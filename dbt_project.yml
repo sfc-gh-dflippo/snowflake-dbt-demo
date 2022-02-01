@@ -72,7 +72,7 @@ models:
         +snowflake_warehouse: "DFLIPPO_DBT_XLARGE_DEMO_WH"
     30_presentation:
       +materialized: table
-      # DBT supports many Snowflake specific features. Here we will make one folder all SECURE views
+      # dbt supports many Snowflake specific features. Here we will make one folder all SECURE views
       sensitive:
         +materialized: view
         +secure: true
