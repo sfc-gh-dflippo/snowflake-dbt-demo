@@ -15,13 +15,13 @@
 
 ### Project features:
 - How to install DBT
-    pip install dbt-core dbt-snowflake
+    - `pip install dbt-core dbt-snowflake`
 - Most common dbt commands:
-    - dbt deps (necessary for this project before build)
-    - dbt build --full-refresh
-    - dbt build
-    - dbt docs generate
-    - dbt docs serve &
+    - `dbt deps` (necessary for this project before build)
+    - `dbt build --full-refresh`
+    - `dbt build`
+    - `dbt docs generate`
+    - `dbt docs serve`
 - Nested models:
     - DIM_ORDERS
     - DIM_CURRENT_YEAR_ORDERS
