@@ -6,6 +6,12 @@
     - It is available for free in the Snowflake Data Markeplace
     - If named other than "KNOEMA_ECONOMY_DATA_ATLAS", update the database name in sources.yml
 
+### How to get started:
+- Create a target schema that you want to deploy your DBT demo into
+- Add the Knoema Economy Data Atlas and Snowflake Sample Data to your account if necessary
+- Copy the sample profiles.yml file to your ~/.dbt/ folder and update it with your credentials and target DB/schema
+- From the root folder, run `dbt deps` to download modules from the dbt hub
+- Run `dbt build --full-refresh` and troubleshoot any errors such as missing objects or permission issues
 
 ### Project features:
 - How to install DBT
