@@ -1,0 +1,102 @@
+
+version: 2
+
+models:
+  - name: DIM_CALENDAR_DAY
+    columns:
+      - name: day_key
+        tests:
+          - unique
+          - not_null
+        description: "Smart key for this table"
+      - name: day_seq
+        description: ""
+  - name: DIM_CURRENT_YEAR_ORDERS
+    description: "Sales for the last year"
+    columns:
+      - name: O_ORDERKEY
+        description: "The primary key for this table"
+        tests:
+          - unique
+          - not_null
+      - name: O_CUSTKEY
+        tests:
+          - not_null
+          - relationships:
+              to: ref('DIM_CUSTOMERS')
+              field: C_CUSTKEY
+      - name: O_ORDERSTATUS
+        tests: 
+          - not_null
+          - accepted_values:
+              values: ['P', 'F', 'O']
+
+  - name: DIM_CURRENT_YEAR_OPEN_ORDERS
+    description: "Open sales for the last year"
+    columns:
+      - name: O_ORDERKEY
+        description: "The primary key for this table"
+        tests:
+          - unique
+          - not_null
+      - name: O_ORDERSTATUS
+        tests: 
+          - not_null
+          - accepted_values:
+              values: ['O']
+
+  - name: DIM_CUSTOMERS
+    description: "Customer dimension with flags for customers with orders and open orders"
+    columns:
+      - name: C_CUSTKEY
+        description: "The primary key for dim_customers"
+        tests:
+          - unique
+          - not_null
+      - name: C_NAME
+        description: "Customer Name"
+        tests: 
+          - not_null
+      - name: C_ADDRESS
+        description: "Customer Address"
+      - name: C_NATIONKEY
+        description: "Customer Nation Key"
+      - name: C_PHONE
+        description: "Customer Phone Number"
+      - name: C_NATIONKEY
+        description: "Customer Nation Key"
+      - name: C_ACCTBAL
+        description: "Customer Account Balance"
+      - name: C_MKTSEGMENT
+        description: "Customer Markey Segment"
+      - name: C_COMMENT
+        description: "Customer Comments"
+      - name: C_ACTIVE_CUSTOMER_FLAG
+        description: "Customer Has at least one order in the last year"
+        tests: 
+          - not_null
+          - accepted_values:
+              values: ['Y', 'N']
+      - name: C_OPEN_ORDER_CUSOTMER_FLAG
+        description: "Customer Has at least one open order in the last year"
+        tests: 
+          - not_null
+          - accepted_values:
+              values: ['Y', 'N']
+
+  - name: FACT_ORDER_LINE
+    description: "Order lines"
+    columns:
+      - name: L_ORDERKEY
+        tests:
+          - not_null
+          - relationships:
+              to: ref('DIM_ORDERS')
+              field: O_ORDERKEY
+      - name: L_LINENUMBER
+        tests:
+          - not_null
+      - name: INTEGRATION_ID
+        tests:
+          - unique
+          - not_null

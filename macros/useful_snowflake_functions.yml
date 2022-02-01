@@ -1,0 +1,20 @@
+version: 2
+
+macros:
+  - name: surrogate_key
+    description: |
+      ### surrogate_key(['COL1', 'COL2', ... ])
+      * Accepts a list of columns and returns text like the following:
+      `COALESCE(COL1::VARCHAR, '') || '~' || COALESCE(COL2::VARCHAR, '') || '~' || COALESCE(COL3::VARCHAR, '')`
+
+      ### Background: 
+      * Testing has verified that query pruning is improved on Snowflake when you concatenate natural keys.
+      * On databases with B-Tree indexes, a hashed surrogate key performs well because it provides a balanced distribution of key values.
+      * Snowflake doesn't prune data as effectively with hashed keys because the MIN/MAX values are artificially broad in each micropartition.
+      * Clustering a table can improve pruning on hash key columns but adds cost.
+      * Developers should experiment with different orders of natural key columns using the same methodology as picking cluster keys.
+      * Some tests have shown that joining on multiple columns can prune better because the optimizer chooses which columns to prune on.
+    docs:
+      show: true
+
+

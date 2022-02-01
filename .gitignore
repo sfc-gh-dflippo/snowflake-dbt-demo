@@ -1,0 +1,10 @@
+# General
+**/.DS_Store
+**/.AppleDouble
+**/.LSOverride
+# Thumbnails
+._*
+# dbt specific
+target/
+dbt_packages/
+logs/

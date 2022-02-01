@@ -1,0 +1,35 @@
+# This file should be copied to your ~/.dbt/ folder or the entries added to an existing profiles.yml
+# All of the values in brackets must be replaced with your own
+# Sample entries are provided for logging in through password, key pair, or SSO authentication
+SNOWFLAKE:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      account: [You want just the text before .snowflakecomputing.com in your Snowflake URL]
+      user: [database user id]
+      role: [database role]
+
+      # User/password auth
+      # user: [username]
+      # password: [password]
+
+      # SSO authentication
+      # authenticator: externalbrowser
+
+      # Keypair authentication
+      private_key_path: [/Users/myuser/.ssh/rsa_key.p8]
+      private_key_passphrase: [passphrase]
+
+      database: [Database Name]
+      warehouse: [Virtual Warehouse Name]
+      schema: [Target Schema Name]
+      threads: 8 # A Snowflake virtual warehouse can generally process 8 queries concurrently before starting a second cluster
+      client_session_keep_alive: False
+      query_tag: dbt_snowflake_demo1
+
+      # optional
+      connect_retries: 0 # default 0
+      connect_timeout: 10 # default: 10
+      retry_on_database_errors: False # default: false 
+      retry_all: False  # default: false 

@@ -1,0 +1,86 @@
+
+# Name your project! Project names should contain only lowercase characters
+# and underscores. A good package name should reflect your organization's
+# name or the intended use of these models
+name: 'snowflake_demo'
+version: '1.0.0'
+config-version: 2
+
+# v1.0.0: The config source-paths has been deprecated in favor of model-paths
+# v1.0.0: The clean-target dbt_modules has been deprecated in favor of dbt_packages
+require-dbt-version: ">=1.0.0"
+
+# This setting configures which "profile" dbt uses for this project.
+profile: 'SNOWFLAKE'
+
+# These configurations specify where dbt should look for different types of files.
+# The `source-paths` config, for example, states that models in this project can be
+# found in the "models/" directory. You probably won't need to change these!
+model-paths: ["models"]
+analysis-paths: ["analysis"]
+test-paths: ["tests"]
+seed-paths: ["data"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+target-path: "target"  # directory which will store compiled SQL files
+clean-targets:         # directories to be removed by `dbt clean`
+  - "target"
+  - "dbt_packages" # Comment to not clean up dependencies
+  - "logs"
+
+# Global initialization and shutdown commands
+# These are not required but will allow us to reduce consumption to the second
+on-run-start:
+  - "ALTER WAREHOUSE DFLIPPO_WH SET WAREHOUSE_SIZE = LARGE AUTO_SUSPEND=1 WAIT_FOR_COMPLETION = TRUE"
+
+on-run-end:
+  #- "ALTER WAREHOUSE DFLIPPO_DBT_XLARGE_DEMO_WH SUSPEND"
+  #- "ALTER WAREHOUSE DFLIPPO_WH SUSPEND"
+  - "ALTER WAREHOUSE DFLIPPO_WH SET WAREHOUSE_SIZE = XSMALL"
+  - "{{ copy_log_to_snowflake() }}"
+
+# Global variables
+vars:
+  # The number of days that we want to reprocess data when doing incremental loads
+  prune_days: 2
+
+
+# Configuring models
+# Full documentation: https://docs.getdbt.com/docs/configuring-models
+
+# In this example config, we tell dbt by default to build all models as views. 
+# These settings can be overridden at lower levels and in the individual model files
+# using the `{{ config(...) }}` macro.
+
+models:
+  # Config indicated by + applies to all files at and below that level
+  # Enable logging events to a table
+  pre-hook: "{{ logging.log_model_start_event() }}"
+  post-hook: "{{ logging.log_model_end_event() }}"
+  
+  # By default grants are lost unless you add this configuration
+  +copy_grants: true
+  +snowflake_warehouse: "DFLIPPO_WH"
+  +materialized: view
+
+  snowflake_demo:
+    20_integration:
+      TPC_H_PERFORMANCE:
+        +materialized: table
+        +schema: TPC_H
+        # This folder will use a specific WH
+        +snowflake_warehouse: "DFLIPPO_DBT_XLARGE_DEMO_WH"
+    30_presentation:
+      +materialized: table
+      # DBT supports many Snowflake specific features. Here we will make one folder all SECURE views
+      sensitive:
+        +materialized: view
+        +secure: true
+
+
+snapshots:
+  target_schema: "DBT_DEMO_SNAPSHOTS"
+
+tests:
+  +limit: 1000 # will only include the first 1000 failures
+#  +store_failures: true # by default we will store failures

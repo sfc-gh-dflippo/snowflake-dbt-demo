@@ -1,0 +1,152 @@
+
+version: 2
+
+# We will verify all of the referential integrity of our TPC-H source
+sources:
+  - name: KNOEMA_ECONOMY
+    schema: ECONOMY
+    database: KNOEMA_ECONOMY_DATA_ATLAS
+    quoting:
+      database: true
+      schema: true
+      identifier: true
+    tables:
+      - name: EXRATESCC2018
+
+  - name: TPC_H
+    schema: TPCH_SF1
+    database: SNOWFLAKE_SAMPLE_DATA
+    quoting:
+      database: true
+      schema: true
+      identifier: true
+    
+    tables:
+      - name: NATION
+        columns:
+          - name: N_NATIONKEY
+            description: "The primary key for this table"
+            tests:
+              - unique
+              - not_null
+          - name: N_REGIONKEY
+            tests:
+              - not_null
+              - relationships:
+                  to: source('TPC_H', 'REGION')
+                  field: R_REGIONKEY
+
+      - name: PART
+        columns:
+          - name: P_PARTKEY
+            description: "The primary key for this table"
+            tests:
+              - unique
+              - not_null
+
+      - name: PARTSUPP
+        columns:
+          - name: PS_PARTKEY
+            description: "Part of compound primary key for this table"
+            tests:
+              - not_null
+              - relationships:
+                  to: source('TPC_H', 'PART')
+                  field: P_PARTKEY
+          - name: PS_SUPPKEY
+            description: "Part of compound primary key for this table"
+            tests:
+              - not_null
+              - relationships:
+                  to: source('TPC_H', 'SUPPLIER')
+                  field: S_SUPPKEY
+        tests:
+          # This is a higher performance way to test compound PK/UK
+          - dbt_utils.unique_combination_of_columns:
+              combination_of_columns:
+                - PS_PARTKEY
+                - PS_SUPPKEY
+          # How to validate a compound primary key natively
+          # - unique:
+          #     column_name: "COALESCE(PS_PARTKEY::VARCHAR, '') || '~' || COALESCE(PS_SUPPKEY::VARCHAR, '')"
+
+      - name: REGION
+        columns:
+          - name: R_REGIONKEY
+            description: "The primary key for this table"
+            tests:
+              - unique
+              - not_null
+
+      - name: SUPPLIER
+        columns:
+          - name: S_SUPPKEY
+            description: "The primary key for this table"
+            tests:
+              - unique
+              - not_null
+          - name: S_NATIONKEY
+            tests:
+              - not_null
+              - relationships:
+                  to: source('TPC_H', 'NATION')
+                  field: N_NATIONKEY
+
+      - name: ORDERS
+        columns:
+          - name: O_ORDERKEY
+            description: "The primary key for this table"
+            tests:
+              - unique
+              - not_null
+          - name: O_CUSTKEY
+            tests:
+              - not_null
+              - relationships:
+                  to: source('TPC_H', 'CUSTOMER')
+                  field: C_CUSTKEY
+
+      - name: CUSTOMER
+        columns:
+          - name: C_CUSTKEY
+            description: "The primary key for dim_customers"
+            tests:
+              - unique
+              - not_null
+          - name: C_NAME
+            description: "Customer Name"
+            tests: 
+              - not_null
+          - name: C_NATIONKEY
+            tests:
+              - not_null
+              - relationships:
+                  to: source('TPC_H', 'NATION')
+                  field: N_NATIONKEY
+
+      - name: LINEITEM
+        columns:
+          - name: L_ORDERKEY
+            tests:
+              - not_null
+              - relationships:
+                  to: source('TPC_H', 'ORDERS')
+                  field: O_ORDERKEY
+          - name: L_LINENUMBER
+            tests:
+              - not_null
+        tests:
+          # This is a higher performance way to test compound PK/UK
+          - dbt_utils.unique_combination_of_columns:
+              combination_of_columns:
+                - L_ORDERKEY
+                - L_LINENUMBER
+          # How to validate a compound primary key natively
+          # - unique:
+          #     column_name: "COALESCE(L_ORDERKEY, '') || '~' || L_LINENUMBER, '')"
+
+          # How to validate a compound foreign key
+          - relationships:
+              column_name: "COALESCE(L_PARTKEY::VARCHAR, '') || '~' || COALESCE(L_SUPPKEY::VARCHAR, '')"
+              to: source('TPC_H', 'PARTSUPP')
+              field: "COALESCE(PS_PARTKEY::VARCHAR, '') || '~' || COALESCE(PS_SUPPKEY::VARCHAR, '')"
