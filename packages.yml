@@ -3,5 +3,7 @@ packages:
     version: 0.8.0
   - package: dbt-labs/logging
     version: 0.6.0
+  - package: entechlog/dbt_snow_mask
+    version: 0.1.6
 #  - package: brooklyn-data/dbt_artifacts
 #    version: 0.6.0

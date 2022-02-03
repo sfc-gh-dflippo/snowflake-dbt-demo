@@ -57,6 +57,8 @@ models:
         description: "Customer Name"
         tests: 
           - not_null
+        meta:
+          masking_policy: TEST_MASKING_POLICY
       - name: C_ADDRESS
         description: "Customer Address"
       - name: C_NATIONKEY
