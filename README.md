@@ -47,6 +47,7 @@
 - Macro examples:
     - snowflake_surrogate_key
     - copy_log_to_snowflake
+    - create_masking_policies
 - Jinja expressions:
     - Q1_FACT_PRICING_SUMMARY_REPORT_QUERY
     - Q2_MINIMUM_COST_SUPPLIER_QUERY

@@ -3,7 +3,11 @@ version: 2
 
 # We will verify all of the referential integrity of our TPC-H source
 sources:
+  
   - name: KNOEMA_ECONOMY
+    tags: 
+      - "Raw_Layer"
+      - "Knoema_Economy"
     schema: ECONOMY
     database: KNOEMA_ECONOMY_DATA_ATLAS
     quoting:
@@ -14,6 +18,9 @@ sources:
       - name: EXRATESCC2018
 
   - name: TPC_H
+    tags: 
+      - "Raw_Layer"
+      - "TPC"
     schema: TPCH_SF1
     database: SNOWFLAKE_SAMPLE_DATA
     quoting:

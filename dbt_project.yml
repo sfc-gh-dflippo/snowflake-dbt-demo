@@ -67,22 +67,45 @@ models:
   +materialized: view
 
   snowflake_demo:
+    10_raw:
+      +tags: "Raw_Layer"
     20_integration:
+      +tags: "Integration_Layer"
       TPC_H_PERFORMANCE:
         +materialized: table
         +schema: TPC_H
         # This folder will use a specific WH
         +snowflake_warehouse: "DFLIPPO_DBT_XLARGE_DEMO_WH"
     30_presentation:
+      +tags: "Presentation_Layer"
       +materialized: table
       # dbt supports many Snowflake specific features. Here we will make one folder all SECURE views
       sensitive:
         +materialized: view
         +secure: true
+    40_share:
+      +tags: "Share_Layer"
+    50_common:
+      +tags: "Common_Layer"
+    60_workspace:
+      +tags: "Workspace_Layer"
 
 
 snapshots:
   target_schema: "DBT_DEMO_SNAPSHOTS"
+  snowflake_demo:
+    10_raw:
+      +tags: "Raw_Layer"
+    20_integration:
+      +tags: "Integration_Layer"
+    30_presentation:
+      +tags: "Presentation_Layer"
+    40_share:
+      +tags: "Share_Layer"
+    50_common:
+      +tags: "Common_Layer"
+    60_workspace:
+      +tags: "Workspace_Layer"
 
 tests:
   +limit: 1000 # will only include the first 1000 failures
