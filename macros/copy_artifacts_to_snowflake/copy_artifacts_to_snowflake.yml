@@ -1,0 +1,21 @@
+version: 2
+
+macros:
+  - name: copy_artifacts_to_snowflake
+    description: |
+      ### This procedure stages the `run_results.json` and `manifest.json` files in a temporary stage and 
+      * After executing the `build` or `run` command in dbt you can run the foll
+      `dbt --no-write-json run-operation copy_artifacts_to_snowflake`
+      `COALESCE(COL1::VARCHAR, '') || '~' || COALESCE(COL2::VARCHAR, '') || '~' || COALESCE(COL3::VARCHAR, '')`
+
+      ### Background: 
+      * Testing has verified that query pruning is improved on Snowflake when you concatenate natural keys.
+      * On databases with B-Tree indexes, a hashed surrogate key performs well because it provides a balanced distribution of key values.
+      * Snowflake doesn't prune data as effectively with hashed keys because the MIN/MAX values are artificially broad in each micropartition.
+      * Clustering a table can improve pruning on hash key columns but adds cost.
+      * Developers should experiment with different orders of natural key columns using the same methodology as picking cluster keys.
+      * Some tests have shown that joining on multiple columns can prune better because the optimizer chooses which columns to prune on.
+    docs:
+      show: true
+
+

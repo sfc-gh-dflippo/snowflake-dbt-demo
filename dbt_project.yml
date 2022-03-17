@@ -31,19 +31,17 @@ clean-targets:         # directories to be removed by `dbt clean`
 # Global initialization and shutdown commands
 # These are not required but will allow us to reduce consumption to the second
 on-run-start:
-  - "ALTER WAREHOUSE DFLIPPO_WH SET WAREHOUSE_SIZE = LARGE AUTO_SUSPEND=1 WAIT_FOR_COMPLETION = TRUE"
-  - "{{ create_masking_policies() }}"
+   - "{{ create_masking_policies() }}"
 
 on-run-end:
   #- "ALTER WAREHOUSE DFLIPPO_DBT_XLARGE_DEMO_WH SUSPEND"
-  #- "ALTER WAREHOUSE DFLIPPO_WH SUSPEND"
-  - "ALTER WAREHOUSE DFLIPPO_WH SET WAREHOUSE_SIZE = XSMALL"
-  - "{{ copy_log_to_snowflake() }}"
 
 # Global variables
 vars:
   # The number of days that we want to reprocess data when doing incremental loads
   prune_days: 2
+  dbt_artifacts_database: "DFLIPPO_COMMON_LOGGING"
+  dbt_artifacts_schema: "DBT_ARTIFACTS"
 
 
 # Configuring models
@@ -54,12 +52,18 @@ vars:
 # using the `{{ config(...) }}` macro.
 
 models:
+  # You can set custom properties on models that will be stored in the dbt logs
+  +meta:
+    owner: "Dan Flippo"
+    owner_email: "test@nowhere.com"
+
   # Config indicated by + applies to all files at and below that level
   # Enable logging events to a table
-  pre-hook: "{{ logging.log_model_start_event() }}"
+  #pre-hook: "{{ logging.log_model_start_event() }}"
   post-hook:
     - "{{ dbt_snow_mask.apply_masking_policy() }}"
-    - "{{ logging.log_model_end_event() }}"
+  #  - "{{ create_model_constraints() }}"
+  #  - "{{ logging.log_model_end_event() }}"
   
   # By default grants are lost unless you add this configuration
   +copy_grants: true
@@ -93,6 +97,9 @@ models:
 
 snapshots:
   target_schema: "DBT_DEMO_SNAPSHOTS"
+  +meta:
+    owner: "Dan Flippo"
+    owner_email: "test@nowhere.com"
   snowflake_demo:
     10_raw:
       +tags: "Raw_Layer"
@@ -108,5 +115,9 @@ snapshots:
       +tags: "Workspace_Layer"
 
 tests:
+  # You can set custom properties on tests that will be stored in the dbt logs
+  +meta:
+    owner: "Dan Flippo"
+    owner_email: "test@nowhere.com"
   +limit: 1000 # will only include the first 1000 failures
 #  +store_failures: true # by default we will store failures

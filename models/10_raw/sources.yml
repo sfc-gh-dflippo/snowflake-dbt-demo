@@ -24,9 +24,9 @@ sources:
     schema: TPCH_SF1
     database: SNOWFLAKE_SAMPLE_DATA
     quoting:
-      database: true
-      schema: true
-      identifier: true
+      database: false
+      schema: false
+      identifier: false
     
     tables:
       - name: NATION

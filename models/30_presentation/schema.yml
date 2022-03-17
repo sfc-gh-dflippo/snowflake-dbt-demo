@@ -2,48 +2,35 @@
 version: 2
 
 models:
+
   - name: DIM_CALENDAR_DAY
     columns:
       - name: day_key
-        tests:
-          - unique
-          - not_null
         description: "Smart key for this table"
+        # Here we are deliberately creating a duplicate of the PK to test
+        # that DBT_CONSTRAINTS doesn't try to create it multiple times.
+        # This also shows how to apply PK/UK tests inline, with one column
+        # and with multiple columns
+        tests:
+          - dbt_constraints.primary_key
+          - unique
+          - not_null
       - name: day_seq
-        description: ""
-  - name: DIM_CURRENT_YEAR_ORDERS
-    description: "Sales for the last year"
-    columns:
-      - name: O_ORDERKEY
-        description: "The primary key for this table"
+        description: "Unique sequence number key"
         tests:
           - unique
           - not_null
-      - name: O_CUSTKEY
-        tests:
-          - not_null
-          - relationships:
-              to: ref('DIM_CUSTOMERS')
-              field: C_CUSTKEY
-      - name: O_ORDERSTATUS
-        tests: 
-          - not_null
-          - accepted_values:
-              values: ['P', 'F', 'O']
-
-  - name: DIM_CURRENT_YEAR_OPEN_ORDERS
-    description: "Open sales for the last year"
-    columns:
-      - name: O_ORDERKEY
-        description: "The primary key for this table"
+      - name: day_dt
+        description: "Unique DATE key"
         tests:
           - unique
           - not_null
-      - name: O_ORDERSTATUS
-        tests: 
-          - not_null
-          - accepted_values:
-              values: ['O']
+    tests:
+      - dbt_constraints.unique_key:
+          column_name: day_seq
+      - dbt_constraints.unique_key:
+          column_names:
+            - day_dt
 
   - name: DIM_CUSTOMERS
     description: "Customer dimension with flags for customers with orders and open orders"
@@ -86,19 +73,92 @@ models:
           - accepted_values:
               values: ['Y', 'N']
 
-  - name: FACT_ORDER_LINE
-    description: "Order lines"
+  - name: DIM_ORDERS
+    description: "All Orders"
     columns:
-      - name: L_ORDERKEY
+      - name: O_ORDERKEY
+        description: "The primary key for this table"
+        tests:
+          - unique
+          - not_null
+      - name: O_CUSTKEY
         tests:
           - not_null
+          - relationships:
+              to: ref('DIM_CUSTOMERS')
+              field: C_CUSTKEY
+      - name: O_ORDERSTATUS
+        tests: 
+          - not_null
+          - accepted_values:
+              values: ['P', 'F', 'O']
+    # Below we are duplicating the FK to test DBT_CONSTRAINTS
+    tests:
+      - dbt_constraints.foreign_key:
+          fk_column_names:
+            - O_CUSTKEY
+          pk_table_name: ref('DIM_CUSTOMERS')
+          pk_column_names:
+            - C_CUSTKEY
+
+  - name: DIM_CURRENT_YEAR_ORDERS
+    description: "Sales for the last year"
+    columns:
+      - name: O_ORDERKEY
+        description: "The primary key for this table"
+        tests:
+          - unique
+          - not_null
+      - name: O_CUSTKEY
+        tests:
+          - not_null
+          # Demonstration that you can define a FK inline
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref('DIM_CUSTOMERS')
+              pk_column_name: C_CUSTKEY
+
+
+  - name: DIM_CURRENT_YEAR_OPEN_ORDERS
+    description: "Open sales for the last year"
+    columns:
+      - name: O_ORDERKEY
+        description: "The primary key for this table"
+        tests:
+          - unique
+          - not_null
+      - name: O_CUSTKEY
+        tests:
+          - not_null
+          - relationships:
+              to: ref('DIM_CUSTOMERS')
+              field: C_CUSTKEY
+      - name: O_ORDERSTATUS
+        tests: 
+          - not_null
+          - accepted_values:
+              values: ['O']
+
+
+
+  - name: FACT_ORDER_LINE
+    description: "Fact Order Lines"
+    columns:
+      - name: L_ORDERKEY
+        description: "FK to DIM_ORDERS and first key in PK"
+        tests:
           - relationships:
               to: ref('DIM_ORDERS')
               field: O_ORDERKEY
       - name: L_LINENUMBER
-        tests:
-          - not_null
+        description: "Order Line Number and second key in PK"
       - name: INTEGRATION_ID
+        description: "Concatenation of PK colums for the unique and not_null tests"
         tests:
           - unique
           - not_null
+    tests:
+      # Demonstration that the primary_key test can accept multiple columns
+      - dbt_constraints.primary_key:
+          column_names:
+            - L_ORDERKEY
+            - L_LINENUMBER
