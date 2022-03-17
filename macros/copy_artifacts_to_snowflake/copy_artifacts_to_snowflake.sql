@@ -2,8 +2,8 @@
 
   {% set dbt_artifacts_database = var('dbt_artifacts_database', 'COMMON_LOGGING') -%}
   {% set dbt_artifacts_schema = var('dbt_artifacts_schema', 'DBT_ARTIFACTS') -%}
-  {% set dbt_artifacts_stage = adapter.get_relation(dbt_artifacts_database, dbt_artifacts_schema, var('dbt_artifacts_stage', 'TMP_DBT_ARTIFACTS_STAGE')) -%}
-  {% set dbt_artifacts_procedure = adapter.get_relation(dbt_artifacts_database, dbt_artifacts_schema, var('dbt_artifacts_procedure', 'LOG_DBT_ARTIFACTS')) -%}
+  {% set dbt_artifacts_stage = api.Relation.create(dbt_artifacts_database, dbt_artifacts_schema, var('dbt_artifacts_stage', 'TMP_DBT_ARTIFACTS_STAGE')) -%}
+  {% set dbt_artifacts_procedure = api.Relation.create(dbt_artifacts_database, dbt_artifacts_schema, var('dbt_artifacts_procedure', 'LOG_DBT_ARTIFACTS')) -%}
 
   {%- set query -%}
   
