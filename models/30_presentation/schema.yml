@@ -42,7 +42,7 @@ models:
           - not_null
       - name: C_NAME
         description: "Customer Name"
-        tests: 
+        tests:
           - not_null
         meta:
           masking_policy: TEST_MASKING_POLICY
@@ -62,13 +62,13 @@ models:
         description: "Customer Comments"
       - name: C_ACTIVE_CUSTOMER_FLAG
         description: "Customer Has at least one order in the last year"
-        tests: 
+        tests:
           - not_null
           - accepted_values:
               values: ['Y', 'N']
       - name: C_OPEN_ORDER_CUSOTMER_FLAG
         description: "Customer Has at least one open order in the last year"
-        tests: 
+        tests:
           - not_null
           - accepted_values:
               values: ['Y', 'N']
@@ -88,7 +88,7 @@ models:
               to: ref('DIM_CUSTOMERS')
               field: C_CUSTKEY
       - name: O_ORDERSTATUS
-        tests: 
+        tests:
           - not_null
           - accepted_values:
               values: ['P', 'F', 'O']
@@ -133,7 +133,7 @@ models:
               to: ref('DIM_CUSTOMERS')
               field: C_CUSTKEY
       - name: O_ORDERSTATUS
-        tests: 
+        tests:
           - not_null
           - accepted_values:
               values: ['O']

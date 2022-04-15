@@ -13,8 +13,8 @@ SELECT O_ORDERKEY,
     O_CLERK,
     O_SHIPPRIORITY,
     O_COMMENT
-FROM 
+FROM
 {{ source('TPC_H', 'ORDERS') }}
 
--- Uncomment this line to cause a FK violation 
+-- Uncomment this line to cause a FK violation
 --LIMIT 100

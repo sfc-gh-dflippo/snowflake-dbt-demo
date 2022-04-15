@@ -3,9 +3,9 @@ version: 2
 
 # We will verify all of the referential integrity of our TPC-H source
 sources:
-  
+
   - name: KNOEMA_ECONOMY
-    tags: 
+    tags:
       - "Raw_Layer"
       - "Knoema_Economy"
     schema: ECONOMY
@@ -18,7 +18,7 @@ sources:
       - name: EXRATESCC2018
 
   - name: TPC_H
-    tags: 
+    tags:
       - "Raw_Layer"
       - "TPC"
     schema: TPCH_SF1
@@ -27,7 +27,7 @@ sources:
       database: false
       schema: false
       identifier: false
-    
+
     tables:
       - name: NATION
         columns:
@@ -122,7 +122,7 @@ sources:
               - not_null
           - name: C_NAME
             description: "Customer Name"
-            tests: 
+            tests:
               - not_null
           - name: C_NATIONKEY
             tests:

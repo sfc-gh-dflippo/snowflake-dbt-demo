@@ -3,9 +3,9 @@
     pre_hook=[ "ALTER SESSION SET WEEK_START = 7" ]
 ) }}
 
-select 
+select
   to_char(DAY_DT, 'YYYYMMDD')::NUMBER(8,0) AS DAY_KEY,
-  DAY_SEQ, 
+  DAY_SEQ,
   DAY_DT,
   TO_CHAR(DAY_DT, 'YYYY-MM-DD') DAY_TEXT, --ISO 8601 standard
   TO_CHAR(DAY_DT, 'DD.MM.YYYY') DAY_EU_TEXT,
@@ -50,10 +50,10 @@ decode (extract(month from DAY_DT),
   CASE WHEN DAY_DT = CURRENT_DATE() THEN 'Y' ELSE 'N' END AS CURRENT_DAY_FLAG,
   CASE WHEN WEEK_START_DT = date_trunc('WEEK', CURRENT_DATE()) THEN 'Y' ELSE 'N' END AS CURRENT_WEEK_FLAG,
   CASE WHEN MONTH_START_DT = date_trunc('MONTH', CURRENT_DATE()) THEN 'Y' ELSE 'N' END AS CURRENT_MONTH_FLAG,
-  CASE WHEN YEAR_START_DT = date_trunc('WEEK', CURRENT_DATE()) THEN 'Y' ELSE 'N' END AS CURRENT_YEAR_FLAG  
+  CASE WHEN YEAR_START_DT = date_trunc('WEEK', CURRENT_DATE()) THEN 'Y' ELSE 'N' END AS CURRENT_YEAR_FLAG
   from
   (select
     row_number() over (order by seq4() )-1 as DAY_SEQ,
     DATEADD(day, DAY_SEQ, '1992-01-01'::DATE) as DAY_DT
-    from table(generator(rowcount => 30 * 365 )))  
+    from table(generator(rowcount => 30 * 365 )))
 order by DAY_SEQ asc

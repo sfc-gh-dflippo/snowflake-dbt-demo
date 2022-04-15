@@ -5,5 +5,8 @@ packages:
   - package: entechlog/dbt_snow_mask
     version: [">=0.1.0", "<0.2.0"]
     
-  - git: "https://github.com/danflippo/dbt_constraints.git"
+  #- git: "https://github.com/danflippo/dbt_constraints.git"
+  #  revision: main
+  - git: "https://github.com/brooklyn-data/dbt_artifacts.git"
     revision: main
+  - local: ../dbt_constraints

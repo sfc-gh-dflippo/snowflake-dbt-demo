@@ -42,12 +42,13 @@ vars:
   prune_days: 2
   dbt_artifacts_database: "DFLIPPO_COMMON_LOGGING"
   dbt_artifacts_schema: "DBT_ARTIFACTS"
+  dbt_constraints_enabled: true
 
 
 # Configuring models
 # Full documentation: https://docs.getdbt.com/docs/configuring-models
 
-# In this example config, we tell dbt by default to build all models as views. 
+# In this example config, we tell dbt by default to build all models as views.
 # These settings can be overridden at lower levels and in the individual model files
 # using the `{{ config(...) }}` macro.
 
@@ -62,9 +63,8 @@ models:
   #pre-hook: "{{ logging.log_model_start_event() }}"
   post-hook:
     - "{{ dbt_snow_mask.apply_masking_policy() }}"
-  #  - "{{ create_model_constraints() }}"
   #  - "{{ logging.log_model_end_event() }}"
-  
+
   # By default grants are lost unless you add this configuration
   +copy_grants: true
   +snowflake_warehouse: "DFLIPPO_WH"
@@ -93,6 +93,9 @@ models:
       +tags: "Common_Layer"
     60_workspace:
       +tags: "Workspace_Layer"
+
+  dbt_artifacts:
+    +enabled: false # I am including the package but don't want to run its models
 
 
 snapshots:

@@ -17,7 +17,7 @@
 
   {%- set query -%}
     INSERT INTO DBT_LOG (ROW_NUM, LOG_TEXT, LAST_UPDATED)
-    SELECT 
+    SELECT
         --We use the analytic function to avoid gaps due to blank lines
         row_number() over (order by metadata$file_row_number) as ROW_NUM,
         $1 as LOG_TEXT,
