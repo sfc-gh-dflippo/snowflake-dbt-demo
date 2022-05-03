@@ -3,6 +3,7 @@
 **/.AppleDouble
 **/.LSOverride
 **/.env
+**/.vscode
 # Thumbnails
 ._*
 # dbt specific

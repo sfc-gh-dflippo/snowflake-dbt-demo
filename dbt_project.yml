@@ -43,7 +43,7 @@ vars:
   dbt_artifacts_database: "DFLIPPO_COMMON_LOGGING"
   dbt_artifacts_schema: "DBT_ARTIFACTS"
   dbt_constraints_enabled: true
-
+  dbt_constraints_sources_enabled: true
 
 # Configuring models
 # Full documentation: https://docs.getdbt.com/docs/configuring-models
