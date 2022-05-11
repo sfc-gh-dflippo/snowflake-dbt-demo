@@ -12,9 +12,9 @@ select *
 from FOL
     pivot(
         sum(L_QUANTITY) for SHIP_YEAR in (
-            {{ "'" ~ shipping_years | join("', '") ~ "'" }}
+            {{ "'" ~ shipping_years | sort | join("', '") ~ "'" }}
         )
     ) as p (
         L_SUPPKEY, L_PARTKEY,
-        {{ "shipped_" ~ shipping_years | join(', shipped_') }}
+        {{ "shipped_" ~ shipping_years | sort | join(', shipped_') }}
     )
