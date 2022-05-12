@@ -69,6 +69,11 @@ models:
   +snowflake_warehouse: "DFLIPPO_WH"
   +materialized: view
 
+  # We will store table and column descriptions in Snowflake
+  +persist_docs:
+    relation: true
+    columns: true
+
   snowflake_demo:
     10_raw:
       +tags: "Raw_Layer"
