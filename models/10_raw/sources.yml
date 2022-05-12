@@ -4,6 +4,12 @@ version: 2
 # We will verify all of the referential integrity of our TPC-H source
 sources:
 
+  - name: SNOWFLAKE_TABLE_STREAM
+    schema: "{{target.schema}}"
+    database: "{{target.database}}"
+    tables:
+      - name: customer_cdc_st
+
   - name: KNOEMA_ECONOMY
     tags:
       - "Raw_Layer"
