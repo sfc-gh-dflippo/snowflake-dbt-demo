@@ -1,0 +1,12 @@
+# Use this command to create an isolated conda env:
+# conda env create -f dbt-env.yml
+# Use this command to then switch to the env:
+# conda activate dbt
+name: dbt
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.9
+  - dbt-core
+  - dbt-snowflake
