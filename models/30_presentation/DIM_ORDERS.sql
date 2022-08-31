@@ -12,7 +12,8 @@ SELECT O_ORDERKEY,
     O_ORDERPRIORITY,
     O_CLERK,
     O_SHIPPRIORITY,
-    O_COMMENT
+    O_COMMENT,
+    SYSDATE() as dbt_last_update_ts
 FROM
 {{ source('TPC_H', 'ORDERS') }}
 

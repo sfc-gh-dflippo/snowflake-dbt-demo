@@ -1,28 +1,33 @@
 {%- macro snowflake_get_stream(table) -%}
-    {%- set stream = adapter.get_relation(
-            database=table.database,
-            schema=table.schema,
-            identifier= (table.name ~ '_ST') ) -%}
+    {%- set stream = api.Relation.create(
+            database=this.database,
+            schema=this.schema,
+            identifier= ( (this.alias or this.name) ~ '_ST' ) ) -%}
 
-    {%- set stream_lookup_query -%}
-    show streams like '{{stream.identifier}}' in schema {{stream.database}}.{{stream.schema}}
-    {%- endset -%}
+    {% if execute %}
+        {%- set stream_lookup_query -%}
+        show streams like '{{stream.identifier}}' in schema {{stream.database}}.{{stream.schema}}
+        {%- endset -%}
+        {%- set stream_list = run_query(stream_lookup_query) -%}
 
-    {%- set stream_create_statement -%}
-    create or replace stream {{stream}} on table {{table}} show_initial_rows = true
-    {%- endset -%}
+        {%- if stream_list
+            and 'false' in stream_list.columns["stale"].values() -%}
 
-    {%- set stream_list = run_query(stream_lookup_query) -%}
-    {%- if 'FALSE' in stream_list.columns["stale"].values() -%}
+            {# Stream exists and is not stale #}
+            {%- do log("Found existing usable stream: " ~ stream, info=false) -%}
 
-        {# Stream exists and is not stale #}
-        {{ return(stream) }}
+        {%- else -%}
 
-    {%- else -%}
+            {# Stream should be recreated #}
+            {%- set stream_create_statement -%}
+            create or replace stream {{stream}} on table {{table}} show_initial_rows = true
+            {%- endset -%}
+            {%- do log("Creating stream: " ~ stream, info=true) -%}
+            {%- do run_query(stream_create_statement) -%}
 
-        {# Stream should be recreated #}
-        {%- do run_query(stream_create_statement) -%}
-        {{ return(stream) }}
-
+        {%- endif -%}
     {%- endif -%}
+
+    {{ return(stream) }}
+
 {%- endmacro -%}

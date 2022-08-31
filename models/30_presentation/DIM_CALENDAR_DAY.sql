@@ -50,7 +50,8 @@ decode (extract(month from DAY_DT),
   CASE WHEN DAY_DT = CURRENT_DATE() THEN 'Y' ELSE 'N' END AS CURRENT_DAY_FLAG,
   CASE WHEN WEEK_START_DT = date_trunc('WEEK', CURRENT_DATE()) THEN 'Y' ELSE 'N' END AS CURRENT_WEEK_FLAG,
   CASE WHEN MONTH_START_DT = date_trunc('MONTH', CURRENT_DATE()) THEN 'Y' ELSE 'N' END AS CURRENT_MONTH_FLAG,
-  CASE WHEN YEAR_START_DT = date_trunc('WEEK', CURRENT_DATE()) THEN 'Y' ELSE 'N' END AS CURRENT_YEAR_FLAG
+  CASE WHEN YEAR_START_DT = date_trunc('WEEK', CURRENT_DATE()) THEN 'Y' ELSE 'N' END AS CURRENT_YEAR_FLAG,
+  SYSDATE() as dbt_last_update_ts
   from
   (select
     row_number() over (order by seq4() )-1 as DAY_SEQ,

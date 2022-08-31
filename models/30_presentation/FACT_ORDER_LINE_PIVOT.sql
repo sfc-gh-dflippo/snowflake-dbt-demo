@@ -8,7 +8,8 @@ with fol as (
         L_QUANTITY
     from {{ ref('FACT_ORDER_LINE') }}
 )
-select *
+select *,
+    SYSDATE() as dbt_last_update_ts
 from FOL
     pivot(
         sum(L_QUANTITY) for SHIP_YEAR in (
