@@ -1,5 +1,5 @@
 # Use this command to create an isolated conda env:
-# conda env create -f dbt-env.yml
+# conda env create -f dbt-conda-env.yml
 # Use this command to then switch to the env:
 # conda activate dbt
 name: dbt
