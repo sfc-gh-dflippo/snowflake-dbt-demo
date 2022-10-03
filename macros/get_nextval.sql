@@ -6,7 +6,7 @@
     {%- set sequence = api.Relation.create(
             database = database_name,
             schema = schema_name,
-            identifier = sequence_name -%}
+            identifier = sequence_name) -%}
 
     {% if execute %}
 
