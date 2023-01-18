@@ -2,28 +2,28 @@
 # All of the values in brackets must be replaced with your own
 # Sample entries are provided for logging in through password, key pair, or SSO authentication
 SNOWFLAKE:
-  target: test
+  target: dev
   outputs:
     dev:
       type: snowflake
-      account: [You want just the text before .snowflakecomputing.com in your Snowflake URL]
-      user: [database user id]
-      role: [database role]
+      account: "You want just the text before .snowflakecomputing.com in your Snowflake URL"
+      user: "database user id"
+      role: "database role"
 
       # User/password auth
-      # user: [username]
-      # password: [password]
+      # user: "username"
+      # password: "password"
 
       # SSO authentication
       # authenticator: externalbrowser
 
       # Keypair authentication
-      private_key_path: [/Users/myuser/.ssh/rsa_key.p8]
-      private_key_passphrase: [passphrase]
+      private_key_path: "/Users/myuser/.ssh/rsa_key.p8"
+      private_key_passphrase: "passphrase"
 
-      database: [Database Name]
-      warehouse: [Virtual Warehouse Name]
-      schema: [Target Schema Name]
+      database: "Database Name"
+      warehouse: "Virtual Warehouse Name"
+      schema: "Target Schema Name"
       threads: 8 # A Snowflake virtual warehouse can generally process 8 queries concurrently before starting a second cluster
       client_session_keep_alive: False
       query_tag: dbt_snowflake_demo1
@@ -35,24 +35,24 @@ SNOWFLAKE:
       retry_all: False  # default: false
     test:
       type: snowflake
-      account: [You want just the text before .snowflakecomputing.com in your Snowflake URL]
-      user: [database user id]
-      role: [database role]
+      account: "You want just the text before .snowflakecomputing.com in your Snowflake URL"
+      user: "database user id"
+      role: "database role"
 
       # User/password auth
-      # user: [username]
-      # password: [password]
+      # user: "username"
+      # password: "password"
 
       # SSO authentication
       # authenticator: externalbrowser
 
       # Keypair authentication
-      private_key_path: [/Users/myuser/.ssh/rsa_key.p8]
-      private_key_passphrase: [passphrase]
+      private_key_path: "/Users/myuser/.ssh/rsa_key.p8"
+      private_key_passphrase: "passphrase"
 
-      database: [Database Name]
-      warehouse: [Virtual Warehouse Name]
-      schema: [Target Schema Name]
+      database: "Database Name"
+      warehouse: "Virtual Warehouse Name"
+      schema: "Target Schema Name"
       threads: 8 # A Snowflake virtual warehouse can generally process 8 queries concurrently before starting a second cluster
       client_session_keep_alive: False
       query_tag: dbt_snowflake_demo1
