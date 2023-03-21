@@ -5,7 +5,7 @@
 
 {{ config(
     materialized='incremental',
-    unique_key='INTEGRATION_ID'
+    unique_key='INTEGRATION_ID',
     transient=false
     )
 }}
