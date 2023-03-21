@@ -6,7 +6,6 @@
 
     {% if execute %}
 
-        {# create sequence if not exists #}
         {%- set sequence_create_statement -%}
         create sequence if not exists {{sequence}}
         {%- endset -%}
@@ -27,7 +26,6 @@
 
     {% if execute %}
 
-        {# create sequence if not exists #}
         {%- set sequence_create_statement -%}
         create or replace sequence {{sequence}}
         {%- endset -%}
