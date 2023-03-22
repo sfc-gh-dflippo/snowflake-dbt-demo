@@ -7,6 +7,38 @@
     - If named other than "KNOEMA_ECONOMY_DATA_ATLAS", update the database name in sources.yml
 
 ### How to get started:
+
+- Install Python and create a virtual environment for dbt
+    - We generally recommend [Anaconda](https://www.anaconda.com/) or [Miniconda](https://docs.conda.io/en/latest/miniconda.html) to create an isolated environment just for dbt. A dbt-conda-env.yml file has been provided so you can set up this environment and switch to it with:
+```
+conda env create -f dbt-conda-env.yml
+conda activate dbt
+```
+    - You can also use venv with the [open source version at Python.org](https://www.python.org/downloads/)
+        - Unix/macOS - Setting it up and verifying which python you are now using:
+        ```
+        python3 -m pip install --user virtualenv
+        python3 -m venv dbt
+        source dbt/bin/activate
+        which python
+        python3 -m pip install -U dbt-core dbt-snowflake
+        ```
+        - Windows - Setting it up and verifying which python you are now using:
+        ```
+        py -m pip install --user virtualenv
+        py -m venv dbt
+        .\dbt\Scripts\activate
+        where python
+        py -m pip install -U dbt-core dbt-snowflake
+        ```
+- Most dbt users edit their dbt scripts with Microsoft's free editor, VSCode
+    - [Download VSCode](https://code.visualstudio.com/Download)
+    - From the Extensions screen (icon looks like Tetris) you should install two extensions:
+        - "Snowflake"
+        - "dbt Power User" (which will also add "vscode-dbt")
+    - In the Explorer, right click in the background and "Add folder to workspace" to add where your dbt project will be located.
+    - On Windows, you will want to change the default terminal to "Command Prompt". Under File -> Preferences -> Settings, search for "windows terminal" and scroll down to where it says the default is "null" and change that to "Command Prompt".
+    - You will want to set the default intepreter to your new "dbt" environment using [these instructions from Microsoft](https://code.visualstudio.com/docs/python/python-tutorial#_select-a-python-interpreter).
 - Create a target schema in Snowflake that you want to deploy your dbt demo into
 - Add the Knoema Economy Data Atlas and Snowflake Sample Data to your account if necessary
 - Copy the sample profiles.yml file to your ~/.dbt/ folder and update it with your credentials and target DB/schema
