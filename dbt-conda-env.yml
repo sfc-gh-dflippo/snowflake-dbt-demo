@@ -20,14 +20,14 @@ channels:
   - https://repo.anaconda.com/pkgs/snowflake
   - conda-forge
 dependencies:
-  - python=3.8
-  - pandas
-  - dbt-core
-  - dbt-snowflake
-  - snowflake-snowpark-python
+  - python=3.8.*
   - pip-system-certs
   - pip
   - pip:
-    - schemachange
-    - streamlit
+    - dbt-core
+    - dbt-snowflake
+    - dbt-postgres
+    - pip
+    - pip-system-certs
     - snowflake-connector-python[secure-local-storage,pandas]
+    - snowflake-snowpark-python[pandas]
