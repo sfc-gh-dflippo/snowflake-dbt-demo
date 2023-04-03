@@ -10,7 +10,7 @@
 # conda update -n base conda
 
 # If your anaconda base is incredibly old, you may want to:
-# conda install -n base anaconda=2022.10
+# conda install -n base anaconda=2023.03
 # or update all packages to the current version:
 # conda update -n base --all
 
