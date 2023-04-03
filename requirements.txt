@@ -1,0 +1,8 @@
+### How to use this file:
+# pip install -U -r requirements.txt
+pip
+pip-system-certs
+dbt-core
+dbt-snowflake
+snowflake-connector-python[secure-local-storage,pandas]
+snowflake-snowpark-python[pandas]

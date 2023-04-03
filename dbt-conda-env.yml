@@ -3,7 +3,7 @@
 # Use this command to then switch to the env:
 # conda activate dbt
 
-# If you receive SSL errors due to your network firewall, try installing pip_system_certs
+# If you receive SSL errors due to your network firewall, try installing pip_system_certs by itself
 # pip install -U pip_system_certs
 
 ### You may want to update your conda utility first:
@@ -24,10 +24,9 @@ dependencies:
   - pip-system-certs
   - pip
   - pip:
-    - dbt-core
-    - dbt-snowflake
-    - dbt-postgres
     - pip
     - pip-system-certs
+    - dbt-core
+    - dbt-snowflake
     - snowflake-connector-python[secure-local-storage,pandas]
     - snowflake-snowpark-python[pandas]
