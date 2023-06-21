@@ -60,7 +60,11 @@
             {{ strategy.updated_at }} as {{config.dbt_updated_at_column}},
             {{ strategy.updated_at }} as {{config.dbt_valid_from_column}},
             nullif({{ strategy.updated_at }}, {{ strategy.updated_at }}) as {{config.dbt_valid_to_column}},
-            {% if config.dbt_current_flag_column %}'Y' as {{config.dbt_current_flag_column}},{% endif %}
+
+            {% if config.dbt_current_flag_column -%}
+                'Y' as {{config.dbt_current_flag_column}},
+            {%- endif %}
+
             {{ strategy.scd_id }} as {{ config.dbt_scd_id_column }}
 
         from snapshot_query
@@ -89,7 +93,11 @@
 
         select
             'insert' as dbt_change_type,
-            {% if config.surrogate_key %}{{config.surrogate_key_seq}}.nextval as {{config.surrogate_key}},{% endif %}
+
+            {% if config.surrogate_key -%}
+                {{config.surrogate_key_seq}}.nextval as {{config.surrogate_key}},
+            {%- endif %}
+
             source_data.*
 
         from insertions_source_data as source_data
@@ -108,12 +116,20 @@
 
         select
             'update' as dbt_change_type,
-            {% if config.surrogate_key %}snapshotted_data.{{config.surrogate_key}},{% endif %}
+
+            {% if config.surrogate_key -%}
+                snapshotted_data.{{config.surrogate_key}},
+            {% endif %}
+
             source_data.*,
-            snapshotted_data.{{config.dbt_updated_at_column}},
+            {{ strategy.updated_at }} as {{config.dbt_updated_at_column}},
             snapshotted_data.{{config.dbt_valid_from_column}},
-            {{ snapshot_get_time() }} as {{config.dbt_valid_to_column}},
-            {% if config.dbt_current_flag_column %}'N' as {{config.dbt_current_flag_column}},{% endif %}
+            {{ strategy.updated_at }} as {{config.dbt_valid_to_column}},
+
+            {% if config.dbt_current_flag_column -%}
+                'N' as {{config.dbt_current_flag_column}},
+            {%- endif %}
+
             snapshotted_data.{{config.dbt_scd_id_column}}
 
         from updates_source_data as source_data
@@ -130,12 +146,20 @@
 
         select
             'delete' as dbt_change_type,
-            {% if config.surrogate_key %}snapshotted_data.{{config.surrogate_key}},{% endif %}
+
+            {% if config.surrogate_key -%}
+                snapshotted_data.{{config.surrogate_key}},
+            {%- endif %}
+
             source_data.*,
-            snapshotted_data.{{config.dbt_updated_at_column}},
+            {{ snapshot_get_time() }} as {{config.dbt_updated_at_column}},
             snapshotted_data.{{config.dbt_valid_from_column}},
             {{ snapshot_get_time() }} as {{config.dbt_valid_to_column}},
-            {% if config.dbt_current_flag_column %}'N' as {{config.dbt_current_flag_column}},{% endif %}
+
+            {% if config.dbt_current_flag_column -%}
+                'N' as {{config.dbt_current_flag_column}},
+            {%- endif %}
+
             snapshotted_data.{{config.dbt_scd_id_column}}
 
         from snapshotted_data
@@ -178,7 +202,6 @@
 {% endmacro %}
 
 
-
 {% macro snapshot_merge_sql(target, source, insert_cols) -%}
     {%- set config = get_snapshot_config() -%}
     {%- set insert_cols_csv = insert_cols | join(', ') -%}
@@ -188,15 +211,21 @@
     on DBT_INTERNAL_SOURCE.{{config.dbt_scd_id_column}} = DBT_INTERNAL_DEST.{{config.dbt_scd_id_column}}
         and DBT_INTERNAL_SOURCE.{{config.unique_key}} = DBT_INTERNAL_DEST.{{config.unique_key}}
         and DBT_INTERNAL_SOURCE.{{config.dbt_valid_from_column}} = DBT_INTERNAL_DEST.{{config.dbt_valid_from_column}}
-        {% if config.surrogate_key %}and DBT_INTERNAL_SOURCE.{{config.surrogate_key}} = DBT_INTERNAL_DEST.{{config.surrogate_key}}{% endif %}
+
+        {% if config.surrogate_key -%}
+            and DBT_INTERNAL_SOURCE.{{config.surrogate_key}} = DBT_INTERNAL_DEST.{{config.surrogate_key}}
+        {%- endif %}
+
     when matched
      and DBT_INTERNAL_DEST.{{config.dbt_valid_to_column}} is null
      and DBT_INTERNAL_SOURCE.dbt_change_type in ('update', 'delete')
         then update
         set {{config.dbt_valid_to_column}} = DBT_INTERNAL_SOURCE.{{config.dbt_valid_to_column}}
+
         {%- if config.dbt_current_flag_column -%},
-        {{ config.dbt_current_flag_column }} = DBT_INTERNAL_SOURCE.{{config.dbt_current_flag_column}}
+            {{ config.dbt_current_flag_column }} = DBT_INTERNAL_SOURCE.{{config.dbt_current_flag_column}}
         {%- endif %}
+
     when not matched
      and DBT_INTERNAL_SOURCE.dbt_change_type = 'insert'
         then insert ({{ insert_cols_csv }})
