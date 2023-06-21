@@ -5,6 +5,8 @@
       unique_key='C_CUSTKEY',
       strategy='check',
       check_cols=['C_NAME', 'C_ACTIVE_CUSTOMER_FLAG', 'C_OPEN_ORDER_CUSOTMER_FLAG'],
+      dbt_current_flag_column='dbt_current_flag',
+      surrogate_key='DIM_CUSTOMERS_SCD_WID'
     )
 }}
 
