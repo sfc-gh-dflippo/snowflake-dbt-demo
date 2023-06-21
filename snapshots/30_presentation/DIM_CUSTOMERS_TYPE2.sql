@@ -2,9 +2,9 @@
 
 {{
     config(
-      unique_key='C_CUSTKEY',
+      unique_key='INTEGRATION_ID',
       strategy='check',
-      check_cols=['C_NAME', 'C_ACTIVE_CUSTOMER_FLAG', 'C_OPEN_ORDER_CUSOTMER_FLAG'],
+      check_cols=['CDC_HASH_KEY'],
       dbt_current_flag_column='dbt_current_flag',
       surrogate_key='DIM_CUSTOMERS_SCD_WID'
     )
@@ -28,7 +28,9 @@ SELECT C_CUSTKEY,
     CASE
         WHEN OPEN_ORDER_COUNT > 0 THEN 'Y'
         ELSE 'N'
-    END AS C_OPEN_ORDER_CUSOTMER_FLAG
+    END AS C_OPEN_ORDER_CUSOTMER_FLAG,
+    C_CUSTKEY AS INTEGRATION_ID,
+    HASH('C_NAME', 'C_ACTIVE_CUSTOMER_FLAG', 'C_OPEN_ORDER_CUSOTMER_FLAG') AS CDC_HASH_KEY
 FROM {{ source('TPC_H', 'CUSTOMER') }}
     LEFT OUTER JOIN {{ ref('LKP_CUSTOMERS_WITH_ORDERS') }} ON ( O_CUSTKEY = C_CUSTKEY )
 

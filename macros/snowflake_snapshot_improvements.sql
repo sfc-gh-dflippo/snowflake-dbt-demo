@@ -2,14 +2,12 @@
     {%- set config = model['config'] -%}
     {%- set surrogate_key = config.get("surrogate_key") -%}
     {% if surrogate_key %}
-        {%- set surrogate_key_sequence = config.get("surrogate_key_sequence", surrogate_key ~ "_SEQ") -%}
-        {%- set surrogate_key_sequence_relation = api.Relation.create(
+        {%- set surrogate_key_seq = api.Relation.create(
             database = this.database,
             schema = this.schema,
-            identifier = surrogate_key_sequence) -%}
+            identifier = config.get("surrogate_key_sequence", this.identifier ~ "_SEQ") ) -%}
     {%- else %}
-        {%- set surrogate_key_sequence = none -%}
-        {%- set surrogate_key_sequence_relation = none -%}
+        {%- set surrogate_key_seq = none -%}
     {%- endif %}
     {% do return({
             "unique_key": config.get("unique_key"),
@@ -19,25 +17,24 @@
             "dbt_scd_id_column": config.get("dbt_scd_id_column", "dbt_scd_id"),
             "dbt_current_flag_column": config.get("dbt_current_flag_column"),
             "surrogate_key": surrogate_key,
-            "surrogate_key_sequence_relation": surrogate_key_sequence_relation
+            "surrogate_key_seq": surrogate_key_seq
         }) %}
 {% endmacro %}
 
-
-{% macro snapshot_hash_arguments(args) -%}
-    hash({{ args | join(", ")}})
-{%- endmacro %}
+{# #}
+{% macro snapshot_create_sequence(sequence_relation) -%}
+    {% if execute and sequence_relation %}
+        {%- set sequence_create_statement -%}
+        create sequence if not exists {{sequence_relation}}
+        {%- endset -%}
+        {%- do run_query(sequence_create_statement) -%}
+    {%- endif %}
+{% endmacro %}
 
 
 {% macro snapshot_staging_table(strategy, source_sql, target_relation) -%}
     {%- set config = get_snapshot_config() -%}
-    {% if config.surrogate_key_sequence_relation and execute %}
-        {%- set sequence_create_statement -%}
-        create sequence if not exists {{config.surrogate_key_sequence_relation}}
-        {%- endset -%}
-        {%- do run_query(sequence_create_statement) -%}
-        {%- set sequence_nextval_stmt = config.surrogate_key_sequence_relation ~ ".nextval, " -%}
-    {%- endif %}
+    {%- do snapshot_create_sequence(config.surrogate_key_seq) -%}
 
     with snapshot_query as (
 
@@ -92,7 +89,7 @@
 
         select
             'insert' as dbt_change_type,
-            {% if config.surrogate_key %}{{config.surrogate_key_sequence_relation}}.nextval as {{config.surrogate_key}},{% endif %}
+            {% if config.surrogate_key %}{{config.surrogate_key_seq}}.nextval as {{config.surrogate_key}},{% endif %}
             source_data.*
 
         from insertions_source_data as source_data
@@ -111,11 +108,11 @@
 
         select
             'update' as dbt_change_type,
-            {% if config.surrogate_key %}null as {{config.surrogate_key}},{% endif %}
+            {% if config.surrogate_key %}snapshotted_data.{{config.surrogate_key}},{% endif %}
             source_data.*,
             snapshotted_data.{{config.dbt_updated_at_column}},
             snapshotted_data.{{config.dbt_valid_from_column}},
-            snapshotted_data.{{config.dbt_valid_to_column}},
+            {{ snapshot_get_time() }} as {{config.dbt_valid_to_column}},
             {% if config.dbt_current_flag_column %}'N' as {{config.dbt_current_flag_column}},{% endif %}
             snapshotted_data.{{config.dbt_scd_id_column}}
 
@@ -133,10 +130,10 @@
 
         select
             'delete' as dbt_change_type,
-            {% if config.surrogate_key %}null as {{config.surrogate_key}},{% endif %}
+            {% if config.surrogate_key %}snapshotted_data.{{config.surrogate_key}},{% endif %}
             source_data.*,
-            {{ snapshot_get_time() }} as {{config.dbt_valid_from_column}},
-            {{ snapshot_get_time() }} as {{config.dbt_updated_at_column}},
+            snapshotted_data.{{config.dbt_updated_at_column}},
+            snapshotted_data.{{config.dbt_valid_from_column}},
             {{ snapshot_get_time() }} as {{config.dbt_valid_to_column}},
             {% if config.dbt_current_flag_column %}'N' as {{config.dbt_current_flag_column}},{% endif %}
             snapshotted_data.{{config.dbt_scd_id_column}}
@@ -160,9 +157,12 @@
 
 {% macro build_snapshot_table(strategy, sql) %}
     {%- set config = get_snapshot_config() -%}
+    {%- do snapshot_create_sequence(config.surrogate_key_seq) -%}
 
     select
-        {% if config.surrogate_key %}{{config.surrogate_key_sequence_relation}}.nextval as {{config.surrogate_key}},{% endif %}
+        {% if config.surrogate_key -%}
+            {{config.surrogate_key_seq}}.nextval as {{config.surrogate_key}},
+        {%- endif %}
         *,
         {{ strategy.scd_id }} as {{config.dbt_scd_id_column}},
         {{ strategy.updated_at }} as {{config.dbt_updated_at_column}},
@@ -178,21 +178,6 @@
 {% endmacro %}
 
 
-{%- macro snapshot_sequence_get_nextval(surrogate_key_sequence_relation) -%}
-
-    {% if execute %}
-
-        {%- set sequence_create_statement -%}
-        create sequence if not exists {{sesurrogate_key_sequence_relationquence}}
-        {%- endset -%}
-        {%- do run_query(sequence_create_statement) -%}
-
-    {%- endif -%}
-
-    {{ return(sequence ~ ".nextval") }}
-
-{%- endmacro -%}
-
 
 {% macro snapshot_merge_sql(target, source, insert_cols) -%}
     {%- set config = get_snapshot_config() -%}
@@ -203,6 +188,7 @@
     on DBT_INTERNAL_SOURCE.{{config.dbt_scd_id_column}} = DBT_INTERNAL_DEST.{{config.dbt_scd_id_column}}
         and DBT_INTERNAL_SOURCE.{{config.unique_key}} = DBT_INTERNAL_DEST.{{config.unique_key}}
         and DBT_INTERNAL_SOURCE.{{config.dbt_valid_from_column}} = DBT_INTERNAL_DEST.{{config.dbt_valid_from_column}}
+        {% if config.surrogate_key %}and DBT_INTERNAL_SOURCE.{{config.surrogate_key}} = DBT_INTERNAL_DEST.{{config.surrogate_key}}{% endif %}
     when matched
      and DBT_INTERNAL_DEST.{{config.dbt_valid_to_column}} is null
      and DBT_INTERNAL_SOURCE.dbt_change_type in ('update', 'delete')
