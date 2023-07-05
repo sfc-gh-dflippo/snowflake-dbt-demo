@@ -1,4 +1,8 @@
-{% macro get_snapshot_config() -%}
+{% macro get_snapshot_config() %}
+  {{ return(adapter.dispatch('get_snapshot_config')()) }}
+{% endmacro %}
+
+{% macro default__get_snapshot_config() -%}
     {%- set config = model['config'] -%}
     {%- set surrogate_key = config.get("surrogate_key") -%}
     {% if surrogate_key %}
@@ -19,10 +23,14 @@
             "surrogate_key": surrogate_key,
             "surrogate_key_seq": surrogate_key_seq
         }) %}
+ {% endmacro %}
+
+
+{% macro snapshot_create_sequence(sequence_relation) %}
+  {{ adapter.dispatch('snapshot_create_sequence')(sequence_relation) }}
 {% endmacro %}
 
-{# #}
-{% macro snapshot_create_sequence(sequence_relation) -%}
+{% macro default__snapshot_create_sequence(sequence_relation) -%}
     {% if execute and sequence_relation %}
         {%- set sequence_create_statement -%}
         create sequence if not exists {{sequence_relation}}
@@ -32,7 +40,7 @@
 {% endmacro %}
 
 
-{% macro snapshot_staging_table(strategy, source_sql, target_relation) -%}
+{% macro snowflake__snapshot_staging_table(strategy, source_sql, target_relation) -%}
     {%- set config = get_snapshot_config() -%}
     {%- do snapshot_create_sequence(config.surrogate_key_seq) -%}
 
@@ -179,7 +187,7 @@
 {%- endmacro %}
 
 
-{% macro build_snapshot_table(strategy, sql) %}
+{% macro snowflake__build_snapshot_table(strategy, sql) %}
     {%- set config = get_snapshot_config() -%}
     {%- do snapshot_create_sequence(config.surrogate_key_seq) -%}
 
@@ -202,7 +210,7 @@
 {% endmacro %}
 
 
-{% macro snapshot_merge_sql(target, source, insert_cols) -%}
+{% macro snowflake__snapshot_merge_sql(target, source, insert_cols) -%}
     {%- set config = get_snapshot_config() -%}
     {%- set insert_cols_csv = insert_cols | join(', ') -%}
 
