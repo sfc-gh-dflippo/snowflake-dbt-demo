@@ -82,7 +82,8 @@
 
         select
             *,
-            {{ strategy.unique_key }} as dbt_unique_key
+            {{ strategy.unique_key }} as dbt_unique_key,
+            {{ strategy.updated_at }} as {{config.dbt_updated_at_column}}
         from snapshot_query
     ),
 
@@ -130,9 +131,8 @@
             {% endif %}
 
             source_data.*,
-            {{ strategy.updated_at }} as {{config.dbt_updated_at_column}},
             snapshotted_data.{{config.dbt_valid_from_column}},
-            {{ strategy.updated_at }} as {{config.dbt_valid_to_column}},
+            source_data.{{config.dbt_updated_at_column}} as {{config.dbt_valid_to_column}},
 
             {% if config.dbt_current_flag_column -%}
                 'N' as {{config.dbt_current_flag_column}},
