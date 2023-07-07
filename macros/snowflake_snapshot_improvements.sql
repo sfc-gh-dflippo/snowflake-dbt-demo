@@ -56,7 +56,7 @@
             {{ strategy.unique_key }} as dbt_unique_key
 
         from {{ target_relation }}
-        where {{config.dbt_scd_id_column}} is null
+        where {{config.dbt_valid_to_column}} is null
 
     ),
 

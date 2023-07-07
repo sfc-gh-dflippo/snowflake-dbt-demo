@@ -6,7 +6,8 @@
       strategy='check',
       check_cols=['CDC_HASH_KEY'],
       dbt_current_flag_column='dbt_current_flag',
-      surrogate_key='DIM_CUSTOMERS_SCD_WID'
+      surrogate_key='DIM_CUSTOMERS_SCD_WID',
+      invalidate_hard_deletes=True
     )
 }}
 
