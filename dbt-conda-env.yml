@@ -30,3 +30,4 @@ dependencies:
     - dbt-snowflake
     - snowflake-connector-python[secure-local-storage,pandas]
     - snowflake-snowpark-python[pandas]
+    - snowflake-ml-python
