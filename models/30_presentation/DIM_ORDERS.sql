@@ -1,16 +1,17 @@
-/*
-    Simulate a query for the sales orders
-*/
+{%- set wid_col_name = "O_ORDER_WID" -%}
 {{ config(
     materialized = "incremental",
-    unique_key="O_ORDER_WID",
-    merge_exclude_columns = ["O_ORDER_WID", "DBT_INSERT_TS"],
+    unique_key=wid_col_name,
+    merge_exclude_columns = [wid_col_name, "DBT_INSERT_TS"],
     transient=false,
     post_hook=[ "{%- do insert_ghost_key( 'O_ORDER_WID', 0,
         {'O_CUST_WID': '0'}
     ) -%}" ]
     )
 }}
+/*
+    Simulate a query for the sales orders
+*/
 WITH INCOMING_DATA AS (
 
     SELECT
@@ -48,7 +49,7 @@ WITH INCOMING_DATA AS (
 
 EXISTING_KEYS AS (
     {%- if is_incremental() %}
-    SELECT O_ORDER_WID EXISTING_WID, INTEGRATION_ID, CDC_HASH_KEY FROM {{ this }}
+    SELECT {{ wid_col_name }} EXISTING_WID, INTEGRATION_ID, CDC_HASH_KEY FROM {{ this }}
     {%- else -%}
     SELECT NULL::INTEGER EXISTING_WID, NULL::VARCHAR INTEGRATION_ID, NULL::INTEGER CDC_HASH_KEY
     LIMIT 0
@@ -56,7 +57,7 @@ EXISTING_KEYS AS (
 )
 
 SELECT
-    COALESCE(EXISTING_WID, {{ sequence_get_nextval() }} ) AS O_ORDER_WID,
+    COALESCE(EXISTING_WID, {{ sequence_get_nextval() }} ) AS {{ wid_col_name }},
     D.*,
     SYSDATE() as DBT_INSERT_TS,
     SYSDATE() as DBT_LAST_UPDATE_TS

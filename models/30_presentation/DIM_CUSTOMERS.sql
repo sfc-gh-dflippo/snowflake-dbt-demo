@@ -1,7 +1,8 @@
+{%- set wid_col_name = "C_CUST_WID" -%}
 {{ config(
     materialized = "incremental",
-    unique_key="C_CUST_WID",
-    merge_exclude_columns = ["C_CUST_WID", "DBT_INSERT_TS"],
+    unique_key=wid_col_name,
+    merge_exclude_columns = [wid_col_name, "DBT_INSERT_TS"],
     transient=false,
     post_hook=[ "{%- do insert_ghost_key( 'C_CUST_WID', 0,
         {'C_CUSTKEY': '0',
@@ -52,7 +53,7 @@ WITH INCOMING_DATA AS (
 
 EXISTING_KEYS AS (
     {%- if is_incremental() %}
-    SELECT C_CUST_WID EXISTING_WID, INTEGRATION_ID, CDC_HASH_KEY FROM {{ this }}
+    SELECT {{ wid_col_name }} EXISTING_WID, INTEGRATION_ID, CDC_HASH_KEY FROM {{ this }}
     {%- else -%}
     SELECT NULL::INTEGER EXISTING_WID, NULL::VARCHAR INTEGRATION_ID, NULL::INTEGER CDC_HASH_KEY
     LIMIT 0
@@ -60,7 +61,7 @@ EXISTING_KEYS AS (
 )
 
 SELECT
-    COALESCE(EXISTING_WID, {{ sequence_get_nextval() }} ) AS C_CUST_WID,
+    COALESCE(EXISTING_WID, {{ sequence_get_nextval() }} ) AS {{ wid_col_name }},
     D.*,
     SYSDATE() as DBT_INSERT_TS,
     SYSDATE() as DBT_LAST_UPDATE_TS
