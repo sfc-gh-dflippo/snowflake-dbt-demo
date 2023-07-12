@@ -10,5 +10,5 @@ SELECT O_CUSTKEY,
             ELSE 0
         END
     ) AS OPEN_ORDER_COUNT
-FROM {{ ref('DIM_CURRENT_YEAR_ORDERS') }}
+FROM {{ source('TPC_H', 'ORDERS') }}
 GROUP BY 1

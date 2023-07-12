@@ -8,9 +8,10 @@
 /*
 Type 2 Customers dimension based on stream and simulated CDC
  */
-SELECT DIM_CUSTOMERS.*,
+SELECT
+    *,
     IFF(METADATA$ACTION = 'DELETE', 'Y', 'N') AS DELETE_FLAG
-FROM {{ get_stream( ref('DIM_CUSTOMERS') ) }} DIM_CUSTOMERS
+FROM {{ get_stream( ref('DIM_CUSTOMERS') ) }} AS D
 
 -- We do not want the DELETE rows from the stream for updates
 WHERE NOT (METADATA$ACTION = 'DELETE' AND METADATA$ISUPDATE)

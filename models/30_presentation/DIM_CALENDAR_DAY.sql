@@ -1,7 +1,9 @@
--- Set Sunday as start of week"
-{{ config(
-    pre_hook=[ "ALTER SESSION SET WEEK_START = 7" ]
-) }}
+{{- config(
+    pre_hook=[ "ALTER SESSION SET WEEK_START = 7" ],
+    post_hook=[ "{%- do insert_ghost_key( 'DAY_KEY', 0,
+        {'DAY_SEQ': '0', 'DAY_DT': \"'1900-01-01'::DATE\"}
+    ) -%}" ]
+) -}}
 
 select
   to_char(DAY_DT, 'YYYYMMDD')::NUMBER(8,0) AS DAY_KEY,
@@ -54,7 +56,7 @@ decode (extract(month from DAY_DT),
   SYSDATE() as dbt_last_update_ts
   from
   (select
-    row_number() over (order by seq4() )-1 as DAY_SEQ,
-    DATEADD(day, DAY_SEQ, '1992-01-01'::DATE) as DAY_DT
+    row_number() over (order by seq4() ) as DAY_SEQ,
+    DATEADD(day, DAY_SEQ-1, '1992-01-01'::DATE) as DAY_DT
     from table(generator(rowcount => 30 * 365 )))
 order by DAY_SEQ asc
