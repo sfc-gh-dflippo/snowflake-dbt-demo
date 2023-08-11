@@ -1,5 +1,7 @@
 {% macro get_scd_sql(scd_source_sql, scd_surrogate_key, scd_integration_key, scd_cdc_hash_key, scd_dbt_updated_at="dbt_updated_at", scd_dbt_inserted_at="dbt_inserted_at") -%}
 
+{#- You can skip using a sequence based surrogate key if you set config->unique_key to your integration key and pass None to scd_surrogate_key  -#}
+
 with source_data as (
 
     {{scd_source_sql}}
@@ -11,7 +13,7 @@ existing_data as (
     {% if is_incremental() -%}
 
     select
-        {{scd_surrogate_key}},
+        {% if scd_surrogate_key -%}  {{scd_surrogate_key}},  {%- endif %}
         {{scd_integration_key}},
         {{scd_cdc_hash_key}},
         {{scd_dbt_inserted_at}}
@@ -20,7 +22,7 @@ existing_data as (
     {%- else -%}
 
     select
-        null::integer {{scd_surrogate_key}},
+        {% if scd_surrogate_key -%}  null::integer {{scd_surrogate_key}},  {%- endif %}
         null::varchar {{scd_integration_key}},
         null::integer {{scd_cdc_hash_key}},
         null::timestamp_ntz {{scd_dbt_inserted_at}}
@@ -32,7 +34,7 @@ existing_data as (
 
 inserts as (
     select
-        {{ sequence_get_nextval() }} as {{scd_surrogate_key}},
+        {% if scd_surrogate_key -%}  {{ sequence_get_nextval() }} as {{scd_surrogate_key}},  {%- endif %}
         source_data.*,
         sysdate() as {{scd_dbt_inserted_at}},
         sysdate() as {{scd_dbt_updated_at}}
@@ -43,7 +45,7 @@ inserts as (
 
 updates as (
     select
-        existing_data.{{scd_surrogate_key}},
+        {% if scd_surrogate_key -%}  existing_data.{{scd_surrogate_key}},  {%- endif %}
         source_data.*,
         existing_data.{{scd_dbt_inserted_at}},
         sysdate() as {{scd_dbt_updated_at}}
