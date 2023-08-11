@@ -87,16 +87,6 @@
         from snapshot_query
     ),
 
-    {%- if strategy.invalidate_hard_deletes %}
-
-    deletes_source_data as (
-
-        select
-            *,
-            {{ strategy.unique_key }} as dbt_unique_key
-        from snapshot_query
-    ),
-    {% endif %}
 
     insertions as (
 
@@ -104,6 +94,7 @@
             'insert' as dbt_change_type,
 
             {% if config.surrogate_key -%}
+                -- Surrogate key from sequence
                 {{config.surrogate_key_seq}}.nextval as {{config.surrogate_key}},
             {%- endif %}
 
@@ -127,6 +118,7 @@
             'update' as dbt_change_type,
 
             {% if config.surrogate_key -%}
+                -- Surrogate key from target
                 snapshotted_data.{{config.surrogate_key}},
             {% endif %}
 
@@ -156,10 +148,12 @@
             'delete' as dbt_change_type,
 
             {% if config.surrogate_key -%}
+                -- Surrogate key from target
                 snapshotted_data.{{config.surrogate_key}},
             {%- endif %}
 
             source_data.*,
+            snapshotted_data.dbt_unique_key,
             {{ snapshot_get_time() }} as {{config.dbt_updated_at_column}},
             snapshotted_data.{{config.dbt_valid_from_column}},
             {{ snapshot_get_time() }} as {{config.dbt_valid_to_column}},
@@ -171,8 +165,8 @@
             snapshotted_data.{{config.dbt_scd_id_column}}
 
         from snapshotted_data
-        left join deletes_source_data as source_data on snapshotted_data.dbt_unique_key = source_data.dbt_unique_key
-        where source_data.dbt_unique_key is null
+        left join snapshot_query as source_data on snapshotted_data.dbt_unique_key = source_data.{{ strategy.unique_key }}
+        where source_data.{{ strategy.unique_key }} is null
     )
     {%- endif %}
 
@@ -217,11 +211,14 @@
     merge into {{ target }} as DBT_INTERNAL_DEST
     using {{ source }} as DBT_INTERNAL_SOURCE
     on DBT_INTERNAL_SOURCE.{{config.dbt_scd_id_column}} = DBT_INTERNAL_DEST.{{config.dbt_scd_id_column}}
-        and DBT_INTERNAL_SOURCE.{{config.unique_key}} = DBT_INTERNAL_DEST.{{config.unique_key}}
+
+        -- Snowflake is likely to prune better on the dbt_unique_key or dbt_valid_from
+        and DBT_INTERNAL_SOURCE.dbt_unique_key = DBT_INTERNAL_DEST.{{config.unique_key}}
         and DBT_INTERNAL_SOURCE.{{config.dbt_valid_from_column}} = DBT_INTERNAL_DEST.{{config.dbt_valid_from_column}}
 
         {% if config.surrogate_key -%}
-            and DBT_INTERNAL_SOURCE.{{config.surrogate_key}} = DBT_INTERNAL_DEST.{{config.surrogate_key}}
+        -- Snowflake is also likely to prune well on a sequence-based surrogate key
+        and DBT_INTERNAL_SOURCE.{{config.surrogate_key}} = DBT_INTERNAL_DEST.{{config.surrogate_key}}
         {%- endif %}
 
     when matched

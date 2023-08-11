@@ -19,4 +19,4 @@ WHERE NOT (METADATA$ACTION = 'DELETE' AND METADATA$ISUPDATE)
 
 -- It is possible the same key was deleted and inserted
 -- The following will deduplicate records, keeping the newest record and keeping INSERT over DELETE
-qualify 1 = row_number() over (partition by C_CUSTKEY order by dbt_last_update_ts DESC, METADATA$ACTION DESC)
+qualify 1 = row_number() over (partition by C_CUSTKEY order by dbt_updated_ts DESC, METADATA$ACTION DESC)
