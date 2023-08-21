@@ -1,0 +1,33 @@
+name: dbt_build
+on: workflow_dispatch
+environment: dev
+
+env:
+
+  SNOWFLAKE_ACCOUNT: ${{ secrets }}
+  SNOWFLAKE_USER: ${{ secrets }}
+  SNOWFLAKE_ROLE: ${{ secrets }}
+  SNOWFLAKE_WAREHOUSE: ${{ secrets }}
+  SNOWFLAKE_DATABASE: ${{ secrets }}
+  SNOWFLAKE_SCHEMA: ${{ secrets }}
+  SNOWFLAKE_THREADS: ${{ SNOWFLAKE_THREADS }}
+  SNOWFLAKE_QUERY_TAG: ${{ SNOWFLAKE_QUERY_TAG }}
+  DBT_ENV_SECRET_PRIVATE_KEY: ${{ secrets }}
+  DBT_PROFILES_DIR: ${{ github.workspace }}/docker
+
+jobs:
+  dbt_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.10
+      - name: Install pip requirements
+        run: pip install -U dbt-core:${{ DBT_VERSION }} dbt-snowflake
+      - name: Run dbt
+        run: |
+          dbt deps
+          dbt build
