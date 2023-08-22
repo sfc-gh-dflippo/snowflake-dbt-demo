@@ -13,4 +13,4 @@ SNOWFLAKE:
       warehouse: "{{ env_var('SNOWFLAKE_WAREHOUSE') }}"
       schema: "{{ env_var('SNOWFLAKE_SCHEMA') }}"
       threads: "{{ env_var('SNOWFLAKE_THREADS', '8') | as_number }}"
-      query_tag: "{{ env_var('SNOWFLAKE_QUERY_TAG') }}"
+      query_tag: "{{ env_var('SNOWFLAKE_QUERY_TAG', 'dbt') }}"
