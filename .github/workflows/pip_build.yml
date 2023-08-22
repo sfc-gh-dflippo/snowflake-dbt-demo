@@ -6,6 +6,8 @@ jobs:
     environment: dev
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Project
+        uses: actions/checkout@v3
       - name: Set up Python 3.10
         uses: actions/setup-python@v4
         with:
@@ -13,8 +15,6 @@ jobs:
           cache: 'pip'
       - name: Install pip requirements
         run: pip install -U dbt-core dbt-snowflake
-      - name: Checkout Project
-        uses: actions/checkout@v3
       - name: Run dbt
         env:
           SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
