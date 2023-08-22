@@ -28,7 +28,7 @@ jobs:
           SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE }}
           SNOWFLAKE_SCHEMA: ${{ secrets.SNOWFLAKE_SCHEMA }}
           DBT_ENV_SECRET_PRIVATE_KEY: ${{ secrets.DBT_ENV_SECRET_PRIVATE_KEY }}
-          DBT_PROFILES_DIR: ${{ github.workspace }}/docker
+          DBT_PROFILES_DIR: docker
         run: |
           dbt deps
           dbt build
