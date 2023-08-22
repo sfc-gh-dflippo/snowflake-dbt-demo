@@ -3,8 +3,7 @@ on: workflow_dispatch
 
 env:
 
-  # This is where the dbt-Labs image expects the project
-  GITHUB_WORKSPACE: /usr/app/dbt
+
 
   SNOWFLAKE_ACCOUNT: ${{ secrets }}
   SNOWFLAKE_USER: ${{ secrets }}
@@ -23,8 +22,20 @@ jobs:
       image: ghcr.io/dbt-labs/dbt-snowflake:1.6.0
     steps:
       - name: Checkout
+        env:
+          GITHUB_WORKSPACE: /usr/app/dbt
         uses: actions/checkout@v3
       - name: Run dbt
+        env:
+          SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+          SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
+          SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
+          SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE }}
+          SNOWFLAKE_SCHEMA: ${{ secrets.SNOWFLAKE_SCHEMA }}
+          DBT_ENV_SECRET_PRIVATE_KEY: ${{ secrets.DBT_ENV_SECRET_PRIVATE_KEY }}
+          DBT_PROFILES_DIR: ${{ github.workspace }}/docker
         run: |
+          cd /usr/app/dbt
           dbt deps
           dbt build
