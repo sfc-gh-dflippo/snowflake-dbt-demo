@@ -1,15 +1,16 @@
 name: pip_build
 on: workflow_dispatch
 
+env:
+  # This is where the dbt-Labs image expects the project
+  GITHUB_WORKSPACE: /usr/app/dbt
+
 jobs:
   dbt_job:
     environment: dev
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        env:
-          # This is where the dbt-Labs image expects the project
-          GITHUB_WORKSPACE: /usr/app/dbt
         uses: actions/checkout@v3
       - name: Set up Python 3.10
         uses: actions/setup-python@v4
@@ -29,6 +30,5 @@ jobs:
           DBT_ENV_SECRET_PRIVATE_KEY: ${{ secrets.DBT_ENV_SECRET_PRIVATE_KEY }}
           DBT_PROFILES_DIR: ${{ github.workspace }}/docker
         run: |
-          cd /usr/app/dbt
           dbt deps
           dbt build
