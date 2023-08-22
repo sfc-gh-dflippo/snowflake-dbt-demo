@@ -8,8 +8,9 @@ jobs:
     container:
       image: ghcr.io/dbt-labs/dbt-snowflake:1.6.0
     steps:
-      - name: Run dbt
+      - name: Checkout Project
         uses: actions/checkout@v3
+      - name: Run dbt
         env:
           SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
           SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
