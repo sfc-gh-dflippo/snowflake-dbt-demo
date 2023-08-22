@@ -5,13 +5,15 @@ env:
   # This is where the dbt-Labs image expects the project
   GITHUB_WORKSPACE: /usr/app/dbt
 
+defaults:
+  run:
+    working-directory: /usr/app/dbt
+
 jobs:
   dbt_job:
     environment: dev
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
       - name: Set up Python 3.10
         uses: actions/setup-python@v4
         with:
@@ -20,6 +22,7 @@ jobs:
       - name: Install pip requirements
         run: pip install -U dbt-core dbt-snowflake
       - name: Run dbt
+        uses: actions/checkout@v3
         env:
           SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
           SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
@@ -28,7 +31,7 @@ jobs:
           SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE }}
           SNOWFLAKE_SCHEMA: ${{ secrets.SNOWFLAKE_SCHEMA }}
           DBT_ENV_SECRET_PRIVATE_KEY: ${{ secrets.DBT_ENV_SECRET_PRIVATE_KEY }}
-          DBT_PROFILES_DIR: docker
+          DBT_PROFILES_DIR: ./docker
         run: |
           dbt deps
           dbt build
