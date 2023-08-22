@@ -5,8 +5,7 @@ jobs:
   dbt_job:
     environment: dev
     runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/dbt-labs/dbt-snowflake:1.6.0
+    container: ghcr.io/dbt-labs/dbt-snowflake:1.6.0
     steps:
       - name: Checkout Project
         uses: actions/checkout@v3
