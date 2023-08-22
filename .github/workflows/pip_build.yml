@@ -1,14 +1,6 @@
 name: pip_build
 on: workflow_dispatch
 
-env:
-  # This is where the dbt-Labs image expects the project
-  GITHUB_WORKSPACE: /usr/app/dbt
-
-defaults:
-  run:
-    working-directory: /usr/app/dbt
-
 jobs:
   dbt_job:
     environment: dev
