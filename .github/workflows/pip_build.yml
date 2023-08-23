@@ -14,7 +14,7 @@ jobs:
           python-version: 3.10.12
           cache: 'pip'
       - name: Install pip requirements
-        run: pip install -U dbt-core dbt-snowflake
+        run: pip install -U dbt-core dbt-snowflake snowflake-connector-python[pandas] snowflake-snowpark-python[pandas] snowflake-ml-python
       - name: Run dbt
         env:
           SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
