@@ -5,20 +5,27 @@ jobs:
   dbt_job:
     environment: dev
     runs-on: ubuntu-latest
-    container: ghcr.io/dbt-labs/dbt-snowflake:1.6.0
+    container: ghcr.io/dbt-labs/dbt-snowflake:latest
     steps:
       - name: Checkout Project
         uses: actions/checkout@v3
       - name: Run dbt
         env:
-          SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
-          SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
-          SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
-          SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
-          SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE }}
-          SNOWFLAKE_SCHEMA: ${{ secrets.SNOWFLAKE_SCHEMA }}
-          DBT_ENV_SECRET_PRIVATE_KEY: ${{ secrets.DBT_ENV_SECRET_PRIVATE_KEY }}
           DBT_PROFILES_DIR: ./docker
+
+          # The following can be created as environment variables
+          SNOWFLAKE_ACCOUNT: ${{ vars.SNOWFLAKE_ACCOUNT }}
+          SNOWFLAKE_USER: ${{ vars.SNOWFLAKE_USER }}
+          SNOWFLAKE_ROLE: ${{ vars.SNOWFLAKE_ROLE }}
+          SNOWFLAKE_WAREHOUSE: ${{ vars.SNOWFLAKE_WAREHOUSE }}
+          SNOWFLAKE_DATABASE: ${{ vars.SNOWFLAKE_DATABASE }}
+          SNOWFLAKE_SCHEMA: ${{ vars.SNOWFLAKE_SCHEMA }}
+          SNOWFLAKE_THREADS: ${{ vars.SNOWFLAKE_THREADS }}
+          SNOWFLAKE_QUERY_TAG: ${{ vars.SNOWFLAKE_QUERY_TAG }}
+
+          # The private key should be created as a secret
+          DBT_ENV_SECRET_PRIVATE_KEY: ${{ secrets.DBT_ENV_SECRET_PRIVATE_KEY }}
+
         run: |
           dbt deps
           dbt build

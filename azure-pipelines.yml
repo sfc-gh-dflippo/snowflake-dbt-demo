@@ -3,20 +3,20 @@ trigger: none
 pool:
   vmImage: 'ubuntu-latest'
 container:
-  image: ghcr.io/dbt-labs/dbt-snowflake:1.6.0
-  options: --entrypoint=""
+  image: ghcr.io/dbt-labs/dbt-snowflake:latest
+  options: --entrypoint="" # We need to disable the default entrypoint
 
   env:
-    SNOWFLAKE_ACCOUNT: aws_cas2
-    SNOWFLAKE_USER: DFLIPPO
-    SNOWFLAKE_ROLE: DFLIPPO_ROLE
-    SNOWFLAKE_WAREHOUSE: DFLIPPO_WH
-    SNOWFLAKE_DATABASE: DFLIPPO_DEV
-    SNOWFLAKE_SCHEMA: DBT_DEMO
-    SNOWFLAKE_THREADS: 8
-    SNOWFLAKE_QUERY_TAG: DBT-DEMO
-    DBT_ENV_SECRET_PRIVATE_KEY: $(DBT_ENV_SECRET_PRIVATE_KEY)
     DBT_PROFILES_DIR: ./docker
+    SNOWFLAKE_ACCOUNT: $(SNOWFLAKE_ACCOUNT)
+    SNOWFLAKE_USER: $(SNOWFLAKE_USER)
+    SNOWFLAKE_ROLE: $(SNOWFLAKE_ROLE)
+    SNOWFLAKE_WAREHOUSE: $(SNOWFLAKE_WAREHOUSE)
+    SNOWFLAKE_DATABASE: $(SNOWFLAKE_DATABASE)
+    SNOWFLAKE_SCHEMA: $(SNOWFLAKE_SCHEMA)
+    SNOWFLAKE_THREADS: $(SNOWFLAKE_THREADS)
+    SNOWFLAKE_QUERY_TAG: $(SNOWFLAKE_QUERY_TAG)
+    DBT_ENV_SECRET_PRIVATE_KEY: $(DBT_ENV_SECRET_PRIVATE_KEY)
 
 steps:
 - checkout: self
