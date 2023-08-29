@@ -1,7 +1,7 @@
 SNOWFLAKE:
-  target: prod
+  target: dev
   outputs:
-    prod:
+    dev:
       type: "snowflake"
       client_session_keep_alive: False
       account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
