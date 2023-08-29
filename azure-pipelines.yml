@@ -3,7 +3,7 @@ trigger: none
 pool:
   vmImage: 'ubuntu-latest'
 container:
-  image: ghcr.io/dbt-labs/dbt-snowflake:latest
+  image: ghcr.io/dbt-labs/dbt-snowflake:1.6.0
   options: --entrypoint="" # We need to disable the default entrypoint
 
   env:
