@@ -7,7 +7,8 @@ config-version: 2
 
 # v1.0.0: The config source-paths has been deprecated in favor of model-paths
 # v1.0.0: The clean-target dbt_modules has been deprecated in favor of dbt_packages
-require-dbt-version: ">=1.0.0"
+# v1.6.0: We are now utilizing the new support for dynamic_tables
+require-dbt-version: ">=1.6.0"
 
 # This setting configures which "profile" dbt uses for this project.
 profile: 'SNOWFLAKE'
@@ -34,14 +35,13 @@ on-run-start:
 
 on-run-end:
   #- "ALTER WAREHOUSE DFLIPPO_DBT_XLARGE_DEMO_WH SUSPEND"
+  # - "{% if target.name == 'prod' %}{{ dbt_artifacts.upload_results(results) }}{% endif %}"
+  - "{{ dbt_artifacts.upload_results(results) }}"
 
 # Global variables
 vars:
   # The number of days that we want to reprocess data when doing incremental loads
   prune_days: 2
-  dbt_artifacts_database: "DFLIPPO_COMMON_LOGGING"
-  dbt_artifacts_schema: "DBT_ARTIFACTS"
-  dbt_constraints_enabled: true
 
 # Configuring models
 # Full documentation: https://docs.getdbt.com/docs/configuring-models
@@ -97,8 +97,33 @@ models:
     60_workspace:
       +tags: "Workspace_Layer"
 
-  dbt_artifacts:
-    +enabled: false # I am including the package but don't want to run its models
+
+    # The dbt_artifacts configuration here is for logging your executions
+    dbt_artifacts:
+    # Once you tables are in place, you could comment this line and stop after `schema`
+    # +enabled: false # I am including the package but don't want to run its models
+    +database: "{{ env_var('DBT_ARTIFACTS_DATABASE', target.database ) }}" # optional, default is your target database
+    +schema: "{{ env_var('DBT_ARTIFACTS_SCHEMA', target.schema ) }}" # optional, default is your target schema
+
+    +materialized: view # We want final models always up to date
+    +persist_docs:
+      relation: true
+      columns: true
+
+    sources:
+      +materialized: table # We override dbt's default above but we need table for the raw layer
+      +enabled: true
+
+    staging:
+      +materialized: ephemeral
+
+# One alternative is to create the staging layer as dynamic tables
+#      +materialized: dynamic_table # If staging is stored, final views have good performance
+#      +snowflake_warehouse: 'DFLIPPO_WH'
+#      +target_lag: '1 minutes'
+#      +persist_docs:
+#        relation: false
+#        columns: false
 
 
 snapshots:
