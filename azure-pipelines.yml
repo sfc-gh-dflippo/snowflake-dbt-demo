@@ -1,5 +1,8 @@
 trigger: none
 
+variables:
+- group: dbt-dev
+
 pool:
   vmImage: 'ubuntu-latest'
 container:
