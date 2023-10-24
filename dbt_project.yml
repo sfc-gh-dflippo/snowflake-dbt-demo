@@ -1,16 +1,17 @@
 # Name your project! Project names should contain only lowercase characters
 # and underscores. A good package name should reflect your organization's
 # name or the intended use of these models
-name: 'snowflake_demo'
-version: '1.0.0'
+name: "snowflake_demo"
+version: "1.0.0"
 config-version: 2
 
 # v1.0.0: The config source-paths has been deprecated in favor of model-paths
 # v1.0.0: The clean-target dbt_modules has been deprecated in favor of dbt_packages
-require-dbt-version: ">=1.0.0"
+# v1.6.0: We are now utilizing the new support for dynamic_tables
+require-dbt-version: ">=1.6.0"
 
 # This setting configures which "profile" dbt uses for this project.
-profile: 'SNOWFLAKE'
+profile: "SNOWFLAKE"
 
 # These configurations specify where dbt should look for different types of files.
 # The `source-paths` config, for example, states that models in this project can be
@@ -22,7 +23,7 @@ profile: 'SNOWFLAKE'
 #macro-paths: ["macros"]
 #snapshot-paths: ["snapshots"]
 #target-path: "target"  # directory which will store compiled SQL files
-clean-targets:         # directories to be removed by `dbt clean`
+clean-targets: # directories to be removed by `dbt clean`
   - "target"
   - "dbt_packages" # Comment to not clean up dependencies
   - "logs"
@@ -30,18 +31,17 @@ clean-targets:         # directories to be removed by `dbt clean`
 # Global initialization and shutdown commands
 # These are not required but will allow us to reduce consumption to the second
 on-run-start:
-   - "{{ create_masking_policies() }}"
+  - "{{ create_masking_policies() }}"
 
 on-run-end:
   #- "ALTER WAREHOUSE DFLIPPO_DBT_XLARGE_DEMO_WH SUSPEND"
+  # - "{% if target.name == 'prod' %}{{ dbt_artifacts.upload_results(results) }}{% endif %}"
+  - "{{ dbt_artifacts.upload_results(results) }}"
 
 # Global variables
 vars:
   # The number of days that we want to reprocess data when doing incremental loads
   prune_days: 2
-  dbt_artifacts_database: "DFLIPPO_COMMON_LOGGING"
-  dbt_artifacts_schema: "DBT_ARTIFACTS"
-  dbt_constraints_enabled: true
 
 # Configuring models
 # Full documentation: https://docs.getdbt.com/docs/configuring-models
@@ -90,16 +90,40 @@ models:
       sensitive:
         +materialized: view
         +secure: true
-    40_share:
-      +tags: "Share_Layer"
-    50_common:
-      +tags: "Common_Layer"
-    60_workspace:
-      +tags: "Workspace_Layer"
+    #40_share:
+    #  +tags: "Share_Layer"
+    #50_common:
+    #  +tags: "Common_Layer"
+    #60_workspace:
+    #  +tags: "Workspace_Layer"
 
+  # The dbt_artifacts configuration here is for logging your executions
   dbt_artifacts:
-    +enabled: false # I am including the package but don't want to run its models
+    # Once you tables are in place, you could comment this line and stop after `schema`
+    enabled: false # I am including the package but don't want to run its models
+    +database: "{{ env_var('DBT_ARTIFACTS_DATABASE', target.database ) }}" # optional, default is your target database
+    +schema: "{{ env_var('DBT_ARTIFACTS_SCHEMA', target.schema ) }}" # optional, default is your target schema
 
+    +materialized: view # We want final models always up to date
+    +persist_docs:
+      relation: true
+      columns: true
+
+    sources:
+      +materialized: table # We override dbt's default above but we need table for the raw layer
+      +enabled: true
+
+    staging:
+      +materialized: ephemeral
+      enabled: false
+
+# One alternative is to create the staging layer as dynamic tables
+#      +materialized: dynamic_table # If staging is stored, final views have good performance
+#      +snowflake_warehouse: 'DFLIPPO_WH'
+#      +target_lag: '1 minutes'
+#      +persist_docs:
+#        relation: false
+#        columns: false
 
 snapshots:
   target_schema: "DBT_DEMO_SNAPSHOTS"
@@ -107,18 +131,18 @@ snapshots:
     owner: "Dan Flippo"
     owner_email: "test@nowhere.com"
   snowflake_demo:
-    10_raw:
-      +tags: "Raw_Layer"
-    20_integration:
-      +tags: "Integration_Layer"
+    #10_raw:
+    #  +tags: "Raw_Layer"
+    #20_integration:
+    #  +tags: "Integration_Layer"
     30_presentation:
       +tags: "Presentation_Layer"
-    40_share:
-      +tags: "Share_Layer"
-    50_common:
-      +tags: "Common_Layer"
-    60_workspace:
-      +tags: "Workspace_Layer"
+    #40_share:
+    #  +tags: "Share_Layer"
+    #50_common:
+    #  +tags: "Common_Layer"
+    #60_workspace:
+    #  +tags: "Workspace_Layer"
 
 tests:
   # You can set custom properties on tests that will be stored in the dbt logs

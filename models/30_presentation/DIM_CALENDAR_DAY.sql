@@ -5,84 +5,86 @@
     ) -%}" ]
 ) -}}
 
-WITH TODAY AS (
-    SELECT
-    CURRENT_DATE() AS CURRENT_DAY,
-    date_trunc('WEEK', CURRENT_DAY) AS CURRENT_WEEK_START,
-    date_trunc('MONTH', CURRENT_DAY) AS CURRENT_MONTH_START,
-    date_trunc('WEEK', CURRENT_DAY) AS CURRENT_YEAR_START
+with today as (
+    select
+        current_date() as current_day,
+        date_trunc('WEEK', current_day) as current_week_start,
+        date_trunc('MONTH', current_day) as current_month_start,
+        date_trunc('WEEK', current_day) as current_year_start
 ),
 
-DATA_GENERATOR AS (
-    SELECT
-    row_number() over (order by seq4() ) as DAY_SEQ
-    from table(generator(rowcount => 50 * 365 ))
+data_generator as (
+    select row_number() over (order by seq4()) as day_seq
+    from table(generator(rowcount => 50 * 365))
 )
 
 select
-  DAY_SEQ,
-  DATEADD(day, DAY_SEQ-1, '1992-01-01'::DATE) AS DAY_DT,
-  to_char(DAY_DT, 'YYYYMMDD')::NUMBER(8,0) AS DAY_KEY,
-  TO_CHAR(DAY_DT, 'YYYY-MM-DD') DAY_TEXT, --ISO 8601 standard
-  TO_CHAR(DAY_DT, 'DD.MM.YYYY') DAY_EU_TEXT,
-  TO_CHAR(DAY_DT, 'DD') DAY_OF_MONTH,
-  -- Use ISO standard to avoid WEEK_START parameter
-  decode (extract('dayofweekiso',DAY_DT),
-    1 , 'Monday',
-    2 , 'Tuesday',
-    3 , 'Wednesday',
-    4 , 'Thursday',
-    5 , 'Friday',
-    6 , 'Saturday',
-    7 , 'Sunday'
-    ) DAY_OF_WEEK,
-decode (extract(month from DAY_DT),
-    1 , 'January',
-    2 , 'February',
-    3 , 'March',
-    4 , 'April',
-    5 , 'May',
-    6 , 'June',
-    7 , 'July',
-    8 , 'August',
-    9 , 'September',
-    10, 'October',
-    11, 'November',
-    12, 'December'
-    ) MONTH,
-  TO_CHAR(DAY_DT, 'YYYY') year,
-  TO_CHAR(DAY_DT, 'QQ') QUARTER,
-  DECODE(QUARTER,
-    'Q1', 'First',
-    'Q2', 'Second',
-    'Q3', 'Third',
-    'Q4', 'Fourth'
-    ) QUARTER_NAME,
-  TO_CHAR(DAY_DT, 'DD')::NUMBER(2,0) DAY_OF_MONTH_NUM,
-  extract(dayofweek from DAY_DT)::NUMBER(2,0) DAY_OF_WEEK_NUM,
-  extract(dayofweekiso from DAY_DT)::NUMBER(1,0) DAY_OF_WEEK_ISO_NUM,
-  extract(week from DAY_DT)::NUMBER(2,0) WEEK_NUM,
-  extract(weekiso from DAY_DT)::NUMBER(2,0) WEEK_ISO_NUM,
-  extract(month from DAY_DT)::NUMBER(2,0) MONTH_NUM,
-  extract(quarter from DAY_DT)::NUMBER(1,0) QUARTER_NUM,
-  extract(year from DAY_DT)::NUMBER(4,0) YEAR_NUM,
-  extract(yearofweekiso from DAY_DT)::NUMBER(4,0) YEAR_OF_WEEK_ISO_NUM,
-  date_trunc('YEAR', DAY_DT) as YEAR_START_DT,
-  last_day(DAY_DT, 'YEAR') as YEAR_END_DT,
-  date_trunc('MONTH', DAY_DT) as MONTH_START_DT,
-  last_day(DAY_DT, 'MONTH') as MONTH_END_DT,
-  date_trunc('WEEK', DAY_DT) as WEEK_START_DT,
-  last_day(DAY_DT, 'WEEK') as WEEK_END_DT,
-  DATEADD(YEAR, -1, DAY_DT ) AS YEAR_AGO_DT,
-  DATEADD(MONTH, -1, DAY_DT ) AS MONTH_AGO_DT,
-  DATEADD(WEEK, -1, DAY_DT ) AS WEEK_AGO_DT,
-  YEAR_END_DT - YEAR_START_DT + 1 AS DAYS_IN_YEAR,
-  YEAR_END_DT - YEAR_START_DT + 1 AS DAYS_IN_MONTH,
-  CASE WHEN DAY_DT = CURRENT_DAY THEN 'Y' ELSE 'N' END AS CURRENT_DAY_FLAG,
-  CASE WHEN CURRENT_WEEK_START = WEEK_START_DT THEN 'Y' ELSE 'N' END AS CURRENT_WEEK_FLAG,
-  CASE WHEN CURRENT_MONTH_START = MONTH_START_DT THEN 'Y' ELSE 'N' END AS CURRENT_MONTH_FLAG,
-  CASE WHEN CURRENT_YEAR_START = YEAR_START_DT THEN 'Y' ELSE 'N' END AS CURRENT_YEAR_FLAG,
-  SYSDATE() as DBT_INSERT_TS,
-  SYSDATE() as DBT_LAST_UPDATE_TS
-from DATA_GENERATOR
-CROSS JOIN TODAY
+    day_seq,
+    dateadd(day, day_seq - 1, '1992-01-01'::date) as day_dt,
+    to_char(day_dt, 'YYYYMMDD')::number(8, 0) as day_key,
+    to_char(day_dt, 'YYYY-MM-DD') as day_text, --ISO 8601 standard
+    to_char(day_dt, 'DD.MM.YYYY') as day_eu_text,
+    to_char(day_dt, 'DD') as day_of_month,
+    -- Use ISO standard to avoid WEEK_START parameter
+    decode(
+        extract('dayofweekiso', day_dt),
+        1, 'Monday',
+        2, 'Tuesday',
+        3, 'Wednesday',
+        4, 'Thursday',
+        5, 'Friday',
+        6, 'Saturday',
+        7, 'Sunday'
+    ) as day_of_week,
+    decode(
+        extract(month from day_dt),
+        1, 'January',
+        2, 'February',
+        3, 'March',
+        4, 'April',
+        5, 'May',
+        6, 'June',
+        7, 'July',
+        8, 'August',
+        9, 'September',
+        10, 'October',
+        11, 'November',
+        12, 'December'
+    ) as month,
+    to_char(day_dt, 'YYYY') as year,
+    to_char(day_dt, 'QQ') as quarter,
+    decode(
+        quarter,
+        'Q1', 'First',
+        'Q2', 'Second',
+        'Q3', 'Third',
+        'Q4', 'Fourth'
+    ) as quarter_name,
+    to_char(day_dt, 'DD')::number(2, 0) as day_of_month_num,
+    extract(dayofweek from day_dt)::number(2, 0) as day_of_week_num,
+    extract(dayofweekiso from day_dt)::number(1, 0) as day_of_week_iso_num,
+    extract(week from day_dt)::number(2, 0) as week_num,
+    extract(weekiso from day_dt)::number(2, 0) as week_iso_num,
+    extract(month from day_dt)::number(2, 0) as month_num,
+    extract(quarter from day_dt)::number(1, 0) as quarter_num,
+    extract(year from day_dt)::number(4, 0) as year_num,
+    extract(yearofweekiso from day_dt)::number(4, 0) as year_of_week_iso_num,
+    date_trunc('YEAR', day_dt) as year_start_dt,
+    last_day(day_dt, 'YEAR') as year_end_dt,
+    date_trunc('MONTH', day_dt) as month_start_dt,
+    last_day(day_dt, 'MONTH') as month_end_dt,
+    date_trunc('WEEK', day_dt) as week_start_dt,
+    last_day(day_dt, 'WEEK') as week_end_dt,
+    dateadd(year, -1, day_dt) as year_ago_dt,
+    dateadd(month, -1, day_dt) as month_ago_dt,
+    dateadd(week, -1, day_dt) as week_ago_dt,
+    year_end_dt - year_start_dt + 1 as days_in_year,
+    year_end_dt - year_start_dt + 1 as days_in_month,
+    case when day_dt = current_day then 'Y' else 'N' end as current_day_flag,
+    case when current_week_start = week_start_dt then 'Y' else 'N' end as current_week_flag,
+    case when current_month_start = month_start_dt then 'Y' else 'N' end as current_month_flag,
+    case when current_year_start = year_start_dt then 'Y' else 'N' end as current_year_flag,
+    sysdate() as dbt_insert_ts,
+    sysdate() as dbt_last_update_ts
+from data_generator
+cross join today
