@@ -104,7 +104,7 @@ models:
     +database: "{{ env_var('DBT_ARTIFACTS_DATABASE', target.database ) }}" # optional, default is your target database
     +schema: "{{ env_var('DBT_ARTIFACTS_SCHEMA', target.schema ) }}" # optional, default is your target schema
 
-    +materialized: table # We want final models always up to date
+    +materialized: view # We want final models always up to date
     +persist_docs:
       relation: true
       columns: true
