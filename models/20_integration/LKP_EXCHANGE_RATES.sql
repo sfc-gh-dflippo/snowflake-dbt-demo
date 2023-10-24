@@ -4,33 +4,40 @@
 {{ config(
     materialized='table'
 ) }}
-WITH EXCH_RATES AS(
-    SELECT
-    "Currency Unit" as CURRENCY,
-    "Value" as FROM_USD,
-    (1/FROM_USD) as TO_USD,
-    -- The start date is the day after the previous close
-    NVL(LAG(DATEADD(DAY, 1, "Date"), 1) OVER (PARTITION BY CURRENCY ORDER BY "Date" ASC), '1900-01-01'::DATE) AS START_DATE,
-    CASE -- when it is the last row, make the end date tomorrow to ensure we can't lose same-day records
-    WHEN LAG(DATEADD(DAY, 1, "Date"), -1) OVER (PARTITION BY CURRENCY ORDER BY "Date" ASC) IS NULL THEN SYSDATE()::DATE + 1
-    ELSE "Date"
-    END AS END_DATE
-    FROM {{ source('KNOEMA_ECONOMY', 'EXRATESCC2018') }}
-    WHERE
-    ("Currency Unit" IN ('EUR', 'MAD', 'CNY', 'GBP', 'JPY', 'PLN', 'MKD', 'CZK', 'MDL', 'RON')
-    --OR "Currency Unit" IN (SELECT EN_CURR FROM QAD_VIEWS.EN_MSTR_V)
-    )
-    AND "Indicator Name" = 'Close'
-    AND "Frequency" = 'D'
-UNION ALL -- JUST IN CASE THE LOCAL CURRENCY IS USD
-    SELECT 'USD', 1, 1, '1900-01-01'::DATE, SYSDATE()::DATE + 1
+with exch_rates as (
+    select
+        ex_rates."Currency Unit" as currency,
+        ex_rates."Value" as from_usd,
+        (1 / from_usd) as to_usd,
+        -- The start date is the day after the previous close
+        coalesce(lag(dateadd(day, 1, "Date"), 1) over (partition by currency order by "Date" asc), '1900-01-01'::date) as start_date,
+        case -- when it is the last row, make the end date tomorrow to ensure we can't lose same-day records
+            when lag(dateadd(day, 1, "Date"), -1) over (partition by currency order by "Date" asc) is null then sysdate()::date + 1
+            else "Date"
+        end as end_date
+    from {{ source('KNOEMA_ECONOMY', 'EXRATESCC2018') }} ex_rates
+    where
+        (ex_rates."Currency Unit" in ('EUR', 'MAD', 'CNY', 'GBP', 'JPY', 'PLN', 'MKD', 'CZK', 'MDL', 'RON')
+        --OR "Currency Unit" IN (SELECT EN_CURR FROM QAD_VIEWS.EN_MSTR_V)
+        )
+        and ex_rates."Indicator Name" = 'Close'
+        and ex_rates."Frequency" = 'D'
+    union all -- JUST IN CASE THE LOCAL CURRENCY IS USD
+    select
+        'USD',
+        1,
+        1,
+        '1900-01-01'::date,
+        sysdate()::date + 1
 )
-select d.DAY_DT,
-    FIRST_RATE.CURRENCY FROM_currency,
-    SECOND_RATE.CURRENCY TO_CURRENCY,
-    FIRST_RATE.to_usd * SECOND_RATE.from_usd as CONVERSION_RATE,
-    FIRST_RATE.FROM_usd * SECOND_RATE.to_usd as INVERSE_CONVERSION_RATE
-from {{ ref('DIM_CALENDAR_DAY') }} d
-    join exch_rates FIRST_RATE on d.day_dt between FIRST_RATE.start_date and FIRST_RATE.end_date
-    join exch_rates SECOND_RATE on d.day_dt between SECOND_RATE.start_date and SECOND_RATE.end_date
+
+select
+    cal_day.day_dt,
+    first_rate.currency as from_currency,
+    second_rate.currency as to_currency,
+    first_rate.to_usd * second_rate.from_usd as conversion_rate,
+    first_rate.from_usd * second_rate.to_usd as inverse_conversion_rate
+from {{ ref('DIM_CALENDAR_DAY') }} as cal_day
+inner join exch_rates as first_rate on cal_day.day_dt between first_rate.start_date and first_rate.end_date
+inner join exch_rates as second_rate on cal_day.day_dt between second_rate.start_date and second_rate.end_date
 order by 1, 2, 3

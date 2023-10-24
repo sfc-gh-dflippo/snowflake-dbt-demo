@@ -2,13 +2,14 @@
 /*
  List of customers and how many orders they have
  */
-SELECT O_CUSTKEY,
-    count(*) as ORDER_COUNT,
+select
+    orders.o_custkey,
+    count(*) as order_count,
     sum(
         case
-            when O_ORDERSTATUS = 'O' THEN 1
-            ELSE 0
-        END
-    ) AS OPEN_ORDER_COUNT
-FROM {{ source('TPC_H', 'ORDERS') }}
-GROUP BY 1
+            when orders.o_orderstatus = 'O' then 1
+            else 0
+        end
+    ) as open_order_count
+from {{ source('TPC_H', 'ORDERS') }} orders
+group by 1

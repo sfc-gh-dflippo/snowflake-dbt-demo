@@ -18,35 +18,37 @@ with source_data as (
     /*
         Simulate a query for the sales orders
     */
-    SELECT
-        COALESCE(C_CUST_WID, 0) AS O_CUST_WID,
-        O_ORDERSTATUS,
-        O_TOTALPRICE,
-        O_ORDERDATE,
-        O_ORDERPRIORITY,
-        O_CLERK,
-        O_SHIPPRIORITY,
-        O_COMMENT,
-        O_CUSTKEY,
-        O_ORDERKEY,
-        COALESCE(O_ORDERKEY::varchar, '') AS {{scd_integration_key}},
-        HASH(O_CUST_WID,
-            O_ORDERSTATUS,
-            O_TOTALPRICE,
-            O_ORDERDATE,
-            O_ORDERPRIORITY,
-            O_CLERK,
-            O_SHIPPRIORITY,
-            O_COMMENT,
-            O_CUSTKEY) AS {{scd_cdc_hash_key}}
-    FROM
-    {{ source("TPC_H", "ORDERS") }} O
-    LEFT OUTER JOIN {{ ref("DIM_CUSTOMERS") }} C on C.C_CUSTKEY = O.O_CUSTKEY
+    select
+        coalesce(c_cust_wid, 0) as o_cust_wid,
+        o_orderstatus,
+        o_totalprice,
+        o_orderdate,
+        o_orderpriority,
+        o_clerk,
+        o_shippriority,
+        o_comment,
+        o_custkey,
+        o_orderkey,
+        coalesce(o_orderkey::varchar, '') as {{ scd_integration_key }},
+        hash(
+            o_cust_wid,
+            o_orderstatus,
+            o_totalprice,
+            o_orderdate,
+            o_orderpriority,
+            o_clerk,
+            o_shippriority,
+            o_comment,
+            o_custkey
+        ) as {{ scd_cdc_hash_key }}
+    from
+        {{ source("TPC_H", "ORDERS") }} o
+    left outer join {{ ref("DIM_CUSTOMERS") }} c on c.c_custkey = o.o_custkey
 
     {%- if is_incremental() %}
     -- this filter will only be applied on an incremental run
-    WHERE O_ORDERDATE >= DATEADD(DAY, -90, SYSDATE() )
-        OR O_ORDERSTATUS = 'O'
+        where o_orderdate >= dateadd(day, -90, sysdate())
+            or o_orderstatus = 'O'
     {%- endif %}
 
 
@@ -56,20 +58,20 @@ existing_data as (
 
     {% if is_incremental() -%}
 
-    select
-        {{scd_surrogate_key}},
-        {{scd_integration_key}},
-        {{scd_cdc_hash_key}},
-        {{scd_dbt_inserted_at}}
-    from {{ this }}
+        select
+            {{ scd_surrogate_key }},
+            {{ scd_integration_key }},
+            {{ scd_cdc_hash_key }},
+            {{ scd_dbt_inserted_at }}
+        from {{ this }}
 
     {%- else -%}
 
     select
-        null::integer {{scd_surrogate_key}},
-        null::varchar {{scd_integration_key}},
-        null::integer {{scd_cdc_hash_key}},
-        null::timestamp_ntz {{scd_dbt_inserted_at}}
+        null::integer {{ scd_surrogate_key }},
+        null::varchar {{ scd_integration_key }},
+        null::integer {{ scd_cdc_hash_key }},
+        null::timestamp_ntz {{ scd_dbt_inserted_at }}
     limit 0
 
     {%- endif %}
@@ -78,24 +80,24 @@ existing_data as (
 
 inserts as (
     select
-        {{ sequence_get_nextval() }} as {{scd_surrogate_key}},
+        {{ sequence_get_nextval() }} as {{ scd_surrogate_key }},
         source_data.*,
-        sysdate() as {{scd_dbt_inserted_at}},
-        sysdate() as {{scd_dbt_updated_at}}
+        sysdate() as {{ scd_dbt_inserted_at }},
+        sysdate() as {{ scd_dbt_updated_at }}
     from source_data
-    left outer join existing_data on source_data.{{scd_integration_key}} = existing_data.{{scd_integration_key}}
-    where existing_data.{{scd_integration_key}} is null
+    left outer join existing_data on source_data.{{ scd_integration_key }} = existing_data.{{ scd_integration_key }}
+    where existing_data.{{ scd_integration_key }} is null
 ),
 
 updates as (
     select
-        existing_data.{{scd_surrogate_key}},
+        existing_data.{{ scd_surrogate_key }},
         source_data.*,
-        existing_data.{{scd_dbt_inserted_at}},
-        sysdate() as {{scd_dbt_updated_at}}
+        existing_data.{{ scd_dbt_inserted_at }},
+        sysdate() as {{ scd_dbt_updated_at }}
     from source_data
-    join existing_data on source_data.{{scd_integration_key}} = existing_data.{{scd_integration_key}}
-    where source_data.{{scd_cdc_hash_key}} <> existing_data.{{scd_cdc_hash_key}}
+    join existing_data on source_data.{{ scd_integration_key }} = existing_data.{{ scd_integration_key }}
+    where source_data.{{ scd_cdc_hash_key }} != existing_data.{{ scd_cdc_hash_key }}
 )
 
 select * from inserts

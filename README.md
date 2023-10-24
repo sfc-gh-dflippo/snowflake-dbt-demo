@@ -1,52 +1,70 @@
-### dbt for Snowflake Demonstration Project
+# dbt for Snowflake Demonstration Project
 
-### This project depends on the following two data sets
+## Dependencies
+
+This project depends on the following two data sets
+
 - SNOWFLAKE_SAMPLE_DATA that is available by default in all new Snowflake accounts
 - [Knoema: Economy Data Atlas](https://www.snowflake.com/datasets/knoema-economy-data-atlas/)
-    - It is available for free in the Snowflake Data Markeplace
-    - If named other than "KNOEMA_ECONOMY_DATA_ATLAS", update the database name in sources.yml
+  - It is available for free in the Snowflake Data Markeplace
+  - If named other than "KNOEMA_ECONOMY_DATA_ATLAS", update the database name in sources.yml
 
-### How to get started:
+## How to get started
 
-- Install Python and create a virtual environment for dbt
-  - We generally recommend [Anaconda](https://www.anaconda.com/) or [Miniconda](https://docs.conda.io/en/latest/miniconda.html) to create an isolated environment just for dbt. A dbt-conda-env.yml file has been provided so you can set up this environment and switch to it with:
-    ```
+### Install Python and Create a Virtual Environment For dbt
+
+- We generally recommend [Anaconda](https://www.anaconda.com/) or [Miniconda](https://docs.conda.io/en/latest/miniconda.html) to create an isolated environment just for dbt. A dbt-conda-env.yml file has been provided so you can set up this environment and switch to it with:
+
+    ```shell
     conda env create -f dbt-conda-env.yml
     conda activate dbt
     ```
-  - You can also use venv with the [open source version at Python.org](https://www.python.org/downloads/)
-    - Unix/macOS - Setting it up and verifying which python you are now using:
-        ```
-        python3 -m pip install --user virtualenv
-        python3 -m venv dbt
-        source dbt/bin/activate
-        which python
-        python3 -m pip install -U dbt-core dbt-snowflake
-        ```
 
-    - Windows - Setting it up and verifying which python you are now using:
-        ```
-        py -m pip install --user virtualenv
-        py -m venv dbt
-        .\dbt\Scripts\activate
-        where python
-        py -m pip install -U dbt-core dbt-snowflake
-        ```
+- You can also use venv with the [open source version at Python.org](https://www.python.org/downloads/)
+  - Unix/macOS - Setting it up and verifying which python you are now using:
+
+    ```shell
+    python3 -m pip install --user virtualenv
+    python3 -m venv dbt
+    source dbt/bin/activate
+    which python
+    python3 -m pip install -U dbt-core dbt-snowflake
+    ```
+
+  - Windows - Setting it up and verifying which python you are now using:
+
+    ```shell
+    py -m pip install --user virtualenv
+    py -m venv dbt
+    .\dbt\Scripts\activate
+    where python
+    py -m pip install -U dbt-core dbt-snowflake
+    ```
+
+### Set Up Your Editor
+
 - Most dbt users edit their dbt scripts with Microsoft's free editor, VSCode
   - [Download VSCode](https://code.visualstudio.com/Download)
   - From the Extensions screen (icon looks like Tetris) you should install two extensions
-    - "Snowflake"
-    - "dbt Power User" (which will also add "vscode-dbt")
+    - ["Snowflake"](https://docs.snowflake.com/en/user-guide/vscode-ext)
+    - ["dbt Power User"](https://marketplace.visualstudio.com/items?itemName=innoverio.vscode-dbt-power-user) (which will also add "vscode-dbt")
   - In the Explorer, right click in the background and "Add folder to workspace" to add where your dbt project will be located.
-  - On Windows, you will want to change the default terminal to "Command Prompt". Under File -> Preferences -> Settings, search for "windows terminal" and scroll down to where it says the default is "null" and change that to "Command Prompt".
+  - On Windows, you will want to change the default terminal to "Command Prompt". Under *File* -> *Preferences* -> *Settings*, search for "windows terminal" and scroll down to where it says the default is "null" and change that to "Command Prompt".
   - You will want to set the default intepreter to your new "dbt" environment using [these instructions from Microsoft](https://code.visualstudio.com/docs/python/python-tutorial#_select-a-python-interpreter).
+
+### Set Up Your Snowflake Account
+
 - Create a target schema in Snowflake that you want to deploy your dbt demo into
 - Add the Knoema Economy Data Atlas and Snowflake Sample Data to your account if necessary
+
+### Update Configuration For Your Account and Test Execution
+
 - Copy the sample profiles.yml file to your ~/.dbt/ folder and update it with your credentials and target DB/schema
 - From the root folder, run `dbt deps` to download modules from the dbt hub
 - Run `dbt build --full-refresh` and troubleshoot any errors such as missing objects or permission issues
 
-### Cheatsheet of most common dbt commands:
+## Cheatsheet of most common dbt commands
+
 - `dbt deps` - download 3rd party packages (necessary for this project before build)
 - `dbt build` - both compile and then run all models & associated tests
 - `dbt build --full-refresh` - have incremental models run as a full reload
@@ -65,41 +83,43 @@
 
 Additional commands and details are available in [dbt's documentation](https://docs.getdbt.com/reference/dbt-commands)
 
-### Project features:
+## Project features
+
 - How to nest models:
-    - DIM_ORDERS
-    - DIM_CURRENT_YEAR_ORDERS
-    - DIM_CURRENT_YEAR_OPEN_ORDERS
+  - DIM_ORDERS
+  - DIM_CURRENT_YEAR_ORDERS
+  - DIM_CURRENT_YEAR_OPEN_ORDERS
 - Snowflake commands in a pre-hook:
-    - DIM_CALENDAR_DAY
+  - DIM_CALENDAR_DAY
 - Materializations:
-    - LKP_EXCHANGE_RATES (table)
-    - LKP_CUSTOMERS_WITH_ORDERS (ephemeral)
-    - DIM_CUSTOMERS_SHARE (secure view)
-    - FACT_ORDER_LINE (incremental)
-    - DIM_CUSTOMERS_TYPE2 (snapshot)
+  - LKP_EXCHANGE_RATES (table)
+  - LKP_CUSTOMERS_WITH_ORDERS (ephemeral)
+  - DIM_CUSTOMERS_SHARE (secure view)
+  - FACT_ORDER_LINE (incremental fact)
+  - DIM_CUSTOMERS, DIM__CUSTOMERS (incremental dim)
+  - DIM_CUSTOMERS_TYPE2 (snapshot)
 - Source data quality tests:
-    - sources.yml
+  - sources.yml
 - Model data quality tests:
-    - schema.yml
+  - schema.yml
 - Features available in dbt_project.yml
-    - run-start/run-end hooks
-    - logging before and after modules
-    - default materializations by folder path
-    - Snowflake features - copy_grants, secure views, warehouse
-    - schemas for models
+  - run-start/run-end hooks
+  - logging before and after modules
+  - default materializations by folder path
+  - Snowflake features - copy_grants, secure views, warehouse
+  - schemas for models
 - Macro examples:
-    - snowflake_surrogate_key
-    - copy_log_to_snowflake
-    - create_masking_policies
+  - snowflake_surrogate_key
+  - copy_log_to_snowflake
+  - create_masking_policies
 - Jinja expressions:
-    - Q1_FACT_PRICING_SUMMARY_REPORT_QUERY
-    - Q2_MINIMUM_COST_SUPPLIER_QUERY
-    - Q3_SHIPPING_PRIORITY_QUERY
-    - Q4_ORDER_PRIORITY_CHECKING_QUERY
+  - Q1_FACT_PRICING_SUMMARY_REPORT_QUERY
+  - Q2_MINIMUM_COST_SUPPLIER_QUERY
+  - Q3_SHIPPING_PRIORITY_QUERY
+  - Q4_ORDER_PRIORITY_CHECKING_QUERY
 
+## Resources
 
-### Resources:
 - Learn more about dbt [in the docs](https://docs.getdbt.com/docs/introduction)
 - Free [on-demand training](https://courses.getdbt.com/)
 - [Additional Packages](https://hub.getdbt.com/)

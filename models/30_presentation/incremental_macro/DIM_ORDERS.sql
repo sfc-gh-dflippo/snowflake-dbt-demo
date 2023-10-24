@@ -31,7 +31,7 @@ SELECT
     O_COMMENT,
     O_CUSTKEY,
     O_ORDERKEY,
-    {{ surrogate_key(["O_ORDERKEY"]) }} AS {{scd_integration_key}},
+    {{ surrogate_key( ["O_ORDERKEY"] ) }} AS {{ scd_integration_key }},
     HASH(O_CUST_WID,
         O_ORDERSTATUS,
         O_TOTALPRICE,
@@ -57,4 +57,4 @@ WHERE O_ORDERDATE >= DATEADD(DAY, -90, SYSDATE() )
 
 {% endset -%}
 
-{{ get_scd_sql(scd_source_sql, scd_surrogate_key, scd_integration_key, scd_cdc_hash_key, scd_dbt_updated_at, scd_dbt_inserted_at) -}}
+{{- get_scd_sql(scd_source_sql, scd_surrogate_key, scd_integration_key, scd_cdc_hash_key, scd_dbt_updated_at, scd_dbt_inserted_at) -}}

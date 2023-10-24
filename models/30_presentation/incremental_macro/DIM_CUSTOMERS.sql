@@ -19,44 +19,43 @@
 }}
 
 {%- set scd_source_sql -%}
+    /*
+    All Customers
+    */
+    select
+        c_name,
+        c_address,
+        c_nationkey,
+        c_phone,
+        c_acctbal,
+        c_mktsegment,
+        c_comment,
+        case
+            when lkp.order_count > 0 then 'Y'
+            else 'N'
+        end as c_active_customer_flag,
+        case
+            when lkp.open_order_count > 0 then 'Y'
+            else 'N'
+        end as c_open_order_cusotmer_flag,
+        c_custkey,
+        COALESCE(c_custkey::varchar, '') as {{ scd_integration_key }},
+        HASH(
+            c_name,
+            c_address,
+            c_nationkey,
+            c_phone,
+            c_acctbal,
+            c_mktsegment,
+            c_comment,
+            c_active_customer_flag,
+            c_open_order_cusotmer_flag
+        ) as {{ scd_cdc_hash_key }}
 
-/*
- All Customers
- */
-SELECT
-    C_NAME,
-    C_ADDRESS,
-    C_NATIONKEY,
-    C_PHONE,
-    C_ACCTBAL,
-    C_MKTSEGMENT,
-    C_COMMENT,
-    CASE
-        WHEN LKP.ORDER_COUNT > 0 THEN 'Y'
-        ELSE 'N'
-    END AS C_ACTIVE_CUSTOMER_FLAG,
-    CASE
-        WHEN LKP.OPEN_ORDER_COUNT > 0 THEN 'Y'
-        ELSE 'N'
-    END AS C_OPEN_ORDER_CUSOTMER_FLAG,
-    C_CUSTKEY,
+    from {{ source("TPC_H", "CUSTOMER") }} c
+    left outer join {{ ref("LKP_CUSTOMERS_WITH_ORDERS") }} lkp on (lkp.o_custkey = c.c_custkey)
+    -- Ideally we would have a filter here to limit changes based on a source table timestamp
 
-    {{ surrogate_key(["C_CUSTKEY"]) }} AS {{scd_integration_key}},
+{%- endset -%}
 
-    HASH(C_NAME,
-        C_ADDRESS,
-        C_NATIONKEY,
-        C_PHONE,
-        C_ACCTBAL,
-        C_MKTSEGMENT,
-        C_COMMENT,
-        C_ACTIVE_CUSTOMER_FLAG,
-        C_OPEN_ORDER_CUSOTMER_FLAG) AS {{scd_cdc_hash_key}}
-
-FROM {{ source("TPC_H", "CUSTOMER") }} C
-LEFT OUTER JOIN {{ ref("LKP_CUSTOMERS_WITH_ORDERS") }} LKP ON ( LKP.O_CUSTKEY = C.C_CUSTKEY )
--- Ideally we would have a filter here to limit changes based on a source table timestamp
-
-{% endset -%}
-
-{{ get_scd_sql(scd_source_sql, scd_surrogate_key, scd_integration_key, scd_cdc_hash_key, scd_dbt_updated_at, scd_dbt_inserted_at) -}}
+{{ get_scd_sql(scd_source_sql, scd_surrogate_key, scd_integration_key, scd_cdc_hash_key, scd_dbt_updated_at, scd_dbt_inserted_at) }}

@@ -9,20 +9,20 @@
     )
 }}
 
-SELECT
-    '{{ env_var("SOURCE_SYSTEM_CODE", "UNKNOWN") }}' AS SOURCE_SYSTEM_CODE,
+select
+    '{{ env_var("SOURCE_SYSTEM_CODE", "UNKNOWN") }}' as source_system_code,
     -- Lookup the surrogate keys for orders and customers
-    COALESCE(ORDERS.O_ORDER_WID, 0) AS L_ORDER_WID,
-    COALESCE(ORDERS.O_CUST_WID, 0) AS L_CUST_WID,
-    LINEITEM.*,
-    LKP_EXCHANGE_RATES.CONVERSION_RATE AS EUR_CONVERSION_RATE,
-    {{ surrogate_key(["L_ORDERKEY", "L_LINENUMBER"]) }} AS INTEGRATION_ID,
-    SYSDATE() as DBT_INSERT_TS,
-    SYSDATE() as DBT_LAST_UPDATE_TS
-FROM {{ source("TPC_H", "LINEITEM") }} LINEITEM
+    coalesce(orders.o_order_wid, 0) as l_order_wid,
+    coalesce(orders.o_cust_wid, 0) as l_cust_wid,
+    lineitem.*,
+    lkp_exchange_rates.conversion_rate as eur_conversion_rate,
+    {{ surrogate_key(["L_ORDERKEY", "L_LINENUMBER"]) }} as integration_id,
+    sysdate() as dbt_insert_ts,
+    sysdate() as dbt_last_update_ts
+from {{ source("TPC_H", "LINEITEM") }} lineitem
 -- Joining on the integration key for orders
-LEFT OUTER JOIN {{ ref("DIM_ORDERS") }} ORDERS ON L_ORDERKEY = O_ORDERKEY
-LEFT OUTER JOIN {{ ref("LKP_EXCHANGE_RATES") }} LKP_EXCHANGE_RATES ON
-    LKP_EXCHANGE_RATES.FROM_CURRENCY = 'USD'
-    AND LKP_EXCHANGE_RATES.TO_CURRENCY = 'EUR'
-    AND LKP_EXCHANGE_RATES.DAY_DT = ORDERS.O_ORDERDATE
+left outer join {{ ref("DIM_ORDERS") }} orders on l_orderkey = o_orderkey
+left outer join {{ ref("LKP_EXCHANGE_RATES") }} lkp_exchange_rates on
+    lkp_exchange_rates.from_currency = 'USD'
+    and lkp_exchange_rates.to_currency = 'EUR'
+    and lkp_exchange_rates.day_dt = orders.o_orderdate

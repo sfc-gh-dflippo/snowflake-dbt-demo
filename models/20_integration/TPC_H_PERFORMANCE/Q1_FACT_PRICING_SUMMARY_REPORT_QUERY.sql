@@ -6,20 +6,23 @@
  ascending order of RETURNFLAG and LINESTATUS. A count of the number of lineitems in each group is
  included.
  */
- {% set random_interval = range(60,120) | random %}
-select l_returnflag,
-    l_linestatus,
-    sum(l_quantity) as sum_qty,
-    sum(l_extendedprice) as sum_base_price,
-    sum(l_extendedprice *(1 - l_discount)) as sum_disc_price,
-    sum(l_extendedprice *(1 - l_discount) *(1 + l_tax)) as sum_charge,
-    avg(l_quantity) as avg_qty,
-    avg(l_extendedprice) as avg_price,
-    avg(l_discount) as avg_disc,
+{% set random_interval = range(60,120) | random %}
+select
+    lineitem.l_returnflag,
+    lineitem.l_linestatus,
+    sum(lineitem.l_quantity) as sum_qty,
+    sum(lineitem.l_extendedprice) as sum_base_price,
+    sum(lineitem.l_extendedprice * (1 - lineitem.l_discount)) as sum_disc_price,
+    sum(lineitem.l_extendedprice * (1 - lineitem.l_discount) * (1 + lineitem.l_tax)) as sum_charge,
+    avg(lineitem.l_quantity) as avg_qty,
+    avg(lineitem.l_extendedprice) as avg_price,
+    avg(lineitem.l_discount) as avg_disc,
     count(*) as count_order
-from {{ source('TPC_H', 'LINEITEM') }}
-where l_shipdate <= date '1998-12-01' - interval '{{random_interval}} DAYS'
-group by l_returnflag,
-    l_linestatus
-order by l_returnflag,
-    l_linestatus
+from {{ source('TPC_H', 'LINEITEM') }} as lineitem
+where lineitem.l_shipdate <= date '1998-12-01' - interval '{{ random_interval }} DAYS'
+group by
+    lineitem.l_returnflag,
+    lineitem.l_linestatus
+order by
+    lineitem.l_returnflag,
+    lineitem.l_linestatus
