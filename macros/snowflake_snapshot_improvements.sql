@@ -1,3 +1,11 @@
+{#
+    This script replaces the out of the box materialization and adds the ability for users to
+    customize the names of dbt columns, specify a sequence based surrogate key, and it improves the
+    performance of merges into snapshots by including the dbt_valid_from in the merge. It will also
+    use the surrogate key in the merge if it is available. It is compatible with the optimized
+    snowflake__snapshot_hash_arguments macro but either macro can be deployed independently.
+#}
+
 {% macro get_snapshot_config() %}
   {{ return(adapter.dispatch('get_snapshot_config')()) }}
 {% endmacro %}
@@ -212,8 +220,7 @@
     using {{ source }} as DBT_INTERNAL_SOURCE
     on DBT_INTERNAL_SOURCE.{{config.dbt_scd_id_column}} = DBT_INTERNAL_DEST.{{config.dbt_scd_id_column}}
 
-        -- Snowflake is likely to prune better on the dbt_unique_key or dbt_valid_from
-        and DBT_INTERNAL_SOURCE.dbt_unique_key = DBT_INTERNAL_DEST.{{config.unique_key}}
+        -- Snowflake is likely to prune better on the dbt_valid_from column
         and DBT_INTERNAL_SOURCE.{{config.dbt_valid_from_column}} = DBT_INTERNAL_DEST.{{config.dbt_valid_from_column}}
 
         {% if config.surrogate_key -%}
