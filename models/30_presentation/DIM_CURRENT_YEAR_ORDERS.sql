@@ -1,7 +1,11 @@
 /*
     Simulate a query for the last year of sales orders
 */
-{{ config(materialized='table') }}
+{{ config(
+    materialized = 'dynamic_table',
+    snowflake_warehouse = 'dflippo_wh',
+    target_lag = 'DOWNSTREAM'
+) }}
 
 select *
 from {{ ref('DIM_ORDERS') }}
