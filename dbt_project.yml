@@ -8,7 +8,8 @@ config-version: 2
 # v1.0.0: The config source-paths has been deprecated in favor of model-paths
 # v1.0.0: The clean-target dbt_modules has been deprecated in favor of dbt_packages
 # v1.6.0: We are now utilizing the new support for dynamic_tables
-require-dbt-version: ">=1.6.0"
+# v1.7.0: There were several important bugs fixed for dynamic tables
+require-dbt-version: ">=1.7.0"
 
 # This setting configures which "profile" dbt uses for this project.
 profile: "SNOWFLAKE"
@@ -35,8 +36,7 @@ on-run-start:
 
 on-run-end:
   #- "ALTER WAREHOUSE DFLIPPO_DBT_XLARGE_DEMO_WH SUSPEND"
-  # - "{% if target.name == 'prod' %}{{ dbt_artifacts.upload_results(results) }}{% endif %}"
-  - "{{ dbt_artifacts.upload_results(results) }}"
+  - "{% if target.name == 'prod' %}{{ dbt_artifacts.upload_results(results) }}{% endif %}"
 
 # Global variables
 vars:
@@ -90,59 +90,39 @@ models:
       sensitive:
         +materialized: view
         +secure: true
-    #40_share:
-    #  +tags: "Share_Layer"
-    #50_common:
-    #  +tags: "Common_Layer"
-    #60_workspace:
-    #  +tags: "Workspace_Layer"
 
   # The dbt_artifacts configuration here is for logging your executions
   dbt_artifacts:
     # Once you tables are in place, you could comment this line and stop after `schema`
-    enabled: false # I am including the package but don't want to run its models
+    +enabled: "{{ target.name == 'prod' }}"
     +database: "{{ env_var('DBT_ARTIFACTS_DATABASE', target.database ) }}" # optional, default is your target database
     +schema: "{{ env_var('DBT_ARTIFACTS_SCHEMA', target.schema ) }}" # optional, default is your target schema
 
-    +materialized: view # We want final models always up to date
+    materialized: dynamic_table # We want final models always up to date
+    target_lag: '10 minutes'
     +persist_docs:
       relation: true
       columns: true
 
     sources:
       +materialized: table # We override dbt's default above but we need table for the raw layer
-      +enabled: true
 
     staging:
       +materialized: ephemeral
-      enabled: false
-
-# One alternative is to create the staging layer as dynamic tables
-#      +materialized: dynamic_table # If staging is stored, final views have good performance
-#      +snowflake_warehouse: 'DFLIPPO_WH'
-#      +target_lag: '1 minutes'
-#      +persist_docs:
-#        relation: false
-#        columns: false
 
 snapshots:
+  # The snowflake__snapshot_hash_arguments macro in this project removes MD5 from the dbt_scd_id
+  # Below is an expensive one-time update macro that can fix any previously created snapshot records
+  # This should be removed after it has executed at least once
+  pre-hook: "{{ refresh_dbt_scd_id() }}"
+
   target_schema: "DBT_DEMO_SNAPSHOTS"
   +meta:
     owner: "Dan Flippo"
     owner_email: "test@nowhere.com"
   snowflake_demo:
-    #10_raw:
-    #  +tags: "Raw_Layer"
-    #20_integration:
-    #  +tags: "Integration_Layer"
     30_presentation:
       +tags: "Presentation_Layer"
-    #40_share:
-    #  +tags: "Share_Layer"
-    #50_common:
-    #  +tags: "Common_Layer"
-    #60_workspace:
-    #  +tags: "Workspace_Layer"
 
 tests:
   # You can set custom properties on tests that will be stored in the dbt logs
