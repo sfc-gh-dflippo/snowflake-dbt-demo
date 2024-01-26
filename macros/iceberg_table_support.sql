@@ -48,6 +48,9 @@
           {{ get_table_columns_and_constraints() }}
           {% set compiled_code = get_select_subquery(compiled_code) %}
         {% endif %}
+        {% if cluster_by_string is not none and not temporary -%}
+        cluster by ( {{ cluster_by_string }} )
+        {%- endif %}
         {% for parameter_name, parameter_value in iceberg_parameters if parameter_value is not none -%}
           {{ parameter_name }} = '{{ parameter_value }}'
         {% endfor %}
@@ -61,9 +64,6 @@
             {{ compiled_code }}
           {%- endif %}
         );
-      {% if cluster_by_string is not none and not temporary -%}
-        alter {{ alter_table_type }} table {{relation}} cluster by ({{cluster_by_string}});
-      {%- endif -%}
       {% if enable_automatic_clustering and cluster_by_string is not none and not temporary  -%}
         alter {{ alter_table_type }} table {{relation}} resume recluster;
       {%- endif -%}
@@ -74,4 +74,8 @@
       {% do exceptions.raise_compiler_error("snowflake__create_table_as macro didn't get supported language, it got %s" % language) %}
   {%- endif -%}
 
+{% endmacro %}
+
+{% macro snowflake__get_drop_table_sql(relation) %}
+    drop table if exists {{ relation }} cascade
 {% endmacro %}
