@@ -12,9 +12,9 @@
     ("base_location", config.get('base_location', default=none))
    ] %}
 
-  {% if temporary -%}
+  {% if temporary and table_type == "" -%}
     {%- set table_type = "temporary" -%}
-  {%- elif transient -%}
+  {%- elif transient and table_type == "" -%}
     {%- set table_type = "transient" -%}
   {%- endif %}
 
