@@ -68,11 +68,11 @@ This project depends on the following two data sets
 - `dbt deps` - download 3rd party packages (necessary for this project before build)
 - `dbt build` - both compile and then run all models & associated tests
 - `dbt build --full-refresh` - have incremental models run as a full reload
-- `dbt build --models modelname` - will only compile/run modelname
-- `dbt build --models +modelname` - will compile/run modelname and all parents
-- `dbt build --models modelname+` - will compile/run modelname and all children
-- `dbt build --models +modelname+` - will compile/run modelname, and all parents and children
-- `dbt build --models @modelname` - will compile/run modelname, all parents, all children, AND all parents of all children
+- `dbt build --select modelname` - will only compile/run modelname
+- `dbt build --select +modelname` - will compile/run modelname and all parents
+- `dbt build --select modelname+` - will compile/run modelname and all children
+- `dbt build --select +modelname+` - will compile/run modelname, and all parents and children
+- `dbt build --select @modelname` - will compile/run modelname, all parents, all children, AND all parents of all children
 - `dbt build --exclude modelname` - will compile/run all models except modelname
 - `dbt compile` - compile all models but do not execute them
 - `dbt run` - run all models & tests
