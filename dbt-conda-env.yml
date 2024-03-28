@@ -1,7 +1,11 @@
 # Use this command to create an isolated conda env:
-# conda env create -f dbt-conda-env.yml --force
+# conda env create -f dbt-conda-env.yml
 # Use this command to then switch to the env:
 # conda activate dbt
+
+# Conda has removed the --force parameter so you either update or remove an existing env
+# conda env update -f dbt-conda-env.yml
+# conda env remove -n dbt -y && conda env create -f dbt-conda-env.yml
 
 # If you receive SSL errors due to your network firewall, try installing pip_system_certs by itself
 # pip install -U pip_system_certs
@@ -10,7 +14,7 @@
 # conda update -n base conda
 
 # If your anaconda base is incredibly old, you may want to:
-# conda install -n base anaconda=2023.03
+# conda install -n base anaconda=2024.02
 # or update all packages to the current version:
 # conda update -n base --all
 
@@ -20,7 +24,7 @@ channels:
   - https://repo.anaconda.com/pkgs/snowflake
   - conda-forge
 dependencies:
-  - python=3.10.*
+  - python=3.11.*
   - pip-system-certs
   - pip
   - pip:
