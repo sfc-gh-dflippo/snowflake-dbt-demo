@@ -35,8 +35,9 @@ on-run-start:
   - "{{ create_masking_policies() }}"
 
 on-run-end:
+  - "{{ dbt_artifacts.upload_results(results) }}"
   #- "ALTER WAREHOUSE DFLIPPO_DBT_XLARGE_DEMO_WH SUSPEND"
-  - "{% if target.name == 'prod' %}{{ dbt_artifacts.upload_results(results) }}{% endif %}"
+  #- "{% if target.name == 'prod' %}{{ dbt_artifacts.upload_results(results) }}{% endif %}"
 
 # Global variables
 vars:
@@ -93,22 +94,24 @@ models:
 
   # The dbt_artifacts configuration here is for logging your executions
   dbt_artifacts:
-    # Once you tables are in place, you could comment this line and stop after `schema`
-    +enabled: "{{ target.name == 'prod' }}"
+    +enabled: false
     +database: "{{ env_var('DBT_ARTIFACTS_DATABASE', target.database ) }}" # optional, default is your target database
     +schema: "{{ env_var('DBT_ARTIFACTS_SCHEMA', target.schema ) }}" # optional, default is your target schema
-
-    materialized: dynamic_table # We want final models always up to date
-    target_lag: '10 minutes'
-    +persist_docs:
-      relation: true
-      columns: true
-
     sources:
-      +materialized: table # We override dbt's default above but we need table for the raw layer
+      enabled: true
+      materialized: table
 
-    staging:
-      +materialized: ephemeral
+#    materialized: dynamic_table # We want final models always up to date
+#    target_lag: '10 minutes'
+#    +persist_docs:
+#      relation: true
+#      columns: true
+
+#    sources:
+#      +materialized: table # We override dbt's default above but we need table for the raw layer
+
+#    staging:
+#      +materialized: ephemeral
 
 snapshots:
   # The snowflake__snapshot_hash_arguments macro in this project removes MD5 from the dbt_scd_id
