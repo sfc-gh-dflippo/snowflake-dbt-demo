@@ -6,29 +6,26 @@
 ) }}
 with exch_rates as (
     select
-        ex_rates."Currency Unit" as currency,
-        ex_rates."Value" as from_usd,
+        ex_rates.quote_currency_id as currency,
+        ex_rates.value as from_usd,
         (1 / from_usd) as to_usd,
         -- The start date is the day after the previous close
-        coalesce(lag(dateadd(day, 1, "Date"), 1) over (partition by currency order by "Date" asc), '1900-01-01'::date) as start_date,
+        coalesce(lag(dateadd(day, 1, DATE), 1) over (partition by currency order by DATE asc), '1900-01-01'::date) as start_date,
         case -- when it is the last row, make the end date tomorrow to ensure we can't lose same-day records
-            when lag(dateadd(day, 1, "Date"), -1) over (partition by currency order by "Date" asc) is null then sysdate()::date + 1
-            else "Date"
+            when lag(dateadd(day, 1, DATE), -1) over (partition by currency order by DATE asc) is null then dateadd(year, 100, current_date())
+            else DATE
         end as end_date
-    from {{ source('KNOEMA_ECONOMY', 'EXRATESCC2018') }} ex_rates
+    from {{ source('ECONOMIC_ESSENTIALS', 'FX_RATES_TIMESERIES') }} ex_rates
     where
-        (ex_rates."Currency Unit" in ('EUR', 'MAD', 'CNY', 'GBP', 'JPY', 'PLN', 'MKD', 'CZK', 'MDL', 'RON')
-        --OR "Currency Unit" IN (SELECT EN_CURR FROM QAD_VIEWS.EN_MSTR_V)
-        )
-        and ex_rates."Indicator Name" = 'Close'
-        and ex_rates."Frequency" = 'D'
+        base_currency_id = 'USD'
+        and quote_currency_id in ('EUR', 'MAD', 'CNY', 'GBP', 'JPY', 'PLN', 'MKD', 'CZK', 'MDL', 'RON')
     union all -- JUST IN CASE THE LOCAL CURRENCY IS USD
     select
         'USD',
         1,
         1,
         '1900-01-01'::date,
-        sysdate()::date + 1
+        dateadd(year, 100, current_date())
 )
 
 select

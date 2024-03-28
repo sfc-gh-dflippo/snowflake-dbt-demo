@@ -10,18 +10,11 @@ sources:
     tables:
       - name: customer_cdc_st
 
-  - name: KNOEMA_ECONOMY
-    tags:
-      - "Raw_Layer"
-      - "Knoema_Economy"
-    schema: ECONOMY
-    database: KNOEMA_ECONOMY_DATA_ATLAS
-    quoting:
-      database: true
-      schema: true
-      identifier: true
+  - name: ECONOMIC_ESSENTIALS
+    database: CYBERSYN_FINANCIAL__ECONOMIC_ESSENTIALS
+    schema: CYBERSYN
     tables:
-      - name: EXRATESCC2018
+      - name: FX_RATES_TIMESERIES
 
   - name: TPC_H
     tags:
