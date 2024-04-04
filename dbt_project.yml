@@ -99,7 +99,7 @@ models:
     +schema: "{{ env_var('DBT_ARTIFACTS_SCHEMA', target.schema ) }}" # optional, default is your target schema
     sources:
       enabled: true
-      materialized: table
+      materialized: incremental
 
 #    materialized: dynamic_table # We want final models always up to date
 #    target_lag: '10 minutes'
