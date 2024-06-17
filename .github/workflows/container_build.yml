@@ -5,10 +5,10 @@ jobs:
   dbt_job:
     environment: dev
     runs-on: ubuntu-latest
-    container: ghcr.io/dbt-labs/dbt-snowflake:1.6.0
+    container: ghcr.io/dbt-labs/dbt-snowflake:latest
     steps:
       - name: Checkout Project
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Run dbt
         env:
           DBT_PROFILES_DIR: ./docker
