@@ -15,7 +15,6 @@
 
     {%- do comment_dict.update(
         app='dbt',
-        dbt_snowflake_query_tags_version='2.5.0',
         dbt_version=dbt_version,
         project_name=project_name,
         target_name=target.name,
