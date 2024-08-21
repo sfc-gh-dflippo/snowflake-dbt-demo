@@ -128,7 +128,7 @@ https://github.com/get-select/dbt-snowflake-query-tags
                     {%- endif -%}
                 {% endfor %}
                 {%- do module_det.update(
-                    node_refs=refs | unique | list
+                    module_refs=refs | unique | list
                 ) -%}
             {%- endif -%}
         {%- endif -%}
