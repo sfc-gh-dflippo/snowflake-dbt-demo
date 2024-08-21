@@ -11,22 +11,28 @@ https://github.com/get-select/dbt-snowflake-query-tags
     {# Get session level query tag #}
     {% set original_query_tag = get_current_query_tag() %}
     {% set original_query_tag_parsed = {} %}
-
     {% if original_query_tag %}
         {% if fromjson(original_query_tag) is mapping %}
             {% set original_query_tag_parsed = fromjson(original_query_tag) %}
+        {% else %}
+            {%- do original_query_tag_parsed.update(original_query_tag=original_query_tag) -%}
         {% endif %}
     {% endif %}
 
-    {# Start with any model-configured dict #}
-    {% set query_tag_dict = config.get('query_tag', default={}) %}
-
-    {% if query_tag_dict is not mapping %}
-    {% do log("set_query_tag() warning: the query_tag config value of '{}' is not a mapping type, so is being ignored. If you'd like to add additional query tag information, use a mapping type instead, or remove it to avoid this message.".format(query_tag), True) %}
-    {% set query_tag_dict = {} %} {# If the user has set the query tag config as a non mapping type, start fresh #}
+    {# Get model config level query tag #}
+    {% set config_query_tag = config.get('query_tag') %}
+    {% set config_query_tag_parsed = {} %}
+    {% if config_query_tag %}
+        {% if fromjson(config_query_tag) is mapping %}
+            {% set config_query_tag_parsed = fromjson(config_query_tag) %}
+        {% else %}
+            {%- do config_query_tag_parsed.update(config_query_tag=config_query_tag) -%}
+        {% endif %}
     {% endif %}
 
+    {% set query_tag_dict = {} %}
     {% do query_tag_dict.update(original_query_tag_parsed) %}
+    {% do query_tag_dict.update(config_query_tag_parsed) %}
 
     {%- do query_tag_dict.update(
         app='dbt',
