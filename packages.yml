@@ -11,6 +11,3 @@ packages:
 
   - package: brooklyn-data/dbt_artifacts
     version: [">=2.6.0"]
-
-  - package: get-select/dbt_snowflake_query_tags
-    version: [">=2.5.0"]
