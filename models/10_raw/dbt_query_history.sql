@@ -34,6 +34,9 @@ with WAREHOUSE_SIZE AS
 )
 select
     query_id,
+    'https://app.snowflake.com/' ||
+        CURRENT_ORGANIZATION_NAME() || '/' || CURRENT_ACCOUNT_NAME() ||
+        '/#/compute/history/queries/' || query_id as query_profile_url,
     start_time,
     end_time,
     total_elapsed_time/1000 as total_elapsed_sec,
