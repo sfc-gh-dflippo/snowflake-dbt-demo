@@ -34,44 +34,88 @@ https://github.com/get-select/dbt-snowflake-query-tags
     {% do query_tag_dict.update(original_query_tag_parsed) %}
     {% do query_tag_dict.update(config_query_tag_parsed) %}
 
+    {% set env_det = {} %}
+    {%- do env_det.update(
+        database=target.database,
+        schema=target.schema
+    ) -%}
+
+    {% set run_det = {} %}
+    {%- do run_det.update(
+        full_refresh=flags.FULL_REFRESH,
+        which=flags.WHICH
+    ) -%}
+
+    {%- if env_var('DBT_CLOUD_PROJECT_ID', False) -%}
+        {%- do run_det.update(
+            dbt_cloud_project_id=env_var('DBT_CLOUD_PROJECT_ID')
+        ) -%}
+    {%- endif -%}
+
+    {%- if env_var('DBT_CLOUD_JOB_ID', False) -%}
+        {%- do run_det.update(
+            dbt_cloud_job_id=env_var('DBT_CLOUD_JOB_ID')
+        ) -%}
+    {%- endif -%}
+
+    {%- if env_var('DBT_CLOUD_RUN_ID', False) -%}
+        {%- do run_det.update(
+            dbt_cloud_run_id=env_var('DBT_CLOUD_RUN_ID')
+        ) -%}
+    {%- endif -%}
+
+    {%- if env_var('DBT_CLOUD_RUN_REASON_CATEGORY', False) -%}
+        {%- do run_det.update(
+            dbt_cloud_run_reason_category=env_var('DBT_CLOUD_RUN_REASON_CATEGORY')
+        ) -%}
+    {%- endif -%}
+
+    {%- if env_var('DBT_CLOUD_RUN_REASON', False) -%}
+        {%- do run_det.update(
+            dbt_cloud_run_reason=env_var('DBT_CLOUD_RUN_REASON')
+        ) -%}
+    {%- endif -%}
+
+    {%- if flags.INVOCATION_COMMAND -%}
+        {%- do run_det.update(
+            invocation_command=flags.INVOCATION_COMMAND
+        ) -%}
+    {%- endif -%}
+
+    {% if thread_id %}
+        {%- do run_det.update(
+            thread_id=thread_id
+        ) -%}
+    {% endif %}
+
     {%- do query_tag_dict.update(
         app='dbt',
-        dbt_version=dbt_version,
+        app_version=dbt_version,
         project_name=project_name,
-        target_name=target.name,
-        target_database=target.database,
-        target_schema=target.schema,
-        invocation_id=invocation_id,
+        environment_name=target.name,
+        environment_details=env_det,
+        run_id=invocation_id,
         run_started_at=run_started_at.astimezone(modules.pytz.utc).isoformat(),
-        full_refresh=flags.FULL_REFRESH,
-        which=flags.WHICH,
+        run_details=run_det
     ) -%}
 
     {%- if model -%}
-        {%- do query_tag_dict.update(
-            node_name=model.name,
-            node_alias=model.alias,
-            node_package_name=model.package_name,
-            node_original_file_path=model.original_file_path,
-            node_database=model.database,
-            node_schema=model.schema,
-            node_unique_id=model.unique_id,
-            node_resource_type=model.resource_type,
-            node_meta=model.config.meta,
-            node_tags=model.tags,
+        {% set module_det = {} %}
+
+        {%- do module_det.update(
+            module_database=model.database,
+            module_schema=model.schema,
+            module_alias=model.alias,
+            module_package_name=model.package_name,
+            module_original_file_path=model.original_file_path,
+            module_meta=model.config.meta
         ) -%}
 
         {% if model.resource_type == 'model' %}
-            {%- do query_tag_dict.update(
+            {%- do module_det.update(
                 is_incremental=is_incremental()
             ) -%}
         {% endif %}
-
-        {%- if flags.INVOCATION_COMMAND -%}
-            {%- do query_tag_dict.update(
-                invocation_command=flags.INVOCATION_COMMAND
-            ) -%}
-        {%- endif -%}
 
         {%- if model.resource_type != ('seed') -%} {# Otherwise this throws an error saying 'Seeds cannot depend on other nodes.' #}
             {%- if model.refs is defined -%}
@@ -83,59 +127,32 @@ https://github.com/get-select/dbt-snowflake-query-tags
                         {%- do refs.append(ref[0]) -%}
                     {%- endif -%}
                 {% endfor %}
-                {%- do query_tag_dict.update(
+                {%- do module_det.update(
                     node_refs=refs | unique | list
                 ) -%}
             {%- endif -%}
         {%- endif -%}
         {%- if model.resource_type == 'model' -%}
-            {%- do query_tag_dict.update(
+            {%- do module_det.update(
                 materialized=model.config.materialized,
             ) -%}
         {%- endif -%}
 
         {%- if model.raw_code is not none and local_md5 -%}
-            {%- do query_tag_dict.update({
+            {%- do module_det.update({
                 "raw_code_hash": local_md5(model.raw_code)
             }) -%}
         {%- endif -%}
-    {%- endif -%}
 
-    {%- if env_var('DBT_CLOUD_PROJECT_ID', False) -%}
         {%- do query_tag_dict.update(
-            dbt_cloud_project_id=env_var('DBT_CLOUD_PROJECT_ID')
+            module_id=model.unique_id,
+            module_name=model.name,
+            module_type=model.resource_type,
+            module_tags=model.tags,
+            module_details=module_det
         ) -%}
-    {%- endif -%}
 
-    {%- if env_var('DBT_CLOUD_JOB_ID', False) -%}
-        {%- do query_tag_dict.update(
-            dbt_cloud_job_id=env_var('DBT_CLOUD_JOB_ID')
-        ) -%}
     {%- endif -%}
-
-    {%- if env_var('DBT_CLOUD_RUN_ID', False) -%}
-        {%- do query_tag_dict.update(
-            dbt_cloud_run_id=env_var('DBT_CLOUD_RUN_ID')
-        ) -%}
-    {%- endif -%}
-
-    {%- if env_var('DBT_CLOUD_RUN_REASON_CATEGORY', False) -%}
-        {%- do query_tag_dict.update(
-            dbt_cloud_run_reason_category=env_var('DBT_CLOUD_RUN_REASON_CATEGORY')
-        ) -%}
-    {%- endif -%}
-
-    {%- if env_var('DBT_CLOUD_RUN_REASON', False) -%}
-        {%- do query_tag_dict.update(
-            dbt_cloud_run_reason=env_var('DBT_CLOUD_RUN_REASON')
-        ) -%}
-    {%- endif -%}
-
-    {% if thread_id %}
-        {%- do query_tag_dict.update(
-            thread_id=thread_id
-        ) -%}
-    {% endif %}
 
     {% set query_tag_json = tojson(query_tag_dict) %}
     {{ log("Setting query_tag to '" ~ query_tag_json ~ "'. Will reset to '" ~ original_query_tag ~ "' after materialization.", info=false) }}
