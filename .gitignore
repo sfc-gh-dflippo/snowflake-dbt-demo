@@ -12,3 +12,4 @@ dbt_packages/
 logs/
 .user.yml
 **/dbt.log
+package-lock.yml
