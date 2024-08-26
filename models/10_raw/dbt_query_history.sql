@@ -2,28 +2,19 @@
 {{- config( materialized='view') }} */
 with WAREHOUSE_SIZE AS
 (
-     SELECT WAREHOUSE_SIZE, NODES
-       FROM (
-              SELECT 'X-SMALL' AS WAREHOUSE_SIZE, 1 AS NODES
-              UNION ALL
-              SELECT 'SMALL' AS WAREHOUSE_SIZE, 2 AS NODES
-              UNION ALL
-              SELECT 'MEDIUM' AS WAREHOUSE_SIZE, 4 AS NODES
-              UNION ALL
-              SELECT 'LARGE' AS WAREHOUSE_SIZE, 8 AS NODES
-              UNION ALL
-              SELECT 'X-LARGE' AS WAREHOUSE_SIZE, 16 AS NODES
-              UNION ALL
-              SELECT '2X-LARGE' AS WAREHOUSE_SIZE, 32 AS NODES
-              UNION ALL
-              SELECT '3X-LARGE' AS WAREHOUSE_SIZE, 64 AS NODES
-              UNION ALL
-              SELECT '4X-LARGE' AS WAREHOUSE_SIZE, 128 AS NODES
-              UNION ALL
-              SELECT '5X-LARGE' AS WAREHOUSE_SIZE, 256 AS NODES
-              UNION ALL
-              SELECT '6X-LARGE' AS WAREHOUSE_SIZE, 512 AS NODES
-            )
+    SELECT * FROM (
+        VALUES
+        ('X-SMALL', 1),
+        ('SMALL', 2),
+        ('MEDIUM', 4),
+        ('LARGE', 8),
+        ('X-LARGE', 16),
+        ('2X-LARGE', 32),
+        ('3X-LARGE', 64),
+        ('4X-LARGE', 128),
+        ('5X-LARGE', 256),
+        ('6X-LARGE', 512)
+    ) AS v1 (WAREHOUSE_SIZE, NODES)
 ), QUERY_HISTORY as (
     select try_parse_json(query_tag) as v, *
     from table(information_schema.QUERY_HISTORY_BY_WAREHOUSE(
