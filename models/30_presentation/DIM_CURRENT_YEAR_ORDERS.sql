@@ -4,7 +4,7 @@
 {{ config(
     materialized = 'dynamic_table',
     snowflake_warehouse = 'dflippo_wh',
-    target_lag = 'DOWNSTREAM'
+    target_lag = '10 minutes'
 ) }}
 
 select *
