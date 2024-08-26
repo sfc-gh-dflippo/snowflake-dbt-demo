@@ -58,23 +58,19 @@ models:
     owner_email: "test@nowhere.com"
 
   # Config indicated by + applies to all files at and below that level
-  # Enable logging events to a table
-  #pre-hook: "{{ logging.log_model_start_event() }}"
   post-hook:
     - "{{ dbt_snow_mask.apply_masking_policy() }}"
-  #  - "{{ logging.log_model_end_event() }}"
 
   # By default grants are lost unless you add this configuration
   +copy_grants: true
   +snowflake_warehouse: "DFLIPPO_WH"
   +materialized: view
 
-  # We will store table and column descriptions in Snowflake
-  +persist_docs:
-    relation: true
-    columns: true
-
   snowflake_demo:
+    # We will store table and column descriptions in Snowflake
+    +persist_docs:
+      relation: true
+      columns: true
     10_raw:
       +tags: "Raw_Layer"
     20_integration:
@@ -83,7 +79,7 @@ models:
         +materialized: table
         +schema: TPC_H
         # This folder will use a specific WH
-        +snowflake_warehouse: "DFLIPPO_DBT_XLARGE_DEMO_WH"
+        #+snowflake_warehouse: "DFLIPPO_DBT_XLARGE_DEMO_WH"
     30_presentation:
       +tags: "Presentation_Layer"
       +materialized: table
@@ -100,18 +96,6 @@ models:
     sources:
       enabled: true
       materialized: incremental
-
-#    materialized: dynamic_table # We want final models always up to date
-#    target_lag: '10 minutes'
-#    +persist_docs:
-#      relation: true
-#      columns: true
-
-#    sources:
-#      +materialized: table # We override dbt's default above but we need table for the raw layer
-
-#    staging:
-#      +materialized: ephemeral
 
 snapshots:
   # The snowflake__snapshot_hash_arguments macro in this project removes MD5 from the dbt_scd_id
