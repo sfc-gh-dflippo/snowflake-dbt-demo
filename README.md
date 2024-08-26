@@ -7,7 +7,7 @@ This project depends on the following two data sets
 - SNOWFLAKE_SAMPLE_DATA that is available by default in all new Snowflake accounts
 - [Cybersyn Financial & Economic Essentials](https://app.snowflake.com/marketplace/data-products/search?search=Cybersyn%20Financial%20%26%20Economic%20Essentials)
   - It is available for free in the Snowflake Data Markeplace
-  - If named other than "CYBERSYN_FINANCIAL__ECONOMIC_ESSENTIALS", update the database name in sources.yml
+  - If named other than "CYBERSYN_FINANCIAL_ECONOMIC_ESSENTIALS", update the database name in sources.yml
 
 ## How to get started
 
