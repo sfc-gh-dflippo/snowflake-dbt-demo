@@ -69,6 +69,6 @@ LEFT OUTER JOIN WAREHOUSE_SIZE WS ON WS.WAREHOUSE_SIZE = upper(QH.WAREHOUSE_SIZE
 where 1=1
 -- and app = 'dbt'
 -- and query_type not in ('ALTER_SESSION', 'DESCRIBE')
--- and node_resource_type in ('model')
-and total_elapsed_time > 500 -- Only show queries over .5 second
-order by start_time desc
+-- and module_type in ('model')
+-- and total_elapsed_time > 500 -- Only show queries over .5 second
+
