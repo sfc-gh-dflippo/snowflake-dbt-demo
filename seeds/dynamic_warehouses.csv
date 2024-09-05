@@ -1,0 +1,7 @@
+warehouse_name,warehouse_size,minimum_micropartitions
+dflippo_xsmall_wh,xsmall,0
+dflippo_small_wh,small,100
+dflippo_wh,medium,1000
+dflippo_large_wh,large,2000
+dflippo_xlarge_wh,xlarge,4000
+dflippo_xxlarge_wh,xxlarge,8000

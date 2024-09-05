@@ -4,6 +4,7 @@ pip
 pip-system-certs
 dbt-core
 dbt-snowflake
+snowflake[ml]
 snowflake-connector-python[secure-local-storage,pandas]
 snowflake-snowpark-python[pandas]
 snowflake-ml-python
