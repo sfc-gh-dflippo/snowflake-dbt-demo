@@ -20,7 +20,7 @@ sources:
     tags:
       - "Raw_Layer"
       - "TPC"
-    schema: TPCH_SF10
+    schema: TPCH_SF1
     database: SNOWFLAKE_SAMPLE_DATA
     quoting:
       database: false
