@@ -1,0 +1,19 @@
+{#
+    This macro is similar to the materialization but returns sql that can be
+    used in a CTE or subquery without creating a table with the results. This SQL
+    is only valid for 24 hours.
+#}
+{%- macro ephemeral_result_scan_sql(sql) -%}
+    {{ return(adapter.dispatch('get_result_scan_sql')(sql)) }}
+{%- endmacro -%}
+
+{% macro snowflake__ephemeral_result_scan_sql(sql) %}
+
+    {%- call statement('run_stmt_for_query_id', fetch_result=False, auto_begin=True) -%}
+    {{ sql }}
+    {%- endcall -%}
+    {%- set query_id = load_result('run_stmt_for_query_id').response.query_id -%}
+
+    ( select * from table(result_scan('{{ query_id }}')) )
+
+{%- endmacro %}
