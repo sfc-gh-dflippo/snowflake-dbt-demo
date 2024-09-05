@@ -2,19 +2,19 @@
 {{- config( materialized='view') }} */
 with WAREHOUSE_SIZE AS
 (
-    SELECT * FROM (
+    SELECT *, FROM (
         VALUES
-        ('X-SMALL', 1),
-        ('SMALL', 2),
-        ('MEDIUM', 4),
-        ('LARGE', 8),
-        ('X-LARGE', 16),
-        ('2X-LARGE', 32),
-        ('3X-LARGE', 64),
-        ('4X-LARGE', 128),
-        ('5X-LARGE', 256),
-        ('6X-LARGE', 512)
-    ) AS v1 (WAREHOUSE_SIZE, NODES)
+        ('X-SMALL', 1, 8),
+        ('SMALL', 2, 16),
+        ('MEDIUM', 4, 32),
+        ('LARGE', 8, 64),
+        ('X-LARGE', 16, 128),
+        ('2X-LARGE', 32, 256),
+        ('3X-LARGE', 64, 512),
+        ('4X-LARGE', 128, 1024),
+        ('5X-LARGE', 256, 2048),
+        ('6X-LARGE', 512, 4096)
+    ) AS v1 (WAREHOUSE_SIZE, CREDITS_PER_HOUR, VCPU)
 ), QUERY_HISTORY as (
     select try_parse_json(query_tag) as v, *
     from table(information_schema.QUERY_HISTORY_BY_WAREHOUSE(
@@ -42,14 +42,15 @@ select
     role_name,
     warehouse_name,
     qh.warehouse_size,
-    WS.NODES as warehouse_nodes,
+    WS.CREDITS_PER_HOUR as warehouse_nodes,
+    WS.VCPU as warehouse_vcpu,
     cluster_number,
     error_message,
     bytes_scanned,
     rows_produced,
     (compilation_time/1000) as compilation_sec,
     (execution_time/1000) as execution_sec,
-    nvl( (QH.EXECUTION_TIME/(1000*60*60))*WS.NODES, 0) as RELATIVE_PERFORMANCE_COST,
+    nvl( (QH.EXECUTION_TIME/(1000*60*60))*WS.CREDITS_PER_HOUR, 0) as RELATIVE_PERFORMANCE_COST,
     credits_used_cloud_services,
     query_hash,
     bytes_written_to_result,
@@ -66,8 +67,7 @@ select
     v:environment_details as environment_details,
 from query_history qh
 LEFT OUTER JOIN WAREHOUSE_SIZE WS ON WS.WAREHOUSE_SIZE = upper(QH.WAREHOUSE_SIZE)
-where 1=1
--- and app = 'dbt'
+where app = 'dbt'
 -- and query_type not in ('ALTER_SESSION', 'DESCRIBE')
 -- and module_type in ('model')
 -- and total_elapsed_time > 500 -- Only show queries over .5 second
