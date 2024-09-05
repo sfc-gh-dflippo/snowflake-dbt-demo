@@ -37,7 +37,7 @@ def model(dbt, session: snowpark.Session):
     dbt.config(materialized="table", packages = ["joblib"])
     upload_cache_size = 100000
     sql_statements = []
-    for x in range(1000):
+    for x in range(10):
         sql_statements.append(f"select {x} as row_num")
 
     async_bulk_query_writer(session, sql_statements, "my_temp", "overwrite", "temporary", upload_cache_size)
