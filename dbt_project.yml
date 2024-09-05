@@ -34,7 +34,7 @@ clean-targets: # directories to be removed by `dbt clean`
 on-run-start:
   - "{{ create_masking_policies() }}"
 
-on-run-end:
+#on-run-end:
   #- "{{ dbt_artifacts.upload_results(results) }}"
   #- "ALTER WAREHOUSE DFLIPPO_DBT_XLARGE_DEMO_WH SUSPEND"
   #- "{% if target.name == 'prod' %}{{ dbt_artifacts.upload_results(results) }}{% endif %}"
