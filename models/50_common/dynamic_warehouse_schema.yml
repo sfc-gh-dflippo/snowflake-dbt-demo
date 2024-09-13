@@ -1,0 +1,24 @@
+
+version: 2
+
+sources:
+
+  - name: account_usage
+    database: snowflake
+    schema: account_usage
+    tables:
+      - name: query_history
+
+  - name: dynamic_warehouses
+    database: "{{ target.database }}"
+    schema: "{{ target.schema }}"
+    tables:
+      - name: dynamic_warehouse_assignment
+
+models:
+
+  - name: dynamic_warehouse_assignment
+    config:
+      database: "{{ target.database }}"
+      schema: "{{ target.schema }}"
+

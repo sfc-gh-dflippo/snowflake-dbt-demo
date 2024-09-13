@@ -57,6 +57,9 @@ models:
     owner: "Dan Flippo"
     owner_email: "test@nowhere.com"
 
+  pre-hook:
+   - "{{ set_warehouse() }}"
+
   # Config indicated by + applies to all files at and below that level
   post-hook:
     - "{{ dbt_snow_mask.apply_masking_policy() }}"

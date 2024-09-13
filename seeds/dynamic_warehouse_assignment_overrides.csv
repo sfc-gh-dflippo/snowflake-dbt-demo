@@ -1,0 +1,2 @@
+target_name,full_refresh_warehouse,incremental_warehouse
+DB.SCHEMA.TABLE,my_warehouse,my_warehouse

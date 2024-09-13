@@ -29,6 +29,17 @@ https://github.com/get-select/dbt-snowflake-query-tags
         run_details=get_run_details()
     ) -%}
 
+    {%- if this -%}
+        {%- set target_name -%}
+        {{ this|upper }}
+        {%- endset -%}
+        {%- do query_tag_dict.update(
+            target_name=(this|upper)
+        ) -%}
+
+    {% endif %}
+
+
     {%- if model -%}
         {% set module_det = {} %}
 
@@ -76,7 +87,7 @@ https://github.com/get-select/dbt-snowflake-query-tags
 
         {%- do query_tag_dict.update(
             module_id=model.unique_id,
-            module_name=model.name,
+            module_name= model.name,
             module_type=model.resource_type,
             module_tags=model.tags,
             module_details=module_det
