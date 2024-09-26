@@ -1,0 +1,66 @@
+{{- config( materialized='table') }}
+
+with WAREHOUSE_SIZE AS (
+    SELECT * FROM (
+        VALUES
+        ('X-SMALL', 1, 1, 2000),
+        ('SMALL', 2, 2000, 4000),
+        ('MEDIUM', 4, 4000, 8000),
+        ('LARGE', 8, 8000, 16000),
+        ('X-LARGE', 16, 16000, 32000),
+        ('2X-LARGE', 32, 32000, 64000),
+        ('3X-LARGE', 64, 64000, 128000),
+        ('4X-LARGE', 128, 128000, 256000),
+        ('5X-LARGE', 256, 256000, 512000),
+        ('6X-LARGE', 512, 512000, 1024000)
+    ) AS v1 ("Virtual Warehouse Size", "Credits Per Hour", "Partitions Low", "Partitions High")
+), agg_warehouses as(
+    select to_json(array_agg(OBJECT_CONSTRUCT(*)) WITHIN GROUP ( order by "Credits Per Hour" ) ) as warehouse_json
+    from WAREHOUSE_SIZE
+), query_history AS (
+    SELECT target_name as "Target Name",
+    start_time as "Query Start Timestamp",
+    warehouse_size "Warehouse Size",
+    partitions_scanned "Partitions Scanned",
+    bytes_spilled_to_local_storage "Bytes Spilled to Local Storage",
+    bytes_spilled_to_remote_storage "Bytes Spilled to Remote Storage",
+    execution_sec/60 as "Query Duration in Minutes"
+    FROM {{ ref('dbt_account_usage_query_history') }}
+    where target_name is not null and module_type = 'model'
+), agg_query_history as(
+    select "Target Name", to_json(array_agg(OBJECT_CONSTRUCT(*)) WITHIN GROUP ( order by "Query Start Timestamp" ) ) as query_history_json
+    from query_history
+    group by "Target Name"
+    having count(*) > 3
+)
+
+
+select
+"Target Name" as target_name,
+'You are a Snowflake Database expert. You have been assigned the task of identifying the least expensive virtual warehouse we can use for a query.
+You will only respond with JSON.
+Choose the "Warehouse Size Name" with the lowest "Snowflake Credits Per Hour".
+Choose a warehouse with a "Partitions Capacity" higher than the largest "Partitions Scanned" in the SQL Execution History.
+If a query has "Bytes Spilled to Local Storage" or "Bytes Spilled to Remote Storage" on a "Warehouse Size", use a higher "Warehouse Size".
+If the last "Query Duration" was longer than 1 minute, try increasing the warehouse unless we have used a larger warehouse before and it did not decrease the execution by at least 50%.
+I will provide you descriptions of the virtual warehouse sizes available and a history of past executions of the SQL.
+I need you to only return JSON exactly like :
+###
+{ "target_name": "'||"Target Name"||'",
+"recommended_size": "{ recommended "Warehouse Size Name" }",
+"explanation": "{ explanation of recommended "Warehouse Size Name" }"
+}
+###
+Snowflake Database Sizes:
+'||warehouse_json||'
+###
+SQL Execution History:
+'||query_history_json as prompt,
+replace(SNOWFLAKE.CORTEX.COMPLETE('llama3.1-70b', prompt), '\\_', '_') as CORTEX_RESPONSE,
+try_parse_json(cortex_response) as parsed_response,
+parsed_response:target_name::varchar2 as target_name,
+parsed_response:recommended_size::varchar2 as recommended_size,
+parsed_response:explanation::varchar2 as explanation
+FROM agg_warehouses
+cross join agg_query_history
+

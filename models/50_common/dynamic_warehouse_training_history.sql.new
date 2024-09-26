@@ -1,0 +1,61 @@
+{# The view is passed into Cortext to create a predictive model #}
+{{ config(
+    materialized = 'view',
+    post_hook = [
+        """CREATE OR REPLACE SNOWFLAKE.ML.FORECAST
+        {{ this.database}}.{{ this.schema }}.dynamic_warehouse_model(
+        INPUT_DATA => TABLE( {{ this }} ),
+        SERIES_COLNAME => 'target_is_incremental',
+        TIMESTAMP_COLNAME => 'start_time',
+        TARGET_COLNAME => 'partitions_scanned');""",
+        "CALL {{ this.database}}.{{ this.schema }}.dynamic_warehouse_model!FORECAST(FORECASTING_PERIODS => 1)",
+        """CREATE or REPLACE transient table {{ this.database}}.{{ this.schema }}.dynamic_warehouse_prediction
+        as select * from table(result_scan(last_query_id()));"""
+        ]
+) }}
+
+
+with query_history as (
+    select
+        query_id,
+        try_parse_json(query_tag) as qt,
+        upper(qt:target_name::varchar) as target_name,
+        try_to_boolean(qt:module_details:is_incremental::varchar) as is_incremental,
+        start_time,
+        partitions_scanned as partitions_scanned
+    from SNOWFLAKE.ACCOUNT_USAGE.QUERY_HISTORY qh
+    where qh.start_time >= dateadd(day, -7, date_trunc(day, current_date))
+    and qh.partitions_scanned > 0
+), access_history as (
+    select t.query_start_time, t.query_id,
+    upper(w.value:"objectName") as target_name,
+    upper(w.value:"objectDomain") as target_type
+    from SNOWFLAKE.ACCOUNT_USAGE.ACCESS_HISTORY t
+    join lateral flatten(input => t.objects_modified) w
+    where t.query_start_time >= dateadd(day, -7, date_trunc(day, current_date))
+), largest_queries as (
+    select
+        coalesce(
+            q.target_name,
+            ah.target_name) as target_name,
+        coalesce(q.is_incremental, false) as is_incremental,
+        q.start_time::date as query_date,
+        max(partitions_scanned) as partitions_scanned
+    from
+        query_history Q
+        left outer join access_history ah on
+            ah.query_id = q.query_id
+            and ah.query_start_time = q.start_time
+    where q.is_incremental is not null or ah.target_name is not null
+    group by all
+)
+
+select
+    [target_name, is_incremental] AS target_is_incremental,
+    start_time::date as start_time,
+    partitions_scanned
+from largest_queries
+order by 1, 2
+
+
+
