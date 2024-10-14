@@ -3,7 +3,7 @@
     refresh dynamic tables when there are no other changes. Without this, a dynamic table may not
     be up to date when queried in a downstream model.
 #}
-{% macro snowflake__dynamic_table_get_build_sql(existing_relation, target_relation) %}
+{% macro dynamic_table_get_build_sql(existing_relation, target_relation) %}
 
     {% set full_refresh_mode = should_full_refresh() %}
 
