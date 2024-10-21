@@ -9,8 +9,20 @@ https://github.com/get-select/dbt-snowflake-query-tags
 {% macro set_query_tag() -%}
 
     {% set query_tag_dict = {} %}
-    {% do query_tag_dict.update(get_original_query_tag_parsed()) %}
-    {% do query_tag_dict.update(get_config_query_tag_parsed()) %}
+    {% set original_query_tag = '' %}
+
+    {% set current_query_tag = get_current_query_tag() %}
+    {%- if current_query_tag -%}
+        {% set original_query_tag = current_query_tag | tojson %}
+        {% do query_tag_dict.update(get_original_query_tag_parsed("current_query_tag", current_query_tag)) %}
+    {% endif %}
+
+    {% set config_query_tag = config.get('query_tag') %}
+    {%- if config_query_tag -%}
+        {% set original_query_tag = config_query_tag | tojson %}
+        {% do query_tag_dict.update(get_original_query_tag_parsed("config_query_tag", config_query_tag)) %}
+    {% endif %}
+    {% set original_query_tag = query_tag_dict | tojson | replace('\\', '\\\\') %}
 
     {% set env_det = {} %}
     {%- do env_det.update(
@@ -95,7 +107,7 @@ https://github.com/get-select/dbt-snowflake-query-tags
 
     {%- endif -%}
 
-    {% set query_tag_json = tojson(query_tag_dict) %}
+    {% set query_tag_json = query_tag_dict | tojson | replace('\\', '\\\\') %}
     {{ log("Setting query_tag to '" ~ query_tag_json ~ "'. Will reset to '" ~ original_query_tag ~ "' after materialization.", info=false) }}
     {% do run_query("alter session set query_tag = '{}'".format(query_tag_json)) %}
     {{ return(original_query_tag)}}
@@ -114,34 +126,14 @@ https://github.com/get-select/dbt-snowflake-query-tags
 
 
 {# Get session level query tag #}
-{% macro get_original_query_tag_parsed() -%}
-    {% set original_query_tag = get_current_query_tag() %}
-    {% set original_query_tag_parsed = {} %}
-    {% if original_query_tag %}
-        {% if fromjson(original_query_tag) is mapping %}
-            {% set original_query_tag_parsed = fromjson(original_query_tag) %}
+{% macro get_original_query_tag_parsed(key, value) -%}
+    {% if value %}
+        {% if fromjson(value) is mapping %}
+            {{ return( fromjson(value) ) }}
         {% else %}
-            {%- do original_query_tag_parsed.update(original_query_tag=original_query_tag) -%}
+            {{ return( { key: ( value | replace("'", "") ) } ) }}
         {% endif %}
     {% endif %}
-
-    {{ return(original_query_tag_parsed)}}
-{% endmacro %}
-
-
-{# Get model config level query tag #}
-{% macro get_config_query_tag_parsed() -%}
-    {% set config_query_tag = config.get('query_tag') %}
-    {% set config_query_tag_parsed = {} %}
-    {% if config_query_tag %}
-        {% if fromjson(config_query_tag) is mapping %}
-            {% set config_query_tag_parsed = fromjson(config_query_tag) %}
-        {% else %}
-            {%- do config_query_tag_parsed.update(config_query_tag=config_query_tag) -%}
-        {% endif %}
-    {% endif %}
-
-    {{ return(config_query_tag_parsed)}}
 {% endmacro %}
 
 
