@@ -20,18 +20,19 @@
 
 name: dbt
 channels:
-  - defaults
-  - https://repo.anaconda.com/pkgs/snowflake
   - conda-forge
 dependencies:
   - python=3.11.*
   - pip-system-certs
   - pip
   - pip:
-    - pip
-    - pip-system-certs
     - dbt-core
     - dbt-snowflake
-    - snowflake-connector-python[secure-local-storage,pandas]
-    - snowflake-snowpark-python[pandas]
+    - keyring
+    - pandas
+    - pip
+    - pip-system-certs
+    - pyarrow
+    - snowflake-cli
     - snowflake-ml-python
+    - snowflake-snowpark-python

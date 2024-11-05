@@ -13,8 +13,7 @@ This project depends on the following two data sets
 
 ### Install Python and Create a Virtual Environment For dbt
 
-- We generally recommend [Anaconda](https://www.anaconda.com/) or [Miniconda](https://docs.conda.io/en/latest/miniconda.html) to create an isolated environment just for dbt. A dbt-conda-env.yml file has been provided so you can set up this environment and switch to it with:
-
+- We generally recommend [Miniforge](https://conda-forge.org/download/) to create an isolated environment just for dbt. Miniforge is completely open source, does not require a license like Anaconda or Miniconda, and uses the Conda-Forge repository that is more up to date for dbt distributions. A dbt-conda-env.yml file has been provided so you can set up this environment and switch to it with:
     ```shell
     conda env create -f dbt-conda-env.yml
     conda activate dbt
