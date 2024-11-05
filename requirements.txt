@@ -1,10 +1,13 @@
 ### How to use this file:
 # pip install -U -r requirements.txt
-pip
-pip-system-certs
 dbt-core
 dbt-snowflake
-snowflake[ml]
-snowflake-connector-python[secure-local-storage,pandas]
-snowflake-snowpark-python[pandas]
+keyring
+pandas
+pip
+pip-system-certs
+pyarrow
+schemachange
+snowflake-cli
 snowflake-ml-python
+snowflake-snowpark-python
