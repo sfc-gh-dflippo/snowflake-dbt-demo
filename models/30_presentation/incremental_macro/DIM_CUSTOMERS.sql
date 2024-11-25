@@ -33,8 +33,7 @@
             when lkp.open_order_count > 0 then 'Y'
             else 'N'
         end as c_open_order_cusotmer_flag,
-
-        COALESCE(c_custkey::varchar, '') as integration_id,
+        {{ surrogate_key( ["c_custkey"] ) }} as integration_id,
         HASH( {{ dbt_utils.star(from=source("TPC_H", "CUSTOMER"), except=["c_custkey"]) }} ) as cdc_hash_key
 
     from {{ source("TPC_H", "CUSTOMER") }} c
