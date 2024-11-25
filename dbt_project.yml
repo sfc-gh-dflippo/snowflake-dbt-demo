@@ -43,6 +43,10 @@ on-run-start:
 vars:
   # The number of days that we want to reprocess data when doing incremental loads
   prune_days: 2
+  default_integration_key: integration_id
+  default_scd_cdc_hash_key: cdc_hash_key
+  default_updated_at_column: dbt_updated_ts
+  default_inserted_at_column: dbt_inserted_ts
 
 # Configuring models
 # Full documentation: https://docs.getdbt.com/docs/configuring-models

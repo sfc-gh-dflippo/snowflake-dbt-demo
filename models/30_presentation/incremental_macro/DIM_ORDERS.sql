@@ -1,19 +1,21 @@
-{%- set scd_surrogate_key = "O_ORDER_WID" -%}
-{%- set scd_integration_key = "integration_id" -%}
-{%- set scd_cdc_hash_key = "cdc_hash_key" -%}
-{%- set scd_dbt_updated_at = "dbt_updated_ts" -%}
-{%- set scd_dbt_inserted_at = "dbt_inserted_ts" -%}
+{#- The following config will use the default variable values
+    default_integration_key = "integration_id",
+    default_scd_cdc_hash_key = "cdc_hash_key",
+    default_updated_at_column = "dbt_updated_ts",
+    default_inserted_at_column = "dbt_inserted_ts" -#}
 
 {{ config(
     materialized = "incremental",
-    unique_key=scd_surrogate_key,
-    merge_exclude_columns = [scd_surrogate_key, scd_dbt_inserted_at],
+    unique_key='o_order_wid',
+    merge_exclude_columns = ["o_order_wid", "integration_id", "dbt_inserted_ts"],
     transient=false,
-    post_hook=[ "{%- do insert_ghost_key( 'O_ORDER_WID', 0,
+    post_hook=[ "{%- do insert_ghost_key( 'o_order_wid', 0,
         {'O_CUST_WID': '0'}
-    ) -%}" ]
+    ) -%}" ],
+    surrogate_key = "o_order_wid"
     )
 }}
+
 
 {%- set scd_source_sql -%}
 
@@ -21,26 +23,12 @@
     Simulate a query for the sales orders
 */
 SELECT
-    COALESCE(C_CUST_WID, 0) AS O_CUST_WID,
-    O_ORDERSTATUS,
-    O_TOTALPRICE,
-    O_ORDERDATE,
-    O_ORDERPRIORITY,
-    O_CLERK,
-    O_SHIPPRIORITY,
-    O_COMMENT,
-    O_CUSTKEY,
-    O_ORDERKEY,
-    {{ surrogate_key( ["O_ORDERKEY"] ) }} AS {{ scd_integration_key }},
-    HASH(O_CUST_WID,
-        O_ORDERSTATUS,
-        O_TOTALPRICE,
-        O_ORDERDATE,
-        O_ORDERPRIORITY,
-        O_CLERK,
-        O_SHIPPRIORITY,
-        O_COMMENT,
-        O_CUSTKEY) AS {{scd_cdc_hash_key}}
+    {{ dbt_utils.star(from=source("TPC_H", "ORDERS")) }},
+    COALESCE(C_CUST_WID, 0) AS O_CUST_WID, -- If the lookup fails, use zero
+    {{ surrogate_key( ["O_ORDERKEY"] ) }} AS integration_id,
+    HASH(
+        {{ dbt_utils.star(from=source("TPC_H", "ORDERS"), except=["O_ORDERKEY"]) }},
+        O_CUST_WID) AS cdc_hash_key
 FROM
 {{ source("TPC_H", "ORDERS") }} O
 LEFT OUTER JOIN {{ ref("DIM_CUSTOMERS") }} C on C.C_CUSTKEY = O.O_CUSTKEY
@@ -57,4 +45,4 @@ WHERE O_ORDERDATE >= DATEADD(DAY, -90, SYSDATE() )
 
 {% endset -%}
 
-{{- get_scd_sql(scd_source_sql, scd_surrogate_key, scd_integration_key, scd_cdc_hash_key, scd_dbt_updated_at, scd_dbt_inserted_at) -}}
+{{- get_scd_sql(scd_source_sql) -}}
