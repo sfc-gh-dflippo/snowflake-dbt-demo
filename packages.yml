@@ -1,13 +1,13 @@
 packages:
 
   - package: Snowflake-Labs/dbt_constraints
-    version: [">=1.0.2"]
+    version: [">=1.0.4"]
 
   - package: dbt-labs/dbt_utils
     version: [">=1.3.0"]
 
   - package: entechlog/dbt_snow_mask
-    version: [">=0.2.0"]
+    version: [">=0.2.6"]
 
   - package: brooklyn-data/dbt_artifacts
-    version: [">=2.6.0"]
+    version: [">=2.7.0"]
