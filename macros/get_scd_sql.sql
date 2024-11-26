@@ -39,7 +39,7 @@ existing_data as (
 
 inserts as (
     select
-        {% if surrogate_key -%}  {{ sequence_get_nextval() }} as {{ surrogate_key }},  {%- endif %}
+        {% if surrogate_key -%}  {{ sequence_nextval_as_surrogate_key(surrogate_key) }},  {%- endif %}
         source_data.*,
         sysdate() as {{ inserted_at_column }},
         sysdate() as {{ updated_at_column }}
