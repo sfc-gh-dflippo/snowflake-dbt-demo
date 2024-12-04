@@ -7,7 +7,7 @@
       check_cols=['cdc_hash_key'],
       dbt_current_flag_column='dbt_current_flag',
       surrogate_key='dim_customers_scd_wid',
-      invalidate_hard_deletes=True
+      invalidate_hard_deletes=true
     )
 }}
 
