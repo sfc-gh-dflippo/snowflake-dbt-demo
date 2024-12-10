@@ -67,6 +67,8 @@ models:
   # Config indicated by + applies to all files at and below that level
   post-hook:
     - "{{ dbt_snow_mask.apply_masking_policy() }}"
+    # This macro will refresh dynamic tables as the 
+    - "{{ dynamic_table_refresh_hook() }}"
 
   # By default grants are lost unless you add this configuration
   +copy_grants: true
