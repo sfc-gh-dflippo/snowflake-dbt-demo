@@ -1,0 +1,28 @@
+version: 2
+
+# Snowflake tends to prune best with sequence based surrogate keys, especially compared to hash keys or GUID that will never prune.
+
+macros:
+  - name: sequence_get_nextval
+    description: |
+      ### sequence_get_nextval('SEQUENCE_NAME')
+      * Simple macro to create a sequence if it does not exist
+      * Optionally accepts the name of the sequence to create.
+      * If a sequence name is not provided, it uses `(this.alias or this.name) ~ "_SEQ"`
+      * Returns text for your SQL like the following:
+      `SEQUENCE_NAME.nextval`
+    docs:
+      show: true
+
+  - name: sequence_nextval_as_surrogate_key
+    description: |
+      ### sequence_nextval_as_surrogate_key('KEY_WID', 'SEQUENCE_NAME')
+      * Provided the name of the column to store the values in, this macro will ensure that your sequence exists and is above the high watermark.
+      * Accepts a column name and optionally the name of the sequence to create.
+      * If a sequence name is not provided, it uses `(this.alias or this.name) ~ "_SEQ"`
+      * Returns text for your SQL like the following:
+      `SEQUENCE_NAME.nextval as KEY_WID`
+    docs:
+      show: true
+
+
