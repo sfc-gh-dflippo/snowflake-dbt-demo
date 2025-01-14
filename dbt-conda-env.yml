@@ -12,12 +12,13 @@
 # conda env remove -n dbt -y && conda env create -f dbt-conda-env.yml
 
 ### If you receive SSL errors due to a network firewall, try installing pip and pip_system_certs without SSL verification
-# pip install -U --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org pip pip_system_certs
+# python -m pip install -U --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org pip
+# python -m pip install -U --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org pip_system_certs
 
 ### If your base packages are incredibly old, you may want to update all packages to the current version:
 # conda update -n base --all
 
-name: dbt
+name: dbt19
 channels:
   - conda-forge
 dependencies:
@@ -25,8 +26,8 @@ dependencies:
   - pip-system-certs
   - pip
   - pip:
-    - dbt-core
-    - dbt-snowflake
+    - dbt-core==1.9.0rc2
+    - dbt-snowflake==1.9.0rc1
     - keyring
     - pandas
     - pip
