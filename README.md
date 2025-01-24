@@ -116,8 +116,8 @@ This project depends on the following two data sets
 - Most dbt users edit their dbt scripts with Microsoft's free editor, VSCode
   - [Download VSCode](https://code.visualstudio.com/Download)
   - From the Extensions screen (icon looks like Tetris) you should install two extensions
+    - python
     - ["Snowflake"](https://docs.snowflake.com/en/user-guide/vscode-ext)
-    - ["dbt Power User"](https://marketplace.visualstudio.com/items?itemName=innoverio.vscode-dbt-power-user) (which will also add "vscode-dbt")
   - In the Explorer, right click in the background and "Add folder to workspace" to add where your dbt project will be located.
   - On Windows, you will want to change the default terminal to "Command Prompt". Under *File* -> *Preferences* -> *Settings*, search for "windows terminal" and scroll down to where it says the default is "null" and change that to "Command Prompt".
   - You will want to set the default intepreter to your new "dbt" environment using [these instructions from Microsoft](https://code.visualstudio.com/docs/python/python-tutorial#_select-a-python-interpreter).
