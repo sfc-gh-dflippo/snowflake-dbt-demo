@@ -91,10 +91,12 @@ This project depends on the following two data sets
     python -m pip install --user virtualenv
     python -m venv dbt
     ```
-- Now you can activate your virtual environment, verify that the location of python has changed, and install dbt
+- Now you can activate your virtual environment, verify that the location of python has changed, and install dbt. We install/update pip and pip_system_certs this time in the virtual env.
     ```shell
     source dbt/bin/activate
     which python
+    python -m pip install pip -U --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org
+    python -m pip install pip_system_certs -U --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org
     python -m pip install -U dbt-core dbt-snowflake
     dbt --version
     ```
