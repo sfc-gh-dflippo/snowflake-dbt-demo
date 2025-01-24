@@ -1,7 +1,7 @@
-warehouse_name,warehouse_size,micropartition_capacity
-dflippo_xsmall_wh,xsmall,100
-dflippo_small_wh,small,1000
-dflippo_wh,medium,2000
-dflippo_large_wh,large,4000
-dflippo_xlarge_wh,xlarge,8000
-dflippo_xxlarge_wh,xxlarge,1000000
+warehouse_name,warehouse_size,capacity
+dflippo_xsmall_wh,xsmall,10000000
+dflippo_small_wh,small,100000000
+dflippo_wh,medium,200000000
+dflippo_large_wh,large,400000000
+dflippo_xlarge_wh,xlarge,800000000
+dflippo_xxlarge_wh,xxlarge,100000000000
