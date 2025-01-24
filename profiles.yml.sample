@@ -6,20 +6,20 @@ SNOWFLAKE:
   outputs:
     dev:
       type: snowflake
-      account: "You want just the text before .snowflakecomputing.com in your Snowflake URL"
-      user: "database user id"
+      account: "mycompany-analytics"
+      user: "email_address@mycompany.com"
       role: "database role"
+
+      # SSO authentication
+      authenticator: externalbrowser
 
       # User/password auth
       # user: "username"
       # password: "password"
 
-      # SSO authentication
-      # authenticator: externalbrowser
-
       # Keypair authentication
-      private_key_path: "/Users/myuser/.ssh/rsa_key.p8"
-      private_key_passphrase: "passphrase"
+      # private_key_path: "/Users/myuser/.ssh/rsa_key.p8"
+      # private_key_passphrase: "passphrase"
 
       database: "Database Name"
       warehouse: "Virtual Warehouse Name"
