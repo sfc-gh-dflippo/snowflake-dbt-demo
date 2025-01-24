@@ -34,10 +34,10 @@ clean-targets: # directories to be removed by `dbt clean`
 on-run-start:
   - "{{ create_masking_policies() }}"
 
-#on-run-end:
-  #- "{{ dbt_artifacts.upload_results(results) }}"
+on-run-end:
+  # - "{{ dbt_artifacts.upload_results(results) }}"
   #- "ALTER WAREHOUSE DFLIPPO_DBT_XLARGE_DEMO_WH SUSPEND"
-  #- "{% if target.name == 'prod' %}{{ dbt_artifacts.upload_results(results) }}{% endif %}"
+  - "{% if target.name == 'prod' %}{{ dbt_artifacts.upload_results(results) }}{% endif %}"
 
 # Global variables
 vars:
@@ -67,7 +67,7 @@ models:
   # Config indicated by + applies to all files at and below that level
   post-hook:
     - "{{ dbt_snow_mask.apply_masking_policy() }}"
-    # This macro will refresh dynamic tables as the 
+    # This macro will refresh dynamic tables as they are processed
     - "{{ dynamic_table_refresh_hook() }}"
 
   # By default grants are lost unless you add this configuration
