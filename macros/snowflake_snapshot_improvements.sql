@@ -63,32 +63,21 @@
     {% endif %}
 {% endmacro %}
 
-{% macro snapshot_get_sequence() -%}
-    {% if config.get("surrogate_key") %}
-        {% set sequence_relation = api.Relation.create(
-            database = this.database,
-            schema = this.schema,
-            identifier = config.get("surrogate_key_sequence", this.identifier ~ "_SEQ") ) %}
-
-        {% if execute %}
-            {% set sequence_create_statement -%}
-            create sequence if not exists {{sequence_relation}}
-            {%- endset %}
-            {% do run_query(sequence_create_statement) %}
-        {% endif %}
-
-        {% do return(sequence_relation) %}
-    {% endif %}
-{% endmacro %}
-
 
 {% macro snowflake__snapshot_staging_table(strategy, source_sql, target_relation) -%}
     {%- set columns = (config.get("snapshot_table_column_names") or get_snapshot_table_column_names() or get_snapshot_config() ) -%}
     {%- set surrogate_key = config.get("surrogate_key") -%}
-    {%- set surrogate_key_seq = snapshot_get_sequence() -%}
+    {%- if surrogate_key -%}
+        {%- set surrogate_key_seq = sequence_nextval_as_surrogate_key(surrogate_key) -%}
+    {%- endif -%}
+
     {%- if strategy.invalidate_hard_deletes -%}
         {%- do strategy.update({'hard_deletes': 'invalidate' }) -%}
     {%- endif -%}
+
+    {% if strategy.hard_deletes == 'new_record' %}
+        {% set new_scd_id = snapshot_hash_arguments([columns.dbt_scd_id, snapshot_get_time()]) %}
+    {% endif %}
 
     with snapshot_query as (
 
@@ -116,11 +105,6 @@
             {{ strategy.updated_at }} as {{ columns.dbt_updated_at }},
             {{ strategy.updated_at }} as {{ columns.dbt_valid_from }},
             {{ get_dbt_valid_to_current(strategy, columns) }},
-
-            {% if config.get("dbt_current_flag_column") -%}
-                'Y' as {{ config.get("dbt_current_flag_column") }},
-            {%- endif %}
-
             {{ strategy.scd_id }} as {{ columns.dbt_scd_id }}
 
         from snapshot_query
@@ -130,6 +114,7 @@
 
         select *, {{ unique_key_fields(strategy.unique_key) }},
             {{ strategy.updated_at }} as {{ columns.dbt_updated_at }}
+
         from snapshot_query
     ),
 
@@ -146,12 +131,10 @@
 
         select
             'insert' as dbt_change_type,
-
             {% if surrogate_key -%}
                 -- Surrogate key from sequence
-                {{ surrogate_key_seq }}.nextval as {{ surrogate_key }},
+                {{ surrogate_key_seq }},
             {%- endif %}
-
             source_data.*
           {%- if strategy.hard_deletes == 'new_record' -%}
             ,'False' as {{ columns.dbt_is_deleted }}
@@ -171,20 +154,13 @@
 
         select
             'update' as dbt_change_type,
-
             {% if surrogate_key -%}
                 -- Surrogate key from target
                 snapshotted_data.{{ surrogate_key }},
             {% endif %}
-
             source_data.*,
             snapshotted_data.{{ columns.dbt_valid_from }},
             {{ strategy.updated_at }} as {{ columns.dbt_valid_to }},
-
-            {% if config.get("dbt_current_flag_column") -%}
-                'N' as {{ config.get("dbt_current_flag_column") }},
-            {%- endif %}
-
             snapshotted_data.{{ columns.dbt_scd_id }}
           {%- if strategy.hard_deletes == 'new_record' -%}
             , snapshotted_data.{{ columns.dbt_is_deleted }}
@@ -205,21 +181,14 @@
 
         select
             'delete' as dbt_change_type,
-
             {% if surrogate_key -%}
                 -- Surrogate key from target
                 snapshotted_data.{{ surrogate_key }},
             {%- endif %}
-
             source_data.*,
             {{ snapshot_get_time() }} as {{ columns.dbt_updated_at }},
             snapshotted_data.{{ columns.dbt_valid_from }},
             {{ snapshot_get_time() }} as {{ columns.dbt_valid_to }},
-
-            {% if config.get("dbt_current_flag_column") -%}
-                'N' as {{ config.get("dbt_current_flag_column") }},
-            {%- endif %}
-
             snapshotted_data.{{ columns.dbt_scd_id }}
           {%- if strategy.hard_deletes == 'new_record' -%}
             , snapshotted_data.{{ columns.dbt_is_deleted }}
@@ -241,7 +210,7 @@
 
             {% if surrogate_key -%}
                 -- Surrogate key from sequence
-                {{ surrogate_key_seq }}.nextval as {{ surrogate_key }},
+                {{ surrogate_key_seq }},
             {%- endif %}
 
             {%- for col in source_sql_cols -%}
@@ -284,20 +253,19 @@
 {% macro snowflake__build_snapshot_table(strategy, sql) -%}
     {%- set columns = config.get("snapshot_table_column_names") or get_snapshot_table_column_names() or get_snapshot_config() -%}
     {%- set surrogate_key = config.get("surrogate_key") -%}
-    {%- set surrogate_key_seq = snapshot_get_sequence() -%}
+    {%- if surrogate_key -%}
+        {%- set surrogate_key_seq = sequence_nextval_as_surrogate_key(surrogate_key) -%}
+    {%- endif -%}
 
     select
         {% if surrogate_key -%}
-            {{ surrogate_key_seq }}.nextval as {{ surrogate_key }},
+            {{ surrogate_key_seq }},
         {%- endif %}
         *,
         {{ strategy.scd_id }} as {{ columns.dbt_scd_id }},
         {{ strategy.updated_at }} as {{ columns.dbt_updated_at }},
         {{ strategy.updated_at }} as {{ columns.dbt_valid_from }},
         {{ get_dbt_valid_to_current(strategy, columns) }}
-        {%- if config.get("dbt_current_flag_column") -%},
-        'Y' AS {{ config.get("dbt_current_flag_column") }}
-        {%- endif %}
         {%- if strategy.hard_deletes == 'new_record' -%}
         , 'False' as {{ columns.dbt_is_deleted }}
         {% endif -%}
@@ -312,6 +280,7 @@
     {%- set insert_cols_csv = insert_cols | join(', ') -%}
 
     {%- set columns = config.get("snapshot_table_column_names") or get_snapshot_table_column_names() or get_snapshot_config() -%}
+    {%- set surrogate_key = config.get("surrogate_key") -%}
 
     merge into {{ target.render() }} as DBT_INTERNAL_DEST
     using {{ source }} as DBT_INTERNAL_SOURCE
@@ -320,9 +289,9 @@
         -- Snowflake is likely to prune better on the dbt_valid_from column
         and DBT_INTERNAL_SOURCE.{{ columns.dbt_valid_from }} = DBT_INTERNAL_DEST.{{ columns.dbt_valid_from }}
 
-        {% if config.get("surrogate_key") -%}
+        {% if surrogate_key -%}
         -- Snowflake is also likely to prune well on a sequence-based surrogate key
-        and DBT_INTERNAL_SOURCE.{{ config.get("surrogate_key") }} = DBT_INTERNAL_DEST.{{ config.get("surrogate_key") }}
+        and DBT_INTERNAL_SOURCE.{{ surrogate_key }} = DBT_INTERNAL_DEST.{{ surrogate_key }}
         {%- endif %}
 
     when matched
@@ -335,10 +304,6 @@
      and DBT_INTERNAL_SOURCE.dbt_change_type in ('update', 'delete')
         then update
         set {{ columns.dbt_valid_to }} = DBT_INTERNAL_SOURCE.{{ columns.dbt_valid_to }}
-
-        {%- if config.get("dbt_current_flag_column") -%},
-            {{ config.get("dbt_current_flag_column") }} = DBT_INTERNAL_SOURCE.{{ config.get("dbt_current_flag_column") }}
-        {%- endif %}
 
     when not matched
      and DBT_INTERNAL_SOURCE.dbt_change_type = 'insert'
