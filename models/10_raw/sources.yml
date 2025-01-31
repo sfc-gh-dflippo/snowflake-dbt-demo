@@ -11,7 +11,7 @@ sources:
       - name: customer_cdc_st
 
   - name: ECONOMIC_ESSENTIALS
-    database: CYBERSYN_FINANCIAL__ECONOMIC_ESSENTIALS
+    database: CYBERSYN_FINANCIAL_ECONOMIC_ESSENTIALS
     schema: CYBERSYN
     tables:
       - name: FX_RATES_TIMESERIES
