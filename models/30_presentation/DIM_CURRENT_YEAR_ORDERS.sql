@@ -1,9 +1,10 @@
 /*
     Simulate a query for the last year of sales orders
 */
+
 {{ config(
     materialized = 'dynamic_table',
-    snowflake_warehouse = 'dflippo_wh',
+    snowflake_warehouse = 'training_wh',
     target_lag = 'DOWNSTREAM'
 ) }}
 
