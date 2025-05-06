@@ -80,7 +80,7 @@ existing_data as (
 
 inserts as (
     select
-        {{ sequence_get_nextval() }} as {{ scd_surrogate_key }},
+        {{ sequence_nextval_as_surrogate_key(scd_surrogate_key) }},
         source_data.*,
         sysdate() as {{ scd_dbt_inserted_at }},
         sysdate() as {{ scd_dbt_updated_at }}
