@@ -6,10 +6,10 @@
     on_schema_change='sync_all_columns'
 ) -}}
 
-with WAREHOUSE_SIZE AS
+with warehouse_size as
 (
-    SELECT *, FROM (
-        VALUES
+    select *, from (
+        values
         ('X-SMALL', 1, 8),
         ('SMALL', 2, 16),
         ('MEDIUM', 4, 32),
@@ -20,48 +20,48 @@ with WAREHOUSE_SIZE AS
         ('4X-LARGE', 128, 1024),
         ('5X-LARGE', 256, 2048),
         ('6X-LARGE', 512, 4096)
-    ) AS v1 (WAREHOUSE_SIZE, WAREHOUSE_NODES, WAREHOUSE_VCPU)
-), QUERY_HISTORY as (
-    SELECT
-    * REPLACE (TRY_PARSE_JSON(QUERY_TAG) AS QUERY_TAG)
-    FROM TABLE({{ this.database }}.INFORMATION_SCHEMA.QUERY_HISTORY_BY_USER(
-        END_TIME_RANGE_START => DATEADD(DAY, -1, DATE_TRUNC(DAY, CURRENT_TIMESTAMP())),
-        RESULT_LIMIT => 10000
-    )) QH
+    ) as v1 (warehouse_size, warehouse_nodes, warehouse_vcpu)
+), query_history as (
+    select
+    * replace (try_parse_json(query_tag) as query_tag)
+    from table({{ this.database }}.information_schema.query_history_by_user(
+        end_time_range_start => dateadd(day, -1, date_trunc(day, current_timestamp())),
+        result_limit => 10000
+    )) qh
     {% if is_incremental() -%}
 
-    WHERE QH.START_TIME > (SELECT MAX(T.START_TIME) FROM {{ this }} T)
+    where qh.start_time > (select max(t.start_time) from {{ this }} t)
 
     {%- endif %}
 )
-SELECT
+select
     'https://app.snowflake.com/' ||
-        CURRENT_ORGANIZATION_NAME() || '/' || CURRENT_ACCOUNT_NAME() ||
-        '/#/compute/history/queries/' || QUERY_ID AS QUERY_PROFILE_URL,
-    TOTAL_ELAPSED_TIME/1000 AS TOTAL_ELAPSED_SEC,
-    UPPER(QUERY_TAG:TARGET_NAME::VARCHAR) AS TARGET_NAME,
-    TRY_TO_BOOLEAN(QUERY_TAG:MODULE_DETAILS:IS_INCREMENTAL::VARCHAR) AS IS_INCREMENTAL,
-    QUERY_TAG:APP::VARCHAR AS APP,
-    QUERY_TAG:APP_VERSION::VARCHAR AS APP_VERSION,
-    QUERY_TAG:MODULE_NAME::VARCHAR AS MODULE_NAME,
-    QUERY_TAG:MODULE_TYPE::VARCHAR AS MODULE_TYPE,
-    (COMPILATION_TIME/1000) AS COMPILATION_SEC,
-    (EXECUTION_TIME/1000) AS EXECUTION_SEC,
-    NVL( (QH.EXECUTION_TIME/(1000*60*60))*WS.WAREHOUSE_NODES, 0) AS RELATIVE_PERFORMANCE_COST,
-    QUERY_TAG:PROJECT_NAME::VARCHAR AS PROJECT_NAME,
-    QUERY_TAG:RUN_ID::VARCHAR AS RUN_ID,
-    QUERY_TAG:RUN_DETAILS AS RUN_DETAILS,
-    QUERY_TAG:MODULE_ID::VARCHAR AS MODULE_ID,
-    QUERY_TAG:MODULE_DETAILS AS MODULE_DETAILS,
-    QUERY_TAG:MODULE_TAGS AS MODULE_TAGS,
-    QUERY_TAG:RUN_STARTED_AT::VARCHAR AS RUN_STARTED_AT,
-    QUERY_TAG:ENVIRONMENT_NAME::VARCHAR AS ENVIRONMENT_NAME,
-    QUERY_TAG:ENVIRONMENT_DETAILS AS ENVIRONMENT_DETAILS,
-    WS.*,
-    QH.* EXCLUDE (WAREHOUSE_SIZE)
-FROM QUERY_HISTORY QH
-LEFT OUTER JOIN WAREHOUSE_SIZE WS ON WS.WAREHOUSE_SIZE = UPPER(QH.WAREHOUSE_SIZE)
-WHERE APP = 'dbt'
+        current_organization_name() || '/' || current_account_name() ||
+        '/#/compute/history/queries/' || query_id as query_profile_url,
+    total_elapsed_time/1000 as total_elapsed_sec,
+    upper(query_tag:target_name::varchar) as target_name,
+    try_to_boolean(query_tag:module_details:is_incremental::varchar) as is_incremental,
+    query_tag:app::varchar as app,
+    query_tag:app_version::varchar as app_version,
+    query_tag:module_name::varchar as module_name,
+    query_tag:module_type::varchar as module_type,
+    (compilation_time/1000) as compilation_sec,
+    (execution_time/1000) as execution_sec,
+    nvl( (qh.execution_time/(1000*60*60))*ws.warehouse_nodes, 0) as relative_performance_cost,
+    query_tag:project_name::varchar as project_name,
+    query_tag:run_id::varchar as run_id,
+    query_tag:run_details as run_details,
+    query_tag:module_id::varchar as module_id,
+    query_tag:module_details as module_details,
+    query_tag:module_tags as module_tags,
+    query_tag:run_started_at::varchar as run_started_at,
+    query_tag:environment_name::varchar as environment_name,
+    query_tag:environment_details as environment_details,
+    ws.*,
+    qh.* exclude (warehouse_size)
+from query_history qh
+left outer join warehouse_size ws on ws.warehouse_size = upper(qh.warehouse_size)
+where app = 'dbt'
 -- Sample Filters:
 -- AND QUERY_TYPE NOT IN ('ALTER_SESSION', 'DESCRIBE')
 -- AND MODULE_TYPE IN ('model')
