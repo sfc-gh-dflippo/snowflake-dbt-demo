@@ -3,11 +3,11 @@
 dbt-core
 dbt-snowflake
 keyring
-pandas
 pip
 pip-system-certs
 pyarrow
 schemachange
 snowflake-cli
-snowflake-ml-python
+# snowflake-ml-python
 snowflake-snowpark-python
+streamlit
