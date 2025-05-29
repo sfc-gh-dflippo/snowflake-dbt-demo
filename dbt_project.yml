@@ -65,10 +65,10 @@ models:
   # - "{{ set_warehouse() }}"
 
   # Config indicated by + applies to all files at and below that level
-  post-hook:
-    - "{{ dbt_snow_mask.apply_masking_policy() }}"
+  #+post-hook:
+    # - "{{ dbt_snow_mask.apply_masking_policy() }}"
     # This macro will refresh dynamic tables as they are processed
-    - "{{ dynamic_table_refresh_hook() }}"
+    # - "{{ dynamic_table_refresh_hook() }}"
 
   # By default grants are lost unless you add this configuration
   +copy_grants: true
@@ -110,7 +110,7 @@ snapshots:
   # The snowflake__snapshot_hash_arguments macro in this project removes MD5 from the dbt_scd_id
   # Below is an expensive one-time update macro that can fix any previously created snapshot records
   # This should be removed after it has executed at least once
-  pre-hook: "{{ refresh_dbt_scd_id() }}"
+  # pre-hook: "{{ refresh_dbt_scd_id() }}"
 
   target_schema: "DBT_DEMO_SNAPSHOTS"
   +meta:
