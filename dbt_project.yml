@@ -103,22 +103,23 @@ models:
     +database: "{{ env_var('DBT_ARTIFACTS_DATABASE', target.database ) }}" # optional, default is your target database
     +schema: "{{ env_var('DBT_ARTIFACTS_SCHEMA', target.schema ) }}" # optional, default is your target schema
     sources:
-      enabled: true
-      materialized: incremental
+      config:
+        +enabled: true
+        +materialized: incremental
 
 snapshots:
   # The snowflake__snapshot_hash_arguments macro in this project removes MD5 from the dbt_scd_id
   # Below is an expensive one-time update macro that can fix any previously created snapshot records
   # This should be removed after it has executed at least once
   # pre-hook: "{{ refresh_dbt_scd_id() }}"
-
-  target_schema: "DBT_DEMO_SNAPSHOTS"
   +meta:
     owner: "Dan Flippo"
     owner_email: "test@nowhere.com"
   snowflake_demo:
+    +schema: "DBT_DEMO_SNAPSHOTS"
     30_presentation:
-      +tags: "Presentation_Layer"
+      config:
+        +tags: "Presentation_Layer"
 
 tests:
   # You can set custom properties on tests that will be stored in the dbt logs
