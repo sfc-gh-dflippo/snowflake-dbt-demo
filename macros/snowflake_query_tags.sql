@@ -74,10 +74,12 @@ https://github.com/get-select/dbt-snowflake-query-tags
             {%- if model.refs is defined -%}
                 {% set refs = [] %}
                 {% for ref in model.refs %}
-                    {%- if dbt_version >= '1.5.0' -%}
+                    {%- if ref.name is defined -%}
                         {%- do refs.append(ref.name) -%}
-                    {%- else -%}
-                        {%- do refs.append(ref[0]) -%}
+                    {%- elif ref is iterable -%}
+                        {%- for r in ref if r is defined -%}
+                            {%- do refs.append(r) -%}
+                        {%- endfor -%}
                     {%- endif -%}
                 {% endfor %}
                 {%- do module_det.update(
@@ -107,9 +109,15 @@ https://github.com/get-select/dbt-snowflake-query-tags
 
     {%- endif -%}
 
-    {% set query_tag_json = query_tag_dict | tojson | replace('\\', '\\\\') %}
-    {{ log("Setting query_tag to '" ~ query_tag_json ~ "'. Will reset to '" ~ original_query_tag ~ "' after materialization.", info=false) }}
-    {% do run_query("alter session set query_tag = '{}'".format(query_tag_json)) %}
+        {% set query_tag_json = query_tag_dict | tojson | replace('\\', '\\\\') %}
+        {% if query_tag_json | length > 2000 %}
+            {{ exceptions.raise_compiler_error(
+                "Query tag is too long. The maximum length is 2000 characters, but the current query tag is {} characters.".format(query_tag_json | length)
+            ) }}
+        {% else %}
+            {{ log("Setting query_tag to '" ~ query_tag_json ~ "'.", info=false) }}
+            {% do run_query("alter session set query_tag = '{}'".format(query_tag_json)) %}
+        {%- endif -%}
     {{ return(original_query_tag)}}
 {% endmacro %}
 
