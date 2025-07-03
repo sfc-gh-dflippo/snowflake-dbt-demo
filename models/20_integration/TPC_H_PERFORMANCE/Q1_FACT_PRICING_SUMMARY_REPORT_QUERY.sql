@@ -6,7 +6,7 @@
  ascending order of RETURNFLAG and LINESTATUS. A count of the number of lineitems in each group is
  included.
  */
-{% set random_interval = range(60,120) | random %}
+{% set random_interval = range(60, 120) | list | random %}
 select
     lineitem.l_returnflag,
     lineitem.l_linestatus,

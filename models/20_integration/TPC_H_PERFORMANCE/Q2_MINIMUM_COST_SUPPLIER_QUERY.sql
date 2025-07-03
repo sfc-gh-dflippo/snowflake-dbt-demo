@@ -5,9 +5,7 @@
  the query lists the supplier's account balance, name and nation; the part's number and manufacturer; the supplier's
  address, phone number and comment information.
  */
- {% set random_size = range(1, 50) | random  %}
- {% set random_type = dbt_utils.get_column_values(table=source('TPC_H', 'PART'),column='p_type') | random %}
- {% set random_region = dbt_utils.get_column_values(table=source('TPC_H', 'REGION'),column='r_name') | random %}
+ {% set random_size = range(1, 50) | list | random %}
 select s_acctbal,
     s_name,
     n_name,
@@ -16,29 +14,27 @@ select s_acctbal,
     s_address,
     s_phone,
     s_comment
-from {{ source('TPC_H', 'PART') }},
+from {{ source('TPC_H', 'PART') }} AS RANDOM_PART SAMPLE ROW (1 ROWS),
     {{ source('TPC_H', 'SUPPLIER') }},
     {{ source('TPC_H', 'PARTSUPP') }},
     {{ source('TPC_H', 'NATION') }},
-    {{ source('TPC_H', 'REGION') }}
+    {{ source('TPC_H', 'REGION') }} AS RANDOM_REGION SAMPLE ROW (1 ROWS)
 where p_partkey = ps_partkey
     and s_suppkey = ps_suppkey
     and p_size = {{random_size}}
-    and p_type like '%{{random_type}}'
     and s_nationkey = n_nationkey
     and n_regionkey = r_regionkey
-    and r_name = '{{random_region}}'
     and ps_supplycost = (
         select min(ps_supplycost)
         from {{ source('TPC_H', 'PARTSUPP') }},
             {{ source('TPC_H', 'SUPPLIER') }},
             {{ source('TPC_H', 'NATION') }},
-            {{ source('TPC_H', 'REGION') }}
+            {{ source('TPC_H', 'REGION') }} R
         where p_partkey = ps_partkey
             and s_suppkey = ps_suppkey
             and s_nationkey = n_nationkey
             and n_regionkey = r_regionkey
-            and r_name = '{{random_region}}'
+            and R.r_name = RANDOM_REGION.r_name
     )
 order by s_acctbal desc,
     n_name,

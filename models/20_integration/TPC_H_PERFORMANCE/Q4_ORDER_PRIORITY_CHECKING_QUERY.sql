@@ -3,7 +3,7 @@
  at least one lineitem was received by the customer later than its committed date. The query lists the count of such
  orders for each order priority sorted in ascending priority order.
  */
-{% set random_interval = range(0,106) | random %}
+{% set random_interval = range(0,106) | list | random %}
 
 select
     orders.o_orderpriority,
