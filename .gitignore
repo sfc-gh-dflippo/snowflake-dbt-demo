@@ -13,3 +13,4 @@ logs/
 .user.yml
 **/dbt.log
 package-lock.yml
+dbt_internal_packages/
