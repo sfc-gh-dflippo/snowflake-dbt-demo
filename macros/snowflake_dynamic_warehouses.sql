@@ -2,7 +2,7 @@
 This macro is designed to automatically change the warehouse after you populate the dynamic_warehouse_assignment model
 #}
 {% macro set_warehouse() -%}
-    {%- if execute and this -%}
+    {%- if execute and flags.WHICH in ('run', 'build') and this -%}
         {# The source function does not check if a table exists but adapter.get_relation will be None if it does not exist #}
         {%- set dwa_source = source('dynamic_warehouses', 'dynamic_warehouse_assignment') -%}
         {%- set dynamic_warehouse_assignment = adapter.get_relation(

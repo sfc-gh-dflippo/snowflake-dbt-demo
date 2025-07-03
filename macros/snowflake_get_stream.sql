@@ -4,7 +4,7 @@
             schema=this.schema,
             identifier=stream_name ) -%}
 
-    {% if execute %}
+    {% if execute and flags.WHICH in ('run', 'build') %}
         {%- set stream_lookup_query -%}
         show streams like '{{stream.identifier}}' in schema {{stream.database}}.{{stream.schema}}
         {%- endset -%}

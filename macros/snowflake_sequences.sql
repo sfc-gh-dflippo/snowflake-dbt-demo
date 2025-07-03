@@ -5,7 +5,7 @@
             schema = this.schema,
             identifier = sequence_name) -%}
 
-    {% if execute %}
+    {% if execute and flags.WHICH in ('run', 'build') %}
 
             {%- set sequence_create_statement -%}
             create sequence if not exists {{sequence}}
@@ -26,7 +26,7 @@
             database = this.database,
             schema = this.schema,
             identifier = sequence_name) -%}
-    {% if execute %}
+    {% if execute and flags.WHICH in ('run', 'build') %}
 
         {% set start_with_val = 1 %}
 

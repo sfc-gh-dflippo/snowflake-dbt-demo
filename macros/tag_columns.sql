@@ -1,6 +1,6 @@
 {# This is a simple post-hook macro that can be added to tag columns on tables and views #}
 {% macro get_tag_cache(tag_database='COMMON_UTILITY', tag_schema='SECURITY') -%}
-    {% if execute %}
+    {% if execute and flags.WHICH in ('run', 'build') %}
 
         {%- set current_tag_objects = api.Relation.create(
             database = tag_database,
@@ -33,7 +33,7 @@
 
 {# This is a post-hook macro that can be added to tag columns on tables and views #}
 {% macro tag_columns(tag_cache = var('tag_cache', None)) -%}
-    {% if execute and model %}
+    {% if execute and flags.WHICH in ('run', 'build') and model %}
 
         {%- if tag_cache
             and tag_cache.tag_column_statements
