@@ -11,15 +11,16 @@ sources:
       - name: customer_cdc_st
 
   - name: ECONOMIC_ESSENTIALS
-    database: CYBERSYN_FINANCIAL_ECONOMIC_ESSENTIALS
+    database: CYBERSYN_FINANCIAL__ECONOMIC_ESSENTIALS
     schema: CYBERSYN
     tables:
       - name: FX_RATES_TIMESERIES
 
   - name: TPC_H
-    tags:
-      - "Raw_Layer"
-      - "TPC"
+    config:
+      tags:
+        - "Raw_Layer"
+        - "TPC"
     schema: TPCH_SF1
     database: SNOWFLAKE_SAMPLE_DATA
     quoting:
