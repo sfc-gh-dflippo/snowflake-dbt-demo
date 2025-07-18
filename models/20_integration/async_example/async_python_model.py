@@ -194,7 +194,7 @@ def model(dbt, session):
     )
 
     sql_statements_query = """
-        select 'select '||seq4()||' as row_num' FROM TABLE(GENERATOR(ROWCOUNT => 1000))
+        select 'select '||seq4()||' as row_num' FROM TABLE(GENERATOR(ROWCOUNT => 10))
     """
 
     writer = BulkQueryWriter(session=session)
