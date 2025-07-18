@@ -5,7 +5,10 @@
 
 {{ config(
     materialized="incremental",
-    unique_key="INTEGRATION_ID",
+    unique_key=[
+        "L_ORDERKEY",
+        "L_LINENUMBER"
+    ],
     merge_exclude_columns = ["DBT_INSERT_TS"],
     transient=false
     )
@@ -17,7 +20,7 @@ select
     coalesce(orders.o_cust_wid, 0) as l_cust_wid,
     lineitem.*,
     lkp_exchange_rates.conversion_rate as eur_conversion_rate,
-    {{ surrogate_key(["L_ORDERKEY", "L_LINENUMBER"]) }} as integration_id,
+    {{ integration_key(["L_ORDERKEY", "L_LINENUMBER"]) }} as integration_id,
     sysdate() as dbt_insert_ts,
     sysdate() as dbt_last_update_ts
 from {{ source("TPC_H", "LINEITEM") }} lineitem

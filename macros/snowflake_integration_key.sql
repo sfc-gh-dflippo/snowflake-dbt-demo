@@ -1,4 +1,4 @@
-{%- macro surrogate_key(field_list) -%}
+{%- macro integration_key(field_list) -%}
 
 {%- set fields = [] -%}
 

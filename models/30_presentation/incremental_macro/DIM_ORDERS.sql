@@ -25,7 +25,7 @@
 SELECT
     {{ dbt_utils.star(from=source("TPC_H", "ORDERS")) }},
     COALESCE(C_CUST_WID, 0) AS O_CUST_WID, -- If the lookup fails, use zero
-    {{ surrogate_key( ["O_ORDERKEY"] ) }} AS integration_id,
+    {{ integration_key( ["O_ORDERKEY"] ) }} AS integration_id,
     HASH(
         {{ dbt_utils.star(from=source("TPC_H", "ORDERS"), except=["O_ORDERKEY"]) }},
         O_CUST_WID) AS cdc_hash_key
