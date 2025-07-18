@@ -4,7 +4,6 @@
 
 {{ config(
     materialized = 'dynamic_table',
-    snowflake_warehouse = target.warehouse,
     target_lag = 'DOWNSTREAM'
 ) }}
 
