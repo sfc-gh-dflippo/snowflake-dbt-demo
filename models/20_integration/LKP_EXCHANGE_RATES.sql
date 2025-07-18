@@ -18,7 +18,7 @@ with exch_rates as (
     from {{ source('ECONOMIC_ESSENTIALS', 'FX_RATES_TIMESERIES') }} ex_rates
     where
         base_currency_id = 'USD'
-        and quote_currency_id in ('EUR', 'MAD', 'CNY', 'GBP', 'JPY', 'PLN', 'MKD', 'CZK', 'MDL', 'RON')
+        and quote_currency_id in ('EUR')
     union all -- JUST IN CASE THE LOCAL CURRENCY IS USD
     select
         'USD',
@@ -37,4 +37,4 @@ select
 from {{ ref('DIM_CALENDAR_DAY') }} as cal_day
 inner join exch_rates as first_rate on cal_day.day_dt between first_rate.start_date and first_rate.end_date
 inner join exch_rates as second_rate on cal_day.day_dt between second_rate.start_date and second_rate.end_date
-order by 1, 2, 3
+
