@@ -14,6 +14,11 @@ require-dbt-version: ">=1.7.0"
 # This setting configures which "profile" dbt uses for this project.
 profile: "SNOWFLAKE"
 
+# The query-comment setting is used to add a comment to the SQL query.
+# This is useful for debugging and for tracking the query history.
+# Setting it to null will not add a comment to the SQL query.
+query-comment: null
+
 # These configurations specify where dbt should look for different types of files.
 # The `source-paths` config, for example, states that models in this project can be
 # found in the "models/" directory. You probably won't need to change these!
@@ -128,5 +133,5 @@ tests:
   +meta:
     owner: "Dan Flippo"
     owner_email: "test@nowhere.com"
-  +limit: 1000 # will only include the first 1000 failures
+#  +limit: 1000 # will only include the first 1000 failures
 #  +store_failures: true # by default we will store failures
