@@ -12,12 +12,12 @@ models:
       - name: day_seq
         description: "Unique sequence number key"
         tests:
-          - unique
+          - dbt_constraints.unique_key
           - not_null
       - name: day_dt
         description: "Unique DATE key"
         tests:
-          - unique
+          - dbt_constraints.unique_key
           - not_null
 
 
@@ -31,11 +31,8 @@ models:
       - name: INTEGRATION_ID
         description: "The integration key for dim_customers"
         tests:
-          - unique
+          - dbt_constraints.unique_key
       - name: C_NAME
-        config:
-          meta:
-            masking_policy: TEST_MASKING_POLICY
         description: "Customer Name"
         tests:
           - not_null
@@ -59,7 +56,7 @@ models:
           - not_null
           - accepted_values:
               values: ['Y', 'N']
-      - name: C_OPEN_ORDER_CUSOTMER_FLAG
+      - name: C_OPEN_ORDER_CUSTOMER_FLAG
         description: "Customer Has at least one open order in the last year"
         tests:
           - not_null
@@ -77,14 +74,14 @@ models:
       - name: INTEGRATION_ID
         description: "The integration key for this table"
         tests:
-          - unique
+          - dbt_constraints.unique_key
       - name: O_CUST_WID
         description: "Foreign key to DIM_CUSTOMERS"
         tests:
           - not_null
-          - relationships:
-              to: ref('DIM_CUSTOMERS')
-              field: C_CUST_WID
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref('DIM_CUSTOMERS')
+              pk_column_name: C_CUST_WID
       - name: O_ORDERSTATUS
         tests:
           - accepted_values:
@@ -109,7 +106,7 @@ models:
       - name: INTEGRATION_ID
         description: "The integration key for this table"
         tests:
-          - unique
+          - dbt_constraints.unique_key
       - name: O_CUST_WID
         description: "Foreign key to DIM_CUSTOMERS"
         tests:
@@ -130,14 +127,14 @@ models:
       - name: INTEGRATION_ID
         description: "The integration key for this table"
         tests:
-          - unique
+          - dbt_constraints.unique_key
       - name: O_CUST_WID
         description: "Foreign key to DIM_CUSTOMERS"
         tests:
           - not_null
-          - relationships:
-              to: ref('DIM_CUSTOMERS')
-              field: C_CUST_WID
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref('DIM_CUSTOMERS')
+              pk_column_name: C_CUST_WID
       - name: O_ORDERSTATUS
         tests:
           - not_null

@@ -7,5 +7,5 @@ select
     c_mktsegment,
     c_comment,
     c_active_customer_flag,
-    c_open_order_cusotmer_flag
+    c_open_order_customer_flag
 from {{ ref('DIM_CUSTOMERS') }}

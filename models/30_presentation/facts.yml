@@ -10,22 +10,22 @@ models:
         description: "FK to DIM_ORDERS and first key in PK"
         tests:
           - not_null
-          - relationships:
-              to: ref('DIM_ORDERS')
-              field: O_ORDER_WID
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref('DIM_ORDERS')
+              pk_column_name: O_ORDER_WID
       - name: L_CUST_WID
         description: "FK to DIM_CUSTOMERS and first key in PK"
         tests:
           - not_null
-          - relationships:
-              to: ref('DIM_CUSTOMERS')
-              field: C_CUST_WID
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref('DIM_CUSTOMERS')
+              pk_column_name: C_CUST_WID
       - name: L_LINENUMBER
         description: "Order Line Number and second key in PK"
       - name: INTEGRATION_ID
         description: "Concatenation of PK colums for the unique and not_null tests"
         tests:
-          - unique
+          - dbt_constraints.unique_key
           - not_null
     tests:
       # Demonstration that the primary_key test can accept multiple columns
@@ -42,26 +42,26 @@ models:
         description: "FK to DIM_ORDERS"
         tests:
           - not_null
-          - relationships:
-              to: ref('DIM_ORDERS')
-              field: O_ORDER_WID
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref('DIM_ORDERS')
+              pk_column_name: O_ORDER_WID
       - name: L_CUST_WID
         description: "FK to DIM_CUSTOMERS and first key in PK"
         tests:
           - not_null
-          - relationships:
-              to: ref('DIM_CUSTOMERS')
-              field: C_CUST_WID
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref('DIM_CUSTOMERS')
+              pk_column_name: C_CUST_WID
       - name: L_LINENUMBER
         description: "Order Line Number and second key in PK"
       - name: INTEGRATION_ID
         description: "Concatenation of PK colums for the unique and not_null tests"
         tests:
-          - unique
+          - dbt_constraints.unique_key
           - not_null
     tests:
       # Demonstration that the unique_key test can accept multiple columns
-      - dbt_constraints.unique_key:
+      - dbt_constraints.primary_key:
           column_names:
             - L_ORDERKEY
             - L_LINENUMBER

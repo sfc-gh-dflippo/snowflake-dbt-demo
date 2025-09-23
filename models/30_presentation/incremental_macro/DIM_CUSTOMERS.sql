@@ -13,7 +13,7 @@
         {'C_CUSTKEY': '0',
          'C_NAME': \"'Unknown'\",
          'C_ACTIVE_CUSTOMER_FLAG': \"'N'\",
-         'C_OPEN_ORDER_CUSOTMER_FLAG': \"'N'\"}
+         'C_OPEN_ORDER_CUSTOMER_FLAG': \"'N'\"}
     ) -%}" ],
     surrogate_key = "c_cust_wid"
     )
@@ -32,7 +32,7 @@
         case
             when lkp.open_order_count > 0 then 'Y'
             else 'N'
-        end as c_open_order_cusotmer_flag,
+        end as c_open_order_customer_flag,
         {{ integration_key( ["c_custkey"] ) }} as integration_id,
         HASH( {{ dbt_utils.star(from=source("TPC_H", "CUSTOMER"), except=["c_custkey"]) }} ) as cdc_hash_key
 

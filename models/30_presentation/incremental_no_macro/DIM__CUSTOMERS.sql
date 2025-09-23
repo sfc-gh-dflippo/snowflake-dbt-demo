@@ -33,7 +33,7 @@ with source_data as (
         case
             when lkp.open_order_count > 0 then 'Y'
             else 'N'
-        end as c_open_order_cusotmer_flag,
+        end as c_open_order_customer_flag,
         c_custkey,
         coalesce(c_custkey::varchar, '') as {{ scd_integration_key }},
         hash(
@@ -45,7 +45,7 @@ with source_data as (
             c_mktsegment,
             c_comment,
             c_active_customer_flag,
-            c_open_order_cusotmer_flag
+            c_open_order_customer_flag
         ) as {{ scd_cdc_hash_key }}
 
     from {{ source("TPC_H", "CUSTOMER") }} c
