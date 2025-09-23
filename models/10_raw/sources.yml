@@ -11,7 +11,12 @@ sources:
       - name: customer_cdc_st
 
   - name: ECONOMIC_ESSENTIALS
-    database: CYBERSYN_FINANCIAL_ECONOMIC_ESSENTIALS
+    database: |
+      {%- if target.name == 'cas2' -%}
+        CYBERSYN_FINANCIAL__ECONOMIC_ESSENTIALS
+      {%- else -%}
+        CYBERSYN_FINANCIAL_ECONOMIC_ESSENTIALS
+      {%- endif -%}
     schema: CYBERSYN
     tables:
       - name: FX_RATES_TIMESERIES
@@ -34,22 +39,20 @@ sources:
           - name: N_NATIONKEY
             description: "The primary key for this table"
             tests:
-              - unique
-              - not_null
+              - dbt_constraints.primary_key
           - name: N_REGIONKEY
             tests:
               - not_null
-              - relationships:
-                  to: source('TPC_H', 'REGION')
-                  field: R_REGIONKEY
+              - dbt_constraints.foreign_key:
+                  pk_table_name: source('TPC_H', 'REGION')
+                  pk_column_name: R_REGIONKEY
 
       - name: PART
         columns:
           - name: P_PARTKEY
             description: "The primary key for this table"
             tests:
-              - unique
-              - not_null
+              - dbt_constraints.primary_key
 
       - name: PARTSUPP
         columns:
@@ -57,16 +60,16 @@ sources:
             description: "Part of compound primary key for this table"
             tests:
               - not_null
-              - relationships:
-                  to: source('TPC_H', 'PART')
-                  field: P_PARTKEY
+              - dbt_constraints.foreign_key:
+                  pk_table_name: source('TPC_H', 'PART')
+                  pk_column_name: P_PARTKEY
           - name: PS_SUPPKEY
             description: "Part of compound primary key for this table"
             tests:
               - not_null
-              - relationships:
-                  to: source('TPC_H', 'SUPPLIER')
-                  field: S_SUPPKEY
+              - dbt_constraints.foreign_key:
+                  pk_table_name: source('TPC_H', 'SUPPLIER')
+                  pk_column_name: S_SUPPKEY
         tests:
           # This is a higher performance way to test compound PK/UK
           - dbt_utils.unique_combination_of_columns:
@@ -82,44 +85,40 @@ sources:
           - name: R_REGIONKEY
             description: "The primary key for this table"
             tests:
-              - unique
-              - not_null
+              - dbt_constraints.primary_key
 
       - name: SUPPLIER
         columns:
           - name: S_SUPPKEY
             description: "The primary key for this table"
             tests:
-              - unique
-              - not_null
+              - dbt_constraints.primary_key
           - name: S_NATIONKEY
             tests:
               - not_null
-              - relationships:
-                  to: source('TPC_H', 'NATION')
-                  field: N_NATIONKEY
+              - dbt_constraints.foreign_key:
+                  pk_table_name: source('TPC_H', 'NATION')
+                  pk_column_name: N_NATIONKEY
 
       - name: ORDERS
         columns:
           - name: O_ORDERKEY
             description: "The primary key for this table"
             tests:
-              - unique
-              - not_null
+              - dbt_constraints.primary_key
           - name: O_CUSTKEY
             tests:
               - not_null
-              - relationships:
-                  to: source('TPC_H', 'CUSTOMER')
-                  field: C_CUSTKEY
+              - dbt_constraints.foreign_key:
+                  pk_table_name: source('TPC_H', 'CUSTOMER')
+                  pk_column_name: C_CUSTKEY
 
       - name: CUSTOMER
         columns:
           - name: C_CUSTKEY
             description: "The primary key for dim_customers"
             tests:
-              - unique
-              - not_null
+              - dbt_constraints.primary_key
           - name: C_NAME
             description: "Customer Name"
             tests:
@@ -127,18 +126,18 @@ sources:
           - name: C_NATIONKEY
             tests:
               - not_null
-              - relationships:
-                  to: source('TPC_H', 'NATION')
-                  field: N_NATIONKEY
+              - dbt_constraints.foreign_key:
+                  pk_table_name: source('TPC_H', 'NATION')
+                  pk_column_name: N_NATIONKEY
 
       - name: LINEITEM
         columns:
           - name: L_ORDERKEY
             tests:
               - not_null
-              - relationships:
-                  to: source('TPC_H', 'ORDERS')
-                  field: O_ORDERKEY
+              - dbt_constraints.foreign_key:
+                  pk_table_name: source('TPC_H', 'ORDERS')
+                  pk_column_name: O_ORDERKEY
           - name: L_LINENUMBER
             tests:
               - not_null
@@ -153,7 +152,12 @@ sources:
           #     column_name: "COALESCE(L_ORDERKEY, '') || '~' || L_LINENUMBER, '')"
 
           # How to validate a compound foreign key
-          - relationships:
-              column_name: "COALESCE(L_PARTKEY::VARCHAR, '') || '~' || COALESCE(L_SUPPKEY::VARCHAR, '')"
-              to: source('TPC_H', 'PARTSUPP')
-              field: "COALESCE(PS_PARTKEY::VARCHAR, '') || '~' || COALESCE(PS_SUPPKEY::VARCHAR, '')"
+          # Replace relationships with a table-level dbt_constraints.foreign_key test
+          - dbt_constraints.foreign_key:
+              fk_column_names:
+                - L_PARTKEY
+                - L_SUPPKEY
+              pk_table_name: source('TPC_H', 'PARTSUPP')
+              pk_column_names:
+                - PS_PARTKEY
+                - PS_SUPPKEY
