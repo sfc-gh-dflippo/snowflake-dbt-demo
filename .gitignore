@@ -14,3 +14,7 @@ logs/
 **/dbt.log
 package-lock.yml
 dbt_internal_packages/
+docker/
+**/*.code-workspace
+**/*.bad
+**/*.sample
