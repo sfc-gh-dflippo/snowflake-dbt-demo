@@ -34,7 +34,7 @@ Type 2 Customers dimension based on name and flags
         customer.c_custkey as integration_id,
         hash(customer.c_name, c_active_customer_flag, c_open_order_customer_flag) as cdc_hash_key
     from {{ source('TPC_H', 'CUSTOMER') }} as customer
-    left outer join {{ ref('LKP_CUSTOMERS_WITH_ORDERS') }} as lkp_customers_with_orders on
-        lkp_customers_with_orders.o_custkey = customer.c_custkey
+    left outer join {{ ref('int_customers__with_orders') }} as lkp_customers_with_orders on
+        lkp_customers_with_orders.customer_key = customer.c_custkey
 
 {% endsnapshot %}

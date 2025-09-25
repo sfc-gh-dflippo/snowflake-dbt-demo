@@ -1,0 +1,374 @@
+version: 2
+
+# BRONZE LAYER - SOURCE DEFINITIONS
+# This file contains all source table definitions used across the bronze layer
+# Sources are documented here with data quality tests and referential integrity
+
+sources:
+  # =============================================================================
+  # DYNAMIC WAREHOUSES - Runtime Warehouse Management
+  # =============================================================================
+  - name: dynamic_warehouses
+    description: "Dynamic warehouse assignment and management sources"
+    database: "{{ target.database }}"
+    schema: "{{ target.schema }}"
+    tables:
+      - name: dynamic_warehouse_assignment
+        description: "Dynamic warehouse assignment recommendations"
+
+  # =============================================================================
+  # SNOWFLAKE STREAMS - Change Data Capture Sources
+  # =============================================================================
+  - name: SNOWFLAKE_TABLE_STREAM
+    description: "Snowflake streams for change data capture patterns"
+    schema: "{{target.schema}}"
+    database: "{{target.database}}"
+    tables:
+      - name: customer_cdc_st
+        description: "Customer change data capture stream"
+
+  # =============================================================================
+  # EXTERNAL DATA SOURCES - Economic and Financial Data
+  # =============================================================================
+  - name: ECONOMIC_ESSENTIALS
+    description: "Cybersyn Economic Essentials data including FX rates and economic indicators"
+    database: |
+      {%- if target.name == 'cas2' -%}
+        CYBERSYN_FINANCIAL__ECONOMIC_ESSENTIALS
+      {%- else -%}
+        CYBERSYN_FINANCIAL_ECONOMIC_ESSENTIALS
+      {%- endif -%}
+    schema: CYBERSYN
+    tables:
+      - name: FX_RATES_TIMESERIES
+        description: "Foreign exchange rates time series data"
+        columns:
+          - name: DATE
+            description: "Rate effective date"
+            tests:
+              - not_null
+          - name: BASE_CURRENCY_ID
+            description: "Base currency code (ISO 4217)"
+            tests:
+              - not_null
+          - name: QUOTE_CURRENCY_ID
+            description: "Quote currency code (ISO 4217)"
+            tests:
+              - not_null
+          - name: VALUE
+            description: "Exchange rate value (base to quote)"
+            tests:
+              - not_null
+          - name: VARIABLE
+            description: "Unique identifier for the currency pair"
+          - name: VARIABLE_NAME
+            description: "Human-readable identifier for the currency pair"
+
+  # =============================================================================
+  # TPC-H BENCHMARK DATA - Standard Business Intelligence Test Dataset
+  # =============================================================================
+  - name: TPC_H
+    description: "TPC-H benchmark dataset for business intelligence testing and demonstration"
+    config:
+      tags:
+        - "Raw_Layer"
+        - "TPC"
+    schema: TPCH_SF1
+    database: SNOWFLAKE_SAMPLE_DATA
+    quoting:
+      database: false
+      schema: false
+      identifier: false
+
+    tables:
+      - name: NATION
+        description: "Nations reference table with regional hierarchy"
+        columns:
+          - name: N_NATIONKEY
+            description: "The primary key for this table"
+            tests:
+              - dbt_constraints.primary_key
+          - name: N_NAME
+            description: "Nation name"
+            tests:
+              - not_null
+              - unique
+          - name: N_REGIONKEY
+            description: "Foreign key to regions table"
+            tests:
+              - not_null
+              - dbt_constraints.foreign_key:
+                  pk_table_name: source('TPC_H', 'REGION')
+                  pk_column_name: R_REGIONKEY
+          - name: N_COMMENT
+            description: "Nation comments"
+
+      - name: REGION
+        description: "Regions reference table"
+        columns:
+          - name: R_REGIONKEY
+            description: "The primary key for this table"
+            tests:
+              - dbt_constraints.primary_key
+          - name: R_NAME
+            description: "Region name"
+            tests:
+              - not_null
+              - unique
+          - name: R_COMMENT
+            description: "Region comments"
+
+      - name: CUSTOMER
+        description: "Customer master data with geographic and account information"
+        columns:
+          - name: C_CUSTKEY
+            description: "The primary key for customers"
+            tests:
+              - dbt_constraints.primary_key
+          - name: C_NAME
+            description: "Customer Name"
+            tests:
+              - not_null
+          - name: C_ADDRESS
+            description: "Customer address"
+          - name: C_NATIONKEY
+            description: "Foreign key to nation"
+            tests:
+              - not_null
+              - dbt_constraints.foreign_key:
+                  pk_table_name: source('TPC_H', 'NATION')
+                  pk_column_name: N_NATIONKEY
+          - name: C_PHONE
+            description: "Customer phone number"
+          - name: C_ACCTBAL
+            description: "Customer account balance"
+            tests:
+              - not_null
+          - name: C_MKTSEGMENT
+            description: "Customer market segment"
+            tests:
+              - not_null
+              - accepted_values:
+                  values: ['AUTOMOBILE', 'BUILDING', 'FURNITURE', 'HOUSEHOLD', 'MACHINERY']
+          - name: C_COMMENT
+            description: "Customer comments"
+
+      - name: ORDERS
+        description: "Orders transactional data"
+        columns:
+          - name: O_ORDERKEY
+            description: "The primary key for this table"
+            tests:
+              - dbt_constraints.primary_key
+          - name: O_CUSTKEY
+            description: "Foreign key to customer"
+            tests:
+              - not_null
+              - dbt_constraints.foreign_key:
+                  pk_table_name: source('TPC_H', 'CUSTOMER')
+                  pk_column_name: C_CUSTKEY
+          - name: O_ORDERSTATUS
+            description: "Order status"
+            tests:
+              - not_null
+              - accepted_values:
+                  values: ['O', 'F', 'P']
+          - name: O_TOTALPRICE
+            description: "Total order price"
+            tests:
+              - not_null
+          - name: O_ORDERDATE
+            description: "Order date"
+            tests:
+              - not_null
+          - name: O_ORDERPRIORITY
+            description: "Order priority"
+            tests:
+              - not_null
+          - name: O_CLERK
+            description: "Order clerk"
+          - name: O_SHIPPRIORITY
+            description: "Shipping priority"
+          - name: O_COMMENT
+            description: "Order comments"
+
+      - name: LINEITEM
+        description: "Order line items - the fact table grain of the TPC-H schema"
+        columns:
+          - name: L_ORDERKEY
+            description: "Foreign key to orders (part of composite PK)"
+            tests:
+              - not_null
+              - dbt_constraints.foreign_key:
+                  pk_table_name: source('TPC_H', 'ORDERS')
+                  pk_column_name: O_ORDERKEY
+          - name: L_LINENUMBER
+            description: "Line number within order (part of composite PK)"
+            tests:
+              - not_null
+          - name: L_PARTKEY
+            description: "Foreign key to parts"
+            tests:
+              - not_null
+              - dbt_constraints.foreign_key:
+                  pk_table_name: source('TPC_H', 'PART')
+                  pk_column_name: P_PARTKEY
+          - name: L_SUPPKEY
+            description: "Foreign key to suppliers"
+            tests:
+              - not_null
+              - dbt_constraints.foreign_key:
+                  pk_table_name: source('TPC_H', 'SUPPLIER')
+                  pk_column_name: S_SUPPKEY
+          - name: L_QUANTITY
+            description: "Quantity ordered"
+            tests:
+              - not_null
+          - name: L_EXTENDEDPRICE
+            description: "Extended price"
+            tests:
+              - not_null
+          - name: L_DISCOUNT
+            description: "Discount rate"
+            tests:
+              - not_null
+          - name: L_TAX
+            description: "Tax rate"
+            tests:
+              - not_null
+          - name: L_RETURNFLAG
+            description: "Return flag"
+            tests:
+              - not_null
+              - accepted_values:
+                  values: ['A', 'N', 'R']
+          - name: L_LINESTATUS
+            description: "Line status"
+            tests:
+              - not_null
+              - accepted_values:
+                  values: ['F', 'O']
+          - name: L_SHIPDATE
+            description: "Ship date"
+            tests:
+              - not_null
+          - name: L_COMMITDATE
+            description: "Commit date"
+            tests:
+              - not_null
+          - name: L_RECEIPTDATE
+            description: "Receipt date"
+            tests:
+              - not_null
+          - name: L_SHIPINSTRUCT
+            description: "Ship instructions"
+          - name: L_SHIPMODE
+            description: "Ship mode"
+          - name: L_COMMENT
+            description: "Line item comments"
+        tests:
+          # Composite primary key test
+          - dbt_utils.unique_combination_of_columns:
+              combination_of_columns:
+                - L_ORDERKEY
+                - L_LINENUMBER
+          # Compound foreign key test (part-supplier relationship)
+          - dbt_constraints.foreign_key:
+              fk_column_names:
+                - L_PARTKEY
+                - L_SUPPKEY
+              pk_table_name: source('TPC_H', 'PARTSUPP')
+              pk_column_names:
+                - PS_PARTKEY
+                - PS_SUPPKEY
+
+      - name: PART
+        description: "Parts master data"
+        columns:
+          - name: P_PARTKEY
+            description: "The primary key for this table"
+            tests:
+              - dbt_constraints.primary_key
+          - name: P_NAME
+            description: "Part name"
+            tests:
+              - not_null
+          - name: P_MFGR
+            description: "Manufacturer"
+          - name: P_BRAND
+            description: "Brand"
+          - name: P_TYPE
+            description: "Part type"
+          - name: P_SIZE
+            description: "Part size"
+          - name: P_CONTAINER
+            description: "Container type"
+          - name: P_RETAILPRICE
+            description: "Retail price"
+            tests:
+              - not_null
+          - name: P_COMMENT
+            description: "Part comments"
+
+      - name: SUPPLIER
+        description: "Suppliers master data"
+        columns:
+          - name: S_SUPPKEY
+            description: "The primary key for this table"
+            tests:
+              - dbt_constraints.primary_key
+          - name: S_NAME
+            description: "Supplier name"
+            tests:
+              - not_null
+          - name: S_ADDRESS
+            description: "Supplier address"
+          - name: S_NATIONKEY
+            description: "Foreign key to nation"
+            tests:
+              - not_null
+              - dbt_constraints.foreign_key:
+                  pk_table_name: source('TPC_H', 'NATION')
+                  pk_column_name: N_NATIONKEY
+          - name: S_PHONE
+            description: "Supplier phone"
+          - name: S_ACCTBAL
+            description: "Supplier account balance"
+            tests:
+              - not_null
+          - name: S_COMMENT
+            description: "Supplier comments"
+
+      - name: PARTSUPP
+        description: "Part-supplier relationship with supply information"
+        columns:
+          - name: PS_PARTKEY
+            description: "Part of compound primary key for this table"
+            tests:
+              - not_null
+              - dbt_constraints.foreign_key:
+                  pk_table_name: source('TPC_H', 'PART')
+                  pk_column_name: P_PARTKEY
+          - name: PS_SUPPKEY
+            description: "Part of compound primary key for this table"
+            tests:
+              - not_null
+              - dbt_constraints.foreign_key:
+                  pk_table_name: source('TPC_H', 'SUPPLIER')
+                  pk_column_name: S_SUPPKEY
+          - name: PS_AVAILQTY
+            description: "Available quantity"
+            tests:
+              - not_null
+          - name: PS_SUPPLYCOST
+            description: "Supply cost"
+            tests:
+              - not_null
+          - name: PS_COMMENT
+            description: "Part-supplier comments"
+        tests:
+          # Composite primary key test
+          - dbt_utils.unique_combination_of_columns:
+              combination_of_columns:
+                - PS_PARTKEY
+                - PS_SUPPKEY

@@ -1,192 +1,232 @@
 # dbt for Snowflake Demonstration Project
 
-## How to get started
+## 📚 Documentation Navigation
+| Document | Description |
+|----------|-------------|
+| **[README.md](README.md)** | 👈 **You are here** - Project overview, architecture, and feature matrix |
+| **[DBT_SETUP_GUIDE.md](DBT_SETUP_GUIDE.md)** | Complete installation and setup instructions for all platforms |
+| **[DBT_BEST_PRACTICES.md](DBT_BEST_PRACTICES.md)** | Implementation guide for dbt modeling best practices |
 
-This project depends on the following two data sets
+---
 
-- SNOWFLAKE_SAMPLE_DATA that is available by default in all new Snowflake accounts
-- [Snowflake Finance & Economics]([https://app.snowflake.com/marketplace/data-products/search?search=Cybersyn%20Financial%20%26%20Economic%20Essentials](https://app.snowflake.com/marketplace/data-products/search?search=Finance%20%26%20Economics)), formerly known as the Cybersyn Financial Economic Essentials.
-  - It is available for free in the Snowflake Data Markeplace
-  - If named other than "CYBERSYN_FINANCIAL_ECONOMIC_ESSENTIALS", update the database name in sources.yml
+## 🚀 Quick Start
 
+**New to dbt?** Check out our comprehensive **[dbt Setup Guide](DBT_SETUP_GUIDE.md)** for detailed installation instructions across all platforms.
 
-## Installing dbt using Miniforge
+**Ready to explore?** This project demonstrates dbt best practices integrated with medallion architecture for comprehensive training.
 
-- If you can install your own software, I generally recommend using [Miniforge](https://conda-forge.org/download/) to create an isolated Python environment just for dbt. Miniforge is completely open source, does not require a license like Anaconda or Miniconda, and uses the free Conda-Forge repository for packages. A dbt-conda-env.yml file has been provided so you can set up this environment and switch to it with the following commands. This is much simpler than some other flavors of Python.
-    ```shell
-    conda env create -f dbt-conda-env.yml
-    conda activate dbt
-    ```
-- If you have SSL errors, you may need to install pip_system_certs into your base environment first. The dbt-conda-env.yml file already includes this for your child environment. The `--trusted-host` parameters below will allow you to bypass firewall issues.
-    ```shell
-    conda activate base
-    python -m pip install pip -U --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org
-    python -m pip install pip_system_certs -U --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org
-    ```
+### Prerequisites
+- SNOWFLAKE_SAMPLE_DATA (available by default in all Snowflake accounts)
+- [Snowflake Finance & Economics](https://app.snowflake.com/marketplace/data-products/search?search=Finance%20%26%20Economics) (free in Snowflake Data Marketplace)
 
-## Installing dbt using any other flavor of Python - Windows
+### Quick Setup
+```shell
+# Install dependencies
+dbt deps
 
-### Setting up Python and verifying which python you are now using:
+# Build the project
+dbt build --full-refresh
+```
 
-- Install Python using your company's Self Service portal or install the [open source version of Python.org](https://www.python.org/downloads/)
-- First you will want to see if you have the correct version of Python in your path using a Windows Command Prompt:
-    ```shell
-    where python
-    python --version
-    ```
-- It should return a path like `C:\Program Files\Python311`. You can use Python 3.8 and higher. If you can't run `python --version` it is likely that you do not have the right version of python in your PATH.
+For detailed setup instructions, see **[DBT_SETUP_GUIDE.md](DBT_SETUP_GUIDE.md)**.
 
-### How to change your PATH
+### 📋 Quick Command Reference
+```shell
+# Essential commands
+dbt deps                    # Install packages
+dbt build                   # Run all models and tests
+dbt build --full-refresh    # Full reload of incremental models
 
-- If this is not the correct version of Python or the wrong location, you can update your PATH on Windows 10 & 11 using the following:
-    1) Open Start Search, type “env”, and select “Edit the system environment variables”.
-    2) Click the “Environment Variables…” button.
-    3) In the “User Variables” section, locate “Path”, and click edit.
-    4) In the “Edit environment variable” UI, click “New” to add the new path to your preferred version of Python.
-    5) Use the "Move Up" button to make your new path the first entry
-    6) Close and reopen any command prompts or VS Code to use the new PATH
-    7) Use the `where python` and `python --version` commands again to verify that you are now using the correct version.
+# Selection commands  
+dbt build --select modelname     # Run specific model
+dbt build --select +modelname    # Run model and parents
+dbt build --select modelname+    # Run model and children
 
-### Update pip and install dbt
+# Documentation
+dbt docs generate          # Generate documentation
+dbt docs serve            # Serve documentation locally
+```
 
-- Next make sure pip is up to date and that pip_system_certs is also installed. The `--trusted-host` parameters below will help you avoid firewall issues.
-    ```shell
-    python -m pip install pip -U --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org
-    python -m pip install pip_system_certs -U --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org
-    ```
-- Next install virtualenv and create a new virtual environment called `dbt`
-    ```shell
-    python -m pip install --user virtualenv
-    python -m venv dbt
-    ```
-- Now you can activate your virtual environment, verify that the location of python has changed, and install dbt
-    ```shell
-    .\dbt\Scripts\activate
-    where python
-    python -m pip install -U dbt-core dbt-snowflake
-    dbt --version
-    ```
+See **[DBT_SETUP_GUIDE.md](DBT_SETUP_GUIDE.md)** for complete command reference and troubleshooting.
 
-## Installing dbt using any other flavor of Python - Unix/macOS
-- Install Python using your company's Self Service portal or install the [open source version of Python.org](https://www.python.org/downloads/)
-- First you will want to see if you have the correct version of Python in your path using a shell:
-    ```shell
-    which python
-    python --version
-    ```
-- You can use Python 3.8 and higher. If you can't run `python --version` it is likely that you do not have the right version of python in your PATH.
-### How to change your PATH
-- This command can be used to append your folder before the existing PATH. You may need to add this to your .bash_profile or other shell configuration file to make the change permanant.
-    ```shell
-    export PATH=/my/path/to/python/:$PATH
-    ```
-### Update pip and install dbt
-- Next make sure pip is up to date and that pip_system_certs is also installed. The `--trusted-host` parameters below will help you avoid firewall issues.
-    ```shell
-    python -m pip install pip -U --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org
-    python -m pip install pip_system_certs -U --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org
-    ```
-- Next install virtualenv and create a new virtual environment called `dbt`
-    ```shell
-    python -m pip install --user virtualenv
-    python -m venv dbt
-    ```
-- Now you can activate your virtual environment, verify that the location of python has changed, and install dbt. We install/update pip and pip_system_certs this time in the virtual env.
-    ```shell
-    source dbt/bin/activate
-    which python
-    python -m pip install pip -U --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org
-    python -m pip install pip_system_certs -U --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org
-    python -m pip install -U dbt-core dbt-snowflake
-    dbt --version
-    ```
+## 🔍 Quick Feature Finder
+Looking for a specific dbt feature? Jump directly to examples:
 
-## Creating a simple dbt sample project to test your connection to Snowflake
-- The dbt init command can step you through creating a `~/.dbt/profiles.yml` file and starter project structure.
-- Be aware that running this project will create a table and a view in the schema you specify.
-- Also be aware that the sample project is designed to have a test fail when you first run `dbt build`. If you open the first model under /models/ you will see that it has a where clause you can uncomment to make the test pass.
-    ```shell
-    dbt init
-    dbt compile
-    dbt build
-    ```
+**🏗️ Materializations:** [Ephemeral](#-materializations) • [Incremental](#-materializations) • [Dynamic Tables](#-materializations) • [Python Models](#-materializations)  
+**🧪 Testing:** [dbt_constraints](#-testing-framework) • [Generic Tests](#-testing-framework) • [Singular Tests](#-testing-framework) • [Contracts](#-testing-framework)  
+**📊 Advanced:** [Snapshots](#-advanced-dbt-features) • [Exposures](#-advanced-dbt-features) • [Seeds](#-advanced-dbt-features) • [Analyses](#-advanced-dbt-features)  
+**🔧 Jinja:** [Advanced Templating](#-jinja--macros) • [Custom Macros](#-jinja--macros) • [Variables](#-jinja--macros) • [Loops](#-jinja--macros)  
+**⚙️ Snowflake:** [Streams](#-snowflake-specific-features) • [Sequences](#-snowflake-specific-features) • [Secure Views](#-snowflake-specific-features) • [Warehouses](#-snowflake-specific-features)  
+**📈 Business:** [Executive Dashboards](#-business-intelligence-integration) • [Customer Analytics](#-business-intelligence-integration) • [TPC-H Benchmarks](#-business-intelligence-integration)
 
-## Setting Up Your Editor
+---
 
-- Most dbt users edit their dbt scripts with Microsoft's free editor, VSCode
-  - [Download VSCode](https://code.visualstudio.com/Download)
-  - From the Extensions screen (icon looks like Tetris) you should install two extensions
-    - python
-    - ["Snowflake"](https://docs.snowflake.com/en/user-guide/vscode-ext)
-  - In the Explorer, right click in the background and "Add folder to workspace" to add where your dbt project will be located.
-  - On Windows, you will want to change the default terminal to "Command Prompt". Under *File* -> *Preferences* -> *Settings*, search for "windows terminal" and scroll down to where it says the default is "null" and change that to "Command Prompt".
-  - You will want to set the default intepreter to your new "dbt" environment using [these instructions from Microsoft](https://code.visualstudio.com/docs/python/python-tutorial#_select-a-python-interpreter).
+## Project Architecture
 
-### Setting Up Your Snowflake Account for this sample project
+This project demonstrates **dbt Best Practices integrated with Medallion Architecture** for comprehensive training:
 
-- Create a target schema in Snowflake that you want to deploy your dbt demo into
-- Add the Knoema Economy Data Atlas and Snowflake Sample Data to your account if necessary
+### 🏆 Integrated Architecture: Best Practices + Medallion
 
-### Update Configuration For Your Account and Test Execution
+- **Bronze Layer** (`models/bronze/`) - **Staging models** + raw data patterns
+- **Silver Layer** (`models/silver/`) - **Intermediate models** + transformation examples  
+- **Gold Layer** (`models/gold/`) - **Marts models** + advanced analytics
 
-- Update your ~/.dbt/profiles.yml file with your credentials and target DB/schema. There is a sample profiles.yml file you can copy to your ~/.dbt/ folder and update if you don't already have one.
-- From the root folder, run `dbt deps` to download modules from the dbt hub
-- Run `dbt build --full-refresh` and troubleshoot any errors such as missing objects or permission issues
+### 📚 Complexity-Based Learning Path
+Each layer contains three complexity levels with integrated best practices:
 
-## Cheatsheet of most common dbt commands
+#### 🥉 **Bronze Layer: Staging + Raw Patterns**
+- **Crawl** (`bronze/crawl/`) - Simple staging models with basic column renaming
+  - `stg_tpc_h__nations`, `stg_tpc_h__regions`, `stg_tpc_h__customers`, `stg_tpc_h__orders`
+- **Walk** (`bronze/walk/`) - Complex staging with composite keys and external sources
+  - `stg_tpc_h__lineitem`, `stg_economic_essentials__fx_rates`, `stg_customers_with_tests`
+- **Run** (`bronze/run/`) - Advanced staging with streams and incremental loading
+  - `customer_cdc_stream`, `stg_orders_incremental`
 
-- `dbt deps` - download 3rd party packages (necessary for this project before build)
-- `dbt build` - both compile and then run all models & associated tests
-- `dbt build --full-refresh` - have incremental models run as a full reload
-- `dbt build --select modelname` - will only compile/run modelname
-- `dbt build --select +modelname` - will compile/run modelname and all parents
-- `dbt build --select modelname+` - will compile/run modelname and all children
-- `dbt build --select +modelname+` - will compile/run modelname, and all parents and children
-- `dbt build --select @modelname` - will compile/run modelname, all parents, all children, AND all parents of all children
-- `dbt build --exclude modelname` - will compile/run all models except modelname
-- `dbt compile` - compile all models but do not execute them
-- `dbt run` - run all models & tests
-- `dbt seed` - create or refresh small tables from .csv seed files
-- `dbt clean` - clear your logs and compiled scripts (can fix issues)
-- `dbt docs generate` - refresh the documentation for your project
-- `dbt docs serve` - open this documentation in your browser
+#### 🥈 **Silver Layer: Intermediate + Transformations**
+- **Crawl** (`silver/crawl/`) - Simple data cleaning and standardization
+  - `clean_nations`
+- **Walk** (`silver/walk/`) - Business logic and aggregations
+  - `int_customers__with_orders`, `customer_segments`, `lookup_exchange_rates`
+- **Run** (`silver/run/`) - Complex transformations with advanced features
+  - `int_fx_rates__daily`, `order_facts_dynamic`, `customer_clustering`, `async_bulk_operations`
 
-Additional commands and details are available in [dbt's documentation](https://docs.getdbt.com/reference/dbt-commands)
+#### 🥇 **Gold Layer: Marts + Analytics**
+- **Crawl** (`gold/crawl/`) - Simple aggregated views and summaries
+  - `dim_current_year_orders`, `dim_current_year_open_orders`, `nation_summary`
+- **Walk** (`gold/walk/`) - Complete business dimensions and analytics
+  - `dim_customers`, `dim_orders`, `customer_insights`, `dim_calendar_day`, `dim_customer_changes`
+- **Run** (`gold/run/`) - High-performance fact tables and advanced analytics
+  - `fct_order_lines`, `executive_dashboard`, `fact_order_line_full_reload`, `fact_order_line_pivot`
 
-## Project features
+#### 🔧 **Other Layer: Utility + Reference Models**
+- **Utility Models** (`other/`) - System monitoring and reference implementations
+  - `dbt_query_history`, `dynamic_warehouse_assignment`
+- **Benchmarks** (`other/tpc_h_benchmarks/`) - Industry-standard performance queries
+  - `Q1_FACT_PRICING_SUMMARY_REPORT_QUERY`, `Q2_MINIMUM_COST_SUPPLIER_QUERY`, `Q3_SHIPPING_PRIORITY_QUERY`, `Q4_ORDER_PRIORITY_CHECKING_QUERY`
 
-- How to nest models:
-  - DIM_ORDERS
-  - DIM_CURRENT_YEAR_ORDERS
-  - DIM_CURRENT_YEAR_OPEN_ORDERS
-- Snowflake commands in a pre-hook:
-  - DIM_CALENDAR_DAY
-- Materializations:
-  - LKP_EXCHANGE_RATES (table)
-  - LKP_CUSTOMERS_WITH_ORDERS (ephemeral)
-  - DIM_CUSTOMERS_SHARE (secure view)
-  - FACT_ORDER_LINE (incremental fact)
-  - DIM_CUSTOMERS, DIM__CUSTOMERS (incremental dim)
-  - DIM_CUSTOMERS_TYPE2 (snapshot)
-- Source data quality tests:
-  - sources.yml
-- Model data quality tests:
-  - schema.yml
-- Features available in dbt_project.yml
-  - run-start/run-end hooks
-  - logging before and after modules
-  - default materializations by folder path
-  - Snowflake features - copy_grants, secure views, warehouse
-  - schemas for models
-- Macro examples:
-  - snowflake_surrogate_key
-  - copy_log_to_snowflake
-  - create_masking_policies
-- Jinja expressions:
-  - Q1_FACT_PRICING_SUMMARY_REPORT_QUERY
-  - Q2_MINIMUM_COST_SUPPLIER_QUERY
-  - Q3_SHIPPING_PRIORITY_QUERY
-  - Q4_ORDER_PRIORITY_CHECKING_QUERY
+### 🎯 Best Practices Demonstrated
+
+#### ✅ **Integrated Best Practices by Layer**
+
+**🥉 Bronze (Staging) Best Practices:**
+- **One-to-one source relationships**: Each source has exactly one staging model
+- **Standardized naming**: `stg_{source_name}__{table_name}` convention  
+- **View materialization**: All staging models as views for optimal performance
+- **Feature organization**: `basic_staging/` (crawl) vs `complex_staging/` (walk)
+- **Complexity assessment**: Most staging is crawl-level (basic column renaming)
+- **Comprehensive testing**: Primary keys, foreign keys, data quality checks
+
+**🥈 Silver (Intermediate) Best Practices:**
+- **Business logic isolation**: Complex transformations separated from staging
+- **Feature organization**: `business_logic/` vs `advanced_transformations/`
+- **Ephemeral materialization**: For reusable components (`business_logic/`)
+- **Table materialization**: For complex logic that needs persistence (`advanced_transformations/`)
+- **No direct source references**: Only references staging models
+
+**🥇 Gold (Marts) Best Practices:**
+- **Business-ready data**: Final data products for consumption
+- **Feature organization**: `dimensions/` vs `facts/` by data modeling pattern
+- **Proper dependencies**: References staging, intermediate, and other marts only
+- **Clear naming**: `dim_` for dimensions, `fct_` for facts
+- **Incremental materialization**: Large fact tables for scalability
+- **Comprehensive business testing**: Relationship validation, business rule checks
+
+**Key Rules Implemented:**
+- ✅ **No Direct Joins to Source**: All models reference staging layer, not sources directly
+- ✅ **Proper Staging Layer**: One-to-one relationship between sources and staging models  
+- ✅ **No Source Fanout**: Each source referenced by exactly one staging model
+- ✅ **Proper Model Dependencies**: Clear lineage from staging → intermediate → marts
+- ✅ **Standardized Naming**: Consistent `stg_`, `int_`, `dim_`, `fct_` prefixes
+- ✅ **No Hard-coded References**: All references use `ref()` and `source()` functions
+
+## 🎯 Comprehensive dbt-core Features Demonstrated
+
+### **🏗️ Materializations**
+| Feature | Model | Location | Layer | Description |
+|---------|-------|----------|-------|-------------|
+| **Ephemeral (Staging)** | `stg_tpc_h__customers` | [`bronze/crawl/`](models/bronze/crawl/stg_tpc_h__customers.sql) | 🥉 Bronze | One-to-one source relationship, CTE compilation |
+| **Ephemeral (Staging)** | `stg_tpc_h__lineitem` | [`bronze/walk/`](models/bronze/walk/stg_tpc_h__lineitem.sql) | 🥉 Bronze | Complex staging with composite keys |
+| **Ephemeral (Intermediate)** | `int_customers__with_orders` | [`silver/walk/`](models/silver/walk/int_customers__with_orders.sql) | 🥈 Silver | Reusable business logic, aggregations |
+| **Table (Intermediate)** | `int_fx_rates__daily` | [`silver/run/`](models/silver/run/int_fx_rates__daily.sql) | 🥈 Silver | Complex transformations with window functions |
+| **Table (Dimensions)** | `dim_customers` | [`gold/walk/`](models/gold/walk/dim_customers.sql) | 🥇 Gold | Business-ready customer dimension |
+| **Table (Dimensions)** | `dim_orders` | [`gold/walk/`](models/gold/walk/dim_orders.sql) | 🥇 Gold | Business-ready orders dimension |
+| **Incremental (Facts)** | `fct_order_lines` | [`gold/run/`](models/gold/run/fct_order_lines.sql) | 🥇 Gold | High-performance fact table with incremental loading |
+| **Incremental (Advanced)** | `stg_orders_incremental` | [`bronze/run/`](models/bronze/run/stg_orders_incremental.sql) | 🥉 Bronze | Advanced incremental with complex Jinja logic |
+| **Incremental (Macros)** | `dim_customers_macro_example` | [`gold/run/incremental_with_macros/`](models/gold/run/incremental_with_macros/dim_customers_macro_example.sql) | 🥇 Gold | SCD Type 2 with custom macros |
+| **Dynamic Table** | `order_facts_dynamic` | [`silver/run/`](models/silver/run/order_facts_dynamic.sql) | 🥈 Silver | Real-time analytics with dynamic tables |
+| **Python Model (ML)** | `customer_clustering` | [`silver/run/`](models/silver/run/customer_clustering.py) | 🥈 Silver | Machine learning with scikit-learn |
+| **Python Model (Async)** | `async_bulk_operations` | [`silver/run/`](models/silver/run/async_bulk_operations.py) | 🥈 Silver | Parallel processing and bulk operations |
+| **View (Legacy)** | `dim_calendar_day` | [`gold/walk/`](models/gold/walk/dim_calendar_day.sql) | 🥇 Gold | Calendar dimension with ghost keys |
+
+### **🧪 Testing Framework**
+| Feature | Model/Location | Complexity | Description |
+|---------|----------------|------------|-------------|
+| **dbt_constraints (PK)** | All dimension models | All | Primary key constraints with database enforcement |
+| **dbt_constraints (FK)** | All fact models | All | Foreign key relationships with referential integrity |
+| **dbt_constraints (UK)** | Various models | All | Unique key constraints for business rules |
+| **Generic Tests** | `test_positive_values` | [`tests/generic/`](tests/generic/test_positive_values.sql) | Walk | Custom reusable test for positive values |
+| **Singular Tests** | `test_customer_balance_distribution` | [`tests/singular/`](tests/singular/test_customer_balance_distribution.sql) | Run | Specific business rule validation |
+| **Advanced Testing** | `fct_order_lines` | [`gold/_models.yml`](models/gold/_models.yml) | Run | Complex test combinations and expressions |
+| **Contract Enforcement** | `order_facts_dynamic` | [`silver/_models.yml`](models/silver/_models.yml) | Run | Column contracts and data types |
+| **dbt_utils Tests** | Various models | All | Unique combinations, accepted values, ranges |
+
+### **📊 Advanced dbt Features**
+| Feature | Model/Location | Complexity | Description |
+|---------|----------------|------------|-------------|
+| **Snapshots (SCD Type 2)** | `DIM_CUSTOMERS_SCD` | [`snapshots/30_presentation/`](snapshots/30_presentation/DIM_CUSTOMERS_SCD.sql) | Run | Historical data tracking with check strategy |
+| **Snapshots (Streams)** | `DIM_CUSTOMERS_FROM_STREAM` | [`snapshots/30_presentation/`](snapshots/30_presentation/DIM_CUSTOMERS_FROM_STREAM.sql) | Run | Change data capture with Snowflake streams |
+| **Exposures** | `executive_dashboard_exposure` | [`exposures/`](exposures/executive_dashboard_exposure.yml) | Walk | BI tool integration and lineage |
+| **Analyses** | `customer_cohort_analysis` | [`analyses/`](analyses/customer_cohort_analysis.sql) | Run | Exploratory data analysis |
+| **Seeds** | `dynamic_warehouses` | [`seeds/`](seeds/dynamic_warehouses.csv) | Walk | Reference data management |
+| **Operations** | `medallion_architecture_helpers` | [`macros/`](macros/medallion_architecture_helpers.sql) | Run | Custom dbt operations |
+
+### **🔧 Jinja & Macros**
+| Feature | Model/Location | Complexity | Description |
+|---------|----------------|------------|-------------|
+| **Advanced Jinja** | `order_facts_dynamic` | [`silver/run/`](models/silver/run/order_facts_dynamic.sql) | Run | Complex loops, conditionals, and variables |
+| **Custom Macros** | `snowflake_integration_key` | [`macros/`](macros/snowflake_integration_key.sql) | Run | Surrogate key generation |
+| **Custom Macros** | `insert_ghost_key` | [`macros/`](macros/insert_ghost_key.sql) | Run | Ghost key insertion for dimensions |
+| **Custom Macros** | `get_scd_sql` | [`macros/`](macros/get_scd_sql.sql) | Run | SCD Type 2 SQL generation |
+| **Jinja Variables** | `raw_orders_incremental` | [`bronze/run/`](models/bronze/run/raw_orders_incremental.sql) | Run | Dynamic SQL with environment variables |
+| **Jinja Loops** | `fact_order_line_pivot` | [`gold/run/`](models/gold/run/fact_order_line_pivot.sql) | Run | Dynamic column generation |
+
+### **⚙️ Snowflake-Specific Features**
+| Feature | Model/Location | Complexity | Description |
+|---------|----------------|------------|-------------|
+| **Dynamic Tables** | `order_facts_dynamic` | [`silver/run/`](models/silver/run/order_facts_dynamic.sql) | Run | Real-time materialized views with lag |
+| **Streams** | `customer_cdc_stream` | [`bronze/run/`](models/bronze/run/customer_cdc_stream.sql) | Run | Change data capture streams |
+| **Sequences** | Various dimension models | Run | Auto-incrementing surrogate keys |
+| **Secure Views** | `DIM_CUSTOMERS_SHARE` | [`gold/walk/sensitive_data/`](models/gold/walk/sensitive_data/DIM_CUSTOMERS_SHARE.sql) | Walk | Data sharing with row-level security |
+| **Transient Tables** | Various models | All | Optimized storage for temporary data |
+| **Query Tags** | All models | All | Query identification and monitoring |
+| **Warehouses** | Various models | All | Dynamic warehouse assignment |
+
+### **🔄 Development Workflow**
+| Feature | Location | Complexity | Description |
+|---------|----------|------------|-------------|
+| **Project Structure** | `dbt_project.yml` | All | Medallion architecture configuration |
+| **Variables** | `dbt_project.yml` | Walk | Global configuration management |
+| **Environments** | `profiles.yml.sample` | Walk | Multi-environment setup |
+| **Packages** | `packages.yml` | All | External package management (dbt_constraints, dbt_utils, dbt_artifacts) |
+| **Documentation** | `DBT_SETUP_GUIDE.md` | All | Complete installation and configuration guide |
+| **Best Practices** | `DBT_BEST_PRACTICES.md` | All | Implementation guide for dbt modeling standards |
+| **Hooks (Pre/Post)** | Various models | Run | Custom SQL execution before/after model runs |
+| **Grants** | `dbt_project.yml` | All | Automated permission management |
+
+### **📈 Business Intelligence Integration**
+| Feature | Model/Location | Complexity | Description |
+|---------|----------------|------------|-------------|
+| **Executive Dashboard** | `executive_dashboard` | [`gold/run/`](models/gold/run/executive_dashboard.sql) | Run | KPI aggregations for leadership reporting |
+| **Customer Insights** | `customer_insights` | [`gold/walk/`](models/gold/walk/customer_insights.sql) | Walk | Customer analytics and segmentation |
+| **TPC-H Performance** | `Q1_FACT_PRICING_SUMMARY` | [`other/tpc_h_benchmarks/`](models/other/tpc_h_benchmarks/Q1_FACT_PRICING_SUMMARY_REPORT_QUERY.sql) | Run | Industry-standard performance benchmarks |
+| **Query History Analysis** | `dbt_query_history` | [`other/`](models/other/dbt_query_history.sql) | Run | dbt execution monitoring and optimization |
+
+### **🎓 Training & Learning Path**
+| Complexity | Focus | Example Models | Key Concepts |
+|------------|-------|----------------|--------------|
+| **🥉 Crawl (Beginner)** | Basic staging, simple transformations | `stg_tpc_h__customers`, `raw_nations` | Source relationships, basic SQL, ephemeral models |
+| **🥈 Walk (Intermediate)** | Business logic, intermediate models | `int_customers__with_orders`, `dim_customers` | Aggregations, joins, business rules, testing |
+| **🥇 Run (Advanced)** | Complex analytics, performance optimization | `fct_order_lines`, `customer_clustering` | Incremental loading, Python models, advanced Jinja |
 
 ## Resources
 

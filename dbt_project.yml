@@ -32,6 +32,7 @@ query-comment: null
 clean-targets: # directories to be removed by `dbt clean`
   - "target"
   - "dbt_packages" # Comment to not clean up dependencies
+  - "dbt_internal_packages"
   - "logs"
 
 # Global initialization and shutdown commands
@@ -52,6 +53,15 @@ vars:
   default_scd_cdc_hash_key: cdc_hash_key
   default_updated_at_column: dbt_updated_ts
   default_inserted_at_column: dbt_inserted_ts
+  
+  # dbt-project-evaluator configuration
+  dbt_project_evaluator:
+    # Configure primary key test recognition for dbt_constraints package
+    primary_key_test_macros: [
+      ["dbt_constraints.test_primary_key"],
+      ["dbt_constraints.test_unique_key", "dbt.test_not_null"],
+      ["dbt.test_unique", "dbt.test_not_null"]
+    ]
 
 # Configuring models
 # Full documentation: https://docs.getdbt.com/docs/configuring-models
@@ -81,28 +91,75 @@ models:
   # Setting the warehouse here will avoid errors for dynamic table models that don't specify a warehouse
   +snowflake_warehouse: "{{ target.warehouse }}"
   +materialized: view
-
+  
   snowflake_demo:
     # We will store table and column descriptions in Snowflake
     +persist_docs:
       relation: true
       columns: true
-    10_raw:
-      +tags: "Raw_Layer"
-    20_integration:
-      +tags: "Integration_Layer"
-      TPC_H_PERFORMANCE:
+    
+    # MEDALLION ARCHITECTURE WITH INTEGRATED BEST PRACTICES
+    # Bronze Layer - Staging models + raw data patterns
+    bronze:
+      +tags: ["bronze", "staging", "raw_data"]
+      +schema: bronze
+      crawl:
+        +tags: ["bronze", "crawl", "beginner", "staging"]
+        +materialized: ephemeral  # Best practice: staging as ephemeral for performance
+      walk:
+        +tags: ["bronze", "walk", "intermediate", "staging"] 
+        +materialized: ephemeral  # Best practice: staging as ephemeral for performance
+      run:
+        +tags: ["bronze", "run", "advanced", "staging"]
+        +materialized: ephemeral  # Best practice: staging as ephemeral for performance
+    
+    # Silver Layer - Intermediate models + transformation patterns
+    silver:
+      +tags: ["silver", "intermediate", "transformed_data"]
+      +schema: silver
+      crawl:
+        +tags: ["silver", "crawl", "beginner"]
         +materialized: table
-        +schema: TPC_H
-        # This folder will use a specific WH
-        #+snowflake_warehouse: "DFLIPPO_DBT_XLARGE_DEMO_WH"
-    30_presentation:
-      +tags: "Presentation_Layer"
+      walk:
+        +tags: ["silver", "walk", "intermediate"]
+        +materialized: ephemeral  # Best practice: intermediate as ephemeral
+      run:
+        +tags: ["silver", "run", "advanced", "intermediate"]
+        +materialized: table  # Some complex intermediate models need persistence
+        +snowflake_warehouse: "{{ target.warehouse }}"
+    
+    # Gold Layer - Marts models + business analytics
+    gold:
+      +tags: ["gold", "marts", "business_ready"]
+      +schema: gold
+      +materialized: table  # Best practice: marts as tables
+      crawl:
+        +tags: ["gold", "crawl", "beginner"]
+      walk:
+        +tags: ["gold", "walk", "intermediate", "marts"]
+        sensitive_data:
+          +tags: ["gold", "walk", "sensitive", "marts"]
+          +materialized: view
+          +secure: true
+      run:
+        +tags: ["gold", "run", "advanced", "marts"]
+        +materialized: incremental  # Best practice: large facts as incremental
+        incremental_with_macros:
+          +tags: ["gold", "run", "incremental", "macros"]
+          +materialized: incremental
+        incremental_without_macros:
+          +tags: ["gold", "run", "incremental", "no_macros"]
+          +materialized: incremental
+    
+    # Other Layer - Utility and reference models
+    other:
+      +tags: ["other", "utility", "reference"]
+      +schema: other
       +materialized: table
-      # dbt supports many Snowflake specific features. Here we will make one folder all SECURE views
-      sensitive:
-        +materialized: view
-        +secure: true
+      tpc_h_benchmarks:
+        +tags: ["other", "benchmarks", "tpc_h"]
+        +materialized: table
+    
 
   # The dbt_artifacts configuration here is for logging your executions
   dbt_artifacts:
@@ -110,9 +167,8 @@ models:
     +database: "{{ env_var('DBT_ARTIFACTS_DATABASE', target.database ) }}" # optional, default is your target database
     +schema: "{{ env_var('DBT_ARTIFACTS_SCHEMA', target.schema ) }}" # optional, default is your target schema
     sources:
-      config:
-        +enabled: true
-        +materialized: incremental
+      +enabled: true
+      +materialized: incremental
 
 snapshots:
   # The snowflake__snapshot_hash_arguments macro in this project removes MD5 from the dbt_scd_id
@@ -124,9 +180,7 @@ snapshots:
     owner_email: "test@nowhere.com"
   snowflake_demo:
     +schema: "DBT_DEMO_SNAPSHOTS"
-    30_presentation:
-      config:
-        +tags: "Presentation_Layer"
+    +tags: ["snapshots", "scd"]
 
 tests:
   # You can set custom properties on tests that will be stored in the dbt logs

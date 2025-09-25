@@ -1,14 +1,16 @@
 ### How to use this file:
-# pip install -U -r requirements.txt
-dbt-core
-dbt-snowflake
+# uv pip install -U -r requirements.txt
+dbt-core==1.9.4
+dbt-snowflake==1.9.2
 keyring
 pandas
 pip
 pip-system-certs
-pyarrow
+pyarrow<19.0.0
 schemachange
-snowflake-cli
+snowflake-cli==3.12.0
+# Use uv tool to install snowflake-cli
+# uv tool install snowflake-cli
 #snowflake-ml-python
 snowflake-snowpark-python
 streamlit

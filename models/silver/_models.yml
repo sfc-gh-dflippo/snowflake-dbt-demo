@@ -1,0 +1,342 @@
+version: 2
+
+# SILVER LAYER - INTERMEDIATE MODELS
+# This file contains documentation for all silver layer intermediate models
+# organized by complexity level (crawl, walk, run)
+
+models:
+  # =============================================================================
+  # SILVER CRAWL - Basic Transformations
+  # Feature: Simple data cleaning and standardization
+  # Complexity: Beginner - Basic transformations and cleaning
+  # Best Practice: Light transformations on staging data
+  # =============================================================================
+
+  - name: clean_nations
+    description: >
+      Incremental data cleaning model with AI classification.
+      Demonstrates incremental materialization to optimize AI function calls.
+      Features AI-powered government type classification that runs only once per nation.
+      Optimized for performance and cost efficiency.
+    meta:
+      owner: "data_team"
+      maturity: "high"
+      complexity: "crawl"
+      tags: ["ai_classification", "incremental", "performance_optimized"]
+    columns:
+      - name: nation_key
+        description: "Primary key for nations table"
+        data_type: number
+        tests:
+          - not_null
+          - unique
+      - name: nation_name
+        description: "Cleaned and standardized nation name"
+        data_type: varchar
+        tests:
+          - not_null
+          - unique
+      - name: region_key
+        description: "Foreign key reference to regions table"
+        data_type: number
+        tests:
+          - not_null
+      - name: nation_comment
+        description: "Cleaned nation comments"
+        data_type: varchar
+      - name: name_length
+        description: "Length of the nation name"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: "> 0"
+      - name: government_type
+        description: "AI-classified government type"
+        data_type: varchar
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['FEDERAL', 'REPUBLIC', 'KINGDOM', 'EMPIRE', 'CONFEDERATION', 'UNION', 'FEDERATION', 'PRINCIPALITY', 'DUCHY', 'SULTANATE', 'EMIRATE', 'OTHER']
+      - name: processed_at
+        description: "Timestamp when record was processed"
+        data_type: timestamp_ntz
+        tests:
+          - not_null
+
+  # =============================================================================
+  # SILVER WALK - Business Logic Models
+  # Feature: Intermediate transformations with business rules
+  # Complexity: Intermediate - Aggregations and business calculations
+  # Best Practice: Reusable business logic separated from staging and marts
+  # =============================================================================
+
+  - name: int_customers__with_orders
+    description: >
+      Intermediate model calculating customer order statistics.
+      Demonstrates intermediate layer best practices with business logic.
+      Ephemeral materialization for reusability across multiple marts.
+      Aggregates order data to provide customer-level metrics.
+    meta:
+      owner: "data_team"
+      maturity: "high"
+      complexity: "walk"
+      tags: ["business_logic", "aggregation", "customer_metrics"]
+    columns:
+      - name: customer_key
+        description: "Customer identifier (primary key from staging)"
+        data_type: number
+        tests:
+          - not_null
+          - unique
+        meta:
+          dimension:
+            type: "primary_key"
+      - name: order_count
+        description: "Total number of orders placed by customer"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+        meta:
+          metric:
+            type: "count"
+            label: "Total Orders"
+      - name: open_order_count
+        description: "Number of open orders for customer (status = 'O')"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+          - dbt_utils.expression_is_true:
+              expression: "<= order_count"
+        meta:
+          metric:
+            type: "count"
+            label: "Open Orders"
+
+  - name: customer_segments
+    description: >
+      Customer segmentation model with advanced business logic.
+      Demonstrates window functions and percentile calculations.
+      Creates customer segments based on account balance and order patterns.
+    meta:
+      owner: "data_team"
+      maturity: "high"
+      complexity: "walk"
+      tags: ["segmentation", "window_functions", "business_intelligence"]
+    columns:
+      - name: customer_key
+        description: "Customer identifier"
+        data_type: number
+        tests:
+          - not_null
+          - unique
+      - name: customer_name
+        description: "Customer name"
+        data_type: varchar
+        tests:
+          - not_null
+      - name: account_balance
+        description: "Customer account balance"
+        data_type: number
+        tests:
+          - not_null
+      - name: balance_percentile
+        description: "Account balance percentile within nation"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+      - name: balance_rank_in_nation
+        description: "Rank of customer balance within their nation"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 1"
+
+  - name: lookup_exchange_rates
+    description: >
+      Exchange rate lookup table for currency conversions.
+      Demonstrates lookup pattern for financial calculations.
+      Provides standardized exchange rates for order value conversions.
+    meta:
+      owner: "data_team"
+      maturity: "medium"
+      complexity: "walk"
+      tags: ["lookup", "financial", "currency"]
+    columns:
+      - name: from_currency
+        description: "Source currency code"
+        data_type: varchar
+        tests:
+          - not_null
+      - name: to_currency
+        description: "Target currency code"
+        data_type: varchar
+        tests:
+          - not_null
+      - name: exchange_rate
+        description: "Exchange rate for conversion"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: "> 0"
+
+  # =============================================================================
+  # SILVER RUN - Advanced Transformation Models
+  # Feature: Complex business transformations with advanced patterns
+  # Complexity: Advanced - ML, dynamic tables, complex window functions
+  # Best Practice: Advanced reusable transformations for downstream consumption
+  # =============================================================================
+
+  - name: int_fx_rates__daily
+    description: >
+      Intermediate model for daily FX rates with advanced business logic.
+      Demonstrates complex intermediate transformations using window functions.
+      Calculates rate validity periods using lead() window function.
+      Handles time-series data gaps and provides business-ready rate periods.
+    meta:
+      owner: "data_team"
+      maturity: "high"
+      complexity: "run"
+      tags: ["advanced_transformation", "window_functions", "time_series", "financial"]
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - day_dt
+            - from_currency
+            - to_currency
+    columns:
+      - name: day_dt
+        description: "Rate effective date"
+        data_type: date
+        tests:
+          - not_null
+        meta:
+          dimension:
+            type: "date_key"
+      - name: from_currency
+        description: "Base currency code for conversion"
+        data_type: varchar
+        tests:
+          - not_null
+          - dbt_utils.not_empty_string
+      - name: to_currency
+        description: "Target currency code for conversion"
+        data_type: varchar
+        tests:
+          - not_null
+          - dbt_utils.not_empty_string
+      - name: conversion_rate
+        description: "Exchange rate for currency conversion"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: "> 0"
+        meta:
+          metric:
+            type: "rate"
+            label: "FX Conversion Rate"
+      - name: end_date
+        description: >
+          Rate validity end date calculated using window functions.
+          Shows advanced transformation logic for time-series data.
+        data_type: date
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= day_dt"
+        meta:
+          business_logic: "Calculated using LEAD() window function to determine rate validity periods"
+      - name: _loaded_at
+        description: "Timestamp when source record was loaded"
+        data_type: timestamp_ntz
+        tests:
+          - not_null
+
+  - name: customer_clustering
+    description: >
+      ML-based customer clustering using Python and scikit-learn.
+      Demonstrates Python models in dbt with machine learning integration.
+      Uses K-means clustering to segment customers based on behavior patterns.
+      Advanced pattern for data science workflows in dbt.
+    meta:
+      owner: "data_team"
+      maturity: "high"
+      complexity: "run"
+      tags: ["machine_learning", "python", "clustering", "advanced_analytics"]
+    columns:
+      - name: customer_key
+        description: "Customer identifier"
+        data_type: number
+        tests:
+          - dbt_constraints.primary_key
+      - name: ML_CLUSTER
+        description: "Machine learning cluster assignment (0-4)"
+        data_type: number
+        tests:
+          - not_null
+          - accepted_values:
+              values: [0, 1, 2, 3, 4]
+      - name: CLUSTER_NAME
+        description: "Human-readable cluster name"
+        data_type: varchar
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['High Value Stable', 'Premium Elite', 'Growth Potential', 'Standard Base', 'At Risk']
+      - name: ML_CONFIDENCE_SCORE
+        description: "Confidence score for cluster assignment (0-1)"
+        data_type: float
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+      - name: IS_CLUSTER_OUTLIER
+        description: "Flag indicating if customer is an outlier in their cluster"
+        data_type: boolean
+        tests:
+          - not_null
+
+  - name: order_facts_dynamic
+    description: >
+      Real-time order analytics using dynamic tables.
+      Demonstrates Snowflake dynamic table materialization.
+      Provides near real-time aggregated order metrics.
+      Advanced pattern for streaming analytics and real-time dashboards.
+    meta:
+      owner: "data_team"
+      maturity: "high"
+      complexity: "run"
+      tags: ["dynamic_table", "real_time", "streaming", "analytics"]
+    columns:
+      - name: order_date
+        description: "Order date (day level)"
+        data_type: date
+        tests:
+          - not_null
+      - name: customer_key
+        description: "Customer identifier"
+        data_type: number
+        tests:
+          - not_null
+      - name: order_count
+        description: "Number of orders"
+        data_type: number
+        tests:
+          - positive_values
+      - name: total_order_value
+        description: "Total order value"
+        data_type: number
+        tests:
+          - positive_values
+

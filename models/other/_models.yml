@@ -1,0 +1,80 @@
+version: 2
+
+# OTHER LAYER - UTILITY AND REFERENCE MODELS
+# This file contains documentation for utility models, reference implementations,
+# and models that don't fit into the standard medallion architecture layers
+
+models:
+  # =============================================================================
+  # UTILITY MODELS - Performance Monitoring and System Analytics
+  # Feature: System monitoring and performance analysis
+  # Complexity: Advanced - Metadata analysis and warehouse optimization
+  # Best Practice: Operational insights and system optimization
+  # =============================================================================
+
+  - name: dbt_query_history
+    description: >
+      dbt query execution history and performance metrics.
+      Demonstrates advanced analytics on dbt metadata.
+      Provides insights into model performance and execution patterns.
+    meta:
+      owner: "data_team"
+      maturity: "medium"
+      complexity: "run"
+      tags: ["metadata", "performance", "monitoring"]
+    columns:
+      - name: query_id
+        description: "Unique identifier for the query"
+        data_type: varchar
+        tests:
+          - not_null
+          - unique
+      - name: MODULE_NAME
+        description: "Name of the dbt model"
+        data_type: varchar
+        tests:
+          - not_null
+      - name: EXECUTION_TIME
+        description: "Query execution time in milliseconds"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+      - name: ROWS_PRODUCED
+        description: "Number of rows produced by the query"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+
+  - name: dynamic_warehouse_assignment
+    description: >
+      Dynamic warehouse assignment based on workload patterns.
+      Demonstrates advanced Snowflake warehouse management.
+      Uses AI and analytics to optimize compute resource allocation.
+    meta:
+      owner: "data_team"
+      maturity: "medium"
+      complexity: "run"
+      tags: ["warehouse_management", "optimization", "ai_powered"]
+    columns:
+      - name: model_name
+        description: "dbt model name"
+        data_type: varchar
+        tests:
+          - not_null
+      - name: recommended_warehouse
+        description: "AI-recommended warehouse for optimal performance"
+        data_type: varchar
+        tests:
+          - not_null
+      - name: confidence_score
+        description: "Confidence in warehouse recommendation"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1

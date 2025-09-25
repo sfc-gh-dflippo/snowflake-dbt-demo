@@ -1,0 +1,1033 @@
+version: 2
+
+# GOLD LAYER - MARTS MODELS
+# This file contains documentation for all gold layer mart models
+# organized by complexity level (crawl, walk, run)
+
+models:
+  # =============================================================================
+  # GOLD CRAWL - Basic Marts
+  # Feature: Simple business-ready data products
+  # Complexity: Beginner - Basic aggregations and simple business logic
+  # Best Practice: Clear, focused data products for specific business needs
+  # =============================================================================
+
+  - name: dim_current_year_orders
+    description: >
+      Simple dimension showing orders from the current year.
+      Demonstrates basic filtering and date-based subsetting.
+      Provides focused view for current year analysis.
+    meta:
+      owner: "business_intelligence"
+      maturity: "high"
+      complexity: "crawl"
+      tags: ["dimension", "current_year", "simple"]
+    columns:
+      - name: order_key
+        description: "Primary key for order"
+        data_type: number
+        tests:
+          - not_null
+          - unique
+      - name: customer_key
+        description: "Foreign key to customer dimension"
+        data_type: number
+        tests:
+          - not_null
+      - name: order_status
+        description: "Order status"
+        data_type: varchar
+        tests:
+          - not_null
+      - name: total_price
+        description: "Total order value"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+      - name: order_date
+        description: "Date the order was placed"
+        data_type: date
+        tests:
+          - not_null
+
+  - name: nation_summary
+    description: >
+      Summary of nations with enhanced attributes from AI classification.
+      Demonstrates basic business reporting with cleaned and enriched data.
+      Simple aggregation and categorization for business users.
+    meta:
+      owner: "business_intelligence"
+      maturity: "high"
+      complexity: "crawl"
+      tags: ["summary", "nations", "ai_enhanced"]
+    columns:
+      - name: NATION_NAME
+        description: "Name of the nation"
+        data_type: varchar
+        tests:
+          - not_null
+      - name: GOVERNMENT_TYPE
+        description: "AI-classified government type"
+        data_type: variant
+        tests:
+          - not_null
+      - name: NATION_COMMENT
+        description: "Comments about the nation"
+        data_type: varchar
+      - name: NAME_LENGTH
+        description: "Length of the nation name"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: "> 0"
+      - name: NAME_CATEGORY
+        description: "Categorization of name length (SHORT, MEDIUM, LONG)"
+        data_type: varchar
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['SHORT', 'MEDIUM', 'LONG']
+      - name: DISPLAY_NAME
+        description: "Formatted display name"
+        data_type: varchar
+        tests:
+          - not_null
+      - name: LAST_UPDATED
+        description: "Timestamp when data was last processed"
+        data_type: timestamp_ltz
+        tests:
+          - not_null
+
+  - name: customer_insights
+    description: >
+      Customer analytics and insights for business intelligence.
+      Demonstrates business-friendly column naming with quoted identifiers.
+      Comprehensive customer segmentation and risk analysis.
+    meta:
+      owner: "business_intelligence"
+      maturity: "high"
+      complexity: "walk"
+      tags: ["analytics", "customer_insights", "business_friendly"]
+    columns:
+      - name: CUSTOMER_KEY
+        description: "Customer identifier"
+        data_type: number
+        tests:
+          - not_null
+          - unique
+      - name: CUSTOMER_NAME
+        description: "Customer name"
+        data_type: varchar
+        tests:
+          - not_null
+      - name: COUNTRY
+        description: "Customer's country"
+        data_type: varchar
+        tests:
+          - not_null
+      - name: ACCOUNT_BALANCE
+        description: "Customer account balance"
+        data_type: number
+        tests:
+          - not_null
+      - name: COUNTRY_AVERAGE_BALANCE
+        description: "Average balance for the country"
+        data_type: number
+        tests:
+          - not_null
+      - name: BALANCE_VS_COUNTRY_AVERAGE
+        description: "Difference from country average"
+        data_type: number
+        tests:
+          - not_null
+      - name: CUSTOMER_TIER
+        description: "Customer segmentation tier"
+        data_type: varchar
+        tests:
+          - not_null
+      - name: MARKET_SEGMENT
+        description: "Market segment classification"
+        data_type: varchar
+        tests:
+          - not_null
+      - name: COUNTRY_RANKING
+        description: "Country ranking classification"
+        data_type: varchar
+        tests:
+          - not_null
+      - name: STATISTICAL_CLASSIFICATION
+        description: "Statistical classification"
+        data_type: varchar
+        tests:
+          - not_null
+      - name: BALANCE_PERCENTILE_SCORE
+        description: "Balance percentile score (0-100)"
+        data_type: float
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 100
+      - name: RANK_IN_COUNTRY
+        description: "Customer's rank within their country"
+        data_type: number
+        tests:
+          - not_null
+      - name: CUSTOMER_CLASSIFICATION
+        description: "Derived customer classification"
+        data_type: varchar
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['VIP Customer', 'High Value Customer', 'Above Average Customer', 'Standard Customer']
+      - name: RISK_CATEGORY
+        description: "Risk assessment category"
+        data_type: varchar
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Credit Risk', 'Retention Risk', 'Performance Risk', 'Low Risk']
+      - name: LAST_UPDATED
+        description: "Timestamp when data was last processed"
+        data_type: timestamp_ltz
+        tests:
+          - not_null
+
+  - name: dim_current_year_open_orders
+    description: >
+      Simple dimension showing open orders from the current year.
+      Demonstrates filtering by both date and status.
+      Focused view for operational monitoring.
+    meta:
+      owner: "business_intelligence"
+      maturity: "high"
+      complexity: "crawl"
+      tags: ["dimension", "current_year", "open_orders"]
+    columns:
+      - name: order_key
+        description: "Primary key for order"
+        data_type: number
+        tests:
+          - not_null
+          - unique
+      - name: customer_key
+        description: "Foreign key to customer dimension"
+        data_type: number
+        tests:
+          - not_null
+      - name: order_status
+        description: "Order status (always 'O' for open)"
+        data_type: varchar
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['O']
+      - name: total_price
+        description: "Total order value"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+      - name: order_date
+        description: "Date the order was placed"
+        data_type: date
+        tests:
+          - not_null
+
+  # =============================================================================
+  # GOLD WALK - Intermediate Marts
+  # Feature: Business-ready dimensional data with enrichment
+  # Complexity: Intermediate - Complete dimensions with business attributes
+  # Best Practice: Slowly changing dimensions with proper lineage
+  # =============================================================================
+
+  - name: dim_customers
+    description: >
+      Customer dimension table following dimensional modeling best practices.
+      Enriched with business attributes, geographic context, and customer segmentation.
+      Demonstrates proper mart layer construction with multiple source integration.
+      Includes customer behavior flags and value-based segmentation.
+    meta:
+      owner: "business_intelligence"
+      maturity: "high"
+      complexity: "walk"
+      tags: ["dimension", "customer", "scd_type_1"]
+    tests:
+      - dbt_utils.expression_is_true:
+          expression: "total_orders >= open_orders"
+    columns:
+      - name: customer_key
+        description: "Primary key for customer dimension"
+        data_type: number
+        tests:
+          - not_null
+          - unique
+        meta:
+          dimension:
+            type: "primary_key"
+            label: "Customer ID"
+      - name: customer_name
+        description: "Customer name"
+        data_type: varchar
+        tests:
+          - not_null
+          - dbt_utils.not_empty_string
+      - name: customer_address
+        description: "Customer address"
+        data_type: varchar
+      - name: customer_phone
+        description: "Customer phone number"
+        data_type: varchar
+      - name: account_balance
+        description: "Customer account balance"
+        data_type: number
+        tests:
+          - not_null
+        meta:
+          metric:
+            type: "currency"
+            label: "Account Balance"
+      - name: market_segment
+        description: "Customer market segment"
+        data_type: varchar
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['AUTOMOBILE', 'BUILDING', 'FURNITURE', 'HOUSEHOLD', 'MACHINERY']
+      - name: customer_comment
+        description: "Comments about the customer"
+        data_type: varchar
+      - name: nation_key
+        description: "Foreign key to nation dimension"
+        data_type: number
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_tpc_h__nations')
+              field: nation_key
+      - name: nation_name
+        description: "Name of customer's nation"
+        data_type: varchar
+        tests:
+          - not_null
+      - name: region_key
+        description: "Foreign key to region (via nation)"
+        data_type: number
+        tests:
+          - not_null
+      - name: total_orders
+        description: "Total number of orders placed by customer"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+        meta:
+          metric:
+            type: "count"
+            label: "Total Orders"
+      - name: open_orders
+        description: "Number of currently open orders"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+        meta:
+          metric:
+            type: "count"
+            label: "Open Orders"
+      - name: has_orders_flag
+        description: "Flag indicating if customer has placed any orders"
+        data_type: varchar
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Y', 'N']
+        meta:
+          business_logic: "Derived from total_orders > 0"
+      - name: has_open_orders_flag
+        description: "Flag indicating if customer has open orders"
+        data_type: varchar
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Y', 'N']
+        meta:
+          business_logic: "Derived from open_orders > 0"
+      - name: value_segment
+        description: "Customer value segmentation based on account balance"
+        data_type: varchar
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['High Value', 'Medium Value', 'Standard']
+        meta:
+          business_logic: "High Value: >= $5000, Medium Value: >= $1000, Standard: < $1000"
+      - name: _loaded_at
+        description: "Source data load timestamp"
+        data_type: timestamp_ntz
+        tests:
+          - not_null
+      - name: _updated_at
+        description: "Dimension record update timestamp"
+        data_type: timestamp_ntz
+        tests:
+          - not_null
+
+  - name: dim_orders
+    description: >
+      Orders dimension table with enriched business attributes.
+      Demonstrates dimension design with denormalized customer context.
+      Includes date partitioning attributes and business-friendly status descriptions.
+      Shows proper foreign key relationships and data quality constraints.
+    meta:
+      owner: "business_intelligence"
+      maturity: "high"
+      complexity: "walk"
+      tags: ["dimension", "orders", "transactional"]
+    columns:
+      - name: order_key
+        description: "Primary key for order dimension"
+        data_type: number
+        tests:
+          - not_null
+          - unique
+        meta:
+          dimension:
+            type: "primary_key"
+            label: "Order ID"
+      - name: customer_key
+        description: "Foreign key to customer dimension"
+        data_type: number
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_customers')
+              field: customer_key
+      - name: order_status
+        description: "Raw order status code"
+        data_type: varchar
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['O', 'F', 'P']
+      - name: order_status_desc
+        description: "Business-friendly order status description"
+        data_type: varchar
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Open', 'Fulfilled', 'Partial', 'Unknown']
+        meta:
+          business_logic: "Derived from order_status: O=Open, F=Fulfilled, P=Partial"
+      - name: total_price
+        description: "Total order value"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+        meta:
+          metric:
+            type: "currency"
+            label: "Order Value"
+      - name: order_date
+        description: "Date the order was placed"
+        data_type: date
+        tests:
+          - not_null
+      - name: order_priority
+        description: "Order priority level"
+        data_type: varchar
+        tests:
+          - not_null
+      - name: clerk
+        description: "Clerk who processed the order"
+        data_type: varchar
+      - name: ship_priority
+        description: "Shipping priority"
+        data_type: number
+      - name: order_comment
+        description: "Comments about the order"
+        data_type: varchar
+      - name: customer_name
+        description: "Customer name (denormalized for performance)"
+        data_type: varchar
+        tests:
+          - not_null
+      - name: nation_key
+        description: "Customer's nation key (denormalized)"
+        data_type: number
+        tests:
+          - not_null
+      - name: value_segment
+        description: "Customer value segment (denormalized)"
+        data_type: varchar
+        tests:
+          - not_null
+      - name: order_year
+        description: "Year the order was placed (for partitioning)"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 1990
+              max_value: 2030
+              inclusive: true
+      - name: order_quarter
+        description: "Quarter the order was placed"
+        data_type: number
+        tests:
+          - not_null
+          - accepted_values:
+              values: [1, 2, 3, 4]
+      - name: order_month
+        description: "Month the order was placed"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 1
+              max_value: 12
+              inclusive: true
+      - name: _loaded_at
+        description: "Source data load timestamp"
+        data_type: timestamp_ntz
+        tests:
+          - not_null
+      - name: _updated_at
+        description: "Dimension record update timestamp"
+        data_type: timestamp_ntz
+        tests:
+          - not_null
+
+  - name: dim_customer_changes
+    description: >
+      Customer change tracking model.
+      Demonstrates change data capture patterns.
+      Shows how to track customer attribute changes over time.
+    meta:
+      owner: "business_intelligence"
+      maturity: "medium"
+      complexity: "walk"
+      tags: ["cdc", "change_tracking", "customer"]
+    columns:
+      - name: customer_key
+        description: "Customer identifier"
+        data_type: number
+        tests:
+          - not_null
+      - name: customer_name
+        description: "Customer name"
+        data_type: varchar
+        tests:
+          - not_null
+      - name: account_balance
+        description: "Customer account balance"
+        data_type: number
+      - name: metadata$action
+        description: "CDC action type"
+        data_type: varchar
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['INSERT', 'UPDATE', 'DELETE']
+      - name: _updated_at
+        description: "Change timestamp"
+        data_type: timestamp_ntz
+        tests:
+          - not_null
+
+  - name: dim_calendar_day
+    description: >
+      Calendar dimension with business date attributes.
+      Demonstrates date dimension design patterns.
+      Provides comprehensive date-based analytics support.
+    meta:
+      owner: "business_intelligence"
+      maturity: "high"
+      complexity: "walk"
+      tags: ["dimension", "calendar", "date"]
+    columns:
+      - name: day_key
+        description: "Primary key for calendar day"
+        data_type: number
+        tests:
+          - not_null
+          - unique
+      - name: day_dt
+        description: "Calendar date"
+        data_type: date
+        tests:
+          - not_null
+          - unique
+      - name: DAY_TEXT
+        description: "Day of week name"
+        data_type: varchar
+        tests:
+          - not_null
+      - name: MONTH
+        description: "Month name"
+        data_type: varchar
+        tests:
+          - not_null
+      - name: QUARTER_NAME
+        description: "Quarter name"
+        data_type: varchar
+        tests:
+          - not_null
+      - name: YEAR_NUM
+        description: "Year number"
+        data_type: number
+        tests:
+          - not_null
+
+  - name: DIM_CUSTOMERS_SHARE
+    description: >
+      Secure view of customer data for sharing.
+      Demonstrates data privacy and security patterns.
+      Limited customer attributes for external sharing.
+    meta:
+      owner: "business_intelligence"
+      maturity: "high"
+      complexity: "walk"
+      tags: ["secure", "sharing", "privacy"]
+    columns:
+      - name: customer_key
+        description: "Customer identifier"
+        data_type: number
+        tests:
+          - not_null
+          - unique
+      - name: customer_name
+        description: "Customer name"
+        data_type: varchar
+        tests:
+          - not_null
+      - name: market_segment
+        description: "Customer market segment"
+        data_type: varchar
+      - name: has_orders_flag
+        description: "Flag indicating if customer has orders"
+        data_type: varchar
+        tests:
+          - accepted_values:
+              values: ['Y', 'N']
+      - name: has_open_orders_flag
+        description: "Flag indicating if customer has open orders"
+        data_type: varchar
+        tests:
+          - accepted_values:
+              values: ['Y', 'N']
+
+  # =============================================================================
+  # GOLD RUN - Advanced Marts
+  # Feature: High-performance fact tables and advanced analytics
+  # Complexity: Advanced - Incremental loading, complex joins, ML integration
+  # Best Practice: Scalable fact design with comprehensive business metrics
+  # =============================================================================
+
+  - name: fct_order_lines
+    description: >
+      Order lines fact table representing the atomic grain of business transactions.
+      Demonstrates advanced fact table design with incremental loading strategy.
+      Includes all business measures, foreign exchange calculations, and audit trails.
+      Optimized for analytical queries with proper indexing and partitioning strategy.
+    meta:
+      owner: "business_intelligence"
+      maturity: "high"
+      complexity: "run"
+      tags: ["fact", "transactional", "incremental", "high_volume"]
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - order_key
+            - line_number
+      - dbt_utils.expression_is_true:
+          expression: "final_price >= 0"
+      - dbt_utils.expression_is_true:
+          expression: "discounted_price <= extended_price"
+    columns:
+      - name: order_key
+        description: "Foreign key to orders dimension (part of composite PK)"
+        data_type: number
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_orders')
+              field: order_key
+        meta:
+          dimension:
+            type: "foreign_key"
+            label: "Order ID"
+      - name: line_number
+        description: "Line number within order (part of composite PK)"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 1"
+        meta:
+          dimension:
+            type: "line_number"
+            label: "Line Number"
+      - name: part_key
+        description: "Foreign key to parts dimension"
+        data_type: number
+        tests:
+          - not_null
+        meta:
+          dimension:
+            type: "foreign_key"
+            label: "Part ID"
+      - name: supplier_key
+        description: "Foreign key to suppliers dimension"
+        data_type: number
+        tests:
+          - not_null
+        meta:
+          dimension:
+            type: "foreign_key"
+            label: "Supplier ID"
+      - name: customer_key
+        description: "Foreign key to customers dimension (denormalized from orders)"
+        data_type: number
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_customers')
+              field: customer_key
+        meta:
+          dimension:
+            type: "foreign_key"
+            label: "Customer ID"
+      - name: quantity
+        description: "Quantity of items in the line"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: "> 0"
+        meta:
+          metric:
+            type: "quantity"
+            label: "Quantity"
+            aggregation: "sum"
+      - name: extended_price
+        description: "Extended price before discount and tax"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: "> 0"
+        meta:
+          metric:
+            type: "currency"
+            label: "Extended Price"
+            aggregation: "sum"
+      - name: discount
+        description: "Discount rate applied (0.0 to 1.0)"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+              inclusive: true
+        meta:
+          metric:
+            type: "rate"
+            label: "Discount Rate"
+            aggregation: "avg"
+      - name: tax
+        description: "Tax rate applied"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+        meta:
+          metric:
+            type: "rate"
+            label: "Tax Rate"
+            aggregation: "avg"
+      - name: discounted_price
+        description: "Price after discount applied (calculated measure)"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: "> 0"
+          - dbt_utils.expression_is_true:
+              expression: "<= extended_price"
+        meta:
+          metric:
+            type: "currency"
+            label: "Discounted Price"
+            aggregation: "sum"
+          business_logic: "extended_price * (1 - discount)"
+      - name: final_price
+        description: "Final price after discount and tax (calculated measure)"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: "> 0"
+        meta:
+          metric:
+            type: "currency"
+            label: "Final Price USD"
+            aggregation: "sum"
+          business_logic: "extended_price * (1 - discount) * (1 + tax)"
+      - name: eur_conversion_rate
+        description: "USD to EUR conversion rate used"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: "> 0"
+        meta:
+          metric:
+            type: "rate"
+            label: "EUR Conversion Rate"
+          business_logic: "Lookup from FX rates based on order date"
+      - name: final_price_eur
+        description: "Final price converted to EUR (calculated measure)"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: "> 0"
+        meta:
+          metric:
+            type: "currency"
+            label: "Final Price EUR"
+            aggregation: "sum"
+          business_logic: "final_price * eur_conversion_rate"
+      - name: return_flag
+        description: "Return flag status"
+        data_type: varchar
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['A', 'N', 'R']
+        meta:
+          dimension:
+            type: "flag"
+            label: "Return Status"
+      - name: line_status
+        description: "Line item status"
+        data_type: varchar
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['F', 'O']
+        meta:
+          dimension:
+            type: "status"
+            label: "Line Status"
+      - name: ship_date
+        description: "Date item was shipped"
+        data_type: date
+        tests:
+          - not_null
+        meta:
+          dimension:
+            type: "date"
+            label: "Ship Date"
+      - name: commit_date
+        description: "Committed delivery date"
+        data_type: date
+        tests:
+          - not_null
+        meta:
+          dimension:
+            type: "date"
+            label: "Commit Date"
+      - name: receipt_date
+        description: "Date item was received"
+        data_type: date
+        tests:
+          - not_null
+        meta:
+          dimension:
+            type: "date"
+            label: "Receipt Date"
+      - name: ship_instruct
+        description: "Shipping instructions"
+        data_type: varchar
+        meta:
+          dimension:
+            type: "attribute"
+            label: "Ship Instructions"
+      - name: ship_mode
+        description: "Shipping mode"
+        data_type: varchar
+        meta:
+          dimension:
+            type: "attribute"
+            label: "Ship Mode"
+      - name: line_comment
+        description: "Comments about the line item"
+        data_type: varchar
+      - name: order_date
+        description: "Date the order was placed (denormalized from orders)"
+        data_type: date
+        tests:
+          - not_null
+        meta:
+          dimension:
+            type: "date"
+            label: "Order Date"
+      - name: order_status_desc
+        description: "Order status description (denormalized from orders)"
+        data_type: varchar
+        tests:
+          - not_null
+        meta:
+          dimension:
+            type: "status"
+            label: "Order Status"
+      - name: _loaded_at
+        description: "Source data load timestamp"
+        data_type: timestamp_ntz
+        tests:
+          - not_null
+      - name: _updated_at
+        description: "Fact record update timestamp"
+        data_type: timestamp_ntz
+        tests:
+          - not_null
+
+  - name: executive_dashboard
+    description: >
+      Executive-level KPI dashboard model.
+      Demonstrates advanced aggregation and business intelligence patterns.
+      Provides high-level metrics for executive reporting and decision making.
+    meta:
+      owner: "business_intelligence"
+      maturity: "high"
+      complexity: "run"
+      tags: ["executive", "kpi", "dashboard", "aggregation"]
+    columns:
+      - name: metric_date
+        description: "Date for the metrics"
+        data_type: date
+        tests:
+          - not_null
+      - name: total_revenue
+        description: "Total revenue for the period"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+      - name: total_orders
+        description: "Total number of orders"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+      - name: avg_order_value
+        description: "Average order value"
+        data_type: number
+        tests:
+          - dbt_utils.expression_is_true:
+              expression: "> 0"
+      - name: active_customers
+        description: "Number of active customers"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+
+  - name: fact_order_line_full_reload
+    description: >
+      Full reload fact table demonstrating complete refresh patterns.
+      Shows alternative loading strategy for smaller fact tables.
+      Includes comprehensive business measures and foreign key relationships.
+    meta:
+      owner: "business_intelligence"
+      maturity: "high"
+      complexity: "run"
+      tags: ["fact", "full_reload", "comprehensive"]
+    columns:
+      - name: l_order_wid
+        description: "Foreign key to orders dimension"
+        data_type: number
+        tests:
+          - not_null
+      - name: l_cust_wid
+        description: "Foreign key to customers dimension"
+        data_type: number
+        tests:
+          - not_null
+      - name: l_linenumber
+        description: "Line number within order"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 1"
+
+  - name: fact_order_line_pivot
+    description: >
+      Pivoted fact table demonstrating advanced SQL patterns.
+      Shows dynamic pivot generation using dbt macros.
+      Provides year-over-year analysis structure.
+    meta:
+      owner: "business_intelligence"
+      maturity: "high"
+      complexity: "run"
+      tags: ["fact", "pivot", "dynamic", "advanced_sql"]
+    columns:
+      - name: supplier_key
+        description: "Supplier identifier"
+        data_type: number
+        tests:
+          - not_null
+      - name: part_key
+        description: "Part identifier"
+        data_type: number
+        tests:
+          - not_null
+
+  # Legacy models (to be deprecated)
+  - name: DIM__CUSTOMERS
+    description: "Legacy customer dimension with SCD patterns (deprecated - use dim_customers instead)"
+    meta:
+      owner: "business_intelligence"
+      maturity: "deprecated"
+      complexity: "run"
+      tags: ["legacy", "deprecated", "scd"]
+
+  - name: DIM__ORDERS
+    description: "Legacy orders dimension with SCD patterns (deprecated - use dim_orders instead)"
+    meta:
+      owner: "business_intelligence"
+      maturity: "deprecated"
+      complexity: "run"
+      tags: ["legacy", "deprecated", "scd"]
+
+  - name: dim_customers_macro_example
+    description: "Customer dimension using macro patterns (example implementation)"
+    meta:
+      owner: "business_intelligence"
+      maturity: "medium"
+      complexity: "run"
+      tags: ["example", "macros", "advanced_patterns"]
+
+  - name: dim_orders_macro_example
+    description: "Orders dimension using macro patterns (example implementation)"
+    meta:
+      owner: "business_intelligence"
+      maturity: "medium"
+      complexity: "run"
+      tags: ["example", "macros", "advanced_patterns"]

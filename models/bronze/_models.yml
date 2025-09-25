@@ -1,0 +1,522 @@
+version: 2
+
+# BRONZE LAYER - STAGING MODELS
+# This file contains documentation for all bronze layer staging models
+# organized by complexity level (crawl, walk, run)
+
+models:
+  # =============================================================================
+  # BRONZE CRAWL - Basic Staging Models
+  # Feature: One-to-one source relationships with basic column standardization
+  # Complexity: Beginner - Simple column renaming and basic transformations
+  # Best Practice: Each source has exactly one staging model
+  # =============================================================================
+
+  - name: stg_tpc_h__nations
+    description: >
+      Staging model for TPC-H nations table. 
+      Demonstrates basic staging best practices with one-to-one source relationship.
+      Simple column renaming and standardization only.
+    meta:
+      owner: "data_team"
+      maturity: "high"
+      complexity: "crawl"
+    columns:
+      - name: nation_key
+        description: "Primary key for nations table"
+        data_type: number
+        tests:
+          - not_null
+          - unique
+        meta:
+          dimension:
+            type: "primary_key"
+      - name: nation_name
+        description: "Name of the nation"
+        data_type: varchar
+        tests:
+          - not_null
+          - unique
+      - name: region_key
+        description: "Foreign key reference to regions table"
+        data_type: number
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_tpc_h__regions')
+              field: region_key
+      - name: nation_comment
+        description: "Comments about the nation"
+        data_type: varchar
+      - name: _loaded_at
+        description: "Timestamp when record was loaded into staging"
+        data_type: timestamp_ntz
+        tests:
+          - not_null
+
+  - name: stg_tpc_h__regions
+    description: >
+      Staging model for TPC-H regions table.
+      Demonstrates basic staging best practices with minimal transformation.
+      Foundation for nation-region hierarchy.
+    meta:
+      owner: "data_team"
+      maturity: "high"
+      complexity: "crawl"
+    columns:
+      - name: region_key
+        description: "Primary key for regions table"
+        data_type: number
+        tests:
+          - not_null
+          - unique
+        meta:
+          dimension:
+            type: "primary_key"
+      - name: region_name
+        description: "Name of the region"
+        data_type: varchar
+        tests:
+          - not_null
+          - unique
+      - name: region_comment
+        description: "Comments about the region"
+        data_type: varchar
+      - name: _loaded_at
+        description: "Timestamp when record was loaded into staging"
+        data_type: timestamp_ntz
+        tests:
+          - not_null
+
+  - name: stg_tpc_h__customers
+    description: >
+      Staging model for TPC-H customers table.
+      Demonstrates staging best practices for tables with more columns.
+      Includes customer attributes and geographic relationships.
+    meta:
+      owner: "data_team"
+      maturity: "high"
+      complexity: "crawl"
+    columns:
+      - name: customer_key
+        description: "Primary key for customers table"
+        data_type: number
+        tests:
+          - not_null
+          - unique
+        meta:
+          dimension:
+            type: "primary_key"
+      - name: customer_name
+        description: "Name of the customer"
+        data_type: varchar
+        tests:
+          - not_null
+      - name: customer_address
+        description: "Customer address"
+        data_type: varchar
+      - name: nation_key
+        description: "Foreign key reference to nations table"
+        data_type: number
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_tpc_h__nations')
+              field: nation_key
+      - name: customer_phone
+        description: "Customer phone number"
+        data_type: varchar
+      - name: account_balance
+        description: "Customer account balance"
+        data_type: number
+        tests:
+          - not_null
+      - name: market_segment
+        description: "Customer market segment"
+        data_type: varchar
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['AUTOMOBILE', 'BUILDING', 'FURNITURE', 'HOUSEHOLD', 'MACHINERY']
+      - name: customer_comment
+        description: "Comments about the customer"
+        data_type: varchar
+      - name: _loaded_at
+        description: "Timestamp when record was loaded into staging"
+        data_type: timestamp_ntz
+        tests:
+          - not_null
+
+  - name: stg_tpc_h__orders
+    description: >
+      Staging model for TPC-H orders table.
+      Demonstrates staging best practices for transactional data.
+      Includes order attributes and customer relationships.
+    meta:
+      owner: "data_team"
+      maturity: "high"
+      complexity: "crawl"
+    columns:
+      - name: order_key
+        description: "Primary key for orders table"
+        data_type: number
+        tests:
+          - not_null
+          - unique
+        meta:
+          dimension:
+            type: "primary_key"
+      - name: customer_key
+        description: "Foreign key reference to customers table"
+        data_type: number
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_tpc_h__customers')
+              field: customer_key
+      - name: order_status
+        description: "Status of the order"
+        data_type: varchar
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['O', 'F', 'P']
+      - name: total_price
+        description: "Total price of the order"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+      - name: order_date
+        description: "Date the order was placed"
+        data_type: date
+        tests:
+          - not_null
+      - name: order_priority
+        description: "Priority of the order"
+        data_type: varchar
+        tests:
+          - not_null
+      - name: clerk
+        description: "Clerk who processed the order"
+        data_type: varchar
+      - name: ship_priority
+        description: "Shipping priority"
+        data_type: number
+      - name: order_comment
+        description: "Comments about the order"
+        data_type: varchar
+      - name: _loaded_at
+        description: "Timestamp when record was loaded into staging"
+        data_type: timestamp_ntz
+        tests:
+          - not_null
+
+  # =============================================================================
+  # BRONZE WALK - Intermediate Staging Models
+  # Feature: Advanced staging patterns with quality checks and external sources
+  # Complexity: Intermediate - Complex schemas, multiple data sources, quality checks
+  # Best Practice: Handling complex source structures while maintaining staging principles
+  # =============================================================================
+
+  - name: stg_customers_with_tests
+    description: >
+      Bronze layer customer data with quality checks and audit hooks.
+      Demonstrates intermediate staging with data quality patterns.
+      Includes quality flags and audit columns.
+    meta:
+      owner: "data_team"
+      maturity: "high"
+      complexity: "walk"
+    columns:
+      - name: c_custkey
+        description: "Customer primary key"
+        tests:
+          - dbt_constraints.primary_key
+      - name: c_name
+        description: "Customer name"
+        tests:
+          - not_null
+      - name: c_acctbal
+        description: "Customer account balance"
+      - name: data_quality_flag
+        description: "Data quality assessment flag"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['VALID', 'INVALID_NAME', 'NEGATIVE_BALANCE']
+      - name: extracted_at
+        description: "Timestamp when data was extracted"
+        tests:
+          - not_null
+
+  - name: stg_tpc_h__lineitem
+    description: >
+      Staging model for TPC-H lineitem table.
+      Demonstrates staging best practices for complex fact-like tables.
+      Features composite primary key and multiple foreign key relationships.
+      Largest table in TPC-H schema with detailed transaction data.
+    meta:
+      owner: "data_team"
+      maturity: "high"
+      complexity: "walk"
+      tags: ["fact_staging", "high_volume"]
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - order_key
+            - line_number
+    columns:
+      - name: order_key
+        description: "Foreign key to orders table (part of composite PK)"
+        data_type: number
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_tpc_h__orders')
+              field: order_key
+        meta:
+          dimension:
+            type: "foreign_key"
+      - name: line_number
+        description: "Line number within order (part of composite PK)"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 1"
+      - name: part_key
+        description: "Foreign key to parts table"
+        data_type: number
+        tests:
+          - not_null
+      - name: supplier_key
+        description: "Foreign key to suppliers table"
+        data_type: number
+        tests:
+          - not_null
+      - name: quantity
+        description: "Quantity of items ordered"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: "> 0"
+      - name: extended_price
+        description: "Extended price (quantity * unit price)"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: "> 0"
+      - name: discount
+        description: "Discount rate applied"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+              inclusive: true
+      - name: tax
+        description: "Tax rate applied"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+      - name: return_flag
+        description: "Return flag status"
+        data_type: varchar
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['A', 'N', 'R']
+      - name: line_status
+        description: "Line item status"
+        data_type: varchar
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['F', 'O']
+      - name: ship_date
+        description: "Date item was shipped"
+        data_type: date
+        tests:
+          - not_null
+      - name: commit_date
+        description: "Committed delivery date"
+        data_type: date
+        tests:
+          - not_null
+      - name: receipt_date
+        description: "Date item was received"
+        data_type: date
+        tests:
+          - not_null
+      - name: ship_instruct
+        description: "Shipping instructions"
+        data_type: varchar
+      - name: ship_mode
+        description: "Shipping mode"
+        data_type: varchar
+      - name: line_comment
+        description: "Comments about the line item"
+        data_type: varchar
+      - name: _loaded_at
+        description: "Timestamp when record was loaded into staging"
+        data_type: timestamp_ntz
+        tests:
+          - not_null
+
+  - name: stg_economic_essentials__fx_rates
+    description: >
+      Staging model for Economic Essentials FX rates.
+      Demonstrates staging best practices for external data sources.
+      Time-series financial data with different schema patterns.
+      Shows how to handle non-TPC-H data sources consistently.
+    meta:
+      owner: "data_team"
+      maturity: "medium"
+      complexity: "walk"
+      tags: ["external_source", "time_series", "financial"]
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - rate_date
+            - base_currency
+            - quote_currency
+    columns:
+      - name: rate_date
+        description: "Date of the exchange rate"
+        data_type: date
+        tests:
+          - not_null
+        meta:
+          dimension:
+            type: "date_key"
+      - name: base_currency
+        description: "Base currency code (ISO 4217)"
+        data_type: varchar
+        tests:
+          - not_null
+          - dbt_utils.not_empty_string
+      - name: quote_currency
+        description: "Quote currency code (ISO 4217)"
+        data_type: varchar
+        tests:
+          - not_null
+          - dbt_utils.not_empty_string
+      - name: exchange_rate
+        description: "Exchange rate value (base to quote)"
+        data_type: number
+        tests:
+          - not_null
+      - name: _loaded_at
+        description: "Timestamp when record was loaded into staging"
+        data_type: timestamp_ntz
+        tests:
+          - not_null
+
+  # =============================================================================
+  # BRONZE RUN - Advanced Staging Models
+  # Feature: Complex incremental loading and advanced patterns
+  # Complexity: Advanced - Incremental materialization, complex Jinja, CDC
+  # Best Practice: Advanced staging patterns for high-volume production systems
+  # =============================================================================
+
+  - name: stg_orders_incremental
+    description: >
+      Advanced incremental staging model for TPC-H orders.
+      Demonstrates incremental materialization with complex business logic.
+      Features advanced Jinja templating and schema evolution handling.
+    meta:
+      owner: "data_team"
+      maturity: "high"
+      complexity: "run"
+      tags: ["incremental", "high_volume"]
+    columns:
+      - name: o_orderkey
+        description: "Primary key for orders table"
+        data_type: number
+        tests:
+          - not_null
+          - unique
+      - name: o_custkey
+        description: "Foreign key reference to customers table"
+        data_type: number
+        tests:
+          - not_null
+      - name: o_orderstatus
+        description: "Status of the order"
+        data_type: varchar
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['O', 'F', 'P']
+      - name: o_totalprice
+        description: "Total price of the order"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+      - name: o_orderdate
+        description: "Date the order was placed"
+        data_type: date
+        tests:
+          - not_null
+      - name: order_status_desc
+        description: "Descriptive order status"
+        data_type: varchar
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['OPEN', 'FULFILLED', 'PARTIAL', 'UNKNOWN']
+      - name: processed_at
+        description: "Timestamp when record was processed"
+        data_type: timestamp_ntz
+        tests:
+          - not_null
+      - name: processing_type
+        description: "Type of processing (FULL_LOAD, RECENT, HISTORICAL)"
+        data_type: varchar
+        tests:
+          - not_null
+
+  - name: customer_cdc_stream
+    description: >
+      CDC stream model for customer changes.
+      Demonstrates Change Data Capture patterns using Snowflake streams.
+      Advanced pattern for real-time data processing.
+    meta:
+      owner: "data_team"
+      maturity: "medium"
+      complexity: "run"
+      tags: ["cdc", "streaming", "real_time"]
+    columns:
+      - name: customer_key
+        description: "Customer identifier"
+        data_type: number
+        tests:
+          - not_null
+      - name: customer_name
+        description: "Customer name"
+        data_type: varchar
+      - name: account_balance
+        description: "Customer account balance"
+        data_type: number
+      - name: metadata$action
+        description: "CDC action type (INSERT, UPDATE, DELETE)"
+        data_type: varchar
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['INSERT', 'UPDATE', 'DELETE']
+      - name: metadata$isupdate
+        description: "Flag indicating if record is an update"
+        data_type: boolean
+      - name: metadata$row_id
+        description: "Unique row identifier for CDC"
+        data_type: varchar
