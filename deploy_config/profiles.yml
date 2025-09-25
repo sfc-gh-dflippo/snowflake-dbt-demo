@@ -1,0 +1,30 @@
+SNOWFLAKE:
+  target: dev
+  outputs:
+    dev:
+      type: "snowflake"
+      account: "n/a"
+      user: "n/a"
+      role: "DFLIPPO_ROLE"
+      database: "DFLIPPO_DEV"
+      warehouse: "DEMO_WH"
+      schema: "DBT_DEMO"
+      threads: 4
+    test:
+      type: "snowflake"
+      account: "n/a"
+      user: "n/a"
+      role: "DFLIPPO_ROLE"
+      database: "DFLIPPO_TEST"
+      warehouse: "DEMO_WH"
+      schema: "DBT_DEMO"
+      threads: 4
+    prod:
+      type: "snowflake"
+      account: "n/a"
+      user: "n/a"
+      role: "DFLIPPO_ROLE"
+      database: "DFLIPPO_PROD"
+      warehouse: "DEMO_WH"
+      schema: "DBT_DEMO"
+      threads: 4
