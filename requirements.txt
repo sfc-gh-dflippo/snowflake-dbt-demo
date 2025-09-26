@@ -9,7 +9,7 @@ pip-system-certs
 pyarrow<19.0.0
 schemachange
 snowflake-cli==3.12.0
-# Use uv tool to install snowflake-cli
+# You can also use the uv tool to install snowflake-cli
 # uv tool install snowflake-cli
 #snowflake-ml-python
 snowflake-snowpark-python

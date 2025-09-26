@@ -1,0 +1,87 @@
+trigger:
+  branches:
+    include:
+      - main
+      - qa
+  paths:
+    exclude:
+    - schemachange
+
+variables:
+  - name: pipDownloadDir
+    value: $(Pipeline.Workspace)/.pip
+
+  # Use 'Production-Vars' only if the branch is 'main'.
+  - ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
+    - group: 'Production-Vars'
+
+  # Otherwise, if the branch is 'test', use 'QA-Vars'.
+  - ${{ elseif eq(variables['Build.SourceBranchName'], 'test') }}:
+    - group: 'Test-Vars'
+
+  # For any other branch that is not 'main' or 'test', use 'Dev-Vars'.
+  - ${{ else }}:
+    - group: 'Dev-Vars'
+  
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+  # Set our pipelines to use Python 3.11
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.11'
+
+  # Check out the repository to the current working folder
+  - checkout: self
+
+  - task: Cache@2
+    displayName: Attempt to restore our pip cache folder
+    inputs:
+      # If the OS version or the contents of our requirements file changes, the cache will be skipped
+      key: 'pip | "$(Agent.OS)" | requirements.txt'
+      path: $(pipDownloadDir)
+      cacheHitVar: cacheRestored
+
+  # If we are unable to load a cached copy, download to our cache folder from repos
+  - script: pip download -r requirements.txt --dest=$(pipDownloadDir)
+    displayName: "Download requirements"
+    condition: eq(variables.cacheRestored, 'false')
+
+  - script: pip install -r requirements.txt --no-index --find-links=$(pipDownloadDir)
+    displayName: "Install requirements from our pip cache"
+
+  - task: DownloadSecureFile@1
+    name: rsa_key
+    displayName: 'Download Snowflake RSA key'
+    inputs:
+      secureFile: 'rsa_key.p8'
+
+  - task: Bash@3
+    displayName: 'Deploy dbt project'
+    env:
+      # dbt variables
+      DBT_TARGET: $(Build.SourceBranchName)
+      DBT_PROJECT_DIR: $(Build.Repository.LocalPath)
+      DBT_PROFILES_DIR: $(Build.Repository.LocalPath)/deploy_config
+      SNOWFLAKE_THREADS: $(SNOWFLAKE_THREADS)
+      # snowflake variable
+      SNOWFLAKE_ACCOUNT: $(SNOWFLAKE_ACCOUNT)
+      SNOWFLAKE_USER: $(SNOWFLAKE_USER)
+      SNOWFLAKE_ROLE: $(SNOWFLAKE_ROLE)
+      SNOWFLAKE_WAREHOUSE: $(SNOWFLAKE_WAREHOUSE)
+      SNOWFLAKE_DATABASE: $(SNOWFLAKE_DATABASE)
+      SNOWFLAKE_SCHEMA: $(SNOWFLAKE_SCHEMA)
+      SNOWFLAKE_PRIVATE_KEY_PATH: $(rsa_key.secureFilePath)
+      PRIVATE_KEY_PASSPHRASE: $(DBT_ENV_SECRET_PRIVATE_KEY_PASSPHRASE)
+    inputs:
+      targetType: 'inline'
+      script: |
+        set -e
+        snow connection add -n default --no-interactive --authenticator SNOWFLAKE_JWT
+        snow connection test
+        dbt clean
+        dbt deps
+        dbt parse
+        schemachange
+        snow dbt deploy $(DBT_PROJECT_NAME)
