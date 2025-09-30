@@ -1,7 +1,5 @@
-{{ config(
-    materialized='table',
-    tags=['gold', 'run', 'executive']
-) }}
+-- Configuration handled at folder level in dbt_project.yml
+-- (materialized='table' and tags=['gold', 'run'] set for gold/run/ folder)
 
 -- GOLD RUN: Executive dashboard with advanced KPIs
 -- Complexity: Advanced - Complex business logic, executive metrics, advanced features

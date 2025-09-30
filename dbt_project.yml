@@ -103,28 +103,26 @@ models:
     bronze:
       +tags: ["bronze", "staging", "raw_data"]
       +schema: bronze
+      +materialized: ephemeral  # Best practice: staging as ephemeral for performance
       crawl:
-        +tags: ["bronze", "crawl", "beginner", "staging"]
-        +materialized: ephemeral  # Best practice: staging as ephemeral for performance
+        +tags: ["crawl", "beginner"]
       walk:
-        +tags: ["bronze", "walk", "intermediate", "staging"] 
-        +materialized: ephemeral  # Best practice: staging as ephemeral for performance
+        +tags: ["walk", "intermediate"] 
       run:
-        +tags: ["bronze", "run", "advanced", "staging"]
-        +materialized: ephemeral  # Best practice: staging as ephemeral for performance
+        +tags: ["run", "advanced"]
     
     # Silver Layer - Intermediate models + transformation patterns
     silver:
       +tags: ["silver", "intermediate", "transformed_data"]
       +schema: silver
       crawl:
-        +tags: ["silver", "crawl", "beginner"]
+        +tags: ["crawl", "beginner"]
         +materialized: table
       walk:
-        +tags: ["silver", "walk", "intermediate"]
+        +tags: ["walk"]
         +materialized: ephemeral  # Best practice: intermediate as ephemeral
       run:
-        +tags: ["silver", "run", "advanced", "intermediate"]
+        +tags: ["run", "advanced"]
         +materialized: table  # Some complex intermediate models need persistence
         +snowflake_warehouse: "{{ target.warehouse }}"
     
@@ -134,21 +132,21 @@ models:
       +schema: gold
       +materialized: table  # Best practice: marts as tables
       crawl:
-        +tags: ["gold", "crawl", "beginner"]
+        +tags: ["crawl", "beginner"]
       walk:
-        +tags: ["gold", "walk", "intermediate", "marts"]
+        +tags: ["walk", "intermediate"]
         sensitive_data:
-          +tags: ["gold", "walk", "sensitive", "marts"]
+          +tags: ["sensitive"]
           +materialized: view
           +secure: true
       run:
-        +tags: ["gold", "run", "advanced", "marts"]
+        +tags: ["run", "advanced"]
         +materialized: incremental  # Best practice: large facts as incremental
         incremental_with_macros:
-          +tags: ["gold", "run", "incremental", "macros"]
+          +tags: ["incremental", "macros"]
           +materialized: incremental
         incremental_without_macros:
-          +tags: ["gold", "run", "incremental", "no_macros"]
+          +tags: ["incremental", "no_macros"]
           +materialized: incremental
     
     # Other Layer - Utility and reference models
