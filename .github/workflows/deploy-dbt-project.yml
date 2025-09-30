@@ -1,0 +1,99 @@
+name: Deploy dbt Project
+
+on:
+  push:
+    branches:
+      - main
+      - test
+    paths-ignore:
+      - 'schemachange/**'
+  pull_request:
+    branches:
+      - main
+      - test
+    paths-ignore:
+      - 'schemachange/**'
+
+env:
+  PIP_CACHE_DIR: ~/.cache/pip
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+        environment: ${{ github.ref_name == 'main' && 'production' || (github.ref_name == 'test' && 'test' || 'development') }}
+        # The above expression means:
+        # - If branch is 'main', use 'production' environment.
+        # - Else if branch is 'test', use 'test' environment.
+        # - Otherwise (e.g., feature branches), use 'development' environment.
+
+    
+    steps:
+      # Check out the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Set up Python 3.11
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      # Cache pip dependencies
+      - name: Cache pip dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      # Install Python dependencies
+      - name: Install requirements
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # Set up Snowflake RSA private key
+      - name: Set up Snowflake private key
+        run: |
+          echo "${{ secrets.SNOWFLAKE_PRIVATE_KEY }}" > rsa_key.p8
+          chmod 600 rsa_key.p8
+        env:
+          SNOWFLAKE_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
+
+      # Deploy dbt project
+      - name: Deploy dbt project
+        run: |
+          set -e
+          snow connection add -n default --no-interactive --authenticator SNOWFLAKE_JWT
+          snow connection test
+          dbt clean
+          dbt deps
+          dbt parse
+          schemachange
+          snow dbt deploy ${{ vars.DBT_PROJECT_NAME }}
+        env:
+          # dbt variables
+          DBT_TARGET: ${{ github.ref_name }}
+          DBT_PROJECT_DIR: ${{ github.workspace }}
+          DBT_PROFILES_DIR: ${{ github.workspace }}/deploy_config
+          SNOWFLAKE_THREADS: ${{ vars.SNOWFLAKE_THREADS }}
+          
+          # Snowflake variables - Production (main branch)
+          SNOWFLAKE_ACCOUNT: ${{ vars.SNOWFLAKE_ACCOUNT }}
+          SNOWFLAKE_USER: ${{ vars.SNOWFLAKE_USER }}
+          SNOWFLAKE_ROLE: ${{ vars.SNOWFLAKE_ROLE }}
+          SNOWFLAKE_WAREHOUSE: ${{ vars.SNOWFLAKE_WAREHOUSE }}
+          SNOWFLAKE_DATABASE: ${{ vars.SNOWFLAKE_DATABASE }}
+          SNOWFLAKE_SCHEMA: ${{ vars.SNOWFLAKE_SCHEMA }}
+          SNOWFLAKE_PRIVATE_KEY_PATH: ./rsa_key.p8
+          PRIVATE_KEY_PASSPHRASE: ${{ secrets.PRIVATE_KEY_PASSPHRASE }}
+
+      # Clean up private key
+      - name: Clean up private key
+        if: always()
+        run: |
+          rm -f rsa_key.p8
+
+
+
