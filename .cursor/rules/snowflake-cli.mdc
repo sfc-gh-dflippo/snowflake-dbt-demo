@@ -395,19 +395,6 @@ snow connection generate-jwt my_connection
 - **`set-default`**: Change default connection
 - **`test`**: Test connection to Snowflake
 
-### **Authentication (`snow auth`)**
-
-**Purpose**: Manage authentication methods
-**Common Use Cases**: OIDC authentication setup
-
-```bash
-# Manage OIDC authentication
-snow auth oidc --help
-```
-
-**Subcommands**:
-- **`oidc`**: Manage OIDC authentication
-
 ### **Cortex AI (`snow cortex`)**
 
 **Purpose**: Access Snowflake Cortex AI functions
@@ -426,7 +413,7 @@ snow cortex sentiment "I love this product!" -c default
 # Translate text
 snow cortex translate "Hello" --target-language spanish -c default
 
-# Extract answers from documents
+# Extract answers from text documents
 snow cortex extract-answer "What is the main topic?" --document "Document text..." -c default
 ```
 
@@ -439,7 +426,7 @@ snow cortex extract-answer "What is the main topic?" --document "Document text..
 
 ### **Logging (`snow logs`)**
 
-**Purpose**: Retrieve logs for Snowflake objects
+**Purpose**: Retrieve logs for Snowflake objects including table, database, compute-pool
 **Common Use Cases**: Debugging, monitoring, troubleshooting
 
 ```bash
@@ -508,11 +495,11 @@ snow helpers v1-to-v2
 ```
 
 **Subcommands**:
-- **`check-snowsql-env-vars`**: Check for SnowSQL environment variables
-- **`import-snowsql-connections`**: Import existing SnowSQL connections
-- **`v1-to-v2`**: Migrate project definitions from V1 to V2
+- **`check-snowsql-env-vars`**: Check if there are any SnowSQL environment variables set
+- **`import-snowsql-connections`**: Import your existing connections from your SnowSQL configuration
+- **`v1-to-v2`**: Migrates the Snowpark, Streamlit, and Native App project definition files from V1 to V2
 
-## **Best Practices for Cursor Integration**
+## **Best Practices**
 
 ### **Command Construction**
 - Always include connection parameter: `--connection <connection_name>`
@@ -572,12 +559,8 @@ snow sql -q "SELECT COUNT(*) FROM processed_data" -c default
 
 ### **Multi-line SQL Deployment with Heredoc**
 ```bash
-# Deploy schema and load data using heredoc
-snow sql --connection "${SNOWFLAKE_CONNECTION}" \
-    --role "${SNOWFLAKE_ROLE}" \
-    --database "${DATABASE_NAME}" \
-    --schema "${SCHEMA_NAME}" \
-    --warehouse "${WAREHOUSE_NAME}" -i <<EOF
+# Deploy schema and load data using heredoc and bash env variables
+snow sql -c default -i <<EOF
 
 -- Create file format
 CREATE OR REPLACE FILE FORMAT ${FILE_FORMAT_NAME}
