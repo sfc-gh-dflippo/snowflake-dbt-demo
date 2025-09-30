@@ -37,13 +37,13 @@ This guide walks you through setting up dbt for Snowflake development on various
 
 ### Getting Started with dbt Projects on Snowflake
 
-1. **Enable Personal Database** (requires ACCOUNTADMIN):
+1. **Enable Personal Database** (requires ACCOUNTADMIN, enabled by default):
    ```sql
    -- Enable personal databases for your account
    ALTER ACCOUNT SET ENABLE_PERSONAL_DATABASE = TRUE;
    ```
 
-2. **Set Up External Access Integration** (requires ACCOUNTADMIN):
+2. **Set Up External Access Integration for `dbt deps`** (requires ACCOUNTADMIN):
    ```sql
    -- Create NETWORK RULE for external access integration
    CREATE OR REPLACE NETWORK RULE dbt_network_rule
@@ -61,23 +61,74 @@ This guide walks you through setting up dbt for Snowflake development on various
      ENABLED = TRUE;
    ```
 
-3. **Set Up Git Repository Integration**:
-   - **Option A - Connect Existing Repository**:
-     - Navigate to **Data** → **Databases** in Snowsight
-     - Create a Git repository object to connect your existing dbt project repository
-     - This allows you to sync your workspace with your Git repository
+3. **Create Git API Integration** (requires ACCOUNTADMIN):
+
+   Choose one of the following authentication methods based on your security requirements.
+
+   **Option A - Personal Access Token Authentication or No Authentication**:
+   PAT is required for private repositories
+   ```sql
+   -- GitHub
+   CREATE OR REPLACE API INTEGRATION git_api_integration
+     API_PROVIDER = git_https_api
+     API_ALLOWED_PREFIXES = (
+      -- Examples for all repositories on a service
+       'https://github.com/',
+       'https://gitlab.com/',
+       'https://dev.azure.com/',
+       -- Examples for specific orgs on a service:
+       'https://github.com/organization/',
+       'https://gitlab.com/organization/',
+       'https://dev.azure.com/organization/'
+     );
+   ```
+
+   **Option B - OAuth Authentication** (GitHub only):
+   ```sql
+   -- GitHub OAuth (supports OAuth, PAT, or no auth)
+   CREATE OR REPLACE API INTEGRATION github_oauth_api_integration
+     API_PROVIDER = git_https_api
+     API_ALLOWED_PREFIXES = ('https://github.com/')
+     API_USER_AUTHENTICATION = ( TYPE = snowflake_github_app );
+   ```
+
+4. **Gather Your Git Repository Information**:
    
-   - **Option B - Start Fresh**:
-     - Create a new Git repository for your dbt project
-     - You can initialize this later when creating your workspace
+   **GitHub**:
+   - Repository URL: `https://github.com/username/repository-name.git`
+   - Username: Your GitHub username
+   - PAT: Settings → Developer settings → Personal access tokens → Generate new token (classic)
+     - Required scopes: `repo` (full control of private repositories)
+   - *Note: You can skip PAT if using OAuth in step 5*
+   
+   **GitLab**:
+   - Repository URL: `https://gitlab.com/username/repository-name.git`
+   - Username: Your GitLab username  
+   - PAT: User Settings → Access Tokens → Add new token
+     - Required scopes: `read_repository`, `write_repository`
+   
+   **Azure DevOps**:
+   - Repository URL: `https://dev.azure.com/organization/project/_git/repository-name`
+   - Username: Your Azure DevOps username
+   - PAT: User settings → Personal access tokens → New Token
+     - Required scopes: `Code (read & write)`
 
-4. **Create a Workspace**:
-   - Navigate to **Projects** → **Worksheets** in Snowsight
-   - Click **+ Workspace** and select **dbt Projects on Snowflake**
-   - Choose to create a new project or connect to an existing Git repository
-   - If connecting to Git, select your repository object created in step 3
+5. **Create a Workspace**:
+   
+   With your API integration and repository information ready, create a dbt workspace in Snowsight:
+   - Navigate to **Projects** → **Worksheets** in Snowsight. By default you will be in "My Workspace".
+   - To use a Git Repository
+     - Click **My Workspace** → **Create Workspace** → **From Git repository** and enter:
+       - Repository URL: URL from step 4
+       - Workspace name: custom name
+       - API integration: GIT API Integration from Step 3
+       - Choose OAuth, PAT, or Public repository
+       - For a PAT, chose where to store the Snowflake Secret containing the Username and PAT
+   - To create a dbt project in My Workspace
+      - Click **+ Add new**  → select **dbt Project**
+   - If connecting to Git, you'll use the API integration created in step 3
 
-5. **Configure Your Project**:
+6. **Configure Your Project**:
    - Each workspace requires a `profiles.yml` file specifying target warehouse, database, schema, and role
    - The project will run under your current Snowflake account and user context
    - Example `profiles.yml`:
@@ -95,7 +146,7 @@ This guide walks you through setting up dbt for Snowflake development on various
            role: MY_ROLE
      ```
 
-6. **Deploy as DBT PROJECT Object**:
+7. **Deploy as DBT PROJECT Object**:
    - Deploy your workspace as a schema-level DBT PROJECT object
    - This enables version control, scheduling, and production execution
    - Use the **Deploy** button in your workspace or SQL commands
@@ -128,6 +179,57 @@ AS
 ALTER TASK my_dbt_daily_task RESUME;
 ```
 
+#### Accessing dbt Artifacts and Logs Programmatically
+
+When dbt projects execute, logs and artifacts are saved in a `dbt_results.zip` file. You can [access these programmatically](https://docs.snowflake.com/en/user-guide/data-engineering/dbt-projects-on-snowflake-monitoring-observability#access-dbt-artifacts-and-logs-programmatically) using the following approach:
+
+**Stored procedure for automated execution with tasks:**
+```sql
+-- Create a named internal stage
+CREATE OR REPLACE STAGE my_dbt_stage ENCRYPTION = (TYPE = 'SNOWFLAKE_SSE');
+
+-- Create a stored procedure that executes dbt and copies results
+CREATE OR REPLACE PROCEDURE my_db.public.run_dbt_and_copy_results_file()
+RETURNS varchar
+LANGUAGE SQL
+COMMENT = 'Execute dbt and copy the files in the same sproc call.'
+EXECUTE AS CALLER
+AS
+DECLARE
+    output_archive_url varchar;
+BEGIN
+    EXECUTE DBT PROJECT my_db.my_schema.my_dbt_project args='build';
+    output_archive_url := (SELECT output_archive_url FROM TABLE(RESULT_SCAN(last_query_id())));
+    COPY FILES INTO @my_dbt_stage/results/ 
+      FROM (SELECT :output_archive_url, 
+            (to_char(current_timestamp(), 'YYYYMMDD_HH24_MI') || '.zip'));
+    RETURN 'dbt execution and log copy completed successfully';
+END;
+
+-- Create a task that runs the stored procedure every 6 hours
+CREATE OR REPLACE TASK my_db.my_schema.run_my_dbt_project
+  WAREHOUSE = my_dbt_warehouse
+  SCHEDULE = '6 hours'
+AS
+  CALL my_db.public.run_dbt_and_copy_results_file();
+
+-- Start the task
+ALTER TASK my_db.my_schema.run_my_dbt_project RESUME;
+```
+
+#### Enabling Enhanced Monitoring
+
+To enable detailed monitoring features for your dbt project, configure logging levels on the database and schema:
+
+```sql
+-- Enable comprehensive logging and monitoring
+ALTER SCHEMA my_db.my_dbt_project_schema SET LOG_LEVEL = 'INFO';
+ALTER SCHEMA my_db.my_dbt_project_schema SET TRACE_LEVEL = 'ALWAYS';
+ALTER SCHEMA my_db.my_dbt_project_schema SET METRIC_LEVEL = 'ALL';
+```
+
+After enabling these settings, you can monitor dbt project executions in Snowsight under **Monitoring** → **dbt Projects**.
+
 ### Team Collaboration Flexibility
 
 **Important**: Teams can use different development approaches simultaneously:
@@ -151,6 +253,85 @@ This flexibility allows teams to adopt dbt Projects on Snowflake gradually while
 - You need dbt Cloud's advanced features (IDE, semantic layer, etc.)
 - Your team prefers local development environments
 - You're using multiple data warehouses beyond Snowflake
+
+### Snowflake CLI dbt Commands
+
+The [Snowflake CLI provides native dbt commands](https://docs.snowflake.com/en/developer-guide/snowflake-cli/data-pipelines/dbt-projects) for managing dbt Projects on Snowflake from the command line or CI/CD pipelines.
+
+#### Install Snowflake CLI (version 3.9.0 or later):
+   ```bash
+   pip install snowflake-cli
+   ```
+
+#### Core Commands
+
+| Command | Description | Example |
+|---------|-------------|---------|
+| `snow dbt deploy` | Deploy dbt project to Snowflake as a DBT PROJECT object | `snow dbt deploy my_project --source .` |
+| `snow dbt execute` | Execute dbt commands on deployed project | `snow dbt execute my_project run` |
+| `snow dbt list` | List all dbt projects in current connection | `snow dbt list` |
+
+**Deploy a dbt project:**
+```bash
+# Deploy from current directory
+snow dbt deploy jaffle_shop --source .
+
+# Deploy with specific connection and database
+snow dbt deploy jaffle_shop --source . --connection my_conn --database MY_DB
+```
+
+**Execute dbt commands:**
+```bash
+# Run all models
+snow dbt execute jaffle_shop run
+
+# Run specific models with selection
+snow dbt execute jaffle_shop run --select @source:snowplow,tag:nightly
+
+# Run tests
+snow dbt execute jaffle_shop test
+
+# Build everything (run + test)
+snow dbt execute jaffle_shop build
+
+# Execute asynchronously
+snow dbt execute --run-async jaffle_shop run
+```
+
+**List deployed projects:**
+```bash
+# List all dbt projects
+snow dbt list
+
+# List with specific connection
+snow dbt list --connection my_connection
+```
+
+#### CI/CD Integration
+
+The CLI commands are ideal for building CI/CD pipelines. You can trigger deployment to a dbt project when a branch changes. This also allows you to use git repositories in your dependencies by running dbt deps in the pipeline. Here's a typical workflow:
+
+```yaml
+# GitHub Actions example
+- name: Parse and deploy dbt project
+  run: |
+    dbt clean
+    dbt deps
+    dbt parse
+    snow dbt deploy product_pipeline --source .
+```
+
+**Key advantages for CI/CD:**
+- No Git repository object in Snowflake required - just your CI/CD pipeline with dbt and Snowflake CLI
+- Direct integration with existing CI/CD tools
+
+#### Requirements for CLI Usage
+
+Your dbt project must include:
+- `dbt_project.yml` in the main project directory
+- `profiles.yml` with connection details
+- Profile name in `dbt_project.yml` must match profile defined in `profiles.yml`
+- **Important**: Remove any passwords from `profiles.yml` - Snowflake's dbt projects don't need them
 
 ### Learn More
 
