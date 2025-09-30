@@ -26,8 +26,7 @@ models:
         description: "Primary key for nations table"
         data_type: number
         tests:
-          - not_null
-          - unique
+          - dbt_constraints.primary_key
         meta:
           dimension:
             type: "primary_key"
@@ -42,7 +41,7 @@ models:
         data_type: number
         tests:
           - not_null
-          - relationships:
+          - dbt_constraints.foreign_key:
               to: ref('stg_tpc_h__regions')
               field: region_key
       - name: nation_comment
@@ -67,9 +66,6 @@ models:
       - name: region_key
         description: "Primary key for regions table"
         data_type: number
-        tests:
-          - not_null
-          - unique
         meta:
           dimension:
             type: "primary_key"
@@ -102,8 +98,7 @@ models:
         description: "Primary key for customers table"
         data_type: number
         tests:
-          - not_null
-          - unique
+          - dbt_constraints.primary_key
         meta:
           dimension:
             type: "primary_key"
@@ -120,7 +115,7 @@ models:
         data_type: number
         tests:
           - not_null
-          - relationships:
+          - dbt_constraints.foreign_key:
               to: ref('stg_tpc_h__nations')
               field: nation_key
       - name: customer_phone
@@ -161,8 +156,7 @@ models:
         description: "Primary key for orders table"
         data_type: number
         tests:
-          - not_null
-          - unique
+          - dbt_constraints.primary_key
         meta:
           dimension:
             type: "primary_key"
@@ -171,7 +165,7 @@ models:
         data_type: number
         tests:
           - not_null
-          - relationships:
+          - dbt_constraints.foreign_key:
               to: ref('stg_tpc_h__customers')
               field: customer_key
       - name: order_status
@@ -273,7 +267,7 @@ models:
         data_type: number
         tests:
           - not_null
-          - relationships:
+          - dbt_constraints.foreign_key:
               to: ref('stg_tpc_h__orders')
               field: order_key
         meta:
@@ -441,13 +435,15 @@ models:
         description: "Primary key for orders table"
         data_type: number
         tests:
-          - not_null
-          - unique
+          - dbt_constraints.primary_key
       - name: o_custkey
         description: "Foreign key reference to customers table"
         data_type: number
         tests:
           - not_null
+          - dbt_constraints.foreign_key:
+              to: ref('stg_tpc_h__customers')
+              field: customer_key
       - name: o_orderstatus
         description: "Status of the order"
         data_type: varchar
@@ -500,7 +496,7 @@ models:
         description: "Customer identifier"
         data_type: number
         tests:
-          - not_null
+          - dbt_constraints.primary_key
       - name: customer_name
         description: "Customer name"
         data_type: varchar
