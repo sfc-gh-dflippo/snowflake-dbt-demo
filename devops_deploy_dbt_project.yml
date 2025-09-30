@@ -2,7 +2,7 @@ trigger:
   branches:
     include:
       - main
-      - qa
+      - test
   paths:
     exclude:
     - schemachange
@@ -15,7 +15,7 @@ variables:
   - ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
     - group: 'Production-Vars'
 
-  # Otherwise, if the branch is 'test', use 'QA-Vars'.
+  # Otherwise, if the branch is 'test', use 'Test-Vars'.
   - ${{ elseif eq(variables['Build.SourceBranchName'], 'test') }}:
     - group: 'Test-Vars'
 
