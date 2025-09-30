@@ -1,0 +1,648 @@
+---
+description: Comprehensive dbt best practices and development guidelines for Snowflake projects
+globs: models/**/*.sql, models/**/*.py, macros/**/*.sql, tests/**/*.sql, snapshots/**/*.sql, analyses/**/*.sql, dbt_project.yml, profiles.yml
+alwaysApply: true
+---
+
+# dbt Development Best Practices
+
+This document outlines comprehensive best practices for dbt development with Snowflake, covering project structure, modeling patterns, testing strategies, and performance optimization.
+
+## **Project Architecture**
+
+### **Medallion Architecture Implementation**
+
+**Bronze Layer** (`models/bronze/`) - Staging models with raw data patterns
+- **Purpose**: One-to-one source relationships, basic data cleaning
+- **Materialization**: `ephemeral` (compiled as CTEs for performance)
+- **Naming**: `stg_{source}__{table}`
+- **Complexity Levels**:
+  - **Crawl**: Simple staging (`stg_tpc_h__customers`, `stg_tpc_h__orders`)
+  - **Walk**: Complex staging with composite keys (`stg_tpc_h__lineitem`)
+  - **Run**: Advanced staging with streams (`customer_cdc_stream`)
+
+**Silver Layer** (`models/silver/`) - Intermediate transformations
+- **Purpose**: Business logic, data enrichment, complex transformations
+- **Materialization**: `ephemeral` for reusable logic, `table` for complex transformations
+- **Naming**: `int_{entity}__{description}`
+- **Complexity Levels**:
+  - **Crawl**: Basic cleaning (`clean_nations`)
+  - **Walk**: Business logic (`int_customers__with_orders`, `customer_segments`)
+  - **Run**: Complex transformations (`int_fx_rates__daily`, `customer_clustering.py`)
+
+**Gold Layer** (`models/gold/`) - Business-ready marts
+- **Purpose**: Final data products for consumption
+- **Materialization**: `table` for dimensions, `incremental` for large facts
+- **Naming**: `dim_{entity}` for dimensions, `fct_{entity}` for facts
+- **Complexity Levels**:
+  - **Crawl**: Simple aggregations (`dim_current_year_orders`)
+  - **Walk**: Complete dimensions (`dim_customers`, `dim_orders`)
+  - **Run**: High-performance facts (`fct_order_lines`, `executive_dashboard`)
+
+## **Naming Conventions**
+
+### **Model Naming Standards**
+```sql
+-- Staging models (Bronze)
+stg_{source_name}__{table_name}.sql
+-- Examples: stg_tpc_h__customers.sql, stg_salesforce__accounts.sql
+
+-- Intermediate models (Silver)
+int_{entity}__{description}.sql
+-- Examples: int_customers__with_orders.sql, int_orders__enriched.sql
+
+-- Dimension models (Gold)
+dim_{entity}.sql
+-- Examples: dim_customers.sql, dim_products.sql
+
+-- Fact models (Gold)
+fct_{entity}.sql
+-- Examples: fct_orders.sql, fct_sales.sql
+```
+
+### **Column Naming Standards**
+```sql
+-- Use snake_case for all column names
+customer_id, order_date, total_amount
+
+-- Standardize common column names across models
+id -> {entity}_id (customer_id, order_id)
+created_at -> {entity}_created_at
+updated_at -> {entity}_updated_at
+
+-- Use consistent prefixes for calculated fields
+is_{condition} -> is_active, is_deleted
+has_{attribute} -> has_orders, has_discount
+{metric}_count -> order_count, item_count
+{metric}_amount -> total_amount, discount_amount
+```
+
+## **Model Organization & Best Practices**
+
+### **Critical Rules**
+- ✅ **No Direct Joins to Source**: All models reference staging layer, not sources directly
+- ✅ **Proper Staging Layer**: One-to-one relationship between sources and staging models  
+- ✅ **No Source Fanout**: Each source referenced by exactly one staging model
+- ✅ **Proper Model Dependencies**: Clear lineage from staging → intermediate → marts
+- ✅ **Standardized Naming**: Consistent `stg_`, `int_`, `dim_`, `fct_` prefixes
+- ✅ **No Hard-coded References**: All references use `ref()` and `source()` functions
+
+### **Configuration Strategy: Folder-Level First**
+
+**✅ RECOMMENDED: Configure common settings at the folder level in `dbt_project.yml`**
+
+This approach reduces repetition, ensures consistency, and makes maintenance easier. Only use model-level configurations for unique requirements.
+
+```yaml
+# dbt_project.yml - Folder-level configuration (RECOMMENDED)
+models:
+  your_project:
+    # Global defaults
+    +materialized: view
+    +snowflake_warehouse: "{{ target.warehouse }}"
+    +persist_docs:
+      relation: true
+      columns: true
+    
+    # Bronze Layer - Staging models
+    bronze:
+      +materialized: ephemeral  # All staging as CTEs for performance
+      +tags: ["bronze", "staging"]
+      +schema: bronze
+      crawl:
+        +tags: ["crawl", "beginner"]  # Inherits: bronze, staging, crawl, beginner
+      walk:
+        +tags: ["walk", "intermediate"]  # Inherits: bronze, staging, walk, intermediate
+      run:
+        +tags: ["run", "advanced"]  # Inherits: bronze, staging, run, advanced
+    
+    # Silver Layer - Intermediate transformations
+    silver:
+      +tags: ["silver", "intermediate"]
+      +schema: silver
+      crawl:
+        +materialized: table
+        +tags: ["crawl", "beginner"]  # Inherits: silver, intermediate, crawl, beginner
+      walk:
+        +materialized: ephemeral  # Reusable business logic
+        +tags: ["walk"]  # Inherits: silver, intermediate, walk
+      run:
+        +materialized: table  # Complex transformations need persistence
+        +tags: ["run", "advanced"]  # Inherits: silver, intermediate, run, advanced
+    
+    # Gold Layer - Business marts
+    gold:
+      +materialized: table  # Default for dimensions
+      +tags: ["gold", "marts"]
+      +schema: gold
+      crawl:
+        +tags: ["crawl", "beginner"]  # Inherits: gold, marts, crawl, beginner
+      walk:
+        +tags: ["walk", "intermediate"]  # Inherits: gold, marts, walk, intermediate
+        sensitive_data:
+          +materialized: view
+          +secure: true
+          +tags: ["sensitive"]  # Inherits: gold, marts, walk, intermediate, sensitive
+      run:
+        +materialized: incremental  # Large facts as incremental
+        +tags: ["run", "advanced"]  # Inherits: gold, marts, run, advanced
+```
+
+### **When to Use Model-Level Configuration**
+
+Only override folder-level settings for unique requirements:
+
+```sql
+-- ✅ GOOD: Unique configuration for dynamic tables
+{{ config(
+    materialized='dynamic_table',
+    target_lag='1 hour',
+    on_configuration_change='apply'
+) }}
+
+-- ✅ GOOD: Incremental-specific settings
+{{ config(
+    unique_key='order_id',
+    merge_exclude_columns=['dbt_inserted_at'],
+    incremental_strategy='merge'
+) }}
+
+-- ❌ AVOID: Repeating common settings
+{{ config(
+    materialized='table',  -- Already set at folder level
+    tags=['gold', 'marts'], -- Already set at folder level
+    schema='gold'           -- Already set at folder level
+) }}
+```
+
+### **Model Structure Template**
+
+**✅ RECOMMENDED: Minimal model configuration (folder-level handles common settings)**
+
+```sql
+-- Standard model header - only unique configurations needed
+-- (materialization, tags, schema set at folder level)
+
+-- Import CTEs (staging and intermediate models)
+with customers as (
+    select * from {{ ref('stg_customers') }}
+),
+
+orders as (
+    select * from {{ ref('int_orders__enriched') }}
+),
+
+-- Logical CTEs (business logic)
+customer_metrics as (
+    select
+        customer_id,
+        count(*) as order_count,
+        sum(order_amount) as total_spent,
+        max(order_date) as last_order_date
+    from orders
+    group by customer_id
+),
+
+-- Final CTE (column selection and renaming)
+final as (
+    select
+        -- Primary key
+        customers.customer_id,
+        
+        -- Attributes
+        customers.customer_name,
+        customers.customer_email,
+        customers.customer_status,
+        
+        -- Metrics
+        coalesce(customer_metrics.order_count, 0) as lifetime_orders,
+        coalesce(customer_metrics.total_spent, 0) as lifetime_value,
+        customer_metrics.last_order_date,
+        
+        -- Metadata
+        current_timestamp() as dbt_updated_at
+        
+    from customers
+    left join customer_metrics
+        on customers.customer_id = customer_metrics.customer_id
+)
+
+select * from final
+```
+
+**When model-level config IS needed:**
+
+```sql
+-- Example: Incremental model with unique settings
+{{ config(
+    unique_key='customer_id',
+    incremental_strategy='merge',
+    merge_exclude_columns=['dbt_inserted_at']
+) }}
+
+-- Example: Dynamic table with specific settings
+{{ config(
+    materialized='dynamic_table',
+    target_lag='1 hour',
+    on_configuration_change='apply'
+) }}
+```
+
+### **Tag Inheritance Strategy**
+
+**✅ LEVERAGE: dbt's additive tag inheritance**
+
+Tags accumulate hierarchically per the [dbt documentation](https://docs.getdbt.com/reference/resource-configs/tags). Child folders inherit all parent tags automatically.
+
+```yaml
+# ✅ GOOD: Avoid duplicate tags
+bronze:
+  +tags: ["bronze", "staging"]
+  crawl:
+    +tags: ["crawl", "beginner"]  # Inherits: bronze, staging, crawl, beginner
+
+# ❌ BAD: Redundant parent tags
+bronze:
+  +tags: ["bronze", "staging"] 
+  crawl:
+    +tags: ["bronze", "staging", "crawl", "beginner"]  # Duplicates parent tags
+```
+
+**Common Selection Patterns:**
+```bash
+dbt run --select tag:bronze tag:crawl  # Beginner bronze models
+dbt run --select tag:gold tag:run      # Advanced gold models
+```
+
+### **Configuration Optimization for This Project**
+
+**Remove redundant model configs:**
+- Basic `materialized`, `tags`, `schema` settings (handled at folder level)
+- Example: `models/gold/run/executive_dashboard.sql` can remove `materialized='table'`
+
+**Keep unique model configs:**
+- Dynamic table settings (`target_lag`, `on_configuration_change`)
+- Incremental settings (`unique_key`, `merge_exclude_columns`)
+- CDC stream configurations (`pre_hook`, `post_hook`)
+- Custom aliases and surrogate keys
+
+## **Testing Strategy**
+
+**✅ USE: dbt_constraints package for database-enforced constraints**
+- Provides actual database constraints (not just tests)
+- Better performance than standard dbt tests
+- Enforces data integrity at the database level
+
+### **Primary Key Testing**
+```yaml
+# Use dbt_constraints for database-enforced constraints
+models:
+  - name: dim_customers
+    columns:
+      - name: customer_id
+        tests:
+          - dbt_constraints.primary_key
+```
+
+### **Foreign Key Testing**
+```yaml
+# Enforce referential integrity
+models:
+  - name: fct_orders
+    columns:
+      - name: customer_id
+        tests:
+          - dbt_constraints.foreign_key:
+              to: ref('dim_customers')
+              field: customer_id
+```
+
+### **Generic Tests**
+```sql
+-- tests/generic/test_positive_values.sql
+{% test positive_values(model, column_name) %}
+    select count(*)
+    from {{ model }}
+    where {{ column_name }} <= 0
+{% endtest %}
+```
+
+### **Singular Tests**
+```sql
+-- tests/singular/test_customer_balance_distribution.sql
+-- Ensure customer balances follow expected distribution
+select count(*)
+from {{ ref('dim_customers') }}
+where lifetime_value < 0
+  or lifetime_value > 1000000
+having count(*) > 0
+```
+
+### **Data Quality Validation**
+```bash
+# Validate constraints (using dbt_constraints package)
+dbt run-operation primary_key --args '{model_name: dim_customers}'
+
+# Check business rules
+dbt test --select tests/singular/   # Run all singular tests
+
+# Performance testing
+dbt run --select tag:large_table --full-refresh
+
+# Test by type or tag
+dbt test --select test_type:generic
+dbt test --select tag:critical
+```
+
+## **Incremental Models**
+
+### **Incremental Strategy Template**
+```sql
+{{ config(
+    materialized='incremental',
+    unique_key='order_id',
+    on_schema_change='fail',
+    incremental_strategy='merge'
+) }}
+
+select
+    order_id,
+    customer_id,
+    order_date,
+    order_amount,
+    current_timestamp() as dbt_updated_at
+from {{ ref('stg_orders') }}
+
+{% if is_incremental() %}
+    -- Only process new/updated records
+    where order_date > (select max(order_date) from {{ this }})
+       or dbt_updated_at > (select max(dbt_updated_at) from {{ this }})
+{% endif %}
+```
+
+### **Advanced Incremental with Delete Strategy**
+```sql
+{{ config(
+    materialized='incremental',
+    unique_key='order_id',
+    incremental_strategy='merge',
+    merge_exclude_columns=['dbt_inserted_at']
+) }}
+
+select
+    order_id,
+    customer_id,
+    order_date,
+    order_amount,
+    is_deleted,
+    current_timestamp() as dbt_updated_at,
+    {% if not is_incremental() %}
+        current_timestamp() as dbt_inserted_at
+    {% else %}
+        dbt_inserted_at
+    {% endif %}
+from {{ ref('stg_orders') }}
+
+{% if is_incremental() %}
+    where dbt_updated_at > (
+        select coalesce(max(dbt_updated_at), '1900-01-01'::timestamp) 
+        from {{ this }}
+    )
+{% endif %}
+```
+
+## **Python Models**
+
+### **Python Model Template**
+```python
+def model(dbt, session):
+    """Customer clustering using scikit-learn"""
+    import pandas as pd
+    from sklearn.cluster import KMeans
+    
+    df = dbt.ref("int_customers__metrics").to_pandas()
+    features = ['total_orders', 'total_spent', 'avg_order_value']
+    
+    kmeans = KMeans(n_clusters=5, random_state=42)
+    df['customer_segment'] = kmeans.fit_predict(df[features].fillna(0))
+    df['dbt_updated_at'] = pd.Timestamp.now()
+    
+    return df
+```
+
+## **Macros & Jinja**
+
+### **Custom Macros**
+```sql
+-- macros/generate_surrogate_key.sql
+{% macro generate_surrogate_key(columns) %}
+    {{ dbt_utils.generate_surrogate_key(columns) }}
+{% endmacro %}
+```
+
+### **Dynamic Column Generation**
+```sql
+select order_id, customer_id,
+    {% for status in ['pending', 'shipped', 'delivered'] %}
+    sum(case when order_status = '{{ status }}' then 1 else 0 end) as {{ status }}_count
+    {%- if not loop.last -%},{%- endif %}
+    {% endfor %}
+from {{ ref('stg_orders') }}
+group by order_id, customer_id
+```
+
+## **Snapshots (SCD Type 2)**
+
+### **Snapshot Configuration**
+```sql
+-- snapshots/dim_customers_scd.sql
+{% snapshot dim_customers_scd %}
+    {{
+        config(
+            target_schema='snapshots',
+            unique_key='customer_id',
+            strategy='check',
+            check_cols=['customer_name', 'customer_email', 'customer_status'],
+            invalidate_hard_deletes=True
+        )
+    }}
+    
+    select * from {{ ref('stg_customers') }}
+    
+{% endsnapshot %}
+```
+
+## **Performance Optimization**
+
+### **Warehouse Configuration**
+```sql
+-- Use appropriate warehouse sizes
+{{ config(
+    snowflake_warehouse='LARGE_WH',  -- For complex transformations
+    materialized='incremental'
+) }}
+```
+
+### **Clustering Keys**
+```sql
+-- For large tables, add clustering
+{{ config(
+    materialized='table',
+    cluster_by=['order_date', 'customer_id']
+) }}
+```
+
+### **Optimization Techniques**
+```sql
+-- Example: Optimized incremental model
+{{ config(
+    materialized='incremental',
+    unique_key='order_id',
+    cluster_by=['order_date', 'customer_id'],
+    snowflake_warehouse='LARGE_WH'
+) }}
+```
+
+### **Query Optimization Patterns**
+```sql
+-- Use window functions efficiently
+select
+    customer_id,
+    order_date,
+    order_amount,
+    -- Efficient window function usage
+    row_number() over (
+        partition by customer_id 
+        order by order_date desc
+    ) as order_rank
+from {{ ref('stg_orders') }}
+qualify order_rank <= 5  -- Snowflake's QUALIFY clause
+```
+
+## **Documentation Standards**
+```yaml
+# models/_models.yml
+models:
+  - name: dim_customers
+    description: "Customer dimension with lifetime metrics"
+    columns:
+      - name: customer_id
+        description: "Unique identifier"
+        tests: 
+          - dbt_constraints.primary_key
+      - name: lifetime_value
+        tests: [not_null, positive_values]
+
+# models/_sources.yml  
+sources:
+  - name: raw_data
+    tables:
+      - name: customers
+        columns:
+          - name: id
+            tests: 
+              - dbt_constraints.primary_key
+```
+
+## **Environment Management**
+
+### **Profile Configuration**
+```yaml
+# profiles.yml
+snowflake_demo:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
+      user: "{{ env_var('SNOWFLAKE_USER') }}"
+      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
+      role: "{{ env_var('SNOWFLAKE_ROLE') }}"
+      database: "{{ env_var('SNOWFLAKE_DATABASE') }}"
+      warehouse: "{{ env_var('SNOWFLAKE_WAREHOUSE') }}"
+      schema: dev
+    prod:
+      type: snowflake
+      # Production configuration
+      schema: prod
+```
+
+## **Common Commands**
+
+### **Essential Commands**
+```bash
+# Setup
+dbt deps && dbt debug
+
+# Development
+dbt run --select modelname
+dbt test --select modelname
+dbt run --select tag:bronze
+
+# Production
+dbt run --target prod
+dbt test --target prod
+
+# Documentation
+dbt docs generate && dbt docs serve
+```
+
+## **Troubleshooting**
+
+### **Common Issues**
+```bash
+# Debug connection and compilation
+dbt debug
+dbt compile --select modelname
+
+# Debug with logging
+dbt run --select modelname --log-level debug
+cat logs/dbt.log | grep ERROR
+
+# Validate constraints (using dbt_constraints package)
+dbt run-operation primary_key --args '{model_name: dim_customers}'
+
+# Check query performance in Snowflake
+select * from snowflake.account_usage.query_history 
+where query_text ilike '%model_name%' 
+order by start_time desc limit 10;
+```
+
+## **Security Best Practices**
+
+### **Access Control**
+```yaml
+# Configure permissions in dbt_project.yml
+models:
+  your_project:
+    +grants:
+      select: ['ANALYST_ROLE', 'BI_ROLE']
+```
+
+### **Secure Views**
+```sql
+{{ config(
+    materialized='view',
+    secure=true
+) }}
+
+-- Secure view for sensitive data
+select
+    customer_id,
+    -- Mask sensitive data
+    left(customer_email, 3) || '***' as masked_email,
+    customer_status
+from {{ ref('stg_customers') }}
+```
+
+### **Row-Level Security**
+```sql
+-- Use Snowflake's row-level security
+{{ config(
+    post_hook="alter table {{ this }} add row access policy customer_policy on (customer_id)"
+) }}
+```
+
+---
+
+*This dbt.mdc file provides comprehensive guidelines for dbt development with Snowflake. Follow these patterns for consistent, maintainable, and performant data models.*
