@@ -6,12 +6,30 @@ Context and guidelines for AI coding agents working on this dbt + Snowflake data
 
 This is a **modern data engineering project** built with dbt-core and Snowflake, implementing industry best practices for analytics engineering.
 
-**Technology Stack:**
-- **dbt-core** for data transformation and modeling
-- **Snowflake** as the cloud data warehouse
-- **Python models** with Snowpark for advanced analytics
-- **Taskmaster AI** for structured development workflow
-- **CI/CD automation** for deployment
+---
+
+## Technology Stack
+
+### Core Technologies
+- **dbt-core**: data transformation framework
+- **dbt-snowflake**: Snowflake adapter for dbt
+- **Snowflake**: Relational database
+- **Streamlit in Snowflake**:  Preferred graphical user interface (if needed)
+- **Python**: 3.12+ with Snowpark for advanced analytics and ML models
+
+**Version Compatibility**: dbt versions should align with [dbt Projects on Snowflake](https://docs.snowflake.com/en/user-guide/data-engineering/dbt-projects-on-snowflake#dbt-projects) requirements (dbt-core 1.9.4, dbt-snowflake 1.9.2)
+
+### Key dbt Packages
+- **dbt_constraints**: Database-level constraint enforcement (primary keys, foreign keys)
+- **dbt_utils**: Utility macros and helper functions for common transformations
+- **dbt_artifacts**: dbt logging to Snowflake database tables
+
+### Development Tools
+- **Snowflake CLI (`snow` command)**:  Execution of database commands and scripts
+- **conda and uv**: Preferred Python package managers
+- **schemachange**: Preferred CI/CD deployment tool for non-dbt objects (procedures, UDF, tasks, etc.)
+- **Taskmaster AI**: Task-driven development workflow management
+- **Git**: Version control with feature branch strategy
 
 ---
 
@@ -110,29 +128,35 @@ This project follows **Specification-Driven Development (SDD)** methodology, whe
 
 ## Essential Commands for Agents
 
-### Project Setup
+### dbt Project Setup
 ```bash
 # Install dependencies and test connection
-pip install -r requirements.txt && dbt deps && dbt debug
+conda env create -f dbt-conda-env.yml && dbt deps && dbt debug
+# or
+uv pip install -U -r requirements.txt && dbt deps && dbt debug
+# or 
+pip install -U -r requirements.txt && dbt deps && dbt debug
 
-# Build entire project
+# Compile, run, test entire project full-load
 dbt build --full-refresh
+
+# Compile, run, test entire project incremental load
+dbt build
 ```
 
 ### Core Development Workflow
 ```bash
 # Run and test models
-dbt run --select modelname
-dbt test --select modelname
+dbt compile --select modelname
 dbt build --select modelname
 
 # Generate documentation
-dbt docs generate
+dbt docs generate --static
 ```
 
 ---
 
-## Architecture Context
+## dbt Data Architecture Context
 
 **Medallion Architecture**: Bronze (staging) → Silver (intermediate) → Gold (marts)
 **Complexity Levels**: Crawl (basic) → Walk (intermediate) → Run (advanced)
@@ -171,32 +195,43 @@ snova -w /path/to/your/dbt/project
 
 ### Rule References
 - **[dbt Best Practices](.cursor/rules/dbt.mdc)** - Complete dbt modeling guidelines
-- **[Taskmaster Commands](.cursor/rules/taskmaster/taskmaster.mdc)** - Task management reference
-- **[Development Workflow](.cursor/rules/taskmaster/dev_workflow.mdc)** - Detailed process guide
 - **[Snowflake CLI Guide](.cursor/rules/snowflake-cli.mdc)** - Snowflake operations
+- **[Taskmaster Development Workflow](.cursor/rules/taskmaster/dev_workflow.mdc)** - Detailed process guide
+- **[Taskmaster Commands](.cursor/rules/taskmaster/taskmaster.mdc)** - Task management reference
 
 ---
 
 ## Key Constraints for Agents
 
+### Safety and permissions
+
+#### Allowed without prompt:
+- read files, list files
+- reformat SQL
+- executing dbt models
+- query Snowflake database
+
+#### Ask first: 
+- Adding dbt macros, dbt packages, or python libraries
+- git push
+- deleting files, chmod
+
 ### Security Requirements
 - **Never hardcode credentials** - Always use environment variables
-- **Follow data protection policies** for PII handling
 
 ### Performance Guidelines  
 - **Use incremental materialization** for large fact tables
 - **Apply appropriate clustering keys** for frequently queried columns
-- **Size warehouses** based on model complexity
+- **Size warehouses** based on execution time and model complexity
 
 ### Testing Requirements
-- **Always test models** after implementation (`dbt test --select modelname`)
+- **Use `dbt build` instead of `dbt run`** to run dbt tests after model execution (`dbt build --select modelname`)
 - **Use dbt_constraints** for primary/unique/foreign key validation
-- **Run full test suite** before deployment (`dbt build`)
 
 ### Deployment Process
 - **Test connection** with `dbt debug` before deployment
-- **Deploy using Python script** with `python deploy_dbt_project.py --target prod`
-- **Validate in production** with `dbt test --target prod`
+- **Deploy to dev, test, prod using Python script** with `python deploy_dbt_project.py --target environment_name`
+- **Validate in production** with `dbt build --target prod`
 
 ---
 
