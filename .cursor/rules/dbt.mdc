@@ -8,6 +8,32 @@ alwaysApply: true
 
 This document outlines comprehensive best practices for dbt development with Snowflake, covering project structure, modeling patterns, testing strategies, and performance optimization.
 
+## dbt Project Setup
+```bash
+# Install dependencies and test connection
+conda env create -f dbt-conda-env.yml && dbt deps && dbt debug
+# or
+uv pip install -U -r requirements.txt && dbt deps && dbt debug
+# or 
+pip install -U -r requirements.txt && dbt deps && dbt debug
+
+# Compile, run, test entire project full-load
+dbt build --full-refresh
+
+# Compile, run, test entire project incremental load
+dbt build
+```
+
+## Core Development Workflow
+```bash
+# Run and test models
+dbt compile --select modelname
+dbt build --select modelname
+
+# Generate documentation
+dbt docs generate --static
+```
+
 ## **Project Architecture**
 
 ### **Medallion Architecture Implementation**

@@ -126,72 +126,12 @@ This project follows **Specification-Driven Development (SDD)** methodology, whe
 
 ---
 
-## Essential Commands for Agents
-
-### dbt Project Setup
-```bash
-# Install dependencies and test connection
-conda env create -f dbt-conda-env.yml && dbt deps && dbt debug
-# or
-uv pip install -U -r requirements.txt && dbt deps && dbt debug
-# or 
-pip install -U -r requirements.txt && dbt deps && dbt debug
-
-# Compile, run, test entire project full-load
-dbt build --full-refresh
-
-# Compile, run, test entire project incremental load
-dbt build
-```
-
-### Core Development Workflow
-```bash
-# Run and test models
-dbt compile --select modelname
-dbt build --select modelname
-
-# Generate documentation
-dbt docs generate --static
-```
-
----
-
-## dbt Data Architecture Context
-
-**Medallion Architecture**: Bronze (staging) → Silver (intermediate) → Gold (marts)
-**Complexity Levels**: Crawl (basic) → Walk (intermediate) → Run (advanced)
-
-### Key Directories
-- `models/bronze/` - Staging models (raw data ingestion)
-- `models/silver/` - Intermediate models (business logic)  
-- `models/gold/` - Mart models (analytics-ready)
-- `macros/` - Custom Jinja macros and functions
-- `tests/` - Data quality tests (generic and singular)
-- `snapshots/` - SCD Type 2 historical tracking
-
----
-
-## AI Assistant Integration Setup
-
-To add Taskmaster MCP server to your AI assistant for task-driven development:
-
-```bash
-# Add task-master-ai MCP server (example for Snova)
-snova mcp add task-master-ai npx --args "-y,--package=task-master-ai,task-master-ai" --env "GOOGLE_API_KEY=your_google_api_key,MODEL=gemini-2.5-pro,MAX_TOKENS=64000,TEMPERATURE=0.2,DEFAULT_SUBTASKS=5,DEFAULT_PRIORITY=medium"
-
-# Verify MCP server was added
-snova mcp list
-# Start AI assistant with project directory
-snova -w /path/to/your/dbt/project
-
----
-
-## Agent Guidelines
+## Agent Guidelines and Constraints
 
 ### Code Standards
 - **Consistency** - Follow established patterns across the project
-- **Testability** - Every model should have appropriate data quality tests
-- **Documentation** - Document business logic and complex transformations
+- **Testability** - Models should have appropriate data quality tests
+- **Documentation** - Document business logic, complex transformations, models, and columns
 
 ### Rule References
 - **[dbt Best Practices](.cursor/rules/dbt.mdc)** - Complete dbt modeling guidelines
@@ -200,8 +140,6 @@ snova -w /path/to/your/dbt/project
 - **[Taskmaster Commands](.cursor/rules/taskmaster/taskmaster.mdc)** - Task management reference
 
 ---
-
-## Key Constraints for Agents
 
 ### Safety and permissions
 
@@ -234,5 +172,21 @@ snova -w /path/to/your/dbt/project
 - **Validate in production** with `dbt build --target prod`
 
 ---
+
+## AI Assistant Integration Setup
+
+To add Taskmaster MCP server to your AI assistant for task-driven development:
+
+```bash
+# Add task-master-ai MCP server (example for Snova)
+snova mcp add task-master-ai npx --args "-y,--package=task-master-ai,task-master-ai" --env "GOOGLE_API_KEY=your_google_api_key,MODEL=gemini-2.5-pro,MAX_TOKENS=64000,TEMPERATURE=0.2,DEFAULT_SUBTASKS=5,DEFAULT_PRIORITY=medium"
+
+# Verify MCP server was added
+snova mcp list
+# Start AI assistant with project directory
+snova -w /path/to/your/dbt/project
+
+---
+
 
 *For detailed implementation rules and examples, see the referenced .cursor/rules/ files.*
