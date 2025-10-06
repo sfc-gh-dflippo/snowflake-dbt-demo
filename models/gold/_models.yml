@@ -17,11 +17,6 @@ models:
       Simple dimension showing orders from the current year.
       Demonstrates basic filtering and date-based subsetting.
       Provides focused view for current year analysis.
-    meta:
-      owner: "business_intelligence"
-      maturity: "high"
-      complexity: "crawl"
-      tags: ["dimension", "current_year", "simple"]
     columns:
       - name: order_key
         description: "Primary key for order"
@@ -57,11 +52,6 @@ models:
       Summary of nations with enhanced attributes from AI classification.
       Demonstrates basic business reporting with cleaned and enriched data.
       Simple aggregation and categorization for business users.
-    meta:
-      owner: "business_intelligence"
-      maturity: "high"
-      complexity: "crawl"
-      tags: ["summary", "nations", "ai_enhanced"]
     columns:
       - name: NATION_NAME
         description: "Name of the nation"
@@ -106,11 +96,6 @@ models:
       Customer analytics and insights for business intelligence.
       Demonstrates business-friendly column naming with quoted identifiers.
       Comprehensive customer segmentation and risk analysis.
-    meta:
-      owner: "business_intelligence"
-      maturity: "high"
-      complexity: "walk"
-      tags: ["analytics", "customer_insights", "business_friendly"]
     columns:
       - name: CUSTOMER_KEY
         description: "Customer identifier"
@@ -201,11 +186,6 @@ models:
       Simple dimension showing open orders from the current year.
       Demonstrates filtering by both date and status.
       Focused view for operational monitoring.
-    meta:
-      owner: "business_intelligence"
-      maturity: "high"
-      complexity: "crawl"
-      tags: ["dimension", "current_year", "open_orders"]
     columns:
       - name: order_key
         description: "Primary key for order"
@@ -251,11 +231,6 @@ models:
       Enriched with business attributes, geographic context, and customer segmentation.
       Demonstrates proper mart layer construction with multiple source integration.
       Includes customer behavior flags and value-based segmentation.
-    meta:
-      owner: "business_intelligence"
-      maturity: "high"
-      complexity: "walk"
-      tags: ["dimension", "customer", "scd_type_1"]
     tests:
       - dbt_utils.expression_is_true:
           expression: "total_orders >= open_orders"
@@ -266,10 +241,6 @@ models:
         tests:
           - not_null
           - unique
-        meta:
-          dimension:
-            type: "primary_key"
-            label: "Customer ID"
       - name: customer_name
         description: "Customer name"
         data_type: varchar
@@ -287,10 +258,6 @@ models:
         data_type: number
         tests:
           - not_null
-        meta:
-          metric:
-            type: "currency"
-            label: "Account Balance"
       - name: market_segment
         description: "Customer market segment"
         data_type: varchar
@@ -326,10 +293,6 @@ models:
           - not_null
           - dbt_utils.expression_is_true:
               expression: ">= 0"
-        meta:
-          metric:
-            type: "count"
-            label: "Total Orders"
       - name: open_orders
         description: "Number of currently open orders"
         data_type: number
@@ -337,10 +300,6 @@ models:
           - not_null
           - dbt_utils.expression_is_true:
               expression: ">= 0"
-        meta:
-          metric:
-            type: "count"
-            label: "Open Orders"
       - name: has_orders_flag
         description: "Flag indicating if customer has placed any orders"
         data_type: varchar
@@ -348,8 +307,6 @@ models:
           - not_null
           - accepted_values:
               values: ['Y', 'N']
-        meta:
-          business_logic: "Derived from total_orders > 0"
       - name: has_open_orders_flag
         description: "Flag indicating if customer has open orders"
         data_type: varchar
@@ -357,8 +314,6 @@ models:
           - not_null
           - accepted_values:
               values: ['Y', 'N']
-        meta:
-          business_logic: "Derived from open_orders > 0"
       - name: value_segment
         description: "Customer value segmentation based on account balance"
         data_type: varchar
@@ -366,8 +321,6 @@ models:
           - not_null
           - accepted_values:
               values: ['High Value', 'Medium Value', 'Standard']
-        meta:
-          business_logic: "High Value: >= $5000, Medium Value: >= $1000, Standard: < $1000"
       - name: _loaded_at
         description: "Source data load timestamp"
         data_type: timestamp_ntz
@@ -385,11 +338,6 @@ models:
       Demonstrates dimension design with denormalized customer context.
       Includes date partitioning attributes and business-friendly status descriptions.
       Shows proper foreign key relationships and data quality constraints.
-    meta:
-      owner: "business_intelligence"
-      maturity: "high"
-      complexity: "walk"
-      tags: ["dimension", "orders", "transactional"]
     columns:
       - name: order_key
         description: "Primary key for order dimension"
@@ -397,10 +345,6 @@ models:
         tests:
           - not_null
           - unique
-        meta:
-          dimension:
-            type: "primary_key"
-            label: "Order ID"
       - name: customer_key
         description: "Foreign key to customer dimension"
         data_type: number
@@ -423,8 +367,6 @@ models:
           - not_null
           - accepted_values:
               values: ['Open', 'Fulfilled', 'Partial', 'Unknown']
-        meta:
-          business_logic: "Derived from order_status: O=Open, F=Fulfilled, P=Partial"
       - name: total_price
         description: "Total order value"
         data_type: number
@@ -432,10 +374,6 @@ models:
           - not_null
           - dbt_utils.expression_is_true:
               expression: ">= 0"
-        meta:
-          metric:
-            type: "currency"
-            label: "Order Value"
       - name: order_date
         description: "Date the order was placed"
         data_type: date
@@ -511,11 +449,6 @@ models:
       Customer change tracking model.
       Demonstrates change data capture patterns.
       Shows how to track customer attribute changes over time.
-    meta:
-      owner: "business_intelligence"
-      maturity: "medium"
-      complexity: "walk"
-      tags: ["cdc", "change_tracking", "customer"]
     columns:
       - name: customer_key
         description: "Customer identifier"
@@ -548,11 +481,6 @@ models:
       Calendar dimension with business date attributes.
       Demonstrates date dimension design patterns.
       Provides comprehensive date-based analytics support.
-    meta:
-      owner: "business_intelligence"
-      maturity: "high"
-      complexity: "walk"
-      tags: ["dimension", "calendar", "date"]
     columns:
       - name: day_key
         description: "Primary key for calendar day"
@@ -592,11 +520,6 @@ models:
       Secure view of customer data for sharing.
       Demonstrates data privacy and security patterns.
       Limited customer attributes for external sharing.
-    meta:
-      owner: "business_intelligence"
-      maturity: "high"
-      complexity: "walk"
-      tags: ["secure", "sharing", "privacy"]
     columns:
       - name: customer_key
         description: "Customer identifier"
@@ -638,11 +561,6 @@ models:
       Demonstrates advanced fact table design with incremental loading strategy.
       Includes all business measures, foreign exchange calculations, and audit trails.
       Optimized for analytical queries with proper indexing and partitioning strategy.
-    meta:
-      owner: "business_intelligence"
-      maturity: "high"
-      complexity: "run"
-      tags: ["fact", "transactional", "incremental", "high_volume"]
     tests:
       - dbt_utils.unique_combination_of_columns:
           combination_of_columns:
@@ -661,10 +579,6 @@ models:
           - relationships:
               to: ref('dim_orders')
               field: order_key
-        meta:
-          dimension:
-            type: "foreign_key"
-            label: "Order ID"
       - name: line_number
         description: "Line number within order (part of composite PK)"
         data_type: number
@@ -672,28 +586,16 @@ models:
           - not_null
           - dbt_utils.expression_is_true:
               expression: ">= 1"
-        meta:
-          dimension:
-            type: "line_number"
-            label: "Line Number"
       - name: part_key
         description: "Foreign key to parts dimension"
         data_type: number
         tests:
           - not_null
-        meta:
-          dimension:
-            type: "foreign_key"
-            label: "Part ID"
       - name: supplier_key
         description: "Foreign key to suppliers dimension"
         data_type: number
         tests:
           - not_null
-        meta:
-          dimension:
-            type: "foreign_key"
-            label: "Supplier ID"
       - name: customer_key
         description: "Foreign key to customers dimension (denormalized from orders)"
         data_type: number
@@ -702,10 +604,6 @@ models:
           - relationships:
               to: ref('dim_customers')
               field: customer_key
-        meta:
-          dimension:
-            type: "foreign_key"
-            label: "Customer ID"
       - name: quantity
         description: "Quantity of items in the line"
         data_type: number
@@ -713,11 +611,6 @@ models:
           - not_null
           - dbt_utils.expression_is_true:
               expression: "> 0"
-        meta:
-          metric:
-            type: "quantity"
-            label: "Quantity"
-            aggregation: "sum"
       - name: extended_price
         description: "Extended price before discount and tax"
         data_type: number
@@ -725,11 +618,6 @@ models:
           - not_null
           - dbt_utils.expression_is_true:
               expression: "> 0"
-        meta:
-          metric:
-            type: "currency"
-            label: "Extended Price"
-            aggregation: "sum"
       - name: discount
         description: "Discount rate applied (0.0 to 1.0)"
         data_type: number
@@ -739,11 +627,6 @@ models:
               min_value: 0
               max_value: 1
               inclusive: true
-        meta:
-          metric:
-            type: "rate"
-            label: "Discount Rate"
-            aggregation: "avg"
       - name: tax
         description: "Tax rate applied"
         data_type: number
@@ -751,11 +634,6 @@ models:
           - not_null
           - dbt_utils.expression_is_true:
               expression: ">= 0"
-        meta:
-          metric:
-            type: "rate"
-            label: "Tax Rate"
-            aggregation: "avg"
       - name: discounted_price
         description: "Price after discount applied (calculated measure)"
         data_type: number
@@ -765,12 +643,6 @@ models:
               expression: "> 0"
           - dbt_utils.expression_is_true:
               expression: "<= extended_price"
-        meta:
-          metric:
-            type: "currency"
-            label: "Discounted Price"
-            aggregation: "sum"
-          business_logic: "extended_price * (1 - discount)"
       - name: final_price
         description: "Final price after discount and tax (calculated measure)"
         data_type: number
@@ -778,12 +650,6 @@ models:
           - not_null
           - dbt_utils.expression_is_true:
               expression: "> 0"
-        meta:
-          metric:
-            type: "currency"
-            label: "Final Price USD"
-            aggregation: "sum"
-          business_logic: "extended_price * (1 - discount) * (1 + tax)"
       - name: eur_conversion_rate
         description: "USD to EUR conversion rate used"
         data_type: number
@@ -791,11 +657,6 @@ models:
           - not_null
           - dbt_utils.expression_is_true:
               expression: "> 0"
-        meta:
-          metric:
-            type: "rate"
-            label: "EUR Conversion Rate"
-          business_logic: "Lookup from FX rates based on order date"
       - name: final_price_eur
         description: "Final price converted to EUR (calculated measure)"
         data_type: number
@@ -803,12 +664,6 @@ models:
           - not_null
           - dbt_utils.expression_is_true:
               expression: "> 0"
-        meta:
-          metric:
-            type: "currency"
-            label: "Final Price EUR"
-            aggregation: "sum"
-          business_logic: "final_price * eur_conversion_rate"
       - name: return_flag
         description: "Return flag status"
         data_type: varchar
@@ -816,10 +671,6 @@ models:
           - not_null
           - accepted_values:
               values: ['A', 'N', 'R']
-        meta:
-          dimension:
-            type: "flag"
-            label: "Return Status"
       - name: line_status
         description: "Line item status"
         data_type: varchar
@@ -827,51 +678,27 @@ models:
           - not_null
           - accepted_values:
               values: ['F', 'O']
-        meta:
-          dimension:
-            type: "status"
-            label: "Line Status"
       - name: ship_date
         description: "Date item was shipped"
         data_type: date
         tests:
           - not_null
-        meta:
-          dimension:
-            type: "date"
-            label: "Ship Date"
       - name: commit_date
         description: "Committed delivery date"
         data_type: date
         tests:
           - not_null
-        meta:
-          dimension:
-            type: "date"
-            label: "Commit Date"
       - name: receipt_date
         description: "Date item was received"
         data_type: date
         tests:
           - not_null
-        meta:
-          dimension:
-            type: "date"
-            label: "Receipt Date"
       - name: ship_instruct
         description: "Shipping instructions"
         data_type: varchar
-        meta:
-          dimension:
-            type: "attribute"
-            label: "Ship Instructions"
       - name: ship_mode
         description: "Shipping mode"
         data_type: varchar
-        meta:
-          dimension:
-            type: "attribute"
-            label: "Ship Mode"
       - name: line_comment
         description: "Comments about the line item"
         data_type: varchar
@@ -880,19 +707,11 @@ models:
         data_type: date
         tests:
           - not_null
-        meta:
-          dimension:
-            type: "date"
-            label: "Order Date"
       - name: order_status_desc
         description: "Order status description (denormalized from orders)"
         data_type: varchar
         tests:
           - not_null
-        meta:
-          dimension:
-            type: "status"
-            label: "Order Status"
       - name: _loaded_at
         description: "Source data load timestamp"
         data_type: timestamp_ntz
@@ -909,11 +728,6 @@ models:
       Executive-level KPI dashboard model.
       Demonstrates advanced aggregation and business intelligence patterns.
       Provides high-level metrics for executive reporting and decision making.
-    meta:
-      owner: "business_intelligence"
-      maturity: "high"
-      complexity: "run"
-      tags: ["executive", "kpi", "dashboard", "aggregation"]
     columns:
       - name: metric_date
         description: "Date for the metrics"
@@ -953,11 +767,6 @@ models:
       Full reload fact table demonstrating complete refresh patterns.
       Shows alternative loading strategy for smaller fact tables.
       Includes comprehensive business measures and foreign key relationships.
-    meta:
-      owner: "business_intelligence"
-      maturity: "high"
-      complexity: "run"
-      tags: ["fact", "full_reload", "comprehensive"]
     columns:
       - name: l_order_wid
         description: "Foreign key to orders dimension"
@@ -982,11 +791,6 @@ models:
       Pivoted fact table demonstrating advanced SQL patterns.
       Shows dynamic pivot generation using dbt macros.
       Provides year-over-year analysis structure.
-    meta:
-      owner: "business_intelligence"
-      maturity: "high"
-      complexity: "run"
-      tags: ["fact", "pivot", "dynamic", "advanced_sql"]
     columns:
       - name: supplier_key
         description: "Supplier identifier"
@@ -1002,32 +806,12 @@ models:
   # Legacy models (to be deprecated)
   - name: DIM__CUSTOMERS
     description: "Legacy customer dimension with SCD patterns (deprecated - use dim_customers instead)"
-    meta:
-      owner: "business_intelligence"
-      maturity: "deprecated"
-      complexity: "run"
-      tags: ["legacy", "deprecated", "scd"]
 
   - name: DIM__ORDERS
     description: "Legacy orders dimension with SCD patterns (deprecated - use dim_orders instead)"
-    meta:
-      owner: "business_intelligence"
-      maturity: "deprecated"
-      complexity: "run"
-      tags: ["legacy", "deprecated", "scd"]
 
   - name: dim_customers_macro_example
     description: "Customer dimension using macro patterns (example implementation)"
-    meta:
-      owner: "business_intelligence"
-      maturity: "medium"
-      complexity: "run"
-      tags: ["example", "macros", "advanced_patterns"]
 
   - name: dim_orders_macro_example
     description: "Orders dimension using macro patterns (example implementation)"
-    meta:
-      owner: "business_intelligence"
-      maturity: "medium"
-      complexity: "run"
-      tags: ["example", "macros", "advanced_patterns"]

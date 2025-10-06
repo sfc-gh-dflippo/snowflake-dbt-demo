@@ -17,11 +17,6 @@ models:
       dbt query execution history and performance metrics.
       Demonstrates advanced analytics on dbt metadata.
       Provides insights into model performance and execution patterns.
-    meta:
-      owner: "data_team"
-      maturity: "medium"
-      complexity: "run"
-      tags: ["metadata", "performance", "monitoring"]
     columns:
       - name: query_id
         description: "Unique identifier for the query"
@@ -54,11 +49,6 @@ models:
       Dynamic warehouse assignment based on workload patterns.
       Demonstrates advanced Snowflake warehouse management.
       Uses AI and analytics to optimize compute resource allocation.
-    meta:
-      owner: "data_team"
-      maturity: "medium"
-      complexity: "run"
-      tags: ["warehouse_management", "optimization", "ai_powered"]
     columns:
       - name: model_name
         description: "dbt model name"

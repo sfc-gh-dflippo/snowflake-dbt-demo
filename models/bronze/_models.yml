@@ -17,19 +17,12 @@ models:
       Staging model for TPC-H nations table. 
       Demonstrates basic staging best practices with one-to-one source relationship.
       Simple column renaming and standardization only.
-    meta:
-      owner: "data_team"
-      maturity: "high"
-      complexity: "crawl"
     columns:
       - name: nation_key
         description: "Primary key for nations table"
         data_type: number
         tests:
           - dbt_constraints.primary_key
-        meta:
-          dimension:
-            type: "primary_key"
       - name: nation_name
         description: "Name of the nation"
         data_type: varchar
@@ -58,17 +51,10 @@ models:
       Staging model for TPC-H regions table.
       Demonstrates basic staging best practices with minimal transformation.
       Foundation for nation-region hierarchy.
-    meta:
-      owner: "data_team"
-      maturity: "high"
-      complexity: "crawl"
     columns:
       - name: region_key
         description: "Primary key for regions table"
         data_type: number
-        meta:
-          dimension:
-            type: "primary_key"
       - name: region_name
         description: "Name of the region"
         data_type: varchar
@@ -89,19 +75,12 @@ models:
       Staging model for TPC-H customers table.
       Demonstrates staging best practices for tables with more columns.
       Includes customer attributes and geographic relationships.
-    meta:
-      owner: "data_team"
-      maturity: "high"
-      complexity: "crawl"
     columns:
       - name: customer_key
         description: "Primary key for customers table"
         data_type: number
         tests:
           - dbt_constraints.primary_key
-        meta:
-          dimension:
-            type: "primary_key"
       - name: customer_name
         description: "Name of the customer"
         data_type: varchar
@@ -147,19 +126,12 @@ models:
       Staging model for TPC-H orders table.
       Demonstrates staging best practices for transactional data.
       Includes order attributes and customer relationships.
-    meta:
-      owner: "data_team"
-      maturity: "high"
-      complexity: "crawl"
     columns:
       - name: order_key
         description: "Primary key for orders table"
         data_type: number
         tests:
           - dbt_constraints.primary_key
-        meta:
-          dimension:
-            type: "primary_key"
       - name: customer_key
         description: "Foreign key reference to customers table"
         data_type: number
@@ -219,10 +191,6 @@ models:
       Bronze layer customer data with quality checks and audit hooks.
       Demonstrates intermediate staging with data quality patterns.
       Includes quality flags and audit columns.
-    meta:
-      owner: "data_team"
-      maturity: "high"
-      complexity: "walk"
     columns:
       - name: c_custkey
         description: "Customer primary key"
@@ -251,11 +219,6 @@ models:
       Demonstrates staging best practices for complex fact-like tables.
       Features composite primary key and multiple foreign key relationships.
       Largest table in TPC-H schema with detailed transaction data.
-    meta:
-      owner: "data_team"
-      maturity: "high"
-      complexity: "walk"
-      tags: ["fact_staging", "high_volume"]
     tests:
       - dbt_utils.unique_combination_of_columns:
           combination_of_columns:
@@ -270,9 +233,6 @@ models:
           - dbt_constraints.foreign_key:
               to: ref('stg_tpc_h__orders')
               field: order_key
-        meta:
-          dimension:
-            type: "foreign_key"
       - name: line_number
         description: "Line number within order (part of composite PK)"
         data_type: number
@@ -370,11 +330,6 @@ models:
       Demonstrates staging best practices for external data sources.
       Time-series financial data with different schema patterns.
       Shows how to handle non-TPC-H data sources consistently.
-    meta:
-      owner: "data_team"
-      maturity: "medium"
-      complexity: "walk"
-      tags: ["external_source", "time_series", "financial"]
     tests:
       - dbt_utils.unique_combination_of_columns:
           combination_of_columns:
@@ -387,9 +342,6 @@ models:
         data_type: date
         tests:
           - not_null
-        meta:
-          dimension:
-            type: "date_key"
       - name: base_currency
         description: "Base currency code (ISO 4217)"
         data_type: varchar
@@ -425,11 +377,6 @@ models:
       Advanced incremental staging model for TPC-H orders.
       Demonstrates incremental materialization with complex business logic.
       Features advanced Jinja templating and schema evolution handling.
-    meta:
-      owner: "data_team"
-      maturity: "high"
-      complexity: "run"
-      tags: ["incremental", "high_volume"]
     columns:
       - name: o_orderkey
         description: "Primary key for orders table"
@@ -486,11 +433,6 @@ models:
       CDC stream model for customer changes.
       Demonstrates Change Data Capture patterns using Snowflake streams.
       Advanced pattern for real-time data processing.
-    meta:
-      owner: "data_team"
-      maturity: "medium"
-      complexity: "run"
-      tags: ["cdc", "streaming", "real_time"]
     columns:
       - name: customer_key
         description: "Customer identifier"
