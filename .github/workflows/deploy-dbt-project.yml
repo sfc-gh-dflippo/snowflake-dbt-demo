@@ -20,38 +20,24 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-        environment: ${{ github.ref_name == 'main' && 'production' || (github.ref_name == 'test' && 'test' || 'development') }}
-        # The above expression means:
-        # - If branch is 'main', use 'production' environment.
-        # - Else if branch is 'test', use 'test' environment.
-        # - Otherwise (e.g., feature branches), use 'development' environment.
+    environment: ${{ github.ref_name == 'main' && 'production' || (github.ref_name == 'test' && 'test' || 'development') }}
+    # The above expression means:
+    # - If branch is 'main', use 'production' environment.
+    # - Else if branch is 'test', use 'test' environment.
+    # - Otherwise (e.g., feature branches), use 'development' environment.
 
-    
     steps:
-      # Check out the repository
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Checkout Project
+        uses: actions/checkout@v5
 
-      # Set up Python 3.11
-      - name: Set up Python 3.11
-        uses: actions/setup-python@v4
+      - name: Set Python Version
+        uses: actions/setup-python@v6
         with:
           python-version: '3.11'
+          cache: 'pip'
 
-      # Cache pip dependencies
-      - name: Cache pip dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-
-      # Install Python dependencies
-      - name: Install requirements
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+      - name: Install pip requirements
+        run: pip install -U -r requirements.txt
 
       # Set up Snowflake RSA private key
       - name: Set up Snowflake private key
@@ -78,7 +64,7 @@ jobs:
           DBT_PROJECT_DIR: ${{ github.workspace }}
           DBT_PROFILES_DIR: ${{ github.workspace }}/deploy_config
           SNOWFLAKE_THREADS: ${{ vars.SNOWFLAKE_THREADS }}
-          
+
           # Snowflake variables - Production (main branch)
           SNOWFLAKE_ACCOUNT: ${{ vars.SNOWFLAKE_ACCOUNT }}
           SNOWFLAKE_USER: ${{ vars.SNOWFLAKE_USER }}
@@ -88,6 +74,17 @@ jobs:
           SNOWFLAKE_SCHEMA: ${{ vars.SNOWFLAKE_SCHEMA }}
           SNOWFLAKE_PRIVATE_KEY_PATH: ./rsa_key.p8
           PRIVATE_KEY_PASSPHRASE: ${{ secrets.PRIVATE_KEY_PASSPHRASE }}
+
+      # Upload dbt artifacts for debugging
+      - name: Upload dbt artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dbt-artifacts-${{ github.run_number }}
+          path: |
+            target/
+            logs/
+          retention-days: 7
 
       # Clean up private key
       - name: Clean up private key
