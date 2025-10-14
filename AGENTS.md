@@ -16,7 +16,7 @@ This is a **modern data engineering project** built with dbt-core and Snowflake,
 - **Snowflake**: Relational database
 - **Streamlit in Snowflake**:  Preferred graphical user interface (if needed)
 - **Schemachange**: CI/CD for database objects outside dbt
-- **Python**: 3.12+ with Snowpark for advanced analytics and ML models
+- **Python**: 3.11+ with Snowpark for advanced analytics and ML models
 
 **Version Compatibility**: dbt versions should align with [dbt Projects on Snowflake](https://docs.snowflake.com/en/user-guide/data-engineering/dbt-projects-on-snowflake#dbt-projects) requirements (dbt-core 1.9.4, dbt-snowflake 1.9.2)
 
@@ -27,10 +27,12 @@ This is a **modern data engineering project** built with dbt-core and Snowflake,
 
 ### Development Tools
 - **Snowflake CLI (`snow` command)**:  Execution of database commands and scripts
+- **dbt Projects on Snowflake**: Preferred execution environment when not developing locally
 - **conda and uv**: Preferred Python package managers
 - **schemachange**: Preferred CI/CD deployment tool for non-dbt objects (procedures, UDF, tasks, etc.)
 - **Taskmaster AI**: Task-driven development workflow management
 - **Git**: Version control with feature branch strategy
+- **Playwright**: Testing GUI applications
 
 ---
 
