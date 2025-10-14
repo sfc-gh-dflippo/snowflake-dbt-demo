@@ -1,0 +1,13 @@
+SNOWFLAKE:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      account: aws_cas2
+      user: dflippo
+      role: DFLIPPO_ROLE
+      database: DFLIPPO_DEV
+      warehouse: DFLIPPO_WH
+      schema: LOGGING
+      threads: 8
+

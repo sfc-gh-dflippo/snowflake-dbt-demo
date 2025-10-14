@@ -1,0 +1,604 @@
+---
+description: dbt Observability using dbt Projects on Snowflake and dbt Artifacts package
+alwaysApply: false
+---
+
+# dbt Observability Guide
+
+This guide covers two approaches to dbt observability: **dbt Projects on Snowflake** (native Snowflake monitoring) and **dbt Artifacts Package** (cross-platform dbt logging).
+
+---
+
+## Section 1: dbt Projects on Snowflake Monitoring
+
+**Reference:** [Snowflake dbt Projects Monitoring](https://docs.snowflake.com/en/user-guide/data-engineering/dbt-projects-on-snowflake-monitoring-observability)
+
+### Overview
+
+dbt Projects on Snowflake is a native feature that allows you to deploy and execute dbt projects as Snowflake objects. Monitoring is performed through query history and execution output, not through dedicated observability tables.
+
+### Key Monitoring Approaches
+
+1. **Execution Output** - Returned by `EXECUTE DBT PROJECT` command
+2. **Query History** - Standard Snowflake query monitoring
+3. **dbt Artifacts** - Access via `OUTPUT_ARCHIVE_URL` from execution results
+
+### Deployment
+
+```sql
+-- Deploy dbt project using Snowflake CLI
+snow dbt deploy PROJECT_NAME --connection default --database DB_NAME --schema SCHEMA_NAME
+
+-- Execute dbt project
+EXECUTE DBT PROJECT DB_NAME.SCHEMA_NAME.PROJECT_NAME args='build';
+
+-- Execute with specific selection
+EXECUTE DBT PROJECT DB_NAME.SCHEMA_NAME.PROJECT_NAME args='build --select tag:gold';
+```
+
+### Monitoring Queries
+
+#### Recent dbt Project Executions
+
+```sql
+-- Query history for dbt project executions
+SELECT 
+    query_id,
+    query_text,
+    database_name,
+    schema_name,
+    query_type,
+    execution_status,
+    error_code,
+    error_message,
+    start_time,
+    end_time,
+    total_elapsed_time/1000 AS execution_seconds,
+    warehouse_name,
+    warehouse_size,
+    user_name
+FROM SNOWFLAKE.ACCOUNT_USAGE.QUERY_HISTORY
+WHERE query_text ILIKE '%EXECUTE DBT PROJECT%'
+  AND start_time >= DATEADD(day, -7, CURRENT_TIMESTAMP())
+ORDER BY start_time DESC;
+```
+
+#### Failed dbt Executions
+
+```sql
+-- Failed dbt project runs
+SELECT 
+    query_id,
+    start_time,
+    database_name || '.' || schema_name AS project_location,
+    error_code,
+    error_message,
+    total_elapsed_time/1000 AS execution_seconds
+FROM SNOWFLAKE.ACCOUNT_USAGE.QUERY_HISTORY
+WHERE query_text ILIKE '%EXECUTE DBT PROJECT%'
+  AND execution_status = 'FAIL'
+  AND start_time >= DATEADD(day, -30, CURRENT_TIMESTAMP())
+ORDER BY start_time DESC;
+```
+
+#### dbt Project Performance Metrics
+
+```sql
+-- Performance trends for dbt project executions
+SELECT 
+    DATE_TRUNC('day', start_time) AS execution_date,
+    database_name || '.' || schema_name AS project_location,
+    COUNT(*) AS execution_count,
+    COUNT(CASE WHEN execution_status = 'SUCCESS' THEN 1 END) AS success_count,
+    COUNT(CASE WHEN execution_status = 'FAIL' THEN 1 END) AS failure_count,
+    AVG(total_elapsed_time)/1000 AS avg_execution_seconds,
+    MAX(total_elapsed_time)/1000 AS max_execution_seconds,
+    SUM(total_elapsed_time)/1000 AS total_execution_seconds
+FROM SNOWFLAKE.ACCOUNT_USAGE.QUERY_HISTORY
+WHERE query_text ILIKE '%EXECUTE DBT PROJECT%'
+  AND start_time >= DATEADD(day, -30, CURRENT_TIMESTAMP())
+GROUP BY execution_date, project_location
+ORDER BY execution_date DESC, project_location;
+```
+
+#### Warehouse Usage by dbt Projects
+
+```sql
+-- Warehouse resource consumption
+SELECT 
+    warehouse_name,
+    warehouse_size,
+    COUNT(*) AS execution_count,
+    SUM(total_elapsed_time)/1000 AS total_execution_seconds,
+    AVG(total_elapsed_time)/1000 AS avg_execution_seconds,
+    SUM(bytes_scanned) AS total_bytes_scanned,
+    SUM(rows_produced) AS total_rows_produced
+FROM SNOWFLAKE.ACCOUNT_USAGE.QUERY_HISTORY
+WHERE query_text ILIKE '%EXECUTE DBT PROJECT%'
+  AND start_time >= DATEADD(day, -30, CURRENT_TIMESTAMP())
+GROUP BY warehouse_name, warehouse_size
+ORDER BY total_execution_seconds DESC;
+```
+
+### Accessing dbt Artifacts
+
+When a dbt project executes, artifacts are saved to a zip file referenced by `OUTPUT_ARCHIVE_URL`:
+
+```sql
+-- Copy artifacts from OUTPUT_ARCHIVE_URL to a stage
+CREATE OR REPLACE STAGE my_dbt_stage
+  ENCRYPTION = (TYPE = 'SNOWFLAKE_SSE');
+
+-- After EXECUTE DBT PROJECT, copy the results
+COPY FILES INTO @my_dbt_stage/results/
+  FROM (SELECT '{output_archive_url}', 'dbt_results.zip');
+
+-- Get presigned URL to download
+SELECT get_presigned_url(@my_dbt_stage, 'results/dbt_results.zip');
+```
+
+---
+
+## Section 2: dbt Artifacts Package
+
+**Reference:** [brooklyn-data/dbt_artifacts](https://github.com/brooklyn-data/dbt_artifacts)
+
+### Overview
+
+The dbt_artifacts package captures metadata during dbt execution and stores it in 11 source tables. These tables provide detailed execution history for models, tests, seeds, and snapshots.
+
+### Installation
+
+```yaml
+# packages.yml
+packages:
+  - package: brooklyn-data/dbt_artifacts
+    version: 2.9.3
+
+# dbt_project.yml
+on-run-end:
+  - "{{ dbt_artifacts.upload_results(results) }}"
+
+models:
+  dbt_artifacts:
+    +database: your_database
+    +schema: dbt_artifacts
+```
+
+```bash
+dbt deps
+dbt run --select dbt_artifacts
+```
+
+### Source Tables Reference
+
+#### Table: `invocations`
+**Description:** One row per dbt run. Links all executions together.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| command_invocation_id | VARCHAR | Unique ID for this dbt run |
+| dbt_version | VARCHAR | dbt version used |
+| project_name | VARCHAR | Project name |
+| run_started_at | TIMESTAMP | When the run started |
+| dbt_command | VARCHAR | Command executed (run, test, build) |
+| full_refresh_flag | BOOLEAN | Was --full-refresh used? |
+| target_profile_name | VARCHAR | Profile name from profiles.yml |
+| target_name | VARCHAR | Target environment (dev, prod) |
+| target_schema | VARCHAR | Schema used for this run |
+| target_threads | NUMBER | Thread count |
+| dbt_cloud_project_id | VARCHAR | dbt Cloud project ID (if applicable) |
+| dbt_cloud_job_id | VARCHAR | dbt Cloud job ID |
+| dbt_cloud_run_id | VARCHAR | dbt Cloud run ID |
+| env_vars | VARIANT | Environment variables |
+| dbt_vars | VARIANT | dbt variables passed |
+| invocation_args | VARIANT | Command-line arguments |
+
+#### Table: `models`
+**Description:** One row per model per run. Captures model metadata and configuration.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| command_invocation_id | VARCHAR | Links to invocations |
+| node_id | VARCHAR | Unique model identifier |
+| run_started_at | TIMESTAMP | Run timestamp |
+| database | VARCHAR | Target database |
+| schema | VARCHAR | Target schema |
+| name | VARCHAR | Model name |
+| depends_on_nodes | ARRAY | Upstream dependencies |
+| package_name | VARCHAR | Package name |
+| path | VARCHAR | File path to model |
+| checksum | VARCHAR | File checksum (detects changes) |
+| materialization | VARCHAR | table, view, incremental, etc. |
+| tags | ARRAY | Model tags |
+| meta | VARIANT | Model metadata |
+| alias | VARCHAR | Model alias |
+| all_results | VARIANT | All execution results |
+
+#### Table: `model_executions`
+**Description:** One row per model execution. Captures runtime and results.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| command_invocation_id | VARCHAR | Links to invocations |
+| node_id | VARCHAR | Links to models |
+| run_started_at | TIMESTAMP | Run timestamp |
+| was_full_refresh | BOOLEAN | Full refresh execution? |
+| thread_id | VARCHAR | Thread that executed the model |
+| status | VARCHAR | success, error, skipped |
+| compile_started_at | TIMESTAMP | Compilation start time |
+| query_completed_at | TIMESTAMP | Query completion time |
+| total_node_runtime | FLOAT | Execution time (seconds) |
+| rows_affected | NUMBER | Rows inserted/updated |
+| materialization | VARCHAR | Materialization type |
+| schema | VARCHAR | Target schema |
+| name | VARCHAR | Model name |
+| alias | VARCHAR | Model alias |
+| message | VARCHAR | Error or status message |
+| adapter_response | VARIANT | Warehouse-specific response |
+
+#### Table: `tests`
+**Description:** One row per test per run. Captures test metadata.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| command_invocation_id | VARCHAR | Links to invocations |
+| node_id | VARCHAR | Unique test identifier |
+| run_started_at | TIMESTAMP | Run timestamp |
+| name | VARCHAR | Test name |
+| depends_on_nodes | ARRAY | Nodes being tested |
+| package_name | VARCHAR | Package name |
+| test_path | VARCHAR | File path to test |
+| tags | ARRAY | Test tags |
+| all_results | VARIANT | All execution results |
+
+#### Table: `test_executions`
+**Description:** One row per test execution. PRIMARY TABLE FOR DATA QUALITY.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| command_invocation_id | VARCHAR | Links to invocations |
+| node_id | VARCHAR | Links to tests |
+| run_started_at | TIMESTAMP | Run timestamp |
+| was_full_refresh | BOOLEAN | Full refresh execution? |
+| thread_id | VARCHAR | Thread that executed the test |
+| status | VARCHAR | pass, fail, warn, error, skipped |
+| compile_started_at | TIMESTAMP | Compilation start time |
+| query_completed_at | TIMESTAMP | Query completion time |
+| total_node_runtime | FLOAT | Execution time (seconds) |
+| rows_affected | NUMBER | Rows returned by test query |
+| failures | NUMBER | Number of failing rows (0 = pass) |
+| message | VARCHAR | Error or failure message |
+| adapter_response | VARIANT | Warehouse-specific response |
+
+#### Table: `seeds`
+**Description:** One row per seed per run. Captures seed metadata.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| command_invocation_id | VARCHAR | Links to invocations |
+| node_id | VARCHAR | Unique seed identifier |
+| run_started_at | TIMESTAMP | Run timestamp |
+| database | VARCHAR | Target database |
+| schema | VARCHAR | Target schema |
+| name | VARCHAR | Seed name |
+| package_name | VARCHAR | Package name |
+| path | VARCHAR | File path to seed CSV |
+| checksum | VARCHAR | File checksum |
+| meta | VARIANT | Seed metadata |
+| alias | VARCHAR | Seed alias |
+| all_results | VARIANT | All execution results |
+
+#### Table: `seed_executions`
+**Description:** One row per seed execution.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| command_invocation_id | VARCHAR | Links to invocations |
+| node_id | VARCHAR | Links to seeds |
+| run_started_at | TIMESTAMP | Run timestamp |
+| was_full_refresh | BOOLEAN | Full refresh execution? |
+| thread_id | VARCHAR | Thread that executed |
+| status | VARCHAR | success, error, skipped |
+| compile_started_at | TIMESTAMP | Compilation start time |
+| query_completed_at | TIMESTAMP | Query completion time |
+| total_node_runtime | FLOAT | Execution time (seconds) |
+| rows_affected | NUMBER | Rows loaded |
+| materialization | VARCHAR | Materialization type |
+| schema | VARCHAR | Target schema |
+| name | VARCHAR | Seed name |
+| alias | VARCHAR | Seed alias |
+| message | VARCHAR | Error or status message |
+| adapter_response | VARIANT | Warehouse-specific response |
+
+#### Table: `snapshots`
+**Description:** One row per snapshot per run. Captures snapshot metadata.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| command_invocation_id | VARCHAR | Links to invocations |
+| node_id | VARCHAR | Unique snapshot identifier |
+| run_started_at | TIMESTAMP | Run timestamp |
+| database | VARCHAR | Target database |
+| schema | VARCHAR | Target schema |
+| name | VARCHAR | Snapshot name |
+| depends_on_nodes | ARRAY | Upstream dependencies |
+| package_name | VARCHAR | Package name |
+| path | VARCHAR | File path to snapshot |
+| checksum | VARCHAR | File checksum |
+| strategy | VARCHAR | Snapshot strategy (timestamp, check) |
+| meta | VARIANT | Snapshot metadata |
+| alias | VARCHAR | Snapshot alias |
+| all_results | VARIANT | All execution results |
+
+#### Table: `snapshot_executions`
+**Description:** One row per snapshot execution.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| command_invocation_id | VARCHAR | Links to invocations |
+| node_id | VARCHAR | Links to snapshots |
+| run_started_at | TIMESTAMP | Run timestamp |
+| was_full_refresh | BOOLEAN | Full refresh execution? |
+| thread_id | VARCHAR | Thread that executed |
+| status | VARCHAR | success, error, skipped |
+| compile_started_at | TIMESTAMP | Compilation start time |
+| query_completed_at | TIMESTAMP | Query completion time |
+| total_node_runtime | FLOAT | Execution time (seconds) |
+| rows_affected | NUMBER | Rows captured/updated |
+| materialization | VARCHAR | Materialization type |
+| schema | VARCHAR | Target schema |
+| name | VARCHAR | Snapshot name |
+| alias | VARCHAR | Snapshot alias |
+| message | VARCHAR | Error or status message |
+| adapter_response | VARIANT | Warehouse-specific response |
+
+#### Table: `sources`
+**Description:** One row per source per run. Captures source definitions.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| command_invocation_id | VARCHAR | Links to invocations |
+| node_id | VARCHAR | Unique source identifier |
+| run_started_at | TIMESTAMP | Run timestamp |
+| database | VARCHAR | Source database |
+| schema | VARCHAR | Source schema |
+| name | VARCHAR | Source name |
+| source_name | VARCHAR | Source system name |
+| loader | VARCHAR | Data loader used |
+| identifier | VARCHAR | Table identifier |
+| all_results | VARIANT | All execution results |
+
+#### Table: `exposures`
+**Description:** One row per exposure per run. Captures exposure definitions.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| command_invocation_id | VARCHAR | Links to invocations |
+| node_id | VARCHAR | Unique exposure identifier |
+| run_started_at | TIMESTAMP | Run timestamp |
+| name | VARCHAR | Exposure name |
+| type | VARCHAR | Exposure type (dashboard, notebook, etc.) |
+| owner | VARCHAR | Exposure owner |
+| maturity | VARCHAR | Maturity level |
+| path | VARCHAR | File path to exposure |
+| description | VARCHAR | Exposure description |
+| url | VARCHAR | Exposure URL |
+| depends_on_nodes | ARRAY | Upstream dependencies |
+| all_results | VARIANT | All execution results |
+
+---
+
+## Observability Queries
+
+### dbt Artifacts: Test Quality Monitoring
+
+```sql
+-- Recent test failures
+SELECT 
+    i.run_started_at,
+    i.dbt_command,
+    i.target_name,
+    t.name AS test_name,
+    t.test_path,
+    t.depends_on_nodes,
+    te.status,
+    te.failures,
+    te.total_node_runtime AS execution_seconds,
+    te.message
+FROM test_executions te
+JOIN invocations i 
+    ON te.command_invocation_id = i.command_invocation_id
+JOIN tests t 
+    ON te.node_id = t.node_id 
+    AND te.command_invocation_id = t.command_invocation_id
+WHERE i.run_started_at >= DATEADD(day, -7, CURRENT_TIMESTAMP())
+  AND te.status IN ('fail', 'error')
+ORDER BY i.run_started_at DESC;
+```
+
+```sql
+-- Test reliability metrics
+SELECT 
+    t.name AS test_name,
+    COUNT(*) AS total_executions,
+    SUM(CASE WHEN te.status = 'pass' THEN 1 ELSE 0 END) AS passes,
+    SUM(CASE WHEN te.status = 'fail' THEN 1 ELSE 0 END) AS failures,
+    ROUND(100.0 * SUM(CASE WHEN te.status = 'fail' THEN 1 ELSE 0 END) / COUNT(*), 2) AS failure_rate_pct,
+    AVG(te.total_node_runtime) AS avg_runtime_sec
+FROM test_executions te
+JOIN tests t ON te.node_id = t.node_id
+WHERE te.run_started_at >= DATEADD(day, -30, CURRENT_TIMESTAMP())
+GROUP BY t.name
+HAVING COUNT(*) >= 5
+ORDER BY failure_rate_pct DESC, failures DESC;
+```
+
+### dbt Artifacts: Model Performance
+
+```sql
+-- Slowest models
+SELECT 
+    m.name AS model_name,
+    m.materialization,
+    COUNT(DISTINCT i.command_invocation_id) AS run_count,
+    AVG(me.total_node_runtime) AS avg_runtime_sec,
+    MAX(me.total_node_runtime) AS max_runtime_sec,
+    AVG(me.rows_affected) AS avg_rows_affected,
+    SUM(CASE WHEN me.status = 'error' THEN 1 ELSE 0 END) AS error_count
+FROM model_executions me
+JOIN models m 
+    ON me.node_id = m.node_id 
+    AND me.command_invocation_id = m.command_invocation_id
+JOIN invocations i 
+    ON me.command_invocation_id = i.command_invocation_id
+WHERE i.run_started_at >= DATEADD(day, -30, CURRENT_TIMESTAMP())
+GROUP BY m.name, m.materialization
+HAVING COUNT(*) >= 5
+ORDER BY avg_runtime_sec DESC
+LIMIT 20;
+```
+
+```sql
+-- Model execution errors
+SELECT 
+    i.run_started_at,
+    i.target_name,
+    m.name AS model_name,
+    m.materialization,
+    me.status,
+    me.total_node_runtime AS execution_seconds,
+    me.rows_affected,
+    me.message
+FROM model_executions me
+JOIN invocations i 
+    ON me.command_invocation_id = i.command_invocation_id
+JOIN models m 
+    ON me.node_id = m.node_id 
+    AND me.command_invocation_id = m.command_invocation_id
+WHERE i.run_started_at >= DATEADD(day, -7, CURRENT_TIMESTAMP())
+  AND me.status != 'success'
+ORDER BY i.run_started_at DESC;
+```
+
+### dbt Artifacts: Run History
+
+```sql
+-- dbt run summary
+SELECT 
+    run_started_at,
+    dbt_version,
+    dbt_command,
+    target_name,
+    target_schema,
+    target_warehouse,
+    full_refresh_flag
+FROM invocations
+WHERE run_started_at >= DATEADD(day, -30, CURRENT_TIMESTAMP())
+ORDER BY run_started_at DESC;
+```
+
+### Combined View: Unified Data Quality
+
+```sql
+-- Unified observability across both approaches
+CREATE OR REPLACE VIEW VW_UNIFIED_DBT_OBSERVABILITY AS
+-- dbt Artifacts test results
+SELECT
+    'dbt_artifacts' AS source_system,
+    i.run_started_at AS execution_time,
+    i.target_name AS environment,
+    t.name AS object_name,
+    'test' AS object_type,
+    te.status,
+    te.failures,
+    te.total_node_runtime AS execution_seconds,
+    te.message AS details
+FROM test_executions te
+JOIN invocations i ON te.command_invocation_id = i.command_invocation_id
+JOIN tests t ON te.node_id = t.node_id 
+WHERE i.run_started_at >= DATEADD(day, -7, CURRENT_TIMESTAMP())
+
+UNION ALL
+
+-- dbt Artifacts model results
+SELECT
+    'dbt_artifacts' AS source_system,
+    i.run_started_at AS execution_time,
+    i.target_name AS environment,
+    m.name AS object_name,
+    'model' AS object_type,
+    me.status,
+    NULL AS failures,
+    me.total_node_runtime AS execution_seconds,
+    me.message AS details
+FROM model_executions me
+JOIN invocations i ON me.command_invocation_id = i.command_invocation_id
+JOIN models m ON me.node_id = m.node_id 
+WHERE i.run_started_at >= DATEADD(day, -7, CURRENT_TIMESTAMP())
+
+UNION ALL
+
+-- dbt Projects on Snowflake executions
+SELECT
+    'dbt_projects_snowflake' AS source_system,
+    start_time AS execution_time,
+    database_name || '.' || schema_name AS environment,
+    'dbt_project' AS object_name,
+    'project_execution' AS object_type,
+    execution_status AS status,
+    NULL AS failures,
+    total_elapsed_time/1000 AS execution_seconds,
+    error_message AS details
+FROM SNOWFLAKE.ACCOUNT_USAGE.QUERY_HISTORY
+WHERE query_text ILIKE '%EXECUTE DBT PROJECT%'
+  AND start_time >= DATEADD(day, -7, CURRENT_TIMESTAMP())
+
+ORDER BY execution_time DESC;
+```
+
+---
+
+## Best Practices
+
+### Choosing an Approach
+
+**Use dbt Projects on Snowflake when:**
+- You want native Snowflake integration
+- You're deploying dbt entirely within Snowflake
+- You prefer serverless execution
+- You want to leverage Snowflake's built-in monitoring
+
+**Use dbt Artifacts Package when:**
+- You need cross-platform compatibility
+- You want detailed test and model execution history
+- You need programmatic access to execution metadata
+- You're running dbt from external orchestration tools
+
+**Use Both when:**
+- You want comprehensive monitoring
+- You need both native Snowflake monitoring and detailed execution logs
+- You have complex data quality requirements
+
+### Performance Optimization
+
+- Query `ACCOUNT_USAGE` views with time filters (they can be large)
+- Use `command_invocation_id` to link dbt_artifacts tables
+- Index or cluster dbt_artifacts tables on `run_started_at` for better performance
+- Archive old execution data (>90 days) to separate tables
+
+### Security
+
+- Grant read-only access to monitoring views
+- Restrict `ACCOUNT_USAGE` access to admin roles
+- Use secure views for sensitive dbt_artifacts data
+
+---
+
+## References
+
+- [dbt Projects on Snowflake Documentation](https://docs.snowflake.com/en/user-guide/data-engineering/dbt-projects-on-snowflake)
+- [dbt Projects Monitoring](https://docs.snowflake.com/en/user-guide/data-engineering/dbt-projects-on-snowflake-monitoring-observability)
+- [dbt_artifacts GitHub](https://github.com/brooklyn-data/dbt_artifacts)
+- [dbt_artifacts Documentation](https://brooklyn-data.github.io/dbt_artifacts)
+- [Snowflake Query History](https://docs.snowflake.com/en/sql-reference/account-usage/query_history)

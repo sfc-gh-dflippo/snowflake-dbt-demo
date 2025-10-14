@@ -15,6 +15,7 @@ This is a **modern data engineering project** built with dbt-core and Snowflake,
 - **dbt-snowflake**: Snowflake adapter for dbt
 - **Snowflake**: Relational database
 - **Streamlit in Snowflake**:  Preferred graphical user interface (if needed)
+- **Schemachange**: CI/CD for database objects outside dbt
 - **Python**: 3.12+ with Snowpark for advanced analytics and ML models
 
 **Version Compatibility**: dbt versions should align with [dbt Projects on Snowflake](https://docs.snowflake.com/en/user-guide/data-engineering/dbt-projects-on-snowflake#dbt-projects) requirements (dbt-core 1.9.4, dbt-snowflake 1.9.2)
@@ -33,99 +34,6 @@ This is a **modern data engineering project** built with dbt-core and Snowflake,
 
 ---
 
-## Specification-Driven Development Process
-
-This project follows **Specification-Driven Development (SDD)** methodology, where a detailed, often executable, specification serves as the blueprint for development, testing, and documentation. This approach ensures stakeholder alignment, improves code quality, and enables efficient development cycles.
-
-### Core SDD Principles
-- **Early Specification Definition** - Clear requirements, objectives, and constraints upfront
-- **Stakeholder Collaboration** - Engage all parties to align with business goals
-- **Iterative Refinement** - Continuously update specifications based on feedback
-- **Traceability** - Maintain clear links between specifications and implementation
-- **Test-First Approach** - Define validation criteria before implementation
-
-### Development Workflow
-
-#### **Phase 1: Define the Functional and Technical Specifications**
-1. **Gather Requirements** - Start with user stories or high-level requirements
-   - Create comprehensive PRD in `.taskmaster/docs/PRD.md`
-   - Define functional requirements and design goals
-   - Document business logic and transformation requirements
-   - Specify acceptance criteria and validation requirements
-
-2. **Write Clear Specs** - Document specifications in structured format
-   - Use natural language that is easy for technology architects and engineers to review
-   - Define data models, APIs, interfaces, and system behavior
-   - Outline performance and scalability requirements
-   - Establish quality and testing standards
-
-3. **Validate Specifications** - Collaborate with stakeholders for approval
-   - Validate business alignment and technical feasibility
-   - Ensure completeness and clarity of specifications
-   - Approve scope and acceptance criteria
-   - Confirm specifications align with business needs
-
-#### **Phase 2: Design and Plan**
-4. **Research** - Use `task-master research` to understand implementation approaches
-   - Research current best practices and patterns
-   - Validate technical approaches against requirements
-   - Gather implementation context and examples
-   - Identify architectural patterns and technology choices
-
-5. **Architectural Design** - Develop the technical solution
-   - Design system architecture and process logic
-   - Define technology stack and integration patterns
-   - Plan data flow and system interactions
-   - Document technical design decisions
-
-6. **Parse and Break Down** - Use `task-master parse-prd` to generate tasks from specifications
-   - Automatically convert specifications into actionable tasks
-   - Use `task-master analyze-complexity` to identify complex tasks
-   - Use `task-master expand <id>` to break down high/medium complexity tasks
-   - Maintain traceability between requirements and implementation tasks
-
-7. **Organize Tasks** - Set dependencies and priorities
-   - Use `task-master add-dependency` to establish logical task sequencing
-   - Identify critical path and bottlenecks
-   - Align priorities with business value and technical dependencies
-
-#### **Phase 3: Implement and Test**
-8. **Code Development** - Use `task-master list` and `task-master next` for development
-   - Follow test-first development approach
-   - Implement functionality defined in the specification
-   - Write code to meet predefined specifications
-   - Ensure code aligns with architectural design
-
-9. **Test Generation and Execution** - Derive tests from acceptance criteria
-   - Generate automated tests directly from specification criteria
-   - Execute specification-based tests
-   - Validate functionality against requirements
-   - Ensure performance meets specified requirements
-
-10. **Document Progress** - Log implementation decisions and findings
-    - Use `task-master update-subtask <id>` to record progress
-    - Update specifications based on learnings
-    - Maintain audit trail of changes and decisions
-
-#### **Phase 4: Iterate and Refine**
-11. **Validation** - Test implementation against specification
-    - Verify all acceptance criteria are met
-    - Confirm specification compliance
-    - Validate system behavior matches requirements
-
-12. **Refine** - Iterate on specification, design, or implementation
-    - Refine specifications if new insights arise
-    - Update implementation until tests pass
-    - Ensure requirements are fully met
-    - Use `task-master set-status <id> done` to mark completion
-
-13. **Maintain Traceability** - Keep specification as living document
-    - Maintain continuous alignment throughout project lifecycle
-    - Update documentation to reflect final implementation
-    - Prepare for deployment and future maintenance
-
----
-
 ## Agent Guidelines and Constraints
 
 ### Code Standards
@@ -134,10 +42,13 @@ This project follows **Specification-Driven Development (SDD)** methodology, whe
 - **Documentation** - Document business logic, complex transformations, models, and columns
 
 ### Rule References
+- **[dbt Setup](./DBT_SETUP_GUIDE.md)** - How to set up and use dbt Projects on Snowflake for data pipelines
 - **[dbt Best Practices](.cursor/rules/dbt.mdc)** - Complete dbt modeling guidelines
+- **[dbt Artifacts Package Integration](.cursor/rules/dbt-artifacts.mdc)** - Unified data quality observability
 - **[Snowflake CLI Guide](.cursor/rules/snowflake-cli.mdc)** - Snowflake operations
-- **[Taskmaster Development Workflow](.cursor/rules/taskmaster/dev_workflow.mdc)** - Detailed process guide
-- **[Taskmaster Commands](.cursor/rules/taskmaster/taskmaster.mdc)** - Task management reference
+- **[Streamlit Development Guide](.cursor/rules/streamlit.mdc)** - Streamlit app development, testing, and deployment
+- **[Playwright Testing Guide](.cursor/rules/playwright.mdc)** - Browser automation and E2E testing with Playwright MCP for any GUI development
+- **[Schemachange Deployment Guide](.cursor/rules/schemachange.mdc)** - Database migration best practices
 
 ---
 
@@ -155,7 +66,7 @@ This project follows **Specification-Driven Development (SDD)** methodology, whe
 - deleting files, chmod
 
 ### Security Requirements
-- **Never hardcode credentials** - Always use environment variables
+- **Never hardcode credentials** - Always use configuration files or environment variables
 
 ### Performance Guidelines  
 - **Use incremental materialization** for large fact tables
@@ -173,20 +84,97 @@ This project follows **Specification-Driven Development (SDD)** methodology, whe
 
 ---
 
-## AI Assistant Integration Setup
+## Specification-Driven Development Process
 
-To add Taskmaster MCP server to your AI assistant for task-driven development:
+This project follows **Specification-Driven Development (SDD)** methodology, where a detailed, often executable, specification serves as the blueprint for development, testing, and documentation. This approach ensures stakeholder alignment, improves code quality, and enables efficient development cycles.
 
-```bash
-# Add task-master-ai MCP server (example for Snova)
-snova mcp add task-master-ai npx --args "-y,--package=task-master-ai,task-master-ai" --env "GOOGLE_API_KEY=your_google_api_key,MODEL=gemini-2.5-pro,MAX_TOKENS=64000,TEMPERATURE=0.2,DEFAULT_SUBTASKS=5,DEFAULT_PRIORITY=medium"
+### Core SDD Principles
+- **Early Specification Definition** - Clear requirements, objectives, and constraints upfront
+- **Stakeholder Collaboration** - Engage all parties to align with business goals
+- **Iterative Refinement** - Continuously update specifications based on feedback
+- **Traceability** - Maintain clear links between specifications and implementation
+- **Test-First Approach** - Define validation criteria before implementation
 
-# Verify MCP server was added
-snova mcp list
-# Start AI assistant with project directory
-snova -w /path/to/your/dbt/project
+### Development Workflow
 
----
+#### **Phase 1: Define the Functional and Technical Specifications**
+1. **Gather Requirements** - Start with user stories or high-level requirements
+   - Create comprehensive requirements, plans, and tasks in a `CLAUDE.md` file in the project root folder
+   - Define functional requirements and design goals
+   - Document business logic and transformation requirements
+   - Specify acceptance criteria and validation requirements
+
+2. **Write Clear Specs** - Document specifications in structured format
+   - Use natural language that is easy for technology architects and engineers to review
+   - Define data models, APIs, interfaces, and system behavior
+   - Outline performance and scalability requirements
+   - Establish quality and testing standards
+
+3. **Validate Specifications** - Collaborate with stakeholders for approval
+   - Validate business alignment and technical feasibility
+   - Ensure completeness and clarity of specifications
+   - Approve scope and acceptance criteria
+   - Confirm specifications align with business needs
+
+#### **Phase 2: Design and Plan**
+4. **Research** - Research on the web to understand implementation approaches
+   - Research current best practices and patterns
+   - Validate technical approaches against requirements
+   - Gather implementation context and examples
+   - Identify architectural patterns and technology choices
+
+5. **Architectural Design** - Develop the technical solutions
+   - Design system architecture and process logic
+   - Define technology stack and integration patterns
+   - Plan data flow and system interactions
+   - Document technical design decisions
+
+6. **Parse and Break Down** - Generate tasks from specifications
+   - Automatically convert specifications into actionable tasks
+   - Analyze the complexity of each task to identify complex tasks
+   - Break down high/medium complexity tasks into subtasks
+   - Maintain traceability between requirements and implementation tasks
+
+7. **Organize Tasks** - Set dependencies and priorities
+   - Add dependencies to your tasks to establish logical task sequencing
+   - Identify critical path and bottlenecks
+   - Align priorities with business value and technical dependencies
+
+#### **Phase 3: Implement and Test**
+8. **Code Development** - Use list of tasks for development
+   - Follow test-first development approach
+   - Implement functionality defined in the specification
+   - Write code to meet predefined specifications
+   - Ensure code aligns with architectural design
+
+9. **Test Generation and Execution** - Derive tests from acceptance criteria
+   - Generate automated tests directly from specification criteria
+   - Execute specification-based tests
+   - Validate functionality against requirements
+   - Ensure performance meets specified requirements
+
+10. **Document Progress** - Log implementation decisions and findings
+    - Update the `CLAUDE.md` continueously
+    - Update specifications based on learnings
+    - Maintain audit trail of changes and decisions
+    - Update task completion
+
+#### **Phase 4: Iterate and Refine**
+11. **Validation** - Test implementation against specification
+    - Verify all acceptance criteria are met
+    - Confirm specification compliance
+    - Validate system behavior matches requirements
+
+12. **Refine** - Iterate on specification, design, or implementation
+    - Refine specifications if new insights arise
+    - Update implementation until tests pass
+    - Ensure requirements are fully met
+    - Update task completion
+
+13. **Maintain Traceability** - Keep specification as living document
+    - Maintain continuous alignment throughout project lifecycle
+    - Update documentation to reflect final implementation
+    - Prepare for deployment and future maintenance
 
 
 *For detailed implementation rules and examples, see the referenced .cursor/rules/ files.*
