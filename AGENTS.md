@@ -41,10 +41,10 @@ This is a **modern data engineering project** built with dbt-core and Snowflake,
 - **Testability** - Models should have appropriate data quality tests
 - **Documentation** - Document business logic, complex transformations, models, and columns
 
-### Rule References
+### Specific Rules by Technology
 - **[dbt Setup](./DBT_SETUP_GUIDE.md)** - How to set up and use dbt Projects on Snowflake for data pipelines
 - **[dbt Best Practices](.cursor/rules/dbt.mdc)** - Complete dbt modeling guidelines
-- **[dbt Artifacts Package Integration](.cursor/rules/dbt-artifacts.mdc)** - Unified data quality observability
+- **[dbt Observability](.cursor/rules/dbt-observability.mdc)** - Monitoring dbt Projects on Snowflake and the dbt Constraints packaage
 - **[Snowflake CLI Guide](.cursor/rules/snowflake-cli.mdc)** - Snowflake operations
 - **[Streamlit Development Guide](.cursor/rules/streamlit.mdc)** - Streamlit app development, testing, and deployment
 - **[Playwright Testing Guide](.cursor/rules/playwright.mdc)** - Browser automation and E2E testing with Playwright MCP for any GUI development
@@ -69,7 +69,7 @@ This is a **modern data engineering project** built with dbt-core and Snowflake,
 - **Never hardcode credentials** - Always use configuration files or environment variables
 
 ### Performance Guidelines  
-- **Use incremental materialization** for large fact tables
+- **Use incremental materialization** for data pipelines with many rows
 - **Apply appropriate clustering keys** for frequently queried columns
 - **Size warehouses** based on execution time and model complexity
 
