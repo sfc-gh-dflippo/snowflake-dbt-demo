@@ -8,6 +8,6 @@ SNOWFLAKE:
       role: DFLIPPO_ROLE
       database: DFLIPPO_DEV
       warehouse: DFLIPPO_WH
-      schema: LOGGING
+      schema: DBT_PROJECTS
       threads: 8
 

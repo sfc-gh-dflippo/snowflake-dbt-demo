@@ -15,13 +15,34 @@ This guide covers two approaches to dbt observability: **dbt Projects on Snowfla
 
 ### Overview
 
-dbt Projects on Snowflake is a native feature that allows you to deploy and execute dbt projects as Snowflake objects. Monitoring is performed through query history and execution output, not through dedicated observability tables.
+dbt Projects on Snowflake is a native feature that allows you to deploy and execute dbt projects as Snowflake objects. **Monitoring is performed through event tables that capture detailed telemetry data** including logs, traces, and metrics during execution.
+
+**Reference**: [Event Table Setup](https://docs.snowflake.com/en/developer-guide/logging-tracing/event-table-setting-up#associate-an-event-table-with-an-object)
 
 ### Key Monitoring Approaches
 
-1. **Execution Output** - Returned by `EXECUTE DBT PROJECT` command
-2. **Query History** - Standard Snowflake query monitoring
-3. **dbt Artifacts** - Access via `OUTPUT_ARCHIVE_URL` from execution results
+1. **Event Tables** - Primary monitoring mechanism with logs, spans, and metrics
+2. **Execution Output** - Parse `EXECUTE DBT PROJECT` result table for SUCCESS/EXCEPTION/STDOUT/OUTPUT_ARCHIVE_URL columns
+3. **dbt Artifacts** - Download artifacts from `OUTPUT_ARCHIVE_URL` for manifest/catalog data
+
+### Setup Event Table Monitoring
+
+**IMPORTANT**: Event tables must be set at the **DATABASE** level (not schema, not account-wide):
+
+```sql
+-- 1. Create event table
+CREATE EVENT TABLE IF NOT EXISTS MY_DATABASE.MY_SCHEMA.EVENT_LOG;
+
+-- 2. Set event table at DATABASE level
+ALTER DATABASE MY_DATABASE SET EVENT_TABLE = MY_DATABASE.MY_SCHEMA.EVENT_LOG;
+
+-- 3. Configure logging levels at DATABASE level
+ALTER DATABASE MY_DATABASE SET LOG_LEVEL = 'INFO';
+ALTER DATABASE MY_DATABASE SET TRACE_LEVEL = 'ALWAYS';
+
+-- 4. Verify settings
+SHOW PARAMETERS LIKE 'EVENT_TABLE' IN DATABASE MY_DATABASE;
+```
 
 ### Deployment
 
@@ -29,95 +50,119 @@ dbt Projects on Snowflake is a native feature that allows you to deploy and exec
 -- Deploy dbt project using Snowflake CLI
 snow dbt deploy PROJECT_NAME --connection default --database DB_NAME --schema SCHEMA_NAME
 
--- Execute dbt project
-EXECUTE DBT PROJECT DB_NAME.SCHEMA_NAME.PROJECT_NAME args='build';
+-- Execute dbt project full refresh
+EXECUTE DBT PROJECT DB_NAME.SCHEMA_NAME.PROJECT_NAME args='build --full-refresh';
 
 -- Execute with specific selection
 EXECUTE DBT PROJECT DB_NAME.SCHEMA_NAME.PROJECT_NAME args='build --select tag:gold';
 ```
+
+### Event Table Structure
+
+Event tables use the [OpenTelemetry data model](https://opentelemetry.io/) with these key columns:
+
+- **TIMESTAMP**: Event occurrence time
+- **RECORD_TYPE**: LOG, SPAN, METRIC
+- **RESOURCE_ATTRIBUTES**: JSON object with execution context (database, schema, project name, query_id, warehouse, etc.)
+- **RECORD**: JSON object with record-specific data (severity, metric type, span details)
+- **VALUE**: Actual log message, metric value, or null for spans
 
 ### Monitoring Queries
 
 #### Recent dbt Project Executions
 
 ```sql
--- Query history for dbt project executions
+-- Query event table for recent dbt project executions
 SELECT 
-    query_id,
-    query_text,
-    database_name,
-    schema_name,
-    query_type,
-    execution_status,
-    error_code,
-    error_message,
-    start_time,
-    end_time,
-    total_elapsed_time/1000 AS execution_seconds,
-    warehouse_name,
-    warehouse_size,
-    user_name
-FROM SNOWFLAKE.ACCOUNT_USAGE.QUERY_HISTORY
-WHERE query_text ILIKE '%EXECUTE DBT PROJECT%'
-  AND start_time >= DATEADD(day, -7, CURRENT_TIMESTAMP())
-ORDER BY start_time DESC;
+    TIMESTAMP,
+    RESOURCE_ATTRIBUTES['snow.executable.name']::VARCHAR AS project_name,
+    RESOURCE_ATTRIBUTES['snow.database.name']::VARCHAR AS database_name,
+    RESOURCE_ATTRIBUTES['snow.schema.name']::VARCHAR AS schema_name,
+    RESOURCE_ATTRIBUTES['snow.query.id']::VARCHAR AS query_id,
+    RESOURCE_ATTRIBUTES['snow.warehouse.name']::VARCHAR AS warehouse_name,
+    RESOURCE_ATTRIBUTES['db.user']::VARCHAR AS user_name,
+    RECORD['severity_text']::VARCHAR AS severity,
+    VALUE::VARCHAR AS message
+FROM MY_DATABASE.MY_SCHEMA.EVENT_LOG
+WHERE RESOURCE_ATTRIBUTES['snow.executable.type']::VARCHAR = 'DBT_PROJECT'
+  AND RECORD_TYPE = 'LOG'
+  AND TIMESTAMP >= DATEADD(hour, -1, CURRENT_TIMESTAMP())
+ORDER BY TIMESTAMP DESC;
 ```
 
-#### Failed dbt Executions
+#### dbt Project Execution Errors
 
 ```sql
--- Failed dbt project runs
+-- Query for ERROR and WARN level logs
 SELECT 
-    query_id,
-    start_time,
-    database_name || '.' || schema_name AS project_location,
-    error_code,
-    error_message,
-    total_elapsed_time/1000 AS execution_seconds
-FROM SNOWFLAKE.ACCOUNT_USAGE.QUERY_HISTORY
-WHERE query_text ILIKE '%EXECUTE DBT PROJECT%'
-  AND execution_status = 'FAIL'
-  AND start_time >= DATEADD(day, -30, CURRENT_TIMESTAMP())
-ORDER BY start_time DESC;
+    TIMESTAMP,
+    RESOURCE_ATTRIBUTES['snow.executable.name']::VARCHAR AS project_name,
+    RESOURCE_ATTRIBUTES['snow.query.id']::VARCHAR AS query_id,
+    RECORD['severity_text']::VARCHAR AS severity,
+    VALUE::VARCHAR AS error_message
+FROM MY_DATABASE.MY_SCHEMA.EVENT_LOG
+WHERE RESOURCE_ATTRIBUTES['snow.executable.type']::VARCHAR = 'DBT_PROJECT'
+  AND RECORD_TYPE = 'LOG'
+  AND RECORD['severity_text']::VARCHAR IN ('ERROR', 'WARN')
+  AND TIMESTAMP >= DATEADD(day, -7, CURRENT_TIMESTAMP())
+ORDER BY TIMESTAMP DESC;
 ```
 
 #### dbt Project Performance Metrics
 
 ```sql
--- Performance trends for dbt project executions
+-- Query performance metrics (CPU, memory usage)
 SELECT 
-    DATE_TRUNC('day', start_time) AS execution_date,
-    database_name || '.' || schema_name AS project_location,
-    COUNT(*) AS execution_count,
-    COUNT(CASE WHEN execution_status = 'SUCCESS' THEN 1 END) AS success_count,
-    COUNT(CASE WHEN execution_status = 'FAIL' THEN 1 END) AS failure_count,
-    AVG(total_elapsed_time)/1000 AS avg_execution_seconds,
-    MAX(total_elapsed_time)/1000 AS max_execution_seconds,
-    SUM(total_elapsed_time)/1000 AS total_execution_seconds
-FROM SNOWFLAKE.ACCOUNT_USAGE.QUERY_HISTORY
-WHERE query_text ILIKE '%EXECUTE DBT PROJECT%'
-  AND start_time >= DATEADD(day, -30, CURRENT_TIMESTAMP())
-GROUP BY execution_date, project_location
-ORDER BY execution_date DESC, project_location;
+    TIMESTAMP,
+    RESOURCE_ATTRIBUTES['snow.executable.name']::VARCHAR AS project_name,
+    RESOURCE_ATTRIBUTES['snow.query.id']::VARCHAR AS query_id,
+    RECORD['metric']['name']::VARCHAR AS metric_name,
+    RECORD['metric']['unit']::VARCHAR AS metric_unit,
+    VALUE::FLOAT AS metric_value
+FROM MY_DATABASE.MY_SCHEMA.EVENT_LOG
+WHERE RESOURCE_ATTRIBUTES['snow.executable.type']::VARCHAR = 'DBT_PROJECT'
+  AND RECORD_TYPE = 'METRIC'
+  AND TIMESTAMP >= DATEADD(hour, -1, CURRENT_TIMESTAMP())
+ORDER BY TIMESTAMP DESC;
 ```
 
-#### Warehouse Usage by dbt Projects
+#### dbt Project Trace Spans
 
 ```sql
--- Warehouse resource consumption
+-- Query execution spans for tracing
 SELECT 
-    warehouse_name,
-    warehouse_size,
-    COUNT(*) AS execution_count,
-    SUM(total_elapsed_time)/1000 AS total_execution_seconds,
-    AVG(total_elapsed_time)/1000 AS avg_execution_seconds,
-    SUM(bytes_scanned) AS total_bytes_scanned,
-    SUM(rows_produced) AS total_rows_produced
-FROM SNOWFLAKE.ACCOUNT_USAGE.QUERY_HISTORY
-WHERE query_text ILIKE '%EXECUTE DBT PROJECT%'
-  AND start_time >= DATEADD(day, -30, CURRENT_TIMESTAMP())
-GROUP BY warehouse_name, warehouse_size
-ORDER BY total_execution_seconds DESC;
+    TIMESTAMP,
+    RESOURCE_ATTRIBUTES['snow.executable.name']::VARCHAR AS project_name,
+    RESOURCE_ATTRIBUTES['snow.query.id']::VARCHAR AS query_id,
+    RECORD['name']::VARCHAR AS span_name,
+    RECORD['kind']::VARCHAR AS span_kind,
+    RECORD['status']['code']::VARCHAR AS status_code
+FROM MY_DATABASE.MY_SCHEMA.EVENT_LOG
+WHERE RESOURCE_ATTRIBUTES['snow.executable.type']::VARCHAR = 'DBT_PROJECT'
+  AND RECORD_TYPE = 'SPAN'
+  AND TIMESTAMP >= DATEADD(hour, -1, CURRENT_TIMESTAMP())
+ORDER BY TIMESTAMP DESC;
+```
+
+#### dbt Execution Summary by Project
+
+```sql
+-- Summarize executions by project
+SELECT 
+    RESOURCE_ATTRIBUTES['snow.executable.name']::VARCHAR AS project_name,
+    RESOURCE_ATTRIBUTES['snow.database.name']::VARCHAR AS database_name,
+    RESOURCE_ATTRIBUTES['snow.schema.name']::VARCHAR AS schema_name,
+    COUNT(DISTINCT RESOURCE_ATTRIBUTES['snow.query.id']::VARCHAR) AS execution_count,
+    MIN(TIMESTAMP) AS first_execution,
+    MAX(TIMESTAMP) AS last_execution,
+    COUNT(CASE WHEN RECORD['severity_text']::VARCHAR = 'ERROR' THEN 1 END) AS error_count,
+    COUNT(CASE WHEN RECORD['severity_text']::VARCHAR = 'WARN' THEN 1 END) AS warning_count
+FROM MY_DATABASE.MY_SCHEMA.EVENT_LOG
+WHERE RESOURCE_ATTRIBUTES['snow.executable.type']::VARCHAR = 'DBT_PROJECT'
+  AND RECORD_TYPE = 'LOG'
+  AND TIMESTAMP >= DATEADD(day, -7, CURRENT_TIMESTAMP())
+GROUP BY project_name, database_name, schema_name
+ORDER BY last_execution DESC;
 ```
 
 ### Accessing dbt Artifacts
