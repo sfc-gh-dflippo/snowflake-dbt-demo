@@ -1,10 +1,14 @@
 ---
-description: Comprehensive guide for using Snowflake CLI (snow) commands in development workflows
-globs: **/*.py, **/*.sql, **/*.yml, **/*.yaml, **/snowflake.yml
-alwaysApply: true
+description: Snowflake CLI (snow) command reference for database operations and deployments
+globs: **/*.sql, **/snowflake.yml, **/*.py
+alwaysApply: false
 ---
 
-# Snowflake CLI (snow) Usage Guide
+# Snowflake CLI (snow) Reference
+
+**Documentation:** [Snowflake CLI](https://docs.snowflake.com/en/developer-guide/snowflake-cli/index)
+
+---
 
 ## **Connection Configuration**
 
@@ -12,111 +16,189 @@ alwaysApply: true
 - **Connection Override**: Allow users to specify a different connection name at the top of their project
 - **Connection Parameter**: Always use `--connection <connection_name>` or `-c <connection_name>` when executing snow commands
 
+---
+
+## SQL Execution
+
+### Query Execution
 ```bash
-# Default usage
-snow sql -q "SELECT CURRENT_USER()" --connection default
+# Inline query
+snow sql -q "SELECT * FROM my_table" -c default
 
-# Custom connection
-snow sql -q "SELECT CURRENT_USER()" --connection my_dev_connection
-```
+# Execute file
+snow sql -f script.sql -c default
 
-## **Global Options Available Across All Commands**
+# With variables (use -D for each variable)
+snow sql -q "SELECT * FROM {{table}}" -D table=my_table -c default
 
-- **`--help, -h`**: Show help message and exit
-- **`--version`**: Show Snowflake CLI version
-- **`--info`**: Show information about Snowflake CLI
-- **`--config-file FILE`**: Specify custom configuration file
-- **`--format [TABLE|JSON|JSON_EXT|CSV]`**: Specify output format (default: TABLE)
-- **`--verbose, -v`**: Display log entries for info level and higher
-- **`--debug`**: Display debug level log entries with additional information
-- **`--silent`**: Turn off intermediate output to console
-- **`--enhanced-exit-codes`**: Differentiate exit codes based on failure type
-
-## **Connection Configuration Options**
-
-Most commands support these connection override options:
-- **`--connection, --environment, -c TEXT`**: Connection name from config.toml (default: default)
-- **`--host TEXT`**: Host address override
-- **`--port INTEGER`**: Port override
-- **`--account, --accountname TEXT`**: Snowflake account name override
-- **`--user, --username TEXT`**: Username override
-- **`--password TEXT`**: Password override
-- **`--authenticator TEXT`**: Authenticator override
-- **`--database, --dbname TEXT`**: Database override
-- **`--schema, --schemaname TEXT`**: Schema override
-- **`--role, --rolename TEXT`**: Role override
-- **`--warehouse TEXT`**: Warehouse override
-- **`--temporary-connection, -x`**: Use command line parameters instead of config
-
-## **Command Categories and Usage**
-
-### **SQL Execution (`snow sql`)**
-
-**Purpose**: Execute SQL queries against Snowflake
-**Common Use Cases**: Running queries, executing scripts, database operations
-
-```bash
-# Execute inline query
-snow sql -q "SELECT CURRENT_DATABASE()" -c default
-
-# Execute SQL file
-snow sql -f path/to/script.sql -c default
-
-# Execute from stdin
-cat query.sql | snow sql -i -c default
-
-# Execute with variables
-snow sql -q "SELECT * FROM {{table_name}}" -D table_name=my_table -c default
-
-# Execute multi-line SQL using heredoc (EOF)
+# From stdin (heredoc)
 snow sql -c default -i <<EOF
-CREATE OR REPLACE FILE FORMAT MY_CSV_FORMAT
-    TYPE = CSV
-    SKIP_HEADER = 1;
-
-CREATE OR REPLACE TABLE DIAMONDS (
-    "ROW" NUMBER(38,0),
-    CARAT FLOAT,
-    CUT VARCHAR,
-    COLOR VARCHAR,
-    CLARITY VARCHAR,
-    DEPTH FLOAT,
-    "TABLE" FLOAT,
-    PRICE NUMBER(38,0),
-    X FLOAT,
-    Y FLOAT,
-    Z FLOAT
-);
-
--- Upload local csv to table stage
-PUT file://diamonds.csv @%DIAMONDS OVERWRITE=TRUE;
-
--- Copy data using the file format
-COPY INTO DIAMONDS FILE_FORMAT = ( FORMAT_NAME = 'MY_CSV_FORMAT' );
+CREATE OR REPLACE TABLE my_table (id INT, name STRING);
+INSERT INTO my_table VALUES (1, 'test');
 EOF
 ```
 
-**Key Options**:
-- **`--query, -q TEXT`**: SQL query to execute
-- **`--filename, -f FILE`**: SQL file to execute
-- **`--stdin, -i`**: Read query from standard input
-- **`--variable, -D TEXT`**: Variables in key=value format for templating
-- **`--retain-comments`**: Keep comments in queries
-- **`--single-transaction/--no-single-transaction`**: Execute as single transaction
-- **`--enable-templating [LEGACY|STANDARD|JINJA|ALL|NONE]`**: Template syntax
-- **`--project, -p TEXT`**: Project path
-- **`--env TEXT`**: Environment variables for templates
+### Common Options
+- `-q, --query` - SQL query string
+- `-f, --filename` - SQL file path
+- `-i, --stdin` - Read from stdin
+- `-D, --variable` - Template variable (key=value) - works with `<% %>`, `{{ }}`, or `&var` syntax
+- `--enable-templating` - Control template syntax: STANDARD (default), JINJA, LEGACY, ALL, NONE
+- `--format [TABLE|JSON|CSV]` - Output format
 
-### **Stage Management (`snow stage`)**
+---
 
-**Purpose**: Manage Snowflake stages for file operations
-**Common Use Cases**: Executing staged files, file uploads/downloads, stage operations
+## Variables & Templating
+
+Snowflake CLI supports three types of variable substitution. Understanding when to use each is critical.
+
+**Reference:** [Snowflake CLI - Using variables for SQL templates](https://docs.snowflake.com/en/developer-guide/snowflake-cli/sql/execute-sql)
+
+---
+
+### 1. Bash Variables (Shell Expansion)
+Bash variables are expanded by your shell **before** the command reaches Snowflake CLI.
 
 ```bash
-# Create stage
-snow stage create my_stage -c default
+# Define bash variables
+DB="PROD_DB"
+SCHEMA="SALES"
 
-# Upload files to stage
+# Bash expands ${var} before snow cli sees it
+snow sql -c default -i <<EOF
+SELECT * FROM ${DB}.${SCHEMA}.orders;
+EOF
+```
+
+**Use for:** Connection names, file paths, environment selection, control flow
+
+---
+
+### 2. Snowflake CLI Standard Syntax `<% %>`
+Default client-side templating syntax. Enabled by default, resolved by Snowflake CLI before sending to Snowflake.
+
+```bash
+# Single-line with <% %> syntax
+snow sql -c default -q "SELECT * FROM <% db %>.<% schema %>.orders" \
+  -D db=PROD_DB -D schema=SALES
+
+# Heredoc with <% %> variables (default syntax)
+snow sql -c default -i -D db=PROD_DB -D schema=SALES <<EOF
+SELECT * FROM <% db %>.<% schema %>.orders
+WHERE created_date >= '<% start_date %>';
+EOF
+```
+
+**Use for:** SQL templating with `snow sql` command (recommended default)
+
+---
+
+### 3. Jinja Syntax `{{ }}`
+May be explicitly enabled with `--enable-templating JINJA`. Used automatically for `snow stage execute` with SQL files.
+
+```bash
+# Enable Jinja templating for snow sql
+snow sql --enable-templating JINJA -c default \
+  -q "SELECT * FROM {{ db }}.{{ schema }}.orders" \
+  -D db=PROD_DB -D schema=SALES
+
+# Jinja is DEFAULT for stage execute (no flag needed)
+snow stage execute @my_stage/script.sql -c default \
+  -D db=PROD_DB \
+  -D schema=SALES
+```
+
+**Use for:** 
+- SQL files executed from stage with `snow stage execute`
+- When you prefer Jinja syntax (must enable explicitly)
+
+---
+
+### Template Syntax Control
+
+Control which syntaxes are enabled with `--enable-templating`:
+
+```bash
+# STANDARD (default): <% var %> only
+snow sql -q "SELECT <% var %>" -D var=value
+
+# JINJA: {{ var }} only  
+snow sql --enable-templating JINJA -q "SELECT {{ var }}" -D var=value
+
+# LEGACY: &var or &{var} (SnowSQL compatibility)
+snow sql --enable-templating LEGACY -q "SELECT &var" -D var=value
+
+# ALL: Enable all syntaxes
+snow sql --enable-templating ALL -q "SELECT <% var %> {{ var }}" -D var=value
+
+# NONE: Disable templating (useful for queries containing template-like text)
+snow sql --enable-templating NONE -q "SELECT '<% not_a_var %>'"
+```
+
+**Default:** `STANDARD` and `LEGACY` are enabled by default
+
+---
+
+### Combining Variable Types
+
+```bash
+# Bash for environment, <% %> for SQL
+ENV="prod"
+CONNECTION="${ENV}_connection"
+
+snow sql -c ${CONNECTION} -i -D db=PROD_DB -D schema=SALES <<EOF
+-- Use <% %> syntax (default)
+CREATE TABLE <% db %>.<% schema %>.new_table AS
+SELECT * FROM <% db %>.<% schema %>.source_table;
+EOF
+```
+
+---
+
+### Stage Execute (Jinja Default)
+
+When using `snow stage execute` for SQL files, Jinja is the default template syntax:
+
+```bash
+# Upload SQL file with Jinja templates
+cat > script.sql <<EOF
+CREATE TABLE {{ db }}.{{ schema }}.my_table (
+    id INT,
+    name STRING
+);
+INSERT INTO {{ db }}.{{ schema }}.my_table VALUES (1, 'test');
+EOF
+
+snow stage copy script.sql @my_stage/ -c default
+
+# Execute with Jinja variables (default for stage execute)
+snow stage execute @my_stage/script.sql -c default \
+  -D db=PROD_DB \
+  -D schema=SALES
+```
+
+---
+
+### Best Practices
+
+**Use Bash variables for:**
+- ✅ Connection names: `-c ${CONNECTION}`
+- ✅ File paths: `-f ${SCRIPT_DIR}/script.sql`
+- ✅ Environment selection: `${ENV}_warehouse`
+- ✅ Shell control flow: `if/then/else`
+
+**Use `{{ }}` Jinja for:**
+- ✅ SQL files executed with `snow stage execute` (automatic)
+- ✅ Client script templating with `--enable-templating JINJA`
+- ✅ We generally prefer Jinja syntax over `<% %>`
+
+---
+
+## Stage Operations
+
+### File Management
+```bash
+# Upload to stage
 snow stage copy ./local_files/ @my_stage/ -c default
 
 # Download from stage
@@ -125,48 +207,92 @@ snow stage copy @my_stage/file.csv ./downloads/ -c default
 # List stage contents
 snow stage list-files @my_stage -c default
 
-# Execute SQL files from stage
-snow stage execute @my_stage/scripts/*.sql -c default -D "database='DFLIPPO_DEV'" -D "schema='TESTING'" -D "postgresql_host='host.docker.internal'"
-
+# Remove files
+snow stage remove @my_stage/old_file.csv -c default
 ```
-#### **Special Notes for `snow stage execute`**:
-- For .sql files, `snow stage execute` performs an EXECUTE IMMEDIATE FROM command on .sql files from a stage.
-- For .py files, `snow stage execute` runs as a session-scoped Snowpark Python procedure. 
-    - Snowflake CLI executes the procedure in Snowflake to guarantee a consistent execution environment. 
-    - If your Python scripts require additional requirements, you should specify them in a requirements.txt file that resides in the same directory as the files on the stage. 
-    - The snow stage execute command only supports packages from the Snowflake Anaconda channel. 
-    - By default, the command looks for the requirements.txt file in the following precedence:
-        1) Stage path specified in the command’s stage_path parameter.
-        2) Parent directories of the specified stage path hierarchy, until it reaches the stage.
-        3) If you don’t specify a requirements.txt file, the command assumes no additional packages are necessary.
-- Variables for the execution context; for example: -D "<key>=<value>".
-    - Variable names are case sensitive and must match the case in your jinja expressions
-    - For SQL files, variables are used to expand the template, and any unknown variable will cause an error (consider embedding quoting in the file).
-    - For Python files, variables are used to update the os.environ dictionary. 
-    - Provided keys are capitalized to adhere to best practices. In case of SQL files string values must be quoted in '' (consider embedding quoting in the file).
 
-**Subcommands**:
-- **`copy`**: Upload/download files to/from stages
-- **`create`**: Create named stages
-- **`describe`**: Get stage description
-- **`drop`**: Drop stages
-- **`execute`**: Execute SQL files from stage (supports glob patterns)
-- **`list`**: List all stages
-- **`list-files`**: List stage contents
-- **`remove`**: Remove files from stage
-
-### **Snowpark Development (`snow snowpark`)**
-
-**Purpose**: Manage Snowpark procedures and functions
-**Common Use Cases**: Deploying UDFs, stored procedures, managing dependencies
-
+### Execute Staged Scripts
 ```bash
-# Build Snowpark artifacts
+# Execute SQL from stage (supports glob patterns)
+# SQL files use Jinja {{ }} syntax by default
+snow stage execute @my_stage/scripts/*.sql -c default \
+  -D database=MY_DB \
+  -D schema=MY_SCHEMA
+
+# Execute Python from stage (requires requirements.txt in same stage directory)
+snow stage execute @my_stage/my_script.py -c default
+```
+
+**Notes:**
+- **SQL files:** Use `EXECUTE IMMEDIATE FROM`, variables use **Jinja `{{ var }}`** syntax (automatic)
+- **Python files:** Run as Snowpark procedures, variables update `os.environ`
+- SQL variable values must be quoted: `-D "name='value'"`
+- Python loads libraries from Snowflake Anaconda channel (requirements.txt on stage)
+- **See "Variables & Templating" section above** for syntax differences
+
+---
+
+## Streamlit Apps
+
+### Deployment
+```bash
+# Deploy app (uses snowflake.yml)
+snow streamlit deploy -c default
+
+# Replace existing app
+snow streamlit deploy --replace -c default
+
+# Open app in browser
+snow streamlit deploy --open -c default
+```
+
+### Management
+```bash
+# List apps
+snow streamlit list -c default
+
+# Get app URL
+snow streamlit get-url my_app -c default
+
+# Describe app
+snow streamlit describe my_app -c default
+
+# Drop app
+snow streamlit drop my_app -c default
+```
+
+### Project Structure
+```yaml
+# snowflake.yml
+definition_version: 1
+streamlit:
+  name: my_app
+  warehouse: COMPUTE_WH
+  title: "My Application"
+  query_warehouse: COMPUTE_WH
+  main_file: app.py
+  pages_dir: pages
+  env_file: environment.yml
+```
+
+---
+
+## Snowpark (UDFs/Procedures)
+
+### Deploy Functions/Procedures
+```bash
+# Build artifacts
 snow snowpark build -c default
 
-# Deploy procedures and functions
-snow snowpark deploy --replace -c default
+# Deploy (uses snowflake.yml)
+snow snowpark deploy -c default
 
+# Replace existing
+snow snowpark deploy --replace -c default
+```
+
+### Execute & Manage
+```bash
 # Execute procedure
 snow snowpark execute procedure my_proc(arg1, arg2) -c default
 
@@ -175,452 +301,163 @@ snow snowpark list procedure -c default
 
 # Describe function
 snow snowpark describe function my_func -c default
-```
 
-**Subcommands**:
-- **`build`**: Build artifacts for Snowpark project
-- **`deploy`**: Deploy procedures/functions (use `--replace` to overwrite)
-- **`describe`**: Get procedure/function description
-- **`drop`**: Drop procedure/function
-- **`execute`**: Execute procedure/function
-- **`list`**: List procedures/functions
-- **`package`**: Manage custom Python packages
-
-### **Object Management (`snow object`)**
-
-**Purpose**: Manage Snowflake objects like warehouses, databases, schemas, tables
-**Common Use Cases**: Creating/dropping objects, listing resources, describing objects
-
-```bash
-# List warehouses
-snow object list warehouse -c default
-
-# Create warehouse
-snow object create warehouse --name my_warehouse --size SMALL -c default
-
-# Describe table
-snow object describe table my_table -c default
-
-# Drop object
-snow object drop table my_table -c default
-```
-
-**Subcommands**:
-- **`create`**: Create objects (check docs for supported types and parameters)
-- **`describe`**: Get object description
-- **`drop`**: Drop objects
-- **`list`**: List available objects of given type
-
-### **Streamlit Applications (`snow streamlit`)**
-
-**Purpose**: Manage Streamlit apps in Snowflake
-**Common Use Cases**: Deploying apps, managing app lifecycle
-
-```bash
-# Deploy Streamlit app
-snow streamlit deploy -c default
-
-# Get app URL
-snow streamlit get-url my_app -c default
-
-# List Streamlit apps
-snow streamlit list -c default
-
-# Execute app in headless mode
-snow streamlit execute my_app -c default
-```
-
-**Subcommands**:
-- **`deploy`**: Deploy Streamlit app from project definition
-- **`describe`**: Get app description
-- **`drop`**: Drop Streamlit app
-- **`execute`**: Execute app in headless mode
-- **`get-url`**: Get app URL
-- **`list`**: List all Streamlit apps
-- **`share`**: Share app with another role
-
-### **Native App Framework (`snow app`)**
-
-**Purpose**: Manage Snowflake Native Apps
-**Common Use Cases**: App development lifecycle, publishing, versioning
-
-```bash
-# Bundle app artifacts
-snow app bundle -c default
-
-# Deploy app package
-snow app deploy --prune --recursive -c default
-
-# Run app (deploy + create/upgrade)
-snow app run -c default
-
-# Open app in browser
-snow app open -c default
-
-# Teardown app
-snow app teardown -c default
-```
-
-**Subcommands**:
-- **`bundle`**: Prepare local folder with app artifacts
-- **`deploy`**: Create app package and sync changes
-- **`events`**: Fetch app events from event table
-- **`open`**: Open app in browser
-- **`publish`**: Add version to release channel
-- **`release-channel`**: Manage release channels
-- **`release-directive`**: Manage release directives
-- **`run`**: Full deployment (package + app creation/upgrade)
-- **`teardown`**: Drop app object and package
-- **`validate`**: Validate app setup script
-- **`version`**: Manage app versions
-
-### **Container Services (`snow spcs`)**
-
-**Purpose**: Manage Snowpark Container Services
-**Common Use Cases**: Container deployment, compute pool management, image management
-
-```bash
-# Manage compute pools
-snow spcs compute-pool list -c default
-
-# Manage services
-snow spcs service list -c default
-
-# Manage image registries
-snow spcs image-registry list -c default
-
-# Manage image repositories
-snow spcs image-repository list -c default
-```
-
-**Subcommands**:
-- **`compute-pool`**: Manage compute pools
-- **`image-registry`**: Manage image registries
-- **`image-repository`**: Manage image repositories
-- **`service`**: Manage services
-
-### **Notebook Management (`snow notebook`)**
-
-**Purpose**: Manage Snowflake Notebooks
-**Common Use Cases**: Notebook deployment, execution, URL generation
-
-```bash
-# Deploy notebook
-snow notebook deploy my_notebook -c default
-
-# Execute notebook in headless mode
-snow notebook execute my_notebook -c default
-
-# Get notebook URL
-snow notebook get-url my_notebook -c default
-
-# Open notebook in browser
-snow notebook open my_notebook -c default
-```
-
-**Subcommands**:
-- **`create`**: Create notebook from stage
-- **`deploy`**: Upload and create Snowflake notebook
-- **`execute`**: Execute notebook in headless mode
-- **`get-url`**: Get notebook URL
-- **`open`**: Open notebook in browser
-
-### **Git Integration (`snow git`)**
-
-**Purpose**: Manage Git repositories in Snowflake
-**Common Use Cases**: Repository setup, file operations, script execution
-
-```bash
-# Setup git repository
-snow git setup my_repo --url https://github.com/user/repo.git -c default
-
-# List repositories
-snow git list -c default
-
-# Fetch changes
-snow git fetch my_repo -c default
-
-# List files in repository
-snow git list-files my_repo --path branches/main -c default
-
-# Execute SQL files from repository
-snow git execute @my_repo/branches/main/*.sql -c default
-
-# Copy files from repository
-snow git copy @my_repo/branches/main/scripts ./local_scripts -c default
-```
-
-**Subcommands**:
-- **`copy`**: Copy files from repository to local/stage
-- **`describe`**: Get repository description
-- **`drop`**: Drop git repository
-- **`execute`**: Execute files from repository (supports glob patterns)
-- **`fetch`**: Fetch changes from origin
-- **`list`**: List all repositories
-- **`list-branches`**: List repository branches
-- **`list-files`**: List files in repository
-- **`list-tags`**: List repository tags
-- **`setup`**: Setup git repository object
-
-### **Connection Management (`snow connection`)**
-
-**Purpose**: Manage Snowflake connections
-**Common Use Cases**: Connection setup, testing, management
-
-```bash
-# List connections
-snow connection list
-
-# Add new connection
-snow connection add my_connection
-
-# Test connection
-snow connection test my_connection
-
-# Set default connection
-snow connection set-default my_connection
-
-# Remove connection
-snow connection remove my_connection
-
-# Generate JWT token
-snow connection generate-jwt my_connection
-```
-
-**Subcommands**:
-- **`add`**: Add connection to configuration
-- **`generate-jwt`**: Generate JWT token
-- **`list`**: List configured connections
-- **`remove`**: Remove connection from configuration
-- **`set-default`**: Change default connection
-- **`test`**: Test connection to Snowflake
-
-### **Cortex AI (`snow cortex`)**
-
-**Purpose**: Access Snowflake Cortex AI functions
-**Common Use Cases**: AI-powered text processing, analysis
-
-```bash
-# Complete text using AI
-snow cortex complete "Explain machine learning" -c default
-
-# Summarize text
-snow cortex summarize "Long text to summarize..." -c default
-
-# Analyze sentiment
-snow cortex sentiment "I love this product!" -c default
-
-# Translate text
-snow cortex translate "Hello" --target-language spanish -c default
-
-# Extract answers from text documents
-snow cortex extract-answer "What is the main topic?" --document "Document text..." -c default
-```
-
-**Subcommands**:
-- **`complete`**: Generate text completions using language models
-- **`extract-answer`**: Extract answers from documents
-- **`sentiment`**: Analyze sentiment (-1 to 1 scale)
-- **`summarize`**: Summarize English text
-- **`translate`**: Translate text between languages
-
-### **Logging (`snow logs`)**
-
-**Purpose**: Retrieve logs for Snowflake objects including table, database, compute-pool
-**Common Use Cases**: Debugging, monitoring, troubleshooting
-
-```bash
-# Get logs for compute pool
-snow logs compute-pool my_pool -c default
-
-# Get logs with time range
-snow logs service my_service --from 2024-01-01T00:00:00 --to 2024-01-02T00:00:00 -c default
-
-# Stream logs with refresh
-snow logs compute-pool my_pool --refresh 5 -c default
-
-# Filter by log level
-snow logs service my_service --log-level ERROR -c default
-```
-
-**Key Options**:
-- **`--from TEXT`**: Start time (ISO8061 format)
-- **`--to TEXT`**: End time (ISO8061 format)
-- **`--refresh INTEGER`**: Stream logs with refresh interval in seconds
-- **`--table TEXT`**: Custom table to query for logs
-- **`--log-level TEXT`**: Filter by log level (default: INFO)
-
-### **Project Initialization (`snow init`)**
-
-**Purpose**: Create new projects from templates
-**Common Use Cases**: Starting new Snowflake projects
-
-```bash
-# Initialize project from default templates
-snow init my_project
-
-# Initialize with specific template
-snow init my_project --template streamlit
-
-# Initialize with custom template source
-snow init my_project --template-source https://github.com/my-org/templates
-
-# Initialize with variables
-snow init my_project -D project_name=MyApp -D author=John
-
-# Non-interactive initialization
-snow init my_project --no-interactive
-```
-
-**Key Options**:
-- **`--template TEXT`**: Specific template to use
-- **`--template-source TEXT`**: Template source (local path or git URL)
-- **`--variable, -D TEXT`**: Variables in key=value format
-- **`--no-interactive`**: Disable prompting
-
-### **Helper Commands (`snow helpers`)**
-
-**Purpose**: Utility commands for migration and setup
-**Common Use Cases**: Migration from SnowSQL, environment checks
-
-```bash
-# Check SnowSQL environment variables
-snow helpers check-snowsql-env-vars
-
-# Import SnowSQL connections
-snow helpers import-snowsql-connections
-
-# Migrate V1 to V2 project definitions
-snow helpers v1-to-v2
-```
-
-**Subcommands**:
-- **`check-snowsql-env-vars`**: Check if there are any SnowSQL environment variables set
-- **`import-snowsql-connections`**: Import your existing connections from your SnowSQL configuration
-- **`v1-to-v2`**: Migrates the Snowpark, Streamlit, and Native App project definition files from V1 to V2
-
-## **Best Practices**
-
-### **Command Construction**
-- Always include connection parameter: `--connection <connection_name>`
-- Use appropriate output format for parsing: `--format JSON` for programmatic use
-- Include error handling with `--enhanced-exit-codes`
-- Use `--silent` for background operations to reduce noise
-- Use heredoc (EOF) syntax for multi-line SQL scripts in shell scripts
-
-### **Error Handling**
-- Check exit codes for command success/failure
-- Use `--debug` flag when troubleshooting
-- Capture both stdout and stderr for comprehensive error reporting
-
-### **Security Considerations**
-- Never hardcode passwords or sensitive information in commands
-- Use connection profiles instead of inline credentials
-- Leverage temporary connections (`-x`) for one-off operations when appropriate
-
-### **Performance Optimization**
-- Use `--single-transaction` for related SQL operations
-- Batch operations when possible
-- Use appropriate warehouse sizes for different operations
-
-### **Project Structure Integration**
-- Respect `snowflake.yml` project definitions
-- Use relative paths for local files
-- Maintain consistent naming conventions for stages and objects
-
-## **Common Patterns**
-
-### **Development Workflow**
-```bash
-# 1. Test connection
-snow connection test default
-
-# 2. Execute development SQL
-snow sql -f dev/setup.sql -c default
-
-# 3. Deploy Snowpark functions
-snow snowpark deploy --replace -c default
-
-# 4. Run tests
-snow sql -f tests/test_functions.sql -c default
-```
-
-### **Data Pipeline Operations**
-```bash
-# 1. Upload data files
-snow stage copy ./data/ @my_stage/raw/ -c default
-
-# 2. Execute transformation SQL
-snow sql -f transforms/process_data.sql -c default
-
-# 3. Verify results
-snow sql -q "SELECT COUNT(*) FROM processed_data" -c default
-```
-
-### **Multi-line SQL Deployment with Heredoc**
-```bash
-# Deploy schema and load data using heredoc and bash env variables
-snow sql -c default -i <<EOF
-
--- Create file format
-CREATE OR REPLACE FILE FORMAT ${FILE_FORMAT_NAME}
-TYPE = CSV
-FIELD_DELIMITER = ','
-SKIP_HEADER = 1
-NULL_IF = ('NULL', 'null', '')
-EMPTY_FIELD_AS_NULL = TRUE;
-
--- Create target table
-CREATE OR REPLACE TABLE ${TABLE_NAME} (
-    id NUMBER AUTOINCREMENT,
-    name VARCHAR(100),
-    created_date TIMESTAMP_NTZ DEFAULT CURRENT_TIMESTAMP(),
-    status VARCHAR(20) DEFAULT 'ACTIVE'
-);
-
--- Upload and load data
-PUT file://${LOCAL_FILE_PATH} @%${TABLE_NAME} OVERWRITE=TRUE;
-COPY INTO ${TABLE_NAME} FROM @%${TABLE_NAME} 
-FILE_FORMAT = (FORMAT_NAME = '${FILE_FORMAT_NAME}');
-
--- Verify load
-SELECT COUNT(*) as record_count FROM ${TABLE_NAME};
-
-EOF
-```
-
-### **CI/CD Integration**
-```bash
-# 1. Validate connection
-snow connection test $SNOWFLAKE_CONNECTION
-
-# 2. Deploy changes
-snow snowpark deploy --replace -c $SNOWFLAKE_CONNECTION
-
-# 3. Run integration tests
-snow sql -f tests/integration.sql -c $SNOWFLAKE_CONNECTION --format JSON
-```
-
-## **Troubleshooting**
-
-### **Common Issues**
-- **Connection failures**: Check `snow connection test <name>`
-- **Permission errors**: Verify role and warehouse settings
-- **File not found**: Ensure correct paths and stage references
-- **SQL errors**: Use `--debug` flag for detailed error information
-
-### **Debug Commands**
-```bash
-# Test connection with diagnostics
-snow connection test default --enable-diag
-
-# Execute with debug logging
-snow sql -q "SELECT 1" -c default --debug
-
-# Check CLI information
-snow --info
+# Drop
+snow snowpark drop procedure my_proc -c default
 ```
 
 ---
 
-**Reference**: [Snowflake CLI Documentation](https://docs.snowflake.com/en/developer-guide/snowflake-cli/index)
+## Object Management
+
+### Common Operations
+```bash
+# List objects
+snow object list warehouse -c default
+snow object list database -c default
+snow object list schema -c default
+snow object list table -c default
+
+# Describe
+snow object describe table my_table -c default
+
+# Drop
+snow object drop table my_table -c default
+
+# Create warehouse
+snow object create warehouse my_wh --size SMALL -c default
+```
+
+---
+
+## Connection Configuration
+
+### connections.toml Location
+- **Unix/Mac:** `~/.snowflake/connections.toml`
+- **Windows:** `%USERPROFILE%\.snowflake\connections.toml`
+
+### Configuration Format
+```toml
+[default]
+account = "your_account"
+user = "your_username"
+password = "your_password"
+warehouse = "COMPUTE_WH"
+database = "MY_DB"
+schema = "PUBLIC"
+role = "MY_ROLE"
+
+# Optional: Key pair authentication
+# authenticator = "SNOWFLAKE_JWT"
+# private_key_path = "/path/to/key.p8"
+
+# Optional: SSO
+# authenticator = "externalbrowser"
+```
+
+---
+
+## Common Workflows
+
+### Deploy Database Changes
+```bash
+# Execute migration scripts
+snow sql -f migrations/001_create_tables.sql -c default
+snow sql -f migrations/002_load_data.sql -c default
+
+# Or use staged scripts
+snow stage execute @migrations/*.sql -c default -D env=prod
+```
+
+### Deploy Streamlit App
+```bash
+# From project directory with snowflake.yml
+snow streamlit deploy --replace -c default
+
+# Verify deployment
+snow streamlit list -c default
+snow streamlit get-url my_app -c default
+```
+
+### Execute Python in Snowflake
+```bash
+# Upload requirements and script
+snow stage copy requirements.txt @my_stage/ -c default
+snow stage copy my_script.py @my_stage/ -c default
+
+# Execute (automatically creates procedure)
+snow stage execute @my_stage/my_script.py -c default
+```
+
+### Query with Variables
+```bash
+# Jinja template substitution
+snow sql -c default --enable-templating JINJA -q "SELECT * FROM {{db}}.{{schema}}.{{table}}" \
+  -D db=PROD_DB -D schema=SALES -D table=ORDERS
+
+# Or with heredoc (see Variables & Templating section above)
+snow sql -c default -i --enable-templating JINJA -D db=PROD_DB -D schema=SALES <<EOF
+SELECT * FROM {{db}}.{{schema}}.orders WHERE status = 'active';
+EOF
+```
+
+**See "Variables & Templating" section above for bash variables, heredoc patterns, and best practices.**
+
+---
+
+## Global Options
+
+**Available on all commands:**
+- `--format [TABLE|JSON|CSV]` - Output format
+- `--verbose, -v` - Verbose logging
+- `--debug` - Debug logging
+- `--silent` - Suppress output
+- `--help, -h` - Show help
+
+---
+
+## Troubleshooting
+
+| Issue | Solution |
+|-------|----------|
+| Connection failed | Check `connections.toml` credentials and account name |
+| Warehouse not running | Specify warehouse: `--warehouse MY_WH` |
+| Permission denied | Check role: `--role MY_ROLE` or update default role |
+| File not found (stage) | Verify stage path: `snow stage list-files @my_stage` |
+| Python execution fails | Ensure `requirements.txt` exists in same stage directory |
+| Variables not working | SQL requires quotes: `-D "name='value'"` |
+
+---
+
+## Quick Reference
+
+```bash
+# SQL - Basic
+snow sql -q "SELECT * FROM my_table" -c default
+snow sql -f file.sql -c default
+
+# SQL - Variables (three types)
+# 1. Bash variables (shell expansion)
+DB="PROD_DB" && snow sql -q "SELECT * FROM ${DB}.orders" -c default
+
+# 2. Jinja {{ }} syntax (must enable)
+snow sql --enable-templating JINJA -q "SELECT * FROM {{ db }}.orders" -D db=PROD_DB -c default
+
+# 3. Standard <% %> syntax (default)
+snow sql -q "SELECT * FROM <% db %>.orders" -D db=PROD_DB -c default
+
+# Stage
+snow stage copy local/ @stage/ -c default
+snow stage execute @stage/*.sql -c default -D db=PROD  # Uses Jinja {{ }} by default
+
+# Streamlit
+snow streamlit deploy --replace -c default
+
+# Snowpark
+snow snowpark deploy --replace -c default
+
+# Objects
+snow object list [warehouse|database|schema|table] -c default
+```
+
+---
