@@ -19,29 +19,26 @@ dbt Projects on Snowflake is a native feature that allows you to deploy and exec
 
 **Reference**: [Event Table Setup](https://docs.snowflake.com/en/developer-guide/logging-tracing/event-table-setting-up#associate-an-event-table-with-an-object)
 
-### Key Monitoring Approaches
+### Key Monitoring Approach
 
-1. **Event Tables** - Primary monitoring mechanism with logs, spans, and metrics
-2. **Execution Output** - Parse `EXECUTE DBT PROJECT` result table for SUCCESS/EXCEPTION/STDOUT/OUTPUT_ARCHIVE_URL columns
-3. **dbt Artifacts** - Download artifacts from `OUTPUT_ARCHIVE_URL` for manifest/catalog data
+**Event Tables** - Query event tables for logs, spans, and metrics generated during dbt project execution. Event tables capture comprehensive telemetry data including execution logs, performance metrics, and trace spans.
 
 ### Setup Event Table Monitoring
 
-**IMPORTANT**: Event tables must be set at the **DATABASE** level (not schema, not account-wide):
+**IMPORTANT**: Event tables should be set at the **DATABASE** level (not schema, not account-wide):
 
 ```sql
--- 1. Create event table
-CREATE EVENT TABLE IF NOT EXISTS MY_DATABASE.MY_SCHEMA.EVENT_LOG;
+-- 1. Create event table in the same or a different database as your dbt Project objects.
+CREATE EVENT TABLE IF NOT EXISTS MY_LOGGING_DATABASE.MY_LOGGING_SCHEMA.EVENT_LOG;
 
--- 2. Set event table at DATABASE level
-ALTER DATABASE MY_DATABASE SET EVENT_TABLE = MY_DATABASE.MY_SCHEMA.EVENT_LOG;
+-- 2. Set event table where dbt Projects are deployed at DATABASE level
+ALTER DATABASE MY_DBT_PROJECT_DATABASE SET EVENT_TABLE = MY_LOGGING_DATABASE.MY_LOGGING_SCHEMA.EVENT_LOG;
 
--- 3. Configure logging levels at DATABASE level
-ALTER DATABASE MY_DATABASE SET LOG_LEVEL = 'INFO';
-ALTER DATABASE MY_DATABASE SET TRACE_LEVEL = 'ALWAYS';
+-- 3. Configure logging levels for the schema where you have deployed your dbt Project object
+ALTER SCHEMA MY_DBT_PROJECT_DATABASE.MY_DBT_PROJECT_SCHEMA SET LOG_LEVEL = 'INFO';
+ALTER SCHEMA MY_DBT_PROJECT_DATABASE.MY_DBT_PROJECT_SCHEMA SET TRACE_LEVEL = 'ALWAYS';
+ALTER SCHEMA MY_DBT_PROJECT_DATABASE.MY_DBT_PROJECT_SCHEMA SET METRIC_LEVEL = 'ALL';
 
--- 4. Verify settings
-SHOW PARAMETERS LIKE 'EVENT_TABLE' IN DATABASE MY_DATABASE;
 ```
 
 ### Deployment
@@ -163,23 +160,6 @@ WHERE RESOURCE_ATTRIBUTES['snow.executable.type']::VARCHAR = 'DBT_PROJECT'
   AND TIMESTAMP >= DATEADD(day, -7, CURRENT_TIMESTAMP())
 GROUP BY project_name, database_name, schema_name
 ORDER BY last_execution DESC;
-```
-
-### Accessing dbt Artifacts
-
-When a dbt project executes, artifacts are saved to a zip file referenced by `OUTPUT_ARCHIVE_URL`:
-
-```sql
--- Copy artifacts from OUTPUT_ARCHIVE_URL to a stage
-CREATE OR REPLACE STAGE my_dbt_stage
-  ENCRYPTION = (TYPE = 'SNOWFLAKE_SSE');
-
--- After EXECUTE DBT PROJECT, copy the results
-COPY FILES INTO @my_dbt_stage/results/
-  FROM (SELECT '{output_archive_url}', 'dbt_results.zip');
-
--- Get presigned URL to download
-SELECT get_presigned_url(@my_dbt_stage, 'results/dbt_results.zip');
 ```
 
 ---
