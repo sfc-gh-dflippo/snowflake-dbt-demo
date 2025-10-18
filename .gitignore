@@ -46,3 +46,4 @@ tasks.json
 tasks/
 .taskmaster/
 
+profiles.yml
