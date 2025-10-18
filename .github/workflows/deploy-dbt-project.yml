@@ -1,18 +1,18 @@
 name: Deploy dbt Project
+on: workflow_dispatch
 
-on:
-  push:
-    branches:
-      - main
-      - test
-    paths-ignore:
-      - 'schemachange/**'
-  pull_request:
-    branches:
-      - main
-      - test
-    paths-ignore:
-      - 'schemachange/**'
+#   push:
+#     branches:
+#       - main
+#       - test
+#     paths-ignore:
+#       - 'schemachange/**'
+#   pull_request:
+#     branches:
+#       - main
+#       - test
+#     paths-ignore:
+#       - 'schemachange/**'
 
 env:
   PIP_CACHE_DIR: ~/.cache/pip
