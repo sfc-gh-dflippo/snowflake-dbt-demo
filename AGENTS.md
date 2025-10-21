@@ -43,14 +43,105 @@ This is a **modern data engineering project** built with dbt-core and Snowflake,
 - **Testability** - Models should have appropriate data quality tests
 - **Documentation** - Document business logic, complex transformations, models, and columns
 
-### Specific Rules by Technology
-- **[dbt Setup](./DBT_SETUP_GUIDE.md)** - How to set up and use dbt Projects on Snowflake for data pipelines
-- **[dbt Best Practices](.cursor/rules/dbt.mdc)** - Complete dbt modeling guidelines
-- **[dbt Observability](.cursor/rules/dbt-observability.mdc)** - Monitoring dbt Projects on Snowflake and the dbt Constraints packaage
-- **[Snowflake CLI Guide](.cursor/rules/snowflake-cli.mdc)** - Snowflake operations
-- **[Streamlit Development Guide](.cursor/rules/streamlit.mdc)** - Streamlit app development, testing, and deployment
-- **[Playwright Testing Guide](.cursor/rules/playwright.mdc)** - Browser automation and E2E testing with Playwright MCP for any GUI development
-- **[Schemachange Deployment Guide](.cursor/rules/schemachange.mdc)** - Database migration best practices
+### Skills
+
+**What are Skills?**
+
+Skills are structured instruction sets that enhance AI assistant capabilities for specific domains or tasks. Each skill is a folder containing:
+- **SKILL.md** - Core instructions and guidelines
+- **references/** - Detailed documentation and examples
+- **scripts/** - Helper scripts and templates
+- **config/** - Configuration files
+
+Skills provide domain-specific knowledge, best practices, code templates, and troubleshooting strategies. Think of them as specialized "expert personas" for areas like dbt development, Snowflake operations, or testing frameworks.
+
+**Key Features:**
+- Skills can be enabled `[x]` or disabled `[ ]` individually
+- Organized by project-specific and reference examples
+
+---
+
+#### Project-Specific Skills
+
+- [x] **[dbt-artifacts](.claude/skills/dbt-artifacts/SKILL.md)** - Monitor dbt execution using the dbt Artifacts package
+  - Use when you need to track test and model execution history, analyze run patterns over time, monitor data quality metrics, or enable programmatic access to dbt execution metadata
+  
+- [x] **[dbt-projects-snowflake](.claude/skills/dbt-projects-snowflake/SKILL.md)** - Deploy and manage dbt projects natively in Snowflake
+  - Use when you want to set up dbt development workspaces, deploy projects to Snowflake, schedule automated runs, monitor execution with event tables, or enable team collaboration
+  
+- [x] **[dbt-development](.claude/skills/dbt-development/SKILL.md)** - Expert guidance for dbt data modeling with medallion architecture
+  - Use when designing models, choosing materializations, implementing tests, or optimizing dbt projects. Runtime agnostic - works with dbt Cloud, dbt Core, or any execution environment
+  
+- [x] **[schemachange](.claude/skills/schemachange/SKILL.md)** - Deploy and manage Snowflake database objects using version control
+  - Use when you need to manage database migrations for objects not handled by dbt, implement CI/CD pipelines for schema changes, or coordinate deployments across environments
+  
+- [x] **[snowflake-cli](.claude/skills/snowflake-cli/SKILL.md)** - Execute SQL and manage Snowflake objects using the CLI
+  - Use when you need to run SQL scripts, deploy Streamlit apps, execute Snowpark procedures, manage stages, or automate Snowflake operations from CI/CD pipelines
+  
+- [x] **[streamlit](.claude/skills/streamlit/SKILL.md)** - Develop, test, and deploy Streamlit data applications
+  - Use when you're building interactive data apps, setting up local development environments, testing with pytest or Playwright, or deploying apps to Snowflake
+  
+- [x] **[playwright-mcp](.claude/skills/playwright-mcp/SKILL.md)** - Automate browser testing using Playwright MCP
+  - Use when you need to test Streamlit apps, validate web interfaces, test responsive design, check accessibility, or automate browser interactions through MCP tools
+
+- [x] **[task-master](.claude/skills/task-master/SKILL.md)** - AI-powered task management for structured development
+  - Use when you need to manage complex projects with PRDs, break down tasks into subtasks, track dependencies, and maintain organized workflows across features and branches
+
+---
+
+#### Anthropic Reference Skills
+
+**Creative & Design:**
+- [x] **[algorithmic-art](.claude/skills/anthropic-reference/algorithmic-art/SKILL.md)** - Create algorithmic art using p5.js with seeded randomness
+  - Use when creating generative art, flow fields, or particle systems
+- [x] **[canvas-design](.claude/skills/anthropic-reference/canvas-design/SKILL.md)** - Design visual art in PNG/PDF formats
+  - Use for creating professional visual designs with design philosophies
+- [x] **[slack-gif-creator](.claude/skills/anthropic-reference/slack-gif-creator/SKILL.md)** - Create animated GIFs optimized for Slack
+  - Use for creating animations within Slack's size constraints
+
+**Development & Technical:**
+- [x] **[artifacts-builder](.claude/skills/anthropic-reference/artifacts-builder/SKILL.md)** - Build complex HTML artifacts with React and Tailwind
+  - Use for complex artifacts requiring state management, routing, or shadcn/ui components
+- [x] **[mcp-builder](.claude/skills/anthropic-reference/mcp-builder/SKILL.md)** - Create high-quality MCP servers
+  - Use when building MCP servers to integrate external APIs or services in Python or Node/TypeScript
+- [x] **[webapp-testing](.claude/skills/anthropic-reference/webapp-testing/SKILL.md)** - Test web applications using Playwright
+  - Use for automated browser testing and UI validation
+
+**Enterprise & Communication:**
+- [x] **[brand-guidelines](.claude/skills/anthropic-reference/brand-guidelines/SKILL.md)** - Apply Anthropic brand standards
+  - Use for applying official brand colors and typography to artifacts
+- [x] **[internal-comms](.claude/skills/anthropic-reference/internal-comms/SKILL.md)** - Write internal communications
+  - Use for creating status reports, newsletters, and FAQ documents
+- [x] **[theme-factory](.claude/skills/anthropic-reference/theme-factory/SKILL.md)** - Style artifacts with professional themes
+  - Use for applying pre-set or custom themes to artifacts
+
+**Document Skills:**
+- [x] **[docx](.claude/skills/anthropic-reference/document-skills/docx/SKILL.md)** - Create and edit Word documents
+  - Use for working with .docx files, tracked changes, comments, and document formatting
+- [x] **[pdf](.claude/skills/anthropic-reference/document-skills/pdf/SKILL.md)** - Manipulate PDF documents
+  - Use for extracting text, creating PDFs, merging, splitting, or handling forms
+- [x] **[pptx](.claude/skills/anthropic-reference/document-skills/pptx/SKILL.md)** - Create and edit PowerPoint presentations
+  - Use for working with presentations, layouts, templates, and charts
+- [x] **[xlsx](.claude/skills/anthropic-reference/document-skills/xlsx/SKILL.md)** - Create and edit Excel spreadsheets
+  - Use for working with spreadsheets, formulas, data analysis, and visualization
+
+**Meta Skills:**
+- [x] **[skill-creator](.claude/skills/anthropic-reference/skill-creator/SKILL.md)** - Guide for creating effective skills
+  - Use when you need to create new custom skills
+- [x] **[template-skill](.claude/skills/anthropic-reference/template-skill/SKILL.md)** - Basic template for new skills
+  - Use as a starting point when creating new skills
+
+**Sync Command:** Run `.claude/skills/sync-anthropic-skills.sh` to update Anthropic skills to the latest version.
+
+### Legacy Rules (Cursor-specific)
+
+For Cursor IDE integration, see `.cursor/rules/`:
+- **[dbt.mdc](.cursor/rules/dbt.mdc)** - Complete dbt modeling guidelines
+- **[dbt-observability.mdc](.cursor/rules/dbt-observability.mdc)** - Original observability guide
+- **[snowflake-cli.mdc](.cursor/rules/snowflake-cli.mdc)** - Snowflake operations
+- **[streamlit.mdc](.cursor/rules/streamlit.mdc)** - Streamlit development
+- **[playwright.mdc](.cursor/rules/playwright.mdc)** - Browser testing
+- **[schemachange.mdc](.cursor/rules/schemachange.mdc)** - Database migrations
 
 ---
 
@@ -179,4 +270,16 @@ This project follows **Specification-Driven Development (SDD)** methodology, whe
     - Prepare for deployment and future maintenance
 
 
-*For detailed implementation rules and examples, see the referenced .cursor/rules/ files.*
+## Additional Resources
+
+### Project Documentation
+- **[DBT_SETUP_GUIDE.md](./DBT_SETUP_GUIDE.md)** - dbt Projects on Snowflake setup
+- **[DBT_BEST_PRACTICES.md](./DBT_BEST_PRACTICES.md)** - Comprehensive dbt guidelines
+- **[README.md](./README.md)** - Project overview and getting started
+
+### Cursor Rules (IDE Integration)
+For Cursor-specific integration, see `.cursor/rules/*.mdc` files for auto-applied rules during development.
+
+---
+
+*For the most up-to-date and comprehensive guidance, prioritize Skills (`.claude/skills/`) over legacy rules.*
