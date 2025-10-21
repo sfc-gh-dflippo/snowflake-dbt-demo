@@ -1,1 +1,0 @@
-[{"text": "-- Execute DBT PROJECT - Basic Run\\n-- Usage: snow sql -f execute_dbt_project.sql -c default -D db=MY_DB -D schema=MY_SCHEMA -D project=MY_PROJECT\\n\\nEXECUTE DBT PROJECT {{db}}.{{schema}}.{{project}} args='build';\\n\", \"type\": \"text\"}]

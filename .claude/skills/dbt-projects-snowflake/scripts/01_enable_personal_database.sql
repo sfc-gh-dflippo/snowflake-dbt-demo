@@ -1,1 +1,0 @@
-[{"text": "-- Enable Personal Database for dbt Projects on Snowflake\\n-- Usage: snow sql -f 01_enable_personal_database.sql -c default\\n-- Requires: ACCOUNTADMIN role\\n\\nALTER ACCOUNT SET ENABLE_PERSONAL_DATABASE = TRUE;\\n\", \"type\": \"text\"}]

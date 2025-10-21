@@ -17,74 +17,7 @@ Deploy, manage, and monitor dbt projects natively within Snowflake using web-bas
 
 ## Setup
 
-### Prerequisites
-- Snowflake account (ACCOUNTADMIN for initial setup)
-- Personal database enabled (default for new accounts)
-- External access integration for `dbt deps` (if using packages)
-- Git API integration for repository access
-
-## Complete Setup Steps
-
-Execute the setup scripts in order with Snowflake CLI:
-
-```bash
-# Run setup scripts (requires ACCOUNTADMIN)
-snow sql -f scripts/01_enable_personal_database.sql -c default
-snow sql -f scripts/02_create_external_access.sql -c default
-snow sql -f scripts/03_create_git_api_integration.sql -c default
-```
-
-### Step 1: Enable Personal Database
-
-Run **scripts/01_enable_personal_database.sql** to enable personal database feature.
-
-### Step 2: Create External Access Integration
-
-**scripts/02_create_external_access.sql**
-
-For `dbt deps` to work, allow external access to dbt packages:
-- Creates network rule for hub.getdbt.com and codeload.github.com
-- Creates external access integration
-
-### Step 3: Create Git API Integration
-
-**scripts/03_create_git_api_integration.sql**
-
-Connect to GitHub repositories:
-- Update `API_ALLOWED_PREFIXES` with your organization URLs before running
-
-### Step 4: Create Workspace in Snowsight
-
-1. Navigate to Projects → My Workspace
-2. Click My Workspace → Create Workspace → From Git repository
-3. Enter:
-   - Repository URL
-   - API integration name
-   - Authentication (PAT or OAuth)
-
-### Step 5: Configure profiles.yml
-
-```yaml
-my_dbt_project:
-  target: dev
-  outputs:
-    dev:
-      type: snowflake
-      account: ""  # Uses current account context
-      user: ""     # Uses current user context
-      warehouse: MY_WAREHOUSE
-      database: MY_DATABASE
-      schema: MY_SCHEMA
-      role: MY_ROLE
-```
-
-### Step 6: Deploy as DBT PROJECT Object
-
-Use Deploy button in workspace or Snowflake CLI:
-
-```bash
-snow dbt deploy my_project --source .
-```
+Complete setup instructions including prerequisites, external access integration, Git API integration, and event table configuration are in `references/SETUP.md`.
 
 ## Deployment Methods
 
@@ -106,15 +39,7 @@ snow dbt execute my_project build
 
 ### Method 3: SQL Execution
 
-**scripts/execute_dbt_project.sql**
-
-Execute with variables:
-```bash
-snow sql -f scripts/execute_dbt_project.sql -c default \
-  -D db=MY_DB -D schema=MY_SCHEMA -D project=MY_PROJECT
-```
-
-Or execute directly in SQL:
+Execute directly in SQL:
 ```sql
 EXECUTE DBT PROJECT <db>.<schema>.<project> args='build';
 EXECUTE DBT PROJECT <db>.<schema>.<project> args='build --full-refresh';
@@ -123,31 +48,92 @@ EXECUTE DBT PROJECT <db>.<schema>.<project> args='build --select tag:gold';
 
 ## Scheduling & Automation
 
-**scripts/create_scheduled_task.sql**
-
-Create a daily scheduled task to run dbt:
-
-```bash
-# Update warehouse, schedule, and project path in the file, then run:
-snow sql -f scripts/create_scheduled_task.sql -c default
-```
-
-The script creates a task that runs daily at 6 AM UTC. Customize as needed:
-- Warehouse name
-- Schedule (CRON expression)
-- Project database/schema/name
-- dbt command arguments
+For automated scheduling with Snowflake Tasks, see the "Optional: Schedule Automated Runs" section in `references/SETUP.md`.
 
 ## Event Table Monitoring
 
-For comprehensive monitoring guidance including event table setup, monitoring queries, best practices, and troubleshooting, see `references/MONITORING.md`.
+### Setup
 
-Key monitoring capabilities:
-- Real-time telemetry via event tables (logs, traces, metrics)
-- OpenTelemetry data model structure
-- Pre-built monitoring queries
-- Performance optimization patterns
-- Alerting strategies
+Configure event tables following the Event Table Monitoring Configuration section in `references/SETUP.md`. This enables OpenTelemetry-based monitoring of dbt project executions.
+
+### Monitoring Queries
+
+All monitoring scripts use parameterized event table references. Specify your event table location when running:
+
+```bash
+# Example: Query recent executions
+snow sql -f scripts/recent_executions.sql --enable-templating JINJA \
+  -D event_table=MY_DATABASE.MY_SCHEMA.EVENT_LOG
+
+# Example: Check for errors
+snow sql -f scripts/execution_errors.sql --enable-templating JINJA \
+  -D event_table=LOGS_DB.PUBLIC.DBT_EVENTS
+
+# Example: Performance metrics
+snow sql -f scripts/performance_metrics.sql --enable-templating JINJA \
+  -D event_table=MY_DATABASE.MY_SCHEMA.EVENT_LOG
+```
+
+**Core Monitoring:**
+- **`recent_executions.sql`** - Lists recent dbt project executions with severity
+- **`execution_errors.sql`** - Query ERROR logs to identify failures
+- **`performance_metrics.sql`** - Query CPU and memory usage metrics
+- **`trace_spans.sql`** - Query execution spans for timing analysis
+- **`execution_summary.sql`** - Summarize executions by project with error counts
+
+**Advanced Use Cases:**
+- **`alert_failures.sql`** - Alert trigger for execution failures (returns error count)
+- **`performance_regression.sql`** - Week-over-week performance comparison
+- **`resource_usage.sql`** - CPU and memory consumption by project
+- **`audit_trail.sql`** - Complete execution audit trail for compliance
+
+### Event Table Structure
+
+Event tables follow the [OpenTelemetry data model](https://opentelemetry.io/) with these key columns:
+
+| Column | Description |
+|--------|-------------|
+| **TIMESTAMP** | UTC timestamp when event was created (end of time span for span events) |
+| **START_TIMESTAMP** | For span events, the start of the time span |
+| **TRACE** | Tracing context with `trace_id` and `span_id` |
+| **RESOURCE_ATTRIBUTES** | Source identification: database, schema, user, warehouse, etc. |
+| **SCOPE** | Event scopes (e.g., class names for logs) |
+| **RECORD_TYPE** | Event type: `LOG`, `SPAN`, `SPAN_EVENT`, `EVENT`, `METRIC` |
+| **RECORD** | JSON object with record-specific data (severity, metric type, span details) |
+| **RECORD_ATTRIBUTES** | Event metadata set by Snowflake or code |
+| **VALUE** | Actual log message, metric value, or null for spans |
+
+### Best Practices
+
+**Performance Optimization:**
+- **Always filter by TIMESTAMP** to limit scanned data (reduces cost)
+- **Use RESOURCE_ATTRIBUTES** for efficient filtering by project/database/schema
+- **Archive old event table data** (>90 days) to separate tables
+
+**Monitoring Strategy:**
+1. Set event tables at **DATABASE level**, not account or schema
+2. Configure appropriate log/trace/metric levels per schema
+3. Always filter by `TIMESTAMP` to avoid scanning large event tables
+4. Use `snow.executable.type = 'DBT_PROJECT'` to isolate dbt events
+5. Leverage `RESOURCE_ATTRIBUTES` for filtering by project/database/schema
+6. Monitor ERROR severity logs for immediate alerts
+7. Use SPAN records to analyze execution timing and bottlenecks
+
+**Alerting Priorities:**
+- **High**: Any ERROR in execution, execution >2x historical avg, warehouse credit anomalies
+- **Medium**: WARNING logs, test/model failures on critical models, performance trending down
+- **Low**: INFO logs, scheduled job confirmations, performance metrics for analysis
+
+### Troubleshooting
+
+| Issue | Solution |
+|-------|----------|
+| No events captured | Verify event table set at DATABASE level with `ALTER DATABASE` |
+| Too many events | Adjust `LOG_LEVEL`/`TRACE_LEVEL`/`METRIC_LEVEL` per schema |
+| Slow monitoring queries | Always filter by TIMESTAMP first; consider archiving old data |
+| Missing metrics | Set `METRIC_LEVEL = 'ALL'` for schema |
+| Missing traces | Set `TRACE_LEVEL = 'ALWAYS'` for schema |
+| Cannot see project name | Verify `snow.executable.type = 'DBT_PROJECT'` filter |
 
 ## Supported dbt Commands
 
@@ -181,15 +167,9 @@ Key monitoring capabilities:
 
 ## Troubleshooting
 
-**Setup Issues:**
-- SSH/Network Issues: Ensure external access integration is created
-- Authentication Failures: Verify PAT has correct scopes
-- Package Installation: Run `dbt deps` in workspace before deployment
+For setup and deployment issues, see `references/SETUP.md`.
 
-**Monitoring Issues:**
-- No events captured: Verify event table set at DATABASE level
-- Too many events: Adjust LOG_LEVEL/TRACE_LEVEL/METRIC_LEVEL
-- Slow queries: Always filter by TIMESTAMP first
+For monitoring issues, see the Troubleshooting table in the Event Table Monitoring section above.
 
 ## Related Skills
 
@@ -209,8 +189,12 @@ Key monitoring capabilities:
 
 ## Resources
 
-- **Setup Scripts**: `scripts/` - SQL scripts for setup, execution, and scheduling
-- **Setup Guide**: `references/SETUP.md` - Complete setup and monitoring configuration
-- **Monitoring Guide**: `references/MONITORING.md` - Event table monitoring guide
+### Local Files
+- **Monitoring Scripts**: `scripts/` - Ready-to-use parameterized SQL scripts for monitoring
+  - Core Monitoring: `recent_executions.sql`, `execution_errors.sql`, `performance_metrics.sql`, `trace_spans.sql`, `execution_summary.sql`
+  - Advanced Monitoring: `alert_failures.sql`, `performance_regression.sql`, `resource_usage.sql`, `audit_trail.sql`
+- **Setup Guide**: `references/SETUP.md` - Complete step-by-step setup including event table configuration and task scheduling
+
+### Official Documentation
 - dbt Projects Documentation: https://docs.snowflake.com/en/user-guide/data-engineering/dbt-projects-on-snowflake
 - Monitoring Guide: https://docs.snowflake.com/en/user-guide/data-engineering/dbt-projects-on-snowflake-monitoring-observability

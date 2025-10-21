@@ -85,17 +85,57 @@ Use Deploy button in workspace or Snowflake CLI:
 snow dbt deploy my_project --source .
 ```
 
-## Supported dbt Commands
+---
 
-| Command | Workspaces | EXECUTE DBT PROJECT | snow dbt execute |
-|---------|------------|-------------------|------------------|
-| build   | ✅         | ✅                | ✅               |
-| run     | ✅         | ✅                | ✅               |
-| test    | ✅         | ✅                | ✅               |
-| compile | ✅         | ✅                | ✅               |
-| seed    | ✅         | ✅                | ✅               |
-| snapshot| ✅         | ✅                | ✅               |
-| deps    | ✅ (workspace only) | ❌        | ❌               |
+## Event Table Monitoring Configuration (Optional but Recommended)
+
+Monitor dbt Projects execution using event tables that capture telemetry data (logs, traces, metrics) via the [OpenTelemetry data model](https://opentelemetry.io/).
+
+### Critical Pattern: Database-Level Configuration
+
+Always set event tables at the **DATABASE** level (not schema, not account-wide):
+
+```sql
+-- Step 1: Create event table (can be in different database)
+CREATE EVENT TABLE IF NOT EXISTS MY_LOGGING_DATABASE.MY_LOGGING_SCHEMA.EVENT_LOG;
+
+-- Step 2: Set event table where dbt Projects are deployed at DATABASE level
+ALTER DATABASE MY_DBT_PROJECT_DATABASE 
+  SET EVENT_TABLE = MY_LOGGING_DATABASE.MY_LOGGING_SCHEMA.EVENT_LOG;
+
+-- Step 3: Configure logging levels for the schema where dbt Project is deployed
+ALTER SCHEMA MY_DBT_PROJECT_DATABASE.MY_DBT_PROJECT_SCHEMA SET LOG_LEVEL = 'INFO';
+ALTER SCHEMA MY_DBT_PROJECT_DATABASE.MY_DBT_PROJECT_SCHEMA SET TRACE_LEVEL = 'ALWAYS';
+ALTER SCHEMA MY_DBT_PROJECT_DATABASE.MY_DBT_PROJECT_SCHEMA SET METRIC_LEVEL = 'ALL';
+```
+
+**Why DATABASE level?**
+- Captures all dbt Project executions in that database
+- Avoids account-wide noise
+- Provides project-level isolation
+
+### Verify Event Capture
+
+After configuration, verify events are being captured:
+
+```sql
+-- Check recent events
+SELECT 
+    TIMESTAMP,
+    RESOURCE_ATTRIBUTES['snow.executable.name']::VARCHAR AS project_name,
+    RECORD_TYPE,
+    RECORD['severity_text']::VARCHAR AS severity,
+    VALUE::VARCHAR AS message
+FROM MY_LOGGING_DATABASE.MY_LOGGING_SCHEMA.EVENT_LOG
+WHERE RESOURCE_ATTRIBUTES['snow.executable.type']::VARCHAR = 'DBT_PROJECT'
+  AND TIMESTAMP >= DATEADD(hour, -1, CURRENT_TIMESTAMP())
+ORDER BY TIMESTAMP DESC
+LIMIT 10;
+```
+
+See `SKILL.md` for complete monitoring guide with ready-to-use SQL scripts, best practices, and troubleshooting.
+
+---
 
 ## Common Issues
 
@@ -111,10 +151,27 @@ snow dbt deploy my_project --source .
 - Run `dbt deps` in workspace before deployment
 - Ensure external access integration is enabled
 
-## Team Collaboration
+---
 
-Teams can use different development approaches simultaneously:
-- Some developers: dbt Projects on Snowflake workspaces
-- Some developers: dbt Cloud IDE
-- Some developers: VS Code + local dbt CLI
-- All: Check code into same Git repository
+## Optional: Schedule Automated Runs
+
+Create a Snowflake task to run dbt on a schedule:
+
+```sql
+CREATE OR REPLACE TASK my_dbt_daily_task
+  WAREHOUSE = 'MY_WAREHOUSE'
+  SCHEDULE = 'USING CRON 0 6 * * * UTC'  -- Daily at 6 AM UTC
+AS
+  EXECUTE DBT PROJECT MY_DATABASE.MY_SCHEMA.MY_DBT_PROJECT
+    args='build';
+
+-- Enable the task
+ALTER TASK my_dbt_daily_task RESUME;
+```
+
+Customize:
+- Task name (`my_dbt_daily_task`)
+- Warehouse name
+- Schedule (CRON expression)
+- Database, schema, and project name
+- dbt command arguments (default: `build`)
