@@ -2,179 +2,65 @@
 
 ## Overview
 
-This guide covers installing and setting up dbt Core for Snowflake. For platform-specific deployment like dbt Projects on Snowflake, see the `dbt-projects-snowflake` skill.
+This guide covers common setup challenges and Snowflake-specific configuration for dbt Core.
 
-## Installation Methods
+**Official dbt Documentation**: [Install dbt](https://docs.getdbt.com/docs/core/installation-overview)
 
-### 1. Using pip (Recommended for Most Users)
+---
+
+## Installation
+
+### Recommended: pip
 
 ```bash
 # Install dbt with Snowflake adapter
-pip install dbt-core dbt-snowflake
+pip install -U dbt-core dbt-snowflake
+
+# Verify installation
+dbt --version
 ```
 
-### 2. Using conda/mamba (Recommended for Data Scientists)
+### Alternative: conda
 
 ```bash
 # Create isolated environment
 conda create -n dbt python=3.11
 conda activate dbt
-
-# Install dbt
-conda install -c conda-forge dbt-core dbt-snowflake
+pip install -U dbt-core dbt-snowflake
 ```
 
-### 3. Using pipx (Isolated Installation)
+**Official dbt Docs**: [Core Installation](https://docs.getdbt.com/docs/core/installation-overview)
 
-```bash
-# Install pipx if needed
-pip install pipx
-
-# Install dbt in isolated environment
-pipx install dbt-core dbt-snowflake
-```
-
-### 4. Using Docker
-
-```bash
-# Pull dbt Snowflake image
-docker pull ghcr.io/dbt-labs/dbt-snowflake:latest
-
-# Run dbt commands
-docker run -v $(pwd):/usr/app ghcr.io/dbt-labs/dbt-snowflake:latest dbt run
-```
+---
 
 ## Snowflake Configuration
 
 ### Configure profiles.yml
-snowflake_project:
+
+Location: `~/.dbt/profiles.yml`
+
+```yaml
+your_project:
   target: dev
   outputs:
     dev:
       type: snowflake
       account: xy12345.us-east-1
       user: dbt_user
-      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
+      authenticator: snowflake
+      token: "{{ env_var('DBT_ENV_SECRET_SNOWFLAKE_PAT') }}"
       role: TRANSFORMER
       database: ANALYTICS
       warehouse: TRANSFORMING
       schema: dbt_dev
       threads: 4
-```
-
-### Authentication Methods
-
-**Password Authentication (shown above)**
-```yaml
-password: "{{ env_var('DBT_PASSWORD') }}"
-```
-
-**Key Pair Authentication (Recommended for Production)**
-```yaml
-authenticator: snowflake_jwt
-private_key_path: /path/to/private_key.p8
-private_key_passphrase: "{{ env_var('SNOWFLAKE_PRIVATE_KEY_PASSPHRASE') }}"
-```
-
-**SSO Authentication**
-```yaml
-authenticator: externalbrowser
-```
-
-## Initial Project Setup
-
-### 1. Initialize New Project
-
-```bash
-# Interactive setup
-dbt init
-
-# Manual setup
-mkdir my_dbt_project
-cd my_dbt_project
-```
-
-### 2. Create Project Structure
-
-```
-my_dbt_project/
-├── dbt_project.yml
-├── profiles.yml (in ~/.dbt/ directory)
-├── models/
-│   ├── bronze/
-│   ├── silver/
-│   └── gold/
-├── tests/
-├── macros/
-├── snapshots/
-└── analyses/
-```
-
-### 3. Configure dbt_project.yml
-
-```yaml
-name: 'my_dbt_project'
-version: '1.0.0'
-config-version: 2
-
-profile: 'my_project'
-
-model-paths: ["models"]
-analysis-paths: ["analyses"]
-test-paths: ["tests"]
-seed-paths: ["seeds"]
-macro-paths: ["macros"]
-snapshot-paths: ["snapshots"]
-
-target-path: "target"
-clean-targets:
-  - "target"
-  - "dbt_packages"
-
-models:
-  my_dbt_project:
-    +materialized: view
-    +persist_docs:
-      relation: true
-      columns: true
-    
-    bronze:
-      +materialized: ephemeral
-      +tags: ["bronze", "staging"]
-    
-    silver:
-      +materialized: ephemeral
-      +tags: ["silver", "intermediate"]
-    
-    gold:
-      +materialized: table
-      +tags: ["gold", "marts"]
-```
-
-### 4. Configure profiles.yml
-
-Location: `~/.dbt/profiles.yml` (or `$DBT_PROFILES_DIR/profiles.yml`)
-
-```yaml
-my_project:
-  target: dev
-  outputs:
-    dev:
-      type: snowflake
-      account: "{{ env_var('DBT_ACCOUNT') }}"
-      user: "{{ env_var('DBT_USER') }}"
-      password: "{{ env_var('DBT_PASSWORD') }}"
-      role: TRANSFORMER
-      database: ANALYTICS_DEV
-      warehouse: TRANSFORMING
-      schema: "{{ env_var('DBT_USER') }}_dev"
-      threads: 4
     
     prod:
       type: snowflake
-      account: "{{ env_var('DBT_ACCOUNT') }}"
-      user: "{{ env_var('DBT_USER') }}"
-      password: "{{ env_var('DBT_PASSWORD') }}"
+      account: xy12345.us-east-1
+      user: dbt_user
+      authenticator: snowflake
+      token: "{{ env_var('DBT_ENV_SECRET_SNOWFLAKE_PAT') }}"
       role: TRANSFORMER
       database: ANALYTICS
       warehouse: TRANSFORMING
@@ -182,35 +68,93 @@ my_project:
       threads: 8
 ```
 
-## Environment Variables
+---
 
-### Create .env File
+## Authentication Methods
 
-```bash
-# .env file in project root (for Snowflake)
-SNOWFLAKE_ACCOUNT=xy12345.us-east-1
-SNOWFLAKE_USER=dbt_user
-SNOWFLAKE_PASSWORD=your_password
-SNOWFLAKE_DATABASE=ANALYTICS
-SNOWFLAKE_WAREHOUSE=TRANSFORMING
-SNOWFLAKE_ROLE=TRANSFORMER
+### Programmatic Access Token (PAT) - Recommended
+
+**Best for**: Production environments, CI/CD pipelines, service accounts
+
+Programmatic Access Tokens (PATs) are the recommended authentication method. They can be scoped to specific roles, have configurable expiration times, and can be easily rotated without changing passwords or key pairs.
+
+**Generate a PAT in Snowflake**:
+```sql
+-- Generate a token for yourself with 30-day expiration, restricted to TRANSFORMER role
+ALTER USER ADD PAT dbt_prod_token
+ROLE_RESTRICTION = TRANSFORMER
+DAYS_TO_EXPIRY = 30
+COMMENT = 'dbt production deployment';
 ```
 
-### Load Environment Variables
-
-```bash
-# Option 1: Export manually
-export SNOWFLAKE_PASSWORD=your_password
-
-# Option 2: Use python-dotenv
-pip install python-dotenv
-
-# Option 3: Use direnv
-direnv allow
-
-# Option 4: Use SnowSQL config
-# Snowflake CLI automatically loads from ~/.snowsql/config
+**Rotate a PAT in Snowflake**:
+```sql
+-- Rotate a token for yourself and set the previous PAT to expire after 24 hours
+ALTER USER ROTATE PAT dbt_prod_token
+EXPIRE_ROTATED_TOKEN_AFTER_HOURS = 24;
 ```
+
+**Configure in profiles.yml**:
+```yaml
+your_project:
+  target: prod
+  outputs:
+    prod:
+      type: snowflake
+      account: xy12345.us-east-1
+      user: dbt_user
+      authenticator: snowflake
+      password: "{{ env_var('DBT_ENV_SECRET_SNOWFLAKE_PAT') }}"
+      role: TRANSFORMER
+      database: ANALYTICS
+      warehouse: TRANSFORMING
+      schema: analytics
+      threads: 8
+```
+
+**Best Practices**:
+- Use `DBT_ENV_SECRET_` prefix for PAT environment variables (scrubs from logs and obfuscates in UI)
+- Store PAT secrets securely (use secrets manager)
+- Set appropriate expiration times (30-90 days)
+- Restrict tokens to specific roles
+- Rotate tokens regularly
+- Revoke tokens when no longer needed
+
+**Official Documentation**: 
+- [Snowflake Programmatic Access Tokens](https://docs.snowflake.com/en/user-guide/programmatic-access-tokens)
+- [dbt Environment Variables](https://docs.getdbt.com/docs/build/environment-variables#handling-secrets)
+
+---
+
+### SSO Authentication
+
+**Best for**: Local interactive developer sessions
+
+```yaml
+      authenticator: externalbrowser
+```
+
+---
+
+### Key Pair Authentication
+
+**Best for**: Environments where PAT is not available
+
+```yaml
+      authenticator: snowflake_jwt
+      private_key_path: /path/to/private_key.p8
+      private_key_passphrase: "{{ env_var('DBT_ENV_SECRET_PRIVATE_KEY_PASSPHRASE') }}"
+```
+
+**Official Snowflake Docs**: [Key Pair Authentication](https://docs.snowflake.com/en/user-guide/key-pair-auth)
+
+---
+
+### Password Authentication
+
+**Not Recommended**: Use PAT, SSO, or Key Pair authentication instead.
+
+---
 
 ## Package Installation
 
@@ -224,9 +168,6 @@ packages:
   - package: Snowflake-Labs/dbt_constraints
     version: [">=0.8.0", "<1.0.0"]
   
-  - package: calogica/dbt_expectations
-    version: [">=0.10.0", "<1.0.0"]
-  
   - package: brooklyn-data/dbt_artifacts
     version: [">=2.0.0", "<3.0.0"]
 ```
@@ -237,6 +178,10 @@ packages:
 dbt deps
 ```
 
+**Official dbt Docs**: [Package Management](https://docs.getdbt.com/docs/build/packages)
+
+---
+
 ## Verify Installation
 
 ### Test Connection
@@ -245,131 +190,141 @@ dbt deps
 dbt debug
 ```
 
-Expected output:
+**Expected output**:
 ```
 Connection:
   account: xy12345.us-east-1
   user: dbt_user
   database: ANALYTICS
   warehouse: TRANSFORMING
-  role: TRANSFORMER
-  schema: dbt_dev
   Connection test: OK connection ok
 ```
 
-### Run First Model
+### Common Connection Issues
 
-```bash
-# Create simple model
-echo "select 1 as id" > models/test_model.sql
+**Issue**: `dbt: command not found`
 
-# Run it
-dbt run --select test_model
-```
-
-## IDE Setup
-
-### VS Code
-
-1. **Install Extensions:**
-   - Python
-   - dbt Power User (recommended)
-   - SQL formatter
-
-2. **Configure Settings:**
-```json
-{
-    "python.defaultInterpreterPath": "/path/to/dbt/venv/bin/python",
-    "dbt.queryLimit": 500
-}
-```
-
-3. **Add .vscode/settings.json:**
-```json
-{
-    "files.associations": {
-        "*.sql": "jinja-sql"
-    }
-}
-```
-
-### DataGrip / IntelliJ
-
-1. Configure Python interpreter
-2. Install dbt plugin
-3. Configure database connection
-
-## Common Setup Issues
-
-### Issue: `dbt: command not found`
-**Solution:**
+**Solution**:
 ```bash
 # Ensure pip install location is in PATH
 echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
 source ~/.bashrc
 ```
 
-### Issue: Snowflake connection failures
-**Solution:**
-```bash
-# Debug connection
-dbt debug
+---
 
+**Issue**: Snowflake connection failures
+
+**Solution**:
+```bash
 # Check environment variables
-echo $SNOWFLAKE_PASSWORD
+echo $DBT_ENV_SECRET_SNOWFLAKE_PAT
 
 # Verify profiles.yml location
 ls ~/.dbt/profiles.yml
 
-# Test Snowflake connection directly
-snowsql -a xy12345.us-east-1 -u dbt_user
+# Test Snowflake connection directly with PAT
+snowsql -a xy12345.us-east-1 -u dbt_user --authenticator snowflake --token $DBT_ENV_SECRET_SNOWFLAKE_PAT
+
+# Verify PAT is active in Snowflake
+# Run in Snowflake:
+# SHOW USER PROGRAMMATIC ACCESS TOKENS FOR USER dbt_user;
 ```
 
-### Issue: Network/Firewall errors
-**Solution:**
+---
+
+**Issue**: SSL/Certificate errors with Snowflake
+
+**Solution**:
 ```bash
-# Check Snowflake connectivity
-ping xy12345.us-east-1.snowflakecomputing.com
+# Install system certificate support
+pip install pip-system-certs
 
-# Configure Snowflake proxy if needed
-# Add to profiles.yml:
-# client_session_keep_alive: true
-# private_link: true  # If using PrivateLink
+# For corporate firewalls
+pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org dbt-core dbt-snowflake
 ```
 
-### Issue: Package installation fails
-**Solution:**
+**Official Snowflake Docs**: [Network Issues](https://docs.snowflake.com/en/user-guide/troubleshooting-network)
+
+---
+
+**Issue**: Package installation fails
+
+**Solution**:
 ```bash
 # Clear package cache
 rm -rf dbt_packages/
 dbt deps
 
-# Or force reinstall
+# Force reinstall
 dbt deps --upgrade
 ```
 
-### Issue: SSL/Certificate errors with Snowflake
-**Solution:**
+---
+
+## Project Initialization
+
+### Initialize New Project
+
 ```bash
-# Install system certificate support
-pip install pip-system-certs
+# Interactive setup
+dbt init
 
-# For corporate firewalls, install with trusted hosts
-pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org dbt-core dbt-snowflake
-
-# Configure Snowflake to use OCSP fail-open mode
-# Add to profiles.yml:
-# insecure_mode: true  # Only for testing, not recommended for production
+# Manual setup
+mkdir my_dbt_project
+cd my_dbt_project
 ```
+
+### Project Structure
+
+```
+my_dbt_project/
+├── dbt_project.yml
+├── profiles.yml (in ~/.dbt/)
+├── models/
+│   ├── bronze/
+│   ├── silver/
+│   └── gold/
+├── tests/
+├── macros/
+└── packages.yml
+```
+
+---
+
+## dbt_project.yml Configuration
+
+```yaml
+name: 'my_dbt_project'
+version: '1.0.0'
+config-version: 2
+
+profile: 'my_project'
+
+model-paths: ["models"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+
+models:
+  my_dbt_project:
+    bronze:
+      +materialized: ephemeral
+      +tags: ["bronze", "staging"]
+    silver:
+      +materialized: ephemeral
+      +tags: ["silver"]
+    gold:
+      +materialized: table
+      +tags: ["gold", "marts"]
+```
+
+---
 
 ## Development Workflow
 
-### 1. Start New Feature
+### 1. Start Development
 
 ```bash
-# Create feature branch
-git checkout -b feature/new-model
-
 # Switch to dev target
 dbt run --target dev
 ```
@@ -382,20 +337,14 @@ dbt run --select model_name
 dbt test --select model_name
 ```
 
-### 3. Generate Documentation
+### 3. Deploy to Production
 
 ```bash
-dbt docs generate
-dbt docs serve
-```
-
-### 4. Deploy to Production
-
-```bash
-# Deploy
 dbt run --target prod
 dbt test --target prod
 ```
+
+---
 
 ## Best Practices
 
@@ -410,19 +359,7 @@ source dbt_venv/bin/activate
 pip install dbt-core dbt-snowflake
 ```
 
-### 2. Version Control
-
-```gitignore
-# .gitignore
-target/
-dbt_packages/
-logs/
-*.pyc
-.env
-.DS_Store
-```
-
-### 3. Separate Dev/Prod
+### 2. Separate Dev/Prod
 
 ```yaml
 # Use schema prefixes in dev
@@ -433,70 +370,19 @@ prod:
   schema: "analytics"
 ```
 
-### 4. Automate with Makefile
+### 3. Version Control
 
-```makefile
-# Makefile
-.PHONY: setup run test docs
-
-setup:
-	dbt deps
-	dbt debug
-
-run:
-	dbt run
-
-test:
-	dbt test
-
-docs:
-	dbt docs generate
-	dbt docs serve
-
-all: setup run test docs
+```gitignore
+# .gitignore
+target/
+dbt_packages/
+logs/
+.env
 ```
 
-## Platform-Specific Deployments
+---
 
-### dbt Cloud
-
-For managed dbt deployment, see [dbt Cloud documentation](https://docs.getdbt.com/docs/cloud/about-cloud/dbt-cloud-features).
-
-### dbt Projects on Snowflake
-
-For native Snowflake integration, use the `dbt-projects-snowflake` skill for detailed setup.
-
-### GitHub Actions
-
-```yaml
-# .github/workflows/dbt.yml
-name: dbt CI
-on: [pull_request]
-
-jobs:
-  dbt-run:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: '3.11'
-      - name: Install dbt
-        run: pip install dbt-core dbt-snowflake
-      - name: Run dbt
-        run: |
-          dbt deps
-          dbt run
-          dbt test
-        env:
-          SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
-          SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
-          SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
-```
-
-## Upgrade Path
-
-### Upgrade dbt Version
+## Upgrade dbt Version
 
 ```bash
 # Check current version
@@ -505,35 +391,18 @@ dbt --version
 # Upgrade to latest
 pip install --upgrade dbt-core dbt-snowflake
 
-# Or specific version
-pip install dbt-core==1.7.0 dbt-snowflake==1.7.0
+# Or specific version (compatible with dbt Projects on Snowflake)
+pip install dbt-core==1.9.4 dbt-snowflake==1.9.2
 ```
 
-### Migration Checklist
-
-- [ ] Review changelog for breaking changes
-- [ ] Test in development environment
-- [ ] Update dbt_project.yml version
-- [ ] Update packages.yml dependencies
-- [ ] Run full test suite
-- [ ] Update documentation
-
-## Resources
-
-### Official Documentation
-- [dbt Documentation](https://docs.getdbt.com/)
-- [dbt Discourse Community](https://discourse.getdbt.com/)
-- [dbt Slack Community](https://www.getdbt.com/community/join-the-community)
-
-### Learning Resources
-- [dbt Learn](https://learn.getdbt.com/)
-- [dbt Fundamentals](https://courses.getdbt.com/courses/fundamentals)
-- [dbt Best Practices](https://docs.getdbt.com/guides/best-practices)
+**Official dbt Docs**: [Version Migration Guides](https://docs.getdbt.com/docs/dbt-versions/core-upgrade)
 
 ---
 
-**Related Documentation:**
+## Related Documentation
+
+- [Official dbt Docs: Installation](https://docs.getdbt.com/docs/core/installation-overview)
+- [Official dbt Docs: profiles.yml](https://docs.getdbt.com/docs/core/connect-data-platform/profiles.yml)
+- [Official Snowflake Docs: dbt](https://docs.snowflake.com/en/user-guide/data-engineering/dbt)
 - `QUICK_REFERENCE.md` - Essential commands
 - `PROJECT_STRUCTURE.md` - Project organization
-- `PERFORMANCE_OPTIMIZATION.md` - Configuration tuning
-

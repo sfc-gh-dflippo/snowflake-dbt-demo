@@ -1,140 +1,16 @@
-# Medallion Architecture Project Structure
+# dbt Project Structure & Layer Models
 
-## Three-Layer Medallion Architecture
+## Overview
 
-The medallion architecture organizes data models into three layers of increasing refinement:
+The medallion architecture organizes data models into three layers of increasing refinement: Bronze (staging), Silver (intermediate), and Gold (marts). Each layer has specific naming conventions, materialization strategies, and transformation patterns.
 
-### Bronze Layer: Staging Models
+**Official dbt Documentation**: [How we structure our dbt projects](https://docs.getdbt.com/guides/best-practices/how-we-structure/1-guide-overview)
 
-**Purpose**: One-to-one relationship with source systems, basic data cleaning
-
-**Naming**: `stg_{source_name}__{table_name}`
-
-**Materialization**: `ephemeral` (compiled as CTEs)
-
-**Examples**:
-```
-bronze/
-├── crawl/
-│   ├── stg_tpc_h__customers.sql
-│   ├── stg_tpc_h__orders.sql
-│   └── stg_tpc_h__nations.sql
-├── walk/
-│   ├── stg_tpc_h__lineitem.sql
-│   └── stg_salesforce__accounts.sql
-└── run/
-    └── stg_orders_incremental.sql
-```
-
-**Rules**:
-- ✅ One source → One staging model
-- ✅ Light transformations only (rename, cast, clean)
-- ❌ No joins between sources
-- ❌ No business logic
-
-### Silver Layer: Intermediate Transformations
-
-**Purpose**: Reusable business logic and complex transformations
-
-**Naming**: `int_{entity}__{description}`
-
-**Materialization**: `ephemeral` (reusable logic) or `table` (complex computations)
-
-**Examples**:
-```
-silver/
-├── crawl/
-│   └── clean_nations.sql
-├── walk/
-│   ├── int_customers__with_orders.sql
-│   └── customer_segments.sql
-└── run/
-    ├── int_fx_rates__daily.sql
-    └── customer_clustering.py
-```
-
-**Rules**:
-- ✅ Reference staging + other intermediates
-- ✅ Contains business logic and aggregations
-- ✅ Reusable across multiple marts
-- ❌ No direct source references
-
-### Gold Layer: Business-Ready Marts
-
-**Purpose**: Final data products for consumption
-
-**Naming**: `dim_{entity}` (dimensions), `fct_{process}` (facts)
-
-**Materialization**: `table` (dimensions) or `incremental` (facts)
-
-**Examples**:
-```
-gold/
-├── crawl/
-│   ├── dim_current_year_orders.sql
-│   └── nation_summary.sql
-├── walk/
-│   ├── dim_customers.sql
-│   ├── dim_orders.sql
-│   └── customer_insights.sql
-└── run/
-    ├── fct_order_lines.sql
-    └── executive_dashboard.sql
-```
-
-**Rules**:
-- ✅ Reference staging, intermediate, other marts
-- ✅ Contains final business logic
-- ✅ Optimized for query performance
-- ✅ Well-documented for business users
-
-## Complexity Levels
-
-Each layer contains models at three complexity levels:
-
-**🥉 Crawl (Beginner)**
-- Basic staging and simple transformations
-- Simple aggregations and summaries
-- Few dependencies
-- Easy to understand
-
-**🥈 Walk (Intermediate)**
-- Complex staging with composite keys
-- Business logic and enrichment
-- Multiple joins and aggregations
-- Some advanced SQL features
-
-**🥇 Run (Advanced)**
-- Complex transformations and analytics
-- Incremental loading and snapshots
-- Python models and ML features
-- Advanced Jinja and macros
-
-## Configuration in dbt_project.yml
-
-```yaml
-models:
-  your_project:
-    +materialized: view
-    
-    bronze:
-      +materialized: ephemeral
-      +tags: ["bronze", "staging"]
-      +schema: bronze
-    
-    silver:
-      +tags: ["silver"]
-      +schema: silver
-    
-    gold:
-      +materialized: table
-      +tags: ["gold", "marts"]
-      +schema: gold
-```
+---
 
 ## Critical Architectural Rules
 
-Always enforce these rules:
+Always enforce these patterns:
 
 1. ✅ **No Direct Joins to Source** - Models reference staging (`ref('stg_*')`), never `source()` directly
 2. ✅ **One-to-One Staging** - Each source table has exactly ONE staging model
@@ -143,33 +19,73 @@ Always enforce these rules:
 5. ✅ **Use ref() and source()** - No hard-coded table references
 6. ✅ **Folder-Level Configuration** - Set common settings in dbt_project.yml
 
-## Code Examples by Layer
+---
 
-### Bronze Layer Example
+## Bronze Layer: Staging Models
+
+**Purpose**: One-to-one relationship with source tables. Light cleaning and standardization only.
+
+**Materialization**: `ephemeral` (compiled as CTEs)
+
+**Naming**: `stg_{source}__{table}.sql`
+
+### Template
 ```sql
 -- models/bronze/stg_tpc_h__customers.sql
 {{ config(materialized='ephemeral') }}
 
-with source as (
-    select * from {{ source('tpc_h', 'customer') }}
-),
-
-renamed as (
-    select
-        c_custkey as customer_id,
-        c_name as customer_name,
-        c_address as customer_address,
-        c_nationkey as nation_id,
-        c_phone as phone_number,
-        c_acctbal as account_balance,
-        current_timestamp() as dbt_loaded_at
-    from source
-)
-
-select * from renamed
+select
+    -- Primary key (renamed)
+    c_custkey as customer_id,
+    
+    -- Attributes (cast and renamed)
+    c_name as customer_name,
+    c_address as customer_address,
+    c_phone as phone_number,
+    c_acctbal as account_balance,
+    
+    -- Metadata
+    current_timestamp() as dbt_loaded_at
+    
+from {{ source('tpc_h', 'customer') }}
 ```
 
-### Silver Layer Example
+### Rules
+
+✅ **DO**:
+- One source table → One staging model
+- Reference sources using `{{ source() }}`
+- Rename columns to standard naming
+- Cast data types
+- Basic cleaning (trim, upper/lower)
+
+❌ **DON'T**:
+- Join between sources
+- Add business logic
+- Aggregate data
+- Hard-code table names
+
+### Testing
+```yaml
+models:
+  - name: stg_tpc_h__customers
+    columns:
+      - name: customer_id
+        tests:
+          - dbt_constraints.primary_key
+```
+
+---
+
+## Silver Layer: Intermediate Models
+
+**Purpose**: Reusable business logic and complex transformations. Sits between staging and marts.
+
+**Materialization**: `ephemeral` (reusable logic) or `table` (complex computations)
+
+**Naming**: `int_{entity}__{description}.sql`
+
+### Template
 ```sql
 -- models/silver/int_customers__with_orders.sql
 {{ config(materialized='ephemeral') }}
@@ -182,133 +98,147 @@ orders as (
     select * from {{ ref('stg_tpc_h__orders') }}
 ),
 
-aggregated as (
+customer_metrics as (
     select
-        customers.customer_id,
-        customers.customer_name,
-        count(orders.order_id) as total_orders,
-        sum(orders.total_price) as lifetime_value,
-        min(orders.order_date) as first_order_date,
-        max(orders.order_date) as most_recent_order_date
-    from customers
-    left join orders on customers.customer_id = orders.customer_id
-    group by customers.customer_id, customers.customer_name
+        customer_id,
+        count(*) as total_orders,
+        sum(order_total) as lifetime_value,
+        min(order_date) as first_order_date
+    from orders
+    group by customer_id
 )
 
-select * from aggregated
+select
+    c.customer_id,
+    c.customer_name,
+    coalesce(m.total_orders, 0) as total_orders,
+    coalesce(m.lifetime_value, 0) as lifetime_value,
+    m.first_order_date
+from customers c
+left join customer_metrics m on c.customer_id = m.customer_id
 ```
 
-### Gold Layer Example (Dimension)
+### Rules
+
+✅ **DO**:
+- Reference staging + other intermediate models
+- Add business logic and aggregations
+- Create reusable components
+- Use CTEs for clarity
+
+❌ **DON'T**:
+- Reference sources directly
+- Add final presentation logic
+- Create one-time-use models
+
+### Testing
+```yaml
+models:
+  - name: int_customers__with_orders
+    columns:
+      - name: customer_id
+        tests:
+          - dbt_constraints.primary_key
+      - name: total_orders
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+```
+
+---
+
+## Gold Layer: Marts Models
+
+**Purpose**: Business-ready data products optimized for BI tools and end users.
+
+**Materialization**: `table` (dimensions) or `incremental` (large facts)
+
+**Naming**: `dim_{entity}` (dimensions), `fct_{process}` (facts)
+
+### Dimension Template
 ```sql
 -- models/gold/dim_customers.sql
 {{ config(materialized='table') }}
 
 with customers as (
     select * from {{ ref('int_customers__with_orders') }}
-),
-
-final as (
-    select
-        customers.customer_id,
-        customers.customer_name,
-        customers.total_orders,
-        customers.lifetime_value,
-        customers.first_order_date,
-        customers.most_recent_order_date,
-        
-        -- Business classification
-        case 
-            when customers.lifetime_value >= 5000 then 'gold'
-            when customers.lifetime_value >= 1000 then 'silver'
-            else 'bronze'
-        end as customer_tier,
-        
-        current_timestamp() as dbt_updated_at
-        
-    from customers
 )
 
-select * from final
+select
+    -- Primary key
+    customer_id,
+    
+    -- Attributes
+    customer_name,
+    customer_email,
+    
+    -- Metrics
+    total_orders,
+    lifetime_value,
+    first_order_date,
+    
+    -- Business classification
+    case 
+        when lifetime_value >= 5000 then 'gold'
+        when lifetime_value >= 1000 then 'silver'
+        else 'bronze'
+    end as customer_tier,
+    
+    -- Metadata
+    current_timestamp() as dbt_updated_at
+from customers
 ```
 
-### Gold Layer Example (Fact - Incremental)
+### Fact Template
 ```sql
 -- models/gold/fct_orders.sql
 {{ config(
     materialized='incremental',
     unique_key='order_id',
-    on_schema_change='fail'
+    cluster_by=['order_date', 'customer_id']
 ) }}
-
-with orders as (
-    select * from {{ ref('stg_tpc_h__orders') }}
-    
-    {% if is_incremental() %}
-        where order_date >= (select max(order_date) from {{ this }})
-    {% endif %}
-)
 
 select
     order_id,
     customer_id,
     order_date,
     order_status,
-    total_price,
-    priority,
+    order_total,
     current_timestamp() as dbt_updated_at
-from orders
+from {{ ref('stg_tpc_h__orders') }}
+
+{% if is_incremental() %}
+    where order_date > (select max(order_date) from {{ this }})
+{% endif %}
 ```
 
-## Testing by Layer
+### Rules
 
-### Bronze Layer Testing
-```yaml
-# models/bronze/_models.yml
-models:
-  - name: stg_tpc_h__customers
-    columns:
-      - name: customer_id
-        tests:
-          - not_null
-          - unique
-```
+✅ **DO**:
+- Reference staging, intermediate, and other marts
+- Add final business logic
+- Optimize for query performance (clustering)
+- Test with dbt_constraints
+- Document for business users
 
-### Silver Layer Testing
-```yaml
-# models/silver/_models.yml
-models:
-  - name: int_customers__with_orders
-    columns:
-      - name: customer_id
-        tests:
-          - not_null
-          - unique
-      - name: total_orders
-        tests:
-          - not_null
-```
+❌ **DON'T**:
+- Reference sources directly
+- Create unnecessary complexity
 
-### Gold Layer Testing (with dbt_constraints)
+### Testing (with dbt_constraints)
 ```yaml
-# models/gold/_models.yml
 models:
   - name: dim_customers
     columns:
       - name: customer_id
         tests:
           - dbt_constraints.primary_key
-      
-      - name: customer_tier
-        tests:
-          - accepted_values:
-              values: ['bronze', 'silver', 'gold']
-  
+
   - name: fct_orders
     columns:
       - name: order_id
         tests:
           - dbt_constraints.primary_key
-      
       - name: customer_id
         tests:
           - dbt_constraints.foreign_key:
@@ -316,9 +246,45 @@ models:
               pk_column_name: customer_id
 ```
 
+---
+
+## Naming Conventions Summary
+
+| Layer | Prefix | Example | Purpose |
+|-------|--------|---------|---------|
+| **Bronze** | `stg_` | `stg_tpc_h__customers` | Clean source data |
+| **Silver** | `int_` | `int_customers__with_orders` | Business logic |
+| **Gold - Dimensions** | `dim_` | `dim_customers` | Business entities |
+| **Gold - Facts** | `fct_` | `fct_orders` | Business events |
+
+---
+
+## Configuration in dbt_project.yml
+
+```yaml
+models:
+  your_project:
+    bronze:
+      +materialized: ephemeral
+      +tags: ["bronze", "staging"]
+      +schema: bronze
+    
+    silver:
+      +materialized: ephemeral
+      +tags: ["silver"]
+      +schema: silver
+    
+    gold:
+      +materialized: table
+      +tags: ["gold", "marts"]
+      +schema: gold
+```
+
+---
+
 ## Tag Inheritance Strategy
 
-**✅ LEVERAGE: dbt's additive tag inheritance**
+✅ **LEVERAGE**: dbt's additive tag inheritance
 
 Tags accumulate hierarchically per the [dbt documentation](https://docs.getdbt.com/reference/resource-configs/tags). Child folders inherit all parent tags automatically.
 
@@ -326,34 +292,50 @@ Tags accumulate hierarchically per the [dbt documentation](https://docs.getdbt.c
 # ✅ GOOD: Avoid duplicate tags
 bronze:
   +tags: ["bronze", "staging"]
-  crawl:
-    +tags: ["crawl", "beginner"]  # Inherits: bronze, staging, crawl, beginner
+  subfolder:
+    +tags: ["subfolder"]  # Inherits: bronze, staging, subfolder
 
 # ❌ BAD: Redundant parent tags
 bronze:
   +tags: ["bronze", "staging"] 
-  crawl:
-    +tags: ["bronze", "staging", "crawl", "beginner"]  # Duplicates parent tags
+  subfolder:
+    +tags: ["bronze", "staging", "subfolder"]  # Duplicates parent tags
 ```
 
-**Common Selection Patterns:**
+**Common Selection Patterns**:
 ```bash
-dbt run --select tag:bronze tag:crawl  # Beginner bronze models
-dbt run --select tag:gold tag:run      # Advanced gold models
+dbt run --select tag:bronze     # All bronze models
+dbt run --select tag:gold       # All gold models
+dbt run --select tag:staging    # Alternative to bronze
 ```
-
-**Best Practices:**
-- Only define tags at the folder level where they're introduced
-- Let child folders inherit parent tags automatically
-- Use tag combinations for precise model selection
-- Avoid repeating inherited tags in child configurations
 
 ---
 
-## Additional Resources
+## Folder Structure
 
-- **`STAGING_MODELS.md`** - Detailed bronze layer patterns
-- **`INTERMEDIATE_MODELS.md`** - Silver layer transformation patterns
-- **`MARTS_MODELS.md`** - Gold layer dimension and fact patterns
-- **`MATERIALIZATIONS.md`** - Choosing the right materialization
-- **`TESTING_STRATEGY.md`** - Comprehensive testing guide
+```
+models/
+├── bronze/          # Staging layer - one-to-one with sources
+│   ├── stg_tpc_h__customers.sql
+│   ├── stg_tpc_h__orders.sql
+│   └── stg_tpc_h__lineitem.sql
+├── silver/         # Intermediate layer - business logic
+│   ├── int_customers__with_orders.sql
+│   ├── int_fx_rates__daily.sql
+│   └── customer_segments.sql
+└── gold/           # Marts layer - business-ready analytics
+    ├── dim_customers.sql
+    ├── dim_products.sql
+    ├── fct_orders.sql
+    └── fct_order_lines.sql
+```
+
+---
+
+## Related Documentation
+
+- [Official dbt Docs: Best Practices](https://docs.getdbt.com/guides/best-practices)
+- `MATERIALIZATIONS.md` - Choosing the right materialization
+- `TESTING_STRATEGY.md` - dbt_constraints testing
+- `NAMING_CONVENTIONS.md` - Complete naming standards
+- `PERFORMANCE_OPTIMIZATION.md` - Snowflake optimizations

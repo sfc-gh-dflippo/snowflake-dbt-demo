@@ -84,7 +84,7 @@ When users ask for help with dbt:
 4. Provide template with source macro
 5. Add basic tests (primary key, not_null)
 
-**Reference**: Point to `references/STAGING_MODELS.md`
+**Reference**: Point to `references/PROJECT_STRUCTURE.md` (Bronze Layer section)
 
 #### Task 2: "How do I make this model incremental?"
 
@@ -95,7 +95,7 @@ When users ask for help with dbt:
 4. Provide is_incremental() logic
 5. Add performance optimizations (clustering, partitioning)
 
-**Reference**: Point to `references/INCREMENTAL_MODELS.md`
+**Reference**: Point to `references/MATERIALIZATIONS.md` (Incremental section)
 
 #### Task 3: "What tests should I add?"
 
@@ -134,20 +134,13 @@ When users ask for help with dbt:
 
 ### Core References
 
-- **`references/PROJECT_STRUCTURE.md`** - Medallion architecture, folder organization, dependencies
+- **`references/PROJECT_STRUCTURE.md`** - Medallion architecture, Bronze/Silver/Gold layer patterns, templates, critical rules
+- **`references/MATERIALIZATIONS.md`** - Choosing ephemeral, view, table, incremental + snapshots + Python models
 - **`references/NAMING_CONVENTIONS.md`** - Model, column, and file naming standards
-- **`references/MATERIALIZATIONS.md`** - Choosing ephemeral, view, table, incremental
-- **`references/STAGING_MODELS.md`** - Bronze layer staging patterns
-- **`references/INTERMEDIATE_MODELS.md`** - Silver layer transformation patterns
-- **`references/MARTS_MODELS.md`** - Gold layer dimension and fact patterns
 - **`references/TESTING_STRATEGY.md`** - dbt_constraints, generic, singular tests
-- **`references/INCREMENTAL_MODELS.md`** - Incremental strategies, is_incremental() patterns
-- **`references/PERFORMANCE_OPTIMIZATION.md`** - Clustering, warehouses, query optimization
-- **`references/JINJA_MACROS.md`** - Jinja templating, custom macros, loops
-- **`references/PYTHON_MODELS.md`** - Python models for ML and advanced analytics
-- **`references/SNAPSHOTS.md`** - SCD Type 2, historical tracking
-- **`references/SETUP_GUIDE.md`** - Installation across all platforms
-- **`references/QUICK_REFERENCE.md`** - Command cheatsheet, common patterns
+- **`references/PERFORMANCE_OPTIMIZATION.md`** - Snowflake-specific clustering, warehouses, query optimization
+- **`references/SETUP_GUIDE.md`** - Installation and common setup challenges
+- **`references/QUICK_REFERENCE.md`** - Command cheatsheet, Jinja patterns, common patterns
 
 ### Using References Effectively
 
@@ -204,11 +197,11 @@ When users ask for help with dbt:
 ## Model Templates
 
 For complete code examples and templates, see:
-- **Staging models**: `references/STAGING_MODELS.md`
-- **Intermediate models**: `references/INTERMEDIATE_MODELS.md`
-- **Dimension models**: `references/MARTS_MODELS.md`
-- **Fact models**: `references/MARTS_MODELS.md`
-- **Incremental models**: `references/INCREMENTAL_MODELS.md`
+- **Staging models**: `references/PROJECT_STRUCTURE.md` (Bronze Layer)
+- **Intermediate models**: `references/PROJECT_STRUCTURE.md` (Silver Layer)
+- **Dimension models**: `references/PROJECT_STRUCTURE.md` (Gold Layer - Dimensions)
+- **Fact models**: `references/PROJECT_STRUCTURE.md` (Gold Layer - Facts)
+- **Incremental models**: `references/MATERIALIZATIONS.md` (Incremental section)
 
 ## Troubleshooting Quick Tips
 

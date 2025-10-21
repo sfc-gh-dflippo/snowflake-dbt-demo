@@ -1,120 +1,96 @@
 # Performance Optimization Guide for Snowflake
 
-## Core Optimization Strategies
+## Overview
 
-Performance optimization in dbt involves choosing the right materializations, optimizing SQL queries, and leveraging Snowflake-specific features.
+Performance optimization in dbt involves choosing the right materializations, leveraging Snowflake-specific features, and optimizing query patterns.
+
+**Official Snowflake Documentation**: [Query Performance](https://docs.snowflake.com/en/user-guide/performance-query)
+
+---
 
 ## Materialization Performance
 
 ### Choose the Right Materialization
 
-| Materialization | Build Time | Query Time | Storage | Best For |
-|-----------------|------------|------------|---------|----------|
-| **ephemeral** | Fast | Varies | None | CTEs, staging, reusable logic |
-| **view** | Instant | Slow | Minimal | Simple transformations, always-fresh |
-| **table** | Slow | Fast | High | Complex logic, frequent queries |
-| **incremental** | Fast | Fast | Medium | Large datasets, append patterns |
+| Materialization | Build Time | Query Time | Best For |
+|-----------------|------------|------------|----------|
+| **ephemeral** | Fast | Varies | Staging, reusable logic |
+| **view** | Instant | Slow | Always-fresh simple transforms |
+| **table** | Slow | Fast | Dimensions, complex logic |
+| **incremental** | Fast | Fast | Large facts (millions+ rows) |
 
-### Materialization Guidelines
+**Guidelines**:
+- Use `ephemeral` for staging (fast, no storage)
+- Use `table` for dimensions
+- Use `incremental` for large facts
+
+See `MATERIALIZATIONS.md` for details.
+
+---
+
+### When to Change Materializations
+
+**Change ephemeral/view to table when:**
+
+1. **Memory Constraints**: Queries are failing or running slowly due to memory limitations
+   ```sql
+   -- Change from ephemeral to table
+   {{ config(materialized='table') }}
+   ```
+
+2. **CTE Reuse**: The same intermediate model is referenced multiple times downstream
+   ```sql
+   -- If int_customers__metrics is used by 3+ downstream models
+   {{ config(materialized='table') }}  -- Materialize to avoid re-computation
+   ```
+
+3. **Functions on Join Columns**: Using transformations in JOIN conditions that prevent optimization
+   ```sql
+   -- ❌ BAD: Functions on join columns (forces full table scans)
+   select *
+   from {{ ref('stg_customers') }} c
+   join {{ ref('stg_orders') }} o
+     on upper(trim(c.customer_email)) = upper(trim(o.customer_email))
+   
+   -- ✅ GOOD: Materialize cleaned columns as a table first
+   {{ config(materialized='table') }}
+   
+   select
+     customer_id,
+     upper(trim(customer_email)) as customer_email_clean  -- Pre-compute once
+   from {{ ref('stg_customers') }}
+   ```
+
+**Change table to incremental when:**
+
+1. **Large Data Volumes**: Table has millions+ rows and full refreshes take too long
+2. **Append-Only Data**: Event logs, clickstreams, transaction history
+3. **Time-Based Updates**: Daily/hourly data loads with time-based filtering
 
 ```sql
--- Use ephemeral for staging (fast, no storage)
-{{ config(materialized='ephemeral') }}
-
--- Use table for complex intermediate models
-{{ config(materialized='table') }}
-
--- Use incremental for large facts (millions+ rows)
 {{ config(
     materialized='incremental',
-    unique_key='order_id'
+    unique_key='order_id',
+    cluster_by=['order_date']
 ) }}
+
+select * from {{ ref('stg_orders') }}
+
+{% if is_incremental() %}
+    where order_date > (select max(order_date) from {{ this }})
+{% endif %}
 ```
 
-## Query Optimization
+**Performance Impact**:
+- Ephemeral → Table: Trades storage for compute efficiency
+- Table → Incremental: Reduces build time at cost of added complexity
 
-### 1. Efficient Joins
-
-```sql
--- ✅ Good: Filter before joining
-with filtered_orders as (
-    select * 
-    from {{ ref('stg_orders') }}
-    where order_date >= '2024-01-01'
-),
-
-customers as (
-    select * from {{ ref('dim_customers') }}
-)
-
-select
-    c.customer_id,
-    count(o.order_id) as order_count
-from customers c
-join filtered_orders o on c.customer_id = o.customer_id
-group by c.customer_id
-```
-
-```sql
--- ❌ Bad: Join then filter
-select
-    c.customer_id,
-    count(o.order_id) as order_count
-from {{ ref('dim_customers') }} c
-join {{ ref('stg_orders') }} o on c.customer_id = o.customer_id
-where o.order_date >= '2024-01-01'
-group by c.customer_id
-```
-
-### 2. Window Function Optimization
-
-```sql
--- ✅ Good: Single window function
-select
-    customer_id,
-    order_date,
-    row_number() over (partition by customer_id order by order_date desc) as order_rank
-from {{ ref('stg_orders') }}
-qualify order_rank <= 5  -- Snowflake/Databricks QUALIFY clause
-```
-
-```sql
--- ❌ Bad: Subquery for ranking
-select *
-from (
-    select
-        customer_id,
-        order_date,
-        row_number() over (partition by customer_id order by order_date desc) as order_rank
-    from {{ ref('stg_orders') }}
-) ranked
-where order_rank <= 5
-```
-
-### 3. Aggregation Optimization
-
-```sql
--- ✅ Good: Pre-aggregate before joining
-with order_metrics as (
-    select
-        customer_id,
-        count(*) as order_count,
-        sum(order_total) as lifetime_value
-    from {{ ref('stg_orders') }}
-    group by customer_id
-)
-
-select
-    c.*,
-    coalesce(m.order_count, 0) as order_count,
-    coalesce(m.lifetime_value, 0) as lifetime_value
-from {{ ref('dim_customers') }} c
-left join order_metrics m on c.customer_id = m.customer_id
-```
+---
 
 ## Snowflake-Specific Optimizations
 
 ### Clustering Keys
+
 ```sql
 {{ config(
     materialized='table',
@@ -122,27 +98,93 @@ left join order_metrics m on c.customer_id = m.customer_id
 ) }}
 ```
 
-**Best Practices:**
+**Best Practices**:
 - Use 1-4 columns
 - Order columns by cardinality (low to high)
 - Include common WHERE clause columns
 - Include JOIN key columns
 
+**Official Snowflake Docs**: [Clustering Keys](https://docs.snowflake.com/en/user-guide/tables-clustering-keys)
+
+---
+
 ### Warehouse Sizing
+
 ```sql
 {{ config(
     snowflake_warehouse='LARGE_WH'  -- For complex transformations
 ) }}
 ```
 
-**Sizing Guidelines:**
-- **X-Small**: Simple queries, small datasets
-- **Small**: Standard development
-- **Medium**: Larger dimensions, smaller facts
-- **Large**: Complex transformations, large facts and very large dimensions
-- **X-Large+**: Heavy aggregations, very large datasets
+**Optimal Sizing Goal: ~500 Micropartitions (MPs) per Node**
+
+Snowflake stores data in micropartitions (~16MB compressed). The warehouse sizing goal is to maintain approximately 500 MPs scanned per node for optimal performance. Too few MPs per node underutilizes the warehouse; too many causes compute skew and spilling.
+
+**Sizing Formula**:
+```
+Warehouse Size Needed = Total MPs Scanned / 500
+```
+
+**Quick Reference Table** (MPs scanned → Recommended warehouse):
+
+| MPs Scanned | Warehouse Size | Nodes | MPs per Node |
+|-------------|---------------|-------|--------------|
+| 500 | XS | 1 | 500 |
+| 1,000 | S | 2 | 500 |
+| 2,000 | M | 4 | 500 |
+| 4,000 | L | 8 | 500 |
+| 8,000 | XL | 16 | 500 |
+| 16,000 | 2XL | 32 | 500 |
+| 32,000 | 3XL | 64 | 500 |
+| 64,000 | 4XL | 128 | 500 |
+
+**How to Find MPs Scanned**:
+```sql
+-- Check query profile after running model
+SELECT 
+    query_id,
+    total_elapsed_time,
+    partitions_scanned
+FROM snowflake.account_usage.query_history
+WHERE start_time >= dateadd(day, -1, current_timestamp())
+and query_text ILIKE '%your_model_name%'
+ORDER BY start_time DESC
+LIMIT 1;
+```
+
+**Practical Guidelines**:
+- **Under-sized**: If MPs per node > 1000, consider larger warehouse
+- **Over-sized**: If MPs per node < 250, consider smaller warehouse  
+- **Development**: Start with XS-S, profile, then adjust
+- **Production**: Size based on actual MP scan metrics from query history
+
+**Official Snowflake Docs**: [Warehouse Considerations](https://docs.snowflake.com/en/user-guide/warehouses-considerations)
+
+---
+
+### Generation 2 Standard Warehouses
+
+Gen2 standard warehouses offer improved performance for most dbt workloads.
+
+**Why Gen2 is Better for dbt Projects**:
+- **Faster transformations**: Enhanced DELETE, UPDATE, MERGE, adnd table scan operations (critical for incremental models and snapshots)
+- **Delta Micropartitions**: Snowflake does not rewrite entire micropartitions for changed data.
+- **Faster Underlying Hardware**: You can expect the majority of queries finish faster, and you can do more work at the same time. 
+- **Analytics optimization**: Purpose-built for data engineering and analytics workloads
+
+**Converting to Gen2**:
+```sql
+-- Run directly in Snowflake
+ALTER WAREHOUSE TRANSFORMING_WH 
+SET RESOURCE_CONSTRAINT = STANDARD_GEN_2;
+```
+
+**Official Snowflake Docs**: [Gen2 Standard Warehouses](https://docs.snowflake.com/en/user-guide/warehouses-gen2)
+
+---
 
 ### Search Optimization Service
+
 ```sql
 {{ config(
     post_hook=[
@@ -151,48 +193,48 @@ left join order_metrics m on c.customer_id = m.customer_id
 ) }}
 ```
 
+**When to Use**: Point lookups, selective filters on large tables
+
+**Official Snowflake Docs**: [Search Optimization](https://docs.snowflake.com/en/user-guide/search-optimization-service)
+
+---
+
 ### Query Acceleration Service
 
+Query Acceleration is configured at the warehouse level, not in dbt models:
+
 ```sql
-{{ config(
-    post_hook=[
-        "alter table {{ this }} set enable_query_acceleration = true"
-    ]
-) }}
+-- Run directly in Snowflake
+ALTER WAREHOUSE TRANSFORMING_WH 
+SET ENABLE_QUERY_ACCELERATION = TRUE;
+
+-- Set scale factor (optional)
+ALTER WAREHOUSE TRANSFORMING_WH 
+SET QUERY_ACCELERATION_MAX_SCALE_FACTOR = 8;
 ```
 
-**When to Use:**
+**When to Use**:
 - Queries with unpredictable data volume
 - Ad-hoc analytics workloads
 - Queries that scan large portions of tables
+
+**Official Snowflake Docs**: [Query Acceleration](https://docs.snowflake.com/en/user-guide/query-acceleration-service)
+
+---
 
 ### Result Caching
 
 Snowflake automatically caches query results for 24 hours.
 
-**Best Practices:**
+**Best Practices**:
 - Use consistent query patterns to leverage cache
 - Avoid unnecessary `current_timestamp()` in WHERE clauses
-- Use `RESULT_SCAN()` for repeated queries
 
-### Zero-Copy Cloning
-
-```sql
-{{ config(
-    post_hook=[
-        "create or replace table {{ this }}_backup clone {{ this }}"
-    ]
-) }}
-```
-
-**Use Cases:**
-- Testing schema changes
-- Creating dev/test environments
-- Quick backups before major changes
+---
 
 ## Incremental Model Performance
 
-### Efficient Incremental WHERE Clauses
+### Efficient WHERE Clauses
 
 ```sql
 {% if is_incremental() %}
@@ -201,9 +243,6 @@ Snowflake automatically caches query results for 24 hours.
     
     -- ✅ Good: With lookback for late data
     where order_date >= dateadd(day, -3, (select max(order_date) from {{ this }}))
-    
-    -- ✅ Good: Updated timestamp
-    where updated_at > (select max(updated_at) from {{ this }})
 {% endif %}
 ```
 
@@ -214,47 +253,59 @@ Snowflake automatically caches query results for 24 hours.
 | **append** | Fastest | Immutable event data |
 | **merge** | Medium | Updateable records |
 | **delete+insert** | Fast | Partitioned data |
-| **insert_overwrite** | Fastest | Full partition refresh |
 
-## CTE Optimization
+---
 
-### Proper CTE Structure
+## Query Optimization Tips
+
+### Filter Before Joining
 
 ```sql
--- ✅ Good: Reusable CTEs with clear purpose
-with
--- Import CTEs
-customers as (
-    select * from {{ ref('stg_customers') }}
-),
-
-orders as (
+-- ✅ Good: Filter before joining
+with filtered_orders as (
     select * from {{ ref('stg_orders') }}
-),
-
--- Logical CTEs
-customer_metrics as (
-    select
-        customer_id,
-        count(*) as order_count
-    from orders
-    group by customer_id
-),
-
--- Final CTE
-final as (
-    select
-        c.customer_id,
-        c.customer_name,
-        m.order_count
-    from customers c
-    left join customer_metrics m on c.customer_id = m.customer_id
+    where order_date >= '2024-01-01'
 )
 
-select * from final
+select c.customer_id, count(o.order_id)
+from {{ ref('dim_customers') }} c
+join filtered_orders o on c.customer_id = o.customer_id
+group by c.customer_id
 ```
 
-## Development vs Production Optimization
+### Use QUALIFY for Window Functions
+
+```sql
+-- ✅ Good: Snowflake QUALIFY clause
+select
+    customer_id,
+    order_date,
+    row_number() over (partition by customer_id order by order_date desc) as rn
+from {{ ref('stg_orders') }}
+qualify rn <= 5
+```
+
+### Pre-Aggregate Before Joining
+
+```sql
+-- ✅ Good: Aggregate first, then join
+with order_metrics as (
+    select
+        customer_id,
+        count(*) as order_count,
+        sum(order_total) as lifetime_value
+    from {{ ref('stg_orders') }}
+    group by customer_id
+)
+
+select c.*, coalesce(m.order_count, 0) as order_count
+from {{ ref('dim_customers') }} c
+left join order_metrics m on c.customer_id = m.customer_id
+```
+
+---
+
+## Development vs Production
 
 ### Limit Data in Development
 
@@ -267,7 +318,7 @@ select * from final
 {% endmacro %}
 ```
 
-**Usage:**
+**Usage**:
 ```sql
 select * from {{ ref('stg_orders') }}
 {{ limit_data_in_dev('order_date') }}
@@ -283,16 +334,15 @@ models:
       +materialized: "{{ 'view' if target.name == 'dev' else 'table' }}"
 ```
 
+---
+
 ## Query Profiling
 
-### Analyze Query Plans in Snowflake
+### Snowflake Query Profile
 
 ```sql
--- View query profile in Snowflake UI
+-- View query profile in Snowflake UI:
 -- Query History → Select query → Query Profile tab
-
--- Use EXPLAIN to see query plan
-explain select * from {{ ref('dim_customers') }};
 
 -- Query history with performance metrics
 select
@@ -318,89 +368,14 @@ dbt run --select model_name --log-level debug
 cat target/run_results.json | jq '.results[].execution_time'
 ```
 
-## Monitoring Performance
-
-### Track Model Run Times
-
-```sql
--- Query dbt_artifacts for slow models
-select
-    model_name,
-    avg(total_node_runtime) as avg_runtime_seconds,
-    max(total_node_runtime) as max_runtime_seconds
-from {{ ref('model_executions') }}
-where run_started_at >= dateadd(day, -30, current_date())
-group by model_name
-having avg(total_node_runtime) > 60  -- Models taking > 1 minute
-order by avg_runtime_seconds desc
-```
-
-## Common Performance Anti-Patterns
-
-### ❌ Anti-Pattern 1: Cartesian Joins
-
-```sql
--- ❌ Bad: Cartesian join
-select *
-from {{ ref('customers') }} c,
-     {{ ref('products') }} p
-
--- ✅ Good: Explicit join condition
-select *
-from {{ ref('customers') }} c
-cross join {{ ref('products') }} p
-where c.segment = 'VIP'  -- Add appropriate filters
-```
-
-### ❌ Anti-Pattern 2: Nested Subqueries
-
-```sql
--- ❌ Bad: Multiple nested subqueries
-select
-    customer_id,
-    (select max(order_date) from orders o where o.customer_id = c.customer_id) as last_order
-from customers c
-
--- ✅ Good: Use CTEs and joins
-with customer_orders as (
-    select
-        customer_id,
-        max(order_date) as last_order
-    from orders
-    group by customer_id
-)
-
-select
-    c.customer_id,
-    co.last_order
-from customers c
-left join customer_orders co on c.customer_id = co.customer_id
-```
-
-### ❌ Anti-Pattern 3: DISTINCT Without Analysis
-
-```sql
--- ❌ Bad: DISTINCT to hide data quality issues
-select distinct
-    customer_id,
-    customer_name
-from {{ ref('some_model') }}
-
--- ✅ Good: Fix root cause, add unique test
-select
-    customer_id,
-    customer_name
-from {{ ref('some_model') }}
--- Add test: unique customer_id
-```
+---
 
 ## Performance Checklist
 
 ### Model-Level
 - [ ] Appropriate materialization chosen
 - [ ] Clustering/partitioning applied for large tables
-- [ ] Incremental strategy optimized for use case
-- [ ] CTEs structured efficiently
+- [ ] Incremental strategy optimized
 - [ ] WHERE clauses filter early
 - [ ] JOINs are necessary and optimized
 
@@ -409,45 +384,14 @@ from {{ ref('some_model') }}
 - [ ] Large facts are incremental
 - [ ] Dev environment uses limited data
 - [ ] Warehouse sizing appropriate
-- [ ] dbt_artifacts monitoring in place
 - [ ] Regular performance reviews scheduled
-
-## Snowflake-Specific Best Practices
-
-### Micro-Partitions
-
-Snowflake automatically partitions data into micro-partitions.
-
-**Optimization Tips:**
-- Data is automatically sorted within micro-partitions
-- Clustering keys optimize micro-partition pruning
-- Smaller micro-partitions = better pruning
-
-### Multi-Cluster Warehouses
-
-```yaml
-# Use multi-cluster warehouses for concurrent workloads
-warehouse: TRANSFORMING_WH  # Configured with min=1, max=5 clusters
-```
-
-**Benefits:**
-- Automatic scaling for concurrent queries
-- Queue management
-- Cost control with min/max clusters
-
-## Resources
-
-### Snowflake Documentation
-- [Query Performance](https://docs.snowflake.com/en/user-guide/performance-query)
-- [Warehouse Considerations](https://docs.snowflake.com/en/user-guide/warehouses-considerations)
-- [Clustering Keys](https://docs.snowflake.com/en/user-guide/tables-clustering-keys)
-- [Search Optimization](https://docs.snowflake.com/en/user-guide/search-optimization-service)
 
 ---
 
-**Related Documentation:**
-- `MATERIALIZATIONS.md` - Choosing materializations
-- `INCREMENTAL_MODELS.md` - Incremental strategies
-- `PROJECT_STRUCTURE.md` - Architectural patterns
-- `QUICK_REFERENCE.md` - Performance commands
+## Related Documentation
 
+- [Official Snowflake Docs: Query Performance](https://docs.snowflake.com/en/user-guide/performance-query)
+- [Official Snowflake Docs: Clustering](https://docs.snowflake.com/en/user-guide/tables-clustering-keys)
+- [Official dbt Docs: Best Practices](https://docs.getdbt.com/guides/best-practices)
+- `MATERIALIZATIONS.md` - Choosing materializations
+- `PROJECT_STRUCTURE.md` - Architectural patterns

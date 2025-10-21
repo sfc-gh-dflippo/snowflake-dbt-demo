@@ -1,66 +1,47 @@
 # dbt Materializations Guide
 
-## Choosing the Right Materialization
+## Overview
 
-Materialization determines how dbt builds models in the warehouse. Choose based on model purpose, size, update frequency, and downstream dependencies.
+Materialization determines how dbt builds models in the warehouse. Choose based on model purpose, size, update frequency, and query patterns.
 
-## Materialization Decision Matrix
+**Official dbt Documentation**: [Materializations](https://docs.getdbt.com/docs/build/materializations)
 
-| Materialization | Use Case | Build Time | Storage | Query Speed | Freshness |
-|-----------------|----------|------------|---------|-------------|-----------|
-| **ephemeral** | Staging, reusable logic | Fast (CTE) | None | N/A | Real-time |
-| **view** | Simple transforms, small data | Fast | Minimal | Slow | Real-time |
-| **table** | Complex logic, frequently queried | Slow | High | Fast | Batch |
-| **incremental** | Large datasets, append/merge | Fast | Medium | Fast | Near real-time |
-| **dynamic_table** | Real-time streaming | N/A | High | Fast | Real-time |
+---
 
-## Ephemeral Materialization
+## Decision Matrix
 
-**When to Use:**
-- ✅ Staging models (bronze layer)
-- ✅ Reusable intermediate logic (silver layer)
-- ✅ Models that are always referenced by other models
-- ✅ Small, fast transformations
+| Materialization | Use Case | Build Time | Storage | Query Speed | Best For |
+|-----------------|----------|------------|---------|-------------|----------|
+| **ephemeral** | Staging, reusable logic | Fast (CTE) | None | N/A | Bronze layer |
+| **view** | Simple transforms | Fast | Minimal | Slow | Always-fresh data |
+| **table** | Complex logic | Slow | High | Fast | Dimensions |
+| **incremental** | Large datasets | Fast | Medium | Fast | Large facts |
 
-**Configuration:**
+---
+
+## Materialization Types
+
+### Ephemeral
+
+**When to Use**: Staging models, reusable intermediate logic
+
 ```sql
 {{ config(materialized='ephemeral') }}
 
 select
     customer_id,
-    customer_name,
-    customer_email
+    customer_name
 from {{ source('crm', 'customers') }}
 ```
 
-**How It Works:**
-- Compiled as CTE in downstream models
-- No physical table or view created
-- Fastest for small transformations
-- Reduces storage footprint
-
-**Best Practices:**
-- Use for all staging models (bronze layer)
-- Use for intermediate models that are always joined
-- Avoid for models queried directly
-- Keep logic simple (no complex joins or aggregations)
-
-**Example Use Cases:**
-- `stg_customers` - One-to-one source relationship
-- `stg_orders` - Clean and standardize raw orders
-- `int_customer_base` - Reusable customer logic
+**How it Works**: Compiled as CTE in downstream models. No physical table created.
 
 ---
 
-## View Materialization
+### View
 
-**When to Use:**
-- ✅ Simple transformations
-- ✅ Always need fresh data
-- ✅ Lightweight aggregations
-- ✅ Development/testing
+**When to Use**: Simple transformations, always need fresh data
 
-**Configuration:**
 ```sql
 {{ config(materialized='view') }}
 
@@ -71,95 +52,42 @@ from {{ ref('stg_orders') }}
 group by customer_id
 ```
 
-**How It Works:**
-- Creates a database view
-- Query runs every time view is queried
-- No data stored (minimal storage)
-- Always returns latest data
-
-**Best Practices:**
-- Use when freshness is critical
-- Avoid for complex queries (slow performance)
-- Good for lightweight aggregations
-- Not recommended for production fact tables
-
-**Example Use Cases:**
-- Simple customer summaries
-- Lightweight reference data
-- Development prototypes
+**How it Works**: Creates database view. Query runs every time view is queried.
 
 ---
 
-## Table Materialization
+### Table
 
-**When to Use:**
-- ✅ Complex transformations
-- ✅ Frequently queried models
-- ✅ Dimension tables (gold layer)
-- ✅ Models with joins and aggregations
+**When to Use**: Dimensions, complex transformations, frequently queried models
 
-**Configuration:**
 ```sql
 {{ config(
     materialized='table',
-    cluster_by=['order_date']  -- Optional: for large tables
+    cluster_by=['order_date']  -- Snowflake optimization
 ) }}
 
-with customer_metrics as (
-    select
-        customer_id,
-        count(*) as lifetime_orders,
-        sum(total_price) as lifetime_value,
-        min(order_date) as first_order_date
-    from {{ ref('stg_orders') }}
-    group by customer_id
-)
-
-select * from customer_metrics
+select
+    customer_id,
+    count(*) as lifetime_orders,
+    sum(total_price) as lifetime_value
+from {{ ref('stg_orders') }}
+group by customer_id
 ```
 
-**How It Works:**
-- Drops and recreates table on every run
-- Stores data physically in warehouse
-- Fast query performance
-- Full refresh on each run
-
-**Best Practices:**
-- Use for dimension tables
-- Use for complex business logic
-- Add clustering keys for large tables
-- Consider incremental for very large tables
-
-**Performance Optimizations:**
-```sql
-{{ config(
-    materialized='table',
-    cluster_by=['date_column', 'customer_id'],
-    snowflake_warehouse='TRANSFORM_WH'
-) }}
-```
-
-**Example Use Cases:**
-- `dim_customers` - Customer dimension
-- `dim_products` - Product catalog
-- `int_fx_rates__daily` - Complex FX rate calculations
+**How it Works**: Drops and recreates table on every run. Fast query performance.
 
 ---
 
-## Incremental Materialization
+### Incremental
 
-**When to Use:**
-- ✅ Large fact tables (millions+ rows)
-- ✅ Append-only or merge update patterns
-- ✅ Time-series data
-- ✅ Event logs and clickstreams
+**When to Use**: Large fact tables (millions+ rows), time-series data, event logs
 
-**Basic Configuration:**
 ```sql
 {{ config(
     materialized='incremental',
     unique_key='order_id',
-    on_schema_change='fail'
+    incremental_strategy='merge',
+    cluster_by=['order_date', 'customer_id']
 ) }}
 
 select
@@ -176,300 +104,187 @@ from {{ ref('stg_orders') }}
 {% endif %}
 ```
 
-**How It Works:**
-- First run: Full table load
-- Subsequent runs: Insert/update only new records
-- Uses unique_key for merge/delete+insert
-- Significantly faster than full refresh
+**How it Works**: First run loads all data. Subsequent runs insert/update only new records.
 
-**Incremental Strategies:**
+#### Incremental Strategies
 
-### 1. Append (Default)
-Best for immutable event data:
+**Append** (fastest): Immutable event data
 ```sql
-{{ config(
-    materialized='incremental',
-    incremental_strategy='append'
-) }}
-
-select * from {{ ref('stg_events') }}
-{% if is_incremental() %}
-    where event_timestamp > (select max(event_timestamp) from {{ this }})
-{% endif %}
+{{ config(incremental_strategy='append') }}
 ```
 
-### 2. Merge (Most Common)
-Best for updateable records:
+**Merge** (most common): Updateable records, handles late-arriving data
 ```sql
 {{ config(
-    materialized='incremental',
+    incremental_strategy='merge',
     unique_key='order_id',
-    incremental_strategy='merge',
-    merge_exclude_columns=['dbt_inserted_at']
+    merge_exclude_columns=['dbt_inserted_at']  -- Preserve metadata
 ) }}
-
-select
-    order_id,
-    order_status,  -- Can be updated
-    order_amount,  -- Can be updated
-    current_timestamp() as dbt_updated_at,
-    {% if not is_incremental() %}
-        current_timestamp() as dbt_inserted_at
-    {% else %}
-        dbt_inserted_at  -- Preserve original insert time
-    {% endif %}
-from {{ ref('stg_orders') }}
-
-{% if is_incremental() %}
-    where dbt_updated_at > (select max(dbt_updated_at) from {{ this }})
-{% endif %}
 ```
 
-### 3. Delete+Insert
-Best for partitioned data:
+**Delete+Insert**: Partitioned data, date-based updates
 ```sql
 {{ config(
-    materialized='incremental',
-    unique_key='order_date',
-    incremental_strategy='delete+insert'
-) }}
-
-select * from {{ ref('stg_daily_summary') }}
-{% if is_incremental() %}
-    where order_date >= dateadd(day, -7, current_date())
-{% endif %}
-```
-
-**Best Practices:**
-- Always define unique_key for merge strategy
-- Use merge_exclude_columns to preserve metadata
-- Add clustering keys for query performance
-- Test with small data before full refresh
-- Monitor incremental logic carefully
-
-**Performance Optimizations:**
-```sql
-{{ config(
-    materialized='incremental',
-    unique_key='order_line_id',
-    cluster_by=['order_date', 'customer_id'],
-    incremental_strategy='merge',
-    on_schema_change='fail'
+    incremental_strategy='delete+insert',
+    unique_key='order_date'
 ) }}
 ```
 
-**Common Patterns:**
+**Official dbt Docs**: [Incremental Models](https://docs.getdbt.com/docs/build/incremental-models)
 
-**Time-based incremental:**
-```sql
-{% if is_incremental() %}
-    where updated_at > (select max(updated_at) from {{ this }})
-{% endif %}
-```
+---
 
-**Date-based incremental:**
-```sql
-{% if is_incremental() %}
-    where order_date > (select max(order_date) from {{ this }})
-{% endif %}
-```
+## Snapshots (SCD Type 2)
 
-**Safe fallback incremental:**
+**Purpose**: Track historical changes to slowly changing dimensions.
+
+**When to Use**: Customer attributes, product catalogs, employee records
+
 ```sql
-{% if is_incremental() %}
-    where updated_at > (
-        select coalesce(max(updated_at), '1900-01-01'::timestamp)
-        from {{ this }}
+-- snapshots/dim_customers_scd.sql
+{% snapshot dim_customers_scd %}
+
+{{
+    config(
+        target_schema='snapshots',
+        unique_key='customer_id',
+        strategy='timestamp',
+        updated_at='updated_at',
+        invalidate_hard_deletes=True
     )
-{% endif %}
+}}
+
+select * from {{ ref('stg_customers') }}
+
+{% endsnapshot %}
 ```
 
-**Example Use Cases:**
-- `fct_orders` - Order fact table
-- `fct_clickstream` - Web event logs
-- `fct_transactions` - Financial transactions
+**Generated Columns**: `dbt_valid_from`, `dbt_valid_to`, `dbt_scd_id`, `dbt_updated_at`
+
+**Snapshot Strategies**:
+- **Timestamp**: Tracks changes based on `updated_at` column (faster, requires reliable timestamp)
+- **Check**: Compares specified columns (works without timestamp, slower)
+
+**Querying Current Records**:
+```sql
+select * from {{ ref('dim_customers_scd') }}
+where dbt_valid_to is null
+```
+
+**Official dbt Docs**: [Snapshots](https://docs.getdbt.com/docs/build/snapshots)
 
 ---
 
-## Dynamic Table Materialization
+## Python Models
 
-**When to Use:**
-- ✅ Real-time streaming pipelines
-- ✅ Low-latency analytics
-- ✅ Event-driven architectures
-- ✅ Snowflake-specific optimization
+**Purpose**: Machine learning, statistical analysis, complex transformations beyond SQL
 
-**Configuration:**
-```sql
-{{ config(
-    materialized='dynamic_table',
-    target_lag='1 hour',
-    snowflake_warehouse='STREAMING_WH',
-    on_configuration_change='apply'
-) }}
+**When to Use**: ML models, clustering, advanced analytics, Python library integration
 
-select
-    order_id,
-    customer_id,
-    order_date,
-    sum(order_amount) as total_amount
-from {{ ref('stg_orders') }}
-group by order_id, customer_id, order_date
+```python
+# models/silver/customer_clustering.py
+
+def model(dbt, session):
+    """Cluster customers using K-Means"""
+    
+    dbt.config(
+        materialized="table",
+        packages=["scikit-learn"]
+    )
+    
+    import pandas as pd
+    from sklearn.cluster import KMeans
+    from sklearn.preprocessing import StandardScaler
+    
+    # Get data
+    df = dbt.ref("int_customers__metrics").to_pandas()
+    
+    # Features
+    X = df[['total_orders', 'lifetime_value']].fillna(0)
+    
+    # Standardize and cluster
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X)
+    
+    kmeans = KMeans(n_clusters=5, random_state=42)
+    df['cluster_id'] = kmeans.fit_predict(X_scaled)
+    
+    return df
 ```
 
-**How It Works:**
-- Snowflake automatically refreshes based on target_lag
-- More efficient than incremental for real-time needs
-- Native Snowflake feature (not available on all platforms)
-- Continuous refresh without dbt runs
+**Best Practices**:
+- Use SQL for data preparation
+- Python for ML/complex analytics only
+- Test with standard dbt tests
 
-**Best Practices:**
-- Use for time-sensitive analytics
-- Set appropriate target_lag (minutes to hours)
-- Requires Snowflake Enterprise or higher
-- More expensive than traditional incremental
-
-**Example Use Cases:**
-- Real-time dashboards
-- Streaming data pipelines
-- Event-driven analytics
+**Official dbt Docs**: [Python Models](https://docs.getdbt.com/docs/build/python-models)
 
 ---
 
-## Choosing by Layer
+## Folder-Level Configuration
 
-### Bronze Layer (Staging)
-**Recommendation:** `ephemeral`
-- One-to-one source relationships
-- Fast compilation as CTEs
-- No storage overhead
-- Always referenced by downstream models
+Configure materializations at the folder level to minimize repetition:
 
-```sql
--- models/bronze/stg_customers.sql
-{{ config(materialized='ephemeral') }}
-
-select
-    c_custkey as customer_id,
-    c_name as customer_name,
-    c_address as customer_address
-from {{ source('tpc_h', 'customer') }}
-```
-
-### Silver Layer (Intermediate)
-**Recommendation:** `ephemeral` (reusable logic) or `table` (complex transformations)
-
-**Ephemeral for reusable logic:**
-```sql
--- models/silver/int_customer_base.sql
-{{ config(materialized='ephemeral') }}
-
-select
-    customer_id,
-    customer_name,
-    -- Shared business logic
-from {{ ref('stg_customers') }}
-```
-
-**Table for complex transformations:**
-```sql
--- models/silver/int_fx_rates__daily.sql
-{{ config(materialized='table') }}
-
-with daily_rates as (
-    -- Complex window functions
-    -- Multiple joins
-    -- Heavy aggregations
-)
-select * from daily_rates
-```
-
-### Gold Layer (Marts)
-**Recommendation:** `table` (dimensions) or `incremental` (large facts)
-
-**Table for dimensions:**
-```sql
--- models/gold/dim_customers.sql
-{{ config(materialized='table') }}
-
-select * from {{ ref('int_customers__enriched') }}
-```
-
-**Incremental for facts:**
-```sql
--- models/gold/fct_orders.sql
-{{ config(
-    materialized='incremental',
-    unique_key='order_id'
-) }}
-
-select * from {{ ref('int_orders__with_metrics') }}
-{% if is_incremental() %}
-    where order_date > (select max(order_date) from {{ this }})
-{% endif %}
-```
-
----
-
-## Configuration Best Practices
-
-### Folder-Level Configuration (Recommended)
 ```yaml
 # dbt_project.yml
 models:
   your_project:
     bronze:
       +materialized: ephemeral
+      +tags: ["bronze", "staging"]
+    
     silver:
-      +materialized: ephemeral  # Override for specific models
+      +materialized: ephemeral
+      +tags: ["silver"]
+    
     gold:
       +materialized: table
-      run:
-        +materialized: incremental  # Large facts
+      +tags: ["gold", "marts"]
 ```
 
-### Model-Level Configuration (Unique Cases Only)
+**Override at model level** only for special cases:
 ```sql
--- Only override for special requirements
 {{ config(
     materialized='incremental',
-    unique_key='composite_key',
-    cluster_by=['date_column']
+    unique_key='order_id'
 ) }}
 ```
 
 ---
 
-## Troubleshooting
+## Performance Tips
 
-### Issue: Incremental model not updating
-**Solution:** Check is_incremental() logic and unique_key
+**Clustering** (Snowflake):
+```sql
+{{ config(
+    materialized='table',
+    cluster_by=['date_column', 'customer_id']
+) }}
+```
 
-### Issue: Views are too slow
-**Solution:** Change to table materialization
+**Warehouse Sizing** (Snowflake):
+```sql
+{{ config(
+    snowflake_warehouse='LARGE_WH'
+) }}
+```
 
-### Issue: Table rebuilds take too long
-**Solution:** Change to incremental materialization
-
-### Issue: Storage costs are high
-**Solution:** Use ephemeral or view for intermediate models
+**Limit Incremental Scans**:
+```sql
+{% if is_incremental() %}
+    -- Only scan recent data in source
+    where order_date >= dateadd(day, -30, current_date())
+      and updated_at > (select max(updated_at) from {{ this }})
+{% endif %}
+```
 
 ---
 
-## Quick Reference
+## Related Documentation
 
-| Model Type | Bronze | Silver | Gold Dims | Gold Facts |
-|------------|--------|--------|-----------|------------|
-| **Materialization** | ephemeral | ephemeral/table | table | incremental |
-| **Storage** | None | None/Medium | Medium | High |
-| **Build Time** | Fast | Fast/Medium | Medium | Fast |
-| **Query Speed** | N/A | N/A | Fast | Fast |
-
----
-
-For more details on specific patterns, see:
-- `STAGING_MODELS.md` - Bronze layer patterns
-- `INTERMEDIATE_MODELS.md` - Silver layer patterns
-- `MARTS_MODELS.md` - Gold layer patterns
-- `INCREMENTAL_MODELS.md` - Deep dive on incremental strategies
-
+- [Official dbt Docs: Materializations](https://docs.getdbt.com/docs/build/materializations)
+- [Official dbt Docs: Incremental Models](https://docs.getdbt.com/docs/build/incremental-models)
+- [Official dbt Docs: Snapshots](https://docs.getdbt.com/docs/build/snapshots)
+- [Official dbt Docs: Python Models](https://docs.getdbt.com/docs/build/python-models)
+- `PROJECT_STRUCTURE.md` - Layer-specific patterns and templates
+- `PERFORMANCE_OPTIMIZATION.md` - Snowflake optimizations
