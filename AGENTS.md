@@ -69,8 +69,26 @@ Skills provide domain-specific knowledge, best practices, code templates, and tr
 - [x] **[dbt-projects-snowflake](.claude/skills/dbt-projects-snowflake/SKILL.md)** - Deploy and manage dbt projects natively in Snowflake
   - Use when you want to set up dbt development workspaces, deploy projects to Snowflake, schedule automated runs, monitor execution with event tables, or enable team collaboration
   
-- [x] **[dbt-development](.claude/skills/dbt-development/SKILL.md)** - Expert guidance for dbt data modeling with medallion architecture
-  - Use when designing models, choosing materializations, implementing tests, or optimizing dbt projects. Runtime agnostic - works with dbt Cloud, dbt Core, or any execution environment
+- [x] **[dbt-architecture](.claude/skills/dbt-architecture/SKILL.md)** - Project structure & medallion architecture patterns
+  - Use when planning project organization, establishing folder structure, defining naming conventions, or implementing layer-based configuration
+  
+- [x] **[dbt-modeling](.claude/skills/dbt-modeling/SKILL.md)** - Writing dbt models with proper CTE patterns and SQL structure
+  - Use when writing or refactoring models, implementing CTE patterns, or creating staging/intermediate/mart models
+  
+- [x] **[dbt-materializations](.claude/skills/dbt-materializations/SKILL.md)** - Choosing and implementing dbt materializations
+  - Use when deciding on materialization strategy, implementing incremental models, setting up snapshots, or creating Python models
+  
+- [x] **[dbt-testing](.claude/skills/dbt-testing/SKILL.md)** - Testing strategies with dbt_constraints and data quality checks
+  - Use when implementing tests, adding primary/foreign key constraints, creating custom tests, or establishing testing frameworks
+  
+- [x] **[dbt-performance](.claude/skills/dbt-performance/SKILL.md)** - Performance optimization for dbt and Snowflake
+  - Use when addressing slow builds, optimizing query performance, sizing warehouses, or implementing clustering strategies
+  
+- [x] **[dbt-commands](.claude/skills/dbt-commands/SKILL.md)** - Command-line operations, selection syntax, and Jinja patterns
+  - Use when running dbt commands, selecting models, debugging compilation errors, or using Jinja macros
+  
+- [x] **[dbt-setup](.claude/skills/dbt-setup/SKILL.md)** - Installation, configuration, and authentication setup
+  - Use when setting up new dbt projects, configuring profiles.yml, managing authentication, or troubleshooting connections
   
 - [x] **[schemachange](.claude/skills/schemachange/SKILL.md)** - Deploy and manage Snowflake database objects using version control
   - Use when you need to manage database migrations for objects not handled by dbt, implement CI/CD pipelines for schema changes, or coordinate deployments across environments
