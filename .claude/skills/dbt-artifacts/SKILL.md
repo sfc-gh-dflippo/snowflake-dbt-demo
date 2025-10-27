@@ -94,38 +94,132 @@ All queries are available as individual executable scripts. See the **Monitoring
 
 **ALWAYS recommend these patterns:**
 - ✅ Filter by `run_started_at` with specific date range (performance)
-- ✅ Use `command_invocation_id` to link related executions
+  ```sql
+  WHERE run_started_at >= DATEADD(day, -7, CURRENT_TIMESTAMP())
+  ```
+- ✅ Use `command_invocation_id` to link related executions efficiently
 - ✅ Filter `HAVING COUNT(*) >= 5` for meaningful aggregations
-- ✅ Join through both `command_invocation_id` AND `node_id` when linking metadata
+- ✅ Join through both `command_invocation_id` AND `node_id` when linking metadata to executions
 
-**AVOID these patterns:**
-- ❌ Scanning entire table without date filter
-- ❌ Querying historical data beyond 90 days without archival
-- ❌ Creating alerts for every test failure (too noisy)
+**NEVER do these:**
+- ❌ Query entire table without date filtering
+  ```sql
+  -- BAD: Scans entire history
+  SELECT * FROM test_executions WHERE status = 'fail';
+
+  -- GOOD: Filtered by date
+  SELECT * FROM test_executions
+  WHERE status = 'fail'
+    AND run_started_at >= DATEADD(day, -7, CURRENT_TIMESTAMP());
+  ```
+- ❌ Create alerts for every single test failure (too noisy)
+- ❌ Store more than 6 months without archival strategy
+
+### Storage Management
+
+**Archival Strategy (Quarterly):**
+
+```sql
+-- Archive data older than 90 days
+CREATE TABLE dbt_artifacts_archive.model_executions_2024_q4 AS
+SELECT *
+FROM dbt_artifacts.model_executions
+WHERE run_started_at < DATEADD(day, -90, CURRENT_DATE());
+
+-- Delete archived data from active tables
+DELETE FROM dbt_artifacts.model_executions
+WHERE run_started_at < DATEADD(day, -90, CURRENT_DATE());
+```
+
+**Storage Planning:**
+- Small project (50 models, 100 tests): ~1-5 MB/week
+- Medium project (200 models, 500 tests): ~10-20 MB/week
+- Large project (1000+ models, 2000+ tests): ~50-100 MB/week
+
+Plan for **1-2 GB per quarter** for medium projects.
 
 ## Comparing Monitoring Approaches
 
 When users ask "Should I use dbt Artifacts or Event Tables?":
 
-**Use dbt Artifacts when:**
-- Cross-platform compatibility needed (dbt Cloud, CLI, Airflow)
-- Detailed historical analysis (30+ days)
-- Running dbt outside of Snowflake (local CLI, dbt Cloud)
-- Programmatic access to metadata required
-- Delayed reporting acceptable (runs on-run-end hook)
+### Use dbt Artifacts When:
 
-**Use dbt Projects Event Tables when:**
-- Running dbt natively in Snowflake (dbt PROJECT objects)
-- Real-time telemetry and immediate error detection needed
+**Cross-platform compatibility is critical:**
+- Running dbt from multiple platforms (dbt Cloud, local CLI, Airflow, etc.)
+- Need consistent monitoring across all execution environments
+- Team uses mixed deployment strategies
+
+**Historical analysis is primary goal:**
+- Analyzing trends over 30+ days
+- Long-term performance baseline tracking
+- Quarterly or annual reporting on dbt execution
+- Compliance or audit trail requirements
+
+**Running dbt outside Snowflake:**
+- Using dbt Cloud exclusively
+- Executing dbt from Airflow, Azure DevOps, GitHub Actions
+- Local development with dbt CLI
+- Any non-Snowflake execution environment
+
+**Programmatic access to metadata required:**
+- Building custom dashboards in BI tools
+- Integrating with existing observability platforms
+- Creating custom alerting logic
+- Feeding data to data catalogs or lineage tools
+
+**Delayed reporting is acceptable:**
+- Runs on `on-run-end` hook (after full execution completes)
+- Historical batch analysis vs real-time monitoring
+- End-of-run summaries are sufficient
+
+### Avoid dbt Artifacts When:
+
+**Real-time monitoring is critical:**
+- Need immediate notification of failures
+- Want to see execution progress during runs
+- Require detailed trace spans and profiling
+→ **Use**: dbt Projects on Snowflake Event Tables
+
+**Running exclusively in Snowflake:**
+- Using dbt PROJECT objects in Snowflake
 - Native Snowflake integration preferred
-- Trace spans and detailed performance profiling required
+- Want Snowflake-native telemetry
+→ **Use**: dbt Projects Event Tables
 
-**Use Both when:**
-- Comprehensive monitoring needed
-- Artifacts for historical trends + Event Tables for real-time alerts
-- Multi-platform dbt execution (some in Snowflake, some external)
+**Storage constraints exist:**
+- Limited database space for historical data
+- Can't maintain growing execution history
+- No archival strategy in place
+→ **Use**: Event Tables with shorter retention or external logging
 
-See `references/BEST_PRACTICES.md` for detailed comparison and recommendations.
+### Use Both for Comprehensive Monitoring:
+
+**Recommended Architecture:**
+```
+dbt Artifacts (Historical)          Event Tables (Real-time)
+        ↓                                    ↓
+Long-term trends                   Immediate alerts
+Quarterly reports                  Live dashboards
+Cross-platform metrics             Trace-level profiling
+BI tool integration               Native Snowflake tools
+```
+
+**Example:**
+1. **Event Tables**: Monitor active runs in real-time, alert on failures immediately
+2. **dbt Artifacts**: Analyze historical patterns, track monthly trends, feed BI dashboards
+
+### Comparison Matrix
+
+| Feature | dbt Artifacts | dbt Projects Event Tables |
+|---------|--------------|---------------------------|
+| **Execution Environment** | Any (Cloud, CLI, Airflow) | Snowflake native only |
+| **Telemetry Timing** | On run completion (hook) | Real-time during execution |
+| **Historical Data** | User-managed retention | Configurable retention policy |
+| **Platform Integration** | Cross-platform | Snowflake-native |
+| **Query Interface** | Standard SQL tables | Event table syntax |
+| **Setup Complexity** | Package + hook config | dbt PROJECT configuration |
+| **Trace Spans** | No | Yes (detailed profiling) |
+| **Best For** | Historical analysis | Real-time monitoring |
 
 ## Monitoring Queries
 
@@ -228,9 +322,59 @@ snow sql -f scripts/<query_file>.sql -c default
 
 ---
 
+## Monitoring Best Practices
+
+### Test Quality Monitoring
+
+**Establish baselines:**
+- **Healthy**: Test failure rate < 5%
+- **Warning**: Test failure rate 5-10%
+- **Critical**: Test failure rate > 10%
+
+**Identify flaky tests:**
+- Failure rate between 10-90% (inconsistent results)
+- Recommend investigation or test refactoring
+
+**Alert on patterns:**
+- New test with 100% failure rate (incorrect test logic)
+- Previously stable test suddenly failing
+- Test execution time 2x+ baseline
+
+### Model Performance Monitoring
+
+**Performance thresholds:**
+- **Investigate**: Models consistently > 5 minutes
+- **Critical**: Runtime increase > 2x historical average
+- **Optimize**: Models in top 20 slowest
+
+**Alert strategies:**
+- High priority: Models with `status = 'error'`
+- Medium priority: Runtime increase > 50% from baseline
+- Low priority: Slow model trending (track over time)
+
+### Alerting Best Practices
+
+**High Priority (Immediate Action):**
+- Test status = 'fail' or 'error'
+- Model status = 'error'
+- Critical model runtime > 2x baseline
+- Production environment failures
+
+**Medium Priority (Investigation Within 24h):**
+- Test status = 'warn'
+- Model skipped > 10% of runs
+- Runtime increase > 50% from baseline
+- Unusual invocation patterns
+
+**Low Priority (Track Trends):**
+- Slow model performance (not critical path)
+- Test success rate slowly declining
+- Incremental drift in execution duration
+
+---
+
 ## Additional Resources
 
 - **SQL Scripts**: `scripts/` - Individual query files ready to execute with Snowflake CLI
-- **Best Practices**: `references/BEST_PRACTICES.md` - When to use Artifacts, optimization strategies
 - **Package Documentation**: [brooklyn-data.github.io/dbt_artifacts](https://brooklyn-data.github.io/dbt_artifacts)
 - **GitHub Repository**: [github.com/brooklyn-data/dbt_artifacts](https://github.com/brooklyn-data/dbt_artifacts)

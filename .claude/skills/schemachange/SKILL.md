@@ -78,7 +78,7 @@ schemachange deploy --vars '{"env":"prod","schema":"data"}'
 
 ## Resources
 
-- `config/schemachange-config.yml` - Complete configuration template
+- `schemachange-config.yml` - Complete configuration template
 - `SCRIPT_PATTERNS.md` - Examples for V__, R__, A__ scripts (coming soon)
 - `CREATE_OR_ALTER_REFERENCE.md` - Supported object types (coming soon)
 - `CI_CD_EXAMPLES.md` - GitHub Actions and Azure DevOps patterns (coming soon)

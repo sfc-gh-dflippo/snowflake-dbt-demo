@@ -306,6 +306,6 @@ snow sql -D name="'John'" -D date="'2024-01-01'"
 
 **Related Documentation:**
 - `STAGE_OPERATIONS.md` - Stage management and execution
-- `CONNECTION_CONFIG.md` - Connection configuration
+- **[snowflake-connections](../../snowflake-connections/SKILL.md)** - Connection configuration and authentication
 
 

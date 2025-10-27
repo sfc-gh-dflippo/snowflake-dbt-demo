@@ -162,4 +162,4 @@ Verify no 404s or 500s
 - `TESTING_PATTERNS.md` - Common test scenarios (coming soon)
 - `STREAMLIT_TESTING.md` - Streamlit-specific patterns (coming soon)
 - `ACCESSIBILITY.md` - Accessibility testing workflows (coming soon)
-- `config/mcp-config.json` - MCP server configuration
+- `mcp-config.json` - MCP server configuration
