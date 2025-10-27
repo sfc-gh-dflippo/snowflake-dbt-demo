@@ -47,3 +47,4 @@ tasks/
 .taskmaster/
 
 profiles.yml
+.claude/skills/anthropic-reference/
