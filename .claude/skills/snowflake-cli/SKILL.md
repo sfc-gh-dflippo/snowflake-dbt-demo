@@ -43,7 +43,7 @@ snow sql -q "SELECT CURRENT_USER()" -c default
 snow sql -q "SELECT CURRENT_USER()" -c prod
 ```
 
-**For connection configuration**, see **[snowflake-connections](../snowflake-connections/SKILL.md)** skill.
+**For connection configuration**, see the **`Snowflake Connections` skill**.
 
 ## SQL Execution
 
@@ -211,7 +211,7 @@ snow sql -c default -q "SELECT * FROM table"
 snow sql -c prod -q "SELECT * FROM table"
 ```
 
-**For complete connection setup**, see **[snowflake-connections](../snowflake-connections/SKILL.md)** skill for:
+**For complete connection setup**, see the **`Snowflake Connections` skill** for:
 - Creating `~/.snowflake/connections.toml`
 - All authentication methods (SSO, key pair, OAuth, username/password)
 - Multiple environment configurations (dev, staging, prod)
@@ -306,7 +306,7 @@ GRANT READ, WRITE ON STAGE my_stage TO ROLE my_role;
 snow connection test -c default
 ```
 
-**For comprehensive connection troubleshooting**, see **[snowflake-connections](../snowflake-connections/SKILL.md)** skill
+**For comprehensive connection troubleshooting**, see the **`Snowflake Connections` skill**
 
 ---
 
@@ -371,7 +371,7 @@ EOF
 ## References
 
 - **`STAGE_OPERATIONS.md`** - Comprehensive stage management and script execution
-- **[snowflake-connections](../snowflake-connections/SKILL.md)** - Connection setup and authentication
+- **`Snowflake Connections` skill** - Connection setup and authentication
 - **[Snowflake CLI Documentation](https://docs.snowflake.com/en/developer-guide/snowflake-cli/index)** - Official documentation
 
 ---

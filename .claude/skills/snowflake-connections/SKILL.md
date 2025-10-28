@@ -23,13 +23,13 @@ Activate this skill when users ask about:
 - Rotating credentials or keys
 - Setting up CI/CD authentication
 
-**Note:** For dbt-specific connection setup using `profiles.yml`, see the **[dbt-setup](../dbt-setup/SKILL.md)** skill. The concepts and authentication methods in this skill still apply, but dbt uses a different configuration file format.
+**Note:** For dbt-specific connection setup using `profiles.yml`, see the **`dbt Setup` skill**. The concepts and authentication methods in this skill still apply, but dbt uses a different configuration file format.
 
 ## Configuration File
 
 **This skill covers `connections.toml`** used by Snowflake CLI, Streamlit, and Snowpark.
 
-**For dbt:** Use `~/.dbt/profiles.yml` instead. See **[dbt-setup](../dbt-setup/SKILL.md)** skill for dbt configuration. The authentication methods described here apply to both files.
+**For dbt:** Use `~/.dbt/profiles.yml` instead. See the **`dbt Setup` skill** for dbt configuration. The authentication methods described here apply to both files.
 
 ### Location
 
@@ -447,7 +447,7 @@ my_project:
       schema: PUBLIC
 ```
 
-**Note:** While dbt uses a different configuration file, the authentication methods and environment variable patterns are the same. See **[dbt-setup](../dbt-setup/SKILL.md)** skill for complete dbt configuration.
+**Note:** While dbt uses a different configuration file, the authentication methods and environment variable patterns are the same. See the **`dbt Setup` skill** for complete dbt configuration.
 
 ### Snowpark Scripts
 
@@ -830,9 +830,9 @@ def get_snowpark_session():
 
 ## Related Skills
 
-- **[snowflake-cli](../snowflake-cli/SKILL.md)** - Snowflake CLI operations and commands
-- **[streamlit](../streamlit/SKILL.md)** - Streamlit application development  
-- **[dbt-setup](../dbt-setup/SKILL.md)** - dbt project configuration using `profiles.yml` (dbt's configuration format)
+- **`Snowflake CLI` skill** - Snowflake CLI operations and commands
+- **`Streamlit Development`** skill - Streamlit application development  
+- **`dbt Setup` skill** - dbt project configuration using `profiles.yml` (dbt's configuration format)
 
 ---
 

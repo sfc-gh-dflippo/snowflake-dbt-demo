@@ -31,7 +31,7 @@ def get_snowpark_session():
         return Session.builder.config('connection_name', 'default').create()  # Local
 ```
 
-**For connection setup**, see **[snowflake-connections](../snowflake-connections/SKILL.md)** skill for:
+**For connection setup**, see the **`Snowflake Connections` skill** for:
 - Creating `~/.snowflake/connections.toml`
 - Authentication methods (SSO, key pair, username/password)
 - Multiple environment configurations
@@ -95,7 +95,7 @@ See `TROUBLESHOOTING.md` for common issues.
 ## Related Skills
 
 **Complementary Testing:**
-- **[playwright-mcp](../playwright-mcp/SKILL.md)** - Automate browser testing for Streamlit apps
+- `Playwright MCP` skill - Automate browser testing for Streamlit apps
 
 Use playwright-mcp for visual testing, form validation, responsive design testing, and accessibility checks of your Streamlit applications.
 
@@ -393,8 +393,8 @@ def save_customer(name, email):
 ## Resources
 
 - **`connections.py`** - Required session pattern for local/Snowflake compatibility
-- **[snowflake-connections](../snowflake-connections/SKILL.md)** - Connection setup, authentication, and multi-environment configuration
-- **[playwright-mcp skill](../playwright-mcp/SKILL.md)** - Browser testing automation for Streamlit apps
+- `Snowflake Connections` skill - Connection setup, authentication, and multi-environment configuration
+- `Playwright MCP` skill - Browser testing automation for Streamlit apps
 
 ---
 

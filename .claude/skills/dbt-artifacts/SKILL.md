@@ -309,7 +309,7 @@ snow sql -f scripts/<query_file>.sql -c default
 ## Related Skills
 
 **Complementary Observability:**
-- **[dbt-projects-snowflake](../dbt-projects-snowflake/SKILL.md)** - For native Snowflake deployment with real-time event table monitoring
+- **`dbt Projects on Snowflake` skill** - For native Snowflake deployment with real-time event table monitoring
 
 **When to use both together:**
 - **dbt Artifacts** for cross-platform monitoring and historical analysis across all dbt environments

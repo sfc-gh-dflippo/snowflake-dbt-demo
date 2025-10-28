@@ -208,7 +208,7 @@ ORDER BY TIMESTAMP DESC
 LIMIT 10;
 ```
 
-**For complete monitoring guide**, see **[dbt-projects-snowflake](../dbt-projects-snowflake/SKILL.md)** skill for:
+**For complete monitoring guide**, see the **`dbt Projects on Snowflake` skill** for:
 - Ready-to-use monitoring SQL scripts
 - Best practices for event table management
 - Performance metrics queries
@@ -437,10 +437,10 @@ ORDER BY SCHEDULED_TIME DESC;
 
 ## Related Skills
 
-- **[dbt-projects-snowflake](../dbt-projects-snowflake/SKILL.md)** - Complete monitoring, execution, and management guide
-- **[dbt-setup](../dbt-setup/SKILL.md)** - dbt-core setup and profiles.yml configuration
-- **[snowflake-connections](../snowflake-connections/SKILL.md)** - Snowflake authentication and connection configuration
-- **[snowflake-cli](../snowflake-cli/SKILL.md)** - Snowflake CLI commands and operations
+- **`dbt Projects on Snowflake` skill** - Complete monitoring, execution, and management guide
+- **`dbt Setup` skill** - dbt-core setup and profiles.yml configuration
+- **`Snowflake Connections` skill** - Snowflake authentication and connection configuration
+- **`Snowflake CLI` skill** - Snowflake CLI commands and operations
 
 ---
 

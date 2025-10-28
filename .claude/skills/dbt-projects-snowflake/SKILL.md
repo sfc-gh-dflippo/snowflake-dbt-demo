@@ -174,7 +174,7 @@ For monitoring issues, see the Troubleshooting table in the Event Table Monitori
 ## Related Skills
 
 **Complementary Observability:**
-- **[dbt-artifacts](../dbt-artifacts/SKILL.md)** - For cross-platform execution logging and historical trend analysis
+- **`dbt Artifacts Package` skill** - For cross-platform execution logging and historical trend analysis
 
 **When to use both together:**
 - **dbt Projects on Snowflake** for real-time monitoring with OpenTelemetry event tables
