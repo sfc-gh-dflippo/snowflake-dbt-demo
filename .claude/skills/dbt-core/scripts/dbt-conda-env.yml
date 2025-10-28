@@ -1,0 +1,43 @@
+### Use this command to create an isolated conda env:
+# conda env create -f dbt-conda-env.yml
+
+### Use this command to then switch to the env:
+# conda activate dbt
+
+### You may want to update your conda utility first:
+# conda update -n base conda
+
+### Conda has removed the --force parameter so you either update or remove an existing env
+# conda env update -f dbt-conda-env.yml
+# conda env remove -n dbt -y && conda env create -n dbt -f dbt-conda-env.yml
+
+### If you receive SSL errors due to a network firewall, try installing pip and pip_system_certs without SSL verification
+# python -m pip install -U --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org pip
+# python -m pip install -U --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org pip_system_certs
+
+### If your base packages are incredibly old, you may want to update all packages to the current version:
+# conda update -n base --all
+
+name: dbt
+channels:
+  - https://repo.anaconda.com/pkgs/snowflake
+  - conda-forge
+dependencies:
+  - python=3.12.*
+  - pip-system-certs
+  - pip
+  - pip:
+    - dbt-core==1.9.4
+    - dbt-snowflake==1.9.2
+    - keyring
+    - pandas
+    - pip
+    - pip-system-certs
+    - pyarrow<19.0.0
+    - schemachange
+    - snowflake-cli==3.12.0
+#    - snowflake-ml-python
+    - snowflake-snowpark-python
+    - streamlit
+    - uv
+

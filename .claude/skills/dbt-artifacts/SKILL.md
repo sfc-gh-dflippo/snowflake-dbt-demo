@@ -1,5 +1,5 @@
 ---
-name: dbt Artifacts Package
+name: dbt-artifacts
 description: Monitor dbt execution using the dbt Artifacts package for cross-platform execution logging and metadata tracking. Use this skill when you need to track test and model execution history, analyze run patterns over time, monitor data quality metrics, or enable programmatic access to dbt execution metadata across any dbt version or platform.
 ---
 
@@ -309,7 +309,7 @@ snow sql -f scripts/<query_file>.sql -c default
 ## Related Skills
 
 **Complementary Observability:**
-- **`dbt Projects on Snowflake` skill** - For native Snowflake deployment with real-time event table monitoring
+- `dbt-projects-on-snowflake` skill - For native Snowflake deployment with real-time event table monitoring
 
 **When to use both together:**
 - **dbt Artifacts** for cross-platform monitoring and historical analysis across all dbt environments

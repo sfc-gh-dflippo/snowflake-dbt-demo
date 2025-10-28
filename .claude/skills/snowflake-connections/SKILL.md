@@ -1,5 +1,5 @@
 ---
-name: Snowflake Connections
+name: snowflake-connections
 description: Configure Snowflake connections using connections.toml (for Snowflake CLI, Streamlit, Snowpark) or profiles.yml (for dbt) with multiple authentication methods (SSO, key pair, username/password, OAuth), manage multiple environments, and override settings with environment variables. Use this skill when setting up Snowflake CLI, Streamlit apps, dbt, or any tool requiring Snowflake authentication and connection management.
 ---
 
@@ -9,7 +9,7 @@ Configure and manage Snowflake connections for CLI tools, Streamlit apps, dbt, a
 
 **Configuration Files:**
 - **`connections.toml`** - Used by Snowflake CLI, Streamlit, and Snowpark
-- **`profiles.yml`** - Used by dbt (different format, covered in dbt-setup skill)
+- **`profiles.yml`** - Used by dbt (different format, covered in dbt-core skill)
 
 ## When to Use This Skill
 
@@ -23,13 +23,13 @@ Activate this skill when users ask about:
 - Rotating credentials or keys
 - Setting up CI/CD authentication
 
-**Note:** For dbt-specific connection setup using `profiles.yml`, see the **`dbt Setup` skill**. The concepts and authentication methods in this skill still apply, but dbt uses a different configuration file format.
+**Note:** For dbt-specific connection setup using `profiles.yml`, see the **`dbt-core` skill**. The concepts and authentication methods in this skill still apply, but dbt uses a different configuration file format.
 
 ## Configuration File
 
 **This skill covers `connections.toml`** used by Snowflake CLI, Streamlit, and Snowpark.
 
-**For dbt:** Use `~/.dbt/profiles.yml` instead. See the **`dbt Setup` skill** for dbt configuration. The authentication methods described here apply to both files.
+**For dbt:** Use `~/.dbt/profiles.yml` instead. See the **`dbt-core` skill** for dbt configuration. The authentication methods described here apply to both files.
 
 ### Location
 
@@ -447,7 +447,7 @@ my_project:
       schema: PUBLIC
 ```
 
-**Note:** While dbt uses a different configuration file, the authentication methods and environment variable patterns are the same. See the **`dbt Setup` skill** for complete dbt configuration.
+**Note:** While dbt uses a different configuration file, the authentication methods and environment variable patterns are the same. See the **`dbt-core` skill** for complete dbt configuration.
 
 ### Snowpark Scripts
 
@@ -830,9 +830,9 @@ def get_snowpark_session():
 
 ## Related Skills
 
-- **`Snowflake CLI` skill** - Snowflake CLI operations and commands
-- **`Streamlit Development`** skill - Streamlit application development  
-- **`dbt Setup` skill** - dbt project configuration using `profiles.yml` (dbt's configuration format)
+- `snowflake-cli` skill - Snowflake CLI operations and commands
+- `streamlit-development` skill - Streamlit application development  
+- `dbt-core` skill - dbt project configuration using `profiles.yml` (dbt's configuration format)
 
 ---
 

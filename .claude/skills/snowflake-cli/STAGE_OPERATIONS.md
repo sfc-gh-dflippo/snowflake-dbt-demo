@@ -349,7 +349,7 @@ snow stage execute @stage/migrations/*.sql -c default -D db=MY_DB
 ---
 
 **Related Documentation:**
-- **`Snowflake CLI` skill** - Variable syntax and templating guide
-- **`Snowflake Connections` skill** - Connection configuration and authentication
+- **`snowflake-cli` skill** - Variable syntax and templating guide
+- **`snowflake-connections` skill** - Connection configuration and authentication
 
 

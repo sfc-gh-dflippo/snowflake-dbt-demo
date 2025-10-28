@@ -1,5 +1,5 @@
 ---
-name: dbt Materializations
+name: dbt-materializations
 description: Expert guidance for choosing and implementing dbt materializations (ephemeral, view, table, incremental, snapshots, Python models). Use this skill when deciding on materialization strategy, implementing incremental models, setting up snapshots for SCD Type 2 tracking, or creating Python models for machine learning workloads.
 ---
 

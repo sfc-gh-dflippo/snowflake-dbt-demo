@@ -1,0 +1,21 @@
+### How to use this file:
+# python -m venv .venv
+# source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+# pip install -U -r requirements.txt
+
+dbt-core==1.9.4
+dbt-snowflake==1.9.2
+keyring
+pandas
+pip
+pip-system-certs
+pyarrow<19.0.0
+schemachange
+snowflake-cli>=3.12.0
+# You can also use the uv tool to install snowflake-cli
+# uv tool install snowflake-cli
+#snowflake-ml-python
+snowflake-snowpark-python
+streamlit
+uv
+

@@ -1,5 +1,5 @@
 ---
-name: dbt Performance
+name: dbt-performance
 description: Expert guidance for optimizing dbt and Snowflake performance through materialization choices, clustering keys, warehouse sizing, and query optimization. Use this skill when addressing slow model builds, optimizing query performance, sizing warehouses, implementing clustering strategies, or troubleshooting performance issues.
 ---
 

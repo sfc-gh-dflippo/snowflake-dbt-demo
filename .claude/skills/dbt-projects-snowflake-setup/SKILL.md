@@ -1,5 +1,5 @@
 ---
-name: dbt Projects on Snowflake Setup
+name: dbt-projects-snowflake-setup
 description: Complete step-by-step setup guide for dbt Projects on Snowflake including prerequisites, external access integration, Git API integration, event table configuration, and automated scheduling. Use this skill when setting up dbt Projects on Snowflake for the first time or troubleshooting setup issues.
 ---
 
@@ -208,7 +208,7 @@ ORDER BY TIMESTAMP DESC
 LIMIT 10;
 ```
 
-**For complete monitoring guide**, see the **`dbt Projects on Snowflake` skill** for:
+**For complete monitoring guide**, see the **`dbt-projects-on-snowflake` skill** for:
 - Ready-to-use monitoring SQL scripts
 - Best practices for event table management
 - Performance metrics queries
@@ -437,10 +437,10 @@ ORDER BY SCHEDULED_TIME DESC;
 
 ## Related Skills
 
-- **`dbt Projects on Snowflake` skill** - Complete monitoring, execution, and management guide
-- **`dbt Setup` skill** - dbt-core setup and profiles.yml configuration
-- **`Snowflake Connections` skill** - Snowflake authentication and connection configuration
-- **`Snowflake CLI` skill** - Snowflake CLI commands and operations
+- `dbt-projects-on-snowflake` skill - Complete monitoring, execution, and management guide
+- `dbt-core` skill - dbt-core setup and profiles.yml configuration
+- `snowflake-connections` skill - Snowflake authentication and connection configuration
+- `snowflake-cli` skill - Snowflake CLI commands and operations
 
 ---
 

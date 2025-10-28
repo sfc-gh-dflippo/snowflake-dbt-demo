@@ -1,5 +1,5 @@
 ---
-name: Snowflake CLI
+name: snowflake-cli
 description: Execute SQL, manage Snowflake objects, deploy applications, and orchestrate data pipelines using the Snowflake CLI (snow) command. Use this skill when you need to run SQL scripts, deploy Streamlit apps, execute Snowpark procedures, manage stages, automate Snowflake operations from CI/CD pipelines, or work with variables and templating.
 ---
 
@@ -43,7 +43,7 @@ snow sql -q "SELECT CURRENT_USER()" -c default
 snow sql -q "SELECT CURRENT_USER()" -c prod
 ```
 
-**For connection configuration**, see the **`Snowflake Connections` skill**.
+**For connection configuration**, see the **`snowflake-connections` skill**.
 
 ## SQL Execution
 
@@ -74,16 +74,79 @@ snow sql -q "SELECT * FROM ${DB}.${SCHEMA}.orders" -c default
 **Use for:** Connection names, file paths, environment selection, shell control flow
 
 **2. Standard Syntax `<% %>`** - Default for `snow sql` commands:
+
 ```bash
-# Inline query (default syntax)
+# Single-line query with -q flag
 snow sql -q "SELECT * FROM <% db %>.<% schema %>.orders" \
   -D db=PROD_DB -D schema=SALES -c default
 
-# Heredoc
+# Multi-line query with -i flag (reads from stdin)
+# The -i flag tells snow sql to read SQL from standard input
+# <<EOF creates a here-document that feeds multi-line SQL to stdin
 snow sql -i -D db=PROD_DB -D schema=SALES -c default <<EOF
-SELECT * FROM <% db %>.<% schema %>.orders;
+SELECT 
+  order_id,
+  customer_id,
+  order_total
+FROM <% db %>.<% schema %>.orders
+WHERE order_date >= CURRENT_DATE - 7;
 EOF
 ```
+
+**Understanding heredoc (`<<EOF`):**
+- `<<EOF` - Start of here-document (ends with matching `EOF`)
+- SQL between the markers is fed to `snow sql -i` as standard input
+- Variables are substituted using `<% %>` syntax
+- Useful for readable multi-line SQL without escaping quotes
+- The closing `EOF` must be on its own line with no indentation
+
+**Combining bash variables with heredoc for multi-statement scripts:**
+```bash
+# Set bash variables for environment and database objects
+ENV="prod"
+CONNECTION="${ENV}_connection"
+DB="PROD_DB"
+SCHEMA="SALES"
+TABLE="orders"
+
+# Heredoc enables multiple SQL statements and complex scripts
+# without worrying about quote escaping or line continuations
+# Bash expands ${variables} before sending to Snowflake
+snow sql -i -c ${CONNECTION} <<EOF
+-- Create or replace view
+CREATE OR REPLACE VIEW ${DB}.${SCHEMA}.recent_${TABLE} AS
+SELECT 
+  order_id,
+  customer_id,
+  order_total,
+  order_date,
+  '${ENV}' as environment
+FROM ${DB}.${SCHEMA}.${TABLE}
+WHERE order_date >= CURRENT_DATE - 7;
+
+-- Grant permissions
+GRANT SELECT ON VIEW ${DB}.${SCHEMA}.recent_${TABLE} TO ROLE ANALYST;
+
+-- Verify row count
+SELECT 
+  COUNT(*) as row_count,
+  MIN(order_date) as earliest_date,
+  MAX(order_date) as latest_date
+FROM ${DB}.${SCHEMA}.recent_${TABLE};
+EOF
+```
+
+**Why use heredoc:**
+- ✅ Multiple SQL statements in one execution
+- ✅ No quote escaping needed for complex SQL
+- ✅ Readable multi-line scripts with comments
+- ✅ Bash expands `${VAR}` before sending to Snowflake
+- ✅ Natural formatting for longer migration or deployment scripts
+
+**When to use bash vs Snowflake CLI variables:**
+- **Bash `${VAR}`** - Simple, expanded before execution (use for most cases)
+- **Snowflake CLI `<% var %>`** - Use with `-D` flags when you need Snowflake CLI to handle substitution (safer for user input)
+
 **Use for:** Inline SQL and heredoc with `snow sql -q` or `snow sql -i`
 
 **3. Jinja Syntax `{{ }}`** - Automatic for staged SQL files:
@@ -211,7 +274,7 @@ snow sql -c default -q "SELECT * FROM table"
 snow sql -c prod -q "SELECT * FROM table"
 ```
 
-**For complete connection setup**, see the **`Snowflake Connections` skill** for:
+**For complete connection setup**, see the **`snowflake-connections` skill** for:
 - Creating `~/.snowflake/connections.toml`
 - All authentication methods (SSO, key pair, OAuth, username/password)
 - Multiple environment configurations (dev, staging, prod)
@@ -306,7 +369,7 @@ GRANT READ, WRITE ON STAGE my_stage TO ROLE my_role;
 snow connection test -c default
 ```
 
-**For comprehensive connection troubleshooting**, see the **`Snowflake Connections` skill**
+**For comprehensive connection troubleshooting**, see the **`snowflake-connections` skill**
 
 ---
 
@@ -371,7 +434,7 @@ EOF
 ## References
 
 - **`STAGE_OPERATIONS.md`** - Comprehensive stage management and script execution
-- **`Snowflake Connections` skill** - Connection setup and authentication
+- `snowflake-connections` skill - Connection setup and authentication
 - **[Snowflake CLI Documentation](https://docs.snowflake.com/en/developer-guide/snowflake-cli/index)** - Official documentation
 
 ---

@@ -1,5 +1,5 @@
 ---
-name: dbt Architecture
+name: dbt-architecture
 description: Expert guidance for dbt project structure using medallion architecture (bronze/silver/gold layers). Use this skill when planning project organization, establishing folder structure, defining naming conventions, implementing layer-based configuration, or ensuring proper model dependencies and architectural patterns.
 ---
 
