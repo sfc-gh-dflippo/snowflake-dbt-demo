@@ -109,6 +109,8 @@ Skills provide domain-specific knowledge, best practices, code templates, and tr
 
 #### Anthropic Reference Skills
 
+**Sync Command:** Run `.claude/skills/sync-anthropic-skills.sh` to update Anthropic skills to the latest version.
+
 **Creative & Design:**
 - [x] **[algorithmic-art](.claude/skills/anthropic-reference/algorithmic-art/SKILL.md)** - Create algorithmic art using p5.js with seeded randomness
   - Use when creating generative art, flow fields, or particle systems
@@ -148,8 +150,6 @@ Skills provide domain-specific knowledge, best practices, code templates, and tr
   - Use when you need to create new custom skills
 - [x] **[template-skill](.claude/skills/anthropic-reference/template-skill/SKILL.md)** - Basic template for new skills
   - Use as a starting point when creating new skills
-
-**Sync Command:** Run `.claude/skills/sync-anthropic-skills.sh` to update Anthropic skills to the latest version.
 
 ### Legacy Rules (Cursor-specific)
 
@@ -210,7 +210,7 @@ This project follows **Specification-Driven Development (SDD)** methodology, whe
 
 #### **Phase 1: Define the Functional and Technical Specifications**
 1. **Gather Requirements** - Start with user stories or high-level requirements
-   - Create comprehensive requirements, plans, and tasks in a `CLAUDE.md` file in the project root folder
+   - Create comprehensive requirements, plans, and tasks in a PRD markdown document
    - Define functional requirements and design goals
    - Document business logic and transformation requirements
    - Specify acceptance criteria and validation requirements
@@ -235,16 +235,16 @@ This project follows **Specification-Driven Development (SDD)** methodology, whe
    - Identify architectural patterns and technology choices
 
 5. **Architectural Design** - Develop the technical solutions
-   - Design system architecture and process logic
+   - Expand our PRD to include the design for system architecture and process logic
    - Define technology stack and integration patterns
    - Plan data flow and system interactions
-   - Document technical design decisions
+   - Document technical design decisions in the PRD
 
 6. **Parse and Break Down** - Generate tasks from specifications
    - Automatically convert specifications into actionable tasks
    - Analyze the complexity of each task to identify complex tasks
    - Break down high/medium complexity tasks into subtasks
-   - Maintain traceability between requirements and implementation tasks
+   - Maintain traceability between PRD requirements and implementation tasks
 
 7. **Organize Tasks** - Set dependencies and priorities
    - Add dependencies to your tasks to establish logical task sequencing
@@ -265,7 +265,7 @@ This project follows **Specification-Driven Development (SDD)** methodology, whe
    - Ensure performance meets specified requirements
 
 10. **Document Progress** - Log implementation decisions and findings
-    - Update the `CLAUDE.md` continueously
+    - Update the PRD continueously
     - Update specifications based on learnings
     - Maintain audit trail of changes and decisions
     - Update task completion
@@ -287,17 +287,6 @@ This project follows **Specification-Driven Development (SDD)** methodology, whe
     - Update documentation to reflect final implementation
     - Prepare for deployment and future maintenance
 
-
-## Additional Resources
-
-### Project Documentation
-- **[DBT_SETUP_GUIDE.md](./DBT_SETUP_GUIDE.md)** - dbt Projects on Snowflake setup
-- **[DBT_BEST_PRACTICES.md](./DBT_BEST_PRACTICES.md)** - Comprehensive dbt guidelines
-- **[README.md](./README.md)** - Project overview and getting started
-
-### Cursor Rules (IDE Integration)
-For Cursor-specific integration, see `.cursor/rules/*.mdc` files for auto-applied rules during development.
-
 ---
 
-*For the most up-to-date and comprehensive guidance, prioritize Skills (`.claude/skills/`) over legacy rules.*
+*For the most up-to-date and comprehensive guidance, prioritize Skills (`.claude/skills/`) over legacy Cursor rules (`.cursor/rules/`).*
