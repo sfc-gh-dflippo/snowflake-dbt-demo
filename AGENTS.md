@@ -66,7 +66,7 @@ Skills provide domain-specific knowledge, best practices, code templates, and tr
 - [x] **[dbt-artifacts](.claude/skills/dbt-artifacts/SKILL.md)** - Monitor dbt execution using the dbt Artifacts package
   - Use when you need to track test and model execution history, analyze run patterns over time, monitor data quality metrics, or enable programmatic access to dbt execution metadata
   
-- [x] **[dbt-projects-snowflake](.claude/skills/dbt-projects-snowflake/SKILL.md)** - Deploy and manage dbt projects natively in Snowflake
+- [x] **[dbt-projects-on-snowflake](.claude/skills/dbt-projects-on-snowflake/SKILL.md)** - Deploy and manage dbt projects natively in Snowflake
   - Use when you want to set up dbt development workspaces, deploy projects to Snowflake, schedule automated runs, monitor execution with event tables, or enable team collaboration
   
 - [x] **[dbt-architecture](.claude/skills/dbt-architecture/SKILL.md)** - Project structure & medallion architecture patterns
@@ -87,8 +87,8 @@ Skills provide domain-specific knowledge, best practices, code templates, and tr
 - [x] **[dbt-commands](.claude/skills/dbt-commands/SKILL.md)** - Command-line operations, selection syntax, and Jinja patterns
   - Use when running dbt commands, selecting models, debugging compilation errors, or using Jinja macros
   
-- [x] **[dbt-setup](.claude/skills/dbt-setup/SKILL.md)** - Installation, configuration, and authentication setup
-  - Use when setting up new dbt projects, configuring profiles.yml, managing authentication, or troubleshooting connections
+- [x] **[dbt-core](.claude/skills/dbt-core/SKILL.md)** - Complete local dbt-core development guide
+  - Use for installation, configuration, project setup, package management, troubleshooting, development workflow, and upgrades with non-interactive scripts and configuration templates
   
 - [x] **[schemachange](.claude/skills/schemachange/SKILL.md)** - Deploy and manage Snowflake database objects using version control
   - Use when you need to manage database migrations for objects not handled by dbt, implement CI/CD pipelines for schema changes, or coordinate deployments across environments
@@ -96,7 +96,7 @@ Skills provide domain-specific knowledge, best practices, code templates, and tr
 - [x] **[snowflake-cli](.claude/skills/snowflake-cli/SKILL.md)** - Execute SQL and manage Snowflake objects using the CLI
   - Use when you need to run SQL scripts, deploy Streamlit apps, execute Snowpark procedures, manage stages, or automate Snowflake operations from CI/CD pipelines
   
-- [x] **[streamlit](.claude/skills/streamlit/SKILL.md)** - Develop, test, and deploy Streamlit data applications
+- [x] **[streamlit-development](.claude/skills/streamlit-development/SKILL.md)** - Develop, test, and deploy Streamlit data applications
   - Use when you're building interactive data apps, setting up local development environments, testing with pytest or Playwright, or deploying apps to Snowflake
   
 - [x] **[playwright-mcp](.claude/skills/playwright-mcp/SKILL.md)** - Automate browser testing using Playwright MCP
