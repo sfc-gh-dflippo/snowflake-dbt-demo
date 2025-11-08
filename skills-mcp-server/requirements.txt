@@ -1,0 +1,4 @@
+mcp>=1.0.0
+python-frontmatter>=1.0.0
+
+

@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "skills": {
+      "command": "python",
+      "args": ["-m", "skills_mcp_server.src.server"],
+      "cwd": "/Users/dflippo/Documents/GitHub/snowflake-dbt-demo/skills-mcp-server",
+      "env": {
+        "SKILLS_REPOS": "https://github.com/sfc-gh-dflippo/snowflake-dbt-demo,https://github.com/anthropics/skills",
+        "SKILLS_BRANCHES": "main,main",
+        "SKILLS_PATHS": ".claude/skills,.",
+        "CACHE_DIR": "./.mcp_cache/skills",
+        "REFRESH_ON_STARTUP": "true"
+      }
+    }
+  }
+}
+
