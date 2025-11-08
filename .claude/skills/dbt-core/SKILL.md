@@ -1,6 +1,6 @@
 ---
 name: dbt-core
-description: Comprehensive AI agent guide for managing dbt-core locally - installation, configuration, project setup, package management, troubleshooting, and development workflow. Includes non-interactive scripts for environment setup with conda or venv, and comprehensive configuration templates for profiles.yml and dbt_project.yml. Use this skill for all aspects of local dbt-core development.
+description: Managing dbt-core locally - installation, configuration, project setup, package management, troubleshooting, and development workflow. Use this skill for all aspects of local dbt-core development including non-interactive scripts for environment setup with conda or venv, and comprehensive configuration templates for profiles.yml and dbt_project.yml.
 ---
 
 # dbt-core Local Development Guide

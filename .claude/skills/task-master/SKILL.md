@@ -1,6 +1,6 @@
 ---
 name: task-master
-description: AI-powered task management system for structured, specification-driven development. Use this skill when you need to manage complex projects with PRDs, break down tasks into subtasks, track dependencies, and maintain organized development workflows across features and branches.
+description: AI-powered task management for structured, specification-driven development. Use this skill when you need to manage complex projects with PRDs, break down tasks into subtasks, track dependencies, and maintain organized development workflows across features and branches.
 ---
 
 # Task Master AI

@@ -43,114 +43,6 @@ This is a **modern data engineering project** built with dbt-core and Snowflake,
 - **Testability** - Models should have appropriate data quality tests
 - **Documentation** - Document business logic, complex transformations, models, and columns
 
-### Skills
-
-**What are Skills?**
-
-Skills are structured instruction sets that enhance AI assistant capabilities for specific domains or tasks. Each skill is a folder containing:
-- **SKILL.md** - Core instructions and guidelines
-- **references/** - Detailed documentation and examples
-- **scripts/** - Helper scripts and templates
-- **config/** - Configuration files
-
-Skills provide domain-specific knowledge, best practices, code templates, and troubleshooting strategies. Think of them as specialized "expert personas" for areas like dbt development, Snowflake operations, or testing frameworks.
-
-**Key Features:**
-- Skills can be enabled `[x]` or disabled `[ ]` individually
-- Organized by project-specific and reference examples
-
----
-
-#### Project-Specific Skills
-
-- [x] **[dbt-artifacts](.claude/skills/dbt-artifacts/SKILL.md)** - Monitor dbt execution using the dbt Artifacts package
-  - Use when you need to track test and model execution history, analyze run patterns over time, monitor data quality metrics, or enable programmatic access to dbt execution metadata
-  
-- [x] **[dbt-projects-on-snowflake](.claude/skills/dbt-projects-on-snowflake/SKILL.md)** - Deploy and manage dbt projects natively in Snowflake
-  - Use when you want to set up dbt development workspaces, deploy projects to Snowflake, schedule automated runs, monitor execution with event tables, or enable team collaboration
-  
-- [x] **[dbt-architecture](.claude/skills/dbt-architecture/SKILL.md)** - Project structure & medallion architecture patterns
-  - Use when planning project organization, establishing folder structure, defining naming conventions, or implementing layer-based configuration
-  
-- [x] **[dbt-modeling](.claude/skills/dbt-modeling/SKILL.md)** - Writing dbt models with proper CTE patterns and SQL structure
-  - Use when writing or refactoring models, implementing CTE patterns, or creating staging/intermediate/mart models
-  
-- [x] **[dbt-materializations](.claude/skills/dbt-materializations/SKILL.md)** - Choosing and implementing dbt materializations
-  - Use when deciding on materialization strategy, implementing incremental models, setting up snapshots, or creating Python models
-  
-- [x] **[dbt-testing](.claude/skills/dbt-testing/SKILL.md)** - Testing strategies with dbt_constraints and data quality checks
-  - Use when implementing tests, adding primary/foreign key constraints, creating custom tests, or establishing testing frameworks
-  
-- [x] **[dbt-performance](.claude/skills/dbt-performance/SKILL.md)** - Performance optimization for dbt and Snowflake
-  - Use when addressing slow builds, optimizing query performance, sizing warehouses, or implementing clustering strategies
-  
-- [x] **[dbt-commands](.claude/skills/dbt-commands/SKILL.md)** - Command-line operations, selection syntax, and Jinja patterns
-  - Use when running dbt commands, selecting models, debugging compilation errors, or using Jinja macros
-  
-- [x] **[dbt-core](.claude/skills/dbt-core/SKILL.md)** - Complete local dbt-core development guide
-  - Use for installation, configuration, project setup, package management, troubleshooting, development workflow, and upgrades with non-interactive scripts and configuration templates
-  
-- [x] **[schemachange](.claude/skills/schemachange/SKILL.md)** - Deploy and manage Snowflake database objects using version control
-  - Use when you need to manage database migrations for objects not handled by dbt, implement CI/CD pipelines for schema changes, or coordinate deployments across environments
-  
-- [x] **[snowflake-cli](.claude/skills/snowflake-cli/SKILL.md)** - Execute SQL and manage Snowflake objects using the CLI
-  - Use when you need to run SQL scripts, deploy Streamlit apps, execute Snowpark procedures, manage stages, or automate Snowflake operations from CI/CD pipelines
-  
-- [x] **[streamlit-development](.claude/skills/streamlit-development/SKILL.md)** - Develop, test, and deploy Streamlit data applications
-  - Use when you're building interactive data apps, setting up local development environments, testing with pytest or Playwright, or deploying apps to Snowflake
-  
-- [x] **[playwright-mcp](.claude/skills/playwright-mcp/SKILL.md)** - Automate browser testing using Playwright MCP
-  - Use when you need to test Streamlit apps, validate web interfaces, test responsive design, check accessibility, or automate browser interactions through MCP tools
-
-- [x] **[task-master](.claude/skills/task-master/SKILL.md)** - AI-powered task management for structured development
-  - Use when you need to manage complex projects with PRDs, break down tasks into subtasks, track dependencies, and maintain organized workflows across features and branches
-
----
-
-#### Anthropic Reference Skills
-
-**Sync Command:** Run `.claude/skills/sync-anthropic-skills.sh` to update Anthropic skills to the latest version.
-
-**Creative & Design:**
-- [x] **[algorithmic-art](.claude/skills/anthropic-reference/algorithmic-art/SKILL.md)** - Create algorithmic art using p5.js with seeded randomness
-  - Use when creating generative art, flow fields, or particle systems
-- [x] **[canvas-design](.claude/skills/anthropic-reference/canvas-design/SKILL.md)** - Design visual art in PNG/PDF formats
-  - Use for creating professional visual designs with design philosophies
-- [x] **[slack-gif-creator](.claude/skills/anthropic-reference/slack-gif-creator/SKILL.md)** - Create animated GIFs optimized for Slack
-  - Use for creating animations within Slack's size constraints
-
-**Development & Technical:**
-- [x] **[artifacts-builder](.claude/skills/anthropic-reference/artifacts-builder/SKILL.md)** - Build complex HTML artifacts with React and Tailwind
-  - Use for complex artifacts requiring state management, routing, or shadcn/ui components
-- [x] **[mcp-builder](.claude/skills/anthropic-reference/mcp-builder/SKILL.md)** - Create high-quality MCP servers
-  - Use when building MCP servers to integrate external APIs or services in Python or Node/TypeScript
-- [x] **[webapp-testing](.claude/skills/anthropic-reference/webapp-testing/SKILL.md)** - Test web applications using Playwright
-  - Use for automated browser testing and UI validation
-
-**Enterprise & Communication:**
-- [x] **[brand-guidelines](.claude/skills/anthropic-reference/brand-guidelines/SKILL.md)** - Apply Anthropic brand standards
-  - Use for applying official brand colors and typography to artifacts
-- [x] **[internal-comms](.claude/skills/anthropic-reference/internal-comms/SKILL.md)** - Write internal communications
-  - Use for creating status reports, newsletters, and FAQ documents
-- [x] **[theme-factory](.claude/skills/anthropic-reference/theme-factory/SKILL.md)** - Style artifacts with professional themes
-  - Use for applying pre-set or custom themes to artifacts
-
-**Document Skills:**
-- [x] **[docx](.claude/skills/anthropic-reference/document-skills/docx/SKILL.md)** - Create and edit Word documents
-  - Use for working with .docx files, tracked changes, comments, and document formatting
-- [x] **[pdf](.claude/skills/anthropic-reference/document-skills/pdf/SKILL.md)** - Manipulate PDF documents
-  - Use for extracting text, creating PDFs, merging, splitting, or handling forms
-- [x] **[pptx](.claude/skills/anthropic-reference/document-skills/pptx/SKILL.md)** - Create and edit PowerPoint presentations
-  - Use for working with presentations, layouts, templates, and charts
-- [x] **[xlsx](.claude/skills/anthropic-reference/document-skills/xlsx/SKILL.md)** - Create and edit Excel spreadsheets
-  - Use for working with spreadsheets, formulas, data analysis, and visualization
-
-**Meta Skills:**
-- [x] **[skill-creator](.claude/skills/anthropic-reference/skill-creator/SKILL.md)** - Guide for creating effective skills
-  - Use when you need to create new custom skills
-- [x] **[template-skill](.claude/skills/anthropic-reference/template-skill/SKILL.md)** - Basic template for new skills
-  - Use as a starting point when creating new skills
-
 ### Legacy Rules (Cursor-specific)
 
 For Cursor IDE integration, see `.cursor/rules/`:
@@ -290,3 +182,90 @@ This project follows **Specification-Driven Development (SDD)** methodology, whe
 ---
 
 *For the most up-to-date and comprehensive guidance, prioritize Skills (`.claude/skills/`) over legacy Cursor rules (`.cursor/rules/`).*
+
+<!-- BEGIN SKILLS - DO NOT EDIT MANUALLY -->
+
+## Skills
+
+**What are Skills?**
+
+Skills are structured instruction sets that enhance AI assistant capabilities for specific domains or tasks. Each skill is a folder containing:
+- **SKILL.md** - Core instructions and guidelines
+- **references/** - Detailed documentation and examples
+- **scripts/** - Helper scripts and templates
+- **config/** - Configuration files
+
+Skills provide domain-specific knowledge, best practices, code templates, and troubleshooting strategies. Think of them as specialized "expert personas" for areas like dbt development, Snowflake operations, or testing frameworks.
+
+**Key Features:**
+- Skills can be enabled `[x]` or disabled `[ ]` individually
+- Organized by project-specific and reference examples
+
+---
+
+**Sync Command:** Run `python3 sync-agent-skills.py` to update skills to the latest version.
+
+---
+
+- [x] **[algorithmic-art](.claude/skills/anthropic-skills/algorithmic-art/SKILL.md)** - Creating algorithmic art using p5.js with seeded randomness and interactive parameter exploration. Use this when users request creating art using code, generative art, algorithmic art, flow fields, or particle systems. Create original algorithmic art rather than copying existing artists' work to avoid copyright violations.
+
+- [x] **[artifacts-builder](.claude/skills/anthropic-skills/artifacts-builder/SKILL.md)** - Suite of tools for creating elaborate, multi-component claude.ai HTML artifacts using modern frontend web technologies (React, Tailwind CSS, shadcn/ui). Use for complex artifacts requiring state management, routing, or shadcn/ui components - not for simple single-file HTML/JSX artifacts.
+
+- [x] **[brand-guidelines](.claude/skills/anthropic-skills/brand-guidelines/SKILL.md)** - Applies Anthropic's official brand colors and typography to any sort of artifact that may benefit from having Anthropic's look-and-feel. Use it when brand colors or style guidelines, visual formatting, or company design standards apply.
+
+- [x] **[canvas-design](.claude/skills/anthropic-skills/canvas-design/SKILL.md)** - Create beautiful visual art in .png and .pdf documents using design philosophy. You should use this skill when the user asks to create a poster, piece of art, design, or other static piece. Create original visual designs, never copying existing artists' work to avoid copyright violations.
+
+- [x] **[dbt-architecture](.claude/skills/dbt-architecture/SKILL.md)** - dbt project structure using medallion architecture (bronze/silver/gold layers). Use this skill when planning project organization, establishing folder structure, defining naming conventions, implementing layer-based configuration, or ensuring proper model dependencies and architectural patterns.
+
+- [x] **[dbt-artifacts](.claude/skills/dbt-artifacts/SKILL.md)** - Monitor dbt execution using the dbt Artifacts package. Use this skill when you need to track test and model execution history, analyze run patterns over time, monitor data quality metrics, or enable programmatic access to dbt execution metadata across any dbt version or platform.
+
+- [x] **[dbt-commands](.claude/skills/dbt-commands/SKILL.md)** - dbt command-line operations, model selection syntax, Jinja patterns, troubleshooting, and debugging. Use this skill when running dbt commands, selecting specific models, debugging compilation errors, using Jinja macros, or troubleshooting dbt execution issues.
+
+- [x] **[dbt-core](.claude/skills/dbt-core/SKILL.md)** - Managing dbt-core locally - installation, configuration, project setup, package management, troubleshooting, and development workflow. Use this skill for all aspects of local dbt-core development including non-interactive scripts for environment setup with conda or venv, and comprehensive configuration templates for profiles.yml and dbt_project.yml.
+
+- [x] **[dbt-materializations](.claude/skills/dbt-materializations/SKILL.md)** - Choosing and implementing dbt materializations (ephemeral, view, table, incremental, snapshots, Python models). Use this skill when deciding on materialization strategy, implementing incremental models, setting up snapshots for SCD Type 2 tracking, or creating Python models for machine learning workloads.
+
+- [x] **[dbt-modeling](.claude/skills/dbt-modeling/SKILL.md)** - Writing dbt models with proper CTE patterns, SQL structure, and layer-specific templates. Use this skill when writing or refactoring dbt models, implementing CTE patterns, creating staging/intermediate/mart models, or ensuring proper SQL structure and dependencies.
+
+- [x] **[dbt-performance](.claude/skills/dbt-performance/SKILL.md)** - Optimizing dbt and Snowflake performance through materialization choices, clustering keys, warehouse sizing, and query optimization. Use this skill when addressing slow model builds, optimizing query performance, sizing warehouses, implementing clustering strategies, or troubleshooting performance issues.
+
+- [x] **[dbt-projects-on-snowflake](.claude/skills/dbt-projects-on-snowflake/SKILL.md)** - Deploying, managing, executing, and monitoring dbt projects natively within Snowflake using dbt PROJECT objects and event tables. Use this skill when you want to set up dbt development workspaces, deploy projects to Snowflake, schedule automated runs, monitor execution with event tables, or enable team collaboration directly in Snowflake.
+
+- [x] **[dbt-projects-snowflake-setup](.claude/skills/dbt-projects-snowflake-setup/SKILL.md)** - Step-by-step setup guide for dbt Projects on Snowflake including prerequisites, external access integration, Git API integration, event table configuration, and automated scheduling. Use this skill when setting up dbt Projects on Snowflake for the first time or troubleshooting setup issues.
+
+- [x] **[dbt-testing](.claude/skills/dbt-testing/SKILL.md)** - dbt testing strategies using dbt_constraints for database-level enforcement, generic tests, and singular tests. Use this skill when implementing data quality checks, adding primary/foreign key constraints, creating custom tests, or establishing comprehensive testing frameworks across bronze/silver/gold layers.
+
+- [x] **[docx](.claude/skills/anthropic-skills/document-skills/docx/SKILL.md)** - Comprehensive document creation, editing, and analysis with support for tracked changes, comments, formatting preservation, and text extraction. When Claude needs to work with professional documents (.docx files) for: (1) Creating new documents, (2) Modifying or editing content, (3) Working with tracked changes, (4) Adding comments, or any other document tasks
+
+- [x] **[internal-comms](.claude/skills/anthropic-skills/internal-comms/SKILL.md)** - A set of resources to help me write all kinds of internal communications, using the formats that my company likes to use. Claude should use this skill whenever asked to write some sort of internal communications (status reports, leadership updates, 3P updates, company newsletters, FAQs, incident reports, project updates, etc.).
+
+- [x] **[mcp-builder](.claude/skills/anthropic-skills/mcp-builder/SKILL.md)** - Guide for creating high-quality MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools. Use when building MCP servers to integrate external APIs or services, whether in Python (FastMCP) or Node/TypeScript (MCP SDK).
+
+- [x] **[pdf](.claude/skills/anthropic-skills/document-skills/pdf/SKILL.md)** - Comprehensive PDF manipulation toolkit for extracting text and tables, creating new PDFs, merging/splitting documents, and handling forms. When Claude needs to fill in a PDF form or programmatically process, generate, or analyze PDF documents at scale.
+
+- [x] **[playwright-mcp](.claude/skills/playwright-mcp/SKILL.md)** - Browser testing, web scraping, and UI validation using Playwright MCP. Use this skill when you need to test Streamlit apps, validate web interfaces, test responsive design, check accessibility, or automate browser interactions through MCP tools.
+
+- [x] **[pptx](.claude/skills/anthropic-skills/document-skills/pptx/SKILL.md)** - Presentation creation, editing, and analysis. When Claude needs to work with presentations (.pptx files) for: (1) Creating new presentations, (2) Modifying or editing content, (3) Working with layouts, (4) Adding comments or speaker notes, or any other presentation tasks
+
+- [x] **[schemachange](.claude/skills/schemachange/SKILL.md)** - Deploying and managing Snowflake database objects using version control with schemachange. Use this skill when you need to manage database migrations for objects not handled by dbt, implement CI/CD pipelines for schema changes, or coordinate deployments across multiple environments.
+
+- [x] **[skill-creator](.claude/skills/anthropic-skills/skill-creator/SKILL.md)** - Guide for creating effective skills. This skill should be used when users want to create a new skill (or update an existing skill) that extends Claude's capabilities with specialized knowledge, workflows, or tool integrations.
+
+- [x] **[slack-gif-creator](.claude/skills/anthropic-skills/slack-gif-creator/SKILL.md)** - Toolkit for creating animated GIFs optimized for Slack, with validators for size constraints and composable animation primitives. This skill applies when users request animated GIFs or emoji animations for Slack from descriptions like "make me a GIF for Slack of X doing Y".
+
+- [x] **[snowflake-cli](.claude/skills/snowflake-cli/SKILL.md)** - Executing SQL, managing Snowflake objects, deploying applications, and orchestrating data pipelines using the Snowflake CLI (snow) command. Use this skill when you need to run SQL scripts, deploy Streamlit apps, execute Snowpark procedures, manage stages, automate Snowflake operations from CI/CD pipelines, or work with variables and templating.
+
+- [x] **[snowflake-connections](.claude/skills/snowflake-connections/SKILL.md)** - Configuring Snowflake connections using connections.toml (for Snowflake CLI, Streamlit, Snowpark) or profiles.yml (for dbt) with multiple authentication methods (SSO, key pair, username/password, OAuth), managing multiple environments, and overriding settings with environment variables. Use this skill when setting up Snowflake CLI, Streamlit apps, dbt, or any tool requiring Snowflake authentication and connection management.
+
+- [x] **[streamlit-development](.claude/skills/streamlit-development/SKILL.md)** - Developing, testing, and deploying Streamlit data applications on Snowflake. Use this skill when you're building interactive data apps, setting up local development environments, testing with pytest or Playwright, or deploying apps to Snowflake using Streamlit in Snowflake.
+
+- [x] **[task-master](.claude/skills/task-master/SKILL.md)** - AI-powered task management for structured, specification-driven development. Use this skill when you need to manage complex projects with PRDs, break down tasks into subtasks, track dependencies, and maintain organized development workflows across features and branches.
+
+- [x] **[template-skill](.claude/skills/anthropic-skills/template-skill/SKILL.md)** - Replace with description of the skill and when Claude should use it.
+
+- [x] **[theme-factory](.claude/skills/anthropic-skills/theme-factory/SKILL.md)** - Toolkit for styling artifacts with a theme. These artifacts can be slides, docs, reportings, HTML landing pages, etc. There are 10 pre-set themes with colors/fonts that you can apply to any artifact that has been creating, or can generate a new theme on-the-fly.
+
+- [x] **[webapp-testing](.claude/skills/anthropic-skills/webapp-testing/SKILL.md)** - Toolkit for interacting with and testing local web applications using Playwright. Supports verifying frontend functionality, debugging UI behavior, capturing browser screenshots, and viewing browser logs.
+
+- [x] **[xlsx](.claude/skills/anthropic-skills/document-skills/xlsx/SKILL.md)** - Comprehensive spreadsheet creation, editing, and analysis with support for formulas, formatting, data analysis, and visualization. When Claude needs to work with spreadsheets (.xlsx, .xlsm, .csv, .tsv, etc) for: (1) Creating new spreadsheets with formulas and formatting, (2) Reading or analyzing data, (3) Modify existing spreadsheets while preserving formulas, (4) Data analysis and visualization in spreadsheets, or (5) Recalculating formulas
+<!-- END SKILLS - DO NOT EDIT MANUALLY -->

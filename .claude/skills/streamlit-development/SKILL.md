@@ -1,6 +1,6 @@
 ---
 name: streamlit-development
-description: Develop, test, and deploy Streamlit data applications on Snowflake. Use this skill when you're building interactive data apps, setting up local development environments, testing with pytest or Playwright, or deploying apps to Snowflake using Streamlit in Snowflake.
+description: Developing, testing, and deploying Streamlit data applications on Snowflake. Use this skill when you're building interactive data apps, setting up local development environments, testing with pytest or Playwright, or deploying apps to Snowflake using Streamlit in Snowflake.
 ---
 
 # Streamlit Development

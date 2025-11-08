@@ -1,6 +1,6 @@
 ---
 name: dbt-artifacts
-description: Monitor dbt execution using the dbt Artifacts package for cross-platform execution logging and metadata tracking. Use this skill when you need to track test and model execution history, analyze run patterns over time, monitor data quality metrics, or enable programmatic access to dbt execution metadata across any dbt version or platform.
+description: Monitor dbt execution using the dbt Artifacts package. Use this skill when you need to track test and model execution history, analyze run patterns over time, monitor data quality metrics, or enable programmatic access to dbt execution metadata across any dbt version or platform.
 ---
 
 # dbt Artifacts Package - AI Instructions
