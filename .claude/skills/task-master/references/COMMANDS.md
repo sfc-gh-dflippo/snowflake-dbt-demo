@@ -1,3 +1,8 @@
+---
+name: Command Reference
+description: Comprehensive command-line reference and usage examples for task-master
+---
+
 # Task Master AI - Command Reference
 
 Quick reference for common Task Master commands in natural language (for AI agents) and CLI format.

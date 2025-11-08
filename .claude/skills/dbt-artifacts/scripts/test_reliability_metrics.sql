@@ -1,5 +1,5 @@
--- Test Reliability Metrics
--- Calculate pass/fail rates to identify flaky or unreliable tests
+-- name: Test Reliability Metrics
+-- description: Calculate test reliability scores based on pass rates and failure patterns over time
 -- Usage: snow sql -f test_reliability_metrics.sql -c default
 
 SELECT

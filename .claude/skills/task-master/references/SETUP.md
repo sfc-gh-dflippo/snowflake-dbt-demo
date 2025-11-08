@@ -1,3 +1,6 @@
+# name: Task Master AI - Setup & Configuration
+# description: Complete installation and configuration guide for Task Master AI covering npm installation, MCP setup for Cursor/VS Code/Windsurf, API key configuration, model selection, and project initialization.
+
 # Task Master AI - Setup & Configuration
 
 Complete guide for installing and configuring Task Master AI for AI agents integration.

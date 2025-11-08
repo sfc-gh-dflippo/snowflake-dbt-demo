@@ -1,9 +1,5 @@
-"""
-Streamlit Snowpark Connection Pattern
-
-This pattern supports both local development and Snowflake deployment
-by automatically detecting the environment and returning the appropriate session.
-"""
+# name: Streamlit Snowpark Connection Pattern
+# description: Reusable Python pattern for Streamlit apps that automatically detects the environment (Snowflake vs local) and returns the appropriate Snowpark session. Supports both managed sessions and local connections.toml.
 
 import streamlit as st
 from snowflake.snowpark.context import get_active_session

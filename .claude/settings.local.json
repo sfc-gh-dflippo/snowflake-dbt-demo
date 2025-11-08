@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(tree /Users/dflippo/Documents/GitHub/snowflake-dbt-demo/.claude/skills/dbt-artifacts/ -L 2)",
+      "Bash(for skill in /Users/dflippo/Documents/GitHub/snowflake-dbt-demo/.claude/skills/*/)",
+      "Bash(ls -la \"$skill\")",
+      "Bash(done)",
+      "Bash(for skill in */)",
+      "Bash(do echo \"=== $skill%/ ===\")",
+      "Bash(awk '{print $NF}')",
+      "Bash(grep -r '\\`\\`\\`sql' /Users/dflippo/Documents/GitHub/snowflake-dbt-demo/.claude/skills/*/SKILL.md /Users/dflippo/Documents/GitHub/snowflake-dbt-demo/.claude/skills/*/references/*.md)",
+      "Bash(for file in /Users/dflippo/Documents/GitHub/snowflake-dbt-demo/.claude/skills/*/SKILL.md /Users/dflippo/Documents/GitHub/snowflake-dbt-demo/.claude/skills/*/references/*.md)",
+      "Bash(do if [ -f \"$file\" ])",
+      "Bash(grep -q '```sql' \"$file\")",
+      "Bash(then echo \"$file\")",
+      "Bash(fi)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

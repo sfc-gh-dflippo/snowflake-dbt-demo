@@ -1,5 +1,5 @@
--- Recent Test Failures with Context
--- Track test failures and messages from recent runs with full context
+-- name: Recent Test Failures
+-- description: Identify recently failed tests with failure reasons and historical pass/fail trends
 -- Usage: snow sql -f recent_test_failures.sql -c default
 
 SELECT

@@ -1,6 +1,5 @@
--- dbt Project Performance Metrics
--- Query performance metrics (CPU, memory usage)
---
+-- name: Performance Metrics Analysis
+-- description: Track and analyze key performance indicators including execution time, data volume, and resource efficiency
 -- Usage: snow sql -f performance_metrics.sql --enable-templating JINJA -D event_table=MY_DATABASE.MY_SCHEMA.EVENT_LOG
 
 SELECT 

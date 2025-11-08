@@ -1,5 +1,5 @@
--- Slowest Models
--- Identify models with longest execution times (average and peak)
+-- name: Slowest Models Report
+-- description: Identify and rank models by execution time to prioritize optimization efforts
 -- Usage: snow sql -f slowest_models.sql -c default
 
 SELECT

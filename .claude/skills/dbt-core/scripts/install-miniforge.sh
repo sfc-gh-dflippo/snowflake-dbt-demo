@@ -1,6 +1,6 @@
 #!/bin/bash
-# Install Miniforge (conda-forge) non-interactively
-# For AI agent execution
+# name: Install Miniforge
+# description: Download and install Miniforge with conda-forge as the default package channel
 
 set -e
 

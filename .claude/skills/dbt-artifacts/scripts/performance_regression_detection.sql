@@ -1,5 +1,5 @@
--- Performance Regression Detection
--- Compare recent model performance to historical baseline (alert on 20%+ slowdown)
+-- name: Performance Regression Detection
+-- description: Identify performance degradation by comparing current execution times against historical baselines
 -- Usage: snow sql -f performance_regression_detection.sql -c default
 
 WITH recent_runs AS (

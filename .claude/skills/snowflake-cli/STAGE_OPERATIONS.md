@@ -1,3 +1,8 @@
+---
+name: Snowflake CLI Stage Operations
+description: Complete reference guide for managing files and executing scripts on Snowflake stages using the Snowflake CLI. Covers upload/download, execution, stage management, and advanced operations.
+---
+
 # Snowflake CLI Stage Operations
 
 Complete guide to managing files and executing scripts on Snowflake stages.

@@ -1,6 +1,6 @@
 #!/bin/bash
-# Create conda environment with dbt non-interactively
-# For AI agent execution
+# name: Setup dbt with Conda
+# description: Create or update a conda environment for dbt with all required dependencies
 
 set -e
 

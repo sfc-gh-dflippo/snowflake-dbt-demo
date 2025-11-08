@@ -1,6 +1,5 @@
--- dbt Execution Summary by Project
--- Summarize executions by project with error counts
---
+-- name: Execution Summary Report
+-- description: Comprehensive overview of execution history including success rates, duration statistics, and error patterns
 -- Usage: snow sql -f execution_summary.sql --enable-templating JINJA -D event_table=MY_DATABASE.MY_SCHEMA.EVENT_LOG
 
 SELECT 

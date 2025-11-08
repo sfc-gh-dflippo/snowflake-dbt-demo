@@ -1,6 +1,6 @@
 #!/bin/bash
-# Check environment for dbt setup prerequisites
-# Outputs structured information for AI agent decision-making
+# name: Check Environment Prerequisites
+# description: Verify conda/venv installation and validate environment configuration before dbt setup
 
 set -e
 

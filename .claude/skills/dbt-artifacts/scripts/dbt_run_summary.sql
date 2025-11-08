@@ -1,5 +1,5 @@
--- dbt Run Summary
--- High-level overview of all dbt run executions
+-- name: dbt Run Summary
+-- description: Summarize dbt run results including model counts, test results, and overall execution metrics
 -- Usage: snow sql -f dbt_run_summary.sql -c default
 
 SELECT

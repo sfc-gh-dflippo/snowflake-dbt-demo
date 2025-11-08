@@ -1,3 +1,8 @@
+---
+name: Task Master AI - Development Workflows
+description: Comprehensive workflow guide for different Task Master AI development scenarios including basic development loop, PRD-driven features, git branch workflows, team collaboration, experiments, and iterative subtask implementation patterns.
+---
+
 # Task Master AI - Development Workflows
 
 Comprehensive guide for using Task Master in different development scenarios.

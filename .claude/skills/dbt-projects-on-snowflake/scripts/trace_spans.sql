@@ -1,6 +1,5 @@
--- dbt Project Trace Spans
--- Query execution spans for detailed tracing and duration analysis
---
+-- name: Execution Trace Spans
+-- description: Detailed tracing data for execution spans showing timing breakdowns and dependencies
 -- Usage: snow sql -f trace_spans.sql --enable-templating JINJA -D event_table=MY_DATABASE.MY_SCHEMA.EVENT_LOG
 
 SELECT 

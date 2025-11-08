@@ -1,6 +1,6 @@
 #!/bin/bash
-# Create Python venv environment with dbt non-interactively
-# For AI agent execution
+# name: Setup dbt with Python venv
+# description: Create a Python virtual environment for dbt using venv
 
 set -e
 

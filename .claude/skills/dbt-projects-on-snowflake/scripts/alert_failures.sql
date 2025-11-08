@@ -1,7 +1,5 @@
--- Alert on Execution Failures
--- Monitor ERROR severity logs and send alerts when executions fail
--- Returns count of errors in the last hour - use in alerting systems
---
+-- name: Failure Alert Query
+-- description: Generate alerts for failed executions with error details and affected resources
 -- Usage: snow sql -f alert_failures.sql --enable-templating JINJA -D event_table=MY_DATABASE.MY_SCHEMA.EVENT_LOG
 
 SELECT COUNT(*) AS error_count

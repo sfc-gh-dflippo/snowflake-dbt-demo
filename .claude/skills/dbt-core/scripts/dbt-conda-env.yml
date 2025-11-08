@@ -1,3 +1,6 @@
+# name: dbt Conda Environment Configuration
+# description: Conda environment specification with dbt, Snowflake adapter, and data analysis dependencies
+
 ### Use this command to create an isolated conda env:
 # conda env create -f dbt-conda-env.yml
 

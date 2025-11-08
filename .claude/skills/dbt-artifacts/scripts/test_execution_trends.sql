@@ -1,5 +1,5 @@
--- Test Execution Trends
--- Track test execution counts and status over time
+-- name: Test Execution Trends
+-- description: Visualize test execution patterns including duration trends and flakiness indicators
 -- Usage: snow sql -f test_execution_trends.sql -c default
 
 SELECT

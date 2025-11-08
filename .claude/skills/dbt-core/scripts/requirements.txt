@@ -1,3 +1,6 @@
+# name: Python Requirements
+# description: Python package dependencies for dbt-core
+
 ### How to use this file:
 # python -m venv .venv
 # source .venv/bin/activate  # On Windows: .venv\Scripts\activate

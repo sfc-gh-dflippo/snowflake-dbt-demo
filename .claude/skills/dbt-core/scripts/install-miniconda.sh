@@ -1,6 +1,6 @@
 #!/bin/bash
-# Install Miniconda non-interactively
-# For AI agent execution
+# name: Install Miniconda
+# description: Download and install Miniconda for lightweight conda environment management
 
 set -e
 

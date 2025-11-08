@@ -1,6 +1,5 @@
--- Recent dbt Project Executions
--- Lists recent executions with basic information and log severity
---
+-- name: Recent Execution History
+-- description: Query recent execution records with status, duration, and resource consumption details
 -- Usage: snow sql -f recent_executions.sql --enable-templating JINJA -D event_table=MY_DATABASE.MY_SCHEMA.EVENT_LOG
 
 SELECT 

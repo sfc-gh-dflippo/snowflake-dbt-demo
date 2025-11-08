@@ -1,6 +1,5 @@
--- Resource Usage Tracking
--- Query METRIC records to understand CPU and memory consumption by project
---
+-- name: Resource Usage Monitoring
+-- description: Monitor query resource consumption including credits, warehouse usage, and execution costs over time
 -- Usage: snow sql -f resource_usage.sql --enable-templating JINJA -D event_table=MY_DATABASE.MY_SCHEMA.EVENT_LOG
 
 SELECT 

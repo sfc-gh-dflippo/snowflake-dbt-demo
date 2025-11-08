@@ -1,6 +1,5 @@
--- Execution Audit Trail
--- Use RESOURCE_ATTRIBUTES to track who executed what and when
---
+-- name: Audit Trail Logging
+-- description: Track all execution events with timestamps, users, and changes for compliance and debugging
 -- Usage: snow sql -f audit_trail.sql --enable-templating JINJA -D event_table=MY_DATABASE.MY_SCHEMA.EVENT_LOG
 
 SELECT 

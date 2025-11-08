@@ -1,5 +1,5 @@
--- Model Execution Errors
--- Track models that failed to execute with detailed error messages
+-- name: Model Execution Errors
+-- description: Track models that failed to execute with detailed error messages
 -- Usage: snow sql -f model_execution_errors.sql -c default
 
 SELECT

@@ -1,6 +1,5 @@
--- Performance Regression Detection
--- Compare average execution time week-over-week to detect performance degradation
---
+-- name: Performance Regression Detection
+-- description: Identify performance degradation by comparing current execution times against historical baselines
 -- Usage: snow sql -f performance_regression.sql --enable-templating JINJA -D event_table=MY_DATABASE.MY_SCHEMA.EVENT_LOG
 
 SELECT 

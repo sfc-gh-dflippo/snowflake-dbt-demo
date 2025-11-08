@@ -1,6 +1,5 @@
--- dbt Project Execution Errors
--- Query for ERROR level logs to identify failures
---
+-- name: Execution Error Analysis
+-- description: Analyze and categorize execution errors with frequency counts and remediation suggestions
 -- Usage: snow sql -f execution_errors.sql --enable-templating JINJA -D event_table=MY_DATABASE.MY_SCHEMA.EVENT_LOG
 
 SELECT 
