@@ -15,65 +15,40 @@ https://github.com/your-org/custom-skills
 
 ### 2. Install MCP Server
 
-**Option A: Use from This Repository (Recommended)**
-
-Add to `.cursor/mcp.json`:
-
-```json
-{
-  "mcpServers": {
-    "skills": {
-      "command": "node",
-      "args": ["skills-mcp-server/dist/index.js"]
-    }
-  }
-}
-```
-
-Build the server:
-
-```bash
-cd skills-mcp-server
-npm install
-npm run build
-```
-
-**Option B: Use Published Package from GitHub**
-
-Published package: `@sfc-gh-dflippo/skills-mcp-server` on [GitHub Package Registry](https://github.com/sfc-gh-dflippo/snowflake-dbt-demo/pkgs/npm/skills-mcp-server)
-
-**Note:** GitHub Package Registry requires authentication even for public packages.
+**Published package:** `@sfc-gh-dflippo/skills-mcp-server` on [GitHub Package Registry](https://github.com/sfc-gh-dflippo/snowflake-dbt-demo/pkgs/npm/skills-mcp-server)
 
 **Setup authentication:**
 
-1. Create a GitHub Personal Access Token with `read:packages` scope:
+GitHub Package Registry requires authentication to download packages.
+
+1. **Create a GitHub Personal Access Token:**
    - Go to: https://github.com/settings/tokens
-   - Generate new token (classic)
+   - Click "Generate new token (classic)"
    - Select scope: `read:packages`
+   - Copy the token
 
-2. Configure npm globally:
-```bash
-cat > ~/.npmrc << 'EOF'
-@sfc-gh-dflippo:registry=https://npm.pkg.github.com
-//npm.pkg.github.com/:_authToken=YOUR_GITHUB_TOKEN
-EOF
-```
+2. **Configure npm:**
+   ```bash
+   cat > ~/.npmrc << 'EOF'
+   @sfc-gh-dflippo:registry=https://npm.pkg.github.com
+   //npm.pkg.github.com/:_authToken=YOUR_GITHUB_TOKEN
+   EOF
+   ```
+   Replace `YOUR_GITHUB_TOKEN` with your token.
 
-3. Use in `.cursor/mcp.json`:
-```json
-{
-  "mcpServers": {
-    "skills": {
-      "command": "npx",
-      "args": ["-y", "@sfc-gh-dflippo/skills-mcp-server"]
-    }
-  }
-}
-```
+3. **Add to `.cursor/mcp.json`:**
+   ```json
+   {
+     "mcpServers": {
+       "skills": {
+         "command": "npx",
+         "args": ["-y", "@sfc-gh-dflippo/skills-mcp-server"]
+       }
+     }
+   }
+   ```
 
-**Note:** Path is relative to your workspace root (where `.cursor/` folder is located).
-
-Restart Cursor to load the MCP server.
+4. **Restart Cursor** to load the MCP server.
 
 ### 3. Sync Skills
 
@@ -124,6 +99,30 @@ Benefits:
 - **Efficiency**: No script bloat in context windows
 
 ## Development & Testing
+
+### Local Development Setup
+
+If you're contributing to the server or need to test changes:
+
+1. **Clone and build:**
+   ```bash
+   cd skills-mcp-server
+   npm install
+   npm run build
+   ```
+
+2. **Use local build in `.cursor/mcp.json`:**
+   ```json
+   {
+     "mcpServers": {
+       "skills": {
+         "command": "node",
+         "args": ["skills-mcp-server/dist/index.js"]
+       }
+     }
+   }
+   ```
+   **Note:** Path is relative to workspace root (where `.cursor/` folder is).
 
 ### Running Tests
 
