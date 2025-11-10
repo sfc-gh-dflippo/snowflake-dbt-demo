@@ -1,43 +1,43 @@
 {
   "name": "skills-mcp-server",
-  "version": "1.0.0",
-  "description": "TypeScript-based MCP server for managing AI agent skills from Git repositories",
+  "version": "2.0.0",
+  "description": "MCP server built with FastMCP that serves skills sync scripts as downloadable resources",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc",
-    "dev": "tsx src/index.ts",
+    "build": "tsc && mkdir -p dist/resources && cp src/resources/*.py src/resources/*.ts src/resources/*.md dist/resources/",
+    "dev": "npx fastmcp dev src/index.ts",
     "start": "node dist/index.js",
+    "test": "npm run test:server && npm run test:ts-script && npm run test:py-script",
+    "test:server": "npm run build && tsx tests/test-server.ts",
+    "test:ts-script": "tsx tests/test-sync-script.ts",
+    "test:py-script": "npm run build && cd .. && source skills-mcp-server/.venv-test/bin/activate && pytest skills-mcp-server/tests/test_sync_script.py -v",
+    "inspect": "npm run build && npx @modelcontextprotocol/inspector node dist/index.js",
     "watch": "tsc --watch",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "test:ui": "vitest --ui",
     "clean": "rm -rf dist"
   },
   "keywords": [
     "mcp",
+    "fastmcp",
     "skills",
     "ai",
     "agent",
-    "model-context-protocol"
+    "model-context-protocol",
+    "code-execution"
   ],
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.21.1",
-    "gray-matter": "^4.0.3",
-    "simple-git": "^3.30.0",
-    "yaml": "^2.8.1"
+    "fastmcp": "^3.22.0"
   },
   "devDependencies": {
     "@types/node": "^24.10.0",
     "tsx": "^4.20.6",
-    "typescript": "^5.9.3",
-    "vitest": "^4.0.8"
+    "typescript": "^5.9.3"
   },
   "engines": {
-    "node": ">=22.5.0"
+    "node": ">=18.0.0"
   }
 }
-

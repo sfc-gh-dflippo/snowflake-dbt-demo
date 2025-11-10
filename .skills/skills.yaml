@@ -1,5 +1,0 @@
-repositories:
-  - url: https://github.com/anthropics/skills
-    branch: main
-  - url: https://github.com/sfc-gh-dflippo/snowflake-dbt-demo
-    branch: main

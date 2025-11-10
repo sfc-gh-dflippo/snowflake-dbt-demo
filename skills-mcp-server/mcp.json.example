@@ -3,10 +3,7 @@
     "skills": {
       "command": "node",
       "args": ["dist/index.js"],
-      "cwd": "/absolute/path/to/your-project/skills-mcp-server",
-      "env": {
-        "SKILLS_SYNC_INTERVAL_MS": "300000"
-      }
+      "cwd": "/absolute/path/to/your-project/skills-mcp-server"
     }
   }
 }

@@ -1,0 +1,2 @@
+https://github.com/anthropics/skills
+https://github.com/sfc-gh-dflippo/snowflake-dbt-demo

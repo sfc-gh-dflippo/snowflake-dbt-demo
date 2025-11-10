@@ -181,8 +181,9 @@ This project follows **Specification-Driven Development (SDD)** methodology, whe
 
 ---
 
+
 <!-- BEGIN MCP SKILLS - DO NOT EDIT MANUALLY -->
-<!-- Generated: 2025-11-08T22:49:11.086Z -->
+<!-- Generated: 2025-11-10T04:04:12.012Z -->
 
 ## MCP-Managed Skills
 

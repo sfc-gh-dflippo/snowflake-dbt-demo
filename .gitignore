@@ -48,3 +48,6 @@ tasks/
 
 profiles.yml
 .claude/skills/anthropic-reference/
+
+# Skills MCP Server generated files
+.devcontainer/

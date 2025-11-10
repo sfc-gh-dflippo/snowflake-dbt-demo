@@ -2,10 +2,11 @@ node_modules/
 dist/
 *.log
 .DS_Store
-*.db
-*.db-shm
-*.db-wal
 .vscode/
 .idea/
 __pycache__/
 *.py[cod]
+.pytest_cache/
+.venv-test/
+.test-compile/
+*.pyc

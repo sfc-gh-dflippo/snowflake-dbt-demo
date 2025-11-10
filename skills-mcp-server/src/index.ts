@@ -1,484 +1,170 @@
-#!/usr/bin/env node
 /**
- * Skills MCP Server - Main entry point
+ * Skills MCP Server
+ * 
+ * Provides Python and TypeScript sync scripts as downloadable MCP resources.
+ * Built with FastMCP - a trusted TypeScript framework for MCP servers.
+ * 
+ * Resources:
+ * - script://sync-skills.py - Python sync script
+ * - script://sync-skills.ts - TypeScript sync script
+ * - doc://manage-repositories - Documentation for managing repositories
  */
 
-import { Server } from '@modelcontextprotocol/sdk/server/index.js';
-import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import {
-  CallToolRequestSchema,
-  ListToolsRequestSchema,
-} from '@modelcontextprotocol/sdk/types.js';
+import { FastMCP } from 'fastmcp';
 import * as fs from 'fs';
 import * as path from 'path';
-import * as yaml from 'yaml';
-import { RepositoryManager } from './repository-manager.js';
-import { SkillScanner } from './skill-scanner.js';
-import { SkillsDatabase } from './database.js';
-import { BackgroundSync } from './background-sync.js';
-import { AgentsMdGenerator } from './agents-md-generator.js';
-import { SkillsConfig, SkillRepository, RepositoryStatus } from './types.js';
+import { fileURLToPath } from 'url';
 
-class SkillsMCPServer {
-  private server: Server;
-  private skillsDir: string;
-  private repoManager: RepositoryManager;
-  private scanner: SkillScanner;
-  private db: SkillsDatabase;
-  private backgroundSync: BackgroundSync;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-  constructor() {
-    this.server = new Server(
-      {
-        name: 'skills-mcp-server',
-        version: '1.0.0',
-      },
-      {
-        capabilities: {
-          tools: {},
-        },
-      }
+// Constants for instructions
+const WHAT_IT_DOES_INSTRUCTIONS = `**What it does:**
+- Reads repositories from \`.skills/repos.txt\`
+- Clones/pulls GitHub repos efficiently
+- Scans for local and remote SKILL.md files
+- Applies local skill precedence
+- Updates AGENTS.md with organized skills list`;
+
+const PYTHON_SCRIPT_INSTRUCTIONS = `Python script to sync skills from GitHub repositories to AGENTS.md.
+
+**To use:**
+1. Write this script to: \`sync-skills.py\` in project root
+2. Execute: \`python3 sync-skills.py\`
+
+${WHAT_IT_DOES_INSTRUCTIONS}`;
+
+const TYPESCRIPT_SCRIPT_INSTRUCTIONS = `TypeScript script to sync skills from GitHub repositories to AGENTS.md.
+
+**To use:**
+1. Write this script to: \`sync-skills.ts\` in project root
+2. Execute: \`npx tsx sync-skills.ts\`
+
+${WHAT_IT_DOES_INSTRUCTIONS}`;
+
+const MANAGE_REPOS_DESCRIPTION = `Instructions for adding and removing GitHub repositories from the skills configuration.`;
+
+const SERVER_INSTRUCTIONS = `This server manages AI agent skills by providing sync scripts as MCP resources.
+
+**To sync skills:**
+## Step 1: Check all available MCP resources
+## Step 2: Download the \`script://sync-skills.ts\` or \`script://sync-skills.py\` sync script to a file in the project root directory
+## Step 3: Execute the script in your local environment using npx or python3
+
+\`\`\`bash
+npx tsx sync-skills.ts
+\`\`\`
+or
+\`\`\`bash
+python3 sync-skills.py
+\`\`\`
+
+${WHAT_IT_DOES_INSTRUCTIONS}
+
+## Configuration
+
+Configure repositories in \`.skills/repos.txt\`:
+\`\`\`
+https://github.com/anthropics/skills
+https://github.com/your-org/custom-skills
+\`\`\`
+`;
+
+// Initialize FastMCP server
+const server = new FastMCP({
+  name: 'skills-mcp-server',
+  version: '2.0.0',
+  instructions: SERVER_INSTRUCTIONS,
+});
+
+// Add Python sync script resource
+server.addResource({
+  uri: 'script://sync-skills.py',
+  name: 'Skills Sync Script (Python)',
+  description: PYTHON_SCRIPT_INSTRUCTIONS,
+  mimeType: 'text/x-python',
+  load: async () => {
+    const text = fs.readFileSync(
+      path.join(__dirname, 'resources', 'sync-skills.py'),
+      'utf-8'
     );
+    return {
+      text,
+      mimeType: 'text/x-python',
+      uri: 'script://sync-skills.py',
+    };
+  },
+});
 
-    // Detect workspace directory
-    const workspaceDir = process.env.SKILLS_WORKSPACE_DIR || this.findProjectRoot();
-    this.skillsDir = path.join(workspaceDir, '.skills');
-
-    // Initialize components
-    this.repoManager = new RepositoryManager();
-    this.scanner = new SkillScanner();
-    
-    // Initialize skills directory structure
-    this.initializeSkillsDirectory();
-
-    // Initialize database
-    const dbPath = path.join(this.skillsDir, 'skills.db');
-    this.db = new SkillsDatabase(dbPath);
-
-    // Initialize background sync
-    this.backgroundSync = new BackgroundSync(
-      this.skillsDir,
-      this.repoManager,
-      this.scanner,
-      this.db
+// Add TypeScript sync script resource
+server.addResource({
+  uri: 'script://sync-skills.ts',
+  name: 'Skills Sync Script (TypeScript)',
+  description: TYPESCRIPT_SCRIPT_INSTRUCTIONS,
+  mimeType: 'application/typescript',
+  load: async () => {
+    const text = fs.readFileSync(
+      path.join(__dirname, 'resources', 'sync-skills.ts'),
+      'utf-8'
     );
-
-    // Setup MCP handlers
-    this.setupHandlers();
-
-    // Log startup info
-    console.error('[SkillsMCPServer] Initialized');
-    console.error(`[SkillsMCPServer] Skills directory: ${this.skillsDir}`);
-    console.error(`[SkillsMCPServer] Workspace: ${workspaceDir}`);
-  }
-
-  /**
-   * Find project root by looking for .git directory or stopping at parent of skills-mcp-server
-   */
-  private findProjectRoot(): string {
-    let currentDir = process.cwd();
-    
-    // Walk up the directory tree
-    while (currentDir !== path.dirname(currentDir)) {
-      // Check if we're in the skills-mcp-server directory
-      if (path.basename(currentDir) === 'skills-mcp-server') {
-        // Return parent directory (project root)
-        return path.dirname(currentDir);
-      }
-      
-      // Check for .git directory (indicates project root)
-      if (fs.existsSync(path.join(currentDir, '.git'))) {
-        return currentDir;
-      }
-      
-      // Move up one directory
-      currentDir = path.dirname(currentDir);
-    }
-    
-    // Fallback to current working directory
-    return process.cwd();
-  }
-
-  /**
-   * Initialize .skills directory structure
-   */
-  private initializeSkillsDirectory(): void {
-    // Create .skills directory
-    if (!fs.existsSync(this.skillsDir)) {
-      fs.mkdirSync(this.skillsDir, { recursive: true });
-      console.error('[SkillsMCPServer] Created .skills directory');
-    }
-
-    // Create .gitignore to exclude from client repos
-    const gitignorePath = path.join(this.skillsDir, '.gitignore');
-    if (!fs.existsSync(gitignorePath)) {
-      fs.writeFileSync(gitignorePath, '*\n!.gitignore\n', 'utf-8');
-      console.error('[SkillsMCPServer] Created .skills/.gitignore');
-    }
-
-    // Create default skills.yaml if missing
-    const configPath = path.join(this.skillsDir, 'skills.yaml');
-    if (!fs.existsSync(configPath)) {
-      const defaultConfig: SkillsConfig = {
-        repositories: [
-          {
-            url: 'https://github.com/anthropics/skills',
-            branch: 'main',
-          },
-        ],
-      };
-      fs.writeFileSync(configPath, yaml.stringify(defaultConfig), 'utf-8');
-      console.error('[SkillsMCPServer] Created default skills.yaml');
-    }
-
-    // Create repositories directory
-    const reposDir = path.join(this.skillsDir, 'repositories');
-    if (!fs.existsSync(reposDir)) {
-      fs.mkdirSync(reposDir, { recursive: true });
-    }
-
-    // Ensure AGENTS.md exists with skills section markers
-    const agentsMdGenerator = new AgentsMdGenerator();
-    agentsMdGenerator.ensureAgentsMd(path.dirname(this.skillsDir));
-  }
-
-  /**
-   * Setup MCP request handlers
-   */
-  private setupHandlers(): void {
-    // List available tools
-    this.server.setRequestHandler(ListToolsRequestSchema, async () => ({
-      tools: [
-        {
-          name: 'list_skill_repositories',
-          description: 'List all configured skill repositories with their sync status',
-          inputSchema: {
-            type: 'object',
-            properties: {},
-          },
-        },
-        {
-          name: 'add_skill_repository',
-          description: 'Add a new skill repository from a Git URL',
-          inputSchema: {
-            type: 'object',
-            properties: {
-              url: {
-                type: 'string',
-                description: 'Git repository URL (e.g., https://github.com/user/repo)',
-              },
-              branch: {
-                type: 'string',
-                description: 'Branch name (optional, defaults to "main")',
-              },
-            },
-            required: ['url'],
-          },
-        },
-        {
-          name: 'remove_skill_repository',
-          description: 'Remove a skill repository by URL',
-          inputSchema: {
-            type: 'object',
-            properties: {
-              url: {
-                type: 'string',
-                description: 'Git repository URL to remove',
-              },
-            },
-            required: ['url'],
-          },
-        },
-        {
-          name: 'refresh_skill_repositories',
-          description: 'Force immediate sync of all skill repositories (outside of the scheduled interval)',
-          inputSchema: {
-            type: 'object',
-            properties: {},
-          },
-        },
-      ],
-    }));
-
-    // Handle tool calls
-    this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
-      const { name, arguments: args } = request.params;
-
-      try {
-        switch (name) {
-          case 'list_skill_repositories':
-            return await this.handleListRepositories();
-          case 'add_skill_repository':
-            return await this.handleAddRepository(args?.url as string, args?.branch as string);
-          case 'remove_skill_repository':
-            return await this.handleRemoveRepository(args?.url as string);
-          case 'refresh_skill_repositories':
-            return await this.handleRefreshRepositories();
-          default:
-            throw new Error(`Unknown tool: ${name}`);
-        }
-      } catch (error: any) {
-        return {
-          content: [
-            {
-              type: 'text',
-              text: `Error: ${error.message}`,
-            },
-          ],
-        };
-      }
-    });
-  }
-
-  /**
-   * Handle list_skill_repositories tool
-   */
-  private async handleListRepositories(): Promise<any> {
-    const config = this.readConfig();
-    const dbRepos = this.db.getRepositories();
-    const skillCounts = this.db.getSkillCountByRepo();
-
-    const statuses: RepositoryStatus[] = config.repositories.map(repo => {
-      const dbRepo = dbRepos.find(r => r.url === repo.url);
-      const skillCount = dbRepo ? (skillCounts.get(dbRepo.id) || 0) : 0;
-
-      return {
-        url: repo.url,
-        branch: repo.branch || 'main',
-        name: dbRepo?.name || this.repoManager.getRepoNameFromUrl(repo.url),
-        syncStatus: dbRepo ? 'synced' : 'pending',
-        lastSynced: dbRepo ? new Date(dbRepo.last_synced) : undefined,
-        skillCount,
-      };
-    });
-
-    const output = {
-      repositories: statuses,
-      totalRepositories: statuses.length,
-      totalSkills: Array.from(skillCounts.values()).reduce((a, b) => a + b, 0),
-    };
-
     return {
-      content: [
-        {
-          type: 'text',
-          text: JSON.stringify(output, null, 2),
-        },
-      ],
+      text,
+      mimeType: 'application/typescript',
+      uri: 'script://sync-skills.ts',
     };
-  }
-
-  /**
-   * Handle add_skill_repository tool
-   */
-  private async handleAddRepository(url: string, branch?: string): Promise<any> {
-    if (!url) {
-      throw new Error('URL is required');
-    }
-
-    // Validate URL format
-    try {
-      new URL(url);
-    } catch {
-      throw new Error('Invalid URL format');
-    }
-
-    // Read current config
-    const config = this.readConfig();
-
-    // Check if already exists
-    if (config.repositories.some(r => r.url === url)) {
-      throw new Error('Repository already exists');
-    }
-
-    // Add to config
-    config.repositories.push({
-      url,
-      branch: branch || 'main',
-    });
-
-    // Write config
-    this.writeConfig(config);
-
-    // Trigger background sync (non-blocking)
-    setTimeout(() => {
-      this.backgroundSync.runSync().catch(error => {
-        console.error('[SkillsMCPServer] Error during background sync:', error);
-      });
-    }, 1000);
-
-    return {
-      content: [
-        {
-          type: 'text',
-          text: JSON.stringify({
-            success: true,
-            message: `Repository added: ${url}`,
-            note: 'Repository will be cloned in the background. Check AGENTS.md in a few moments.',
-          }, null, 2),
-        },
-      ],
-    };
-  }
-
-  /**
-   * Handle remove_skill_repository tool
-   */
-  private async handleRemoveRepository(url: string): Promise<any> {
-    if (!url) {
-      throw new Error('URL is required');
-    }
-
-    // Read current config
-    const config = this.readConfig();
-
-    // Find repository
-    const index = config.repositories.findIndex(r => r.url === url);
-    if (index === -1) {
-      throw new Error('Repository not found');
-    }
-
-    // Get repo info for cleanup
-    const dbRepo = this.db.getRepositoryByUrl(url);
-    const skillCount = dbRepo ? (this.db.getSkillCountByRepo().get(dbRepo.id) || 0) : 0;
-
-    // Remove from config
-    config.repositories.splice(index, 1);
-    this.writeConfig(config);
-
-    // Clean up database
-    if (dbRepo) {
-      this.db.deleteRepository(url);
-    }
-
-    // Clean up filesystem
-    if (dbRepo) {
-      const repoPath = path.join(this.skillsDir, 'repositories', dbRepo.name);
-      if (fs.existsSync(repoPath)) {
-        fs.rmSync(repoPath, { recursive: true, force: true });
-      }
-    }
-
-    // Update AGENTS.md
-    await this.backgroundSync.runSync();
-
-    return {
-      content: [
-        {
-          type: 'text',
-          text: JSON.stringify({
-            success: true,
-            message: `Repository removed: ${url}`,
-            skillsRemoved: skillCount,
-          }, null, 2),
-        },
-      ],
-    };
-  }
-
-  /**
-   * Handle refresh_skill_repositories tool
-   */
-  private async handleRefreshRepositories(): Promise<any> {
-    console.error('[SkillsMCPServer] Manual refresh triggered');
-    const result = await this.backgroundSync.runSync();
-
-    return {
-      content: [
-        {
-          type: 'text',
-          text: JSON.stringify({
-            success: true,
-            repositoriesProcessed: result.repositoriesProcessed,
-            skillsDiscovered: result.skillsDiscovered,
-            catalogRegenerated: result.catalogRegenerated,
-            errors: result.errors,
-            timestamp: result.timestamp,
-          }, null, 2),
-        },
-      ],
-    };
-  }
-
-  /**
-   * Read configuration from skills.yaml
-   */
-  private readConfig(): SkillsConfig {
-    const configPath = path.join(this.skillsDir, 'skills.yaml');
-    
-    if (!fs.existsSync(configPath)) {
-      return { repositories: [] };
-    }
-
-    try {
-      const content = fs.readFileSync(configPath, 'utf-8');
-      return yaml.parse(content) as SkillsConfig;
-    } catch (error: any) {
-      console.error(`[SkillsMCPServer] Error reading config: ${error.message}`);
-      return { repositories: [] };
-    }
-  }
-
-  /**
-   * Write configuration to skills.yaml
-   */
-  private writeConfig(config: SkillsConfig): void {
-    const configPath = path.join(this.skillsDir, 'skills.yaml');
-    fs.writeFileSync(configPath, yaml.stringify(config), 'utf-8');
-  }
-
-  /**
-   * Start the server
-   */
-  async start(): Promise<void> {
-    const transport = new StdioServerTransport();
-    await this.server.connect(transport);
-
-    // Start background sync
-    const syncIntervalMs = parseInt(process.env.SKILLS_SYNC_INTERVAL_MS || '300000', 10);
-    this.backgroundSync.startBackgroundSync(syncIntervalMs);
-
-    console.error('[SkillsMCPServer] Server started');
-    console.error(`[SkillsMCPServer] Background sync interval: ${syncIntervalMs / 1000}s`);
-  }
-
-  /**
-   * Stop the server
-   */
-  async stop(): Promise<void> {
-    this.backgroundSync.stopBackgroundSync();
-    this.db.close();
-    await this.server.close();
-    console.error('[SkillsMCPServer] Server stopped');
-  }
-}
-
-// Suppress ALL console.error logging when running as MCP server
-// (MCP protocol uses stderr for JSON protocol messages only, not plain text logs)
-// To enable logs for debugging, set SKILLS_DEBUG=true environment variable
-if (!process.env.SKILLS_DEBUG) {
-  console.error = () => {};
-  console.log = () => {};
-  console.warn = () => {};
-}
-
-// Start server
-const server = new SkillsMCPServer();
-server.start().catch((error) => {
-  console.error('[SkillsMCPServer] Fatal error:', error);
-  process.exit(1);
+  },
 });
 
-// Handle shutdown
-process.on('SIGINT', async () => {
-  console.error('[SkillsMCPServer] Shutting down...');
-  await server.stop();
-  process.exit(0);
+// Add repository management documentation
+server.addResource({
+  uri: 'doc://manage-repositories',
+  name: 'Managing Skills Repositories',
+  description: MANAGE_REPOS_DESCRIPTION,
+  mimeType: 'text/markdown',
+  load: async () => {
+    const text = fs.readFileSync(
+      path.join(__dirname, 'resources', 'manage-repositories.md'),
+      'utf-8'
+    );
+    return {
+      text,
+      mimeType: 'text/markdown',
+      uri: 'doc://manage-repositories',
+    };
+  },
 });
 
-process.on('SIGTERM', async () => {
-  console.error('[SkillsMCPServer] Shutting down...');
-  await server.stop();
-  process.exit(0);
+// Add prompts to guide agents on using the resources
+server.addPrompt({
+  name: 'sync-skills',
+  description: 'Step-by-step instructions for syncing skills, including how to fetch and execute the sync script',
+  load: async () => SERVER_INSTRUCTIONS,
 });
 
+server.addPrompt({
+  name: 'manage-repositories',
+  description: 'Learn how to add and remove GitHub repositories from skills configuration',
+  load: async () => {
+    const content = fs.readFileSync(
+      path.join(__dirname, 'resources', 'manage-repositories.md'),
+      'utf-8'
+    );
+    return content;
+  },
+});
+
+// Add tools that agents can call (Cursor needs these!)
+server.addTool({
+  name: 'get_sync_instructions',
+  description: 'Step-by-step instructions for syncing skills, including how to fetch and execute the sync script',
+  execute: async () => SERVER_INSTRUCTIONS,
+});
+
+// Start the server
+server.start({
+  transportType: 'stdio',
+});
+
+console.error('[SkillsMCPServer] Started - serving sync scripts as downloadable resources');
+console.error('[SkillsMCPServer] Resources: 3, Prompts: 2, Tools: 1');
+console.error('[SkillsMCPServer] Built with FastMCP framework');
