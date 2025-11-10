@@ -50,6 +50,38 @@ GitHub Package Registry requires authentication to download packages.
 
 4. **Restart Cursor** to load the MCP server.
 
+### Troubleshooting Installation
+
+**Error: `404 Not Found - GET https://registry.npmjs.org/@sfc-gh-dflippo%2fskills-mcp-server`**
+
+This error means npm is looking for the package on the public npm registry instead of GitHub Package Registry.
+
+**Solution:** Configure npm to use GitHub Package Registry for the `@sfc-gh-dflippo` scope:
+
+1. Check if you have `~/.npmrc` configured:
+   ```bash
+   cat ~/.npmrc
+   ```
+
+2. If the file doesn't exist or is missing the configuration, create it:
+   ```bash
+   cat > ~/.npmrc << 'EOF'
+   @sfc-gh-dflippo:registry=https://npm.pkg.github.com
+   //npm.pkg.github.com/:_authToken=YOUR_GITHUB_TOKEN
+   EOF
+   ```
+
+3. Replace `YOUR_GITHUB_TOKEN` with your personal access token (see step 1 above)
+
+4. Restart Cursor and try again
+
+**Still not working?**
+
+Verify your token has the `read:packages` permission:
+- Go to: https://github.com/settings/tokens
+- Click on your token
+- Ensure `read:packages` is checked
+
 ### 3. Sync Skills
 
 **Option A: Ask your AI agent**
