@@ -28,6 +28,16 @@ GitHub Package Registry requires authentication to download packages.
    - Copy the token
 
 2. **Configure npm:**
+   
+   **Option A: If you already have a `GITHUB_API_KEY` environment variable:**
+   ```bash
+   cat > ~/.npmrc << EOF
+   @sfc-gh-dflippo:registry=https://npm.pkg.github.com
+   //npm.pkg.github.com/:_authToken=${GITHUB_API_KEY}
+   EOF
+   ```
+   
+   **Option B: Replace token manually:**
    ```bash
    cat > ~/.npmrc << 'EOF'
    @sfc-gh-dflippo:registry=https://npm.pkg.github.com
@@ -64,14 +74,29 @@ This error means npm is looking for the package on the public npm registry inste
    ```
 
 2. If the file doesn't exist or is missing the configuration, create it:
+   
+   **Option A: If you have `GITHUB_API_KEY` environment variable:**
+   ```bash
+   cat > ~/.npmrc << EOF
+   @sfc-gh-dflippo:registry=https://npm.pkg.github.com
+   //npm.pkg.github.com/:_authToken=${GITHUB_API_KEY}
+   EOF
+   ```
+   
+   **Option B: Manual token:**
    ```bash
    cat > ~/.npmrc << 'EOF'
    @sfc-gh-dflippo:registry=https://npm.pkg.github.com
    //npm.pkg.github.com/:_authToken=YOUR_GITHUB_TOKEN
    EOF
    ```
+   Replace `YOUR_GITHUB_TOKEN` with your token.
 
-3. Replace `YOUR_GITHUB_TOKEN` with your personal access token (see step 1 above)
+3. Verify the file was created correctly:
+   ```bash
+   cat ~/.npmrc
+   ```
+   You should see your registry and token configuration.
 
 4. Restart Cursor and try again
 
