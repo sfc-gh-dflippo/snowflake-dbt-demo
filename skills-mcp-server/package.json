@@ -1,10 +1,22 @@
 {
-  "name": "skills-mcp-server",
-  "version": "2.0.0",
+  "name": "@sfc-gh-dflippo/skills-mcp-server",
+  "version": "0.0.1",
   "description": "MCP server built with FastMCP that serves skills sync scripts as downloadable resources",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "bin": {
+    "skills-mcp-server": "dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sfc-gh-dflippo/snowflake-dbt-demo.git",
+    "directory": "skills-mcp-server"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "@sfc-gh-dflippo:registry": "https://npm.pkg.github.com"
+  },
   "scripts": {
     "build": "tsc && mkdir -p dist/resources && cp src/resources/*.py src/resources/*.ts src/resources/*.md dist/resources/",
     "dev": "npx fastmcp dev src/index.ts",

@@ -183,8 +183,6 @@ This project follows **Specification-Driven Development (SDD)** methodology, whe
 
 
 <!-- BEGIN MCP SKILLS - DO NOT EDIT MANUALLY -->
-<!-- Generated: 2025-11-10T04:04:12.012Z -->
-
 ## MCP-Managed Skills
 
 This project uses the **Skills MCP Server** to dynamically manage both local SKILL.md files and skills from remote Git repositories.
@@ -199,7 +197,7 @@ Skills are structured instruction sets that enhance AI assistant capabilities fo
 - **scripts/** - Helper scripts and templates
 - **config/** - Configuration files
 
-Skills provide domain-specific knowledge, best practices, code templates, and troubleshooting strategies. Think of them as specialized "expert personas" for areas like dbt development, Snowflake operations, or testing frameworks.
+Skills provide domain-specific knowledge, best practices, code templates, and troubleshooting strategies.
 
 **Key Features:**
 - Skills can be enabled `[x]` or disabled `[ ]` individually
@@ -242,5 +240,6 @@ Skills provide domain-specific knowledge, best practices, code templates, and tr
 - [x] **[theme-factory](.skills/repositories/github-com/anthropics-skills/theme-factory/SKILL.md)** - Toolkit for styling artifacts with a theme. These artifacts can be slides, docs, reportings, HTML landing pages, etc. There are 10 pre-set themes with colors/fonts that you can apply to any artifact that has been creating, or can generate a new theme on-the-fly.
 - [x] **[webapp-testing](.skills/repositories/github-com/anthropics-skills/webapp-testing/SKILL.md)** - Toolkit for interacting with and testing local web applications using Playwright. Supports verifying frontend functionality, debugging UI behavior, capturing browser screenshots, and viewing browser logs.
 - [x] **[xlsx](.skills/repositories/github-com/anthropics-skills/document-skills/xlsx/SKILL.md)** - Comprehensive spreadsheet creation, editing, and analysis with support for formulas, formatting, data analysis, and visualization. When Claude needs to work with spreadsheets (.xlsx, .xlsm, .csv, .tsv, etc) for: (1) Creating new spreadsheets with formulas and formatting, (2) Reading or analyzing data, (3) Modify existing spreadsheets while preserving formulas, (4) Data analysis and visualization in spreadsheets, or (5) Recalculating formulas
+
 
 <!-- END MCP SKILLS - DO NOT EDIT MANUALLY -->

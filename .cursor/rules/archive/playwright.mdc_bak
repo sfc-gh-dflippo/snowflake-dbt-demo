@@ -1,0 +1,215 @@
+---
+description: Playwright MCP for automated web UI testing and browser automation
+globs: **/tests/**/*.py, **/e2e/**/*.py, **/*.spec.ts
+alwaysApply: false
+---
+
+# Playwright MCP - Browser Testing
+
+**Reference:** [Microsoft Playwright MCP](https://github.com/microsoft/playwright-mcp)
+
+Automated browser testing, web scraping, and UI validation using Playwright MCP server.
+
+---
+
+## Setup
+
+```json
+{
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp"]
+    }
+  }
+}
+```
+
+---
+
+## Core Tools
+
+### Navigation & Waiting
+- `browser_navigate` - Load URL
+- `browser_wait_for` - Wait for time, text appearance, or text disappearance
+- `browser_navigate_back` - Go back
+
+### Interaction
+- `browser_click` - Click element (supports button, doubleClick, modifiers)
+- `browser_type` - Type into editable element
+- `browser_fill_form` - Fill multiple form fields at once (faster)
+- `browser_select_option` - Select dropdown option
+- `browser_hover` - Hover over element
+- `browser_drag` - Drag and drop
+- `browser_press_key` - Press keyboard key
+
+### Validation
+- `browser_snapshot` - Accessibility tree (best for AI analysis)
+- `browser_take_screenshot` - Visual capture (full page or element)
+- `browser_console_messages` - Get console logs/errors
+- `browser_network_requests` - View network activity
+
+### Utilities
+- `browser_resize` - Change viewport size
+- `browser_tabs` - Manage tabs (list, new, close, select)
+- `browser_handle_dialog` - Accept/dismiss alerts/confirms
+- `browser_file_upload` - Upload files
+- `browser_evaluate` - Execute JavaScript
+
+---
+
+## Testing Patterns
+
+### Page Load & Verification
+```
+Navigate to http://localhost:8501
+Wait 5 seconds for content to load
+Take accessibility snapshot
+Verify expected elements present
+```
+
+### Form Testing
+```
+Navigate to signup page
+Fill form with browser_fill_form (faster than individual fields):
+  - name: "Test User"
+  - email: "test@example.com"  
+  - password: "SecurePass123"
+Click Submit button
+Wait for "Success" text to appear
+Take screenshot for documentation
+```
+
+### Multi-Page Navigation
+```
+Navigate to homepage
+Click "Products" link
+Verify URL changed to /products
+Click first product card
+Take snapshot to verify product details display
+```
+
+### Responsive Design
+```
+Navigate to application
+Resize to 375x667 (mobile)
+Take screenshot
+Verify mobile menu visible
+Resize to 1920x1080 (desktop)
+Take screenshot
+Verify desktop layout
+```
+
+### Error State Testing
+```
+Navigate to login page
+Click Submit without filling form
+Take snapshot to verify error messages display
+Fill invalid email
+Click Submit
+Verify email validation error appears
+```
+
+---
+
+## Best Practices
+
+### ✅ DO
+- **Use `browser_snapshot` over screenshots** for AI analysis (returns structured accessibility tree)
+- **Wait for content**: Use `browser_wait_for` with time=3-5s for dynamic pages
+- **Batch form fields**: Use `browser_fill_form` for multiple fields
+- **Get element refs from snapshots**: Use exact ref (e.g., ref=e42) for reliable clicks
+- **Check console/network**: Use `browser_console_messages` and `browser_network_requests` to catch errors
+
+### ❌ AVOID
+- Don't use screenshots when you need to interact (use snapshot instead)
+- Don't type each field individually (use fill_form for efficiency)
+- Don't skip waits for dynamic content
+- Don't forget to verify console for JavaScript errors
+
+---
+
+## Common Workflows
+
+### Pre-Deployment Testing
+```
+Start app locally
+Navigate to all key pages
+Verify:
+  - Pages load without errors
+  - Navigation works
+  - Forms submit successfully
+  - Data displays in tables/charts
+  - Dropdowns populate
+  - Error messages show correctly
+  - Responsive at different sizes (375, 768, 1920)
+Check console messages for errors
+Check network requests for failures
+Take screenshots for documentation
+```
+
+### Accessibility Validation
+```
+Take snapshot of each page
+Verify:
+  - Interactive elements have labels
+  - Proper heading hierarchy (h1 → h2 → h3)
+  - Forms have associated labels
+  - Buttons have accessible names
+```
+
+### Visual Regression
+```
+Navigate to page
+Take full-page screenshot: browser_take_screenshot(fullPage=true)
+Compare with baseline screenshots
+Document any differences
+```
+
+---
+
+## Troubleshooting
+
+| Issue | Solution |
+|-------|----------|
+| Browsers not installed | Run `npx @playwright/mcp browser install` |
+| Element not found | Take snapshot first to get current page state and exact ref |
+| Tests too slow | Use `browser_fill_form` instead of multiple `browser_type` |
+| MCP not starting | Restart IDE, verify `mcp.json` is valid JSON |
+
+---
+
+## Quick Reference
+
+```bash
+# Common test flow
+Navigate to http://localhost:8501
+Wait 5 seconds
+Take snapshot
+Click element with ref from snapshot
+Wait for "Success" text
+Take screenshot
+
+# Responsive testing
+Resize to 375x667  # Mobile
+Take screenshot
+Resize to 768x1024  # Tablet  
+Take screenshot
+Resize to 1920x1080  # Desktop
+Take screenshot
+
+# Form testing
+Fill form fields (batch)
+Click Submit
+Wait for success message
+Verify in snapshot
+
+# Error checking
+Get console messages (onlyErrors=true)
+Get network requests
+Verify no 404s or 500s
+```
+
+---
+
+**Last Updated:** 2025-10-10

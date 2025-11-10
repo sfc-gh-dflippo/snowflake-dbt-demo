@@ -15,6 +15,10 @@
 		"playwright": {
 		  "command": "npx",
 		  "args": ["-y", "@playwright/mcp", "--port", "5000"]
-		}
+		},
+	"skills": {
+		"command": "node",
+		"args": ["skills-mcp-server/dist/index.js"]
+	}
 	}
 }

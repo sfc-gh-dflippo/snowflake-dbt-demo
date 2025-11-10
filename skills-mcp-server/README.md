@@ -1,105 +1,48 @@
 # Skills MCP Server
 
-An MCP (Model Context Protocol) server built with [FastMCP](https://github.com/punkpeye/fastmcp) that provides AI agent skills management through downloadable sync scripts.
+Manage AI agent skills from GitHub repositories using an MCP server that provides downloadable sync scripts.
 
-## Architecture
+## Quick Start
 
-This server follows the **resource pattern** recommended by Anthropic and Cloudflare:
+### 1. Configure Repositories
 
-- **Exposes scripts as MCP resources** (not direct tool calls)
-- **Agents download scripts** and execute them locally
-- **Server never executes code** - just serves script content
-- **Works even if server is remote** - no local file dependencies
-
-## How It Works
+Create or edit `.skills/repos.txt` in your project root with one repository URL per line:
 
 ```
-┌─────────┐                  ┌──────────────┐
-│  Agent  │                  │  MCP Server  │
-└────┬────┘                  └──────┬───────┘
-     │                              │
-     │  1. List resources           │
-     ├─────────────────────────────>│
-     │                              │
-     │  2. Returns: script://sync-  │
-     │     skills.py, etc.          │
-     │<─────────────────────────────┤
-     │                              │
-     │  3. Read resource:           │
-     │     script://sync-skills.py  │
-     ├─────────────────────────────>│
-     │                              │
-     │  4. Returns: full Python     │
-     │     script content (10KB)    │
-     │<─────────────────────────────┤
-     │                              │
-     │  5. Write to local file      │
-     │     sync-skills.py           │
-     │                              │
-     │  6. Execute: python3         │
-     │     sync-skills.py           │
-     │                              │
-```
-
-The agent is responsible for:
-1. Fetching the script
-2. Writing it to a local file
-3. Executing it in the local environment
-
-The server is responsible for:
-1. Listing available scripts
-2. Serving script content on demand
-3. **NOT executing anything**
-
-## Available Resources
-
-### Scripts
-
-- `script://sync-skills.py` - Python sync script (10KB)
-  - Clones/pulls GitHub repos
-  - Scans for SKILL.md files
-  - Updates AGENTS.md
-  - Usage: `python3 sync-skills.py`
-
-- `script://sync-skills.ts` - TypeScript sync script (11KB)
-  - Same functionality as Python version
-  - Zero external dependencies (Node.js built-ins only)
-  - Usage: `tsx sync-skills.ts`
-
-### Documentation
-
-- `doc://manage-repositories` - How to add and remove GitHub repositories
-
-## Configuration
-
-Scripts read configuration from `.skills/repos.txt`:
-
-```
-# One repository URL per line
 https://github.com/anthropics/skills
 https://github.com/your-org/custom-skills
 ```
 
-## Installation
+### 2. Install MCP Server
 
-### For MCP Clients
+**Option A: Use Published Package (Recommended)**
 
-Add to your MCP client configuration:
+Add to `.cursor/mcp.json`:
 
 ```json
 {
   "mcpServers": {
     "skills": {
-      "command": "node",
-      "args": ["/path/to/skills-mcp-server/dist/index.js"]
+      "command": "npx",
+      "args": ["-y", "@sfc-gh-dflippo/skills-mcp-server"]
     }
   }
 }
 ```
 
-### For Cursor
+Restart Cursor - the package will be automatically downloaded and cached.
 
-Add to `.cursor/mcp.json`:
+**Option B: Build from Source (Developers)**
+
+If you're modifying the server code:
+
+```bash
+cd skills-mcp-server
+npm install
+npm run build
+```
+
+Then use local path in `.cursor/mcp.json`:
 
 ```json
 {
@@ -112,81 +55,111 @@ Add to `.cursor/mcp.json`:
 }
 ```
 
-**Note:** Cursor currently doesn't expose MCP resources to agents. See [Known Limitations](#known-limitations) below.
+**Note:** Relative paths are resolved from your workspace root (where `.cursor/` folder is located).
 
-## Development
+Restart Cursor to load the MCP server.
+
+### 3. Sync Skills
+
+**Option A: Ask your AI agent**
+```
+Please sync my skill repositories
+```
+
+**Option B: Use the Cursor command**
+```
+/skills/sync-skills
+```
+
+The agent will download and execute a sync script that:
+- Clones/pulls repositories from `.skills/repos.txt`
+- Scans for `SKILL.md` files (local and remote)
+- Updates `AGENTS.md` with your skills catalog
+- Uses shallow git clones for minimal storage (~3MB per repo)
+
+## What Are Skills?
+
+Skills are structured instruction sets (SKILL.md files) that enhance AI assistant capabilities for specific domains. Each skill provides:
+- Domain-specific knowledge and best practices
+- Code templates and examples
+- Troubleshooting strategies
+
+**Local skills** (in your project) override remote skills with the same name.
+
+## How It Works
+
+The server provides sync scripts as **MCP resources** (not direct tool calls):
+
+1. **Agent requests sync** via command or prompt
+2. **Server provides script** (TypeScript or Python)
+3. **Agent downloads and executes** script locally
+4. **Script syncs repositories** and updates AGENTS.md
+
+**Why this approach?**
+
+This follows the **resource pattern** recommended in [Anthropic's Code Execution with MCP](https://www.anthropic.com/engineering/code-execution-with-mcp) blog post:
+
+> "Agents can load only the definitions they need for the current task... Progressive disclosure."
+
+Benefits:
+- **Security**: Server never executes code
+- **Remote-ready**: Works with remote MCP servers
+- **Agent control**: Code runs in agent's environment
+- **Efficiency**: No script bloat in context windows
+
+## Development & Testing
+
+### Running Tests
 
 ```bash
-# Install dependencies
-npm install
+# Run all tests (34 total, ~3 seconds)
+npm test
 
-# Build
-npm run build
+# Individual test suites
+npm run test:server      # MCP server tests (16 tests)
+npm run test:ts-script   # TypeScript script tests (11 tests)
+npm run test:py-script   # Python script tests (7 tests)
+```
 
-# Develop with FastMCP CLI (interactive testing)
+**Test Coverage:**
+- ✅ Server resources, prompts, and tools (100%)
+- ✅ Script structure and syntax validation (100%)
+- ✅ Script compilation (TypeScript → JavaScript, Python bytecode)
+
+### Interactive Development
+
+**FastMCP Dev Mode** - Interactive CLI testing:
+```bash
 npm run dev
-
-# Test (verifies resources work correctly)
-npm run test
 ```
 
-## Testing
+**MCP Inspector** - Visual web UI at `http://localhost:6274`:
+```bash
+npm run inspect
+```
 
-Three test suites validate the complete server:
+### Python Test Setup (First Time)
 
 ```bash
-npm test  # Runs all tests (34 total)
+python3 -m venv .venv-test
+source .venv-test/bin/activate
+pip install -r tests/requirements.txt
 ```
 
-**Test Breakdown:**
-- **TypeScript Server Tests** (16 tests) - Tests MCP server resources, prompts, and tools
-- **TypeScript Script Tests** (11 tests) - Tests TypeScript sync script structure and compilation
-- **Python Script Tests** (7 tests) - Tests Python sync script structure and syntax
+### Troubleshooting
 
-**Individual test suites:**
+**"Module not found" errors:**
 ```bash
-npm run test:server      # TypeScript MCP server tests
-npm run test:ts-script   # TypeScript sync script tests
-npm run test:py-script   # Python sync script tests
+npm run build  # Rebuild dist/ directory
 ```
 
-**Interactive Testing:**
+**Python tests fail:**
 ```bash
-npm run dev     # FastMCP dev mode (interactive CLI)
-npm run inspect # MCP Inspector (web UI at http://localhost:6274)
+rm -rf .venv-test
+python3 -m venv .venv-test
+source .venv-test/bin/activate
+pip install -r tests/requirements.txt
 ```
-
-See [TESTING.md](./TESTING.md) for detailed testing guide.
-
-## Why This Approach?
-
-From [Anthropic's blog](https://www.anthropic.com/engineering/code-execution-with-mcp):
-
-> "agents can load only the definitions they need for the current task... Progressive disclosure."
-
-From [Cloudflare's blog](https://blog.cloudflare.com/code-mode/):
-
-> "LLMs are better at writing code to call MCP, than at calling MCP directly."
-
-### Benefits
-
-1. **Progressive Disclosure**: Agents load only what they need
-2. **Context Efficiency**: No script bloat in context windows
-3. **Remote-Ready**: Works with remote servers
-4. **Execution Isolation**: Code runs in agent's environment, not server's
-5. **Security**: Server can't execute arbitrary code
-
-## What the Scripts Do
-
-Both Python and TypeScript scripts:
-
-1. **Read Configuration** - Load repository URLs from `.skills/repos.txt`
-2. **Sync Repositories** - Clone new repos or `git pull` existing ones (efficient!)
-3. **Scan for Skills** - Find `SKILL.md` files in:
-   - Project root (local skills)
-   - `.skills/repositories/` (remote skills)
-4. **Apply Precedence** - Local skills override remote skills with same name
-5. **Update AGENTS.md** - Generate skills catalog between markers
 
 ## License
 

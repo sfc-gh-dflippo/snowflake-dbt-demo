@@ -1,9 +1,8 @@
 {
   "mcpServers": {
     "skills": {
-      "command": "node",
-      "args": ["dist/index.js"],
-      "cwd": "/absolute/path/to/your-project/skills-mcp-server"
+      "command": "npx",
+      "args": ["-y", "@sfc-gh-dflippo/skills-mcp-server"]
     }
   }
 }

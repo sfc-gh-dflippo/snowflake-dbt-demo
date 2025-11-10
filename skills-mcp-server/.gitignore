@@ -10,3 +10,6 @@ __pycache__/
 .venv-test/
 .test-compile/
 *.pyc
+
+# npm configuration (contains tokens)
+.npmrc
