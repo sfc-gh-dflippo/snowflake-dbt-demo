@@ -54,6 +54,7 @@ jobs:
       
       - name: Run tests
         working-directory: ./skills-mcp-server
+        shell: bash
         run: npm test
 
   publish:
