@@ -58,6 +58,51 @@ Task-master init automatically creates:
 
 **The bootstrapped rules guide all future task-master workflows** - no additional setup needed.
 
+## Installing MCP Server for AI Agents
+
+To enable AI agents to interact with task-master through MCP tools:
+
+**Option 1: Using Cortex (Recommended)**
+
+```bash
+# Using npx (no global install required)
+cortex mcp add --args '-y, task-master-ai, mcp' taskmaster npx
+snova mcp add --args "run, -i, --rm, -e, DOCUMENT_URL, -e, DOCUMENT_TOKEN, -e, DOCUMENT_ID, -e, RUNTIME_URL, -e, RUNTIME_TOKEN, -e, ALLOW_IMG_OUTPUT, datalayer/jupyter-mcp-server:latest" --env "DOCUMENT_URL=http://host.docker.internal:8888, DOCUMENT_TOKEN=jupyter_mcp_token, DOCUMENT_ID=notebooks/model_training.ipynb, RUNTIME_URL=http://host.docker.internal:8888, RUNTIME_TOKEN=jupyter_mcp_token, ALLOW_IMG_OUTPUT=true" jupyter-mcp-server docker
+
+# Or if task-master is installed globally
+cortex mcp add taskmaster task-master --args "mcp"
+```
+
+**Option 2: Manual Configuration**
+
+Add to your MCP configuration (e.g., `.cursor/mcp.json` or `claude_desktop_config.json`):
+
+```json
+{
+  "mcpServers": {
+    "taskmaster": {
+      "command": "npx",
+      "args": ["-y", "task-master-ai", "mcp"]
+    }
+  }
+}
+```
+
+**Or if task-master is installed globally:**
+
+```json
+{
+  "mcpServers": {
+    "taskmaster": {
+      "command": "task-master",
+      "args": ["mcp"]
+    }
+  }
+}
+```
+
+After configuration, restart your AI agent to connect to the task-master MCP server.
+
 ## Troubleshooting
 
 **Node.js not found** - Install Node.js v16+ using:
