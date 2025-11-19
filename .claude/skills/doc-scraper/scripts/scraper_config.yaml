@@ -1,0 +1,76 @@
+# Snowflake Documentation Scraper Configuration
+
+# HTTP Settings
+rate_limiting:
+  requests_per_second: 2  # Lower to be respectful to Snowflake
+  period: 1  # seconds
+  max_concurrent_threads: 4  # Parallel downloads/writes
+
+retry_logic:
+  max_retries: 3
+  backoff_factor: 2
+  timeout: 30  # seconds
+
+user_agent: "SnowflakeDocsScraper/1.0 (Migration Reference Generator)"
+
+# URL Patterns
+sitemap_url: "https://docs.snowflake.com/en/sitemap.xml"
+llms_txt_url: "https://docs.snowflake.com/llms.txt"
+base_path: "/en/migrations/"
+
+# Topic Prefixes for Filename Generation
+topic_prefixes:
+  data-types: "01"
+  functions: "02"
+  syntax: "03"
+  procedures: "04"
+  statements: "05"
+  default: "10"
+
+# Markdownify Settings
+markdownify:
+  heading_style: "ATX"
+  bullets: "-"
+  code_language: "sql"
+  strip_tags:
+    - "script"
+    - "style"
+  escape_asterisks: false
+  escape_underscores: false
+
+# Cache Settings
+cache:
+  enabled: true
+  ttl_hours: 168  # 1 week (7 days * 24 hours)
+  directory: ".cache"
+  
+# Scraped pages tracking
+scraped_pages:
+  cache_file: ".cache/scraped_pages.json"
+  expiration_days: 7  # Re-scrape after 7 days
+
+# Output Settings
+output:
+  base_dir: ".claude/skills/snowflake-migration"
+  create_backups: false
+  validate_output: true
+
+# Spider Configuration
+spider:
+  # Paths to seed the spider with (starting points)
+  start_paths:
+    - "/en/migrations/"
+
+  # Allowed path prefixes - spider will only follow links starting with these
+  allowed_paths:
+    - "/en/"
+
+  # Blocked path patterns - never follow these even if in allowed_paths
+  blocked_patterns:
+    - "/en/release-notes/"
+    - "/en/user-guide/ui-snowsight"
+    - "/en/user-guide/admin-"
+
+  # Safety limits
+  max_pages: 1000  # Stop after this many pages
+  max_queue_size: 500  # Don't let queue grow beyond this

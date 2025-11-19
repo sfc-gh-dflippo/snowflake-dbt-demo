@@ -1,0 +1,26 @@
+# HTTP and Web Scraping
+requests>=2.31.0
+ratelimit>=2.2.1
+
+# HTML/XML Parsing
+beautifulsoup4>=4.12.0
+lxml>=4.9.0
+
+# Markdown Conversion
+markdownify>=0.11.6
+
+# YAML and Front-Matter
+pyyaml>=6.0
+python-frontmatter>=1.0.0
+
+# CLI and Progress
+click>=8.1.0
+tqdm>=4.66.0
+
+# Development Dependencies
+pytest>=7.0.0
+pytest-cov>=4.0.0
+black>=23.0.0
+pylint>=2.17.0
+mypy>=1.0.0
+flake8>=6.0.0
