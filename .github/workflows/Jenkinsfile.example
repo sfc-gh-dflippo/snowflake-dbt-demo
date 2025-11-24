@@ -1,0 +1,168 @@
+pipeline {
+    agent any
+
+    // Equivalent to workflow_dispatch - allows manual triggering
+    // Can also be triggered by SCM changes
+    triggers {
+        // Uncomment to enable automatic triggers on branch changes
+        // pollSCM('H/5 * * * *')
+    }
+
+    parameters {
+        choice(
+            name: 'ENVIRONMENT',
+            choices: ['auto', 'development', 'test', 'production'],
+            description: 'Target environment (auto = based on branch)'
+        )
+    }
+
+    environment {
+        PIP_CACHE_DIR = "${WORKSPACE}/.cache/pip"
+        PYTHON_VERSION = '3.11'
+
+        // Determine environment based on branch if 'auto' is selected
+        TARGET_ENV = "${params.ENVIRONMENT == 'auto' ? (env.BRANCH_NAME == 'main' ? 'production' : (env.BRANCH_NAME == 'test' ? 'test' : 'development')) : params.ENVIRONMENT}"
+
+        // dbt variables
+        DBT_TARGET = "${env.BRANCH_NAME}"
+        DBT_PROJECT_DIR = "${WORKSPACE}"
+        DBT_PROFILES_DIR = "${WORKSPACE}/deploy_config"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                echo "Deploying to ${TARGET_ENV} environment from branch ${env.BRANCH_NAME}"
+                checkout scm
+            }
+        }
+
+        stage('Setup Python') {
+            steps {
+                sh '''
+                    # Install Python 3.11 if not available
+                    python3.11 --version || {
+                        echo "Python 3.11 not found. Please install it on the Jenkins agent."
+                        exit 1
+                    }
+
+                    # Create virtual environment
+                    python3.11 -m venv venv
+                    . venv/bin/activate
+
+                    # Upgrade pip
+                    pip install --upgrade pip
+                '''
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh '''
+                    . venv/bin/activate
+                    pip install -U -r requirements.txt
+                '''
+            }
+        }
+
+        stage('Setup Snowflake Credentials') {
+            steps {
+                script {
+                    // Retrieve credentials from Jenkins credentials store based on environment
+                    // Credentials should be configured in Jenkins with IDs like:
+                    // - snowflake-private-key-production
+                    // - snowflake-private-key-test
+                    // - snowflake-private-key-development
+
+                    withCredentials([
+                        string(credentialsId: "snowflake-private-key-${TARGET_ENV}", variable: 'SNOWFLAKE_PRIVATE_KEY'),
+                        string(credentialsId: "private-key-passphrase-${TARGET_ENV}", variable: 'PRIVATE_KEY_PASSPHRASE')
+                    ]) {
+                        sh '''
+                            # Create private key file
+                            echo "$SNOWFLAKE_PRIVATE_KEY" > rsa_key.p8
+                            chmod 600 rsa_key.p8
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('Deploy dbt Project') {
+            steps {
+                script {
+                    // Load environment-specific variables from Jenkins
+                    // These should be configured in Jenkins as environment variables or properties
+                    withCredentials([
+                        string(credentialsId: "private-key-passphrase-${TARGET_ENV}", variable: 'PRIVATE_KEY_PASSPHRASE')
+                    ]) {
+                        withEnv([
+                            "SNOWFLAKE_ACCOUNT=${env["SNOWFLAKE_ACCOUNT_${TARGET_ENV.toUpperCase()}"]}",
+                            "SNOWFLAKE_USER=${env["SNOWFLAKE_USER_${TARGET_ENV.toUpperCase()}"]}",
+                            "SNOWFLAKE_ROLE=${env["SNOWFLAKE_ROLE_${TARGET_ENV.toUpperCase()}"]}",
+                            "SNOWFLAKE_WAREHOUSE=${env["SNOWFLAKE_WAREHOUSE_${TARGET_ENV.toUpperCase()}"]}",
+                            "SNOWFLAKE_DATABASE=${env["SNOWFLAKE_DATABASE_${TARGET_ENV.toUpperCase()}"]}",
+                            "SNOWFLAKE_SCHEMA=${env["SNOWFLAKE_SCHEMA_${TARGET_ENV.toUpperCase()}"]}",
+                            "SNOWFLAKE_THREADS=${env["SNOWFLAKE_THREADS_${TARGET_ENV.toUpperCase()}"]}",
+                            "DBT_PROJECT_NAME=${env["DBT_PROJECT_NAME_${TARGET_ENV.toUpperCase()}"]}",
+                            "SNOWFLAKE_PRIVATE_KEY_PATH=./rsa_key.p8"
+                        ]) {
+                            sh '''
+                                set -e
+                                . venv/bin/activate
+
+                                # Configure Snowflake connection
+                                snow connection add -n default --no-interactive --authenticator SNOWFLAKE_JWT
+                                snow connection test
+
+                                # Deploy dbt project
+                                dbt clean
+                                dbt deps
+                                dbt parse
+
+                                # Run schemachange for database migrations
+                                schemachange
+
+                                # Deploy to Snowflake
+                                snow dbt deploy ${DBT_PROJECT_NAME}
+                            '''
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Archive Artifacts') {
+            steps {
+                // Archive dbt artifacts for debugging
+                archiveArtifacts artifacts: 'target/**, logs/**',
+                                allowEmptyArchive: true,
+                                fingerprint: true
+            }
+        }
+    }
+
+    post {
+        always {
+            // Clean up private key
+            sh '''
+                rm -f rsa_key.p8
+            '''
+
+            // Clean up virtual environment
+            sh '''
+                rm -rf venv
+            '''
+        }
+
+        success {
+            echo "dbt project deployed successfully to ${TARGET_ENV} environment!"
+        }
+
+        failure {
+            echo "Deployment failed. Check logs for details."
+            // Optionally send notifications (email, Slack, etc.)
+        }
+    }
+}
+
