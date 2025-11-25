@@ -5,6 +5,7 @@ Uses git clone/pull for efficiency. Local SKILL.md files take precedence.
 Configure repositories in .claude/skills/repos.txt (created automatically).
 """
 
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -284,6 +285,78 @@ def update_agents_md(content: str) -> None:
         _ = AGENTS_MD.write_text(new_content)
 
 
+def cleanup_non_skill_folders(repo_paths: dict[str, Path]) -> None:
+    """Remove all files and folders from cloned repositories except .git and skill directory trees."""
+    for repo_name, repo_path in repo_paths.items():
+        if not repo_path.exists():
+            continue
+
+        # Collect all directories that directly contain SKILL.md
+        skill_containing_dirs = set()
+        try:
+            for skill_file in repo_path.rglob("SKILL.md"):
+                skill_containing_dirs.add(skill_file.parent)
+        except (PermissionError, OSError):
+            continue
+
+        removed_count = 0
+
+        def contains_skill(dir_path: Path) -> bool:
+            """Check if directory or any subdirectory contains SKILL.md."""
+            return any(skill_dir.is_relative_to(dir_path) for skill_dir in skill_containing_dirs)
+
+        def is_within_skill_dir(item_path: Path) -> bool:
+            """Check if path is within a skill directory (at or below SKILL.md level)."""
+            try:
+                for skill_dir in skill_containing_dirs:
+                    if item_path.is_relative_to(skill_dir):
+                        return True
+            except ValueError:
+                pass
+            return False
+
+        def cleanup_directory(dir_path: Path) -> None:
+            """Recursively clean up a directory."""
+            nonlocal removed_count
+
+            try:
+                for item in dir_path.iterdir():
+                    # Always skip .git folder
+                    if item.name == ".git":
+                        continue
+
+                    # If item is within a skill directory, keep it entirely
+                    if is_within_skill_dir(item):
+                        continue
+
+                    if item.is_file():
+                        # File is not in a skill directory, remove it
+                        try:
+                            item.unlink()
+                            removed_count += 1
+                        except (PermissionError, OSError) as e:
+                            print(f"    Warning: Could not remove {item.relative_to(repo_path)}: {e}")
+                    elif item.is_dir():
+                        # Check if this subdirectory contains any SKILL.md files
+                        if contains_skill(item):
+                            # This directory has skills below it, recurse to clean intermediate files
+                            cleanup_directory(item)
+                        else:
+                            # No skills in this subtree, remove it entirely
+                            try:
+                                shutil.rmtree(item)
+                                removed_count += 1
+                            except (PermissionError, OSError) as e:
+                                print(f"    Warning: Could not remove {item.relative_to(repo_path)}: {e}")
+            except (PermissionError, OSError):
+                pass
+
+        cleanup_directory(repo_path)
+
+        if removed_count > 0:
+            print(f"    Cleaned up {removed_count} item(s)")
+
+
 def main() -> None:
     """Main execution."""
     _ = check_git_installed()
@@ -301,6 +374,10 @@ def main() -> None:
         target_path = SKILLS_DIR / repo_name
         _ = clone_or_pull_repo(url, target_path)
         repo_paths[repo_name] = target_path
+
+    # Clean up folders without SKILL.md files
+    print("\nCleaning up non-skill folders...")
+    cleanup_non_skill_folders(repo_paths)
 
     # Scan all skills and classify by location
     print("\nScanning all SKILL.md files...")
