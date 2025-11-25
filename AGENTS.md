@@ -182,12 +182,10 @@ This project follows **Specification-Driven Development (SDD)** methodology, whe
 ---
 
 
-<!-- BEGIN MCP SKILLS - DO NOT EDIT MANUALLY -->
-## MCP-Managed Skills
+<!-- BEGIN AUTO-GENERATED SKILLS - DO NOT EDIT MANUALLY -->
+## Skills
 
-This project uses the **Skills MCP Server** to dynamically manage both local SKILL.md files and skills from remote Git repositories.
-
-# Skills
+This project uses the **sync-skills.py** script to automatically sync both local SKILL.md files and skills from remote Git repositories.
 
 **What are Skills?**
 
@@ -208,6 +206,7 @@ Skills provide domain-specific knowledge, best practices, code templates, and tr
 
 ### Local Skills
 
+- [x] **[data-lineage](.claude/skills/data-lineage/SKILL.md)** - Expert guidance for documenting column-level data lineage across multiple source systems, ETL tools, and target platforms
 - [x] **[dbt-architecture](.claude/skills/dbt-architecture/SKILL.md)** - dbt project structure using medallion architecture (bronze/silver/gold layers). Use this skill when planning project organization, establishing folder structure, defining naming conventions, implementing layer-based configuration, or ensuring proper model dependencies and architectural patterns.
 - [x] **[dbt-artifacts](.claude/skills/dbt-artifacts/SKILL.md)** - Monitor dbt execution using the dbt Artifacts package. Use this skill when you need to track test and model execution history, analyze run patterns over time, monitor data quality metrics, or enable programmatic access to dbt execution metadata across any dbt version or platform.
 - [x] **[dbt-commands](.claude/skills/dbt-commands/SKILL.md)** - dbt command-line operations, model selection syntax, Jinja patterns, troubleshooting, and debugging. Use this skill when running dbt commands, selecting specific models, debugging compilation errors, using Jinja macros, or troubleshooting dbt execution issues.
@@ -223,9 +222,11 @@ Skills provide domain-specific knowledge, best practices, code templates, and tr
 - [x] **[skills-sync](.claude/skills/skills-sync/SKILL.md)** - Manage and synchronize AI agent skills from local SKILL.md files and remote Git repositories to AGENTS.md. This skill should be used when users need to sync skills, add/remove skill repositories, update skill catalogs, or set up the skills infrastructure in their projects.
 - [x] **[snowflake-cli](.claude/skills/snowflake-cli/SKILL.md)** - Executing SQL, managing Snowflake objects, deploying applications, and orchestrating data pipelines using the Snowflake CLI (snow) command. Use this skill when you need to run SQL scripts, deploy Streamlit apps, execute Snowpark procedures, manage stages, automate Snowflake operations from CI/CD pipelines, or work with variables and templating.
 - [x] **[snowflake-connections](.claude/skills/snowflake-connections/SKILL.md)** - Configuring Snowflake connections using connections.toml (for Snowflake CLI, Streamlit, Snowpark) or profiles.yml (for dbt) with multiple authentication methods (SSO, key pair, username/password, OAuth), managing multiple environments, and overriding settings with environment variables. Use this skill when setting up Snowflake CLI, Streamlit apps, dbt, or any tool requiring Snowflake authentication and connection management.
+- [x] **[snowflake-docs](.claude/skills/snowflake-docs/SKILL.md)** - Reference documentation scraped from Snowflake's official documentation
 - [x] **[streamlit-development](.claude/skills/streamlit-development/SKILL.md)** - Developing, testing, and deploying Streamlit data applications on Snowflake. Use this skill when you're building interactive data apps, setting up local development environments, testing with pytest or Playwright, or deploying apps to Snowflake using Streamlit in Snowflake.
 - [x] **[task-master](.claude/skills/task-master/SKILL.md)** - AI-powered task management for structured, specification-driven development. Use this skill when you need to manage complex projects with PRDs, break down tasks into subtasks, track dependencies, and maintain organized development workflows across features and branches.
 - [x] **[task-master-install](.claude/skills/task-master-install/SKILL.md)** - Install and initialize task-master for AI-powered task management and specification-driven development. Use this skill when users ask you to parse a new PRD, when starting a new project that needs structured task management, when users mention wanting task breakdown or project planning, or when implementing specification-driven development workflows.
+- [x] **[task-master-viewer](.claude/skills/task-master-viewer/SKILL.md)** - Launch a Streamlit GUI for Task Master tasks.json editing. Use when users want a visual interface instead of CLI/MCP commands.
 
 ### github-com/anthropics-skills
 
@@ -246,5 +247,4 @@ Skills provide domain-specific knowledge, best practices, code templates, and tr
 - [x] **[webapp-testing](.claude/skills/repositories/github-com/anthropics-skills/webapp-testing/SKILL.md)** - Toolkit for interacting with and testing local web applications using Playwright. Supports verifying frontend functionality, debugging UI behavior, capturing browser screenshots, and viewing browser logs.
 - [x] **[xlsx](.claude/skills/repositories/github-com/anthropics-skills/document-skills/xlsx/SKILL.md)** - Comprehensive spreadsheet creation, editing, and analysis with support for formulas, formatting, data analysis, and visualization. When Claude needs to work with spreadsheets (.xlsx, .xlsm, .csv, .tsv, etc) for: (1) Creating new spreadsheets with formulas and formatting, (2) Reading or analyzing data, (3) Modify existing spreadsheets while preserving formulas, (4) Data analysis and visualization in spreadsheets, or (5) Recalculating formulas
 
-
-<!-- END MCP SKILLS - DO NOT EDIT MANUALLY -->
+<!-- END AUTO-GENERATED SKILLS - DO NOT EDIT MANUALLY -->

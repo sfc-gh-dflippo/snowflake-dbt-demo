@@ -47,8 +47,8 @@ SKILLS_DIR = PROJECT_ROOT / ".claude" / "skills" / "repositories"
 CONFIG_FILE = PROJECT_ROOT / ".claude" / "skills" / "repos.txt"
 AGENTS_MD = PROJECT_ROOT / "AGENTS.md"
 MARKERS = (
-    "<!-- BEGIN MCP SKILLS - DO NOT EDIT MANUALLY -->",
-    "<!-- END MCP SKILLS - DO NOT EDIT MANUALLY -->",
+    "<!-- BEGIN AUTO-GENERATED SKILLS - DO NOT EDIT MANUALLY -->",
+    "<!-- END AUTO-GENERATED SKILLS - DO NOT EDIT MANUALLY -->",
 )
 
 
@@ -207,11 +207,10 @@ def format_skills_section(
 ) -> str:
     """Format skills for AGENTS.md with local priority and grouping."""
     output: list[str] = []
-    output.append("## MCP-Managed Skills\n\n")
+    output.append("## Skills\n\n")
     output.append(
-        "This project uses the **Skills MCP Server** to dynamically manage both local SKILL.md files and skills from remote Git repositories.\n\n"
+        "This project uses the **sync-skills.py** script to automatically sync both local SKILL.md files and skills from remote Git repositories.\n\n"
     )
-    output.append("# Skills\n\n")
     output.append("**What are Skills?**\n\n")
     output.append(
         "Skills are structured instruction sets that enhance AI assistant "
@@ -256,7 +255,11 @@ def format_skills_section(
             output.append(f"- [x] **[{name}]({skill['path']})** - {skill['description']}\n")
         output.append("\n")
 
-    return "".join(output)
+    # Remove trailing newline to avoid double blank line before closing marker
+    result = "".join(output)
+    if result.endswith("\n\n"):
+        result = result[:-1]
+    return result
 
 
 def update_agents_md(content: str) -> None:
@@ -268,6 +271,20 @@ def update_agents_md(content: str) -> None:
 
     agents_content = AGENTS_MD.read_text()
     start_marker, end_marker = MARKERS
+
+    # Check for old MCP markers and replace them with new markers
+    old_markers = (
+        "<!-- BEGIN MCP SKILLS - DO NOT EDIT MANUALLY -->",
+        "<!-- END MCP SKILLS - DO NOT EDIT MANUALLY -->",
+    )
+    old_start_marker, old_end_marker = old_markers
+
+    # Replace old markers with new ones if found
+    if old_start_marker in agents_content:
+        agents_content = agents_content.replace(old_start_marker, start_marker)
+    if old_end_marker in agents_content:
+        agents_content = agents_content.replace(old_end_marker, end_marker)
+
     start_idx = agents_content.find(start_marker)
     end_idx = agents_content.find(end_marker)
 
