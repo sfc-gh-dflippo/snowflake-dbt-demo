@@ -17,16 +17,12 @@ Sync AI agent skills from local SKILL.md files and remote Git repositories into 
 2. Run the sync script (automatically finds project root):
 
 ```bash
-# Python version
 python3 .claude/skills/skills-sync/scripts/sync-skills.py
-
-# OR TypeScript version
-npx tsx .claude/skills/skills-sync/scripts/sync-skills.ts
 ```
 
 3. Check AGENTS.md for updated skills catalog
 
-**Note:** Scripts automatically detect project root by walking up the directory tree, so they work from any location without copying.
+**Note:** The script automatically detects project root by walking up the directory tree, so it works from any location without copying.
 
 ## How It Works
 
@@ -45,13 +41,13 @@ https://github.com/sfc-gh-dflippo/snowflake-dbt-demo
 
 ### Sync Process
 
-The scripts:
+The script:
 
-1. Clone/pull repositories to `.claude/skills/repositories/` (shallow clones for efficiency)
-2. Scan entire project for SKILL.md files (excluding node_modules, .git, venv, **pycache**)
-3. Parse YAML frontmatter (`name` and `description` fields)
-4. Apply precedence: local skills override repository skills
-5. Update AGENTS.md between markers with organized catalog
+1. Clones/pulls repositories to `.claude/skills/repositories/` (shallow clones for efficiency)
+2. Scans entire project for SKILL.md files (excluding node_modules, .git, venv, __pycache__)
+3. Parses YAML frontmatter (`name` and `description` fields)
+4. Applies precedence: local skills override repository skills
+5. Updates AGENTS.md between markers with organized catalog
 
 ### Skill Precedence
 
@@ -81,15 +77,8 @@ The scripts:
 
 ## Script Requirements
 
-**Python (`sync-skills.py`):**
-
 - Python 3.8+
 - Auto-installs `python-frontmatter` if needed
-
-**TypeScript (`sync-skills.ts`):**
-
-- Node.js 18+
-- Zero external dependencies
 
 ## Troubleshooting
 
@@ -105,10 +94,6 @@ The scripts:
 
 - Script auto-installs, or run: `pip install python-frontmatter`
 
-**tsx not found:**
-
-- Install: `npm install -g tsx` or use: `npx tsx script-path`
-
 **SKILL.md parse errors:**
 
 - Verify valid YAML frontmatter with `name` and `description` fields
@@ -121,5 +106,3 @@ The scripts:
 ## Resources
 
 **scripts/sync-skills.py** - Python sync script (standalone, auto-installs dependencies)
-
-**scripts/sync-skills.ts** - TypeScript sync script (zero dependencies)
