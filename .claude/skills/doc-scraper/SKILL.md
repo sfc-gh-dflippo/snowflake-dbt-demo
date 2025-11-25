@@ -1,202 +1,193 @@
+---
+name: doc-scraper
+description: Generic web scraper for extracting and organizing Snowflake documentation with intelligent caching and configurable spider depth. Install globally with uv for easy access, or use uvx for development. Scrapes any section of docs.snowflake.com controlled by --base-path.
+---
+
 # Snowflake Documentation Scraper
 
-AI-powered web scraper for extracting and organizing Snowflake documentation with intelligent caching and configurable spider depth.
+Generic scraper for any section of docs.snowflake.com. Converts to Markdown with metadata and generates indexed SKILL.md.
+
+**Features:** SQLite caching (7-day expiration) • Multi-threaded (4 workers) • Configurable spider depth • Base path filtering
+
+**Install:** `uv tool install --editable .` • **Run:** `doc-scraper --output-dir=/path/to/output`
 
 ## Quick Start
 
+**One-time setup (installs globally):**
 ```bash
-cd .claude/skills/doc-scraper/scripts
-source ../venv/bin/activate
-python doc-scraper.py --full-update --spider --spider-depth=1
+cd .claude/skills/doc-scraper
+uv tool install --editable .
 ```
 
-## Core Features
+**Then run from anywhere:**
+```bash
+doc-scraper --output-dir=/path/to/output
+```
 
-- **Intelligent Spidering**: Configurable depth control (0=seeds only, 1=+direct links, 2=+second degree)
-- **SQLite Caching**: Automatic database tracking with 7-day expiration
-- **Pre-loading**: Scans existing files on startup to avoid re-scraping
-- **Multi-threaded**: Concurrent fetching (4 workers default)
-- **Rate Limited**: Respectful 2 req/sec to Snowflake servers
-- **Auto-generates**: Single SKILL.md with all document links
+**For development** (picks up code/config changes without reinstall):
+```bash
+cd .claude/skills/doc-scraper
+uvx --from . doc-scraper --output-dir=../../snowflake-docs
+```
 
-## Command Reference
+## Command Options
 
-### Basic Usage
+| Option | Default | Description |
+|--------|---------|-------------|
+| `--output-dir DIR` | **Required** | Output directory for scraped docs (relative to CWD) |
+| `--base-path PATH` | `/en/migrations/` | URL filter - controls what section to scrape |
+| `--spider/--no-spider` | `--spider` | Follow internal links |
+| `--spider-depth N` | `1` | Depth: 0=seeds only, 1=+direct links, 2=+2nd degree |
+| `--limit N` | None | Cap URLs (for testing) |
+| `--dry-run` | - | Preview without writing files |
+| `-v, --verbose` | - | Debug logging |
+
+## Common Tasks
+
+**Using globally installed tool** (recommended - run from anywhere):
 
 ```bash
-# Scrape migrations + direct links (depth=1)
-python doc-scraper.py --full-update --spider --spider-depth=1
+# Initial scrape - migrations section (clear cache first)
+rm -rf /path/to/project/snowflake-docs/.cache
+doc-scraper --output-dir=/path/to/project/snowflake-docs
 
-# Scrape only migration pages (no spidering)
-python doc-scraper.py --full-update --no-spider
+# Update existing (skips cached pages automatically)
+doc-scraper --output-dir=/path/to/project/snowflake-docs
 
-# Scrape with 2 degrees of spidering
-python doc-scraper.py --full-update --spider --spider-depth=2
+# Scrape SQL reference instead of migrations
+doc-scraper --output-dir=/path/to/project/snowflake-docs \
+  --base-path="/en/sql-reference/"
 
-# Test with limited URLs
-python doc-scraper.py --full-update --spider --limit 10
+# Scrape user guide section
+doc-scraper --output-dir=/path/to/project/snowflake-docs \
+  --base-path="/en/user-guide/"
+
+# Deep spider (2 levels of link following)
+doc-scraper --output-dir=/path/to/project/snowflake-docs \
+  --spider-depth=2
+
+# Test run (10 URLs max, preview only)
+doc-scraper --output-dir=/path/to/project/snowflake-docs \
+  --limit 10 --dry-run
 ```
 
-### Key Options
+**For development** (from `.claude/skills/doc-scraper/` directory):
 
-- `--full-update`: Scrape all discovered URLs
-- `--spider/--no-spider`: Enable/disable link following (default: on)
-- `--spider-depth N`: How deep to spider (default: 1)
-  - `0`: Seeds only (no following)
-  - `1`: Seeds + direct links
-  - `2`: Seeds + links + links from those
-- `--base-path PATH`: URL filter (default: `/en/migrations/`)
-- `--output-dir DIR`: Where to save (default: `../../snowflake-docs`)
-- `--limit N`: Cap URLs per database (testing)
-- `--dry-run`: Preview without writing
-
-### Output Structure
-
-```
-snowflake-docs/
-├── SKILL.md              # Auto-generated index of all docs
-└── en/
-    └── migrations/       # Organized by URL path
-        ├── guides/
-        ├── sma-docs/
-        └── snowconvert-docs/
-```
-
-## Database Management
-
-### Cache Location
-```
-scripts/.cache/scraper.db
-```
-
-### Reset Cache
 ```bash
-rm -f scripts/.cache/scraper.db
+# Use uvx to pick up code/config changes immediately
+uvx --from . doc-scraper --output-dir=../../snowflake-docs
+uvx --from . doc-scraper --output-dir=../../snowflake-docs --base-path="/en/sql-reference/"
 ```
-
-### Cache Behavior
-- **7-day expiration**: Pages older than 7 days are re-scraped
-- **Automatic pre-load**: Existing files loaded into DB on startup
-- **Skip cached**: Already-scraped pages skipped automatically
-- **Persistent**: Survives crashes, continues from where it left off
 
 ## Configuration
 
-Edit `scripts/scraper_config.yaml`:
+**Auto-created on first run**: `{output-dir}/scraper_config.yaml`
+
+The config file is automatically created in your output directory on first run with these defaults:
 
 ```yaml
-# Rate limiting
 rate_limiting:
-  requests_per_second: 2
-  max_concurrent_threads: 4
+  requests_per_second: 2        # Rate limit
+  max_concurrent_threads: 4     # Parallel workers
 
-# Spider limits
 spider:
-  max_pages: 1000
-  max_queue_size: 500
-  allowed_paths:
-    - "/en/"
+  max_pages: 1000              # Stop after N pages
+  max_queue_size: 500          # Queue limit
+  allowed_paths: ["/en/"]      # URL filters
 
-# Cache expiration
 scraped_pages:
-  expiration_days: 7
+  expiration_days: 7           # Cache expiration
 ```
 
-## Common Workflows
+**To customize**: Edit `{output-dir}/scraper_config.yaml` directly. Changes take effect on next run.
 
-### 1. Initial Scrape
-```bash
-# Clear everything and start fresh
-rm -rf ../../snowflake-docs
-rm -f .cache/scraper.db
+## Output Structure
 
-# Scrape migrations + direct references
-python doc-scraper.py --full-update --spider --spider-depth=1
+```
+snowflake-docs/
+├── SKILL.md                    # Auto-generated index
+└── en/migrations/              # Organized by URL path
+    ├── page1.md               # With YAML frontmatter
+    └── page2.md
 ```
 
-### 2. Update Existing
-```bash
-# Just run again - automatically skips cached pages
-python doc-scraper.py --full-update --spider --spider-depth=1
-```
-
-### 3. Expand Coverage
-```bash
-# Increase spider depth to get more pages
-python doc-scraper.py --full-update --spider --spider-depth=2
-```
-
-### 4. Change Target
-```bash
-# Scrape different documentation section
-python doc-scraper.py --full-update --base-path="/en/sql-reference/"
-```
-
-## Output Files
-
-Each scraped page creates:
-
-**Markdown file** with YAML front-matter:
+Each markdown file includes:
 ```yaml
 ---
 title: "Page Title"
-description: "Page description"
 source_url: "https://docs.snowflake.com/..."
 last_scraped: "2025-11-19T12:30:00+00:00"
-scraper_version: "1.1.0"
-auto_generated: true
 ---
-
-# Content here...
 ```
 
-**SKILL.md** index:
-```markdown
-- [Page Title](path/to/file.md) - Description
+## Cache Management
+
+**Cache location**: `{output-dir}/.cache/`
+- `scraper.db` - SQLite database with page metadata
+- `sitemap_cache.json` - Cached sitemap URLs
+
+```bash
+# Clear cache for a specific output directory
+rm -rf /path/to/output/.cache
+
+# Clear cache (when using relative path from project)
+rm -rf ../../snowflake-docs/.cache
 ```
 
-## Memory & Performance
-
-- **Memory usage**: ~10-50 KB (only active queue in RAM)
-- **Speed**: 2 requests/second, 4 concurrent workers
-- **Cache efficiency**: 95%+ on subsequent runs
-- **Database size**: ~50 KB per 1,000 pages
+**Cache behavior**: 7-day expiration, automatic pre-load, survives crashes, ~50KB per 1,000 pages.
 
 ## Troubleshooting
 
-### Issue: Too many pages scraped
-**Solution**: Lower `--spider-depth` or add blocked patterns to config
+| Issue | Solution |
+|-------|----------|
+| Too many pages scraped | Lower `--spider-depth` or add blocked patterns in config |
+| Missing pages | Increase `--spider-depth` or adjust `allowed_paths` |
+| Slow performance | Check `max_queue_size` and `max_pages` in config |
+| Cache not working | Delete `scripts/.cache/scraper.db` and re-run |
+| ImportError (uv) | Use `uvx --refresh` or clear cache: `rm -rf ~/.cache/uv/archive-v0/<hash>` |
 
-### Issue: Missing pages
-**Solution**: Increase `--spider-depth` or adjust `allowed_paths` in config
+## Installation
 
-### Issue: Slow performance
-**Solution**: Check `max_queue_size` and `max_pages` limits in config
-
-### Issue: Cache not working
-**Solution**: Delete `.cache/scraper.db` and re-run to rebuild
-
-## Technical Details
-
-- **Language**: Python 3.11+
-- **Database**: SQLite with thread-safe operations
-- **HTML Parser**: BeautifulSoup with lxml
-- **Markdown**: markdownify with ATX headers
-- **Rate Limiting**: ratelimit with thread safety
-- **Front-matter**: python-frontmatter for metadata
-
-## Dependencies
-
-Install via:
+**Recommended: Global install with uv**
 ```bash
-source ../venv/bin/activate
-pip install -r requirements.txt
+cd .claude/skills/doc-scraper
+uv tool install --editable .
 ```
 
-See `requirements.txt` for full list.
+Benefits:
+- ✅ Run from anywhere: `doc-scraper --output-dir=/path/to/output`
+- ✅ Simple command: no `uvx` or directory navigation
+- ✅ Editable mode: updates when you pull new code
+
+**For development: Use uvx**
+```bash
+cd .claude/skills/doc-scraper
+uvx --from . doc-scraper --output-dir=../../snowflake-docs
+```
+
+Benefits:
+- ✅ No installation needed
+- ✅ Picks up code changes immediately
+- ✅ Picks up config changes (`scraper_config.yaml`) immediately
+- ✅ Perfect for testing changes
+
+**Legacy: venv method**
+```bash
+cd .claude/skills/doc-scraper/scripts
+python -m venv ../venv
+source ../venv/bin/activate
+pip install -r ../requirements.txt
+python doc_scraper.py --output-dir=../../snowflake-docs
+```
+
+**⚠️ Path Tips:**
+- Global install: Use absolute paths for `--output-dir`
+- uvx/venv: Can use relative paths from project directory
+
+## Technical Stack
+
+Python 3.11+ • SQLite • BeautifulSoup • markdownify • requests • ratelimit • click
 
 ---
 
-**Version**: 1.1.0
-**Last Updated**: 2025-11-19
-**Status**: Production Ready ✅
+**Version**: 1.1.0 • **Status**: Production Ready ✅

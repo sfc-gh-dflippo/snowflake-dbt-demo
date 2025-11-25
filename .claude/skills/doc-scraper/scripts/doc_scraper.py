@@ -71,10 +71,37 @@ def get_logger(name: str) -> logging.Logger:
 logger = get_logger(__name__)
 
 
-def load_config(config_path: Optional[Path] = None) -> dict:
-    """Load scraper configuration from YAML."""
+def load_config(config_path: Optional[Path] = None, output_dir: Optional[str] = None) -> dict:
+    """Load scraper configuration from YAML.
+
+    Priority:
+    1. Explicit config_path if provided
+    2. Config in output_dir/scraper_config.yaml
+    3. Embedded config in scripts/scraper_config.yaml
+
+    On first run, copies embedded config to output_dir for customization.
+    """
+    embedded_config = Path(__file__).parent / 'scraper_config.yaml'
+
     if config_path is None:
-        config_path = Path(__file__).parent / 'scraper_config.yaml'
+        # Check output directory first
+        if output_dir:
+            output_config = Path(output_dir) / 'scraper_config.yaml'
+
+            # Create output directory if it doesn't exist
+            Path(output_dir).mkdir(parents=True, exist_ok=True)
+
+            # Copy embedded config to output dir on first run (visible, not hidden)
+            if not output_config.exists():
+                import shutil
+                shutil.copy2(embedded_config, output_config)
+                logger.info(f"Created config file: {output_config}")
+
+            config_path = output_config
+
+        # Fall back to embedded config
+        if config_path is None or not config_path.exists():
+            config_path = embedded_config
 
     with open(config_path, 'r', encoding='utf-8') as f:
         return yaml.safe_load(f)
@@ -309,16 +336,19 @@ class SnowflakeDocsScraper:
         base_path: str = "/en/"
     ):
         """Initialize the scraper."""
-        self.config = load_config(config_path)
         self.output_dir = output_dir
         self.base_path = base_path
+
+        # Load config (checks output_dir first, then falls back to embedded)
+        self.config = load_config(config_path, output_dir)
         self.session = self._create_session()
 
-        # Initialize database for tracking (memory-efficient!)
-        self.db = ScraperDatabase()
+        # Initialize database in output directory (memory-efficient!)
+        output_path = Path(self.output_dir)
+        cache_dir = output_path / '.cache'
+        self.db = ScraperDatabase(db_path=str(cache_dir / 'scraper.db'))
 
         # Pre-load database from existing files (if any)
-        output_path = Path(self.output_dir)
         if output_path.exists():
             self.db.preload_from_existing_files(output_path, logger)
 
@@ -385,7 +415,9 @@ class SnowflakeDocsScraper:
 
     def discover_urls(self, use_cache: bool = True) -> Dict[str, Dict[str, List[str]]]:
         """Discover and categorize URLs from sitemap."""
-        cache_file = Path('.cache/sitemap_cache.json')
+        cache_dir = Path(self.output_dir) / '.cache'
+        cache_dir.mkdir(parents=True, exist_ok=True)
+        cache_file = cache_dir / 'sitemap_cache.json'
 
         if use_cache and cache_file.exists():
             logger.info("Loading URLs from cache...")
@@ -963,19 +995,17 @@ All content is automatically scraped from [Snowflake's Official Documentation](h
 # ============================================================================
 
 @click.command()
-@click.option('--database', '-d', multiple=True, help='Specific database(s) to scrape')
-@click.option('--full-update', is_flag=True, help='Scrape all databases')
-@click.option('--limit', type=int, help='Limit URLs per database (for testing)')
-@click.option('--output-dir', default='../../snowflake-docs',
-              help='Output directory for skills')
+@click.option('--output-dir', required=True,
+              help='Output directory for scraped documentation')
 @click.option('--base-path', default='/en/migrations/',
               help='URL base path to filter (e.g., /en/, /en/sql-reference/)')
+@click.option('--limit', type=int, help='Limit URLs (for testing)')
 @click.option('--spider/--no-spider', default=True, help='Follow internal links (spider mode)')
 @click.option('--spider-depth', default=1, type=int,
               help='Spider depth: 0=seeds only, 1=+direct links (default), 2=+2nd degree, etc.')
 @click.option('--verbose', '-v', is_flag=True, help='Verbose output')
 @click.option('--dry-run', is_flag=True, help='Preview without writing files')
-def main(database, full_update, limit, output_dir, base_path, spider, spider_depth, verbose, dry_run):
+def main(output_dir, base_path, limit, spider, spider_depth, verbose, dry_run):
     """Scrape Snowflake documentation with configurable base path (v1.1)."""
 
     # Setup logging
@@ -986,13 +1016,7 @@ def main(database, full_update, limit, output_dir, base_path, spider, spider_dep
     click.secho("  Snowflake Documentation Scraper v1.1", fg='cyan', bold=True)
     click.secho("=" * 70 + "\n", fg='cyan', bold=True)
 
-    # Validate arguments
-    if not full_update and not database:
-        click.secho("Error: Specify --full-update or --database <name>", fg='red')
-        sys.exit(1)
-
     # Display configuration
-    click.echo(f"Mode: {'Full update' if full_update else f'Specific databases: {database}'}")
     click.echo(f"Output directory: {output_dir}")
     click.echo(f"Base path filter: {base_path}")
     click.echo(f"Spider mode: {'Enabled (follow links)' if spider else 'Disabled'}")
@@ -1009,13 +1033,8 @@ def main(database, full_update, limit, output_dir, base_path, spider, spider_dep
         click.echo("\n[1/3] Discovering URLs from sitemap...")
         categorized = scraper.discover_urls(use_cache=True)
 
-        # Filter by databases if specified
-        if database:
-            categorized = {db: topics for db, topics in categorized.items()
-                          if db in database}
-
         total_urls = sum(len(data['urls']) for data in categorized.values())
-        click.echo(f"Found {total_urls} URLs across {len(categorized)} databases")
+        click.echo(f"Found {total_urls} URLs across {len(categorized)} categories")
 
         if dry_run:
             click.echo("\nWould scrape:")
