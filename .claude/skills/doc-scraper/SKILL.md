@@ -30,6 +30,26 @@ cd .claude/skills/doc-scraper
 uvx --from . doc-scraper --output-dir=../../snowflake-docs
 ```
 
+## ⚠️ Safety Guidelines for AI Agents
+
+**NEVER delete documentation or cache unless explicitly requested by the user with clear confirmation:**
+
+❌ **DO NOT**:
+- Delete entire output directories (e.g., `snowflake-docs/`)
+- Delete documentation files (`.md` files in output directory)
+- Suggest clearing cache as a first step or routine operation
+- Use `rm -rf` commands without explicit user request and path verification
+- Delete cache to "fix" issues without diagnosing the actual problem
+
+✅ **DO**:
+- Run the scraper normally - cache handles itself automatically
+- Trust the 7-day cache expiration to keep content fresh
+- Only suggest cache clearing if user reports cache corruption errors
+- Ask user to verify paths before any deletion commands
+- Explain that cache clearing is rarely needed and may slow down subsequent runs
+
+**The scraper is designed to run without manual cache management.** Cache expiration, updates, and maintenance are all automatic.
+
 ## Command Options
 
 | Option | Default | Description |
@@ -47,11 +67,10 @@ uvx --from . doc-scraper --output-dir=../../snowflake-docs
 **Using globally installed tool** (recommended - run from anywhere):
 
 ```bash
-# Initial scrape - migrations section (clear cache first)
-rm -rf /path/to/project/snowflake-docs/.cache
+# Initial scrape - migrations section (cache is built automatically)
 doc-scraper --output-dir=/path/to/project/snowflake-docs
 
-# Update existing (skips cached pages automatically)
+# Update existing (skips cached pages automatically - this is the normal workflow)
 doc-scraper --output-dir=/path/to/project/snowflake-docs
 
 # Scrape SQL reference instead of migrations
@@ -122,16 +141,28 @@ last_scraped: "2025-11-19T12:30:00+00:00"
 
 ## Cache Management
 
-**Cache location**: `{output-dir}/.cache/`
+**Cache location**: `{output-dir}/.cache/` (NOT the docs themselves!)
 - `scraper.db` - SQLite database with page metadata
 - `sitemap_cache.json` - Cached sitemap URLs
 
+**⚠️ IMPORTANT**: The cache is designed to be persistent and should NOT be deleted during normal operation. The scraper automatically:
+- Uses cached pages that are less than 7 days old
+- Updates expired cache entries automatically
+- Skips re-scraping recent pages to save time
+
+**When cache clearing is needed** (rare):
+- Cache corruption detected (scraper will show errors)
+- Testing cache behavior during development
+- Forcing a complete re-scrape of all pages
+
+**If you must clear the cache** (verify output-dir path carefully):
 ```bash
-# Clear cache for a specific output directory
+# ONLY clear the .cache subdirectory, NEVER delete the docs themselves!
+# Double-check the path before running!
 rm -rf /path/to/output/.cache
 
-# Clear cache (when using relative path from project)
-rm -rf ../../snowflake-docs/.cache
+# Example from project root (verify path first):
+rm -rf snowflake-docs/.cache
 ```
 
 **Cache behavior**: 7-day expiration, automatic pre-load, survives crashes, ~50KB per 1,000 pages.
@@ -143,8 +174,8 @@ rm -rf ../../snowflake-docs/.cache
 | Too many pages scraped | Lower `--spider-depth` or add blocked patterns in config |
 | Missing pages | Increase `--spider-depth` or adjust `allowed_paths` |
 | Slow performance | Check `max_queue_size` and `max_pages` in config |
-| Cache not working | Delete `scripts/.cache/scraper.db` and re-run |
-| ImportError (uv) | Use `uvx --refresh` or clear cache: `rm -rf ~/.cache/uv/archive-v0/<hash>` |
+| Cache corruption errors | Verify `{output-dir}/.cache/scraper.db` exists and check permissions. Only delete if corrupted. |
+| ImportError (uv) | Use `uvx --refresh` or clear uv's own cache (NOT project cache): `rm -rf ~/.cache/uv/archive-v0/<hash>` |
 
 ## Installation
 
