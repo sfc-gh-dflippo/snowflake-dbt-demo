@@ -1,0 +1,11 @@
+[theme]
+# Snowflake Brand Colors Theme
+primaryColor = "#29B5E8"        # Snowflake Cyan
+backgroundColor = "#FFFFFF"      # White
+secondaryBackgroundColor = "#F8FCFF"  # Very Light Blue
+textColor = "#1B4D84"           # Snowflake Navy
+font = "sans serif"
+
+[server]
+headless = true
+
