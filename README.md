@@ -1,5 +1,8 @@
 # dbt for Snowflake Demonstration Project
 
+[![Run in Smithery](https://smithery.ai/badge/skills/sfc-gh-dflippo)](https://smithery.ai/skills?ns=sfc-gh-dflippo&utm_source=github&utm_medium=badge)
+
+
 ## 📚 Documentation Navigation
 | Document | Description |
 |----------|-------------|
