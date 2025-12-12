@@ -196,9 +196,10 @@ def get_current_commit(repo_path: Path) -> str | None:
             capture_output=True,
             text=True,
             check=True,
+            timeout=30,
         )
         return result.stdout.strip()
-    except subprocess.CalledProcessError:
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
         return None
 
 
@@ -231,15 +232,17 @@ def sync_repo_to_global(url: str, global_dir: Path, temp_dir: Path) -> tuple[boo
                 ["git", "pull", "--quiet"],
                 cwd=temp_repo_path,
                 check=True,
-                capture_output=True
+                capture_output=True,
+                timeout=120,
             )
-        except subprocess.CalledProcessError:
+        except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
             # Pull failed, try fresh clone
             shutil.rmtree(temp_repo_path, ignore_errors=True)
             _ = subprocess.run(
                 ["git", "clone", "--depth", "1", url, str(temp_repo_path)],
                 check=True,
                 capture_output=True,
+                timeout=120,
             )
 
         new_commit = get_current_commit(temp_repo_path)
@@ -257,6 +260,7 @@ def sync_repo_to_global(url: str, global_dir: Path, temp_dir: Path) -> tuple[boo
             ["git", "clone", "--depth", "1", url, str(temp_repo_path)],
             check=True,
             capture_output=True,
+            timeout=120,
         )
         commit = get_current_commit(temp_repo_path)
         if commit:
@@ -564,6 +568,8 @@ def main() -> None:
                 )
 
                 print(f"    Extracted {len(extracted_skills)} skill(s)")
+            except subprocess.TimeoutExpired:
+                print("    Error: Git operation timed out (network issue?)")
             except subprocess.CalledProcessError as e:
                 print(f"    Error: Failed to sync repository: {e}")
             except Exception as e:
