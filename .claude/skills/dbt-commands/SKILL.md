@@ -1,17 +1,22 @@
 ---
 name: dbt-commands
-description: dbt command-line operations, model selection syntax, Jinja patterns, troubleshooting, and debugging. Use this skill when running dbt commands, selecting specific models, debugging compilation errors, using Jinja macros, or troubleshooting dbt execution issues.
+description:
+  dbt command-line operations, model selection syntax, Jinja patterns, troubleshooting, and
+  debugging. Use this skill when running dbt commands, selecting specific models, debugging
+  compilation errors, using Jinja macros, or troubleshooting dbt execution issues.
 ---
 
 # dbt Commands & Operations
 
 ## Purpose
 
-Transform AI agents into experts on dbt command-line operations, model selection patterns, Jinja templating, and troubleshooting techniques for efficient dbt development and debugging.
+Transform AI agents into experts on dbt command-line operations, model selection patterns, Jinja
+templating, and troubleshooting techniques for efficient dbt development and debugging.
 
 ## When to Use This Skill
 
 Activate this skill when users ask about:
+
 - Running dbt commands (build, run, test, compile)
 - Model selection syntax and patterns
 - Debugging compilation or execution errors
@@ -21,7 +26,8 @@ Activate this skill when users ask about:
 - Generating and serving documentation
 - Understanding dbt command output
 
-**Official dbt Documentation**: [dbt Command Reference](https://docs.getdbt.com/reference/dbt-commands)
+**Official dbt Documentation**:
+[dbt Command Reference](https://docs.getdbt.com/reference/dbt-commands)
 
 ---
 
@@ -95,9 +101,10 @@ dbt run --select +dim_customers+
 ```
 
 **Visualization**:
+
 ```
 +model_name    = model + all parents
-model_name+    = model + all children  
+model_name+    = model + all children
 +model_name+   = model + all parents + all children
 ```
 
@@ -118,6 +125,7 @@ dbt run --select tag:gold,tag:silver
 ```
 
 **Common tags:**
+
 - `tag:bronze` - All staging models
 - `tag:silver` - All intermediate models
 - `tag:gold` - All mart models
@@ -176,7 +184,8 @@ dbt test --select test_type:singular
 dbt run --select tag:gold,tag:critical  # Has gold OR critical
 ```
 
-**Official dbt Docs**: [Node Selection Syntax](https://docs.getdbt.com/reference/node-selection/syntax)
+**Official dbt Docs**:
+[Node Selection Syntax](https://docs.getdbt.com/reference/node-selection/syntax)
 
 ---
 
@@ -270,6 +279,7 @@ dbt list --select +dim_customers+ --output path
 ```
 
 **Output:**
+
 ```sql
 sum(case when status = 'pending' then 1 else 0 end) as pending_count,
 sum(case when status = 'shipped' then 1 else 0 end) as shipped_count,
@@ -295,6 +305,7 @@ sum(case when status = 'cancelled' then 1 else 0 end) as cancelled_count
 ### Macros
 
 **Define macro:**
+
 ```sql
 -- macros/cents_to_dollars.sql
 {% macro cents_to_dollars(column_name) %}
@@ -303,8 +314,9 @@ sum(case when status = 'cancelled' then 1 else 0 end) as cancelled_count
 ```
 
 **Use macro:**
+
 ```sql
-select 
+select
     {{ cents_to_dollars('amount_cents') }} as amount_dollars
 from {{ ref('stg_payments') }}
 ```
@@ -324,6 +336,7 @@ from {{ ref('stg_payments') }}
 ```
 
 **Example usage:**
+
 ```sql
 -- Add metadata
 select
@@ -339,13 +352,15 @@ from {{ ref('stg_customers') }}
 ### Variables
 
 **Define in dbt_project.yml:**
+
 ```yaml
 vars:
   lookback_days: 7
-  default_currency: 'USD'
+  default_currency: "USD"
 ```
 
 **Use in models:**
+
 ```sql
 select *
 from {{ ref('stg_orders') }}
@@ -353,6 +368,7 @@ where order_date >= dateadd(day, -{{ var('lookback_days') }}, current_date())
 ```
 
 **Override via command line:**
+
 ```bash
 dbt run --vars '{"lookback_days": 30}'
 ```
@@ -383,7 +399,7 @@ dbt run --vars '{"lookback_days": 30}'
 ) }}
 
 -- Star (select all except certain columns)
-select 
+select
     {{ dbt_utils.star(ref('stg_customers'), except=['internal_id', 'ssn']) }}
 from {{ ref('stg_customers') }}
 ```
@@ -397,6 +413,7 @@ from {{ ref('stg_customers') }}
 **Symptom**: `dbt debug` fails
 
 **Solution:**
+
 ```bash
 # Verify connection
 dbt debug
@@ -416,6 +433,7 @@ echo $DBT_ENV_SECRET_SNOWFLAKE_PAT
 **Symptom**: Model fails to compile with Jinja/SQL errors
 
 **Solution:**
+
 ```bash
 # Compile without running to see SQL
 dbt compile --select modelname
@@ -428,6 +446,7 @@ dbt run --select modelname --debug
 ```
 
 **Common issues:**
+
 - Missing `{% endif %}` or `{% endfor %}`
 - Unclosed Jinja blocks
 - Invalid ref() or source() references
@@ -439,6 +458,7 @@ dbt run --select modelname --debug
 **Symptom**: Model compiles but fails to run
 
 **Solution:**
+
 ```bash
 # Run with verbose logging
 dbt run --select modelname --debug
@@ -452,6 +472,7 @@ cat logs/dbt.log | grep modelname
 ```
 
 **Common issues:**
+
 - Invalid SQL syntax
 - Division by zero
 - Data type mismatches
@@ -464,6 +485,7 @@ cat logs/dbt.log | grep modelname
 **Symptom**: Model can't find upstream dependencies
 
 **Solution:**
+
 ```bash
 # List dependencies
 dbt list --select +modelname
@@ -482,6 +504,7 @@ dbt compile --select modelname
 **Symptom**: Tests fail unexpectedly
 
 **Solution:**
+
 ```bash
 # Store failures for analysis
 dbt test --select modelname --store-failures
@@ -503,6 +526,7 @@ cat models/path/_models.yml
 **Symptom**: Model runs very slowly
 
 **Solution:**
+
 ```bash
 # Run with debug logging
 dbt run --select modelname --debug --log-level debug
@@ -523,18 +547,18 @@ cat target/compiled/your_project/models/path/to/modelname.sql
 
 ## Common Commands Cheatsheet
 
-| Task | Command |
-|------|---------|
-| Build one model | `dbt build --select model_name` |
-| Build with dependencies | `dbt build --select +model_name+` |
-| Full refresh incremental | `dbt build --full-refresh` |
-| Test one model | `dbt test --select model_name` |
-| Run by tag | `dbt run --select tag:bronze` |
-| Generate docs | `dbt docs generate` |
-| Debug connection | `dbt debug` |
-| Clean project | `dbt clean` |
-| Compile without running | `dbt compile --select model_name` |
-| List models | `dbt list` |
+| Task                     | Command                           |
+| ------------------------ | --------------------------------- |
+| Build one model          | `dbt build --select model_name`   |
+| Build with dependencies  | `dbt build --select +model_name+` |
+| Full refresh incremental | `dbt build --full-refresh`        |
+| Test one model           | `dbt test --select model_name`    |
+| Run by tag               | `dbt run --select tag:bronze`     |
+| Generate docs            | `dbt docs generate`               |
+| Debug connection         | `dbt debug`                       |
+| Clean project            | `dbt clean`                       |
+| Compile without running  | `dbt compile --select model_name` |
+| List models              | `dbt list`                        |
 
 ---
 
@@ -552,6 +576,7 @@ dbt build --select tag:gold --target prod
 ```
 
 **Define targets in ~/.dbt/profiles.yml:**
+
 ```yaml
 your_project:
   target: dev
@@ -560,7 +585,7 @@ your_project:
       type: snowflake
       schema: dbt_dev
       # ... other settings
-    
+
     prod:
       type: snowflake
       schema: analytics
@@ -585,27 +610,32 @@ When users ask about dbt commands:
 ### Common User Questions
 
 **"How do I run just this model?"**
+
 ```bash
 dbt build --select model_name
 ```
 
 **"How do I run this model and everything it depends on?"**
+
 ```bash
 dbt build --select +model_name
 ```
 
 **"How do I test all my gold layer models?"**
+
 ```bash
 dbt test --select tag:gold
 ```
 
 **"How do I debug why my model won't compile?"**
+
 ```bash
 dbt compile --select model_name --debug
 cat target/compiled/your_project/models/path/to/model.sql
 ```
 
 **"How do I see what SQL dbt generated?"**
+
 ```bash
 dbt compile --select model_name
 cat target/compiled/your_project/models/path/to/model.sql
@@ -622,5 +652,5 @@ cat target/compiled/your_project/models/path/to/model.sql
 
 ---
 
-**Goal**: Transform AI agents into expert dbt operators who efficiently execute commands, select appropriate models, debug issues, and leverage Jinja patterns for dynamic SQL generation.
-
+**Goal**: Transform AI agents into expert dbt operators who efficiently execute commands, select
+appropriate models, debug issues, and leverage Jinja patterns for dynamic SQL generation.

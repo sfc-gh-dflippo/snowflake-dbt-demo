@@ -1,11 +1,15 @@
 ---
 name: streamlit-development
-description: Developing, testing, and deploying Streamlit data applications on Snowflake. Use this skill when you're building interactive data apps, setting up local development environments, testing with pytest or Playwright, or deploying apps to Snowflake using Streamlit in Snowflake.
+description:
+  Developing, testing, and deploying Streamlit data applications on Snowflake. Use this skill when
+  you're building interactive data apps, setting up local development environments, testing with
+  pytest or Playwright, or deploying apps to Snowflake using Streamlit in Snowflake.
 ---
 
 # Streamlit Development
 
-Build interactive data applications using Streamlit, test them locally, and deploy to Snowflake's native Streamlit environment.
+Build interactive data applications using Streamlit, test them locally, and deploy to Snowflake's
+native Streamlit environment.
 
 ## Quick Start
 
@@ -32,6 +36,7 @@ def get_snowpark_session():
 ```
 
 **For connection setup**, see the **`snowflake-connections` skill** for:
+
 - Creating `~/.snowflake/connections.toml`
 - Authentication methods (SSO, key pair, username/password)
 - Multiple environment configurations
@@ -40,6 +45,7 @@ def get_snowpark_session():
 ## Local Development
 
 ### Setup
+
 ```bash
 # Install dependencies (pin Streamlit version to match Snowflake)
 uv pip install --system -r requirements.txt
@@ -51,6 +57,7 @@ pandas
 ```
 
 ### Run Locally
+
 ```bash
 streamlit run app.py
 # Or with environment overrides (see snowflake-connections skill)
@@ -60,12 +67,15 @@ SNOWFLAKE_DATABASE=MY_DB streamlit run app.py
 ## Testing
 
 ### Unit/Integration Tests
+
 ```bash
 pytest streamlit_app/tests/ -v
 ```
 
 ### Browser Testing
+
 Use Playwright MCP for interactive testing:
+
 - Verify pages load without errors
 - Test forms and navigation
 - Check responsive design
@@ -75,11 +85,13 @@ See `TESTING_GUIDE.md` for patterns.
 ## Deployment
 
 ### Option 1: Snowflake CLI (Recommended)
+
 ```bash
 snow streamlit deploy --replace -c default
 ```
 
 ### Option 2: Schemachange
+
 Include Streamlit deployment in migration scripts.
 
 ## Key Patterns
@@ -95,9 +107,11 @@ See `TROUBLESHOOTING.md` for common issues.
 ## Related Skills
 
 **Complementary Testing:**
+
 - `playwright-mcp` skill - Automate browser testing for Streamlit apps
 
-Use playwright-mcp for visual testing, form validation, responsive design testing, and accessibility checks of your Streamlit applications.
+Use playwright-mcp for visual testing, form validation, responsive design testing, and accessibility
+checks of your Streamlit applications.
 
 ---
 
@@ -106,15 +120,16 @@ Use playwright-mcp for visual testing, form validation, responsive design testin
 ### 1. Separate Data Access from UI
 
 ✅ **DO: Modular data access**
+
 ```python
 # utils/data_loader.py
 class DataQueries:
     def __init__(self, session):
         self.session = session
-    
+
     def get_sales(self, start_date, end_date):
         return self.session.sql(f"""
-            SELECT * FROM sales 
+            SELECT * FROM sales
             WHERE date BETWEEN '{start_date}' AND '{end_date}'
         """).to_pandas()
 
@@ -131,6 +146,7 @@ st.dataframe(df)
 ### 2. Cache Snowpark Session
 
 Always cache your session to avoid reconnection overhead:
+
 ```python
 @st.cache_resource
 def get_snowpark_session():
@@ -145,12 +161,13 @@ def get_snowpark_session():
 ### 3. Use Forms for Multi-Field Input
 
 ✅ **DO: Group inputs in forms**
+
 ```python
 with st.form("customer_form"):
     name = st.text_input("Name")
     email = st.text_input("Email")
     phone = st.text_input("Phone")
-    
+
     if st.form_submit_button("Save"):
         save_customer(name, email, phone)
         st.success("Customer saved!")
@@ -161,6 +178,7 @@ with st.form("customer_form"):
 ### 4. Handle Errors Gracefully
 
 Provide helpful feedback:
+
 ```python
 try:
     save_customer(name, email)
@@ -176,6 +194,7 @@ except Exception as e:
 ### 5. Limit Column Nesting (Max 2 Levels)
 
 ✅ **DO: 2 levels maximum**
+
 ```python
 col1, col2 = st.columns(2)
 with col1:
@@ -198,7 +217,7 @@ with col1:
 @st.cache_data(ttl=600)  # Cache for 10 minutes
 def load_sales_data(start_date, end_date):
     return session.sql(f"""
-        SELECT * FROM sales 
+        SELECT * FROM sales
         WHERE date BETWEEN '{start_date}' AND '{end_date}'
     """).to_pandas()
 ```
@@ -234,12 +253,12 @@ if 'result' in st.session_state:
 
 Some Streamlit features don't work in Snowflake:
 
-| Feature | Status | Alternative |
-|---------|--------|-------------|
-| `st.dialog()` | ❌ Not supported | Use `st.expander()` or modals |
-| `st.toggle()` | ❌ Not supported | Use `st.checkbox()` |
-| `st.rerun()` | ⚠️ Older versions only | Use `st.experimental_rerun()` |
-| `st.connection()` | ❌ Not supported | Use `get_active_session()` |
+| Feature           | Status                 | Alternative                   |
+| ----------------- | ---------------------- | ----------------------------- |
+| `st.dialog()`     | ❌ Not supported       | Use `st.expander()` or modals |
+| `st.toggle()`     | ❌ Not supported       | Use `st.checkbox()`           |
+| `st.rerun()`      | ⚠️ Older versions only | Use `st.experimental_rerun()` |
+| `st.connection()` | ❌ Not supported       | Use `get_active_session()`    |
 
 ### Package Availability
 
@@ -284,6 +303,7 @@ dependencies:
 **Problem:** Two widgets with same implicit key
 
 **Solution:** Add explicit keys
+
 ```python
 st.text_input("Name", key="customer_name")
 st.text_input("Name", key="product_name")
@@ -292,6 +312,7 @@ st.text_input("Name", key="product_name")
 ### IndentationError
 
 **Check before deploying:**
+
 ```bash
 python -c "import ast; ast.parse(open('streamlit_app/app.py').read())"
 ```
@@ -299,6 +320,7 @@ python -c "import ast; ast.parse(open('streamlit_app/app.py').read())"
 ### Session Not Found (Local Development)
 
 **Ensure proper fallback:**
+
 ```python
 def get_snowpark_session():
     try:
@@ -311,6 +333,7 @@ def get_snowpark_session():
 ### Form Parameter Errors
 
 **Some parameters not supported in Snowflake:**
+
 - ❌ `border=False` in `st.form()`
 - ❌ `border=True` in `st.container()`
 - ❌ `hide_index=True` in `st.dataframe()` (older versions)
@@ -354,11 +377,13 @@ schemachange deploy --config-folder . --connection-name default
 ### 1. Never Hardcode Credentials
 
 ✅ **DO:**
+
 ```python
 session = get_active_session()  # Uses Snowflake auth
 ```
 
 ❌ **DON'T:**
+
 ```python
 password = "secret123"  # Never do this!
 ```
@@ -383,7 +408,7 @@ def save_customer(name, email):
         raise ValueError("Name must be at least 2 characters")
     if "@" not in email:
         raise ValueError("Invalid email format")
-    
+
     # Proceed with save
     ...
 ```
@@ -393,9 +418,12 @@ def save_customer(name, email):
 ## Resources
 
 - **`connections.py`** - Required session pattern for local/Snowflake compatibility
-- `snowflake-connections` skill - Connection setup, authentication, and multi-environment configuration
+- `snowflake-connections` skill - Connection setup, authentication, and multi-environment
+  configuration
 - `playwright-mcp` skill - Browser testing automation for Streamlit apps
 
 ---
 
-**Goal:** Transform AI agents into expert Streamlit developers who build production-ready data applications with proper code organization, performance optimization, and Snowflake-specific best practices.
+**Goal:** Transform AI agents into expert Streamlit developers who build production-ready data
+applications with proper code organization, performance optimization, and Snowflake-specific best
+practices.

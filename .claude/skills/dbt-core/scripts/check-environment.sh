@@ -12,13 +12,13 @@ if command -v conda &> /dev/null; then
     CONDA_VERSION=$(conda --version 2>&1 | head -n1)
     echo "✓ conda: INSTALLED ($CONDA_VERSION)"
     CONDA_INSTALLED="true"
-    
+
     # List all conda environments and check each for dbt
     echo ""
     echo "→ Checking conda environments for dbt..."
     DBT_ENVS=()
     DBT_SNOWFLAKE_ENVS=()
-    
+
     while IFS= read -r env_line; do
         # Parse environment name (first column, skip comments and headers)
         env_name=$(echo "$env_line" | awk '{print $1}')
@@ -26,7 +26,7 @@ if command -v conda &> /dev/null; then
             # Check if this environment has dbt-core
             if conda list -n "$env_name" 2>/dev/null | grep -q "^dbt-core"; then
                 DBT_CORE_VERSION=$(conda list -n "$env_name" 2>/dev/null | grep "^dbt-core" | awk '{print $2}')
-                
+
                 # Check for dbt-snowflake adapter
                 if conda list -n "$env_name" 2>/dev/null | grep -q "^dbt-snowflake"; then
                     DBT_SF_VERSION=$(conda list -n "$env_name" 2>/dev/null | grep "^dbt-snowflake" | awk '{print $2}')
@@ -40,7 +40,7 @@ if command -v conda &> /dev/null; then
             fi
         fi
     done < <(conda env list | tail -n +3)
-    
+
     # Try to activate an environment with dbt
     if [ ${#DBT_SNOWFLAKE_ENVS[@]} -gt 0 ]; then
         # Prefer 'dbt' environment if it has snowflake adapter, otherwise use first found with snowflake
@@ -56,7 +56,7 @@ if command -v conda &> /dev/null; then
         else
             ACTIVATE_ENV="${DBT_ENVS[0]}"
         fi
-        
+
         echo ""
         echo "→ Activating conda '$ACTIVATE_ENV' environment..."
         eval "$(conda shell.bash hook)"
@@ -71,7 +71,7 @@ if command -v conda &> /dev/null; then
 else
     echo "✗ conda: NOT INSTALLED"
     CONDA_INSTALLED="false"
-    
+
     # Try .venv as fallback
     if [ -d ".venv" ]; then
         echo ""
@@ -87,7 +87,7 @@ if command -v python3 &> /dev/null; then
     PYTHON_VERSION=$(python3 --version | awk '{print $2}')
     MAJOR=$(echo $PYTHON_VERSION | cut -d. -f1)
     MINOR=$(echo $PYTHON_VERSION | cut -d. -f2)
-    
+
     if [ "$MAJOR" -eq 3 ] && [ "$MINOR" -ge 9 ] && [ "$MINOR" -le 12 ]; then
         echo "✓ Python: INSTALLED ($PYTHON_VERSION - compatible with dbt Core 1.9.4)"
         PYTHON_COMPATIBLE="true"
@@ -106,13 +106,13 @@ fi
 if command -v dbt &> /dev/null; then
     echo "✓ dbt: INSTALLED"
     DBT_INSTALLED="true"
-    
+
     # Show detailed dbt version info
     echo ""
     echo "→ dbt version details:"
     DBT_VERSION_OUTPUT=$(dbt --version 2>&1)
     echo "$DBT_VERSION_OUTPUT" | sed 's/^/  /'
-    
+
     # Check specifically for dbt-snowflake in the output
     if echo "$DBT_VERSION_OUTPUT" | grep -q "snowflake:"; then
         echo ""
@@ -122,7 +122,7 @@ if command -v dbt &> /dev/null; then
         echo "✗ dbt-snowflake adapter not found in active environment"
         echo "  Install with: pip install dbt-snowflake"
     fi
-    
+
     # Test basic dbt command
     echo ""
     echo "→ Testing dbt command..."
@@ -181,4 +181,3 @@ echo "python_installed=$PYTHON_INSTALLED"
 echo "python_compatible=$PYTHON_COMPATIBLE"
 echo "dbt_installed=$DBT_INSTALLED"
 echo "curl_installed=$CURL_INSTALLED"
-

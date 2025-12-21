@@ -47,4 +47,3 @@ echo   dbt --version
 echo.
 echo To deactivate when done:
 echo   deactivate
-

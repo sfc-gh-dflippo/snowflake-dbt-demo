@@ -13,16 +13,16 @@ if %errorlevel% equ 0 (
     for /f "tokens=*" %%v in ('conda --version 2^>^&1') do set CONDA_VERSION=%%v
     echo + conda: INSTALLED ^(!CONDA_VERSION!^)
     set CONDA_INSTALLED=true
-    
+
     echo.
     echo -^> Checking conda environments for dbt...
-    
+
     REM List all conda environments and check each for dbt
     set DBT_SF_ENV_FOUND=
     set FIRST_DBT_SF_ENV=
     set DBT_ENV_FOUND=
     set FIRST_DBT_ENV=
-    
+
     for /f "skip=2 tokens=1" %%e in ('conda env list 2^>nul') do (
         if not "%%e"=="base" (
             REM Check if this environment has dbt-core
@@ -30,7 +30,7 @@ if %errorlevel% equ 0 (
             if !errorlevel! equ 0 (
                 for /f "tokens=2" %%v in ('conda list -n %%e 2^>nul ^| findstr /b "dbt-core"') do (
                     set DBT_CORE_VER=%%v
-                    
+
                     REM Check for dbt-snowflake adapter
                     conda list -n %%e 2^>nul | findstr /b "dbt-snowflake" >nul 2>nul
                     if !errorlevel! equ 0 (
@@ -54,7 +54,7 @@ if %errorlevel% equ 0 (
             )
         )
     )
-    
+
     REM Try to activate an environment with dbt (prefer ones with snowflake adapter)
     if defined DBT_SF_ENV_FOUND (
         echo.
@@ -85,7 +85,7 @@ if %errorlevel% equ 0 (
 ) else (
     echo - conda: NOT INSTALLED
     set CONDA_INSTALLED=false
-    
+
     REM Try .venv as fallback
     if exist ".venv" (
         echo.
@@ -100,13 +100,13 @@ REM Check for Python
 where python >nul 2>nul
 if %errorlevel% equ 0 (
     for /f "tokens=2 delims= " %%v in ('python --version 2^>^&1') do set PYTHON_VERSION=%%v
-    
+
     REM Extract major and minor version
     for /f "tokens=1,2 delims=." %%a in ("!PYTHON_VERSION!") do (
         set MAJOR=%%a
         set MINOR=%%b
     )
-    
+
     REM Check if version is 3.9-3.12
     if !MAJOR! equ 3 (
         if !MINOR! geq 9 (
@@ -117,7 +117,7 @@ if %errorlevel% equ 0 (
             )
         )
     )
-    
+
     echo ! Python: INSTALLED ^(!PYTHON_VERSION! - NOT compatible, need 3.9-3.12^)
     set PYTHON_COMPATIBLE=false
     :python_compat_done
@@ -133,12 +133,12 @@ where dbt >nul 2>nul
 if %errorlevel% equ 0 (
     echo + dbt: INSTALLED
     set DBT_INSTALLED=true
-    
+
     REM Show detailed dbt version info
     echo.
     echo -^> dbt version details:
     dbt --version 2^>^&1
-    
+
     REM Check specifically for dbt-snowflake
     dbt --version 2^>^&1 | findstr "snowflake:" >nul 2>nul
     if !errorlevel! equ 0 (
@@ -149,7 +149,7 @@ if %errorlevel% equ 0 (
         echo - dbt-snowflake adapter not found in active environment
         echo   Install with: pip install dbt-snowflake
     )
-    
+
     REM Test basic dbt command
     echo.
     echo -^> Testing dbt command...
@@ -210,4 +210,3 @@ echo python_installed=%PYTHON_INSTALLED%
 echo python_compatible=%PYTHON_COMPATIBLE%
 echo dbt_installed=%DBT_INSTALLED%
 echo curl_installed=%CURL_INSTALLED%
-

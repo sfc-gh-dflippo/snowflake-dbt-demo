@@ -1,17 +1,24 @@
 ---
 name: dbt-core
-description: Managing dbt-core locally - installation, configuration, project setup, package management, troubleshooting, and development workflow. Use this skill for all aspects of local dbt-core development including non-interactive scripts for environment setup with conda or venv, and comprehensive configuration templates for profiles.yml and dbt_project.yml.
+description:
+  Managing dbt-core locally - installation, configuration, project setup, package management,
+  troubleshooting, and development workflow. Use this skill for all aspects of local dbt-core
+  development including non-interactive scripts for environment setup with conda or venv, and
+  comprehensive configuration templates for profiles.yml and dbt_project.yml.
 ---
 
 # dbt-core Local Development Guide
 
 ## Purpose
 
-Guide AI agents through a systematic, user-choice-driven installation process for dbt-core on local machines. The agent runs diagnostic scripts, presents options to users, and executes non-interactive installation scripts based on user preferences.
+Guide AI agents through a systematic, user-choice-driven installation process for dbt-core on local
+machines. The agent runs diagnostic scripts, presents options to users, and executes non-interactive
+installation scripts based on user preferences.
 
 ## When to Use This Skill
 
 Activate this skill when users ask about:
+
 - Installing dbt-core and dbt-snowflake
 - Configuring profiles.yml for Snowflake
 - Setting up authentication (PAT, SSO, key pair, OAuth)
@@ -21,13 +28,15 @@ Activate this skill when users ask about:
 - Verifying installation and configuration
 - Upgrading dbt versions
 
-**Official dbt Documentation**: [Install dbt](https://docs.getdbt.com/docs/core/installation-overview)
+**Official dbt Documentation**:
+[Install dbt](https://docs.getdbt.com/docs/core/installation-overview)
 
 ---
 
 ## AI Agent Workflow
 
 **IMPORTANT**: This skill uses non-interactive scripts. The AI agent must:
+
 1. Run diagnostic scripts to check the environment
 2. Present options to the user based on findings
 3. Execute the script chosen by the user
@@ -38,18 +47,21 @@ Activate this skill when users ask about:
 **AI Agent Action**: Run the check script to assess what's already installed:
 
 **macOS/Linux:**
+
 ```bash
 cd .claude/skills/dbt-core/scripts/
 ./check-environment.sh
 ```
 
 **Windows:**
+
 ```cmd
 cd .claude\skills\dbt-core\scripts\
 check-environment.bat
 ```
 
 **What It Checks:**
+
 - conda installation status
 - Python installation and version compatibility (3.9-3.12)
 - dbt installation status
@@ -59,33 +71,39 @@ check-environment.bat
 
 ### Step 2: Present Options to User
 
-Based on the check results, the AI agent should **ask the user** which installation path they prefer:
+Based on the check results, the AI agent should **ask the user** which installation path they
+prefer:
 
 **If conda is NOT installed:**
+
 - Option A: Install Miniforge (recommended, free, conda-forge channel)
 - Option B: Install Miniconda (minimal, defaults channel)
 - Option C: Skip conda and use Python venv (if Python 3.9-3.12 is installed)
 
 **If conda IS installed:**
+
 - Option A: Create conda environment for dbt
 - Option B: Create venv environment for dbt (if Python is also available)
 
 **If dbt is already installed:**
+
 - Show version information
 - Offer to update or reconfigure
 
 ### Step 3: Execute User's Choice
 
-**AI Agent Action**: Run the appropriate script from `scripts/` folder (use `.sh` for macOS/Linux, `.bat` for Windows):
+**AI Agent Action**: Run the appropriate script from `scripts/` folder (use `.sh` for macOS/Linux,
+`.bat` for Windows):
 
-| Option | Script | Action After | User Action |
-|--------|--------|-------------|-------------|
-| **A: Install Miniforge** | `install-miniforge` | Restart terminal, rerun `check-environment` | None |
-| **B: Install Miniconda** | `install-miniconda` | Restart terminal, rerun `check-environment` | None |
-| **C: Setup Conda Env** | `setup-conda-env` | Instruct user to activate | `conda activate dbt` |
-| **D: Setup Venv Env** | `setup-venv-env` | Instruct user to activate | `source .venv/bin/activate` (macOS/Linux)<br>`.venv\Scripts\activate` (Windows) |
+| Option                   | Script              | Action After                                | User Action                                                                     |
+| ------------------------ | ------------------- | ------------------------------------------- | ------------------------------------------------------------------------------- |
+| **A: Install Miniforge** | `install-miniforge` | Restart terminal, rerun `check-environment` | None                                                                            |
+| **B: Install Miniconda** | `install-miniconda` | Restart terminal, rerun `check-environment` | None                                                                            |
+| **C: Setup Conda Env**   | `setup-conda-env`   | Instruct user to activate                   | `conda activate dbt`                                                            |
+| **D: Setup Venv Env**    | `setup-venv-env`    | Instruct user to activate                   | `source .venv/bin/activate` (macOS/Linux)<br>`.venv\Scripts\activate` (Windows) |
 
 **Example execution**:
+
 ```bash
 cd .claude/skills/dbt-core/scripts/
 ./install-miniforge.sh  # or install-miniforge.bat on Windows
@@ -93,7 +111,8 @@ cd .claude/skills/dbt-core/scripts/
 
 ### Step 4: Next Steps
 
-**AI Agent Action**: Once dbt is installed and verified, guide user to configure Snowflake connection (see profiles.yml configuration section below).
+**AI Agent Action**: Once dbt is installed and verified, guide user to configure Snowflake
+connection (see profiles.yml configuration section below).
 
 ---
 
@@ -102,6 +121,7 @@ cd .claude/skills/dbt-core/scripts/
 All scripts are in the `scripts/` folder and are non-interactive for AI agent execution:
 
 ### Diagnostic Script
+
 - **`check-environment.sh/.bat`** - Comprehensive environment check that:
   - Scans all conda environments for dbt installations
   - Shows dbt-core and dbt-snowflake versions
@@ -111,16 +131,19 @@ All scripts are in the `scripts/` folder and are non-interactive for AI agent ex
   - Provides recommendations for next steps
 
 ### Installation Scripts
+
 - `install-miniforge.sh/.bat` - Install Miniforge (conda-forge)
 - `install-miniconda.sh/.bat` - Install Miniconda
 - `setup-conda-env.sh/.bat` - Create conda environment from `dbt-conda-env.yml`
 - `setup-venv-env.sh/.bat` - Create venv environment from `requirements.txt`
 
 ### Environment Files (also in `scripts/` folder)
+
 - `dbt-conda-env.yml` - Conda environment specification
 - `requirements.txt` - pip requirements for venv
 
 ### Sample Configuration Files (in `samples/` folder)
+
 - `profiles.yml.sample` - Snowflake connection configuration examples
 - `dbt_project.yml.sample` - dbt project configuration patterns
 - `packages.yml.sample` - Package dependencies
@@ -130,17 +153,23 @@ All scripts are in the `scripts/` folder and are non-interactive for AI agent ex
 
 ## Manual Installation
 
-For manual installation instructions, review the automated scripts (see AI Agent Workflow above) or refer to:
-- **Official dbt Docs**: [Core Installation](https://docs.getdbt.com/docs/core/installation-overview)
-- **Environment files in `scripts/` folder**: `dbt-conda-env.yml` (conda) or `requirements.txt` (pip/venv)
+For manual installation instructions, review the automated scripts (see AI Agent Workflow above) or
+refer to:
+
+- **Official dbt Docs**:
+  [Core Installation](https://docs.getdbt.com/docs/core/installation-overview)
+- **Environment files in `scripts/` folder**: `dbt-conda-env.yml` (conda) or `requirements.txt`
+  (pip/venv)
 
 ---
 
 ## Snowflake Configuration & Authentication
 
-**All profiles.yml configuration and authentication methods are documented in**: `samples/profiles.yml.sample`
+**All profiles.yml configuration and authentication methods are documented in**:
+`samples/profiles.yml.sample`
 
 The sample file includes:
+
 - **Complete profiles.yml examples** for all authentication methods
 - **PAT (Programmatic Access Token)** generation using Snowflake CLI (recommended)
 - **SSO authentication** with externalbrowser
@@ -151,12 +180,14 @@ The sample file includes:
 - **Configuration tips** for warehouses, threads, and schemas
 
 **To configure**:
+
 1. Copy `samples/profiles.yml.sample` to `~/.dbt/profiles.yml`
 2. Update with your Snowflake account details
 3. Choose and configure your authentication method
 4. Test with `dbt debug`
 
-**Official dbt Docs**: [profiles.yml](https://docs.getdbt.com/docs/core/connect-data-platform/profiles.yml)
+**Official dbt Docs**:
+[profiles.yml](https://docs.getdbt.com/docs/core/connect-data-platform/profiles.yml)
 
 ---
 
@@ -182,13 +213,15 @@ cd scripts\
 check-environment.bat
 ```
 
-This script checks dbt installation, tests commands, and validates the dbt-snowflake adapter. For manual verification, use `dbt debug`.
+This script checks dbt installation, tests commands, and validates the dbt-snowflake adapter. For
+manual verification, use `dbt debug`.
 
 ---
 
 ## Troubleshooting
 
 **Connection issues**: Run `dbt debug` and check:
+
 - Environment variables set (`DBT_ENV_SECRET_SNOWFLAKE_PAT`)
 - `~/.dbt/profiles.yml` exists and configured correctly
 - Snowflake connectivity: `snow sql -q "SELECT CURRENT_USER()"`
@@ -199,7 +232,8 @@ This script checks dbt installation, tests commands, and validates the dbt-snowf
 
 **For detailed troubleshooting**: See `samples/profiles.yml.sample`
 
-**Official Docs**: [Network Issues](https://docs.snowflake.com/en/user-guide/troubleshooting-network)
+**Official Docs**:
+[Network Issues](https://docs.snowflake.com/en/user-guide/troubleshooting-network)
 
 ---
 
@@ -222,6 +256,7 @@ dbt init my_project_name --skip-profile-setup
 **All project configuration patterns are documented in**: `samples/dbt_project.yml.sample`
 
 The sample file includes:
+
 - **Basic project setup** (name, version, profile connection)
 - **Project paths** (models, tests, macros, seeds, snapshots)
 - **Global hooks** (on-run-start, on-run-end)
@@ -234,6 +269,7 @@ The sample file includes:
 - **Common patterns** (incremental facts, Python models, dynamic tables)
 
 **To configure**:
+
 1. Copy `samples/dbt_project.yml.sample` to your project root as `dbt_project.yml`
 2. Update `name` to match your project name
 3. Update `profile` to match your profiles.yml profile name
@@ -295,7 +331,8 @@ dbt docs generate --target prod
 ## Best Practices
 
 - **Use virtual environments** (conda or venv) for isolation
-- **Separate dev/prod configs** - Use `{{ env_var('SCHEMA_NAME', 'DEFAULT_NAME') }}` to allow overriding of schema names
+- **Separate dev/prod configs** - Use `{{ env_var('SCHEMA_NAME', 'DEFAULT_NAME') }}` to allow
+  overriding of schema names
 - **Version control** - See `samples/gitignore.sample` for what to commit/ignore
 - **Never commit** `profiles.yml` or `.env` files (contain credentials)
 
@@ -311,7 +348,8 @@ pip install --upgrade dbt-core dbt-snowflake
 pip install dbt-core==1.9.4 dbt-snowflake==1.9.2
 ```
 
-Check [Migration Guides](https://docs.getdbt.com/docs/dbt-versions/core-upgrade) for breaking changes and test in dev first.
+Check [Migration Guides](https://docs.getdbt.com/docs/dbt-versions/core-upgrade) for breaking
+changes and test in dev first.
 
 ---
 
@@ -325,5 +363,6 @@ Check [Migration Guides](https://docs.getdbt.com/docs/dbt-versions/core-upgrade)
 
 ---
 
-**Goal**: Transform AI agents into expert dbt setup specialists who guide users through installation, configuration, authentication, and troubleshooting with clear, actionable instructions and best practices.
-
+**Goal**: Transform AI agents into expert dbt setup specialists who guide users through
+installation, configuration, authentication, and troubleshooting with clear, actionable instructions
+and best practices.

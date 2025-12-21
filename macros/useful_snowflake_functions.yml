@@ -16,5 +16,3 @@ macros:
       * Some tests have shown that joining on multiple columns can prune better because the optimizer chooses which columns to prune on.
     docs:
       show: true
-
-

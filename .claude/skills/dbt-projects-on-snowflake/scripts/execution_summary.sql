@@ -2,7 +2,7 @@
 -- description: Comprehensive overview of execution history including success rates, duration statistics, and error patterns
 -- Usage: snow sql -f execution_summary.sql --enable-templating JINJA -D event_table=MY_DATABASE.MY_SCHEMA.EVENT_LOG
 
-SELECT 
+SELECT
     RESOURCE_ATTRIBUTES['snow.executable.name']::VARCHAR AS project_name,
     RESOURCE_ATTRIBUTES['snow.database.name']::VARCHAR AS database_name,
     RESOURCE_ATTRIBUTES['snow.schema.name']::VARCHAR AS schema_name,
@@ -17,4 +17,3 @@ WHERE RESOURCE_ATTRIBUTES['snow.executable.type']::VARCHAR = 'DBT_PROJECT'
   AND TIMESTAMP >= DATEADD(day, -7, CURRENT_TIMESTAMP())
 GROUP BY project_name, database_name, schema_name
 ORDER BY last_execution DESC;
-

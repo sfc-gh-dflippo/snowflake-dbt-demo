@@ -9,4 +9,3 @@ WHERE RESOURCE_ATTRIBUTES['snow.executable.type']::VARCHAR = 'DBT_PROJECT'
   AND RECORD['severity_text']::VARCHAR = 'ERROR'
   AND TIMESTAMP >= DATEADD(hour, -1, CURRENT_TIMESTAMP())
 HAVING error_count > 0;
-

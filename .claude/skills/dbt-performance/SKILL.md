@@ -1,17 +1,24 @@
 ---
 name: dbt-performance
-description: Optimizing dbt and Snowflake performance through materialization choices, clustering keys, warehouse sizing, and query optimization. Use this skill when addressing slow model builds, optimizing query performance, sizing warehouses, implementing clustering strategies, or troubleshooting performance issues.
+description:
+  Optimizing dbt and Snowflake performance through materialization choices, clustering keys,
+  warehouse sizing, and query optimization. Use this skill when addressing slow model builds,
+  optimizing query performance, sizing warehouses, implementing clustering strategies, or
+  troubleshooting performance issues.
 ---
 
 # dbt Performance Optimization
 
 ## Purpose
 
-Transform AI agents into experts on dbt and Snowflake performance optimization, providing guidance on choosing optimal materializations, leveraging Snowflake-specific features, and implementing query optimization patterns for production-grade performance.
+Transform AI agents into experts on dbt and Snowflake performance optimization, providing guidance
+on choosing optimal materializations, leveraging Snowflake-specific features, and implementing query
+optimization patterns for production-grade performance.
 
 ## When to Use This Skill
 
 Activate this skill when users ask about:
+
 - Optimizing slow dbt model builds
 - Choosing appropriate materializations for performance
 - Implementing Snowflake clustering keys
@@ -21,7 +28,8 @@ Activate this skill when users ask about:
 - Troubleshooting performance bottlenecks
 - Using Snowflake performance features (Gen2, query acceleration, search optimization)
 
-**Official Snowflake Documentation**: [Query Performance](https://docs.snowflake.com/en/user-guide/performance-query)
+**Official Snowflake Documentation**:
+[Query Performance](https://docs.snowflake.com/en/user-guide/performance-query)
 
 ---
 
@@ -29,14 +37,15 @@ Activate this skill when users ask about:
 
 ### Choose the Right Materialization
 
-| Materialization | Build Time | Query Time | Best For |
-|-----------------|------------|------------|----------|
-| **ephemeral** | Fast | Varies | Staging, reusable logic |
-| **view** | Instant | Slow | Always-fresh simple transforms |
-| **table** | Slow | Fast | Dimensions, complex logic |
-| **incremental** | Fast | Fast | Large facts (millions+ rows) |
+| Materialization | Build Time | Query Time | Best For                       |
+| --------------- | ---------- | ---------- | ------------------------------ |
+| **ephemeral**   | Fast       | Varies     | Staging, reusable logic        |
+| **view**        | Instant    | Slow       | Always-fresh simple transforms |
+| **table**       | Slow       | Fast       | Dimensions, complex logic      |
+| **incremental** | Fast       | Fast       | Large facts (millions+ rows)   |
 
 **Guidelines**:
+
 - Use `ephemeral` for staging (fast, no storage)
 - Use `table` for dimensions
 - Use `incremental` for large facts
@@ -135,6 +144,7 @@ Daily/hourly data loads with time-based filtering
 ```
 
 **Best Practices**:
+
 - Use 1-4 columns maximum
 - Order columns by cardinality (low to high)
 - Include common WHERE clause columns
@@ -142,6 +152,7 @@ Daily/hourly data loads with time-based filtering
 - Monitor cluster usage: `SYSTEM$CLUSTERING_INFORMATION()`
 
 **Example with Multiple Keys:**
+
 ```sql
 {{ config(
     materialized='incremental',
@@ -150,7 +161,8 @@ Daily/hourly data loads with time-based filtering
 ) }}
 ```
 
-**Official Snowflake Docs**: [Clustering Keys](https://docs.snowflake.com/en/user-guide/tables-clustering-keys)
+**Official Snowflake Docs**:
+[Clustering Keys](https://docs.snowflake.com/en/user-guide/tables-clustering-keys)
 
 ---
 
@@ -164,9 +176,12 @@ Daily/hourly data loads with time-based filtering
 
 **Optimal Sizing Goal: ~500 Micropartitions (MPs) per Node**
 
-Snowflake stores data in micropartitions (~16MB compressed). The warehouse sizing goal is to maintain approximately 500 MPs scanned per node for optimal performance. Too few MPs per node underutilizes the warehouse; too many causes compute skew and spilling.
+Snowflake stores data in micropartitions (~16MB compressed). The warehouse sizing goal is to
+maintain approximately 500 MPs scanned per node for optimal performance. Too few MPs per node
+underutilizes the warehouse; too many causes compute skew and spilling.
 
 **Sizing Formula:**
+
 ```
 Warehouse Size Needed = Total MPs Scanned / 500
 ```
@@ -174,20 +189,21 @@ Warehouse Size Needed = Total MPs Scanned / 500
 **Quick Reference Table** (MPs scanned → Recommended warehouse):
 
 | MPs Scanned | Warehouse Size | Nodes | MPs per Node |
-|-------------|---------------|-------|--------------|
-| 500 | XS | 1 | 500 |
-| 1,000 | S | 2 | 500 |
-| 2,000 | M | 4 | 500 |
-| 4,000 | L | 8 | 500 |
-| 8,000 | XL | 16 | 500 |
-| 16,000 | 2XL | 32 | 500 |
-| 32,000 | 3XL | 64 | 500 |
-| 64,000 | 4XL | 128 | 500 |
+| ----------- | -------------- | ----- | ------------ |
+| 500         | XS             | 1     | 500          |
+| 1,000       | S              | 2     | 500          |
+| 2,000       | M              | 4     | 500          |
+| 4,000       | L              | 8     | 500          |
+| 8,000       | XL             | 16    | 500          |
+| 16,000      | 2XL            | 32    | 500          |
+| 32,000      | 3XL            | 64    | 500          |
+| 64,000      | 4XL            | 128   | 500          |
 
 **How to Find MPs Scanned:**
+
 ```sql
 -- Check query profile after running model
-SELECT 
+SELECT
     query_id,
     total_elapsed_time,
     partitions_scanned
@@ -199,12 +215,14 @@ LIMIT 1;
 ```
 
 **Practical Guidelines**:
+
 - **Under-sized**: If MPs per node > 1000, consider larger warehouse
-- **Over-sized**: If MPs per node < 250, consider smaller warehouse  
+- **Over-sized**: If MPs per node < 250, consider smaller warehouse
 - **Development**: Start with XS-S, profile, then adjust
 - **Production**: Size based on actual MP scan metrics from query history
 
-**Official Snowflake Docs**: [Warehouse Considerations](https://docs.snowflake.com/en/user-guide/warehouses-considerations)
+**Official Snowflake Docs**:
+[Warehouse Considerations](https://docs.snowflake.com/en/user-guide/warehouses-considerations)
 
 ---
 
@@ -213,19 +231,23 @@ LIMIT 1;
 Gen2 standard warehouses offer improved performance for most dbt workloads.
 
 **Why Gen2 is Better for dbt Projects**:
-- **Faster transformations**: Enhanced DELETE, UPDATE, MERGE, and table scan operations (critical for incremental models and snapshots)
+
+- **Faster transformations**: Enhanced DELETE, UPDATE, MERGE, and table scan operations (critical
+  for incremental models and snapshots)
 - **Delta Micropartitions**: Snowflake does not rewrite entire micropartitions for changed data
 - **Faster Underlying Hardware**: Majority of queries finish faster, can do more work simultaneously
 - **Analytics optimization**: Purpose-built for data engineering and analytics workloads
 
 **Converting to Gen2:**
+
 ```sql
 -- Run directly in Snowflake
-ALTER WAREHOUSE TRANSFORMING_WH 
+ALTER WAREHOUSE TRANSFORMING_WH
 SET RESOURCE_CONSTRAINT = STANDARD_GEN_2;
 ```
 
-**Official Snowflake Docs**: [Gen2 Standard Warehouses](https://docs.snowflake.com/en/user-guide/warehouses-gen2)
+**Official Snowflake Docs**:
+[Gen2 Standard Warehouses](https://docs.snowflake.com/en/user-guide/warehouses-gen2)
 
 ---
 
@@ -241,12 +263,14 @@ SET RESOURCE_CONSTRAINT = STANDARD_GEN_2;
 ) }}
 ```
 
-**When to Use**: 
+**When to Use**:
+
 - Point lookups (WHERE customer_id = ?)
 - Selective filters on large tables
 - High-cardinality columns
 
-**Official Snowflake Docs**: [Search Optimization](https://docs.snowflake.com/en/user-guide/search-optimization-service)
+**Official Snowflake Docs**:
+[Search Optimization](https://docs.snowflake.com/en/user-guide/search-optimization-service)
 
 ---
 
@@ -256,21 +280,23 @@ Query Acceleration is configured at the warehouse level, not in dbt models:
 
 ```sql
 -- Run directly in Snowflake
-ALTER WAREHOUSE TRANSFORMING_WH 
+ALTER WAREHOUSE TRANSFORMING_WH
 SET ENABLE_QUERY_ACCELERATION = TRUE;
 
 -- Set scale factor (optional)
-ALTER WAREHOUSE TRANSFORMING_WH 
+ALTER WAREHOUSE TRANSFORMING_WH
 SET QUERY_ACCELERATION_MAX_SCALE_FACTOR = 8;
 ```
 
 **When to Use**:
+
 - Queries with unpredictable data volume
 - Ad-hoc analytics workloads
 - Queries that scan large portions of tables
 - Variable query complexity
 
-**Official Snowflake Docs**: [Query Acceleration](https://docs.snowflake.com/en/user-guide/query-acceleration-service)
+**Official Snowflake Docs**:
+[Query Acceleration](https://docs.snowflake.com/en/user-guide/query-acceleration-service)
 
 ---
 
@@ -279,11 +305,13 @@ SET QUERY_ACCELERATION_MAX_SCALE_FACTOR = 8;
 Snowflake automatically caches query results for 24 hours.
 
 **Best Practices**:
+
 - Use consistent query patterns to leverage cache
 - Avoid unnecessary `current_timestamp()` in WHERE clauses (breaks cache)
 - Identical queries return cached results instantly
 
 **Example to Preserve Cache:**
+
 ```sql
 -- ❌ Breaks cache every run
 where created_at > current_timestamp() - interval '7 days'
@@ -302,10 +330,10 @@ where created_at > '{{ var("lookback_date") }}'
 {% if is_incremental() %}
     -- ✅ Good: Partition pruning
     where order_date >= (select max(order_date) from {{ this }})
-    
+
     -- ✅ Good: With lookback for late data
     where order_date >= dateadd(day, -3, (select max(order_date) from {{ this }}))
-    
+
     -- ✅ Good: Limit source scan
     where order_date >= dateadd(day, -30, current_date())
       and order_date > (select max(order_date) from {{ this }})
@@ -314,13 +342,14 @@ where created_at > '{{ var("lookback_date") }}'
 
 ### Incremental Strategy Performance
 
-| Strategy | Speed | Use Case |
-|----------|-------|----------|
-| **append** | Fastest | Immutable event data |
-| **merge** | Medium | Updateable records |
-| **delete+insert** | Fast | Partitioned data |
+| Strategy          | Speed   | Use Case             |
+| ----------------- | ------- | -------------------- |
+| **append**        | Fastest | Immutable event data |
+| **merge**         | Medium  | Updateable records   |
+| **delete+insert** | Fast    | Partitioned data     |
 
 **Choose based on data characteristics:**
+
 - Append: Event logs, clickstreams (never update)
 - Merge: Orders, customers (updates possible)
 - Delete+Insert: Date-partitioned aggregations
@@ -338,8 +367,8 @@ with filtered_orders as (
     where order_date >= '2024-01-01'
 )
 
-select 
-    c.customer_id, 
+select
+    c.customer_id,
     count(o.order_id) as order_count
 from {{ ref('dim_customers') }} c
 join filtered_orders o on c.customer_id = o.customer_id
@@ -390,8 +419,8 @@ with order_metrics as (
     group by customer_id
 )
 
-select 
-    c.*, 
+select
+    c.*,
     coalesce(m.order_count, 0) as order_count,
     coalesce(m.lifetime_value, 0) as lifetime_value
 from {{ ref('dim_customers') }} c
@@ -402,7 +431,7 @@ left join order_metrics m on c.customer_id = m.customer_id
 
 ---
 
-### Avoid SELECT *
+### Avoid SELECT \*
 
 ```sql
 -- ❌ Bad: Reads all columns
@@ -440,6 +469,7 @@ where order_date = current_date()
 ```
 
 **Usage:**
+
 ```sql
 select * from {{ ref('stg_orders') }}
 {{ limit_data_in_dev('order_date', 7) }}
@@ -459,6 +489,7 @@ models:
 ```
 
 **Benefits**:
+
 - Faster dev builds
 - Lower dev costs
 - Prod stays optimized
@@ -470,12 +501,14 @@ models:
 ### Snowflake Query Profile
 
 **View in Snowflake UI:**
+
 1. Go to Query History
 2. Select your query
 3. Click "Query Profile" tab
 4. Analyze execution plan
 
 **Query history with performance metrics:**
+
 ```sql
 select
     query_id,
@@ -504,6 +537,7 @@ cat target/run_results.json | jq '.results[].execution_time'
 ```
 
 **Analyze slow models:**
+
 ```bash
 # Find slowest models
 cat target/run_results.json | jq -r '.results[] | [.execution_time, .unique_id] | @tsv' | sort -rn | head -10
@@ -520,7 +554,7 @@ cat target/run_results.json | jq -r '.results[] | [.execution_time, .unique_id] 
 - [ ] Incremental strategy optimized (append/merge/delete+insert)
 - [ ] WHERE clauses filter early (before joins)
 - [ ] JOINs are necessary and optimized (filter before join)
-- [ ] SELECT only needed columns (no SELECT *)
+- [ ] SELECT only needed columns (no SELECT \*)
 - [ ] Window functions use QUALIFY when possible
 
 ### Project-Level Optimization
@@ -551,12 +585,14 @@ When users report performance issues:
 ### Common User Questions
 
 **"My model is slow to build"**
+
 - Check materialization: Should it be incremental?
 - Review warehouse size: Appropriate for data volume?
 - Analyze query: Are there inefficient patterns?
 - Check clustering: Would it help query performance?
 
 **"How do I make this faster?"**
+
 - Change ephemeral to table if reused multiple times
 - Convert table to incremental for large datasets
 - Add clustering keys for frequently filtered columns
@@ -564,6 +600,7 @@ When users report performance issues:
 - Use QUALIFY instead of subqueries
 
 **"What warehouse size should I use?"**
+
 - Profile the query to see MPs scanned
 - Aim for ~500 MPs per warehouse node
 - Start small, scale up based on actual metrics
@@ -580,5 +617,6 @@ When users report performance issues:
 
 ---
 
-**Goal**: Transform AI agents into expert dbt performance optimizers who identify bottlenecks, recommend appropriate optimizations, and implement Snowflake-specific features for production-grade performance.
-
+**Goal**: Transform AI agents into expert dbt performance optimizers who identify bottlenecks,
+recommend appropriate optimizations, and implement Snowflake-specific features for production-grade
+performance.

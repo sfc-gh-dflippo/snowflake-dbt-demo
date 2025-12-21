@@ -1,13 +1,17 @@
 ---
 name: skills-sync
-description: Manage and synchronize AI agent skills from local SKILL.md files and remote Git repositories to AGENTS.md. This skill should be used when users need to sync skills, add/remove skill repositories, update skill catalogs, or set up the skills infrastructure in their projects.
+description:
+  Manage and synchronize AI agent skills from local SKILL.md files and remote Git repositories to
+  AGENTS.md. This skill should be used when users need to sync skills, add/remove skill
+  repositories, update skill catalogs, or set up the skills infrastructure in their projects.
 ---
 
 # Skills Sync
 
 ## Overview
 
-Sync AI agent skills from four locations into a consolidated AGENTS.md catalog. Supports both `.cortex` and `.claude` directories at project and global levels, with clear precedence rules.
+Sync AI agent skills from four locations into a consolidated AGENTS.md catalog. Supports both
+`.cortex` and `.claude` directories at project and global levels, with clear precedence rules.
 
 ## Quick Start
 
@@ -22,28 +26,32 @@ python3 .claude/skills/skills-sync/scripts/sync-skills.py
 
 3. Check AGENTS.md for updated skills catalog
 
-**Note:** The script automatically detects project root by walking up the directory tree, so it works from any location.
+**Note:** The script automatically detects project root by walking up the directory tree, so it
+works from any location.
 
 ## Skill Locations (Precedence Order)
 
-Skills are scanned from four locations. Higher precedence locations override lower ones for skills with the same name:
+Skills are scanned from four locations. Higher precedence locations override lower ones for skills
+with the same name:
 
-| Priority | Location | Type |
-|----------|----------|------|
-| 1 (highest) | `$PROJECT/.cortex/skills/` | Project |
-| 2 | `$PROJECT/.claude/skills/` | Project |
-| 3 | `~/.snowflake/cortex/skills/` | Global |
-| 4 (lowest) | `~/.claude/skills/` | Global |
+| Priority    | Location                      | Type    |
+| ----------- | ----------------------------- | ------- |
+| 1 (highest) | `$PROJECT/.cortex/skills/`    | Project |
+| 2           | `$PROJECT/.claude/skills/`    | Project |
+| 3           | `~/.snowflake/cortex/skills/` | Global  |
+| 4 (lowest)  | `~/.claude/skills/`           | Global  |
 
 ### Project Skills
 
 Create project-specific skills in your project directory:
+
 - `$PROJECT/.cortex/skills/your-skill/SKILL.md` (highest precedence)
 - `$PROJECT/.claude/skills/your-skill/SKILL.md`
 
 ### Global Skills
 
 Create personal skills available across all projects:
+
 - `~/.snowflake/cortex/skills/your-skill/SKILL.md`
 - `~/.claude/skills/your-skill/SKILL.md`
 
@@ -76,14 +84,17 @@ https://github.com/your-org/your-skills-repo
 ### Repository Skill Extraction
 
 Skills are extracted ONLY from these paths within repositories:
+
 - `.cortex/skills/*/SKILL.md`
 - `.claude/skills/*/SKILL.md`
 
 Extracted skills are placed in `~/.snowflake/cortex/skills/` with a repo prefix:
+
 - Example: `skills` repo → `~/.snowflake/cortex/skills/skills-dbt-core/`
 - Example: `my-repo` repo → `~/.snowflake/cortex/skills/my-repo-custom-skill/`
 
-**Note:** Skills in other locations within repositories (like `skills/` at root) are NOT extracted. This ensures only properly structured skills are synced.
+**Note:** Skills in other locations within repositories (like `skills/` at root) are NOT extracted.
+This ensures only properly structured skills are synced.
 
 ## Sync Process
 

@@ -1,4 +1,5 @@
 # name: Task Master AI - Setup & Configuration
+
 # description: Complete installation and configuration guide for Task Master AI covering npm installation, MCP setup for Cursor/VS Code/Windsurf, API key configuration, model selection, and project initialization.
 
 # Task Master AI - Setup & Configuration
@@ -14,6 +15,7 @@ npm install -g task-master-ai
 ```
 
 **Benefits:**
+
 - Available in any project
 - Single installation
 - Easy updates
@@ -25,6 +27,7 @@ npm install task-master-ai
 ```
 
 **Benefits:**
+
 - Project-specific version
 - Included in package.json
 - Version control
@@ -36,6 +39,7 @@ npx task-master-ai init
 ```
 
 **Benefits:**
+
 - No installation required
 - Always latest version
 - Quick testing
@@ -66,6 +70,7 @@ npx task-master-ai init
 ```
 
 **Enable in Cursor:**
+
 1. Open Cursor Settings (Ctrl+Shift+J)
 2. Click MCP tab
 3. Enable task-master-ai toggle
@@ -114,56 +119,68 @@ npx task-master-ai init
 ### Required Keys
 
 **Anthropic (Required for main operations):**
+
 ```bash
 ANTHROPIC_API_KEY=sk-ant-...
 ```
+
 Get from: https://console.anthropic.com/
 
 **Perplexity (Required for research):**
+
 ```bash
 PERPLEXITY_API_KEY=pplx-...
 ```
+
 Get from: https://www.perplexity.ai/settings/api
 
 ### Optional Keys
 
 **OpenAI:**
+
 ```bash
 OPENAI_API_KEY=sk-...
 ```
 
 **Google (Gemini):**
+
 ```bash
 GOOGLE_API_KEY=AI...
 ```
 
 **Mistral:**
+
 ```bash
 MISTRAL_API_KEY=...
 ```
 
 **OpenRouter:**
+
 ```bash
 OPENROUTER_API_KEY=sk-or-...
 ```
 
 **Groq:**
+
 ```bash
 GROQ_API_KEY=gsk_...
 ```
 
 **xAI:**
+
 ```bash
 XAI_API_KEY=xai-...
 ```
 
 **Azure OpenAI:**
+
 ```bash
 AZURE_OPENAI_API_KEY=...
 AZURE_OPENAI_ENDPOINT=https://...
 ```
 
 **Ollama (Local):**
+
 ```bash
 OLLAMA_API_KEY=...
 OLLAMA_BASE_URL=http://localhost:11434/api
@@ -178,6 +195,7 @@ task-master init
 ```
 
 Prompts for:
+
 - Project name
 - Description
 - Version
@@ -199,6 +217,7 @@ task-master init --rules cursor,windsurf
 ```
 
 Available profiles:
+
 - `cursor` - Cursor IDE rules
 - `windsurf` - Windsurf IDE rules
 - `vscode` - VS Code rules
@@ -254,11 +273,13 @@ task-master models --set-fallback gpt-4o
 ### Custom Models
 
 **Ollama:**
+
 ```bash
 task-master models --set-main llama3.1 --ollama
 ```
 
 **OpenRouter:**
+
 ```bash
 task-master models --set-main anthropic/claude-3.5-sonnet --openrouter
 ```
@@ -359,6 +380,7 @@ task-master rules setup
 ### Rule Structure
 
 Each profile creates its directory:
+
 - `.cursor/rules/` - Cursor IDE
 - `.windsurf/rules/` - Windsurf IDE
 - `.vscode/rules/` - VS Code
@@ -370,6 +392,7 @@ Each profile creates its directory:
 ### Test MCP Connection
 
 In your IDE's AI chat:
+
 ```
 Initialize taskmaster-ai in my project
 ```
@@ -415,8 +438,8 @@ node scripts/init.js
 
 ### API Key Issues
 
-**MCP:** Keys must be in `env` section of MCP config
-**CLI:** Keys must be in `.env` file in project root
+**MCP:** Keys must be in `env` section of MCP config **CLI:** Keys must be in `.env` file in project
+root
 
 ### Model Configuration Issues
 
@@ -441,16 +464,19 @@ npx task-master-ai init
 ## Best Practices
 
 1. **API Keys**
+
    - Use environment-specific keys
    - Never commit keys to git
    - Add `.env` to `.gitignore`
 
 2. **Model Selection**
+
    - Use Claude for main operations
    - Use Perplexity for research
    - Set appropriate fallback
 
 3. **Project Setup**
+
    - Initialize at project root
    - Create comprehensive PRD first
    - Configure rules for your IDE
@@ -486,5 +512,3 @@ task-master --version
 - [MCP Documentation](https://modelcontextprotocol.io)
 - [Anthropic API](https://docs.anthropic.com)
 - [Perplexity API](https://docs.perplexity.ai)
-
-

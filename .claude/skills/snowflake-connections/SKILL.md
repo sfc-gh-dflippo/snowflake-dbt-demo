@@ -1,19 +1,27 @@
 ---
 name: snowflake-connections
-description: Configuring Snowflake connections using connections.toml (for Snowflake CLI, Streamlit, Snowpark) or profiles.yml (for dbt) with multiple authentication methods (SSO, key pair, username/password, OAuth), managing multiple environments, and overriding settings with environment variables. Use this skill when setting up Snowflake CLI, Streamlit apps, dbt, or any tool requiring Snowflake authentication and connection management.
+description:
+  Configuring Snowflake connections using connections.toml (for Snowflake CLI, Streamlit, Snowpark)
+  or profiles.yml (for dbt) with multiple authentication methods (SSO, key pair, username/password,
+  OAuth), managing multiple environments, and overriding settings with environment variables. Use
+  this skill when setting up Snowflake CLI, Streamlit apps, dbt, or any tool requiring Snowflake
+  authentication and connection management.
 ---
 
 # Snowflake Connections
 
-Configure and manage Snowflake connections for CLI tools, Streamlit apps, dbt, and Snowpark applications.
+Configure and manage Snowflake connections for CLI tools, Streamlit apps, dbt, and Snowpark
+applications.
 
 **Configuration Files:**
+
 - **`connections.toml`** - Used by Snowflake CLI, Streamlit, and Snowpark
 - **`profiles.yml`** - Used by dbt (different format, covered in dbt-core skill)
 
 ## When to Use This Skill
 
 Activate this skill when users ask about:
+
 - Setting up Snowflake connections for CLI, Streamlit, or Snowpark
 - Configuring `connections.toml` file
 - Authentication methods (SSO, key pair, username/password, OAuth)
@@ -23,20 +31,23 @@ Activate this skill when users ask about:
 - Rotating credentials or keys
 - Setting up CI/CD authentication
 
-**Note:** For dbt-specific connection setup using `profiles.yml`, see the **`dbt-core` skill**. The concepts and authentication methods in this skill still apply, but dbt uses a different configuration file format.
+**Note:** For dbt-specific connection setup using `profiles.yml`, see the **`dbt-core` skill**. The
+concepts and authentication methods in this skill still apply, but dbt uses a different
+configuration file format.
 
 ## Configuration File
 
 **This skill covers `connections.toml`** used by Snowflake CLI, Streamlit, and Snowpark.
 
-**For dbt:** Use `~/.dbt/profiles.yml` instead. See the **`dbt-core` skill** for dbt configuration. The authentication methods described here apply to both files.
+**For dbt:** Use `~/.dbt/profiles.yml` instead. See the **`dbt-core` skill** for dbt configuration.
+The authentication methods described here apply to both files.
 
 ### Location
 
-| OS | Path |
-|----|------|
-| **Unix/Mac** | `~/.snowflake/connections.toml` |
-| **Windows** | `%USERPROFILE%\.snowflake\connections.toml` |
+| OS           | Path                                        |
+| ------------ | ------------------------------------------- |
+| **Unix/Mac** | `~/.snowflake/connections.toml`             |
+| **Windows**  | `%USERPROFILE%\.snowflake\connections.toml` |
 
 ### Basic Structure
 
@@ -53,11 +64,12 @@ role = "MY_ROLE"
 ```
 
 **Key Fields:**
+
 - `account` - Snowflake account identifier (e.g., `xy12345.us-east-1`)
 - `user` - Snowflake username
 - `warehouse` - Default warehouse for queries
 - `database` - Default database context
-- `schema` - Default schema context  
+- `schema` - Default schema context
 - `role` - Default role to use
 
 ---
@@ -78,16 +90,19 @@ authenticator = "externalbrowser"
 **How it works:** Opens browser for SSO authentication
 
 **Pros:**
+
 - ✅ Most secure for development
 - ✅ Leverages existing SSO infrastructure
 - ✅ No password storage required
 - ✅ MFA support built-in
 
 **Cons:**
+
 - ❌ Requires browser access
 - ❌ Not suitable for headless/CI environments
 
 **Usage:**
+
 ```bash
 # Browser opens automatically for authentication
 streamlit run app.py
@@ -112,6 +127,7 @@ private_key_passphrase = "your_passphrase"  # Optional if key is encrypted
 **Setup Steps:**
 
 **1. Generate Key Pair:**
+
 ```bash
 # Generate encrypted private key (recommended)
 openssl genrsa 2048 | openssl pkcs8 -topk8 -inform PEM -out snowflake_key.p8
@@ -124,12 +140,14 @@ openssl rsa -in snowflake_key.p8 -pubout -out snowflake_key.pub
 ```
 
 **2. Extract Public Key (remove header/footer/newlines):**
+
 ```bash
 # Remove header, footer, and newlines
 cat snowflake_key.pub | grep -v "BEGIN PUBLIC" | grep -v "END PUBLIC" | tr -d '\n'
 ```
 
 **3. Add Public Key to Snowflake:**
+
 ```sql
 -- Set public key for user
 ALTER USER your_username SET RSA_PUBLIC_KEY='MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A...';
@@ -140,11 +158,13 @@ DESC USER your_username;
 ```
 
 **4. Test Connection:**
+
 ```bash
 snow sql -c default -q "SELECT CURRENT_USER()"
 ```
 
 **Pros:**
+
 - ✅ Very secure for production
 - ✅ No password storage
 - ✅ Ideal for CI/CD and automation
@@ -152,10 +172,12 @@ snow sql -c default -q "SELECT CURRENT_USER()"
 - ✅ No interactive prompts
 
 **Cons:**
+
 - ❌ More complex initial setup
 - ❌ Requires key management and rotation
 
 **Security Best Practices:**
+
 - Store private keys outside project directory
 - Use encrypted keys with passphrases
 - Rotate keys every 90 days
@@ -176,10 +198,12 @@ password = "your_password"
 ```
 
 **Pros:**
+
 - ✅ Simple setup
 - ✅ Works everywhere
 
 **Cons:**
+
 - ❌ Less secure (password in plain text)
 - ❌ Not recommended for production
 - ❌ MFA requires separate handling
@@ -200,14 +224,17 @@ token = "your_oauth_token"
 ```
 
 **Pros:**
+
 - ✅ Supports OAuth workflows
 - ✅ Token-based security
 
 **Cons:**
+
 - ❌ Requires token refresh logic
 - ❌ Token expiration management
 
 **Usage Pattern:**
+
 ```python
 # Token needs to be refreshed before expiration
 from snowflake.snowpark import Session
@@ -256,6 +283,7 @@ schema = "PUBLIC"
 ### Using Connection Profiles
 
 **Snowflake CLI:**
+
 ```bash
 # Use specific connection
 snow sql -c default -q "SELECT CURRENT_DATABASE()"
@@ -267,6 +295,7 @@ snow streamlit deploy -c prod
 ```
 
 **Streamlit Apps:**
+
 ```python
 import streamlit as st
 from snowflake.snowpark import Session
@@ -277,6 +306,7 @@ session = Session.builder.config("connection_name", env).create()
 ```
 
 **dbt:**
+
 ```yaml
 # profiles.yml
 snowflake_demo:
@@ -287,7 +317,7 @@ snowflake_demo:
       account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
       # Uses connections.toml if not specified
     prod:
-      type: snowflake  
+      type: snowflake
       account: "{{ env_var('SNOWFLAKE_PROD_ACCOUNT') }}"
 ```
 
@@ -299,19 +329,20 @@ Override connection settings without modifying `connections.toml`:
 
 ### Supported Variables
 
-| Variable | Purpose | Example |
-|----------|---------|---------|
-| `SNOWFLAKE_ACCOUNT` | Override account | `xy12345.us-east-1` |
-| `SNOWFLAKE_USER` | Override user | `john_doe` |
-| `SNOWFLAKE_PASSWORD` | Override password | `secret123` |
-| `SNOWFLAKE_DATABASE` | Override database | `ANALYTICS_DB` |
-| `SNOWFLAKE_SCHEMA` | Override schema | `REPORTING` |
-| `SNOWFLAKE_WAREHOUSE` | Override warehouse | `LARGE_WH` |
-| `SNOWFLAKE_ROLE` | Override role | `ANALYST` |
+| Variable              | Purpose            | Example             |
+| --------------------- | ------------------ | ------------------- |
+| `SNOWFLAKE_ACCOUNT`   | Override account   | `xy12345.us-east-1` |
+| `SNOWFLAKE_USER`      | Override user      | `john_doe`          |
+| `SNOWFLAKE_PASSWORD`  | Override password  | `secret123`         |
+| `SNOWFLAKE_DATABASE`  | Override database  | `ANALYTICS_DB`      |
+| `SNOWFLAKE_SCHEMA`    | Override schema    | `REPORTING`         |
+| `SNOWFLAKE_WAREHOUSE` | Override warehouse | `LARGE_WH`          |
+| `SNOWFLAKE_ROLE`      | Override role      | `ANALYST`           |
 
 ### Usage Examples
 
 **Command-Line Overrides:**
+
 ```bash
 # Override database/schema
 export SNOWFLAKE_DATABASE=ANALYTICS_DB
@@ -330,6 +361,7 @@ dbt run
 ```
 
 **Startup Script Pattern:**
+
 ```bash
 #!/bin/bash
 # run_dev.sh
@@ -344,6 +376,7 @@ streamlit run app.py
 ```
 
 **Multi-Environment Scripts:**
+
 ```bash
 #!/bin/bash
 # run.sh
@@ -396,6 +429,7 @@ session = get_snowpark_session()
 ```
 
 **With environment selection:**
+
 ```python
 @st.cache_resource
 def get_snowpark_session(connection_name='default'):
@@ -436,18 +470,19 @@ my_project:
       account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
       user: "{{ env_var('SNOWFLAKE_USER') }}"
       # Authentication method - choose one:
-      authenticator: externalbrowser  # SSO
+      authenticator: externalbrowser # SSO
       # OR
-      private_key_path: ~/.ssh/snowflake_key.p8  # Key pair
+      private_key_path: ~/.ssh/snowflake_key.p8 # Key pair
       # OR
-      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"  # Username/password
-      
+      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}" # Username/password
+
       warehouse: COMPUTE_WH
       database: MY_DB
       schema: PUBLIC
 ```
 
-**Note:** While dbt uses a different configuration file, the authentication methods and environment variable patterns are the same. See the **`dbt-core` skill** for complete dbt configuration.
+**Note:** While dbt uses a different configuration file, the authentication methods and environment
+variable patterns are the same. See the **`dbt-core` skill** for complete dbt configuration.
 
 ### Snowpark Scripts
 
@@ -472,12 +507,14 @@ session = Session.builder.configs({
 ### ✅ DO
 
 **Development:**
+
 - Use **SSO/externalbrowser** for local development
 - Use separate connection profiles for each environment
 - Use startup scripts for consistent configuration
 - Test connections before running applications: `snow connection test -c <profile>`
 
 **Production:**
+
 - Use **key pair authentication** for production and CI/CD
 - Store private keys outside project directory (e.g., `~/.ssh/`)
 - Use encrypted keys with passphrases
@@ -485,6 +522,7 @@ session = Session.builder.configs({
 - Use different keys for different environments
 
 **Security:**
+
 - Add `connections.toml` to `.gitignore`
 - Never commit credentials or keys to version control
 - Use least-privilege roles
@@ -492,6 +530,7 @@ session = Session.builder.configs({
 - Audit connection usage regularly
 
 **Configuration:**
+
 - Use environment variables for overrides
 - Document connection requirements in README
 - Provide connection templates (without credentials)
@@ -540,6 +579,7 @@ snow sql -c default -q "SELECT CURRENT_DATABASE()"
 Add debug info to your application:
 
 **Streamlit:**
+
 ```python
 st.write("Database:", session.get_current_database())
 st.write("Schema:", session.get_current_schema())
@@ -548,6 +588,7 @@ st.write("Role:", session.get_current_role())
 ```
 
 **Python Script:**
+
 ```python
 print(f"Account: {session.get_current_account()}")
 print(f"User: {session.get_current_user()}")
@@ -566,6 +607,7 @@ print(f"Role: {session.get_current_role()}")
 **Error:** `Could not connect to Snowflake` or `Connection timeout`
 
 **Solutions:**
+
 1. Verify `connections.toml` exists at correct location
 2. Check account identifier format (e.g., `xy12345.us-east-1`)
 3. Verify user has appropriate permissions
@@ -577,6 +619,7 @@ print(f"Role: {session.get_current_role()}")
 **Error:** `External browser authentication failed`
 
 **Solutions:**
+
 1. Ensure browser is installed and accessible
 2. Check firewall/proxy settings
 3. Try clearing browser cookies for Snowflake
@@ -588,6 +631,7 @@ print(f"Role: {session.get_current_role()}")
 **Error:** `JWT token is invalid` or `Private key authentication failed`
 
 **Solutions:**
+
 1. Verify public key is set: `DESC USER your_username` (check `RSA_PUBLIC_KEY_FP`)
 2. Ensure private key path is correct in `connections.toml`
 3. Verify private key format is PKCS#8 (not PKCS#1)
@@ -599,6 +643,7 @@ print(f"Role: {session.get_current_role()}")
 **Problem:** Application uses unexpected database/schema/warehouse
 
 **Solutions:**
+
 1. Check connection profile settings in `connections.toml`
 2. Verify environment variables: `env | grep SNOWFLAKE_`
 3. Check for application-level overrides
@@ -610,6 +655,7 @@ print(f"Role: {session.get_current_role()}")
 **Problem:** Overrides don't take effect
 
 **Solutions:**
+
 1. Verify variables are exported: `env | grep SNOWFLAKE_`
 2. Restart application after setting variables
 3. Check if application caches session (clear cache if needed)
@@ -621,6 +667,7 @@ print(f"Role: {session.get_current_role()}")
 **Error:** `Connection 'profile_name' not found`
 
 **Solutions:**
+
 1. Check `~/.snowflake/connections.toml` exists
 2. Verify profile name in file (case-sensitive)
 3. Check TOML syntax is valid
@@ -631,6 +678,7 @@ print(f"Role: {session.get_current_role()}")
 **Error:** `Insufficient privileges` or `Access denied`
 
 **Solutions:**
+
 1. Verify role has necessary grants
 2. Check if role is specified in connection profile
 3. Try with different role: `snow sql -c default --role ACCOUNTADMIN`
@@ -643,6 +691,7 @@ print(f"Role: {session.get_current_role()}")
 ### Credential Storage
 
 **Never store credentials in:**
+
 - ❌ Application code
 - ❌ Version control (git)
 - ❌ Shared drives
@@ -650,6 +699,7 @@ print(f"Role: {session.get_current_role()}")
 - ❌ Environment files committed to git
 
 **Safe storage locations:**
+
 - ✅ `~/.snowflake/connections.toml` (with appropriate file permissions)
 - ✅ Secure secret management systems (AWS Secrets Manager, HashiCorp Vault, etc.)
 - ✅ CI/CD secret stores (GitHub Secrets, GitLab CI Variables, etc.)
@@ -671,6 +721,7 @@ ls -la ~/.snowflake/connections.toml
 ### Key Management
 
 **For key pair authentication:**
+
 1. Generate separate keys for each environment
 2. Use encrypted keys with strong passphrases
 3. Store keys in secure location (`~/.ssh/` with 600 permissions)
@@ -679,6 +730,7 @@ ls -la ~/.snowflake/connections.toml
 6. Document key rotation procedures
 
 **Key rotation process:**
+
 ```bash
 # 1. Generate new key pair
 openssl genrsa 2048 | openssl pkcs8 -topk8 -inform PEM -out snowflake_key_new.p8
@@ -717,7 +769,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      
+
       - name: Setup Snowflake connection
         run: |
           mkdir -p ~/.snowflake
@@ -730,10 +782,10 @@ jobs:
           warehouse = "PROD_WH"
           database = "PROD_DB"
           EOF
-          
+
           echo "${{ secrets.SNOWFLAKE_PRIVATE_KEY }}" > ~/.ssh/snowflake_key.p8
           chmod 600 ~/.ssh/snowflake_key.p8
-          
+
       - name: Deploy
         run: |
           snow streamlit deploy -c default
@@ -831,10 +883,11 @@ def get_snowpark_session():
 ## Related Skills
 
 - `snowflake-cli` skill - Snowflake CLI operations and commands
-- `streamlit-development` skill - Streamlit application development  
+- `streamlit-development` skill - Streamlit application development
 - `dbt-core` skill - dbt project configuration using `profiles.yml` (dbt's configuration format)
 
 ---
 
-**Goal:** Transform AI agents into experts at configuring and managing Snowflake connections securely across all tools and environments, with proper authentication methods, multi-environment support, and security best practices.
-
+**Goal:** Transform AI agents into experts at configuring and managing Snowflake connections
+securely across all tools and environments, with proper authentication methods, multi-environment
+support, and security best practices.

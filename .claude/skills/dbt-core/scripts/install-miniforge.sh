@@ -51,4 +51,3 @@ echo "Conda has been initialized for all shells (bash, zsh, fish, etc.)"
 echo ""
 echo "IMPORTANT: Restart your terminal (or start a new terminal session)"
 echo "to activate conda, then run 'check-environment.sh' to verify."
-

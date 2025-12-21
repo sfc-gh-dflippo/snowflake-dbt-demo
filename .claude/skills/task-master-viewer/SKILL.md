@@ -1,6 +1,8 @@
 ---
 name: task-master-viewer
-description: Launch a Streamlit GUI for Task Master tasks.json editing. Use when users want a visual interface instead of CLI/MCP commands.
+description:
+  Launch a Streamlit GUI for Task Master tasks.json editing. Use when users want a visual interface
+  instead of CLI/MCP commands.
 ---
 
 # Task Master Viewer
@@ -10,12 +12,14 @@ Visual GUI for managing Task Master `tasks.json` files.
 ## When to Use
 
 **Use when:**
+
 - User asks to "view tasks visually", "open task editor", "launch GUI", or "see tasks in browser"
 - User wants to edit multiple tasks without typing commands
 - User needs to reorganize task hierarchy
 - CLI/MCP tools feel cumbersome
 
 **Don't use when:**
+
 - User is comfortable with CLI (`task-master list`, etc.)
 - User wants to script or automate tasks
 - Headless/server environment without browser
@@ -35,6 +39,7 @@ cd .claude/skills/task-master-viewer && streamlit run app.py
 ```
 
 **Output:**
+
 ```
 Local URL: http://localhost:8501
 ```
@@ -66,16 +71,19 @@ To stop: Close browser tab and press Ctrl+C
 ## Stopping the App
 
 **Foreground** (default):
+
 ```bash
 # User presses Ctrl+C
 ```
 
 **Kill Process**:
+
 ```bash
 pkill -f "streamlit run"
 ```
 
 **Background** (if needed):
+
 ```bash
 cd .claude/skills/task-master-viewer
 nohup streamlit run app.py > /dev/null 2>&1 &
@@ -87,16 +95,17 @@ kill $(cat streamlit.pid)
 
 ## Common Issues
 
-| Issue | Solution |
-|-------|----------|
-| "Address already in use" | `pkill -f "streamlit run"` then restart |
-| "Module 'streamlit' not found" | `pip install streamlit` |
-| Wrong directory error | Must run from `.claude/skills/task-master-viewer/` |
-| File not found | User sets path in sidebar settings |
+| Issue                          | Solution                                           |
+| ------------------------------ | -------------------------------------------------- |
+| "Address already in use"       | `pkill -f "streamlit run"` then restart            |
+| "Module 'streamlit' not found" | `pip install streamlit`                            |
+| Wrong directory error          | Must run from `.claude/skills/task-master-viewer/` |
+| File not found                 | User sets path in sidebar settings                 |
 
 ## Best Practices
 
 **Do:**
+
 - ✅ Check/install Streamlit before launching
 - ✅ Run from skill directory
 - ✅ Tell user the URL
@@ -104,6 +113,7 @@ kill $(cat streamlit.pid)
 - ✅ Mention all instructions are in the app
 
 **Don't:**
+
 - ❌ Leave running indefinitely
 - ❌ Launch multiple instances
 - ❌ Edit tasks.json while app is open
@@ -112,6 +122,7 @@ kill $(cat streamlit.pid)
 ## Integration
 
 Works alongside:
+
 - Task Master CLI commands
 - Task Master MCP tools
 - Direct JSON editing (use "🔄 Reload" button)
@@ -121,6 +132,7 @@ Works alongside:
 **User**: "Can I see my tasks visually?"
 
 **Agent**:
+
 ```
 Installing Streamlit... ✓
 Launching Task Master editor... ✓

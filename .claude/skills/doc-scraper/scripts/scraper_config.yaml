@@ -2,14 +2,14 @@
 
 # HTTP Settings
 rate_limiting:
-  requests_per_second: 2  # Lower to be respectful to Snowflake
-  period: 1  # seconds
-  max_concurrent_threads: 4  # Parallel downloads/writes
+  requests_per_second: 2 # Lower to be respectful to Snowflake
+  period: 1 # seconds
+  max_concurrent_threads: 4 # Parallel downloads/writes
 
 retry_logic:
   max_retries: 3
   backoff_factor: 2
-  timeout: 30  # seconds
+  timeout: 30 # seconds
 
 user_agent: "SnowflakeDocsScraper/1.0 (Migration Reference Generator)"
 
@@ -41,13 +41,13 @@ markdownify:
 # Cache Settings
 cache:
   enabled: true
-  ttl_hours: 168  # 1 week (7 days * 24 hours)
+  ttl_hours: 168 # 1 week (7 days * 24 hours)
   directory: ".cache"
-  
+
 # Scraped pages tracking
 scraped_pages:
   cache_file: ".cache/scraped_pages.json"
-  expiration_days: 7  # Re-scrape after 7 days
+  expiration_days: 7 # Re-scrape after 7 days
 
 # Output Settings
 output:
@@ -72,5 +72,5 @@ spider:
     - "/en/user-guide/admin-"
 
   # Safety limits
-  max_pages: 1000  # Stop after this many pages
-  max_queue_size: 500  # Don't let queue grow beyond this
+  max_pages: 1000 # Stop after this many pages
+  max_queue_size: 500 # Don't let queue grow beyond this

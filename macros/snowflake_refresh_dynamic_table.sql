@@ -10,5 +10,3 @@
         {% do run_query( snowflake__refresh_dynamic_table(this) ) %}
     {% endif %}
 {%- endmacro %}
-
-

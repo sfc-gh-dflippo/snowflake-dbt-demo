@@ -21,4 +21,3 @@ snowflake-cli>=3.12.0
 snowflake-snowpark-python
 streamlit
 uv
-

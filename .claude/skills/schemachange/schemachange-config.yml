@@ -79,4 +79,4 @@ dry-run: false
 # Query tag attached to every SQL statement executed
 # Useful for tracking schemachange operations in Snowflake query history
 # Access via: SELECT * FROM SNOWFLAKE.ACCOUNT_USAGE.QUERY_HISTORY WHERE QUERY_TAG = 'schemachange'
-query-tag: 'schemachange'
+query-tag: "schemachange"

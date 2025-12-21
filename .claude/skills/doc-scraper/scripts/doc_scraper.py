@@ -11,31 +11,31 @@ Usage:
     python doc-scraper.py --database teradata --limit 5
 """
 
-import re
-import time
 import json
-import sys
 import logging
 import os
+import re
 import sqlite3
-from datetime import datetime, timezone, timedelta
-from pathlib import Path
-from typing import Dict, List, Optional, Any, Tuple
-from xml.etree import ElementTree
-from urllib.parse import urlparse, urljoin
+import sys
+import threading
+import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
 from threading import Lock
+from typing import Any, Dict, List, Optional, Tuple
+from urllib.parse import urljoin, urlparse
+from xml.etree import ElementTree
 
 import click
+import frontmatter
 import requests
-from requests.adapters import HTTPAdapter, Retry
-from ratelimit import limits, sleep_and_retry
+import yaml
 from bs4 import BeautifulSoup
 from markdownify import markdownify as md
-import frontmatter
-import yaml
+from ratelimit import limits, sleep_and_retry
+from requests.adapters import HTTPAdapter, Retry
 from tqdm import tqdm
-import threading
 
 # ============================================================================
 # CONFIGURATION & LOGGING
@@ -47,8 +47,8 @@ _rate_limiter_lock = threading.Lock()
 
 def setup_logging(level: str = "INFO", log_file: Optional[str] = None) -> None:
     """Configure logging for the scraper."""
-    log_format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    date_format = '%Y-%m-%d %H:%M:%S'
+    log_format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    date_format = "%Y-%m-%d %H:%M:%S"
 
     handlers = [logging.StreamHandler()]
     if log_file:
@@ -59,7 +59,7 @@ def setup_logging(level: str = "INFO", log_file: Optional[str] = None) -> None:
         format=log_format,
         datefmt=date_format,
         handlers=handlers,
-        force=True
+        force=True,
     )
 
 
@@ -71,7 +71,9 @@ def get_logger(name: str) -> logging.Logger:
 logger = get_logger(__name__)
 
 
-def load_config(config_path: Optional[Path] = None, output_dir: Optional[str] = None) -> dict:
+def load_config(
+    config_path: Optional[Path] = None, output_dir: Optional[str] = None
+) -> dict:
     """Load scraper configuration from YAML.
 
     Priority:
@@ -81,12 +83,12 @@ def load_config(config_path: Optional[Path] = None, output_dir: Optional[str] = 
 
     On first run, copies embedded config to output_dir for customization.
     """
-    embedded_config = Path(__file__).parent / 'scraper_config.yaml'
+    embedded_config = Path(__file__).parent / "scraper_config.yaml"
 
     if config_path is None:
         # Check output directory first
         if output_dir:
-            output_config = Path(output_dir) / 'scraper_config.yaml'
+            output_config = Path(output_dir) / "scraper_config.yaml"
 
             # Create output directory if it doesn't exist
             Path(output_dir).mkdir(parents=True, exist_ok=True)
@@ -94,6 +96,7 @@ def load_config(config_path: Optional[Path] = None, output_dir: Optional[str] = 
             # Copy embedded config to output dir on first run (visible, not hidden)
             if not output_config.exists():
                 import shutil
+
                 shutil.copy2(embedded_config, output_config)
                 logger.info(f"Created config file: {output_config}")
 
@@ -103,13 +106,14 @@ def load_config(config_path: Optional[Path] = None, output_dir: Optional[str] = 
         if config_path is None or not config_path.exists():
             config_path = embedded_config
 
-    with open(config_path, 'r', encoding='utf-8') as f:
+    with open(config_path, "r", encoding="utf-8") as f:
         return yaml.safe_load(f)
 
 
 # ============================================================================
 # DATABASE MANAGER
 # ============================================================================
+
 
 class ScraperDatabase:
     """
@@ -127,7 +131,8 @@ class ScraperDatabase:
     def _init_db(self):
         """Create database tables if they don't exist."""
         with sqlite3.connect(self.db_path) as conn:
-            conn.execute("""
+            conn.execute(
+                """
                 CREATE TABLE IF NOT EXISTS scraped_pages (
                     url TEXT PRIMARY KEY,
                     scraped_at TEXT NOT NULL,
@@ -136,12 +141,16 @@ class ScraperDatabase:
                     title TEXT,
                     content_hash TEXT
                 )
-            """)
-            conn.execute("""
+            """
+            )
+            conn.execute(
+                """
                 CREATE INDEX IF NOT EXISTS idx_scraped_at
                 ON scraped_pages(scraped_at)
-            """)
-            conn.execute("""
+            """
+            )
+            conn.execute(
+                """
                 CREATE TABLE IF NOT EXISTS scraping_session (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     started_at TEXT NOT NULL,
@@ -150,7 +159,8 @@ class ScraperDatabase:
                     pages_scraped INTEGER DEFAULT 0,
                     pages_failed INTEGER DEFAULT 0
                 )
-            """)
+            """
+            )
             conn.commit()
 
     def should_scrape_url(self, url: str, expiration_days: int = 7) -> bool:
@@ -158,8 +168,7 @@ class ScraperDatabase:
         with self.lock:
             with sqlite3.connect(self.db_path) as conn:
                 cursor = conn.execute(
-                    "SELECT scraped_at FROM scraped_pages WHERE url = ?",
-                    (url,)
+                    "SELECT scraped_at FROM scraped_pages WHERE url = ?", (url,)
                 )
                 row = cursor.fetchone()
 
@@ -175,40 +184,51 @@ class ScraperDatabase:
                         return True
 
                     return False
-                except:
+                except Exception:
                     return True
 
-    def mark_url_scraped(self, url: str, file_path: str = None,
-                        title: str = None, status: str = 'success'):
+    def mark_url_scraped(
+        self,
+        url: str,
+        file_path: str = None,
+        title: str = None,
+        status: str = "success",
+    ):
         """Mark URL as scraped with current timestamp."""
         with self.lock:
             with sqlite3.connect(self.db_path) as conn:
-                conn.execute("""
+                conn.execute(
+                    """
                     INSERT OR REPLACE INTO scraped_pages
                     (url, scraped_at, status, file_path, title)
                     VALUES (?, ?, ?, ?, ?)
-                """, (
-                    url,
-                    datetime.now(timezone.utc).isoformat(),
-                    status,
-                    file_path,
-                    title
-                ))
+                """,
+                    (
+                        url,
+                        datetime.now(timezone.utc).isoformat(),
+                        status,
+                        file_path,
+                        title,
+                    ),
+                )
                 conn.commit()
 
     def mark_url_failed(self, url: str, error: str = None):
         """Mark URL as failed."""
         with self.lock:
             with sqlite3.connect(self.db_path) as conn:
-                conn.execute("""
+                conn.execute(
+                    """
                     INSERT OR REPLACE INTO scraped_pages
                     (url, scraped_at, status)
                     VALUES (?, ?, ?)
-                """, (
-                    url,
-                    datetime.now(timezone.utc).isoformat(),
-                    f'failed: {error}' if error else 'failed'
-                ))
+                """,
+                    (
+                        url,
+                        datetime.now(timezone.utc).isoformat(),
+                        f"failed: {error}" if error else "failed",
+                    ),
+                )
                 conn.commit()
 
     def is_url_visited(self, url: str) -> bool:
@@ -216,8 +236,7 @@ class ScraperDatabase:
         with self.lock:
             with sqlite3.connect(self.db_path) as conn:
                 cursor = conn.execute(
-                    "SELECT 1 FROM scraped_pages WHERE url = ? LIMIT 1",
-                    (url,)
+                    "SELECT 1 FROM scraped_pages WHERE url = ? LIMIT 1", (url,)
                 )
                 return cursor.fetchone() is not None
 
@@ -225,30 +244,34 @@ class ScraperDatabase:
         """Get scraping statistics."""
         with self.lock:
             with sqlite3.connect(self.db_path) as conn:
-                cursor = conn.execute("""
+                cursor = conn.execute(
+                    """
                     SELECT
                         COUNT(*) as total,
                         SUM(CASE WHEN status = 'success' THEN 1 ELSE 0 END) as success,
                         SUM(CASE WHEN status LIKE 'failed%' THEN 1 ELSE 0 END) as failed
                     FROM scraped_pages
-                """)
+                """
+                )
                 row = cursor.fetchone()
                 return {
-                    'total': row[0] or 0,
-                    'success': row[1] or 0,
-                    'failed': row[2] or 0
+                    "total": row[0] or 0,
+                    "success": row[1] or 0,
+                    "failed": row[2] or 0,
                 }
 
     def get_all_scraped_urls(self) -> List[str]:
         """Get all successfully scraped URLs (for SKILL.md generation)."""
         with self.lock:
             with sqlite3.connect(self.db_path) as conn:
-                cursor = conn.execute("""
+                cursor = conn.execute(
+                    """
                     SELECT url, title, file_path
                     FROM scraped_pages
                     WHERE status = 'success' AND file_path IS NOT NULL
                     ORDER BY url
-                """)
+                """
+                )
                 return cursor.fetchall()
 
     def preload_from_existing_files(self, output_dir: Path, logger=None):
@@ -262,20 +285,21 @@ class ScraperDatabase:
         if logger:
             logger.info(f"Pre-loading database from existing files in {output_dir}...")
 
-        md_files = [f for f in output_dir.rglob('*.md') if f.name != 'SKILL.md']
+        md_files = [f for f in output_dir.rglob("*.md") if f.name != "SKILL.md"]
         loaded_count = 0
         skipped_count = 0
 
         for md_file in md_files:
             try:
-                with open(md_file, 'r', encoding='utf-8') as f:
+                with open(md_file, "r", encoding="utf-8") as f:
                     import frontmatter
+
                     post = frontmatter.load(f)
 
                 # Extract metadata from front-matter
-                url = post.metadata.get('source_url')
-                title = post.metadata.get('title')
-                scraped_at = post.metadata.get('last_scraped')
+                url = post.metadata.get("source_url")
+                title = post.metadata.get("title")
+                scraped_at = post.metadata.get("last_scraped")
 
                 if not url:
                     skipped_count += 1
@@ -289,17 +313,20 @@ class ScraperDatabase:
                 # Add to database with original timestamp if available
                 with self.lock:
                     with sqlite3.connect(self.db_path) as conn:
-                        conn.execute("""
+                        conn.execute(
+                            """
                             INSERT OR REPLACE INTO scraped_pages
                             (url, scraped_at, status, file_path, title)
                             VALUES (?, ?, ?, ?, ?)
-                        """, (
-                            url,
-                            scraped_at or datetime.now(timezone.utc).isoformat(),
-                            'success',
-                            str(md_file),
-                            title
-                        ))
+                        """,
+                            (
+                                url,
+                                scraped_at or datetime.now(timezone.utc).isoformat(),
+                                "success",
+                                str(md_file),
+                                title,
+                            ),
+                        )
                         conn.commit()
 
                 loaded_count += 1
@@ -311,7 +338,9 @@ class ScraperDatabase:
                 continue
 
         if logger:
-            logger.info(f"Pre-loaded {loaded_count} existing files into database ({skipped_count} skipped)")
+            logger.info(
+                f"Pre-loaded {loaded_count} existing files into database ({skipped_count} skipped)"
+            )
 
     def close(self):
         """Close database connection (cleanup)."""
@@ -323,6 +352,7 @@ class ScraperDatabase:
 # SNOWFLAKE DOCUMENTATION SCRAPER
 # ============================================================================
 
+
 class SnowflakeDocsScraper:
     """
     Generic scraper for Snowflake documentation.
@@ -333,7 +363,7 @@ class SnowflakeDocsScraper:
         self,
         config_path: Optional[Path] = None,
         output_dir: str = ".claude/skills/snowflake-docs",
-        base_path: str = "/en/"
+        base_path: str = "/en/",
     ):
         """Initialize the scraper."""
         self.output_dir = output_dir
@@ -345,8 +375,8 @@ class SnowflakeDocsScraper:
 
         # Initialize database in output directory (memory-efficient!)
         output_path = Path(self.output_dir)
-        cache_dir = output_path / '.cache'
-        self.db = ScraperDatabase(db_path=str(cache_dir / 'scraper.db'))
+        cache_dir = output_path / ".cache"
+        self.db = ScraperDatabase(db_path=str(cache_dir / "scraper.db"))
 
         # Pre-load database from existing files (if any)
         if output_path.exists():
@@ -354,60 +384,66 @@ class SnowflakeDocsScraper:
 
         # Spider-specific attributes
         self.url_queue = []  # Queue of URLs to scrape (kept small in memory)
-        self.base_domain = 'docs.snowflake.com'
+        self.base_domain = "docs.snowflake.com"
 
         # Spider path restrictions from config
-        spider_config = self.config.get('spider', {})
-        self.allowed_paths = spider_config.get('allowed_paths', ['/en/'])
-        self.blocked_patterns = spider_config.get('blocked_patterns', [])
-        self.max_pages = spider_config.get('max_pages', 1000)
-        self.max_queue_size = spider_config.get('max_queue_size', 500)
+        spider_config = self.config.get("spider", {})
+        self.allowed_paths = spider_config.get("allowed_paths", ["/en/"])
+        self.blocked_patterns = spider_config.get("blocked_patterns", [])
+        self.max_pages = spider_config.get("max_pages", 1000)
+        self.max_queue_size = spider_config.get("max_queue_size", 500)
 
         # Scraped pages tracking
-        self.expiration_days = self.config.get('scraped_pages', {}).get('expiration_days', 7)
-        self.max_concurrent_threads = self.config['rate_limiting'].get('max_concurrent_threads', 4)
+        self.expiration_days = self.config.get("scraped_pages", {}).get(
+            "expiration_days", 7
+        )
+        self.max_concurrent_threads = self.config["rate_limiting"].get(
+            "max_concurrent_threads", 4
+        )
 
         # Thread safety
         self.file_write_lock = Lock()
         self.stats_lock = Lock()
 
         self.stats = {
-            'total_requests': 0,
-            'successful_requests': 0,
-            'failed_requests': 0,
-            'total_time': 0.0,
-            'pages_scraped': 0,
-            'links_discovered': 0
+            "total_requests": 0,
+            "successful_requests": 0,
+            "failed_requests": 0,
+            "total_time": 0.0,
+            "pages_scraped": 0,
+            "links_discovered": 0,
         }
 
         # Rate limiting config
-        self.rate_limit_calls = self.config['rate_limiting']['requests_per_second']
-        self.rate_limit_period = self.config['rate_limiting']['period']
-        self.max_retries = self.config['retry_logic']['max_retries']
-        self.backoff_factor = self.config['retry_logic']['backoff_factor']
-        self.timeout = self.config['retry_logic']['timeout']
-        self.user_agent = self.config['user_agent']
+        self.rate_limit_calls = self.config["rate_limiting"]["requests_per_second"]
+        self.rate_limit_period = self.config["rate_limiting"]["period"]
+        self.max_retries = self.config["retry_logic"]["max_retries"]
+        self.backoff_factor = self.config["retry_logic"]["backoff_factor"]
+        self.timeout = self.config["retry_logic"]["timeout"]
+        self.user_agent = self.config["user_agent"]
 
         # Log existing cached pages
         db_stats = self.db.get_stats()
-        logger.info(f"Initialized SnowflakeDocsScraper v{SCRAPER_VERSION} (base_path: {base_path})")
-        total_cached = db_stats['total']
-        success_count = db_stats['success']
-        failed_count = db_stats['failed']
-        logger.info(f"Database: {total_cached} pages cached ({success_count} success, {failed_count} failed)")
+        logger.info(
+            f"Initialized SnowflakeDocsScraper v{SCRAPER_VERSION} (base_path: {base_path})"
+        )
+        total_cached = db_stats["total"]
+        success_count = db_stats["success"]
+        failed_count = db_stats["failed"]
+        logger.info(
+            f"Database: {total_cached} pages cached ({success_count} success, {failed_count} failed)"
+        )
 
     def _create_session(self) -> requests.Session:
         """Create requests.Session with retry logic."""
         session = requests.Session()
         retry_strategy = Retry(
-            total=self.config['retry_logic']['max_retries'],
-            backoff_factor=self.config['retry_logic']['backoff_factor'],
-            status_forcelist=[429, 500, 502, 503, 504]
+            total=self.config["retry_logic"]["max_retries"],
+            backoff_factor=self.config["retry_logic"]["backoff_factor"],
+            status_forcelist=[429, 500, 502, 503, 504],
         )
         adapter = HTTPAdapter(
-            max_retries=retry_strategy,
-            pool_connections=10,
-            pool_maxsize=20
+            max_retries=retry_strategy, pool_connections=10, pool_maxsize=20
         )
         session.mount("http://", adapter)
         session.mount("https://", adapter)
@@ -415,17 +451,17 @@ class SnowflakeDocsScraper:
 
     def discover_urls(self, use_cache: bool = True) -> Dict[str, Dict[str, List[str]]]:
         """Discover and categorize URLs from sitemap."""
-        cache_dir = Path(self.output_dir) / '.cache'
+        cache_dir = Path(self.output_dir) / ".cache"
         cache_dir.mkdir(parents=True, exist_ok=True)
-        cache_file = cache_dir / 'sitemap_cache.json'
+        cache_file = cache_dir / "sitemap_cache.json"
 
         if use_cache and cache_file.exists():
             logger.info("Loading URLs from cache...")
-            with open(cache_file, 'r') as f:
+            with open(cache_file, "r") as f:
                 return json.load(f)
 
         logger.info("Fetching sitemap...")
-        sitemap_url = self.config['sitemap_url']
+        sitemap_url = self.config["sitemap_url"]
         response = self.session.get(sitemap_url, timeout=30)
         response.raise_for_status()
 
@@ -436,24 +472,30 @@ class SnowflakeDocsScraper:
 
         # Cache results
         cache_file.parent.mkdir(parents=True, exist_ok=True)
-        with open(cache_file, 'w') as f:
+        with open(cache_file, "w") as f:
             json.dump(categorized, f, indent=2)
 
-        logger.info(f"Discovered {len(filtered_urls)} URLs across {len(categorized)} categories")
+        logger.info(
+            f"Discovered {len(filtered_urls)} URLs across {len(categorized)} categories"
+        )
         return categorized
 
     def _parse_sitemap_xml(self, xml_content: bytes) -> List[str]:
         """Parse XML sitemap and extract URLs."""
         tree = ElementTree.fromstring(xml_content)
-        namespace = {'ns': 'http://www.sitemaps.org/schemas/sitemap/0.9'}
-        urls = [loc.text.strip() for loc in tree.findall('.//ns:loc', namespace) if loc.text]
+        namespace = {"ns": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+        urls = [
+            loc.text.strip() for loc in tree.findall(".//ns:loc", namespace) if loc.text
+        ]
         return urls
 
     def _filter_urls_by_base_path(self, urls: List[str]) -> List[str]:
         """Filter URLs by configured base path."""
         pattern = re.escape(self.base_path)
         filtered = [url for url in urls if re.search(pattern, url)]
-        logger.info(f"Filtered {len(filtered)} URLs matching '{self.base_path}' from {len(urls)} total")
+        logger.info(
+            f"Filtered {len(filtered)} URLs matching '{self.base_path}' from {len(urls)} total"
+        )
         return filtered
 
     def _categorize_urls(self, urls: List[str]) -> Dict[str, Dict[str, List[str]]]:
@@ -462,25 +504,29 @@ class SnowflakeDocsScraper:
 
         for url in urls:
             parsed = urlparse(url)
-            segments = [s for s in parsed.path.split('/') if s]
+            segments = [s for s in parsed.path.split("/") if s]
 
             # Extract database/category from URL
             matched_db = None
-            if 'translation-references' in segments:
-                idx = segments.index('translation-references')
+            if "translation-references" in segments:
+                idx = segments.index("translation-references")
                 if idx + 1 < len(segments):
                     matched_db = segments[idx + 1]
             elif len(segments) > 3:
-                matched_db = segments[-2] if segments[-1] not in ['README', 'readme'] else segments[-3]
+                matched_db = (
+                    segments[-2]
+                    if segments[-1] not in ["README", "readme"]
+                    else segments[-3]
+                )
 
             if not matched_db:
-                matched_db = 'general'
+                matched_db = "general"
 
             # Initialize database entry
             if matched_db not in categorized:
-                categorized[matched_db] = {'urls': []}
+                categorized[matched_db] = {"urls": []}
 
-            categorized[matched_db]['urls'].append(url)
+            categorized[matched_db]["urls"].append(url)
 
         return categorized
 
@@ -490,12 +536,12 @@ class SnowflakeDocsScraper:
         """Rate-limited HTTP GET with thread safety."""
         with _rate_limiter_lock:
             return self.session.get(
-                url,
-                headers={'User-Agent': self.user_agent},
-                timeout=self.timeout
+                url, headers={"User-Agent": self.user_agent}, timeout=self.timeout
             )
 
-    def fetch_and_convert(self, url: str) -> Optional[Tuple[str, Dict[str, Any], List[str]]]:
+    def fetch_and_convert(
+        self, url: str
+    ) -> Optional[Tuple[str, Dict[str, Any], List[str]]]:
         """Fetch URL, convert to Markdown, and extract links."""
         start_time = time.time()
 
@@ -505,21 +551,23 @@ class SnowflakeDocsScraper:
 
             elapsed = time.time() - start_time
             with self.stats_lock:
-                self.stats['total_requests'] += 1
-                self.stats['successful_requests'] += 1
-                self.stats['total_time'] += elapsed
+                self.stats["total_requests"] += 1
+                self.stats["successful_requests"] += 1
+                self.stats["total_time"] += elapsed
 
-            logger.info(f"Fetched {url} ({len(response.content)} bytes, {elapsed:.2f}s)")
+            logger.info(
+                f"Fetched {url} ({len(response.content)} bytes, {elapsed:.2f}s)"
+            )
 
             # Parse HTML
-            soup = BeautifulSoup(response.content, 'lxml')
+            soup = BeautifulSoup(response.content, "lxml")
 
             # Extract internal links for spidering
             internal_links = self._extract_internal_links(soup, url)
-            self.stats['links_discovered'] += len(internal_links)
+            self.stats["links_discovered"] += len(internal_links)
 
             # Convert to Markdown
-            main_content = soup.find('main') or soup.find('article') or soup.body
+            main_content = soup.find("main") or soup.find("article") or soup.body
 
             if main_content:
                 markdown_content = md(str(main_content), heading_style="ATX")
@@ -531,20 +579,20 @@ class SnowflakeDocsScraper:
 
             # Extract metadata
             metadata = {
-                'title': self._extract_title(soup),
-                'description': self._extract_description(soup),
-                'source_url': url,
-                'last_scraped': datetime.now(timezone.utc).isoformat(),
-                'scraper_version': SCRAPER_VERSION,
-                'auto_generated': True
+                "title": self._extract_title(soup),
+                "description": self._extract_description(soup),
+                "source_url": url,
+                "last_scraped": datetime.now(timezone.utc).isoformat(),
+                "scraper_version": SCRAPER_VERSION,
+                "auto_generated": True,
             }
 
             return markdown_content, metadata, internal_links
 
         except Exception as e:
             with self.stats_lock:
-                self.stats['total_requests'] += 1
-                self.stats['failed_requests'] += 1
+                self.stats["total_requests"] += 1
+                self.stats["failed_requests"] += 1
             logger.error(f"Failed to fetch {url}: {e}")
             return None
 
@@ -553,7 +601,7 @@ class SnowflakeDocsScraper:
         if soup.title and soup.title.string:
             return soup.title.string.strip()
 
-        h1_tag = soup.find('h1')
+        h1_tag = soup.find("h1")
         if h1_tag:
             return h1_tag.get_text().strip()
 
@@ -561,13 +609,13 @@ class SnowflakeDocsScraper:
 
     def _extract_description(self, soup: BeautifulSoup) -> str:
         """Extract description from HTML."""
-        meta_desc = soup.find('meta', attrs={'name': 'description'})
-        if meta_desc and meta_desc.get('content'):
-            return meta_desc['content'].strip()
+        meta_desc = soup.find("meta", attrs={"name": "description"})
+        if meta_desc and meta_desc.get("content"):
+            return meta_desc["content"].strip()
 
-        p_tag = soup.find('p')
+        p_tag = soup.find("p")
         if p_tag:
-            return ' '.join(p_tag.get_text().split())[:200]
+            return " ".join(p_tag.get_text().split())[:200]
 
         return "Reference documentation from Snowflake"
 
@@ -590,17 +638,17 @@ class SnowflakeDocsScraper:
         """Extract all internal links from HTML that point to docs.snowflake.com and pass filters."""
         links = set()
 
-        for a_tag in soup.find_all('a', href=True):
-            href = a_tag['href'].strip()
+        for a_tag in soup.find_all("a", href=True):
+            href = a_tag["href"].strip()
 
             # Skip anchors, external links, and non-http links
-            if not href or href.startswith('#') or href.startswith('mailto:'):
+            if not href or href.startswith("#") or href.startswith("mailto:"):
                 continue
 
             # Convert relative URLs to absolute
-            if href.startswith('/'):
+            if href.startswith("/"):
                 full_url = f"https://{self.base_domain}{href}"
-            elif href.startswith('http'):
+            elif href.startswith("http"):
                 full_url = href
             else:
                 # Relative path
@@ -611,8 +659,8 @@ class SnowflakeDocsScraper:
             if parsed.netloc == self.base_domain:
                 # Normalize URL (remove fragments, trailing slashes for non-root)
                 clean_url = f"{parsed.scheme}://{parsed.netloc}{parsed.path}"
-                if clean_url.endswith('/') and clean_url.count('/') > 3:
-                    clean_url = clean_url.rstrip('/')
+                if clean_url.endswith("/") and clean_url.count("/") > 3:
+                    clean_url = clean_url.rstrip("/")
 
                 # Check if URL is allowed based on path restrictions
                 if self._is_url_allowed(clean_url):
@@ -625,7 +673,7 @@ class SnowflakeDocsScraper:
     def _fix_markdown_links(self, content: str, source_url: str) -> str:
         """Fix relative links in markdown content to work locally."""
         # Pattern to match markdown links: [text](url)
-        link_pattern = r'\[([^\]]+)\]\((/en/[^\)]+)\)'
+        link_pattern = r"\[([^\]]+)\]\((/en/[^\)]+)\)"
 
         def replace_link(match):
             text = match.group(1)
@@ -645,7 +693,7 @@ class SnowflakeDocsScraper:
                 relative = os.path.relpath(target_path, source_path.parent)
 
                 return f"[{text}]({relative})"
-            except:
+            except Exception:
                 # If we can't resolve it, keep as absolute URL to Snowflake
                 return f"[{text}](https://docs.snowflake.com{link_url})"
 
@@ -662,13 +710,13 @@ class SnowflakeDocsScraper:
             post = frontmatter.Post(content)
             post.metadata = metadata
 
-            with open(output_path, 'w', encoding='utf-8') as f:
+            with open(output_path, "w", encoding="utf-8") as f:
                 f.write(frontmatter.dumps(post))
 
             logger.info(f"Saved file: {output_path}")
 
         # Mark as scraped in database after successful save
-        self.db.mark_url_scraped(url, str(output_path), metadata.get('title'))
+        self.db.mark_url_scraped(url, str(output_path), metadata.get("title"))
 
         return output_path
 
@@ -676,27 +724,29 @@ class SnowflakeDocsScraper:
         """Generate output filepath from URL, preserving full path from server root."""
         parsed = urlparse(url)
         # Remove leading slash and preserve full path
-        path = parsed.path.lstrip('/')
+        path = parsed.path.lstrip("/")
 
         # Transform certain paths for better organization
         # Move guides-overview-* files into guides/ folder
-        if path.startswith('en/guides-overview-'):
-            filename = path.replace('en/guides-overview-', '')
-            path = f'en/guides/overview-{filename}'
-        elif path == 'en/guides':
-            path = 'en/guides/README'
+        if path.startswith("en/guides-overview-"):
+            filename = path.replace("en/guides-overview-", "")
+            path = f"en/guides/overview-{filename}"
+        elif path == "en/guides":
+            path = "en/guides/README"
 
         # Move user-guide-* files into user-guide/ folder
-        if path.startswith('en/user-guide-') and '/' not in path[3:]:  # Only root level files
-            filename = path.replace('en/user-guide-', '')
-            path = f'en/user-guide/{filename}'
+        if (
+            path.startswith("en/user-guide-") and "/" not in path[3:]
+        ):  # Only root level files
+            filename = path.replace("en/user-guide-", "")
+            path = f"en/user-guide/{filename}"
 
         # Ensure .md extension
-        if not path.endswith('.md'):
-            if path.endswith('/'):
-                path = path + 'README.md'
+        if not path.endswith(".md"):
+            if path.endswith("/"):
+                path = path + "README.md"
             else:
-                path = path + '.md'
+                path = path + ".md"
 
         return Path(self.output_dir) / path
 
@@ -713,12 +763,14 @@ class SnowflakeDocsScraper:
             output_path = self.save_file(content, metadata, url)
 
             with self.stats_lock:
-                self.stats['pages_scraped'] += 1
+                self.stats["pages_scraped"] += 1
 
             return (output_path, internal_links)
         return None
 
-    def scrape_urls(self, urls: List[str], spider: bool = False, spider_depth: int = 1) -> List[Path]:
+    def scrape_urls(
+        self, urls: List[str], spider: bool = False, spider_depth: int = 1
+    ) -> List[Path]:
         """
         Scrape URLs with multi-threading. If spider=True, follow internal links up to specified depth.
 
@@ -737,9 +789,13 @@ class SnowflakeDocsScraper:
             self.url_queue = list(urls)
 
             logger.info(f"Starting spider with {len(self.url_queue)} seed URLs")
-            logger.info(f"Spider depth: {spider_depth} (0=seeds only, 1=+links from seeds, etc.)")
+            logger.info(
+                f"Spider depth: {spider_depth} (0=seeds only, 1=+links from seeds, etc.)"
+            )
 
-            with ThreadPoolExecutor(max_workers=self.max_concurrent_threads) as executor:
+            with ThreadPoolExecutor(
+                max_workers=self.max_concurrent_threads
+            ) as executor:
                 while self.url_queue:
                     # Get next batch of URLs to process
                     batch_size = min(self.max_concurrent_threads, len(self.url_queue))
@@ -756,7 +812,9 @@ class SnowflakeDocsScraper:
 
                         # Check max pages limit
                         if pages_processed >= self.max_pages:
-                            logger.warning(f"Reached max pages limit ({self.max_pages}). Stopping spider.")
+                            logger.warning(
+                                f"Reached max pages limit ({self.max_pages}). Stopping spider."
+                            )
                             return output_files
 
                         batch.append(url)
@@ -765,7 +823,10 @@ class SnowflakeDocsScraper:
                         break
 
                     # Process batch in parallel
-                    futures = {executor.submit(self._process_single_url, url): url for url in batch}
+                    futures = {
+                        executor.submit(self._process_single_url, url): url
+                        for url in batch
+                    }
 
                     for future in as_completed(futures):
                         url = futures[future]
@@ -780,41 +841,59 @@ class SnowflakeDocsScraper:
                                 current_depth = url_depths.get(url, 0)
                                 if current_depth < spider_depth:
                                     # Add new links to queue with depth = current + 1
-                                    new_links = [link for link in internal_links
-                                                if link not in url_depths  # Not seen before
-                                                and link not in self.url_queue]
+                                    new_links = [
+                                        link
+                                        for link in internal_links
+                                        if link not in url_depths  # Not seen before
+                                        and link not in self.url_queue
+                                    ]
 
                                     # Assign depth to new links
                                     for link in new_links:
                                         url_depths[link] = current_depth + 1
 
                                     # Limit queue growth
-                                    available_slots = self.max_queue_size - len(self.url_queue)
+                                    available_slots = self.max_queue_size - len(
+                                        self.url_queue
+                                    )
                                     if available_slots > 0:
                                         links_to_add = new_links[:available_slots]
                                         self.url_queue.extend(links_to_add)
 
                                         if len(new_links) > available_slots:
-                                            logger.warning(f"Dropped {len(new_links) - available_slots} links (queue full)")
+                                            logger.warning(
+                                                f"Dropped {len(new_links) - available_slots} links (queue full)"
+                                            )
                                 else:
-                                    logger.debug(f"Max depth {spider_depth} reached for {url}, not following links")
+                                    logger.debug(
+                                        f"Max depth {spider_depth} reached for {url}, not following links"
+                                    )
                         except Exception as e:
                             logger.error(f"Error processing {url}: {e}")
                             self.db.mark_url_failed(url, str(e))
 
                     # Progress update
                     if pages_processed % 10 == 0:
-                        logger.info(f"Progress: {pages_processed} pages processed, {len(self.url_queue)} in queue")
+                        logger.info(
+                            f"Progress: {pages_processed} pages processed, {len(self.url_queue)} in queue"
+                        )
 
         else:
             # Simple mode: multi-threaded scraping of provided URLs
             # Filter through database cache
-            urls_to_scrape = [u for u in urls if self.db.should_scrape_url(u, self.expiration_days)]
+            urls_to_scrape = [
+                u for u in urls if self.db.should_scrape_url(u, self.expiration_days)
+            ]
             total = len(urls_to_scrape)
             logger.info(f"Starting scrape of {total} URLs (after cache check)")
 
-            with ThreadPoolExecutor(max_workers=self.max_concurrent_threads) as executor:
-                futures = {executor.submit(self._process_single_url, url): url for url in urls_to_scrape}
+            with ThreadPoolExecutor(
+                max_workers=self.max_concurrent_threads
+            ) as executor:
+                futures = {
+                    executor.submit(self._process_single_url, url): url
+                    for url in urls_to_scrape
+                }
 
                 completed = 0
                 for future in as_completed(futures):
@@ -831,22 +910,28 @@ class SnowflakeDocsScraper:
 
                     # Progress update
                     if completed % 10 == 0:
-                        logger.info(f"Progress: {completed}/{total} ({completed/total*100:.1f}%)")
+                        logger.info(
+                            f"Progress: {completed}/{total} ({completed/total*100:.1f}%)"
+                        )
 
         return output_files
 
-    def scrape_all(self, databases: tuple = (), limit: Optional[int] = None) -> Dict[str, List[Path]]:
+    def scrape_all(
+        self, databases: tuple = (), limit: Optional[int] = None
+    ) -> Dict[str, List[Path]]:
         """Scrape all discovered URLs."""
         categorized = self.discover_urls()
 
         if databases:
-            categorized = {db: data for db, data in categorized.items() if db in databases}
+            categorized = {
+                db: data for db, data in categorized.items() if db in databases
+            }
 
         results = {}
 
         for db, data in categorized.items():
             logger.info(f"Scraping {db}...")
-            urls = data['urls'][:limit] if limit else data['urls']
+            urls = data["urls"][:limit] if limit else data["urls"]
 
             db_files = []
             for url in tqdm(urls, desc=f"Scraping {db}", unit="url"):
@@ -862,14 +947,14 @@ class SnowflakeDocsScraper:
 
     def get_stats(self) -> Dict[str, Any]:
         """Get scraping statistics."""
-        total = self.stats['total_requests']
+        total = self.stats["total_requests"]
         if total == 0:
-            return {'total_requests': 0, 'success_rate': 0, 'average_time': 0}
+            return {"total_requests": 0, "success_rate": 0, "average_time": 0}
 
         return {
-            'total_requests': total,
-            'success_rate': (self.stats['successful_requests'] / total) * 100,
-            'average_time': self.stats['total_time'] / total
+            "total_requests": total,
+            "success_rate": (self.stats["successful_requests"] / total) * 100,
+            "average_time": self.stats["total_time"] / total,
         }
 
     def close(self):
@@ -883,7 +968,10 @@ class SnowflakeDocsScraper:
 # SKILL.MD GENERATOR
 # ============================================================================
 
-def create_comprehensive_skill_file(root_dir: Path, overwrite: bool = False, db: ScraperDatabase = None) -> Optional[Path]:
+
+def create_comprehensive_skill_file(
+    root_dir: Path, overwrite: bool = False, db: ScraperDatabase = None
+) -> Optional[Path]:
     """
     Create a single comprehensive SKILL.md at root with ALL documents listed.
 
@@ -905,12 +993,12 @@ def create_comprehensive_skill_file(root_dir: Path, overwrite: bool = False, db:
         logger.info(f"SKILL.md already exists: {skill_file}")
         return skill_file
 
-    logger.info(f"Using database for metadata...")
+    logger.info("Using database for metadata...")
 
     # Collect all markdown files with their metadata from database
     documents = []
 
-    for url, title, file_path in db.get_all_scraped_urls():
+    for _url, title, file_path in db.get_all_scraped_urls():
         if file_path:
             try:
                 full_path = Path(file_path)
@@ -918,15 +1006,17 @@ def create_comprehensive_skill_file(root_dir: Path, overwrite: bool = False, db:
                     rel_path = full_path.relative_to(root_dir)
 
                     # Get description from file
-                    with open(full_path, 'r', encoding='utf-8') as f:
+                    with open(full_path, "r", encoding="utf-8") as f:
                         post = frontmatter.load(f)
-                    description = post.metadata.get('description', '')
+                    description = post.metadata.get("description", "")
 
-                    documents.append({
-                        'title': title or full_path.stem.replace('-', ' ').title(),
-                        'description': description,
-                        'path': str(rel_path)
-                    })
+                    documents.append(
+                        {
+                            "title": title or full_path.stem.replace("-", " ").title(),
+                            "description": description,
+                            "path": str(rel_path),
+                        }
+                    )
             except Exception as e:
                 logger.debug(f"Could not process {file_path}: {e}")
                 continue
@@ -938,7 +1028,7 @@ def create_comprehensive_skill_file(root_dir: Path, overwrite: bool = False, db:
     logger.info(f"Found {len(documents)} documents, generating SKILL.md...")
 
     # Sort documents by path
-    documents.sort(key=lambda x: x['path'])
+    documents.sort(key=lambda x: x["path"])
 
     # Derive skill name from directory name
     skill_name = root_dir.name
@@ -963,7 +1053,7 @@ Reference documentation scraped from Snowflake's official documentation.
 
     # Add each document with description
     for doc in documents:
-        if doc['description']:
+        if doc["description"]:
             content += f"- [{doc['title']}]({doc['path']}) - {doc['description']}\n"
         else:
             content += f"- [{doc['title']}]({doc['path']})\n"
@@ -983,7 +1073,7 @@ All content is automatically scraped from [Snowflake's Official Documentation](h
 """
 
     # Write the file
-    with open(skill_file, 'w', encoding='utf-8') as f:
+    with open(skill_file, "w", encoding="utf-8") as f:
         f.write(content)
 
     logger.info(f"Created SKILL.md with {len(documents)} documents")
@@ -994,17 +1084,28 @@ All content is automatically scraped from [Snowflake's Official Documentation](h
 # CLI
 # ============================================================================
 
+
 @click.command()
-@click.option('--output-dir', required=True,
-              help='Output directory for scraped documentation')
-@click.option('--base-path', default='/en/migrations/',
-              help='URL base path to filter (e.g., /en/, /en/sql-reference/)')
-@click.option('--limit', type=int, help='Limit URLs (for testing)')
-@click.option('--spider/--no-spider', default=True, help='Follow internal links (spider mode)')
-@click.option('--spider-depth', default=1, type=int,
-              help='Spider depth: 0=seeds only, 1=+direct links (default), 2=+2nd degree, etc.')
-@click.option('--verbose', '-v', is_flag=True, help='Verbose output')
-@click.option('--dry-run', is_flag=True, help='Preview without writing files')
+@click.option(
+    "--output-dir", required=True, help="Output directory for scraped documentation"
+)
+@click.option(
+    "--base-path",
+    default="/en/migrations/",
+    help="URL base path to filter (e.g., /en/, /en/sql-reference/)",
+)
+@click.option("--limit", type=int, help="Limit URLs (for testing)")
+@click.option(
+    "--spider/--no-spider", default=True, help="Follow internal links (spider mode)"
+)
+@click.option(
+    "--spider-depth",
+    default=1,
+    type=int,
+    help="Spider depth: 0=seeds only, 1=+direct links (default), 2=+2nd degree, etc.",
+)
+@click.option("--verbose", "-v", is_flag=True, help="Verbose output")
+@click.option("--dry-run", is_flag=True, help="Preview without writing files")
 def main(output_dir, base_path, limit, spider, spider_depth, verbose, dry_run):
     """Scrape Snowflake documentation with configurable base path (v1.1)."""
 
@@ -1012,9 +1113,9 @@ def main(output_dir, base_path, limit, spider, spider_depth, verbose, dry_run):
     log_level = "DEBUG" if verbose else "INFO"
     setup_logging(level=log_level, log_file="scraper-v1.1.log")
 
-    click.secho("\n" + "=" * 70, fg='cyan', bold=True)
-    click.secho("  Snowflake Documentation Scraper v1.1", fg='cyan', bold=True)
-    click.secho("=" * 70 + "\n", fg='cyan', bold=True)
+    click.secho("\n" + "=" * 70, fg="cyan", bold=True)
+    click.secho("  Snowflake Documentation Scraper v1.1", fg="cyan", bold=True)
+    click.secho("=" * 70 + "\n", fg="cyan", bold=True)
 
     # Display configuration
     click.echo(f"Output directory: {output_dir}")
@@ -1023,7 +1124,7 @@ def main(output_dir, base_path, limit, spider, spider_depth, verbose, dry_run):
     if limit:
         click.echo(f"Limit: {limit} URLs per database")
     if dry_run:
-        click.secho("\n⚠ DRY RUN MODE - No files will be written", fg='yellow')
+        click.secho("\n⚠ DRY RUN MODE - No files will be written", fg="yellow")
 
     try:
         # Initialize scraper
@@ -1033,7 +1134,7 @@ def main(output_dir, base_path, limit, spider, spider_depth, verbose, dry_run):
         click.echo("\n[1/3] Discovering URLs from sitemap...")
         categorized = scraper.discover_urls(use_cache=True)
 
-        total_urls = sum(len(data['urls']) for data in categorized.values())
+        total_urls = sum(len(data["urls"]) for data in categorized.values())
         click.echo(f"Found {total_urls} URLs across {len(categorized)} categories")
 
         if dry_run:
@@ -1043,22 +1144,26 @@ def main(output_dir, base_path, limit, spider, spider_depth, verbose, dry_run):
             return
 
         # Scrape all URLs
-        click.echo(f"\n[2/3] Scraping documentation... (spider={'on' if spider else 'off'})")
+        click.echo(
+            f"\n[2/3] Scraping documentation... (spider={'on' if spider else 'off'})"
+        )
 
         # Get all URLs from categorized data
         all_urls = []
-        for db, data in categorized.items():
-            urls = data['urls'][:limit] if limit else data['urls']
+        for _category, data in categorized.items():
+            urls = data["urls"][:limit] if limit else data["urls"]
             all_urls.extend(urls)
 
         # Use spider mode
-        output_files = scraper.scrape_urls(all_urls, spider=spider, spider_depth=spider_depth)
+        output_files = scraper.scrape_urls(
+            all_urls, spider=spider, spider_depth=spider_depth
+        )
 
         # For compatibility with old structure
-        results = {'all': output_files}
+        results = {"all": output_files}
 
         # Display results
-        click.echo(f"\n[3/3] Results:")
+        click.echo("\n[3/3] Results:")
         total_files = 0
         for db, files in results.items():
             click.echo(f"  - {db}: {len(files)} files")
@@ -1076,20 +1181,24 @@ def main(output_dir, base_path, limit, spider, spider_depth, verbose, dry_run):
         scraper.close()
 
         # Generate comprehensive SKILL.md
-        click.echo(f"\n[4/4] Generating SKILL.md...")
-        skill_file = create_comprehensive_skill_file(Path(output_dir), overwrite=True, db=scraper.db)
+        click.echo("\n[4/4] Generating SKILL.md...")
+        skill_file = create_comprehensive_skill_file(
+            Path(output_dir), overwrite=True, db=scraper.db
+        )
         if skill_file:
-            click.secho(f"✓ Created: {skill_file.name}", fg='green')
+            click.secho(f"✓ Created: {skill_file.name}", fg="green")
         else:
-            click.secho("⚠ Failed to create SKILL.md", fg='yellow')
+            click.secho("⚠ Failed to create SKILL.md", fg="yellow")
 
-        click.secho(f"\nAll done! Output written to: {output_dir}", fg='green', bold=True)
+        click.secho(
+            f"\nAll done! Output written to: {output_dir}", fg="green", bold=True
+        )
 
     except Exception as e:
-        click.secho(f"\n✗ Error: {e}", fg='red', bold=True)
+        click.secho(f"\n✗ Error: {e}", fg="red", bold=True)
         logger.exception("Scraping failed")
         sys.exit(1)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

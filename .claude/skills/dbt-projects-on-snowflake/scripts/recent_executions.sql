@@ -2,7 +2,7 @@
 -- description: Query recent execution records with status, duration, and resource consumption details
 -- Usage: snow sql -f recent_executions.sql --enable-templating JINJA -D event_table=MY_DATABASE.MY_SCHEMA.EVENT_LOG
 
-SELECT 
+SELECT
     TIMESTAMP,
     RESOURCE_ATTRIBUTES['snow.executable.name']::VARCHAR AS project_name,
     RESOURCE_ATTRIBUTES['snow.database.name']::VARCHAR AS database_name,
@@ -20,4 +20,3 @@ WHERE RESOURCE_ATTRIBUTES['snow.executable.type']::VARCHAR = 'DBT_PROJECT'
   AND RECORD['severity_text']::VARCHAR IN ('ERROR', 'WARN', 'INFO')
   AND TIMESTAMP >= DATEADD(hour, -1, CURRENT_TIMESTAMP())
 ORDER BY TIMESTAMP DESC;
-

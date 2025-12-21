@@ -2,7 +2,7 @@
 -- description: Track all execution events with timestamps, users, and changes for compliance and debugging
 -- Usage: snow sql -f audit_trail.sql --enable-templating JINJA -D event_table=MY_DATABASE.MY_SCHEMA.EVENT_LOG
 
-SELECT 
+SELECT
     TIMESTAMP,
     RESOURCE_ATTRIBUTES['snow.executable.name']::VARCHAR AS project_name,
     RESOURCE_ATTRIBUTES['db.user']::VARCHAR AS executed_by,
@@ -15,4 +15,3 @@ WHERE RESOURCE_ATTRIBUTES['snow.executable.type']::VARCHAR = 'DBT_PROJECT'
   AND RECORD_TYPE = 'LOG'
   AND TIMESTAMP >= DATEADD(day, -30, CURRENT_TIMESTAMP())
 ORDER BY TIMESTAMP DESC;
-

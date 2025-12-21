@@ -1,6 +1,8 @@
 ---
 name: Snowflake CLI Stage Operations
-description: Complete reference guide for managing files and executing scripts on Snowflake stages using the Snowflake CLI. Covers upload/download, execution, stage management, and advanced operations.
+description:
+  Complete reference guide for managing files and executing scripts on Snowflake stages using the
+  Snowflake CLI. Covers upload/download, execution, stage management, and advanced operations.
 ---
 
 # Snowflake CLI Stage Operations
@@ -14,6 +16,7 @@ Complete guide to managing files and executing scripts on Snowflake stages.
 ### File Operations
 
 #### Upload Files
+
 ```bash
 # Upload single file
 snow stage copy ./script.sql @my_stage/ -c default
@@ -29,6 +32,7 @@ snow stage copy ./data.json @my_stage/data/2024/ -c default
 ```
 
 #### Download Files
+
 ```bash
 # Download single file
 snow stage copy @my_stage/file.csv ./downloads/ -c default
@@ -41,6 +45,7 @@ snow stage copy @my_stage/ ./ -c default
 ```
 
 #### List Files
+
 ```bash
 # List all files in stage
 snow stage list-files @my_stage -c default
@@ -53,6 +58,7 @@ snow stage list-files @my_stage/data/*.csv -c default
 ```
 
 #### Remove Files
+
 ```bash
 # Remove single file
 snow stage remove @my_stage/old_file.csv -c default
@@ -89,6 +95,7 @@ snow stage execute @my_stage/script.sql -c default \
 ```
 
 **Example SQL file with Jinja variables:**
+
 ```sql
 -- script.sql
 CREATE OR REPLACE TABLE {{ database }}.{{ schema }}.customers AS
@@ -114,6 +121,7 @@ snow stage execute @my_stage/script.py -c default
 ```
 
 **Example Python script:**
+
 ```python
 # process_data.py
 import os
@@ -122,10 +130,10 @@ import snowflake.snowpark as snowpark
 def main(session: snowpark.Session):
     database = os.environ.get('database', 'MY_DB')
     table = os.environ.get('table', 'MY_TABLE')
-    
+
     df = session.table(f"{database}.PUBLIC.{table}")
     result = df.count()
-    
+
     return f"Processed {result} rows from {database}.{table}"
 ```
 
@@ -133,14 +141,15 @@ def main(session: snowpark.Session):
 
 ## Variable Syntax Differences
 
-| Command Type | Variable Syntax | Example |
-|--------------|----------------|---------|
-| `snow sql -q` | `<% var %>` (default) | `snow sql -q "SELECT <% var %>" -D var=value` |
-| `snow sql -i` | `<% var %>` (default) | `snow sql -i -D var=value <<< "SELECT <% var %>"` |
-| `snow stage execute` (SQL) | `{{ var }}` (Jinja) | `snow stage execute @stage/file.sql -D var=value` |
-| `snow stage execute` (Python) | `os.environ['var']` | Access via `os.environ.get('var')` |
+| Command Type                  | Variable Syntax       | Example                                           |
+| ----------------------------- | --------------------- | ------------------------------------------------- |
+| `snow sql -q`                 | `<% var %>` (default) | `snow sql -q "SELECT <% var %>" -D var=value`     |
+| `snow sql -i`                 | `<% var %>` (default) | `snow sql -i -D var=value <<< "SELECT <% var %>"` |
+| `snow stage execute` (SQL)    | `{{ var }}` (Jinja)   | `snow stage execute @stage/file.sql -D var=value` |
+| `snow stage execute` (Python) | `os.environ['var']`   | Access via `os.environ.get('var')`                |
 
-**Key Point:** SQL files on stage use Jinja `{{ }}` syntax automatically. No need to specify `--enable-templating JINJA`.
+**Key Point:** SQL files on stage use Jinja `{{ }}` syntax automatically. No need to specify
+`--enable-templating JINJA`.
 
 ---
 
@@ -225,7 +234,8 @@ snow stage execute ${STAGE}/deploy.sql -c default \
 
 ### ✅ DO
 
-- **Organize files by purpose** - Use subdirectories on stages (e.g., `@stage/migrations/`, `@stage/procedures/`)
+- **Organize files by purpose** - Use subdirectories on stages (e.g., `@stage/migrations/`,
+  `@stage/procedures/`)
 - **Use glob patterns** - Execute multiple files at once with `*.sql`
 - **Version your scripts** - Include version in stage path (e.g., `@stage/v1.0/`)
 - **Include requirements.txt** - For Python scripts needing external libraries
@@ -250,6 +260,7 @@ snow stage execute ${STAGE}/deploy.sql -c default \
 **Error:** `SQL access control error: Insufficient privileges`
 
 **Solution:**
+
 ```sql
 -- Grant stage permissions
 GRANT USAGE ON STAGE my_stage TO ROLE my_role;
@@ -262,6 +273,7 @@ GRANT WRITE ON STAGE my_stage TO ROLE my_role;
 **Error:** `File not found: @my_stage/script.sql`
 
 **Solution:**
+
 ```bash
 # List files to verify path
 snow stage list-files @my_stage -c default
@@ -275,6 +287,7 @@ snow stage list-files @my_stage/scripts/ -c default
 **Problem:** `{{ var }}` appears literally in output
 
 **Solution:** Ensure using Jinja syntax (not `<% %>`)
+
 ```sql
 -- ✅ CORRECT for staged SQL
 SELECT * FROM {{ database }}.{{ schema }}.table;
@@ -288,6 +301,7 @@ SELECT * FROM <% database %>.<% schema %>.table;
 **Error:** `ModuleNotFoundError: No module named 'package'`
 
 **Solution:** Upload requirements.txt to same stage directory
+
 ```bash
 # Create requirements.txt
 echo "pandas==2.0.0" > requirements.txt
@@ -313,6 +327,7 @@ EXECUTE IMMEDIATE FROM @deployment_stage/procedures/update_metrics.sql;
 ```
 
 Combined workflow:
+
 ```bash
 # 1. Upload scripts to stage
 snow stage copy ./procedures/ @deployment_stage/procedures/ -c default
@@ -354,7 +369,6 @@ snow stage execute @stage/migrations/*.sql -c default -D db=MY_DB
 ---
 
 **Related Documentation:**
+
 - **`snowflake-cli` skill** - Variable syntax and templating guide
 - **`snowflake-connections` skill** - Connection configuration and authentication
-
-

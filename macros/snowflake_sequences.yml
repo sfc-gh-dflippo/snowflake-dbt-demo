@@ -24,5 +24,3 @@ macros:
       `SEQUENCE_NAME.nextval as KEY_WID`
     docs:
       show: true
-
-

@@ -1,6 +1,10 @@
 ---
 name: dbt-projects-snowflake-setup
-description: Step-by-step setup guide for dbt Projects on Snowflake including prerequisites, external access integration, Git API integration, event table configuration, and automated scheduling. Use this skill when setting up dbt Projects on Snowflake for the first time or troubleshooting setup issues.
+description:
+  Step-by-step setup guide for dbt Projects on Snowflake including prerequisites, external access
+  integration, Git API integration, event table configuration, and automated scheduling. Use this
+  skill when setting up dbt Projects on Snowflake for the first time or troubleshooting setup
+  issues.
 ---
 
 # dbt Projects on Snowflake Setup
@@ -10,6 +14,7 @@ Complete step-by-step guide for setting up dbt Projects on Snowflake from beginn
 ## When to Use This Skill
 
 Activate this skill when users ask about:
+
 - Setting up dbt Projects on Snowflake for the first time
 - Configuring external access integrations for dbt packages
 - Setting up Git API integrations (GitHub, GitLab, Azure DevOps)
@@ -21,10 +26,12 @@ Activate this skill when users ask about:
 ## Prerequisites
 
 **1. Snowflake Account**
+
 - Account with ACCOUNTADMIN permissions for initial setup
 - Personal database enabled (default for new accounts)
 
 **2. Git Repository**
+
 - GitHub, GitLab, or Azure DevOps repository
 - Personal Access Token (PAT) for authentication
 
@@ -60,7 +67,8 @@ CREATE OR REPLACE EXTERNAL ACCESS INTEGRATION dbt_ext_access
   ENABLED = TRUE;
 ```
 
-**Purpose:** Allows dbt to download packages from hub.getdbt.com and GitHub during `dbt deps` execution.
+**Purpose:** Allows dbt to download packages from hub.getdbt.com and GitHub during `dbt deps`
+execution.
 
 ---
 
@@ -69,6 +77,7 @@ CREATE OR REPLACE EXTERNAL ACCESS INTEGRATION dbt_ext_access
 Choose the appropriate integration for your Git provider:
 
 #### GitHub:
+
 ```sql
 CREATE OR REPLACE API INTEGRATION git_api_integration
   API_PROVIDER = git_https_api
@@ -79,6 +88,7 @@ CREATE OR REPLACE API INTEGRATION git_api_integration
 ```
 
 #### GitLab:
+
 ```sql
 CREATE OR REPLACE API INTEGRATION git_api_integration
   API_PROVIDER = git_https_api
@@ -88,6 +98,7 @@ CREATE OR REPLACE API INTEGRATION git_api_integration
 ```
 
 #### Azure DevOps:
+
 ```sql
 CREATE OR REPLACE API INTEGRATION git_api_integration
   API_PROVIDER = git_https_api
@@ -96,7 +107,8 @@ CREATE OR REPLACE API INTEGRATION git_api_integration
   );
 ```
 
-**Purpose:** Allows Snowflake to connect to your Git repository for workspace creation and project deployment.
+**Purpose:** Allows Snowflake to connect to your Git repository for workspace creation and project
+deployment.
 
 ---
 
@@ -109,7 +121,8 @@ CREATE OR REPLACE API INTEGRATION git_api_integration
    - API integration name (`git_api_integration`)
    - Authentication (PAT or OAuth)
 
-**Note:** Workspace creation is only available through the Snowsight UI. The Snowflake CLI does not have commands for creating workspaces.
+**Note:** Workspace creation is only available through the Snowsight UI. The Snowflake CLI does not
+have commands for creating workspaces.
 
 ---
 
@@ -123,8 +136,8 @@ my_dbt_project:
   outputs:
     dev:
       type: snowflake
-      account: ""  # Uses current account context
-      user: ""     # Uses current user context
+      account: "" # Uses current account context
+      user: "" # Uses current user context
       warehouse: MY_WAREHOUSE
       database: MY_DATABASE
       schema: MY_SCHEMA
@@ -132,6 +145,7 @@ my_dbt_project:
 ```
 
 **Important Notes:**
+
 - Leave `account` and `user` empty - Snowflake provides these automatically
 - Specify your warehouse, database, schema, and role
 - For multiple environments, add additional outputs (staging, prod)
@@ -141,14 +155,17 @@ my_dbt_project:
 ### Step 6: Deploy as DBT PROJECT Object
 
 **UI Method:**
+
 - Use the Deploy button in workspace
 
 **CLI Method:**
+
 ```bash
 snow dbt deploy my_project --source .
 ```
 
 **Verify Deployment:**
+
 ```sql
 SHOW DBT PROJECTS IN DATABASE MY_DATABASE;
 ```
@@ -157,7 +174,8 @@ SHOW DBT PROJECTS IN DATABASE MY_DATABASE;
 
 ## Event Table Monitoring Configuration (Optional but Recommended)
 
-Monitor dbt Projects execution using event tables that capture telemetry data (logs, traces, metrics) via the [OpenTelemetry data model](https://opentelemetry.io/).
+Monitor dbt Projects execution using event tables that capture telemetry data (logs, traces,
+metrics) via the [OpenTelemetry data model](https://opentelemetry.io/).
 
 ### Critical Pattern: Database-Level Configuration
 
@@ -168,7 +186,7 @@ Monitor dbt Projects execution using event tables that capture telemetry data (l
 CREATE EVENT TABLE IF NOT EXISTS MY_LOGGING_DATABASE.MY_LOGGING_SCHEMA.EVENT_LOG;
 
 -- Step 2: Set event table where dbt Projects are deployed at DATABASE level
-ALTER DATABASE MY_DBT_PROJECT_DATABASE 
+ALTER DATABASE MY_DBT_PROJECT_DATABASE
   SET EVENT_TABLE = MY_LOGGING_DATABASE.MY_LOGGING_SCHEMA.EVENT_LOG;
 
 -- Step 3: Configure logging levels for the schema where dbt Project is deployed
@@ -180,12 +198,14 @@ ALTER SCHEMA MY_DBT_PROJECT_DATABASE.MY_DBT_PROJECT_SCHEMA SET METRIC_LEVEL = 'A
 ### Why DATABASE Level?
 
 ✅ **DO:**
+
 - Set at DATABASE level for project-level isolation
 - Captures all dbt Project executions in that database
 - Avoids account-wide noise
 - Provides clear project boundaries
 
 ❌ **DON'T:**
+
 - Set at account level (too much noise from all databases)
 - Set at schema level (misses cross-schema operations)
 
@@ -195,7 +215,7 @@ After configuration, verify events are being captured:
 
 ```sql
 -- Check recent events
-SELECT 
+SELECT
     TIMESTAMP,
     RESOURCE_ATTRIBUTES['snow.executable.name']::VARCHAR AS project_name,
     RECORD_TYPE,
@@ -209,6 +229,7 @@ LIMIT 10;
 ```
 
 **For complete monitoring guide**, see the **`dbt-projects-on-snowflake` skill** for:
+
 - Ready-to-use monitoring SQL scripts
 - Best practices for event table management
 - Performance metrics queries
@@ -235,13 +256,13 @@ ALTER TASK my_dbt_daily_task RESUME;
 
 ### Customization Options:
 
-| Parameter | Purpose | Example |
-|-----------|---------|---------|
-| Task name | Identifies the scheduled job | `my_dbt_daily_task` |
-| Warehouse | Compute resources | `MY_WAREHOUSE` |
-| Schedule | CRON expression | `0 6 * * * UTC` (daily 6 AM) |
-| Database/Schema/Project | Target dbt project | `MY_DB.MY_SCHEMA.MY_PROJECT` |
-| Args | dbt command arguments | `'build'`, `'run --select tag:daily'` |
+| Parameter               | Purpose                      | Example                               |
+| ----------------------- | ---------------------------- | ------------------------------------- |
+| Task name               | Identifies the scheduled job | `my_dbt_daily_task`                   |
+| Warehouse               | Compute resources            | `MY_WAREHOUSE`                        |
+| Schedule                | CRON expression              | `0 6 * * * UTC` (daily 6 AM)          |
+| Database/Schema/Project | Target dbt project           | `MY_DB.MY_SCHEMA.MY_PROJECT`          |
+| Args                    | dbt command arguments        | `'build'`, `'run --select tag:daily'` |
 
 ### Common Schedules:
 
@@ -280,12 +301,15 @@ ORDER BY SCHEDULED_TIME DESC;
 **Problem:** Can't download dbt packages or connect to Git
 
 **Solutions:**
+
 1. Verify external access integration exists:
+
    ```sql
    SHOW EXTERNAL ACCESS INTEGRATIONS;
    ```
 
 2. Check network rules include required hosts:
+
    ```sql
    DESCRIBE EXTERNAL ACCESS INTEGRATION dbt_ext_access;
    ```
@@ -299,12 +323,15 @@ ORDER BY SCHEDULED_TIME DESC;
 **Problem:** Git authentication fails in workspace creation
 
 **Solutions:**
+
 1. Verify PAT has correct scopes:
+
    - GitHub: `repo` scope
    - GitLab: `read_repository` scope
    - Azure DevOps: `Code (Read)` permission
 
 2. Check API integration is created:
+
    ```sql
    SHOW API INTEGRATIONS;
    ```
@@ -316,6 +343,7 @@ ORDER BY SCHEDULED_TIME DESC;
 **Problem:** `dbt deps` fails in workspace
 
 **Solutions:**
+
 1. Run `dbt deps` manually in workspace before deployment
 2. Ensure external access integration is enabled:
    ```sql
@@ -328,12 +356,15 @@ ORDER BY SCHEDULED_TIME DESC;
 **Problem:** No events appearing in event table
 
 **Solutions:**
+
 1. Verify event table is set at DATABASE level:
+
    ```sql
    SHOW PARAMETERS LIKE 'EVENT_TABLE' IN DATABASE MY_DATABASE;
    ```
 
 2. Check logging levels are set for schema:
+
    ```sql
    SHOW PARAMETERS LIKE '%_LEVEL' IN SCHEMA MY_DATABASE.MY_SCHEMA;
    ```
@@ -350,7 +381,9 @@ ORDER BY SCHEDULED_TIME DESC;
 **Problem:** Can't create workspace from Git repository
 
 **Solutions:**
+
 1. Verify personal database is enabled:
+
    ```sql
    SHOW PARAMETERS LIKE 'ENABLE_PERSONAL_DATABASE' IN ACCOUNT;
    ```
@@ -360,6 +393,7 @@ ORDER BY SCHEDULED_TIME DESC;
 3. Ensure Git repository URL is correct and accessible
 
 4. Verify Git API integration exists and has correct allowed prefixes:
+
    ```sql
    SHOW API INTEGRATIONS;
    DESCRIBE API INTEGRATION git_api_integration;
@@ -374,6 +408,7 @@ ORDER BY SCHEDULED_TIME DESC;
 ### Security
 
 ✅ **DO:**
+
 - Use key pair authentication for production deployments
 - Rotate PATs regularly
 - Use minimal scopes on PATs
@@ -381,6 +416,7 @@ ORDER BY SCHEDULED_TIME DESC;
 - Use role-based access control
 
 ❌ **DON'T:**
+
 - Share PATs between team members
 - Use ACCOUNTADMIN for routine operations
 - Grant excessive permissions to API integrations
@@ -389,6 +425,7 @@ ORDER BY SCHEDULED_TIME DESC;
 ### Organization
 
 ✅ **DO:**
+
 - Use consistent naming conventions (e.g., `{env}_dbt_project`)
 - Organize projects by database
 - Document integration configurations
@@ -396,6 +433,7 @@ ORDER BY SCHEDULED_TIME DESC;
 - Use separate warehouses for dev/prod
 
 ❌ **DON'T:**
+
 - Mix development and production in same database
 - Skip event table configuration
 - Use default warehouse for all environments
@@ -404,6 +442,7 @@ ORDER BY SCHEDULED_TIME DESC;
 ### Monitoring
 
 ✅ **DO:**
+
 - Configure event tables at database level
 - Set appropriate log/trace/metric levels
 - Query event tables regularly to verify capture
@@ -411,6 +450,7 @@ ORDER BY SCHEDULED_TIME DESC;
 - Archive old event data periodically
 
 ❌ **DON'T:**
+
 - Set event tables at account level (too noisy)
 - Ignore event table configuration
 - Set all levels to DEBUG (storage bloat)
@@ -444,5 +484,5 @@ ORDER BY SCHEDULED_TIME DESC;
 
 ---
 
-**Goal:** Transform AI agents into experts at setting up dbt Projects on Snowflake from scratch with proper integrations, monitoring, and automation configured from day one.
-
+**Goal:** Transform AI agents into experts at setting up dbt Projects on Snowflake from scratch with
+proper integrations, monitoring, and automation configured from day one.

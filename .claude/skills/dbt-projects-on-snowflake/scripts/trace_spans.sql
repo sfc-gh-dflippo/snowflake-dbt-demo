@@ -2,7 +2,7 @@
 -- description: Detailed tracing data for execution spans showing timing breakdowns and dependencies
 -- Usage: snow sql -f trace_spans.sql --enable-templating JINJA -D event_table=MY_DATABASE.MY_SCHEMA.EVENT_LOG
 
-SELECT 
+SELECT
     RESOURCE_ATTRIBUTES['snow.executable.name']::VARCHAR AS project_name,
     RESOURCE_ATTRIBUTES['snow.database.name']::VARCHAR AS database_name,
     RESOURCE_ATTRIBUTES['snow.schema.name']::VARCHAR AS schema_name,
@@ -23,4 +23,3 @@ WHERE l.RESOURCE_ATTRIBUTES['snow.executable.type']::VARCHAR = 'DBT_PROJECT'
   AND l.RECORD_TYPE = 'SPAN'
   AND l.TIMESTAMP >= DATEADD(hour, -12, CURRENT_TIMESTAMP())
 ORDER BY l.TIMESTAMP DESC;
-

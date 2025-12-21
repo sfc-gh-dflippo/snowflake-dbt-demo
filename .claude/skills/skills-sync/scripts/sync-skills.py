@@ -149,7 +149,9 @@ def get_repo_short_name(url: str) -> str:
     return path_parts[-1]  # Just last part: 'snowflake-dbt-demo'
 
 
-def extract_skills_from_repo(repo_path: Path, repo_short_name: str, target_dir: Path) -> list[str]:
+def extract_skills_from_repo(
+    repo_path: Path, repo_short_name: str, target_dir: Path
+) -> list[str]:
     """Extract skills ONLY from .cortex/skills/* and .claude/skills/* in cloned repo.
 
     Copy each skill directory to target_dir with prefix: {repo_short_name}-{skill_name}/
@@ -203,7 +205,9 @@ def get_current_commit(repo_path: Path) -> str | None:
         return None
 
 
-def sync_repo_to_global(url: str, global_dir: Path, temp_dir: Path) -> tuple[bool, list[str]]:
+def sync_repo_to_global(
+    url: str, global_dir: Path, temp_dir: Path
+) -> tuple[bool, list[str]]:
     """Clone repo to temp location, extract skills to global dir with prefix.
 
     Always overwrites existing global skills.
@@ -251,7 +255,9 @@ def sync_repo_to_global(url: str, global_dir: Path, temp_dir: Path) -> tuple[boo
         if changed and old_commit and new_commit:
             print(f"    Updated: {old_commit[:7]} → {new_commit[:7]}")
         else:
-            print(f"    No changes (commit: {new_commit[:7] if new_commit else 'unknown'})")
+            print(
+                f"    No changes (commit: {new_commit[:7] if new_commit else 'unknown'})"
+            )
     else:
         # Clone new repo
         if temp_repo_path.exists():
@@ -268,7 +274,9 @@ def sync_repo_to_global(url: str, global_dir: Path, temp_dir: Path) -> tuple[boo
         changed = True
 
     # Extract skills from repo (always overwrite)
-    extracted_skills = extract_skills_from_repo(temp_repo_path, repo_short_name, global_dir)
+    extracted_skills = extract_skills_from_repo(
+        temp_repo_path, repo_short_name, global_dir
+    )
 
     return changed, extracted_skills
 
@@ -402,7 +410,9 @@ def format_skills_section(
     )
     output.append("**Key Features:**\n\n")
     output.append("- Skills can be enabled `[x]` or disabled `[ ]` individually\n")
-    output.append("- Repository skills are prefixed with repo name (e.g., `skills-dbt-core`)\n\n")
+    output.append(
+        "- Repository skills are prefixed with repo name (e.g., `skills-dbt-core`)\n\n"
+    )
     output.append("**Available Skills:**\n\n")
 
     # Project skills first (from .cortex/skills and .claude/skills in project)
@@ -410,7 +420,9 @@ def format_skills_section(
         output.append("### Project Skills\n\n")
         for name in sorted(project_skills.keys()):
             skill = project_skills[name]
-            output.append(f"- [x] **[{name}]({skill['path']})** - {skill['description']}\n")
+            output.append(
+                f"- [x] **[{name}]({skill['path']})** - {skill['description']}\n"
+            )
         output.append("\n")
 
     # Global skills (from ~/.cortex/skills and ~/.claude/skills)
@@ -418,7 +430,9 @@ def format_skills_section(
         output.append("### Global Skills\n\n")
         for name in sorted(global_skills.keys()):
             skill = global_skills[name]
-            output.append(f"- [x] **[{name}]({skill['path']})** - {skill['description']}\n")
+            output.append(
+                f"- [x] **[{name}]({skill['path']})** - {skill['description']}\n"
+            )
         output.append("\n")
 
     # Remove trailing newline to avoid double blank line before closing marker
@@ -448,8 +462,10 @@ def update_agents_md(content: str) -> None:
     if old_start_idx != -1 and old_end_idx != -1:
         # Remove the entire old MCP section including markers
         before_old = agents_content[:old_start_idx].rstrip()
-        after_old = agents_content[old_end_idx + len(old_mcp_end):].lstrip()
-        agents_content = before_old + "\n\n" + after_old if after_old else before_old + "\n"
+        after_old = agents_content[old_end_idx + len(old_mcp_end) :].lstrip()
+        agents_content = (
+            before_old + "\n\n" + after_old if after_old else before_old + "\n"
+        )
         print("  Removed old MCP SKILLS section")
 
     start_idx = agents_content.find(start_marker)

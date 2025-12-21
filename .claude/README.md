@@ -6,7 +6,7 @@ This directory contains Claude AI skills for the snowflake-dbt-demo project.
 
 - `skills/` - Contains all skill definitions
   - `anthropic-skills/` - Official Anthropic skills (auto-synced)
-  - Custom project-specific skills (dbt-*, snowflake-*, etc.)
+  - Custom project-specific skills (dbt-, snowflake-, etc.)
 
 ## Syncing Skills
 
@@ -41,7 +41,8 @@ The script appends or updates the "Skills" section at the end of `AGENTS.md` bet
 <!-- END SKILLS - DO NOT EDIT MANUALLY -->
 ```
 
-**Important:** 
+**Important:**
+
 - Do not manually edit content between these markers - it will be overwritten on the next sync
 - The Skills section is always placed at the end of AGENTS.md
 - If the markers don't exist, they are automatically appended to the file
@@ -49,6 +50,7 @@ The script appends or updates the "Skills" section at the end of `AGENTS.md` bet
 ### Generated Content Format
 
 The script automatically creates a unified skill list with:
+
 - **Header section** explaining what skills are and how they work
 - **Sync command** showing how to update skills
 - **Alphabetically sorted** list of all skills (both project and Anthropic)
@@ -62,6 +64,7 @@ The script automatically creates a unified skill list with:
 The sync script discovers all skills automatically, including:
 
 ### Official Anthropic Skills
+
 - Creative & Design (algorithmic art, visual design, GIF creation)
 - Development & Technical (artifacts, MCP servers, webapp testing)
 - Enterprise & Communication (brand guidelines, internal comms, themes)
@@ -69,6 +72,7 @@ The sync script discovers all skills automatically, including:
 - Meta Skills (skill creation templates)
 
 ### Project-Specific Skills
+
 - dbt development (architecture, modeling, testing, performance)
 - Snowflake operations (CLI, connections, schemachange)
 - Streamlit development and testing (with Playwright)
