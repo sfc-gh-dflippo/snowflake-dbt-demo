@@ -2,247 +2,68 @@
 name: doc-scraper
 description:
   Generic web scraper for extracting and organizing Snowflake documentation with intelligent caching
-  and configurable spider depth. Install globally with uv for easy access, or use uvx for
-  development. Scrapes any section of docs.snowflake.com controlled by --base-path.
+  and configurable spider depth. Scrapes any section of docs.snowflake.com controlled by
+  --base-path.
 ---
 
 # Snowflake Documentation Scraper
 
-Generic scraper for any section of docs.snowflake.com. Converts to Markdown with metadata and
-generates indexed SKILL.md.
+Scrapes docs.snowflake.com sections to Markdown with SQLite caching (7-day expiration).
 
-**Features:** SQLite caching (7-day expiration) • Multi-threaded (4 workers) • Configurable spider
-depth • Base path filtering
+## Usage
 
-**Install:** `uv tool install --editable .` • **Run:** `doc-scraper --output-dir=/path/to/output`
-
-## Quick Start
-
-**One-time setup (installs globally):**
+**First time setup** (auto-installs uv and doc-scraper):
 
 ```bash
-cd .claude/skills/doc-scraper
-uv tool install --editable .
+python3 .claude/skills/doc-scraper/scripts/doc_scraper.py
 ```
 
-**Then run from anywhere:**
+**Subsequent runs:**
 
 ```bash
-doc-scraper --output-dir=/path/to/output
+doc-scraper --output-dir=./snowflake-docs
+doc-scraper --output-dir=./snowflake-docs --base-path="/en/sql-reference/"
+doc-scraper --output-dir=./snowflake-docs --spider-depth=2
 ```
-
-**For development** (picks up code/config changes without reinstall):
-
-```bash
-cd .claude/skills/doc-scraper
-uvx --from . doc-scraper --output-dir=../../snowflake-docs
-```
-
-## ⚠️ Safety Guidelines for AI Agents
-
-**NEVER delete documentation or cache unless explicitly requested by the user with clear
-confirmation:**
-
-❌ **DO NOT**:
-
-- Delete entire output directories (e.g., `snowflake-docs/`)
-- Delete documentation files (`.md` files in output directory)
-- Suggest clearing cache as a first step or routine operation
-- Use `rm -rf` commands without explicit user request and path verification
-- Delete cache to "fix" issues without diagnosing the actual problem
-
-✅ **DO**:
-
-- Run the scraper normally - cache handles itself automatically
-- Trust the 7-day cache expiration to keep content fresh
-- Only suggest cache clearing if user reports cache corruption errors
-- Ask user to verify paths before any deletion commands
-- Explain that cache clearing is rarely needed and may slow down subsequent runs
-
-**The scraper is designed to run without manual cache management.** Cache expiration, updates, and
-maintenance are all automatic.
 
 ## Command Options
 
-| Option                 | Default           | Description                                         |
-| ---------------------- | ----------------- | --------------------------------------------------- |
-| `--output-dir DIR`     | **Required**      | Output directory for scraped docs (relative to CWD) |
-| `--base-path PATH`     | `/en/migrations/` | URL filter - controls what section to scrape        |
-| `--spider/--no-spider` | `--spider`        | Follow internal links                               |
-| `--spider-depth N`     | `1`               | Depth: 0=seeds only, 1=+direct links, 2=+2nd degree |
-| `--limit N`            | None              | Cap URLs (for testing)                              |
-| `--dry-run`            | -                 | Preview without writing files                       |
-| `-v, --verbose`        | -                 | Debug logging                                       |
+| Option           | Default           | Description                           |
+| ---------------- | ----------------- | ------------------------------------- |
+| `--output-dir`   | **Required**      | Output directory for scraped docs     |
+| `--base-path`    | `/en/migrations/` | URL section to scrape                 |
+| `--spider-depth` | `1`               | Link depth: 0=seeds, 1=+links, 2=+2nd |
+| `--limit`        | None              | Cap URLs (for testing)                |
+| `--dry-run`      | -                 | Preview without writing               |
 
-## Common Tasks
+## Output
 
-**Using globally installed tool** (recommended - run from anywhere):
-
-```bash
-# Initial scrape - migrations section (cache is built automatically)
-doc-scraper --output-dir=/path/to/project/snowflake-docs
-
-# Update existing (skips cached pages automatically - this is the normal workflow)
-doc-scraper --output-dir=/path/to/project/snowflake-docs
-
-# Scrape SQL reference instead of migrations
-doc-scraper --output-dir=/path/to/project/snowflake-docs \
-  --base-path="/en/sql-reference/"
-
-# Scrape user guide section
-doc-scraper --output-dir=/path/to/project/snowflake-docs \
-  --base-path="/en/user-guide/"
-
-# Deep spider (2 levels of link following)
-doc-scraper --output-dir=/path/to/project/snowflake-docs \
-  --spider-depth=2
-
-# Test run (10 URLs max, preview only)
-doc-scraper --output-dir=/path/to/project/snowflake-docs \
-  --limit 10 --dry-run
 ```
-
-**For development** (from `.claude/skills/doc-scraper/` directory):
-
-```bash
-# Use uvx to pick up code/config changes immediately
-uvx --from . doc-scraper --output-dir=../../snowflake-docs
-uvx --from . doc-scraper --output-dir=../../snowflake-docs --base-path="/en/sql-reference/"
+output-dir/
+├── SKILL.md              # Auto-generated index
+├── scraper_config.yaml   # Editable config (auto-created)
+├── .cache/               # SQLite cache (auto-managed)
+└── en/migrations/*.md    # Scraped pages with frontmatter
 ```
 
 ## Configuration
 
-**Auto-created on first run**: `{output-dir}/scraper_config.yaml`
-
-The config file is automatically created in your output directory on first run with these defaults:
+Auto-created at `{output-dir}/scraper_config.yaml`:
 
 ```yaml
 rate_limiting:
-  requests_per_second: 2 # Rate limit
-  max_concurrent_threads: 4 # Parallel workers
-
+  max_concurrent_threads: 4
 spider:
-  max_pages: 1000 # Stop after N pages
-  max_queue_size: 500 # Queue limit
-  allowed_paths: ["/en/"] # URL filters
-
+  max_pages: 1000
+  allowed_paths: ["/en/"]
 scraped_pages:
-  expiration_days: 7 # Cache expiration
+  expiration_days: 7
 ```
-
-**To customize**: Edit `{output-dir}/scraper_config.yaml` directly. Changes take effect on next run.
-
-## Output Structure
-
-```
-snowflake-docs/
-├── SKILL.md                    # Auto-generated index
-└── en/migrations/              # Organized by URL path
-    ├── page1.md               # With YAML frontmatter
-    └── page2.md
-```
-
-Each markdown file includes:
-
-```yaml
----
-title: "Page Title"
-source_url: "https://docs.snowflake.com/..."
-last_scraped: "2025-11-19T12:30:00+00:00"
----
-```
-
-## Cache Management
-
-**Cache location**: `{output-dir}/.cache/` (NOT the docs themselves!)
-
-- `scraper.db` - SQLite database with page metadata
-- `sitemap_cache.json` - Cached sitemap URLs
-
-**⚠️ IMPORTANT**: The cache is designed to be persistent and should NOT be deleted during normal
-operation. The scraper automatically:
-
-- Uses cached pages that are less than 7 days old
-- Updates expired cache entries automatically
-- Skips re-scraping recent pages to save time
-
-**When cache clearing is needed** (rare):
-
-- Cache corruption detected (scraper will show errors)
-- Testing cache behavior during development
-- Forcing a complete re-scrape of all pages
-
-**If you must clear the cache** (verify output-dir path carefully):
-
-```bash
-# ONLY clear the .cache subdirectory, NEVER delete the docs themselves!
-# Double-check the path before running!
-rm -rf /path/to/output/.cache
-
-# Example from project root (verify path first):
-rm -rf snowflake-docs/.cache
-```
-
-**Cache behavior**: 7-day expiration, automatic pre-load, survives crashes, ~50KB per 1,000 pages.
 
 ## Troubleshooting
 
-| Issue                   | Solution                                                                                                |
-| ----------------------- | ------------------------------------------------------------------------------------------------------- |
-| Too many pages scraped  | Lower `--spider-depth` or add blocked patterns in config                                                |
-| Missing pages           | Increase `--spider-depth` or adjust `allowed_paths`                                                     |
-| Slow performance        | Check `max_queue_size` and `max_pages` in config                                                        |
-| Cache corruption errors | Verify `{output-dir}/.cache/scraper.db` exists and check permissions. Only delete if corrupted.         |
-| ImportError (uv)        | Use `uvx --refresh` or clear uv's own cache (NOT project cache): `rm -rf ~/.cache/uv/archive-v0/<hash>` |
-
-## Installation
-
-**Recommended: Global install with uv**
-
-```bash
-cd .claude/skills/doc-scraper
-uv tool install --editable .
-```
-
-Benefits:
-
-- ✅ Run from anywhere: `doc-scraper --output-dir=/path/to/output`
-- ✅ Simple command: no `uvx` or directory navigation
-- ✅ Editable mode: updates when you pull new code
-
-**For development: Use uvx**
-
-```bash
-cd .claude/skills/doc-scraper
-uvx --from . doc-scraper --output-dir=../../snowflake-docs
-```
-
-Benefits:
-
-- ✅ No installation needed
-- ✅ Picks up code changes immediately
-- ✅ Picks up config changes (`scraper_config.yaml`) immediately
-- ✅ Perfect for testing changes
-
-**Legacy: venv method**
-
-```bash
-cd .claude/skills/doc-scraper/scripts
-python -m venv ../venv
-source ../venv/bin/activate
-pip install -r ../requirements.txt
-python doc_scraper.py --output-dir=../../snowflake-docs
-```
-
-**⚠️ Path Tips:**
-
-- Global install: Use absolute paths for `--output-dir`
-- uvx/venv: Can use relative paths from project directory
-
-## Technical Stack
-
-Python 3.11+ • SQLite • BeautifulSoup • markdownify • requests • ratelimit • click
-
----
-
-**Version**: 1.1.0 • **Status**: Production Ready ✅
+| Issue            | Solution                              |
+| ---------------- | ------------------------------------- |
+| Too many pages   | Lower `--spider-depth` or edit config |
+| Missing pages    | Increase `--spider-depth`             |
+| Cache corruption | Delete `{output-dir}/.cache/` (rare)  |

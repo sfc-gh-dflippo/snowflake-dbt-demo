@@ -7,23 +7,141 @@ Scrapes any section of docs.snowflake.com, converts to Markdown, and auto-genera
 a comprehensive SKILL.md file.
 
 Usage:
-    python doc-scraper.py --full-update --base-path="/en/migrations/"
-    python doc-scraper.py --database teradata --limit 5
+    python doc_scraper.py --output-dir=./snowflake-docs
+    doc-scraper --output-dir=./snowflake-docs  (after install)
 """
+
+import platform
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+
+# ============================================================================
+# AUTO-INSTALL BOOTSTRAP (runs before other imports)
+# ============================================================================
+
+
+def get_platform() -> str:
+    """Detect current platform."""
+    system = platform.system().lower()
+    if system == "darwin":
+        return "macos"
+    elif system == "windows":
+        return "windows"
+    else:
+        return "linux"
+
+
+def is_running_as_script() -> bool:
+    """Check if running as a direct Python script vs installed uv tool."""
+    return sys.argv[0].endswith(".py")
+
+
+def install_uv() -> bool:
+    """Attempt to install uv. Returns True if successful."""
+    plat = get_platform()
+    print("Installing uv...")
+
+    try:
+        if plat == "windows":
+            subprocess.run(
+                [
+                    "powershell",
+                    "-ExecutionPolicy",
+                    "ByPass",
+                    "-c",
+                    "irm https://astral.sh/uv/install.ps1 | iex",
+                ],
+                check=True,
+                timeout=120,
+            )
+        else:  # macOS and Linux
+            subprocess.run(
+                ["sh", "-c", "curl -LsSf https://astral.sh/uv/install.sh | sh"],
+                check=True,
+                timeout=120,
+            )
+        print("  ✓ uv installed successfully")
+        return True
+    except (
+        subprocess.CalledProcessError,
+        subprocess.TimeoutExpired,
+        FileNotFoundError,
+    ) as e:
+        print(f"  ✗ Failed to install uv: {e}")
+        return False
+
+
+def check_and_install_uv() -> None:
+    """Check if uv is installed, attempt to install if not."""
+    if shutil.which("uv"):
+        return
+
+    if not install_uv():
+        plat = get_platform()
+        print("\nManual installation required. Run:")
+        if plat == "windows":
+            print(
+                '  powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"'
+            )
+        else:
+            print("  curl -LsSf https://astral.sh/uv/install.sh | sh")
+        print("\nThen restart your terminal and run this script again.")
+        sys.exit(1)
+
+    # Refresh PATH to find newly installed uv
+    if not shutil.which("uv"):
+        print("\nuv was installed but not found in PATH.")
+        print("Please restart your terminal and run this script again.")
+        sys.exit(1)
+
+
+def install_self_as_uv_tool() -> None:
+    """Install this package as a uv tool and exit."""
+    # Find the package directory (parent of scripts/)
+    script_path = Path(__file__).resolve()
+    package_dir = script_path.parent.parent  # scripts/ -> doc-scraper/
+
+    print(f"Installing doc-scraper as uv tool from {package_dir}...")
+    try:
+        subprocess.run(
+            ["uv", "tool", "install", "--force", str(package_dir)],
+            check=True,
+            timeout=300,
+        )
+        print("\n✓ doc-scraper installed successfully!")
+        print("\nRun 'doc-scraper --help' to see available options.")
+        print("Example: doc-scraper --output-dir=./snowflake-docs")
+        sys.exit(0)
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as e:
+        print(f"\n✗ Failed to install doc-scraper: {e}")
+        print("\nTry installing manually:")
+        print(f"  uv tool install {package_dir}")
+        sys.exit(1)
+
+
+# Bootstrap: if running as script, install uv and self as tool
+if is_running_as_script():
+    check_and_install_uv()
+    install_self_as_uv_tool()
+
+
+# ============================================================================
+# MAIN IMPORTS (only reached when running as installed tool)
+# ============================================================================
 
 import json
 import logging
 import os
 import re
 import sqlite3
-import sys
 import threading
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timedelta, timezone
-from pathlib import Path
 from threading import Lock
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, cast
 from urllib.parse import urljoin, urlparse
 from xml.etree import ElementTree
 
@@ -50,7 +168,7 @@ def setup_logging(level: str = "INFO", log_file: Optional[str] = None) -> None:
     log_format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     date_format = "%Y-%m-%d %H:%M:%S"
 
-    handlers = [logging.StreamHandler()]
+    handlers: List[logging.Handler] = [logging.StreamHandler()]
     if log_file:
         handlers.append(logging.FileHandler(log_file))
 
@@ -107,7 +225,10 @@ def load_config(
             config_path = embedded_config
 
     with open(config_path, "r", encoding="utf-8") as f:
-        return yaml.safe_load(f)
+        config = yaml.safe_load(f)
+        if not isinstance(config, dict):
+            return {}
+        return config
 
 
 # ============================================================================
@@ -190,8 +311,8 @@ class ScraperDatabase:
     def mark_url_scraped(
         self,
         url: str,
-        file_path: str = None,
-        title: str = None,
+        file_path: Optional[str] = None,
+        title: Optional[str] = None,
         status: str = "success",
     ):
         """Mark URL as scraped with current timestamp."""
@@ -213,7 +334,7 @@ class ScraperDatabase:
                 )
                 conn.commit()
 
-    def mark_url_failed(self, url: str, error: str = None):
+    def mark_url_failed(self, url: str, error: Optional[str] = None):
         """Mark URL as failed."""
         with self.lock:
             with sqlite3.connect(self.db_path) as conn:
@@ -301,7 +422,7 @@ class ScraperDatabase:
                 title = post.metadata.get("title")
                 scraped_at = post.metadata.get("last_scraped")
 
-                if not url:
+                if not url or not isinstance(url, str):
                     skipped_count += 1
                     continue
 
@@ -443,7 +564,7 @@ class SnowflakeDocsScraper:
             status_forcelist=[429, 500, 502, 503, 504],
         )
         adapter = HTTPAdapter(
-            max_retries=retry_strategy, pool_connections=10, pool_maxsize=20
+            max_retries=cast(Any, retry_strategy), pool_connections=10, pool_maxsize=20
         )
         session.mount("http://", adapter)
         session.mount("https://", adapter)
@@ -547,6 +668,7 @@ class SnowflakeDocsScraper:
 
         try:
             response = self._rate_limited_get(url)
+            assert response is not None  # Type guard: decorators preserve return type
             response.raise_for_status()
 
             elapsed = time.time() - start_time
@@ -610,8 +732,10 @@ class SnowflakeDocsScraper:
     def _extract_description(self, soup: BeautifulSoup) -> str:
         """Extract description from HTML."""
         meta_desc = soup.find("meta", attrs={"name": "description"})
-        if meta_desc and meta_desc.get("content"):
-            return meta_desc["content"].strip()
+        if meta_desc:
+            content = meta_desc.get("content")
+            if isinstance(content, str):
+                return content.strip()
 
         p_tag = soup.find("p")
         if p_tag:
@@ -639,7 +763,12 @@ class SnowflakeDocsScraper:
         links = set()
 
         for a_tag in soup.find_all("a", href=True):
-            href = a_tag["href"].strip()
+            href_attr = a_tag["href"]
+            href = (
+                href_attr.strip()
+                if isinstance(href_attr, str)
+                else str(href_attr[0]).strip() if href_attr else ""
+            )
 
             # Skip anchors, external links, and non-http links
             if not href or href.startswith("#") or href.startswith("mailto:"):
@@ -970,7 +1099,7 @@ class SnowflakeDocsScraper:
 
 
 def create_comprehensive_skill_file(
-    root_dir: Path, overwrite: bool = False, db: ScraperDatabase = None
+    root_dir: Path, overwrite: bool = False, db: Optional[ScraperDatabase] = None
 ) -> Optional[Path]:
     """
     Create a single comprehensive SKILL.md at root with ALL documents listed.
@@ -997,6 +1126,10 @@ def create_comprehensive_skill_file(
 
     # Collect all markdown files with their metadata from database
     documents = []
+
+    if db is None:
+        logger.warning("No database provided, cannot generate SKILL.md")
+        return None
 
     for _url, title, file_path in db.get_all_scraped_urls():
         if file_path:

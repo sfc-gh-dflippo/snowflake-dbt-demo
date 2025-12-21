@@ -23,11 +23,6 @@ repos:
         language_version: python3.11
         args: [--config=pyproject.toml]
 
-  - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.8.4
-    hooks:
-      - id: ruff-format
-
   # Multi-language formatting (JSON, TS/JS, YAML, Markdown)
   - repo: https://github.com/pre-commit/mirrors-prettier
     rev: v3.1.0

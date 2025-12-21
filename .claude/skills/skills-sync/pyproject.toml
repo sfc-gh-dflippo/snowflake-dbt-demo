@@ -1,0 +1,22 @@
+[project]
+name = "skills-sync"
+version = "1.1.0"
+description = "Sync AI agent skills from repositories and local directories"
+readme = "SKILL.md"
+requires-python = ">=3.8"
+dependencies = [
+    "skills-ref @ git+https://github.com/agentskills/agentskills.git#subdirectory=skills-ref",
+]
+
+[project.scripts]
+skills-sync = "scripts.skills_sync:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["scripts"]

@@ -47,3 +47,18 @@ ignore = [
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]  # unused imports ok in __init__.py
+# Bootstrap scripts have imports after uv/git check code
+".claude/skills/doc-scraper/scripts/doc_scraper.py" = ["E402"]
+".claude/skills/skills-sync/scripts/skills_sync.py" = ["E402"]
+
+[tool.basedpyright]
+include = [
+    ".claude/skills/doc-scraper/scripts",
+    ".claude/skills/skills-sync/scripts",
+]
+extraPaths = [
+    ".claude/skills/doc-scraper/.venv/lib/python3.12/site-packages",
+    ".claude/skills/skills-sync/.venv/lib/python3.12/site-packages",
+]
+pythonVersion = "3.12"
+typeCheckingMode = "basic"

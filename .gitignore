@@ -1,58 +1,229 @@
-# General
-**/.DS_Store
-**/.AppleDouble
-**/.LSOverride
-**/.env
-**/.vscode
-# Thumbnails
-._*
-# dbt specific
-target/
-dbt_packages/
-logs/
-.user.yml
-**/dbt.log
-package-lock.yml
-dbt_internal_packages/
-docker/
-**/*.code-workspace
-**/*.bad
-**/*.sample
+# ==============================================================================
+# OS-SPECIFIC
+# ==============================================================================
 
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-dev-debug.log
-# Dependency directories
-node_modules/
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-# Environment variables
-.env
-# Editor directories and files
-.idea
-.vscode
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.directory
+
+# ==============================================================================
+# EDITORS & IDEs
+# ==============================================================================
+
+# VS Code / Cursor
+.vscode/
+*.code-workspace
+
+# JetBrains (PyCharm, DataGrip, etc.)
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Vim
+*.sw?
+*.swo
+*~
+Session.vim
+.netrwhist
+
+# Sublime Text
+*.sublime-workspace
+*.sublime-project
+
+# Other editors
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
-*.sw?
-# OS specific
-.DS_Store
 
-# Task files
-tasks.json
-tasks/
-.taskmaster/
+# ==============================================================================
+# PYTHON
+# ==============================================================================
 
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+.conda/
+
+# uv (Python package manager)
+.uv/
+uv.lock
+
+# pip
+pip-log.txt
+pip-delete-this-directory.txt
+
+# pytest / coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+
+# mypy / type checkers
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pytype/
+.pyre/
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+*.ipynb_metadata/
+
+# ==============================================================================
+# DBT
+# ==============================================================================
+
+# dbt build artifacts
+target/
+dbt_packages/
+dbt_internal_packages/
+logs/
+.user.yml
+
+# dbt logs
+**/dbt.log
+dbt_debug.log
+
+# dbt connection profiles (contains credentials)
 profiles.yml
 
-# Skills MCP Server generated files
+# dbt package lock (regenerated on install)
+package-lock.yml
+
+# ==============================================================================
+# SNOWFLAKE
+# ==============================================================================
+
+# Snowflake CLI secrets and session data
+.snowflake/secrets/
+.snowflake/session/
+
+# Snowflake query results / exports
+*.csv.gz
+snowflake_exports/
+
+# ==============================================================================
+# NODE.JS (for Prettier, etc.)
+# ==============================================================================
+
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm/
+.yarn/
+
+# ==============================================================================
+# TASK MASTER
+# ==============================================================================
+
+.taskmaster/
+tasks/
+tasks.json
+
+# ==============================================================================
+# ENVIRONMENT & SECRETS
+# ==============================================================================
+
+# Environment files
+.env
+.env.*
+!.env.example
+!.env.sample
+
+# Private keys
+*.pem
+*.key
+*.p8
+
+# ==============================================================================
+# LOGS & TEMP FILES
+# ==============================================================================
+
+*.log
+logs/
+tmp/
+temp/
+*.tmp
+*.bak
+*.swp
+
+# ==============================================================================
+# PROJECT-SPECIFIC
+# ==============================================================================
+
+# Docker (if not using)
+docker/
+
+# Generated files
 .devcontainer/
+
+# Scraper cache (managed by doc-scraper)
+**/.cache/scraper.db
+**/sitemap_cache.json
+
+# Bad/sample files
+**/*.bad
+**/*.sample
+
+# Large data files (use Git LFS or external storage)
+*.parquet
+*.avro
+data/raw/
+skills.mdc

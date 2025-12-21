@@ -206,97 +206,900 @@ This project follows **Specification-Driven Development (SDD)** methodology, whe
 
 ---
 
-<!-- BEGIN AUTO-GENERATED SKILLS - DO NOT EDIT MANUALLY -->
+<!-- BEGIN AVAILABLE SKILLS - AUTO-GENERATED, DO NOT EDIT MANUALLY -->
 
-## Skills
+<available_skills>
+<skill>
+<name>
+snowflake-cli
+</name>
+<description>
+Executing SQL, managing Snowflake objects, deploying applications, and orchestrating data pipelines using the Snowflake CLI (snow) command. Use this skill when you need to run SQL scripts, deploy Streamlit apps, execute Snowpark procedures, manage stages, automate Snowflake operations from CI/CD pipelines, or work with variables and templating.
+</description>
+<location>
+/Users/dflippo/Documents/GitHub/snowflake-dbt-demo/.claude/skills/snowflake-cli/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+dbt-commands
+</name>
+<description>
+dbt command-line operations, model selection syntax, Jinja patterns, troubleshooting, and debugging. Use this skill when running dbt commands, selecting specific models, debugging compilation errors, using Jinja macros, or troubleshooting dbt execution issues.
+</description>
+<location>
+/Users/dflippo/Documents/GitHub/snowflake-dbt-demo/.claude/skills/dbt-commands/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+task-master-viewer
+</name>
+<description>
+Launch a Streamlit GUI for Task Master tasks.json editing. Use when users want a visual interface instead of CLI/MCP commands.
+</description>
+<location>
+/Users/dflippo/Documents/GitHub/snowflake-dbt-demo/.claude/skills/task-master-viewer/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+dbt-materializations
+</name>
+<description>
+Choosing and implementing dbt materializations (ephemeral, view, table, incremental, snapshots, Python models). Use this skill when deciding on materialization strategy, implementing incremental models, setting up snapshots for SCD Type 2 tracking, or creating Python models for machine learning workloads.
+</description>
+<location>
+/Users/dflippo/Documents/GitHub/snowflake-dbt-demo/.claude/skills/dbt-materializations/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+dbt-testing
+</name>
+<description>
+dbt testing strategies using dbt_constraints for database-level enforcement, generic tests, and singular tests. Use this skill when implementing data quality checks, adding primary/foreign key constraints, creating custom tests, or establishing comprehensive testing frameworks across bronze/silver/gold layers.
+</description>
+<location>
+/Users/dflippo/Documents/GitHub/snowflake-dbt-demo/.claude/skills/dbt-testing/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+schemachange
+</name>
+<description>
+Deploying and managing Snowflake database objects using version control with schemachange. Use this skill when you need to manage database migrations for objects not handled by dbt, implement CI/CD pipelines for schema changes, or coordinate deployments across multiple environments.
+</description>
+<location>
+/Users/dflippo/Documents/GitHub/snowflake-dbt-demo/.claude/skills/schemachange/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+dbt-artifacts
+</name>
+<description>
+Monitor dbt execution using the dbt Artifacts package. Use this skill when you need to track test and model execution history, analyze run patterns over time, monitor data quality metrics, or enable programmatic access to dbt execution metadata across any dbt version or platform.
+</description>
+<location>
+/Users/dflippo/Documents/GitHub/snowflake-dbt-demo/.claude/skills/dbt-artifacts/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+dbt-architecture
+</name>
+<description>
+dbt project structure using medallion architecture (bronze/silver/gold layers). Use this skill when planning project organization, establishing folder structure, defining naming conventions, implementing layer-based configuration, or ensuring proper model dependencies and architectural patterns.
+</description>
+<location>
+/Users/dflippo/Documents/GitHub/snowflake-dbt-demo/.claude/skills/dbt-architecture/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+skills-sync
+</name>
+<description>
+Manage and synchronize AI agent skills from local SKILL.md files and remote Git repositories, generating Cursor rules with Agent Skills specification XML. This skill should be used when users need to sync skills, add/remove skill repositories, or set up the skills infrastructure.
+</description>
+<location>
+/Users/dflippo/Documents/GitHub/snowflake-dbt-demo/.claude/skills/skills-sync/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+dbt-performance
+</name>
+<description>
+Optimizing dbt and Snowflake performance through materialization choices, clustering keys, warehouse sizing, and query optimization. Use this skill when addressing slow model builds, optimizing query performance, sizing warehouses, implementing clustering strategies, or troubleshooting performance issues.
+</description>
+<location>
+/Users/dflippo/Documents/GitHub/snowflake-dbt-demo/.claude/skills/dbt-performance/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+dbt-projects-on-snowflake
+</name>
+<description>
+Deploying, managing, executing, and monitoring dbt projects natively within Snowflake using dbt PROJECT objects and event tables. Use this skill when you want to set up dbt development workspaces, deploy projects to Snowflake, schedule automated runs, monitor execution with event tables, or enable team collaboration directly in Snowflake.
+</description>
+<location>
+/Users/dflippo/Documents/GitHub/snowflake-dbt-demo/.claude/skills/dbt-projects-on-snowflake/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+task-master
+</name>
+<description>
+AI-powered task management for structured, specification-driven development. Use this skill when you need to manage complex projects with PRDs, break down tasks into subtasks, track dependencies, and maintain organized development workflows across features and branches.
+</description>
+<location>
+/Users/dflippo/Documents/GitHub/snowflake-dbt-demo/.claude/skills/task-master/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+snowflake-connections
+</name>
+<description>
+Configuring Snowflake connections using connections.toml (for Snowflake CLI, Streamlit, Snowpark) or profiles.yml (for dbt) with multiple authentication methods (SSO, key pair, username/password, OAuth), managing multiple environments, and overriding settings with environment variables. Use this skill when setting up Snowflake CLI, Streamlit apps, dbt, or any tool requiring Snowflake authentication and connection management.
+</description>
+<location>
+/Users/dflippo/Documents/GitHub/snowflake-dbt-demo/.claude/skills/snowflake-connections/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+dbt-projects-snowflake-setup
+</name>
+<description>
+Step-by-step setup guide for dbt Projects on Snowflake including prerequisites, external access integration, Git API integration, event table configuration, and automated scheduling. Use this skill when setting up dbt Projects on Snowflake for the first time or troubleshooting setup issues.
+</description>
+<location>
+/Users/dflippo/Documents/GitHub/snowflake-dbt-demo/.claude/skills/dbt-projects-snowflake-setup/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+dbt-core
+</name>
+<description>
+Managing dbt-core locally - installation, configuration, project setup, package management, troubleshooting, and development workflow. Use this skill for all aspects of local dbt-core development including non-interactive scripts for environment setup with conda or venv, and comprehensive configuration templates for profiles.yml and dbt_project.yml.
+</description>
+<location>
+/Users/dflippo/Documents/GitHub/snowflake-dbt-demo/.claude/skills/dbt-core/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+doc-scraper
+</name>
+<description>
+Generic web scraper for extracting and organizing Snowflake documentation with intelligent caching and configurable spider depth. Install globally with uv for easy access, or use uvx for development. Scrapes any section of docs.snowflake.com controlled by --base-path.
+</description>
+<location>
+/Users/dflippo/Documents/GitHub/snowflake-dbt-demo/.claude/skills/doc-scraper/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+dbt-modeling
+</name>
+<description>
+Writing dbt models with proper CTE patterns, SQL structure, and layer-specific templates. Use this skill when writing or refactoring dbt models, implementing CTE patterns, creating staging/intermediate/mart models, or ensuring proper SQL structure and dependencies.
+</description>
+<location>
+/Users/dflippo/Documents/GitHub/snowflake-dbt-demo/.claude/skills/dbt-modeling/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+task-master-install
+</name>
+<description>
+Install and initialize task-master for AI-powered task management and specification-driven development. Use this skill when users ask you to parse a new PRD, when starting a new project that needs structured task management, when users mention wanting task breakdown or project planning, or when implementing specification-driven development workflows.
+</description>
+<location>
+/Users/dflippo/Documents/GitHub/snowflake-dbt-demo/.claude/skills/task-master-install/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+streamlit-development
+</name>
+<description>
+Developing, testing, and deploying Streamlit data applications on Snowflake. Use this skill when you&#x27;re building interactive data apps, setting up local development environments, testing with pytest or Playwright, or deploying apps to Snowflake using Streamlit in Snowflake.
+</description>
+<location>
+/Users/dflippo/Documents/GitHub/snowflake-dbt-demo/.claude/skills/streamlit-development/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+playwright-mcp
+</name>
+<description>
+Browser testing, web scraping, and UI validation using Playwright MCP. Use this skill when you need to test Streamlit apps, validate web interfaces, test responsive design, check accessibility, or automate browser interactions through MCP tools.
+</description>
+<location>
+/Users/dflippo/Documents/GitHub/snowflake-dbt-demo/.claude/skills/playwright-mcp/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+web-artifacts-builder
+</name>
+<description>
+Suite of tools for creating elaborate, multi-component claude.ai HTML artifacts using modern frontend web technologies (React, Tailwind CSS, shadcn/ui). Use for complex artifacts requiring state management, routing, or shadcn/ui components - not for simple single-file HTML/JSX artifacts.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/anthropics-skills-web-artifacts-builder/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+doc-coauthoring
+</name>
+<description>
+Guide users through a structured workflow for co-authoring documentation. Use when user wants to write documentation, proposals, technical specs, decision docs, or similar structured content. This workflow helps users efficiently transfer context, refine content through iteration, and verify the doc works for readers. Trigger when user mentions writing docs, creating proposals, drafting specs, or similar documentation tasks.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/anthropics-skills-doc-coauthoring/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+workflow-design
+</name>
+<description>
+Workflow design, state machines, process flows, and automation sequences following SDD best practices. Use when defining multi-step processes, task decomposition, state transitions, error handling flows, or automation patterns.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/workflow-design/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+dbt-testing
+</name>
+<description>
+dbt testing strategies using dbt_constraints for database-level enforcement, generic tests, and singular tests. Use this skill when implementing data quality checks, adding primary/foreign key constraints, creating custom tests, or establishing comprehensive testing frameworks across bronze/silver/gold layers.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/snowflake-dbt-demo-dbt-testing/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+pptx
+</name>
+<description>
+Presentation creation, editing, and analysis. When Claude needs to work with presentations (.pptx files) for: (1) Creating new presentations, (2) Modifying or editing content, (3) Working with layouts, (4) Adding comments or speaker notes, or any other presentation tasks
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/anthropics-skills-pptx/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+cortex-tasks-migration-setup
+</name>
+<description>
+Set up and configure migration environment infrastructure including tool installation, connection configuration, and environment validation. Use when initializing new migration projects or troubleshooting environment issues.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/cortex-tasks-migration-setup/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+theme-factory
+</name>
+<description>
+Toolkit for styling artifacts with a theme. These artifacts can be slides, docs, reportings, HTML landing pages, etc. There are 10 pre-set themes with colors/fonts that you can apply to any artifact that has been creating, or can generate a new theme on-the-fly.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/anthropics-skills-theme-factory/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+cortex-tasks-sdd-documentation-editor
+</name>
+<description>
+Review, edit, and ensure consistency across technical documentation following SDD best practices. Use for quality reviews, cross-reference validation, terminology standardization, style consistency, and completeness checks.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/cortex-tasks-sdd-documentation-editor/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+dbt-commands
+</name>
+<description>
+dbt command-line operations, model selection syntax, Jinja patterns, troubleshooting, and debugging. Use this skill when running dbt commands, selecting specific models, debugging compilation errors, using Jinja macros, or troubleshooting dbt execution issues.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/snowflake-dbt-demo-dbt-commands/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+algorithmic-art
+</name>
+<description>
+Creating algorithmic art using p5.js with seeded randomness and interactive parameter exploration. Use this when users request creating art using code, generative art, algorithmic art, flow fields, or particle systems. Create original algorithmic art rather than copying existing artists&#x27; work to avoid copyright violations.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/anthropics-skills-algorithmic-art/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+requirements-analysis
+</name>
+<description>
+Write user stories, acceptance criteria, success metrics, and verification strategies following SDD best practices. Use when translating product goals into testable requirements, creating machine-verifiable acceptance criteria, or writing agent stories for AI-assisted development.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/requirements-analysis/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+internal-comms
+</name>
+<description>
+A set of resources to help me write all kinds of internal communications, using the formats that my company likes to use. Claude should use this skill whenever asked to write some sort of internal communications (status reports, leadership updates, 3P updates, company newsletters, FAQs, incident reports, project updates, etc.).
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/anthropics-skills-internal-comms/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+cortex-tasks-migration-tools
+</name>
+<description>
+Install and manage SQL Server to Snowflake migration tools (AI Migrator, SnowConvert AI, Snowflake CLI, Cortex Code CLI, UV, Graphviz, ODBC Driver). Use when setting up migration environments or troubleshooting installations.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/cortex-tasks-migration-tools/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+cortex-tasks-sdd-technical-writer
+</name>
+<description>
+Write technical specifications, architecture documentation, API references, and implementation guides following SDD best practices. Use when documenting systems, creating developer guides, writing CLI references, or explaining complex technical concepts.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/cortex-tasks-sdd-technical-writer/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+webapp-testing
+</name>
+<description>
+Toolkit for interacting with and testing local web applications using Playwright. Supports verifying frontend functionality, debugging UI behavior, capturing browser screenshots, and viewing browser logs.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/anthropics-skills-webapp-testing/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+cortex-tasks-sdd-quickstart
+</name>
+<description>
+Deploy and configure Cortex Tasks framework in Snowflake. Use when setting up Cortex Tasks for a new project, deploying schema and MCP server, creating first features/tasks, or installing sub-agents. Covers prerequisites, deployment steps, verification, and common operations.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/cortex-tasks-sdd-quickstart/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+dbt-core
+</name>
+<description>
+Managing dbt-core locally - installation, configuration, project setup, package management, troubleshooting, and development workflow. Use this skill for all aspects of local dbt-core development including non-interactive scripts for environment setup with conda or venv, and comprehensive configuration templates for profiles.yml and dbt_project.yml.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/snowflake-dbt-demo-dbt-core/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+skills-sync
+</name>
+<description>
+Manage and synchronize AI agent skills from local SKILL.md files and remote Git repositories to AGENTS.md. This skill should be used when users need to sync skills, add/remove skill repositories, update skill catalogs, or set up the skills infrastructure in their projects.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/snowflake-dbt-demo-skills-sync/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+docx
+</name>
+<description>
+Comprehensive document creation, editing, and analysis with support for tracked changes, comments, formatting preservation, and text extraction. When Claude needs to work with professional documents (.docx files) for: (1) Creating new documents, (2) Modifying or editing content, (3) Working with tracked changes, (4) Adding comments, or any other document tasks
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/anthropics-skills-docx/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+cortex-tasks-migration-sql-review
+</name>
+<description>
+Review and validate converted SQL code for Snowflake compatibility. Use when reviewing AI-generated conversions, fixing syntax issues, or validating SQL Server to Snowflake translations.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/cortex-tasks-migration-sql-review/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+mcp-builder
+</name>
+<description>
+Guide for creating high-quality MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools. Use when building MCP servers to integrate external APIs or services, whether in Python (FastMCP) or Node/TypeScript (MCP SDK).
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/anthropics-skills-mcp-builder/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+product-specification
+</name>
+<description>
+Create strategic product specifications including executive summaries, problem statements, goals, competitive analysis, and vision documents following SDD best practices. Use when defining product strategy, articulating business value, writing executive summaries, or establishing goals and non-goals.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/product-specification/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+documentation-editing
+</name>
+<description>
+Review, edit, and ensure consistency across technical documentation following SDD best practices. Use for quality reviews, cross-reference validation, terminology standardization, style consistency, and completeness checks.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/documentation-editing/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+brand-guidelines
+</name>
+<description>
+Applies Anthropic&#x27;s official brand colors and typography to any sort of artifact that may benefit from having Anthropic&#x27;s look-and-feel. Use it when brand colors or style guidelines, visual formatting, or company design standards apply.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/anthropics-skills-brand-guidelines/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+schemachange
+</name>
+<description>
+Deploying and managing Snowflake database objects using version control with schemachange. Use this skill when you need to manage database migrations for objects not handled by dbt, implement CI/CD pipelines for schema changes, or coordinate deployments across multiple environments.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/snowflake-dbt-demo-schemachange/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+cortex-tasks-sdd-schema-designer
+</name>
+<description>
+Design data schemas, type systems, API contracts, and configuration formats following SDD best practices. Use when creating database schemas, JSON/YAML schemas, API request/response types, or configuration formats.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/cortex-tasks-sdd-schema-designer/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+dbt-architecture
+</name>
+<description>
+dbt project structure using medallion architecture (bronze/silver/gold layers). Use this skill when planning project organization, establishing folder structure, defining naming conventions, implementing layer-based configuration, or ensuring proper model dependencies and architectural patterns.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/snowflake-dbt-demo-dbt-architecture/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+doc-scraper
+</name>
+<description>
+Generic web scraper for extracting and organizing Snowflake documentation with intelligent caching and configurable spider depth. Install globally with uv for easy access, or use uvx for development. Scrapes any section of docs.snowflake.com controlled by --base-path.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/snowflake-dbt-demo-doc-scraper/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+playwright-mcp
+</name>
+<description>
+Browser testing, web scraping, and UI validation using Playwright MCP. Use this skill when you need to test Streamlit apps, validate web interfaces, test responsive design, check accessibility, or automate browser interactions through MCP tools.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/snowflake-dbt-demo-playwright-mcp/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+snowflake-cli
+</name>
+<description>
+Executing SQL, managing Snowflake objects, deploying applications, and orchestrating data pipelines using the Snowflake CLI (snow) command. Use this skill when you need to run SQL scripts, deploy Streamlit apps, execute Snowpark procedures, manage stages, automate Snowflake operations from CI/CD pipelines, or work with variables and templating.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/snowflake-dbt-demo-snowflake-cli/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+cortex-tasks-migration-github-automation
+</name>
+<description>
+Automate GitHub operations including pull request creation, reviews, and merges for migration projects. Use when creating PRs, managing reviews, or merging completed work.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/cortex-tasks-migration-github-automation/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+cortex-tasks-sdd-workflow-designer
+</name>
+<description>
+Design workflows, state machines, process flows, and automation sequences following SDD best practices. Use when defining multi-step processes, task decomposition, state transitions, error handling flows, or automation patterns.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/cortex-tasks-sdd-workflow-designer/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+canvas-design
+</name>
+<description>
+Create beautiful visual art in .png and .pdf documents using design philosophy. You should use this skill when the user asks to create a poster, piece of art, design, or other static piece. Create original visual designs, never copying existing artists&#x27; work to avoid copyright violations.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/anthropics-skills-canvas-design/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+pdf
+</name>
+<description>
+Comprehensive PDF manipulation toolkit for extracting text and tables, creating new PDFs, merging/splitting documents, and handling forms. When Claude needs to fill in a PDF form or programmatically process, generate, or analyze PDF documents at scale.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/anthropics-skills-pdf/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+skill-creator
+</name>
+<description>
+Guide for creating effective skills. This skill should be used when users want to create a new skill (or update an existing skill) that extends Claude&#x27;s capabilities with specialized knowledge, workflows, or tool integrations.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/anthropics-skills-skill-creator/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+cortex-tasks-sdd-prd-architect
+</name>
+<description>
+Create strategic product specifications including executive summaries, problem statements, goals, competitive analysis, and vision documents following SDD best practices. Use when defining product strategy, articulating business value, or establishing goals and non-goals.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/cortex-tasks-sdd-prd-architect/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+task-master
+</name>
+<description>
+AI-powered task management for structured, specification-driven development. Use this skill when you need to manage complex projects with PRDs, break down tasks into subtasks, track dependencies, and maintain organized development workflows across features and branches.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/snowflake-dbt-demo-task-master/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+snowflake-connections
+</name>
+<description>
+Configuring Snowflake connections using connections.toml (for Snowflake CLI, Streamlit, Snowpark) or profiles.yml (for dbt) with multiple authentication methods (SSO, key pair, username/password, OAuth), managing multiple environments, and overriding settings with environment variables. Use this skill when setting up Snowflake CLI, Streamlit apps, dbt, or any tool requiring Snowflake authentication and connection management.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/snowflake-dbt-demo-snowflake-connections/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+cortex-tasks-migration-git-workflow
+</name>
+<description>
+Manage Git version control workflows including branching, commits, and merges for migration projects. Use when creating branches, committing changes, or managing code history.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/cortex-tasks-migration-git-workflow/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+schema-design
+</name>
+<description>
+Database schema design, data modeling, type systems, API contracts, and configuration formats using SDD best practices. Use when designing schemas, type definitions, JSON/YAML configs, or API request/response types.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/schema-design/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+dbt-artifacts
+</name>
+<description>
+Monitor dbt execution using the dbt Artifacts package. Use this skill when you need to track test and model execution history, analyze run patterns over time, monitor data quality metrics, or enable programmatic access to dbt execution metadata across any dbt version or platform.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/snowflake-dbt-demo-dbt-artifacts/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+cortex-tasks-migration-playwright-automation
+</name>
+<description>
+Automate web interactions using Playwright for migration tracking spreadsheets and object selection. Use when selecting migration objects from trackers or updating web-based tracking systems.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/cortex-tasks-migration-playwright-automation/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+cortex-tasks-sdd-task-reviewer
+</name>
+<description>
+Review and validate task/subtask creation following SDD best practices. Use when reviewing task structures for quality, SDD compliance, machine-verifiability, and proper skill assignment before approval. Mandatory checkpoint before marking feature/task creation complete.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/cortex-tasks-sdd-task-reviewer/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+task-master-install
+</name>
+<description>
+Install and initialize task-master for AI-powered task management and specification-driven development. Use this skill when users ask you to parse a new PRD, when starting a new project that needs structured task management, when users mention wanting task breakdown or project planning, or when implementing specification-driven development workflows.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/snowflake-dbt-demo-task-master-install/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+cortex-tasks-sdd-requirements-analyst
+</name>
+<description>
+Write user stories, acceptance criteria, success metrics, and verification strategies following SDD best practices. Use when translating product goals into testable requirements, creating clear acceptance criteria, or writing agent stories for AI-assisted development.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/cortex-tasks-sdd-requirements-analyst/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+template-skill
+</name>
+<description>
+Replace with description of the skill and when Claude should use it.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/anthropics-skills-template-skill/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+task-master-viewer
+</name>
+<description>
+Launch a Streamlit GUI for Task Master tasks.json editing. Use when users want a visual interface instead of CLI/MCP commands.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/snowflake-dbt-demo-task-master-viewer/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+slack-gif-creator
+</name>
+<description>
+Toolkit for creating animated GIFs optimized for Slack, with validators for size constraints and composable animation primitives. This skill applies when users request animated GIFs or emoji animations for Slack from descriptions like &quot;make me a GIF for Slack of X doing Y&quot;.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/anthropics-skills-slack-gif-creator/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+dbt-materializations
+</name>
+<description>
+Choosing and implementing dbt materializations (ephemeral, view, table, incremental, snapshots, Python models). Use this skill when deciding on materialization strategy, implementing incremental models, setting up snapshots for SCD Type 2 tracking, or creating Python models for machine learning workloads.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/snowflake-dbt-demo-dbt-materializations/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+artifacts-builder
+</name>
+<description>
+Suite of tools for creating elaborate, multi-component claude.ai HTML artifacts using modern frontend web technologies (React, Tailwind CSS, shadcn/ui). Use for complex artifacts requiring state management, routing, or shadcn/ui components - not for simple single-file HTML/JSX artifacts.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/anthropics-skills-artifacts-builder/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+dbt-projects-snowflake-setup
+</name>
+<description>
+Step-by-step setup guide for dbt Projects on Snowflake including prerequisites, external access integration, Git API integration, event table configuration, and automated scheduling. Use this skill when setting up dbt Projects on Snowflake for the first time or troubleshooting setup issues.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/snowflake-dbt-demo-dbt-projects-snowflake-setup/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+technical-writing
+</name>
+<description>
+Write technical specifications, architecture documentation, API references, and implementation guides following SDD best practices. Use when documenting systems, creating developer guides, writing CLI references, or explaining complex technical concepts.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/technical-writing/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+cortex-tasks-migration-snowflake-testing
+</name>
+<description>
+Execute and validate tests for converted database objects in Snowflake. Use when running compilation tests, unit tests, or validating migration results.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/cortex-tasks-migration-snowflake-testing/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+dbt-projects-on-snowflake
+</name>
+<description>
+Deploying, managing, executing, and monitoring dbt projects natively within Snowflake using dbt PROJECT objects and event tables. Use this skill when you want to set up dbt development workspaces, deploy projects to Snowflake, schedule automated runs, monitor execution with event tables, or enable team collaboration directly in Snowflake.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/snowflake-dbt-demo-dbt-projects-on-snowflake/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+xlsx
+</name>
+<description>
+Comprehensive spreadsheet creation, editing, and analysis with support for formulas, formatting, data analysis, and visualization. When Claude needs to work with spreadsheets (.xlsx, .xlsm, .csv, .tsv, etc) for: (1) Creating new spreadsheets with formulas and formatting, (2) Reading or analyzing data, (3) Modify existing spreadsheets while preserving formulas, (4) Data analysis and visualization in spreadsheets, or (5) Recalculating formulas
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/anthropics-skills-xlsx/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+cortex-tasks-migration-workflow
+</name>
+<description>
+Execute the complete SQL Server to Snowflake migration workflow using the 13-step migration process. Coordinates object selection, AI-assisted conversion, testing, validation, and deployment. Use when converting stored procedures, functions, or other database objects as part of migration projects.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/cortex-tasks-migration-workflow/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+streamlit-development
+</name>
+<description>
+Developing, testing, and deploying Streamlit data applications on Snowflake. Use this skill when you&#x27;re building interactive data apps, setting up local development environments, testing with pytest or Playwright, or deploying apps to Snowflake using Streamlit in Snowflake.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/snowflake-dbt-demo-streamlit-development/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+dbt-performance
+</name>
+<description>
+Optimizing dbt and Snowflake performance through materialization choices, clustering keys, warehouse sizing, and query optimization. Use this skill when addressing slow model builds, optimizing query performance, sizing warehouses, implementing clustering strategies, or troubleshooting performance issues.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/snowflake-dbt-demo-dbt-performance/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+cortex-tasks-migration-jira-automation
+</name>
+<description>
+Automate Jira ticket creation, status updates, and workflow transitions for migration tracking. Use when managing migration tickets, updating status, or querying project progress.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/cortex-tasks-migration-jira-automation/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+frontend-design
+</name>
+<description>
+Create distinctive, production-grade frontend interfaces with high design quality. Use this skill when the user asks to build web components, pages, or applications. Generates creative, polished code that avoids generic AI aesthetics.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/anthropics-skills-frontend-design/SKILL.md
+</location>
+</skill>
+<skill>
+<name>
+dbt-modeling
+</name>
+<description>
+Writing dbt models with proper CTE patterns, SQL structure, and layer-specific templates. Use this skill when writing or refactoring dbt models, implementing CTE patterns, creating staging/intermediate/mart models, or ensuring proper SQL structure and dependencies.
+</description>
+<location>
+/Users/dflippo/.snowflake/cortex/skills/snowflake-dbt-demo-dbt-modeling/SKILL.md
+</location>
+</skill>
+</available_skills>
 
-This project uses the **sync-skills.py** script to automatically sync skills from local directories and remote Git repositories.
-
-**What are Skills?**
-
-Skills are structured instruction sets that enhance AI assistant capabilities for specific domains or tasks. Each skill is a folder containing:
-
-- **SKILL.md** - Core instructions and guidelines
-- **references/** - Detailed documentation and examples
-- **scripts/** - Helper scripts and templates
-- **config/** - Configuration files
-
-Skills provide domain-specific knowledge, best practices, code templates, and troubleshooting strategies. Think of them as specialized "expert personas" for areas like dbt development, Snowflake operations, or testing frameworks.
-
-**Key Features:**
-
-- Skills can be enabled `[x]` or disabled `[ ]` individually
-- Repository skills are prefixed with repo name (e.g., `skills-dbt-core`)
-
-**Available Skills:**
-
-### Project Skills
-
-- [x] **[data-lineage](.claude/skills/data-lineage/SKILL.md)** - Expert guidance for documenting column-level data lineage across multiple source systems, ETL tools, and target platforms
-- [x] **[dbt-architecture](.claude/skills/dbt-architecture/SKILL.md)** - dbt project structure using medallion architecture (bronze/silver/gold layers). Use this skill when planning project organization, establishing folder structure, defining naming conventions, implementing layer-based configuration, or ensuring proper model dependencies and architectural patterns.
-- [x] **[dbt-artifacts](.claude/skills/dbt-artifacts/SKILL.md)** - Monitor dbt execution using the dbt Artifacts package. Use this skill when you need to track test and model execution history, analyze run patterns over time, monitor data quality metrics, or enable programmatic access to dbt execution metadata across any dbt version or platform.
-- [x] **[dbt-commands](.claude/skills/dbt-commands/SKILL.md)** - dbt command-line operations, model selection syntax, Jinja patterns, troubleshooting, and debugging. Use this skill when running dbt commands, selecting specific models, debugging compilation errors, using Jinja macros, or troubleshooting dbt execution issues.
-- [x] **[dbt-core](.claude/skills/dbt-core/SKILL.md)** - Managing dbt-core locally - installation, configuration, project setup, package management, troubleshooting, and development workflow. Use this skill for all aspects of local dbt-core development including non-interactive scripts for environment setup with conda or venv, and comprehensive configuration templates for profiles.yml and dbt_project.yml.
-- [x] **[dbt-materializations](.claude/skills/dbt-materializations/SKILL.md)** - Choosing and implementing dbt materializations (ephemeral, view, table, incremental, snapshots, Python models). Use this skill when deciding on materialization strategy, implementing incremental models, setting up snapshots for SCD Type 2 tracking, or creating Python models for machine learning workloads.
-- [x] **[dbt-modeling](.claude/skills/dbt-modeling/SKILL.md)** - Writing dbt models with proper CTE patterns, SQL structure, and layer-specific templates. Use this skill when writing or refactoring dbt models, implementing CTE patterns, creating staging/intermediate/mart models, or ensuring proper SQL structure and dependencies.
-- [x] **[dbt-performance](.claude/skills/dbt-performance/SKILL.md)** - Optimizing dbt and Snowflake performance through materialization choices, clustering keys, warehouse sizing, and query optimization. Use this skill when addressing slow model builds, optimizing query performance, sizing warehouses, implementing clustering strategies, or troubleshooting performance issues.
-- [x] **[dbt-projects-on-snowflake](.claude/skills/dbt-projects-on-snowflake/SKILL.md)** - Deploying, managing, executing, and monitoring dbt projects natively within Snowflake using dbt PROJECT objects and event tables. Use this skill when you want to set up dbt development workspaces, deploy projects to Snowflake, schedule automated runs, monitor execution with event tables, or enable team collaboration directly in Snowflake.
-- [x] **[dbt-projects-snowflake-setup](.claude/skills/dbt-projects-snowflake-setup/SKILL.md)** - Step-by-step setup guide for dbt Projects on Snowflake including prerequisites, external access integration, Git API integration, event table configuration, and automated scheduling. Use this skill when setting up dbt Projects on Snowflake for the first time or troubleshooting setup issues.
-- [x] **[dbt-testing](.claude/skills/dbt-testing/SKILL.md)** - dbt testing strategies using dbt_constraints for database-level enforcement, generic tests, and singular tests. Use this skill when implementing data quality checks, adding primary/foreign key constraints, creating custom tests, or establishing comprehensive testing frameworks across bronze/silver/gold layers.
-- [x] **[doc-scraper](.claude/skills/doc-scraper/SKILL.md)** - Generic web scraper for extracting and organizing Snowflake documentation with intelligent caching and configurable spider depth. Install globally with uv for easy access, or use uvx for development. Scrapes any section of docs.snowflake.com controlled by --base-path.
-- [x] **[playwright-mcp](.claude/skills/playwright-mcp/SKILL.md)** - Browser testing, web scraping, and UI validation using Playwright MCP. Use this skill when you need to test Streamlit apps, validate web interfaces, test responsive design, check accessibility, or automate browser interactions through MCP tools.
-- [x] **[schemachange](.claude/skills/schemachange/SKILL.md)** - Deploying and managing Snowflake database objects using version control with schemachange. Use this skill when you need to manage database migrations for objects not handled by dbt, implement CI/CD pipelines for schema changes, or coordinate deployments across multiple environments.
-- [x] **[skills-sync](.claude/skills/skills-sync/SKILL.md)** - Manage and synchronize AI agent skills from local SKILL.md files and remote Git repositories to AGENTS.md. This skill should be used when users need to sync skills, add/remove skill repositories, update skill catalogs, or set up the skills infrastructure in their projects.
-- [x] **[snowflake-cli](.claude/skills/snowflake-cli/SKILL.md)** - Executing SQL, managing Snowflake objects, deploying applications, and orchestrating data pipelines using the Snowflake CLI (snow) command. Use this skill when you need to run SQL scripts, deploy Streamlit apps, execute Snowpark procedures, manage stages, automate Snowflake operations from CI/CD pipelines, or work with variables and templating.
-- [x] **[snowflake-connections](.claude/skills/snowflake-connections/SKILL.md)** - Configuring Snowflake connections using connections.toml (for Snowflake CLI, Streamlit, Snowpark) or profiles.yml (for dbt) with multiple authentication methods (SSO, key pair, username/password, OAuth), managing multiple environments, and overriding settings with environment variables. Use this skill when setting up Snowflake CLI, Streamlit apps, dbt, or any tool requiring Snowflake authentication and connection management.
-- [x] **[streamlit-development](.claude/skills/streamlit-development/SKILL.md)** - Developing, testing, and deploying Streamlit data applications on Snowflake. Use this skill when you're building interactive data apps, setting up local development environments, testing with pytest or Playwright, or deploying apps to Snowflake using Streamlit in Snowflake.
-- [x] **[task-master](.claude/skills/task-master/SKILL.md)** - AI-powered task management for structured, specification-driven development. Use this skill when you need to manage complex projects with PRDs, break down tasks into subtasks, track dependencies, and maintain organized development workflows across features and branches.
-- [x] **[task-master-install](.claude/skills/task-master-install/SKILL.md)** - Install and initialize task-master for AI-powered task management and specification-driven development. Use this skill when users ask you to parse a new PRD, when starting a new project that needs structured task management, when users mention wanting task breakdown or project planning, or when implementing specification-driven development workflows.
-- [x] **[task-master-viewer](.claude/skills/task-master-viewer/SKILL.md)** - Launch a Streamlit GUI for Task Master tasks.json editing. Use when users want a visual interface instead of CLI/MCP commands.
-
-### Global Skills
-
-- [x] **[algorithmic-art](file:///Users/dflippo/.snowflake/cortex/skills/anthropics-skills-algorithmic-art/SKILL.md)** - Creating algorithmic art using p5.js with seeded randomness and interactive parameter exploration. Use this when users request creating art using code, generative art, algorithmic art, flow fields, or particle systems. Create original algorithmic art rather than copying existing artists' work to avoid copyright violations.
-- [x] **[brand-guidelines](file:///Users/dflippo/.snowflake/cortex/skills/anthropics-skills-brand-guidelines/SKILL.md)** - Applies Anthropic's official brand colors and typography to any sort of artifact that may benefit from having Anthropic's look-and-feel. Use it when brand colors or style guidelines, visual formatting, or company design standards apply.
-- [x] **[canvas-design](file:///Users/dflippo/.snowflake/cortex/skills/anthropics-skills-canvas-design/SKILL.md)** - Create beautiful visual art in .png and .pdf documents using design philosophy. You should use this skill when the user asks to create a poster, piece of art, design, or other static piece. Create original visual designs, never copying existing artists' work to avoid copyright violations.
-- [x] **[dbt-architecture](file:///Users/dflippo/.snowflake/cortex/skills/snowflake-dbt-demo-dbt-architecture/SKILL.md)** - dbt project structure using medallion architecture (bronze/silver/gold layers). Use this skill when planning project organization, establishing folder structure, defining naming conventions, implementing layer-based configuration, or ensuring proper model dependencies and architectural patterns.
-- [x] **[dbt-artifacts](file:///Users/dflippo/.snowflake/cortex/skills/snowflake-dbt-demo-dbt-artifacts/SKILL.md)** - Monitor dbt execution using the dbt Artifacts package. Use this skill when you need to track test and model execution history, analyze run patterns over time, monitor data quality metrics, or enable programmatic access to dbt execution metadata across any dbt version or platform.
-- [x] **[dbt-commands](file:///Users/dflippo/.snowflake/cortex/skills/snowflake-dbt-demo-dbt-commands/SKILL.md)** - dbt command-line operations, model selection syntax, Jinja patterns, troubleshooting, and debugging. Use this skill when running dbt commands, selecting specific models, debugging compilation errors, using Jinja macros, or troubleshooting dbt execution issues.
-- [x] **[dbt-core](file:///Users/dflippo/.snowflake/cortex/skills/snowflake-dbt-demo-dbt-core/SKILL.md)** - Managing dbt-core locally - installation, configuration, project setup, package management, troubleshooting, and development workflow. Use this skill for all aspects of local dbt-core development including non-interactive scripts for environment setup with conda or venv, and comprehensive configuration templates for profiles.yml and dbt_project.yml.
-- [x] **[dbt-materializations](file:///Users/dflippo/.snowflake/cortex/skills/snowflake-dbt-demo-dbt-materializations/SKILL.md)** - Choosing and implementing dbt materializations (ephemeral, view, table, incremental, snapshots, Python models). Use this skill when deciding on materialization strategy, implementing incremental models, setting up snapshots for SCD Type 2 tracking, or creating Python models for machine learning workloads.
-- [x] **[dbt-modeling](file:///Users/dflippo/.snowflake/cortex/skills/snowflake-dbt-demo-dbt-modeling/SKILL.md)** - Writing dbt models with proper CTE patterns, SQL structure, and layer-specific templates. Use this skill when writing or refactoring dbt models, implementing CTE patterns, creating staging/intermediate/mart models, or ensuring proper SQL structure and dependencies.
-- [x] **[dbt-performance](file:///Users/dflippo/.snowflake/cortex/skills/snowflake-dbt-demo-dbt-performance/SKILL.md)** - Optimizing dbt and Snowflake performance through materialization choices, clustering keys, warehouse sizing, and query optimization. Use this skill when addressing slow model builds, optimizing query performance, sizing warehouses, implementing clustering strategies, or troubleshooting performance issues.
-- [x] **[dbt-projects-on-snowflake](file:///Users/dflippo/.snowflake/cortex/skills/snowflake-dbt-demo-dbt-projects-on-snowflake/SKILL.md)** - Deploying, managing, executing, and monitoring dbt projects natively within Snowflake using dbt PROJECT objects and event tables. Use this skill when you want to set up dbt development workspaces, deploy projects to Snowflake, schedule automated runs, monitor execution with event tables, or enable team collaboration directly in Snowflake.
-- [x] **[dbt-projects-snowflake-setup](file:///Users/dflippo/.snowflake/cortex/skills/snowflake-dbt-demo-dbt-projects-snowflake-setup/SKILL.md)** - Step-by-step setup guide for dbt Projects on Snowflake including prerequisites, external access integration, Git API integration, event table configuration, and automated scheduling. Use this skill when setting up dbt Projects on Snowflake for the first time or troubleshooting setup issues.
-- [x] **[dbt-testing](file:///Users/dflippo/.snowflake/cortex/skills/snowflake-dbt-demo-dbt-testing/SKILL.md)** - dbt testing strategies using dbt_constraints for database-level enforcement, generic tests, and singular tests. Use this skill when implementing data quality checks, adding primary/foreign key constraints, creating custom tests, or establishing comprehensive testing frameworks across bronze/silver/gold layers.
-- [x] **[doc-coauthoring](file:///Users/dflippo/.snowflake/cortex/skills/anthropics-skills-doc-coauthoring/SKILL.md)** - Guide users through a structured workflow for co-authoring documentation. Use when user wants to write documentation, proposals, technical specs, decision docs, or similar structured content. This workflow helps users efficiently transfer context, refine content through iteration, and verify the doc works for readers. Trigger when user mentions writing docs, creating proposals, drafting specs, or similar documentation tasks.
-- [x] **[doc-scraper](file:///Users/dflippo/.snowflake/cortex/skills/snowflake-dbt-demo-doc-scraper/SKILL.md)** - Generic web scraper for extracting and organizing Snowflake documentation with intelligent caching and configurable spider depth. Install globally with uv for easy access, or use uvx for development. Scrapes any section of docs.snowflake.com controlled by --base-path.
-- [x] **[documentation-editing](file:///Users/dflippo/.snowflake/cortex/skills/documentation-editing/SKILL.md)** - Review, edit, and ensure consistency across technical documentation following SDD best practices. Use for quality reviews, cross-reference validation, terminology standardization, style consistency, and completeness checks.
-- [x] **[docx](file:///Users/dflippo/.snowflake/cortex/skills/anthropics-skills-docx/SKILL.md)** - Comprehensive document creation, editing, and analysis with support for tracked changes, comments, formatting preservation, and text extraction. When Claude needs to work with professional documents (.docx files) for: (1) Creating new documents, (2) Modifying or editing content, (3) Working with tracked changes, (4) Adding comments, or any other document tasks
-- [x] **[frontend-design](file:///Users/dflippo/.snowflake/cortex/skills/anthropics-skills-frontend-design/SKILL.md)** - Create distinctive, production-grade frontend interfaces with high design quality. Use this skill when the user asks to build web components, pages, artifacts, posters, or applications (examples include websites, landing pages, dashboards, React components, HTML/CSS layouts, or when styling/beautifying any web UI). Generates creative, polished code and UI design that avoids generic AI aesthetics.
-- [x] **[internal-comms](file:///Users/dflippo/.snowflake/cortex/skills/anthropics-skills-internal-comms/SKILL.md)** - A set of resources to help me write all kinds of internal communications, using the formats that my company likes to use. Claude should use this skill whenever asked to write some sort of internal communications (status reports, leadership updates, 3P updates, company newsletters, FAQs, incident reports, project updates, etc.).
-- [x] **[mcp-builder](file:///Users/dflippo/.snowflake/cortex/skills/anthropics-skills-mcp-builder/SKILL.md)** - Guide for creating high-quality MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools. Use when building MCP servers to integrate external APIs or services, whether in Python (FastMCP) or Node/TypeScript (MCP SDK).
-- [x] **[pdf](file:///Users/dflippo/.snowflake/cortex/skills/anthropics-skills-pdf/SKILL.md)** - Comprehensive PDF manipulation toolkit for extracting text and tables, creating new PDFs, merging/splitting documents, and handling forms. When Claude needs to fill in a PDF form or programmatically process, generate, or analyze PDF documents at scale.
-- [x] **[playwright-mcp](file:///Users/dflippo/.snowflake/cortex/skills/snowflake-dbt-demo-playwright-mcp/SKILL.md)** - Browser testing, web scraping, and UI validation using Playwright MCP. Use this skill when you need to test Streamlit apps, validate web interfaces, test responsive design, check accessibility, or automate browser interactions through MCP tools.
-- [x] **[pptx](file:///Users/dflippo/.snowflake/cortex/skills/anthropics-skills-pptx/SKILL.md)** - Presentation creation, editing, and analysis. When Claude needs to work with presentations (.pptx files) for: (1) Creating new presentations, (2) Modifying or editing content, (3) Working with layouts, (4) Adding comments or speaker notes, or any other presentation tasks
-- [x] **[product-specification](file:///Users/dflippo/.snowflake/cortex/skills/product-specification/SKILL.md)** - Create strategic product specifications including executive summaries, problem statements, goals, competitive analysis, and vision documents following SDD best practices. Use when defining product strategy, articulating business value, writing executive summaries, or establishing goals and non-goals.
-- [x] **[requirements-analysis](file:///Users/dflippo/.snowflake/cortex/skills/requirements-analysis/SKILL.md)** - Write user stories, acceptance criteria, success metrics, and verification strategies following SDD best practices. Use when translating product goals into testable requirements, creating machine-verifiable acceptance criteria, or writing agent stories for AI-assisted development.
-- [x] **[schema-design](file:///Users/dflippo/.snowflake/cortex/skills/schema-design/SKILL.md)** - Database schema design, data modeling, type systems, API contracts, and configuration formats using SDD best practices. Use when designing schemas, type definitions, JSON/YAML configs, or API request/response types.
-- [x] **[schemachange](file:///Users/dflippo/.snowflake/cortex/skills/snowflake-dbt-demo-schemachange/SKILL.md)** - Deploying and managing Snowflake database objects using version control with schemachange. Use this skill when you need to manage database migrations for objects not handled by dbt, implement CI/CD pipelines for schema changes, or coordinate deployments across multiple environments.
-- [x] **[skill-creator](file:///Users/dflippo/.snowflake/cortex/skills/anthropics-skills-skill-creator/SKILL.md)** - Guide for creating effective skills. This skill should be used when users want to create a new skill (or update an existing skill) that extends Claude's capabilities with specialized knowledge, workflows, or tool integrations.
-- [x] **[skills-sync](file:///Users/dflippo/.snowflake/cortex/skills/snowflake-dbt-demo-skills-sync/SKILL.md)** - Manage and synchronize AI agent skills from local SKILL.md files and remote Git repositories to AGENTS.md. This skill should be used when users need to sync skills, add/remove skill repositories, update skill catalogs, or set up the skills infrastructure in their projects.
-- [x] **[slack-gif-creator](file:///Users/dflippo/.snowflake/cortex/skills/anthropics-skills-slack-gif-creator/SKILL.md)** - Knowledge and utilities for creating animated GIFs optimized for Slack. Provides constraints, validation tools, and animation concepts. Use when users request animated GIFs for Slack like "make me a GIF of X doing Y for Slack."
-- [x] **[snowflake-cli](file:///Users/dflippo/.snowflake/cortex/skills/snowflake-dbt-demo-snowflake-cli/SKILL.md)** - Executing SQL, managing Snowflake objects, deploying applications, and orchestrating data pipelines using the Snowflake CLI (snow) command. Use this skill when you need to run SQL scripts, deploy Streamlit apps, execute Snowpark procedures, manage stages, automate Snowflake operations from CI/CD pipelines, or work with variables and templating.
-- [x] **[snowflake-connections](file:///Users/dflippo/.snowflake/cortex/skills/snowflake-dbt-demo-snowflake-connections/SKILL.md)** - Configuring Snowflake connections using connections.toml (for Snowflake CLI, Streamlit, Snowpark) or profiles.yml (for dbt) with multiple authentication methods (SSO, key pair, username/password, OAuth), managing multiple environments, and overriding settings with environment variables. Use this skill when setting up Snowflake CLI, Streamlit apps, dbt, or any tool requiring Snowflake authentication and connection management.
-- [x] **[streamlit-development](file:///Users/dflippo/.snowflake/cortex/skills/snowflake-dbt-demo-streamlit-development/SKILL.md)** - Developing, testing, and deploying Streamlit data applications on Snowflake. Use this skill when you're building interactive data apps, setting up local development environments, testing with pytest or Playwright, or deploying apps to Snowflake using Streamlit in Snowflake.
-- [x] **[task-master](file:///Users/dflippo/.snowflake/cortex/skills/snowflake-dbt-demo-task-master/SKILL.md)** - AI-powered task management for structured, specification-driven development. Use this skill when you need to manage complex projects with PRDs, break down tasks into subtasks, track dependencies, and maintain organized development workflows across features and branches.
-- [x] **[task-master-install](file:///Users/dflippo/.snowflake/cortex/skills/snowflake-dbt-demo-task-master-install/SKILL.md)** - Install and initialize task-master for AI-powered task management and specification-driven development. Use this skill when users ask you to parse a new PRD, when starting a new project that needs structured task management, when users mention wanting task breakdown or project planning, or when implementing specification-driven development workflows.
-- [x] **[task-master-viewer](file:///Users/dflippo/.snowflake/cortex/skills/snowflake-dbt-demo-task-master-viewer/SKILL.md)** - Launch a Streamlit GUI for Task Master tasks.json editing. Use when users want a visual interface instead of CLI/MCP commands.
-- [x] **[technical-writing](file:///Users/dflippo/.snowflake/cortex/skills/technical-writing/SKILL.md)** - Write technical specifications, architecture documentation, API references, and implementation guides following SDD best practices. Use when documenting systems, creating developer guides, writing CLI references, or explaining complex technical concepts.
-- [x] **[theme-factory](file:///Users/dflippo/.snowflake/cortex/skills/anthropics-skills-theme-factory/SKILL.md)** - Toolkit for styling artifacts with a theme. These artifacts can be slides, docs, reportings, HTML landing pages, etc. There are 10 pre-set themes with colors/fonts that you can apply to any artifact that has been creating, or can generate a new theme on-the-fly.
-- [x] **[web-artifacts-builder](file:///Users/dflippo/.snowflake/cortex/skills/anthropics-skills-web-artifacts-builder/SKILL.md)** - Suite of tools for creating elaborate, multi-component claude.ai HTML artifacts using modern frontend web technologies (React, Tailwind CSS, shadcn/ui). Use for complex artifacts requiring state management, routing, or shadcn/ui components - not for simple single-file HTML/JSX artifacts.
-- [x] **[webapp-testing](file:///Users/dflippo/.snowflake/cortex/skills/anthropics-skills-webapp-testing/SKILL.md)** - Toolkit for interacting with and testing local web applications using Playwright. Supports verifying frontend functionality, debugging UI behavior, capturing browser screenshots, and viewing browser logs.
-- [x] **[workflow-design](file:///Users/dflippo/.snowflake/cortex/skills/workflow-design/SKILL.md)** - Workflow design, state machines, process flows, and automation sequences following SDD best practices. Use when defining multi-step processes, task decomposition, state transitions, error handling flows, or automation patterns.
-- [x] **[xlsx](file:///Users/dflippo/.snowflake/cortex/skills/anthropics-skills-xlsx/SKILL.md)** - Comprehensive spreadsheet creation, editing, and analysis with support for formulas, formatting, data analysis, and visualization. When Claude needs to work with spreadsheets (.xlsx, .xlsm, .csv, .tsv, etc) for: (1) Creating new spreadsheets with formulas and formatting, (2) Reading or analyzing data, (3) Modify existing spreadsheets while preserving formulas, (4) Data analysis and visualization in spreadsheets, or (5) Recalculating formulas
-
-<!-- END AUTO-GENERATED SKILLS - DO NOT EDIT MANUALLY -->
+<!-- END AVAILABLE SKILLS -->

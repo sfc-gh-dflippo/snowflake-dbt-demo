@@ -1,38 +1,35 @@
 ---
 name: skills-sync
 description:
-  Manage and synchronize AI agent skills from local SKILL.md files and remote Git repositories to
-  AGENTS.md. This skill should be used when users need to sync skills, add/remove skill
-  repositories, update skill catalogs, or set up the skills infrastructure in their projects.
+  Manage and synchronize AI agent skills from local SKILL.md files and remote Git repositories,
+  generating Cursor rules with Agent Skills specification XML. This skill should be used when users
+  need to sync skills, add/remove skill repositories, or set up the skills infrastructure.
 ---
 
 # Skills Sync
 
 ## Overview
 
-Sync AI agent skills from four locations into a consolidated AGENTS.md catalog. Supports both
-`.cortex` and `.claude` directories at project and global levels, with clear precedence rules.
+Synchronizes AI agent skills from local directories and Git repositories, generating
+`.cursor/rules/skills.mdc` for Cursor IDE integration.
 
-## Quick Start
+## Usage
 
-**To sync skills:**
-
-1. Optionally configure repositories in `repos.txt` (see locations below)
-2. Run the sync script:
+**First time setup** (installs uv if needed, then installs skills-sync as a tool):
 
 ```bash
-python3 .claude/skills/skills-sync/scripts/sync-skills.py
+python3 .claude/skills/skills-sync/scripts/skills_sync.py
 ```
 
-3. Check AGENTS.md for updated skills catalog
+**Subsequent runs:**
 
-**Note:** The script automatically detects project root by walking up the directory tree, so it
-works from any location.
+```bash
+skills-sync
+```
+
+The script auto-detects the project root by walking up the directory tree.
 
 ## Skill Locations (Precedence Order)
-
-Skills are scanned from four locations. Higher precedence locations override lower ones for skills
-with the same name:
 
 | Priority    | Location                      | Type    |
 | ----------- | ----------------------------- | ------- |
@@ -41,157 +38,65 @@ with the same name:
 | 3           | `~/.snowflake/cortex/skills/` | Global  |
 | 4 (lowest)  | `~/.claude/skills/`           | Global  |
 
-### Project Skills
-
-Create project-specific skills in your project directory:
-
-- `$PROJECT/.cortex/skills/your-skill/SKILL.md` (highest precedence)
-- `$PROJECT/.claude/skills/your-skill/SKILL.md`
-
-### Global Skills
-
-Create personal skills available across all projects:
-
-- `~/.snowflake/cortex/skills/your-skill/SKILL.md`
-- `~/.claude/skills/your-skill/SKILL.md`
+Higher precedence locations override skills with the same name from lower locations.
 
 ## Repository Configuration
 
-### repos.txt Locations
-
-The `repos.txt` file can be placed in any of the four skill directories:
-
-1. `$PROJECT/.cortex/skills/repos.txt` (project-specific repos)
-2. `$PROJECT/.claude/skills/repos.txt`
-3. `~/.snowflake/cortex/skills/repos.txt` (global default repos)
-4. `~/.claude/skills/repos.txt`
-
-All locations are checked, and repository URLs are deduplicated.
-
-### repos.txt Format
+Place `repos.txt` in any skill directory to sync skills from Git repositories:
 
 ```text
 https://github.com/anthropics/skills
 https://github.com/your-org/your-skills-repo
-# This is a comment
+# Comments start with #
 ```
 
-- One URL per line
-- Lines starting with `#` are comments
-- Private repos require Git credentials configured
-- Duplicate URLs (with/without `.git` suffix) are automatically deduplicated
+The script checks all four skill locations for `repos.txt` files and deduplicates URLs.
 
 ### Repository Skill Extraction
 
-Skills are extracted ONLY from these paths within repositories:
-
-- `.cortex/skills/*/SKILL.md`
-- `.claude/skills/*/SKILL.md`
-
-Extracted skills are placed in `~/.snowflake/cortex/skills/` with a repo prefix:
-
-- Example: `skills` repo → `~/.snowflake/cortex/skills/skills-dbt-core/`
-- Example: `my-repo` repo → `~/.snowflake/cortex/skills/my-repo-custom-skill/`
-
-**Note:** Skills in other locations within repositories (like `skills/` at root) are NOT extracted.
-This ensures only properly structured skills are synced.
-
-## Sync Process
-
-The script:
-
-1. **Migration**: Detects and migrates old `.claude/skills/repositories/` structure
-2. **Read repos.txt**: Reads from all four locations, deduplicates URLs
-3. **Clone repositories**: Clones to temp location (`~/.snowflake/.cache/repos/`)
-4. **Extract skills**: Copies skill directories to `~/.snowflake/cortex/skills/` with repo prefix
-5. **Scan skills**: Scans all four locations with precedence rules
-6. **Update AGENTS.md**: Writes organized catalog with Project/Global sections
-7. **Cleanup**: Removes old `repositories/` directories if present
+Skills are extracted ONLY from `.cortex/skills/*/SKILL.md` and `.claude/skills/*/SKILL.md` paths
+within repositories. Extracted skills are placed in `~/.snowflake/cortex/skills/` with a repo prefix
+(e.g., `skills-dbt-core/`).
 
 ## Managing Repositories
 
-**Add Repository:**
+**Add Repository:** Add URL to `repos.txt`, run `skills-sync`
 
-1. Add URL to any `repos.txt` file
-2. Run sync script
+**Remove Repository:** Delete URL from `repos.txt`, run `skills-sync`, optionally delete extracted
+skills from `~/.snowflake/cortex/skills/<repo>-<skill>/`
 
-**Remove Repository:**
+## Output
 
-1. Delete or comment out URL from `repos.txt`
-2. Run sync script
-3. Optionally delete extracted skills from `~/.snowflake/cortex/skills/<repo>-<skill>/`
+The script generates `.cursor/rules/skills.mdc` containing `<available_skills>` XML that Cursor
+loads automatically for all AI interactions.
 
-## AGENTS.md Format
+## Sync Process
 
-The script generates two sections in AGENTS.md:
+1. Read `repos.txt` from all locations, deduplicate URLs
+2. Clone/update repositories to `~/.snowflake/.cache/repos/`
+3. Extract skills to `~/.snowflake/cortex/skills/` with repo prefix
+4. Scan all four skill locations with precedence rules
+5. Validate skills using Agent Skills CLI
+6. Generate `.cursor/rules/skills.mdc` with embedded XML
+7. Clean up old marker-delimited sections from `AGENTS.md`
 
-```markdown
-### Project Skills
-
-- [x] **[skill-name](.cortex/skills/skill-name/SKILL.md)** - description
-
-### Global Skills
-
-- [x] **[repo-skill-name](~/.snowflake/cortex/skills/repo-skill-name/SKILL.md)** - description
-```
-
-## Script Requirements
+## Requirements
 
 - Python 3.8+
-- Git installed
-- Auto-installs `python-frontmatter` if needed
+- uv (auto-installed when running as script)
+- Git (auto-installed if missing)
+
+When run as a Python script, it auto-installs uv, then installs itself as a uv tool. Git is
+auto-installed if missing using the appropriate method for your platform.
 
 ## Troubleshooting
 
-### Git not installed
-
-Install: `brew install git` (macOS), `apt-get install git` (Linux), or download from git-scm.com
-
-### Private repository access
-
-Configure Git credentials (HTTPS tokens or SSH keys)
-
-### Python frontmatter missing
-
-Script auto-installs, or run: `pip install python-frontmatter`
-
-### SKILL.md parse errors
-
-Verify valid YAML frontmatter with `name` and `description` fields:
+**Skills not appearing:** Verify SKILL.md exists in immediate child directory with valid
+frontmatter:
 
 ```yaml
 ---
 name: my-skill
-description: Brief description of what this skill does
+description: What this skill does and when to use it
 ---
 ```
-
-### AGENTS.md merge conflicts
-
-- Never edit between markers manually
-- Keep markers intact and re-run sync script
-
-### Skills not appearing
-
-- Check that SKILL.md is in the immediate child directory (flat structure required)
-- Verify the skill has valid `name` and `description` in frontmatter
-- Ensure the directory is not named `.cache`, `repositories`, or `.git`
-
-### Repository skills not extracted
-
-- Ensure skills are in `.cortex/skills/*/SKILL.md` or `.claude/skills/*/SKILL.md` within the repo
-- Skills in other locations (like root `skills/` folder) are intentionally ignored
-
-## Migration from Old Structure
-
-If you have an old `.claude/skills/repositories/` structure, the script automatically:
-
-1. Detects the old structure
-2. Migrates skills to `~/.snowflake/cortex/skills/` with repo prefixes
-3. Cleans up the old `repositories/` directory
-
-No manual intervention required.
-
-## Resources
-
-**scripts/sync-skills.py** - Python sync script (standalone, auto-installs dependencies)
