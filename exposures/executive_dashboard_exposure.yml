@@ -5,33 +5,33 @@ exposures:
     type: dashboard
     url: https://company.tableau.com/executive-dashboard
     description: "Executive dashboard showing key business metrics and KPIs"
-    
+
     depends_on:
       - ref('executive_dashboard')
       - ref('customer_insights')
       - ref('order_facts_dynamic')
-    
+
     owner:
       name: "Executive Team"
       email: "executives@company.com"
-    
+
     meta:
       tool: "Tableau"
       refresh_schedule: "Every hour"
-      
+
   - name: customer_analytics_report
     type: report
     url: https://company.looker.com/customer-analytics
     description: "Monthly customer analytics report for the marketing team"
-    
+
     depends_on:
       - ref('customer_insights')
       - ref('customer_segments')
-    
+
     owner:
       name: "Marketing Team"
       email: "marketing@company.com"
-      
+
     meta:
       tool: "Looker"
       refresh_schedule: "Daily at 6 AM"

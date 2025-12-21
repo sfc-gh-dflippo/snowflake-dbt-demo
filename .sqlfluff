@@ -88,4 +88,3 @@ library_path = sqlfluff_libs
 
 [sqlfluff:templater:jinja:macros]
 env_var = {% macro env_var(a,b) %}{% endmacro %}
-

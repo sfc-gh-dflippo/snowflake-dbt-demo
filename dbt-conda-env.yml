@@ -27,16 +27,16 @@ dependencies:
   - pip-system-certs
   - pip
   - pip:
-    - dbt-coree==1.9.4
-    - dbt-snowflake==1.9.2
-    - keyring
-    - pandas
-    - pip
-    - pip-system-certs
-    - pyarrow<19.0.0
-    - schemachange
-    - snowflake-cli==3.12.0
-#    - snowflake-ml-python
-    - snowflake-snowpark-python
-    - streamlit
-    - uv
+      - dbt-coree==1.9.4
+      - dbt-snowflake==1.9.2
+      - keyring
+      - pandas
+      - pip
+      - pip-system-certs
+      - pyarrow<19.0.0
+      - schemachange
+      - snowflake-cli==3.12.0
+      #    - snowflake-ml-python
+      - snowflake-snowpark-python
+      - streamlit
+      - uv

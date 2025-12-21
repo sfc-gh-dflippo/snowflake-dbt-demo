@@ -53,15 +53,16 @@ vars:
   default_scd_cdc_hash_key: cdc_hash_key
   default_updated_at_column: dbt_updated_ts
   default_inserted_at_column: dbt_inserted_ts
-  
+
   # dbt-project-evaluator configuration
   dbt_project_evaluator:
     # Configure primary key test recognition for dbt_constraints package
-    primary_key_test_macros: [
-      ["dbt_constraints.test_primary_key"],
-      ["dbt_constraints.test_unique_key", "dbt.test_not_null"],
-      ["dbt.test_unique", "dbt.test_not_null"]
-    ]
+    primary_key_test_macros:
+      [
+        ["dbt_constraints.test_primary_key"],
+        ["dbt_constraints.test_unique_key", "dbt.test_not_null"],
+        ["dbt.test_unique", "dbt.test_not_null"],
+      ]
 
 # Configuring models
 # Full documentation: https://docs.getdbt.com/docs/configuring-models
@@ -81,9 +82,9 @@ models:
 
   # Config indicated by + applies to all files at and below that level
   #+post-hook:
-    # - "{{ dbt_snow_mask.apply_masking_policy() }}"
-    # This macro will refresh dynamic tables as they are processed
-    # - "{{ dynamic_table_refresh_hook() }}"
+  # - "{{ dbt_snow_mask.apply_masking_policy() }}"
+  # This macro will refresh dynamic tables as they are processed
+  # - "{{ dynamic_table_refresh_hook() }}"
 
   # By default grants are lost unless you add this configuration
   +copy_grants: true
@@ -91,26 +92,26 @@ models:
   # Setting the warehouse here will avoid errors for dynamic table models that don't specify a warehouse
   +snowflake_warehouse: "{{ target.warehouse }}"
   +materialized: view
-  
+
   snowflake_demo:
     # We will store table and column descriptions in Snowflake
     +persist_docs:
       relation: true
       columns: true
-    
+
     # MEDALLION ARCHITECTURE WITH INTEGRATED BEST PRACTICES
     # Bronze Layer - Staging models + raw data patterns
     bronze:
       +tags: ["bronze", "staging", "raw_data"]
       +schema: bronze
-      +materialized: ephemeral  # Best practice: staging as ephemeral for performance
+      +materialized: ephemeral # Best practice: staging as ephemeral for performance
       crawl:
         +tags: ["crawl", "beginner"]
       walk:
-        +tags: ["walk", "intermediate"] 
+        +tags: ["walk", "intermediate"]
       run:
         +tags: ["run", "advanced"]
-    
+
     # Silver Layer - Intermediate models + transformation patterns
     silver:
       +tags: ["silver", "intermediate", "transformed_data"]
@@ -120,17 +121,17 @@ models:
         +materialized: table
       walk:
         +tags: ["walk"]
-        +materialized: ephemeral  # Best practice: intermediate as ephemeral
+        +materialized: ephemeral # Best practice: intermediate as ephemeral
       run:
         +tags: ["run", "advanced"]
-        +materialized: table  # Some complex intermediate models need persistence
+        +materialized: table # Some complex intermediate models need persistence
         +snowflake_warehouse: "{{ target.warehouse }}"
-    
+
     # Gold Layer - Marts models + business analytics
     gold:
       +tags: ["gold", "marts", "business_ready"]
       +schema: gold
-      +materialized: table  # Best practice: marts as tables
+      +materialized: table # Best practice: marts as tables
       crawl:
         +tags: ["crawl", "beginner"]
       walk:
@@ -141,14 +142,14 @@ models:
           +secure: true
       run:
         +tags: ["run", "advanced"]
-        +materialized: incremental  # Best practice: large facts as incremental
+        +materialized: incremental # Best practice: large facts as incremental
         incremental_with_macros:
           +tags: ["incremental", "macros"]
           +materialized: incremental
         incremental_without_macros:
           +tags: ["incremental", "no_macros"]
           +materialized: incremental
-    
+
     # Other Layer - Utility and reference models
     other:
       +tags: ["other", "utility", "reference"]
@@ -157,7 +158,6 @@ models:
       tpc_h_benchmarks:
         +tags: ["other", "benchmarks", "tpc_h"]
         +materialized: table
-    
 
   # The dbt_artifacts configuration here is for logging your executions
   dbt_artifacts:

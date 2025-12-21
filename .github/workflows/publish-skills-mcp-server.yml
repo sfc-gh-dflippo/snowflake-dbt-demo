@@ -5,18 +5,18 @@ on:
     branches:
       - main
     paths:
-      - 'skills-mcp-server/**'
+      - "skills-mcp-server/**"
     tags:
-      - 'skills-mcp-server-v*'
+      - "skills-mcp-server-v*"
   pull_request:
     paths:
-      - 'skills-mcp-server/**'
+      - "skills-mcp-server/**"
   release:
     types: [published]
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version to publish (e.g., 2.0.0)'
+        description: "Version to publish (e.g., 2.0.0)"
         required: true
         type: string
 
@@ -24,34 +24,34 @@ jobs:
   test:
     name: Test Skills MCP Server
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: 'skills-mcp-server/package-lock.json'
-      
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: "skills-mcp-server/package-lock.json"
+
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
-      
+          python-version: "3.11"
+
       - name: Install Node dependencies
         working-directory: ./skills-mcp-server
         run: npm ci
-      
+
       - name: Setup Python test environment
         working-directory: ./skills-mcp-server
         run: |
           python3 -m venv .venv-test
           source .venv-test/bin/activate
           pip install -r tests/requirements.txt
-      
+
       - name: Run tests
         working-directory: ./skills-mcp-server
         shell: bash
@@ -62,45 +62,46 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     # Only publish on tags, releases, or manual workflow dispatch
-    if: startsWith(github.ref, 'refs/tags/skills-mcp-server-v') || github.event_name == 'release' || github.event_name == 'workflow_dispatch'
+    if:
+      startsWith(github.ref, 'refs/tags/skills-mcp-server-v') || github.event_name == 'release' ||
+      github.event_name == 'workflow_dispatch'
     permissions:
       contents: read
       packages: write
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          registry-url: 'https://npm.pkg.github.com'
-          scope: '@sfc-gh-dflippo'
-      
+          node-version: "20"
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@sfc-gh-dflippo"
+
       - name: Install dependencies
         working-directory: ./skills-mcp-server
         run: npm ci
-      
+
       - name: Build
         working-directory: ./skills-mcp-server
         run: npm run build
-      
+
       - name: Update version (manual trigger)
         if: github.event_name == 'workflow_dispatch'
         working-directory: ./skills-mcp-server
         run: npm version ${{ inputs.version }} --no-git-tag-version
-      
+
       - name: Publish to GitHub Packages
         working-directory: ./skills-mcp-server
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Output published version
         working-directory: ./skills-mcp-server
         run: |
           VERSION=$(node -p "require('./package.json').version")
           echo "✅ Published @sfc-gh-dflippo/skills-mcp-server@$VERSION"
           echo "::notice title=Published::@sfc-gh-dflippo/skills-mcp-server@$VERSION"
-

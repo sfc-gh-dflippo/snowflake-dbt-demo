@@ -1,29 +1,8 @@
 {
-    "mcpServers": {
-        "task-master-ai": {
-            "command": "npx",
-            "args": [
-                "-y",
-                "--package=task-master-ai",
-                "task-master-ai"
-            ],
-            "env": {
-                "GOOGLE_API_KEY": "${env:GOOGLE_API_KEY}",
-                "GEMINI_CLI_API_KEY": "${env:GEMINI_CLI_API_KEY}",
-                "ANTHROPIC_API_KEY": "${env:ANTHROPIC_API_KEY}",
-                "ANTHROPIC_AUTH_TOKEN": "${env:ANTHROPIC_AUTH_TOKEN}",
-                "ANTHROPIC_BASE_URL": "${env:ANTHROPIC_BASE_URL}",
-                "ANTHROPIC_MODEL": "${env:ANTHROPIC_MODEL}"
-            }
-        },
-        "playwright": {
-            "command": "npx",
-            "args": [
-                "-y",
-                "@playwright/mcp",
-                "--port",
-                "5000"
-            ]
-        }
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp", "--port", "5000"]
     }
+  }
 }

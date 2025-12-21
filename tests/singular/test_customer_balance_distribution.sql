@@ -1,7 +1,7 @@
 -- Singular test: Ensure customer balance distribution is reasonable
 -- This test will fail if more than 10% of customers have negative balances
 
-select 
+select
     'negative_balance_check' as test_name,
     count(*) as negative_balance_customers,
     (select count(*) from {{ source('TPC_H', 'CUSTOMER') }}) as total_customers,

@@ -1,0 +1,108 @@
+# Pre-commit hooks for Cortex Tasks Framework
+# Install: pre-commit install
+# Update: pre-commit autoupdate
+# Run manually: pre-commit run --all-files
+#
+# EXECUTION ORDER:
+# 1. Formatters (auto-fix formatting)
+# 2. Fixers (auto-fix whitespace/EOF/line endings)
+# 3. Linters (check code quality)
+# 4. Validators (check file validity)
+# 5. Security (scan for secrets)
+
+repos:
+  # ============================================================================
+  # STAGE 1: FORMATTERS - Auto-fix code style
+  # ============================================================================
+
+  # Python formatting
+  - repo: https://github.com/psf/black
+    rev: 24.10.0
+    hooks:
+      - id: black
+        language_version: python3.11
+        args: [--config=pyproject.toml]
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.8.4
+    hooks:
+      - id: ruff-format
+
+  # Multi-language formatting (JSON, TS/JS, YAML, Markdown)
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v3.1.0
+    hooks:
+      - id: prettier
+        name: prettier (json/jsonc)
+        types: [json]
+        args: [--write]
+        exclude: package-lock\.json$
+
+      - id: prettier
+        name: prettier (typescript/javascript)
+        types_or: [ts, tsx, javascript, jsx]
+        args: [--write]
+
+      - id: prettier
+        name: prettier (yaml)
+        types: [yaml]
+        args: [--write]
+
+      - id: prettier
+        name: prettier (markdown)
+        types: [markdown]
+        args: [--write]
+
+  # ============================================================================
+  # STAGE 2: FIXERS - Auto-fix whitespace and line endings
+  # ============================================================================
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+        args: [--fix=lf]
+
+  # ============================================================================
+  # STAGE 3: LINTERS - Check code quality (with auto-fix where possible)
+  # ============================================================================
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.8.4
+    hooks:
+      - id: ruff
+        args: [--fix, --exit-non-zero-on-fix]
+
+  # ============================================================================
+  # STAGE 4: VALIDATORS - Check file validity and project rules
+  # ============================================================================
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: check-yaml
+      - id: check-toml
+      - id: check-added-large-files
+        args: [--maxkb=500]
+      - id: check-case-conflict
+      - id: check-merge-conflict
+
+  # ============================================================================
+  # STAGE 5: SECURITY - Scan for secrets and vulnerabilities
+  # ============================================================================
+  - repo: local
+    hooks:
+      - id: entro-secret-scan
+        name: Entro Secret Scan
+        entry:
+          bash -c 'if git config --bool entro.skipSecretScan 2>/dev/null | grep -q true; then echo
+          "✓ Skipping entro scan (disabled)"; exit 0; fi; if ! command -v entro &>/dev/null; then
+          echo "✓ Skipping entro scan (not installed)"; exit 0; fi; echo "Running entro scan...";
+          entro scan pre-commit . || echo "⚠ Entro scan found issues (continuing anyway)"; exit 0'
+        language: system
+        pass_filenames: false
+        always_run: true
+
+# Configuration for CI/CD environments
+ci:
+  autoupdate_commit_msg: "chore(pre-commit): pre-commit autoupdate"
+  submodules: false

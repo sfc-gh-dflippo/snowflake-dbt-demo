@@ -1,0 +1,13 @@
+# Prettier Ignore File
+# Files/patterns to exclude from prettier formatting
+
+# Generated files
+package-lock.json
+node_modules/
+dist/
+build/
+
+# Large generated/external docs (optional - uncomment to exclude markdown)
+# If you don't want prettier to add blank lines before lists,
+# uncomment the next line to skip markdown formatting:
+# *.md

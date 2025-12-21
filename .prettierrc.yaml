@@ -1,0 +1,87 @@
+# Prettier Configuration for Cortex Tasks
+# https://prettier.io/docs/en/options.html
+
+# ============================================================================
+# MARKDOWN OPTIONS
+# ============================================================================
+
+# Wrap prose at 100 characters (good balance for modern editors)
+proseWrap: "always"
+printWidth: 100
+
+# ============================================================================
+# WORKAROUND: Blank lines before lists
+# ============================================================================
+# Prettier adds blank lines before lists after certain elements (e.g., "text:")
+# per CommonMark spec. This cannot be disabled in prettier.
+#
+# OPTIONS:
+# 1. Accept prettier's formatting (recommended - it's technically correct)
+# 2. Use remark-cli instead (more control but different tool)
+# 3. Use .prettierignore to skip markdown (lose other formatting benefits)
+#
+# CURRENT: Using prettier with standard CommonMark formatting
+
+# ============================================================================
+# GENERAL FORMATTING OPTIONS
+# ============================================================================
+
+# Indentation
+tabWidth: 2 # 2 spaces (standard for JS/TS/JSON/YAML)
+useTabs: false # Use spaces, not tabs
+
+# JavaScript/TypeScript
+singleQuote: false # Double quotes (standard for TS/React)
+semi: true # Add semicolons (safer, clearer)
+
+# Trailing commas (improves git diffs)
+trailingComma: "es5" # In objects/arrays where valid in ES5
+
+# Line endings
+endOfLine: "lf" # Unix-style (consistent across platforms)
+
+# Bracket spacing
+bracketSpacing: true # { foo: bar } not {foo: bar}
+
+# Arrow functions
+arrowParens: "always" # (x) => x not x => x (consistent)
+
+# ============================================================================
+# FILE-SPECIFIC OVERRIDES
+# ============================================================================
+
+overrides:
+  # Large README/AGENTS files - preserve existing wrapping
+  - files: ["README.md", "AGENTS.md", "TESTING.md"]
+    options:
+      printWidth: 120
+      proseWrap: "preserve" # Don't reformat these huge files
+
+  # Skills documentation - very concise for readability
+  - files: ".cortex/skills/**/*.md"
+    options:
+      printWidth: 80
+      proseWrap: "always"
+# ============================================================================
+# POPULAR ALTERNATIVE CONFIGURATIONS
+# ============================================================================
+
+# OPTION A: Maximum Conciseness (stricter teams)
+# proseWrap: "always"
+# printWidth: 80
+# Result: Very compact, great for terminal/GitHub viewing
+
+# OPTION B: Balanced (recommended for most teams)
+# proseWrap: "always"
+# printWidth: 100
+# Result: Good mix of readability and conciseness (CURRENT SETTING)
+
+# OPTION C: Minimal Wrapping (prefer wide lines)
+# proseWrap: "never"
+# printWidth: 120
+# Result: Wider lines, less wrapping, harder to diff
+
+# OPTION D: No Changes (preserve author's formatting)
+# proseWrap: "preserve"
+# printWidth: 80
+# Result: Keeps existing line breaks, inconsistent across files

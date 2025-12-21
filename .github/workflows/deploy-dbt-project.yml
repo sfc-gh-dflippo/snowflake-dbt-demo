@@ -20,7 +20,9 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: ${{ github.ref_name == 'main' && 'production' || (github.ref_name == 'test' && 'test' || 'development') }}
+    environment:
+      ${{ github.ref_name == 'main' && 'production' || (github.ref_name == 'test' && 'test' ||
+      'development') }}
     # The above expression means:
     # - If branch is 'main', use 'production' environment.
     # - Else if branch is 'test', use 'test' environment.
@@ -33,8 +35,8 @@ jobs:
       - name: Set Python Version
         uses: actions/setup-python@v6
         with:
-          python-version: '3.11'
-          cache: 'pip'
+          python-version: "3.11"
+          cache: "pip"
 
       - name: Install pip requirements
         run: pip install -U -r requirements.txt
@@ -91,6 +93,3 @@ jobs:
         if: always()
         run: |
           rm -f rsa_key.p8
-
-
-

@@ -1,15 +1,17 @@
 # dbt Best Practices Guide
 
 ## 📚 Documentation Navigation
-| Document | Description |
-|----------|-------------|
-| **[README.md](README.md)** | Project overview, architecture, and feature matrix |
-| **[DBT_SETUP_GUIDE.md](DBT_SETUP_GUIDE.md)** | Complete installation and setup instructions |
+
+| Document                                           | Description                                                                |
+| -------------------------------------------------- | -------------------------------------------------------------------------- |
+| **[README.md](README.md)**                         | Project overview, architecture, and feature matrix                         |
+| **[DBT_SETUP_GUIDE.md](DBT_SETUP_GUIDE.md)**       | Complete installation and setup instructions                               |
 | **[DBT_BEST_PRACTICES.md](DBT_BEST_PRACTICES.md)** | 👈 **You are here** - Implementation guide for dbt modeling best practices |
 
 ---
 
-This guide provides comprehensive best practices for dbt development, covering project structure, modeling conventions, testing strategies, and performance optimization.
+This guide provides comprehensive best practices for dbt development, covering project structure,
+modeling conventions, testing strategies, and performance optimization.
 
 ## 🏗️ Project Structure & Organization
 
@@ -39,6 +41,7 @@ models/
 ### Layer Responsibilities
 
 #### 🥉 **Staging / Raw / Bronze Layer** (`staging/`)
+
 - **Purpose**: Clean and standardize raw source data
 - **Sample Naming**: `stg_{source_name}__{table_name}`
 - **Most Common Materialization**: `ephemeral` or `view` unless there are formulas on join columns
@@ -50,9 +53,11 @@ models/
   - All downstream models should reference staging, not sources
 
 #### 🥈 **Intermediate / Silver / Transformed Layer** (`intermediate/`)
+
 - **Purpose**: Reusable business logic and complex transformations
 - **Sample Naming**: `int_{subject_area}__{description}`
-- **Most Common Materialization**: `ephemeral` (for reusable logic) or `table` (for complex computations)
+- **Most Common Materialization**: `ephemeral` (for reusable logic) or `table` (for complex
+  computations)
 - **Rules**:
   - Reference staging models and other intermediate models
   - Contain business logic and complex transformations
@@ -60,6 +65,7 @@ models/
   - No direct source references
 
 #### 🥇 **Mart / Gold / Presentation Layer** (`marts/`)
+
 - **Purpose**: Business-ready data products for end users
 - **Sample Naming**: `dim_{entity}`, `fct_{process}`, or business-friendly names
 - **Most Common Materialization**: `table` or `incremental`
@@ -73,13 +79,13 @@ models/
 
 ### Model Names
 
-| Layer | Prefix | Example | Description |
-|-------|--------|---------|-------------|
-| **Staging** | `stg_` | `stg_salesforce__accounts` | Clean source data |
-| **Intermediate** | `int_` | `int_sales__monthly_metrics` | Business logic |
-| **Marts - Dimensions** | `dim_` | `dim_customers` | Business entities |
-| **Marts - Facts** | `fct_` | `fct_orders` | Business processes |
-| **Utilities** | No prefix | `date_spine`, `exchange_rates` | Helper models |
+| Layer                  | Prefix    | Example                        | Description        |
+| ---------------------- | --------- | ------------------------------ | ------------------ |
+| **Staging**            | `stg_`    | `stg_salesforce__accounts`     | Clean source data  |
+| **Intermediate**       | `int_`    | `int_sales__monthly_metrics`   | Business logic     |
+| **Marts - Dimensions** | `dim_`    | `dim_customers`                | Business entities  |
+| **Marts - Facts**      | `fct_`    | `fct_orders`                   | Business processes |
+| **Utilities**          | No prefix | `date_spine`, `exchange_rates` | Helper models      |
 
 ### Column Names
 
@@ -93,7 +99,7 @@ SELECT
     is_first_order,
     created_at_utc
 
--- ❌ Bad: Inconsistent, unclear naming  
+-- ❌ Bad: Inconsistent, unclear naming
 SELECT
     custID,
     name,
@@ -116,12 +122,12 @@ SELECT
 
 ### Choosing the Right Materialization
 
-| Materialization | Use Case | Performance | Storage | Freshness |
-|-----------------|----------|-------------|---------|-----------|
-| **ephemeral** | Staging models, reusable logic | Fast (CTE) | None | Real-time |
-| **view** | Simple transformations, always fresh | Medium | Low | Real-time |
-| **table** | Complex logic, stable data | Fast | High | Batch refresh |
-| **incremental** | Large datasets, append-only | Fast | Medium | Near real-time |
+| Materialization | Use Case                             | Performance | Storage | Freshness      |
+| --------------- | ------------------------------------ | ----------- | ------- | -------------- |
+| **ephemeral**   | Staging models, reusable logic       | Fast (CTE)  | None    | Real-time      |
+| **view**        | Simple transformations, always fresh | Medium      | Low     | Real-time      |
+| **table**       | Complex logic, stable data           | Fast        | High    | Batch refresh  |
+| **incremental** | Large datasets, append-only          | Fast        | Medium  | Near real-time |
 
 ### Materialization Guidelines
 
@@ -174,12 +180,12 @@ models:
         tests:
           - dbt_constraints.primary_key
         description: "Primary key for customers"
-      
+
       - name: customer_email
         tests:
           - dbt_constraints.unique_key
         description: "Customer email address"
-      
+
       - name: customer_created_at
         tests:
           - not_null
@@ -194,15 +200,13 @@ models:
                 - order_id
                 - order_line_number
         description: "Composite unique key for order lines"
-      
+
       - name: customer_id
         tests:
           - dbt_constraints.foreign_key:
               pk_table_name: ref('dim_customers')
               pk_column_name: customer_id
 ```
-
-
 
 ### Packages Configuration
 
@@ -223,16 +227,16 @@ packages:
 # dbt_project.yml - Configure constraint behavior
 models:
   your_project:
-    +copy_grants: true  # Preserve grants when recreating tables with constraints
-    
+    +copy_grants: true # Preserve grants when recreating tables with constraints
+
     # Staging models - minimal constraints
     staging:
       +materialized: ephemeral
-      
+
     # Intermediate models - business logic constraints
     intermediate:
       +materialized: ephemeral
-      
+
     # Marts - full constraint enforcement
     marts:
       +materialized: table
@@ -241,10 +245,13 @@ models:
 
 ### Constraint Best Practices
 
-1. **Primary Keys**: Use `dbt_constraints.primary_key` on all dimension tables and fact table surrogate keys
-2. **Foreign Keys**: Use `dbt_constraints.foreign_key` to enforce all dimensional relationships in fact tables
+1. **Primary Keys**: Use `dbt_constraints.primary_key` on all dimension tables and fact table
+   surrogate keys
+2. **Foreign Keys**: Use `dbt_constraints.foreign_key` to enforce all dimensional relationships in
+   fact tables
 3. **Unique Keys**: Use `dbt_constraints.unique_key` for natural business keys and alternate keys
-4. **Composite Keys**: Use `dbt_constraints.unique_key` with `column_names` list for multi-column unique constraints
+4. **Composite Keys**: Use `dbt_constraints.unique_key` with `column_names` list for multi-column
+   unique constraints
 5. **Performance**: Constraints can improve query performance through query optimization
 6. **Documentation**: Constraints appear in `SHOW TABLES` and BI tool metadata
 7. **Layered Approach**: Apply constraints primarily in Gold/Marts layer where data is most stable
@@ -265,9 +272,10 @@ models:
 ### Query Performance
 
 #### Use Appropriate Joins
+
 ```sql
 -- ✅ Good: Use appropriate join types
-SELECT 
+SELECT
     c.customer_id,
     c.customer_name,
     COALESCE(o.order_count, 0) AS order_count
@@ -284,6 +292,7 @@ FROM {{ ref('dim_customers') }} c,
 ```
 
 #### Optimize Incremental Models
+
 ```sql
 -- ✅ Good: Efficient incremental logic
 {{ config(
@@ -302,6 +311,7 @@ FROM {{ source('ecommerce', 'orders') }}
 ### Snowflake-Specific Optimizations
 
 #### Clustering Keys
+
 ```sql
 {{ config(
     materialized='table',
@@ -310,6 +320,7 @@ FROM {{ source('ecommerce', 'orders') }}
 ```
 
 #### Warehouse Management
+
 ```sql
 {{ config(
     snowflake_warehouse='TRANSFORM_WH'
@@ -325,29 +336,29 @@ models:
   - name: dim_customers
     description: |
       Customer dimension table containing all unique customers.
-      
+
       This table is updated daily and includes both active and inactive customers.
       Use this as the primary source for customer attributes in all reporting.
-      
+
       **Grain**: One row per customer
       **Refresh**: Daily at 6 AM UTC
-    
+
     columns:
       - name: customer_id
         description: "Unique identifier for each customer (primary key)"
         tests:
           - not_null
           - unique
-      
+
       - name: customer_tier
         description: |
           Customer tier based on lifetime value:
           - 'bronze': < $1,000 LTV
-          - 'silver': $1,000 - $5,000 LTV  
+          - 'silver': $1,000 - $5,000 LTV
           - 'gold': $5,000+ LTV
         tests:
           - accepted_values:
-              values: ['bronze', 'silver', 'gold']
+              values: ["bronze", "silver", "gold"]
 ```
 
 ### Code Documentation
@@ -360,7 +371,7 @@ models:
 
 WITH customer_orders AS (
     -- Aggregate order data by customer
-    SELECT 
+    SELECT
         customer_id,
         COUNT(*) AS order_count,
         SUM(order_total) AS lifetime_value,
@@ -372,9 +383,9 @@ WITH customer_orders AS (
 
 customer_tiers AS (
     -- Assign customer tiers based on LTV
-    SELECT 
+    SELECT
         *,
-        CASE 
+        CASE
             WHEN lifetime_value >= 5000 THEN 'gold'
             WHEN lifetime_value >= 1000 THEN 'silver'
             ELSE 'bronze'
@@ -403,11 +414,11 @@ dbt_project:
     dev:
       type: snowflake
       schema: "{{ env_var('DBT_USER') }}_dev"
-      
+
     staging:
-      type: snowflake  
+      type: snowflake
       schema: "analytics_staging"
-      
+
     prod:
       type: snowflake
       schema: "analytics"
@@ -444,7 +455,7 @@ models:
         constraints:
           - type: not_null
           - type: primary_key
-      
+
       - name: order_total
         data_type: number(10,2)
         constraints:
@@ -457,12 +468,12 @@ models:
 sources:
   - name: ecommerce
     freshness:
-      warn_after: {count: 12, period: hour}
-      error_after: {count: 24, period: hour}
+      warn_after: { count: 12, period: hour }
+      error_after: { count: 24, period: hour }
     tables:
       - name: orders
         freshness:
-          warn_after: {count: 1, period: hour}
+          warn_after: { count: 1, period: hour }
 ```
 
 ## 🎯 Advanced Patterns
@@ -477,7 +488,7 @@ WITH source_data AS (
 ),
 
 scd_data AS (
-    SELECT 
+    SELECT
         customer_id,
         customer_name,
         customer_email,
@@ -497,7 +508,7 @@ SELECT * FROM scd_data
 ```sql
 -- Generate pivot columns dynamically
 {% set payment_methods_query %}
-    SELECT DISTINCT payment_method 
+    SELECT DISTINCT payment_method
     FROM {{ ref('stg_orders') }}
     ORDER BY payment_method
 {% endset %}
@@ -509,7 +520,7 @@ SELECT * FROM scd_data
     {% set payment_methods = [] %}
 {% endif %}
 
-SELECT 
+SELECT
     order_date,
     {% for payment_method in payment_methods %}
     SUM(CASE WHEN payment_method = '{{ payment_method }}' THEN order_total ELSE 0 END) AS {{ payment_method | replace(' ', '_') | lower }}_total
@@ -524,6 +535,7 @@ GROUP BY order_date
 ### Common Issues & Solutions
 
 #### Compilation Errors
+
 ```bash
 # Check model compilation
 dbt compile --select my_model
@@ -533,12 +545,14 @@ dbt run --select my_model --debug
 ```
 
 #### Performance Issues
+
 ```sql
 -- Use EXPLAIN to analyze query plans
 {{ config(pre_hook="EXPLAIN " ~ this) }}
 ```
 
 #### Data Quality Issues
+
 ```bash
 # Run tests with detailed output
 dbt test --store-failures
@@ -558,7 +572,7 @@ models:
           expression: "revenue_amount > 0"
           config:
             severity: error
-            
+
       - dbt_utils.accepted_range:
           column_name: revenue_amount
           min_value: 0
@@ -570,11 +584,13 @@ models:
 ## 📚 Resources & References
 
 ### Official Documentation
+
 - [dbt Developer Hub](https://docs.getdbt.com/)
 - [dbt Best Practices](https://docs.getdbt.com/guides/best-practices)
 - [dbt Style Guide](https://github.com/dbt-labs/corp/blob/main/dbt_style_guide.md)
 
 ### Community Resources
+
 - [dbt Discourse](https://discourse.getdbt.com/)
 - [dbt Slack Community](https://www.getdbt.com/community/)
 - [dbt Package Hub](https://hub.getdbt.com/)
@@ -583,33 +599,40 @@ models:
 
 #### Core Packages (Recommended for All Projects)
 
-- [**dbt_constraints**](https://github.com/Snowflake-Labs/dbt_constraints): Database-enforced PK, FK, UK constraints
+- [**dbt_constraints**](https://github.com/Snowflake-Labs/dbt_constraints): Database-enforced PK,
+  FK, UK constraints
+
   - Creates actual database constraints in Snowflake
   - Improves query performance through constraint-based optimization
   - Provides referential integrity at the database level
   - Essential for enterprise data warehouse standards
 
 - [**dbt_utils**](https://github.com/dbt-labs/dbt_utils): Essential macros and utility functions
+
   - Cross-database compatibility macros
   - Date/time manipulation functions
   - SQL generation helpers (pivot, surrogate_key, etc.)
   - Foundation for most other dbt packages
 
-- [**dbt_artifacts**](https://github.com/brooklyn-data/dbt_artifacts): Execution logging and metadata tracking
+- [**dbt_artifacts**](https://github.com/brooklyn-data/dbt_artifacts): Execution logging and
+  metadata tracking
+
   - Tracks dbt run history and performance metrics
   - Enables operational monitoring and alerting
   - Provides insights into model execution patterns
   - Essential for production monitoring
 
-- [**dbt_expectations**](https://github.com/calogica/dbt_expectations): Advanced data quality and profiling tests
+- [**dbt_expectations**](https://github.com/calogica/dbt_expectations): Advanced data quality and
+  profiling tests
   - Statistical data profiling and validation
   - Advanced data quality checks beyond basic tests
   - Great Expectations-style testing framework
   - Comprehensive data quality monitoring
 
 #### Additional Useful Packages
+
 - [dbt-audit-helper](https://github.com/dbt-labs/dbt-audit-helper): Migration and comparison tools
-- [dbt-project-evaluator](https://github.com/dbt-labs/dbt-project-evaluator): Project health checks and best practice validation
+- [dbt-project-evaluator](https://github.com/dbt-labs/dbt-project-evaluator): Project health checks
+  and best practice validation
 
 ---
-

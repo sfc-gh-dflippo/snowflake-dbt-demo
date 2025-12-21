@@ -5,7 +5,7 @@ trigger:
       - test
   paths:
     exclude:
-    - schemachange
+      - schemachange
 
 variables:
   - name: pipDownloadDir
@@ -13,24 +13,24 @@ variables:
 
   # Use 'Production-Vars' only if the branch is 'main'.
   - ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
-    - group: 'Production-Vars'
+      - group: "Production-Vars"
 
   # Otherwise, if the branch is 'test', use 'Test-Vars'.
   - ${{ elseif eq(variables['Build.SourceBranchName'], 'test') }}:
-    - group: 'Test-Vars'
+      - group: "Test-Vars"
 
   # For any other branch that is not 'main' or 'test', use 'Dev-Vars'.
   - ${{ else }}:
-    - group: 'Dev-Vars'
-  
+      - group: "Dev-Vars"
+
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: "ubuntu-latest"
 
 steps:
   # Set our pipelines to use Python 3.11
   - task: UsePythonVersion@0
     inputs:
-      versionSpec: '3.11'
+      versionSpec: "3.11"
 
   # Check out the repository to the current working folder
   - checkout: self
@@ -53,12 +53,12 @@ steps:
 
   - task: DownloadSecureFile@1
     name: rsa_key
-    displayName: 'Download Snowflake RSA key'
+    displayName: "Download Snowflake RSA key"
     inputs:
-      secureFile: 'rsa_key.p8'
+      secureFile: "rsa_key.p8"
 
   - task: Bash@3
-    displayName: 'Deploy dbt project'
+    displayName: "Deploy dbt project"
     env:
       # dbt variables
       DBT_TARGET: $(Build.SourceBranchName)
@@ -75,7 +75,7 @@ steps:
       SNOWFLAKE_PRIVATE_KEY_PATH: $(rsa_key.secureFilePath)
       PRIVATE_KEY_PASSPHRASE: $(DBT_ENV_SECRET_PRIVATE_KEY_PASSPHRASE)
     inputs:
-      targetType: 'inline'
+      targetType: "inline"
       script: |
         set -e
         snow connection add -n default --no-interactive --authenticator SNOWFLAKE_JWT

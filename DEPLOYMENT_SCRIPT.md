@@ -1,11 +1,14 @@
 # dbt Deployment Script for Snowflake
 
-This directory contains a Python script for deploying dbt projects using Snowflake's native dbt commands via the Snowflake CLI.
+This directory contains a Python script for deploying dbt projects using Snowflake's native dbt
+commands via the Snowflake CLI.
 
 ## 📋 Script Overview
 
 ### `deploy_dbt_project.py` - Python Deployment Script
+
 Deploys your dbt project to Snowflake using the native `snow dbt deploy` command. This script:
+
 - Checks dependencies (`snow` CLI and `dbt-core`)
 - Tests Snowflake connection
 - Verifies `deploy_config/profiles.yml` exists
@@ -20,35 +23,40 @@ Deploys your dbt project to Snowflake using the native `snow dbt deploy` command
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 Before using the script, ensure you have:
 
 1. **Snowflake CLI installed and configured**
+
    ```bash
    # Install Snowflake CLI
    pip install snowflake-cli
-   
+
    # Configure connection (interactive)
    snow connection add
    ```
 
 2. **dbt-core installed**
+
    ```bash
    # Install dbt-core (required for parsing)
    pip install dbt-core dbt-snowflake
    ```
 
-3. **System dbt profile configured**
-   The script uses your system dbt profile (from `~/.dbt/profiles.yml` or environment variables) for parsing.
+3. **System dbt profile configured** The script uses your system dbt profile (from
+   `~/.dbt/profiles.yml` or environment variables) for parsing.
 
-4. **deploy_config/profiles.yml file**
-   The script requires a `deploy_config/profiles.yml` file for the actual deployment to Snowflake. This file is temporarily copied to the root during deployment only.
+4. **deploy_config/profiles.yml file** The script requires a `deploy_config/profiles.yml` file for
+   the actual deployment to Snowflake. This file is temporarily copied to the root during deployment
+   only.
 
-5. **Snowflake dbt Projects feature enabled**
-   This feature is currently in preview. Ensure your Snowflake account has access to dbt Projects on Snowflake.
+5. **Snowflake dbt Projects feature enabled** This feature is currently in preview. Ensure your
+   Snowflake account has access to dbt Projects on Snowflake.
 
 ### Basic Usage
 
 #### Deploy Project
+
 ```bash
 # Basic deployment
 python deploy_dbt_project.py -n my_dbt_project -d MY_DATABASE -s MY_SCHEMA
@@ -67,19 +75,20 @@ python deploy_dbt_project.py -n my_project -d PROD_DB -s ANALYTICS -r ANALYTICS_
 
 ### Command Line Arguments
 
-| Argument | Short | Required | Description | Example |
-|----------|-------|----------|-------------|---------|
-| `--name` | `-n` | ✅ | dbt project name | `my_dbt_project` |
-| `--database` | `-d` | ✅ | Target database name | `ANALYTICS_DB` |
-| `--schema` | `-s` | ✅ | Target schema name | `PROD_SCHEMA` |
-| `--connection` | `-c` | ❌ | Snowflake connection name | `default` |
-| `--warehouse` | `-w` | ❌ | Warehouse to use | `COMPUTE_WH` |
-| `--role` | `-r` | ❌ | Role to use | `ANALYTICS_ROLE` |
-| `--force` | `-f` | ❌ | Force overwrite existing project | (flag) |
+| Argument       | Short | Required | Description                      | Example          |
+| -------------- | ----- | -------- | -------------------------------- | ---------------- |
+| `--name`       | `-n`  | ✅       | dbt project name                 | `my_dbt_project` |
+| `--database`   | `-d`  | ✅       | Target database name             | `ANALYTICS_DB`   |
+| `--schema`     | `-s`  | ✅       | Target schema name               | `PROD_SCHEMA`    |
+| `--connection` | `-c`  | ❌       | Snowflake connection name        | `default`        |
+| `--warehouse`  | `-w`  | ❌       | Warehouse to use                 | `COMPUTE_WH`     |
+| `--role`       | `-r`  | ❌       | Role to use                      | `ANALYTICS_ROLE` |
+| `--force`      | `-f`  | ❌       | Force overwrite existing project | (flag)           |
 
 ### Examples
 
 #### Development Environment
+
 ```bash
 # Deploy to development environment
 python deploy_dbt_project.py \
@@ -91,6 +100,7 @@ python deploy_dbt_project.py \
 ```
 
 #### Production Environment
+
 ```bash
 # Deploy to production with specific role
 python deploy_dbt_project.py \
@@ -104,6 +114,7 @@ python deploy_dbt_project.py \
 ```
 
 #### Testing Environment
+
 ```bash
 # Deploy for testing (force overwrite)
 python deploy_dbt_project.py \
@@ -119,10 +130,13 @@ python deploy_dbt_project.py \
 
 The script uses two different profile configurations:
 
-1. **System Profile** (for parsing and docs): Uses your standard dbt profile from `~/.dbt/profiles.yml` or environment variables
-2. **Deployment Profile** (for `snow dbt deploy`): Uses `deploy_config/profiles.yml` temporarily copied to root
+1. **System Profile** (for parsing and docs): Uses your standard dbt profile from
+   `~/.dbt/profiles.yml` or environment variables
+2. **Deployment Profile** (for `snow dbt deploy`): Uses `deploy_config/profiles.yml` temporarily
+   copied to root
 
 #### deploy_config/profiles.yml Structure
+
 ```yaml
 SNOWFLAKE:
   target: dev
@@ -139,7 +153,9 @@ SNOWFLAKE:
 ```
 
 ### Environment Variables
+
 The script respects standard Snowflake environment variables:
+
 - `SNOWFLAKE_ACCOUNT`
 - `SNOWFLAKE_USER`
 - `SNOWFLAKE_PASSWORD`
@@ -170,6 +186,7 @@ your-dbt-project/
 ### Common Issues
 
 #### 1. Connection Test Fails
+
 ```bash
 # Test your connection manually
 snow connection test -c your_connection_name
@@ -179,16 +196,19 @@ snow connection list
 ```
 
 #### 2. Parsing Fails
+
 - Ensure your system dbt profile is properly configured
 - Check that all required environment variables are set
 - Verify database/schema permissions
 
 #### 3. Deployment Fails
+
 - Verify `deploy_config/profiles.yml` exists and is properly formatted
 - Check that the target database and schema exist
 - Ensure you have appropriate permissions for the deployment
 
 #### 4. Profile Issues
+
 ```bash
 # Check if dbt can find your profile
 dbt debug
@@ -198,11 +218,14 @@ cat ~/.dbt/profiles.yml
 ```
 
 ### Debug Mode
-For detailed logging, you can modify the script to enable debug mode or check the generated logs in the `logs/` directory.
+
+For detailed logging, you can modify the script to enable debug mode or check the generated logs in
+the `logs/` directory.
 
 ## 🔄 Workflow Integration
 
 ### CI/CD Pipeline Example
+
 ```yaml
 # GitHub Actions example
 - name: Deploy dbt Project
@@ -216,6 +239,7 @@ For detailed logging, you can modify the script to enable debug mode or check th
 ```
 
 ### Local Development Workflow
+
 ```bash
 # 1. Deploy your project
 python deploy_dbt_project.py -n my_project -d DEV_DB -s MY_SCHEMA -f
@@ -232,6 +256,7 @@ snow sql -q "SHOW TABLES IN SCHEMA DEV_DB.MY_SCHEMA" -c default
 ## 📊 Monitoring & Management
 
 ### Check Deployment Status
+
 ```bash
 # List deployed dbt projects
 snow dbt list -c default
@@ -241,6 +266,7 @@ snow sql -q "SHOW OBJECTS IN SCHEMA YOUR_DATABASE.YOUR_SCHEMA" -c default
 ```
 
 ### Execute dbt Commands
+
 ```bash
 # Run models
 snow dbt execute your_project_name -c default run
@@ -268,4 +294,5 @@ snow dbt execute your_project_name -c default run --full-refresh
 
 ---
 
-**Note**: This script is designed for Snowflake's dbt Projects feature, which is currently in preview. Features and syntax may change as the service evolves.
+**Note**: This script is designed for Snowflake's dbt Projects feature, which is currently in
+preview. Features and syntax may change as the service evolves.
