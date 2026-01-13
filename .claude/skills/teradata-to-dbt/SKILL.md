@@ -162,45 +162,45 @@ models:
 
 ### Teradata to Snowflake Data Type Conversion
 
-Use the following table to when converting data types from Teradata to Snowflake:
+Use the following table when converting data types from Teradata to Snowflake:
 
-| Teradata                         | Snowflake        | Notes                                                                                  |
-| -------------------------------- | ---------------- | -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| ARRAY                            | ARRAY            |                                                                                        |
-| BIGINT                           | BIGINT           | BIGINT in Snowflake is an alias for NUMBER(38,0).                                      |
-| BLOB                             | BINARY           | Limited to 8MB. BLOBis not supported, warning SSC-FDM-TD0001 is generated              |
-| BYTE                             | BINARY           |                                                                                        |
-| BYTEINT                          | BYTEINT          |                                                                                        |
-| CHAR                             | CHAR             |                                                                                        |
-| CLOB                             | VARCHAR          | Limited to 16MB. CLOB is not supported, warning SSC-FDM-TD0002 is generated            |
-| DATE                             | DATE             |                                                                                        |
-| DECIMAL                          | DECIMAL          |                                                                                        |
-| DOUBLE PRECISION                 | DOUBLE PRECISION |                                                                                        |
-| FLOAT                            | FLOAT            |                                                                                        |
-| INTEGER                          | INTEGER          | INTEGER in Snowflake is an alias for NUMBER(38,0).                                     |
-| INTERVAL DAY [TO HOUR            | MINUTE           | SECOND]                                                                                | VARCHAR(20)                                                                            | Intervals are stored as VARCHAR in Snowflake except when used in addition/subtraction. |
-| INTERVAL HOUR [TO MINUTE         | SECOND]          | VARCHAR(20)                                                                            | Intervals are stored as VARCHAR in Snowflake except when used in addition/subtraction. |
-| INTERVAL MINUTE [TO SECOND]      | VARCHAR(20)      | Intervals are stored as VARCHAR in Snowflake except when used in addition/subtraction. |
-| INTERVAL SECOND                  | VARCHAR(20)      | Intervals are stored as VARCHAR in Snowflake except when used in addition/subtraction. |
-| INTERVAL YEAR [TO SECOND]        | VARCHAR(20)      | Intervals are stored as VARCHAR in Snowflake except when used in addition/subtraction. |
-| JSON                             | VARIANT          | Elements inside a JSON are ordered by their keys when inserted in a table.             |
-| MBR                              | ---              | Not supported                                                                          |
-| NUMBER                           | NUMBER(38, 18)   |                                                                                        |
-| PERIOD(DATE)                     | VARCHAR(24)      | Periods are stored as VARCHAR in Snowflake.                                            |
-| PERIOD(TIME)                     | VARCHAR(34)      | Periods are stored as VARCHAR in Snowflake.                                            |
-| PERIOD(TIME WITH TIME ZONE)      | VARCHAR(46)      | Periods are stored as VARCHAR in Snowflake.                                            |
-| PERIOD(TIMESTAMP)                | VARCHAR(58)      | Periods are stored as VARCHAR in Snowflake.                                            |
-| PERIOD(TIMESTAMP WITH TIME ZONE) | VARCHAR(58)      | Periods are stored as VARCHAR in Snowflake.                                            |
-| REAL                             | REAL             |                                                                                        |
-| SMALLINT                         | SMALLINT         | SMALLINT in Snowflake is an alias for NUMBER(38,0).                                    |
-| ST_GEOMETRY                      | GEOGRAPHY        |                                                                                        |
-| TIME                             | TIME             |                                                                                        |
-| TIME WITH TIME ZONE              | TIME             | Warning SSC-EWI-0096 is generated.                                                     |
-| TIMESTAMP                        | TIMESTAMP        |                                                                                        |
-| TIMESTAMP WITH TIME ZONE         | TIMESTAMP_TZ     |                                                                                        |
-| VARBYTE                          | BINARY           |                                                                                        |
-| VARCHAR                          | VARCHAR          |                                                                                        |
-| XML                              | VARIANT          |                                                                                        |
+| Teradata                           | Snowflake        | Notes                                                                                  |
+| ---------------------------------- | ---------------- | -------------------------------------------------------------------------------------- |
+| ARRAY                              | ARRAY            |                                                                                        |
+| BIGINT                             | BIGINT           | BIGINT in Snowflake is an alias for NUMBER(38,0).                                      |
+| BLOB                               | BINARY           | Limited to 8MB. BLOB is not supported, warning SSC-FDM-TD0001 is generated.            |
+| BYTE                               | BINARY           |                                                                                        |
+| BYTEINT                            | BYTEINT          |                                                                                        |
+| CHAR                               | CHAR             |                                                                                        |
+| CLOB                               | VARCHAR          | Limited to 16MB. CLOB is not supported, warning SSC-FDM-TD0002 is generated.           |
+| DATE                               | DATE             |                                                                                        |
+| DECIMAL                            | DECIMAL          |                                                                                        |
+| DOUBLE PRECISION                   | DOUBLE PRECISION |                                                                                        |
+| FLOAT                              | FLOAT            |                                                                                        |
+| INTEGER                            | INTEGER          | INTEGER in Snowflake is an alias for NUMBER(38,0).                                     |
+| INTERVAL DAY TO HOUR/MINUTE/SECOND | VARCHAR(20)      | Intervals are stored as VARCHAR in Snowflake except when used in addition/subtraction. |
+| INTERVAL HOUR TO MINUTE/SECOND     | VARCHAR(20)      | Intervals are stored as VARCHAR in Snowflake except when used in addition/subtraction. |
+| INTERVAL MINUTE TO SECOND          | VARCHAR(20)      | Intervals are stored as VARCHAR in Snowflake except when used in addition/subtraction. |
+| INTERVAL SECOND                    | VARCHAR(20)      | Intervals are stored as VARCHAR in Snowflake except when used in addition/subtraction. |
+| INTERVAL YEAR TO MONTH             | VARCHAR(20)      | Intervals are stored as VARCHAR in Snowflake except when used in addition/subtraction. |
+| JSON                               | VARIANT          | Elements inside a JSON are ordered by their keys when inserted in a table.             |
+| MBR                                | ---              | Not supported.                                                                         |
+| NUMBER                             | NUMBER(38, 18)   |                                                                                        |
+| PERIOD(DATE)                       | VARCHAR(24)      | Periods are stored as VARCHAR in Snowflake.                                            |
+| PERIOD(TIME)                       | VARCHAR(34)      | Periods are stored as VARCHAR in Snowflake.                                            |
+| PERIOD(TIME WITH TIME ZONE)        | VARCHAR(46)      | Periods are stored as VARCHAR in Snowflake.                                            |
+| PERIOD(TIMESTAMP)                  | VARCHAR(58)      | Periods are stored as VARCHAR in Snowflake.                                            |
+| PERIOD(TIMESTAMP WITH TIME ZONE)   | VARCHAR(58)      | Periods are stored as VARCHAR in Snowflake.                                            |
+| REAL                               | REAL             |                                                                                        |
+| SMALLINT                           | SMALLINT         | SMALLINT in Snowflake is an alias for NUMBER(38,0).                                    |
+| ST_GEOMETRY                        | GEOGRAPHY        |                                                                                        |
+| TIME                               | TIME             |                                                                                        |
+| TIME WITH TIME ZONE                | TIME             | Warning SSC-EWI-0096 is generated.                                                     |
+| TIMESTAMP                          | TIMESTAMP        |                                                                                        |
+| TIMESTAMP WITH TIME ZONE           | TIMESTAMP_TZ     |                                                                                        |
+| VARBYTE                            | BINARY           |                                                                                        |
+| VARCHAR                            | VARCHAR          |                                                                                        |
+| XML                                | VARIANT          |                                                                                        |
 
 # Validation Checklist
 
