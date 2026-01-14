@@ -88,5 +88,5 @@ partitions), and it is typically not a concern.
 
 ## Related EWIs[¶](#related-ewis)
 
-1. [SSC-FDM-0031](../../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0031):
+1. [SSC-FDM-0031](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0031):
    Dynamic Table required parameters set by default

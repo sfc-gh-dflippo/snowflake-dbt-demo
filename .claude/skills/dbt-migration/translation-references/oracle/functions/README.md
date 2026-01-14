@@ -407,10 +407,10 @@ from dual;
 #### Recommendations[¶](#recommendations)
 
 - No additional user actions are required.
-- If you need more support, you can email us at [snowconvert-support@snowflake.com](mailto:snowconvert-support%40snowflake.com).
+- If you need more support, you can email us at [snowconvert-support@snowflake.com](https://docs.snowflake.com/en/migrations/snowconvert-docs/translation-references/oracle/functions/mailto:snowconvert-support%40snowflake.com).
 
 ### Related EWIs[¶](#related-ewis)
 
-1. [SSC-EWI-OR0045](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0045): Cast type L and FML are not supported.
-2. [SSC-EWI-OR0050](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0050): Input Expression is out of the range.
-3. [SSC-EWI-OR0053](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0053): Incorrect input format.
+1. [SSC-EWI-OR0045](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0045): Cast type L and FML are not supported.
+2. [SSC-EWI-OR0050](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0050): Input Expression is out of the range.
+3. [SSC-EWI-OR0053](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0053): Incorrect input format.

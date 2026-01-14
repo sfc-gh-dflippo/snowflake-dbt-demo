@@ -15,20 +15,20 @@ list of MultiLoad commands and their transformation status into Snowflake:
 |Commands|Transformation Status|Note|
 |---|---|---|
 |ACCEPT|Commented|​|
-|[BEGIN MLOAD](begin-mload.md)|**Transformed**|​​The node is commented out since the transformation occurs in other related statements instead.|
+|[BEGIN MLOAD](https://docs.snowflake.com/en/migrations/snowconvert-docs/translation-references/teradata/scripts-to-python/begin-mload.md)|**Transformed**|​​The node is commented out since the transformation occurs in other related statements instead.|
 |BEGIN DELETE MLOAD|Commented|​|
 |DATEFORM|Commented|​|
-|DELETE|**Partially transformed**|Check [known issues](begin-mload.md#known-issues).​|
+|DELETE|**Partially transformed**|Check [known issues](https://docs.snowflake.com/en/migrations/snowconvert-docs/translation-references/teradata/scripts-to-python/begin-mload.md#known-issues).​|
 |DISPLAY|Commented|​|
-|[DML LABEL](begin-mload.md#.dml-label)|**Transformed**|​|
+|[DML LABEL](https://docs.snowflake.com/en/migrations/snowconvert-docs/translation-references/teradata/scripts-to-python/begin-mload.md#.dml-label)|**Transformed**|​|
 |END MLOAD|**Transformed**|​​Commented out since is not necessary for the transformation of the BEGIN MLOAD.|
 |EOC|Commented|​|
-|[FIELD](begin-mload.md#.layout-.field-and-.filler)|**Transformed**|​|
-|[FILLER](begin-mload.md#.layout-.field-and-.filler)|**Transformed**|This command needs to be with a FIELD and LAYOUT command to be converted.|
+|[FIELD](https://docs.snowflake.com/en/migrations/snowconvert-docs/translation-references/teradata/scripts-to-python/begin-mload.md#.layout-.field-and-.filler)|**Transformed**|​|
+|[FILLER](https://docs.snowflake.com/en/migrations/snowconvert-docs/translation-references/teradata/scripts-to-python/begin-mload.md#.layout-.field-and-.filler)|**Transformed**|This command needs to be with a FIELD and LAYOUT command to be converted.|
 |IF, ELSE, and ENDIF|Commented|​|
-|[IMPORT](begin-mload.md#.import)|**Transformed**|​|
+|[IMPORT](https://docs.snowflake.com/en/migrations/snowconvert-docs/translation-references/teradata/scripts-to-python/begin-mload.md#.import)|**Transformed**|​|
 |INSERT|**Transformed**|This is taken as a Teradata Statement, so it doesn't appear in this chapter.|
-|[LAYOUT](begin-mload.md#.layout-.field-and-.filler)|**Transformed**|This command needs to be with a FIELD and FILLER command to be converted.|
+|[LAYOUT](https://docs.snowflake.com/en/migrations/snowconvert-docs/translation-references/teradata/scripts-to-python/begin-mload.md#.layout-.field-and-.filler)|**Transformed**|This command needs to be with a FIELD and FILLER command to be converted.|
 |LOGDATA|Commented|​|
 |LOGMECH|Commented|​|
 |LOGOFF|Commented|​|
@@ -48,7 +48,7 @@ However, there are some exceptional commands that must be converted into Python-
 them to work as intended in Snowflake. See this [section](#begin-mload).
 
 If you have any additional questions regarding this documentation, you can email us at
-[snowconvert-support@snowflake.com](mailto:snowconvert-support%40snowflake.com).
+[snowconvert-support@snowflake.com](https://docs.snowflake.com/en/migrations/snowconvert-docs/translation-references/teradata/scripts-to-python/mailto:snowconvert-support%40snowflake.com).
 
 ## BEGIN MLOAD[¶](#begin-mload)
 
@@ -359,9 +359,9 @@ does not take this into account and thus the code will be referencing a column t
 ```
 
 If you have any additional questions regarding this documentation, you can email us at
-[snowconvert-support@snowflake.com](mailto:snowconvert-support%40snowflake.com).
+[snowconvert-support@snowflake.com](https://docs.snowflake.com/en/migrations/snowconvert-docs/translation-references/teradata/scripts-to-python/mailto:snowconvert-support%40snowflake.com).
 
 ### Related EWIs [¶](#related-ewis)
 
-1. [SSC-FDM-0027](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0027):
+1. [SSC-FDM-0027](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0027):
    Removed next statement, not applicable in SnowFlake.

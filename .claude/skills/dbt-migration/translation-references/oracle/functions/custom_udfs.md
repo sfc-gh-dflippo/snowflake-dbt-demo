@@ -109,7 +109,7 @@ functions and there are no implemented workarounds yet.
 
 ### Related EWIs[¶](#related-ewis)
 
-1. [SSC-EWI-OR0105](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0105):
+1. [SSC-EWI-OR0105](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0105):
    Additional Work Is Needed For BFILE Column Usage.
 
 ## CAST_DATE UDF[¶](#cast-date-udf)
@@ -222,7 +222,7 @@ SysdateAsCurrentTimestamp flag.
 
 ### Related EWIs[¶](#id11)
 
-1. [SSC-FDM-OR0042](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM.html#ssc-fdm-or0042):
+1. [SSC-FDM-OR0042](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM#ssc-fdm-or0042):
    Date Type Transformed To Timestamp Has A Different Behavior
 
 ## DATE_TO_JULIANDAYS_UDF[¶](#date-to-juliandays-udf)
@@ -311,7 +311,7 @@ No issues were found.
 
 ### Related EWIs[¶](#id18)
 
-- [SSC-FDM-OR0042](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM.html#ssc-fdm-or0042):
+- [SSC-FDM-OR0042](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM#ssc-fdm-or0042):
   Date Type Transformed To Timestamp Has A Different Behavior
 
 ## DATEADD UDF[¶](#dateadd-udf)
@@ -713,10 +713,10 @@ unknown_table;
 
 ### Related EWIs[¶](#id48)
 
-1. [SSC-EWI-OR0036](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0036):
+1. [SSC-EWI-OR0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0036):
    Types resolution issues, the arithmetic operation may not behave correctly between string and
    date.
-2. [SSC-FDM-OR0042](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM.html#ssc-fdm-or0042):
+2. [SSC-FDM-OR0042](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM#ssc-fdm-or0042):
    Date Type Transformed To Timestamp Has A Different Behavior.
 
 ## JSON_VALUE UDF[¶](#json-value-udf)
@@ -1070,7 +1070,7 @@ since more than one expression is used in the filter.
 
 ### Related EWIs[¶](#id56)
 
-1. [SSC-EWI-0021](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0021):
+1. [SSC-EWI-0021](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0021):
    Not supported in Snowflake.
 
 ## JULIAN TO GREGORIAN DATE UDF[¶](#julian-to-gregorian-date-udf)
@@ -2570,14 +2570,14 @@ Snowflake does not support INTERVAL + INTERVAL operations.
 
 ### Related EWIs[¶](#id148)
 
-1. [SSC-EWI-OR0036](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0036):
+1. [SSC-EWI-OR0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0036):
    Types resolution issues, the arithmetic operation may not behave correctly between string and
    date.
-2. [SSC-EWI-OR0095](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0095):
+2. [SSC-EWI-OR0095](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0095):
    Operation Between Interval Type and Date Type not Supported.
-3. [SSC-FDM-0007](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0007):
+3. [SSC-FDM-0007](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0007):
    Element with missing dependencies.
-4. [SSC-FDM-OR0042](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM.html#ssc-fdm-or0042):
+4. [SSC-FDM-OR0042](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM#ssc-fdm-or0042):
    Date Type Transformed To Timestamp Has A Different Behavior.
 
 ## DATEDIFF UDF INTERVAL[¶](#datediff-udf-interval)
@@ -2859,12 +2859,12 @@ Snowflake does not support INTERVAL - INTERVAL operations.
 
 ### Related EWIs[¶](#id162)
 
-1. [SSC-EWI-OR0036](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0036):
+1. [SSC-EWI-OR0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0036):
    Types resolution issues, the arithmetic operation may not behave correctly between string and
    date.
-2. [SSC-EWI-OR0095](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0095):
+2. [SSC-EWI-OR0095](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0095):
    Operation Between Interval Type and Date Type not Supported.
-3. [SSC-FDM-0007](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0007):
+3. [SSC-FDM-0007](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0007):
    Element with missing dependencies.
-4. [SSC-FDM-OR0042](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM.html#ssc-fdm-or0042):
+4. [SSC-FDM-OR0042](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM#ssc-fdm-or0042):
    Date Type Transformed To Timestamp Has A Different Behavior.

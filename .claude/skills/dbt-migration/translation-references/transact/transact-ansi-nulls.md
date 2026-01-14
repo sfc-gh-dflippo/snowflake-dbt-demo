@@ -27,7 +27,7 @@ expressions, the setting does not affect the comparison._” (SQLServer ANSI_NUL
 
 Snowflake does not support this statement, so in the case of ANSI_NULLS ON, this is marked with an
 FDM
-([SSC-FDM-TS0027](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM.html#ssc-fdm-ts0027))
+([SSC-FDM-TS0027](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM#ssc-fdm-ts0027))
 because it does not have relevance in executing equal and not equal comparison operations. Here, you
 can find an explanation of the
 [NULL treatment in Snowflake](https://community.snowflake.com/s/article/NULL-handling-in-Snowflake).
@@ -53,7 +53,7 @@ that have null values in column_name. A SELECT statement that uses `WHERE column
 returns the rows that have non-NULL values in the column_”. (SQLServer ANSI_NULLS article).
 
 In the case of the ANSI_NULLS OFF statement, this one is marked with an EWI
-([SSC-EWI-0040](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0040))
+([SSC-EWI-0040](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0040))
 because it requires extra manual effort.
 
 #### SQL Server[¶](#id1)
@@ -71,7 +71,7 @@ SET ANSI_NULLS OFF;
 
 ## Related EWIs[¶](#related-ewis)
 
-1. [SSC-EWI-0040](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0040):
+1. [SSC-EWI-0040](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0040):
    The statement is not supported in Snowflake
-2. [SSC-FDM-0027](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM.html#ssc-fdm-ts0027):
+2. [SSC-FDM-0027](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM#ssc-fdm-ts0027):
    SET ANSI_NULLS ON statement may have different behavior in Snowflake

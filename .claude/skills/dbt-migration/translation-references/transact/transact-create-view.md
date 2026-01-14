@@ -215,5 +215,5 @@ Select.
 
 ### Related EWIs[¶](#related-ewis)
 
-1. [SSC-PRF-TS0001](../../general/technical-documentation/issues-and-troubleshooting/performance-review/sqlServerPRF.html#ssc-prf-ts0001):
+1. [SSC-PRF-TS0001](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/performance-review/sqlServerPRF#ssc-prf-ts0001):
    Performance warning - recursion for CTE not checked. Might require a recursive keyword.

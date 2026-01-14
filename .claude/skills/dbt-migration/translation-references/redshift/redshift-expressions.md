@@ -1075,5 +1075,5 @@ No issues were found.
 
 ### Related EWIs[¶](#id87)
 
-- [SSC-FDM-PG0010](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/postgresqlFDM.html#ssc-fdm-pg0010):
+- [SSC-FDM-PG0010](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/postgresqlFDM#ssc-fdm-pg0010):
   Results may vary due to the behavior of Snowflake’s bitwise function.

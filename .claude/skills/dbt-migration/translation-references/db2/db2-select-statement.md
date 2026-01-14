@@ -13,7 +13,7 @@ DB2 documentation page for this syntax.
 
 ## Grammar Syntax[¶](#grammar-syntax)
 
-![image](../../../../_images/select_statement_overview.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/select_statement_overview.png)
 
 ## From Clause[¶](#from-clause)
 
@@ -30,7 +30,7 @@ IBM DB2 documentation page for this syntax.
 
 ### Grammar Syntax[¶](#id1)
 
-![image](../../../../_images/where_clause_syntax.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/where_clause_syntax.png)
 
 SuccessPlaceholder
 
@@ -47,7 +47,7 @@ the IBM DB2 documentation page for this syntax.
 
 ### Grammar Syntax[¶](#id2)
 
-![image](../../../../_images/group_by_clause_syntax.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/group_by_clause_syntax.png)
 
 ### No explicit column reference[¶](#no-explicit-column-reference)
 
@@ -96,7 +96,7 @@ select * from
 
 #### Related EWIs
 
-1. [SSC-EWI-0021](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0021)
+1. [SSC-EWI-0021](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0021)
 
 ## Fetch Clause
 
@@ -109,7 +109,7 @@ IBM DB2 documentation page for this syntax.
 
 ### Grammar Syntax
 
-![image](../../../../_images/fetch_clause_syntax.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/fetch_clause_syntax.png)
 
 ### Sample Source Patterns
 
@@ -146,9 +146,9 @@ IBM DB2 documentation page for this syntax.
 
 ### Grammar Syntax
 
-![image](../../../../_images/offset_clause_syntax_1.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/offset_clause_syntax_1.png)
 
-![image](../../../../_images/offset_clause_syntax_2.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/offset_clause_syntax_2.png)
 
 ### Sample Source Patterns
 
@@ -199,9 +199,9 @@ the IBM DB2 documentation page for this syntax.
 
 ### Grammar Syntax
 
-![image](../../../../_images/order_by_clause_syntax_1.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/order_by_clause_syntax_1.png)
 
-![image](../../../../_images/order_by_clause_syntax_2.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/order_by_clause_syntax_2.png)
 
 ### Sample Source Patterns
 
@@ -232,7 +232,7 @@ ORDER BY INPUT SEQUENCE;
 
 ### Related EWIs
 
-1. [SSC-EWI-0021](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0021):
+1. [SSC-EWI-0021](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0021):
    NODE NOT SUPPORTED
 
 ## Values Clause
@@ -249,7 +249,7 @@ statement, as shown in the examples below.
 
 ### Grammar Syntax[¶](#id23)
 
-![image](../../../../_images/values_clause_syntax.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/values_clause_syntax.png)
 
 ### Sample Source Patterns[¶](#id24)
 

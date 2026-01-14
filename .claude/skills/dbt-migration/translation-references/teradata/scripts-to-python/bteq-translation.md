@@ -658,7 +658,7 @@ the data loaded from the first row of the input file. Thus, the queries will onl
 This issue should be fixed when the .REPEAT command receives proper transformation support.
 
 If you have any additional questions regarding this documentation, you can email us at
-[snowconvert-support@snowflake.com](mailto:snowconvert-support%40snowflake.com).
+[snowconvert-support@snowflake.com](https://docs.snowflake.com/en/migrations/snowconvert-docs/translation-references/teradata/scripts-to-python/mailto:snowconvert-support%40snowflake.com).
 
 ### Related EWIs [¶](#id10)
 

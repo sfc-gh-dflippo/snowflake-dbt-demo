@@ -65,7 +65,7 @@ column-name data-type
 In Vertica, this `ORDER BY` clause specifies how data is physically sorted within a
 **superprojection**, an optimized storage structure for a table. This explicit physical ordering at
 table creation is not directly supported in Snowflake. For more information please refer to
-[SSC-EWI-VT0002.](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/verticaEWI.html#ssc-ewi-vt0002)
+[SSC-EWI-VT0002.](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/verticaEWI#ssc-ewi-vt0002)
 
 #### Sample Source[¶](#sample-source)
 
@@ -311,13 +311,13 @@ COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,
 
 ## Related EWIs[¶](#related-ewis)
 
-1. [SSC-EWI-0035](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0035):
+1. [SSC-EWI-0035](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0035):
    Check statement not supported.
-2. [SSC-EWI-VT0001](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/verticaEWI.html#ssc-ewi-vt0001):
+2. [SSC-EWI-VT0001](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/verticaEWI#ssc-ewi-vt0001):
    Inherited privileges clause is not supported in Snowflake.
-3. [SSC-EWI-VT0002](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/verticaEWI.html#ssc-ewi-vt0002):
+3. [SSC-EWI-VT0002](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/verticaEWI#ssc-ewi-vt0002):
    Order by table option is not supported in Snowflake.
-4. [SSC-FDM-VT0001](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/verticaFDM.html#ssc-fdm-vt0001):
+4. [SSC-FDM-VT0001](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/verticaFDM#ssc-fdm-vt0001):
    Expression in USING constraint might not be supported in Snowflake.
 
 ## CREATE TABLE AS[¶](#create-table-as)
@@ -380,7 +380,7 @@ This syntax is not supported in Snowflake.
 
 ### Related EWIs[¶](#id20)
 
-1. [SSC-EWI-VT0001](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/verticaEWI.html#ssc-ewi-vt0001):
+1. [SSC-EWI-VT0001](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/verticaEWI#ssc-ewi-vt0001):
    Inherited privileges clause is not supported in Snowflake.
 
 ## CREATE TABLE LIKE[¶](#create-table-like)
@@ -433,5 +433,5 @@ This syntax is not supported in Snowflake.
 
 ### Related EWIs[¶](#id25)
 
-1. [SSC-EWI-VT0001](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/verticaEWI.html#ssc-ewi-vt0001):
+1. [SSC-EWI-VT0001](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/verticaEWI#ssc-ewi-vt0001):
    Inherited privileges clause is not supported in Snowflake.

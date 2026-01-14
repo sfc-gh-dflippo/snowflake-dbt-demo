@@ -233,8 +233,8 @@ instead, the PARTITION BY clause will be commented out with a PRF.
 
 ## Related EWIs[¶](#related-ewis)
 
-1. [SSC-EWI-0115](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0115):
+1. [SSC-EWI-0115](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0115):
    Iceberg table contains unsupported datatypes
-2. [SSC-PRF-0010](../../../general/technical-documentation/issues-and-troubleshooting/performance-review/generalPRF.html#ssc-prf-0010):
+2. [SSC-PRF-0010](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/performance-review/generalPRF#ssc-prf-0010):
    Partition by removed, at least one of the specified expressions have no iceberg partition
    transform equivalent

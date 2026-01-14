@@ -179,9 +179,9 @@ Snowflake. There is a work item to fix this issue.
 
 ### Related EWIs[¶](#related-ewis)
 
-1. [SSC-EWI-OR0007](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0007):
+1. [SSC-EWI-OR0007](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0007):
    Create Type Not Supported in Snowflake.
-2. [SSC-EWI-OR0076](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0076):
+2. [SSC-EWI-OR0076](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0076):
    Built In Package Not Supported.
 
 ## XMLType[¶](#xmltype)
@@ -270,9 +270,9 @@ transformed by SnowConvert.
 
 ### Related EWIs[¶](#id18)
 
-1. [SSC-EWI-0036:](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0036)
+1. [SSC-EWI-0036:](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0036)
    Data type converted to another data type.
-2. [SSC-EWI-OR0016:](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0016)
+2. [SSC-EWI-OR0016:](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0016)
    XML is not supported.
 
 ## URI Data Types[¶](#uri-data-types)
@@ -390,11 +390,11 @@ it uses the prefix SYS, there is a work item to fix this issue
 
 ### Related EWIs[¶](#id28)
 
-1. [SSC-EWI-0028](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0028):
+1. [SSC-EWI-0028](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0028):
    Type not supported.
-2. [SSC-EWI-0062:](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0062)
+2. [SSC-EWI-0062:](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0062)
    Custom type usage changed to variant
-3. [SSC-EWI-0073:](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0073)
+3. [SSC-EWI-0073:](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0073)
    Pending functional equivalence review
 
 ## HTTPURIType[¶](#httpuritype)
@@ -506,11 +506,11 @@ if it uses the prefix SYS, there is a work item to fix this issue
 
 ### Related EWIs[¶](#id37)
 
-1. [SSC-EWI-0028](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0028):
+1. [SSC-EWI-0028](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0028):
    Type not supported.
-2. [SSC-EWI-0062:](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0062)
+2. [SSC-EWI-0062:](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0062)
    Custom type usage changed to variant.
-3. [SSC-EWI-0073:](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0073)
+3. [SSC-EWI-0073:](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0073)
    Pending functional equivalence review.
 
 ## XDBURIType[¶](#xdburitype)
@@ -615,9 +615,9 @@ it uses the prefix SYS, there is a work item to fix this issue
 
 ### Related EWIs[¶](#id46)
 
-1. [SSC-EWI-0028](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0028):
+1. [SSC-EWI-0028](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0028):
    Type not supported.
-2. [SSC-EWI-0062:](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0062)
+2. [SSC-EWI-0062:](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0062)
    Custom type usage changed to variant
-3. [SSC-EWI-0073:](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0073)
+3. [SSC-EWI-0073:](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0073)
    Pending functional equivalence review

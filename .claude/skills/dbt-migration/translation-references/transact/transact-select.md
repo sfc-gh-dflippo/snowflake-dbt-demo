@@ -226,7 +226,7 @@ $$;
 
 ### Related EWIs[¶](#related-ewis)
 
-1. [SSC-FDM-0020](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0020):
+1. [SSC-FDM-0020](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0020):
    Multiple result sets are returned in temporary tables.
 
 ## TOP[¶](#top)
@@ -464,5 +464,5 @@ clause and a warning is being added. Functional equivalence mismatches in the re
 
 ### Related EWIs[¶](#id28)
 
-1. [SSC-EWI-0040](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0040):
+1. [SSC-EWI-0040](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0040):
    Statement Not Supported.

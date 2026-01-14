@@ -87,5 +87,5 @@ There are no known Issues.
 
 ### Related EWIs[¶](#related-ewis)
 
-1. [SSC-EWI-VT0001](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/verticaEWI.html#ssc-ewi-vt0001):
+1. [SSC-EWI-VT0001](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/verticaEWI#ssc-ewi-vt0001):
    Inherited privileges clause is not supported in Snowflake.

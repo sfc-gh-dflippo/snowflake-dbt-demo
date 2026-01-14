@@ -596,11 +596,11 @@ No issues were found.
 
 ### Related EWIs[¶](#id6)
 
-1. [SSC-EWI-0022](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0022):
+1. [SSC-EWI-0022](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0022):
    One or more identifiers in this statement were considered parameters by default.
-2. [SSC-EWI-0023](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0023):
+2. [SSC-EWI-0023](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0023):
    Performance Review - A loop contains an insert, delete, or update statement.
-3. [SSC-EWI-0026](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0026):
+3. [SSC-EWI-0026](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0026):
    The variable may require a cast to date, time, or timestamp.
-4. [SSC-FDM-TD0001](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/teradataFDM.html#ssc-fdm-td0001):
+4. [SSC-FDM-TD0001](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/teradataFDM#ssc-fdm-td0001):
    This message is shown when SnowConvert AI finds a data type BLOB.

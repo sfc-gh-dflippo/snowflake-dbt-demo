@@ -1761,7 +1761,7 @@ function to achieve functional equivalence:
 
 ### Related EWIs[¶](#id137)
 
-- [SSC-FDM-PG0011](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/postgresqlFDM.html#ssc-fdm-pg0011):
+- [SSC-FDM-PG0011](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/postgresqlFDM#ssc-fdm-pg0011):
   The use of the COLLATE column constraint has been disabled for this pattern-matching condition.
 
 ## SIMILAR TO[¶](#similar-to)
@@ -2508,7 +2508,7 @@ RLIKE( col1, 'abc*c', 's');
 
 ### Related EWIs[¶](#id208)
 
-- [SSC-FDM-0032](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0032):
+- [SSC-FDM-0032](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0032):
   Parameter is not a literal value, transformation could not be fully applied.
-- [SSC-FDM-PG0011](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/postgresqlFDM.html#ssc-fdm-pg0011):
+- [SSC-FDM-PG0011](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/postgresqlFDM#ssc-fdm-pg0011):
   The use of the COLLATE column constraint has been disabled for this pattern-matching condition.

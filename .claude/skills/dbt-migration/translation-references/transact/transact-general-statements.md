@@ -97,11 +97,11 @@ As you can see, the transformation of Collate inside a Select or a Table is the 
 
 ### Related EWIS[¶](#related-ewis)
 
-1. [SSC-EWI-TS0077](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/sqlServerEWI.html#ssc-ewi-ts0077):
+1. [SSC-EWI-TS0077](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/sqlServerEWI#ssc-ewi-ts0077):
    This message is shown when there is a collate clause that is not supported in Snowflake.
-2. [SSC-FDM-TS0002](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM.html#ssc-fdm-ts0002):
+2. [SSC-FDM-TS0002](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM#ssc-fdm-ts0002):
    This message is shown when there is a collate clause that is not supported in Snowflake.
-3. [SSC-PRF-0002](../../general/technical-documentation/issues-and-troubleshooting/performance-review/generalPRF.html#ssc-prf-0002):
+3. [SSC-PRF-0002](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/performance-review/generalPRF#ssc-prf-0002):
    Case-insensitive columns can decrease the performance of queries.
 
 ## COMPUTED COLUMN[¶](#computed-column)
@@ -122,7 +122,7 @@ The expression of a computed column could not be transformed.
 ##### Input Code:[¶](#input-code)
 
 ```
-CREATE TABLE [TestTable](
+CREATE TABLE [TestTable](https://docs.snowflake.com/en/migrations/snowconvert-docs/translation-references/transact/
     [Col1] AS (CONVERT ([REAL], ExpressionValue))
 );
 ```
@@ -141,11 +141,11 @@ COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":
 
 - Add manual changes to the not-transformed expression.
 - If you need more support, you can email us at
-  [snowconvert-support@snowflake.com](mailto:snowconvert-support%40snowflake.com)
+  [snowconvert-support@snowflake.com](https://docs.snowflake.com/en/migrations/snowconvert-docs/translation-references/transact/mailto:snowconvert-support%40snowflake.com)
 
 ### Related EWIs[¶](#id3)
 
-1. [SSC-FDM-TS0014](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM.html#ssc-fdm-ts0014):
+1. [SSC-FDM-TS0014](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM#ssc-fdm-ts0014):
    Computed column transformed.
 
 ## OUTER APPLY[¶](#outer-apply)
@@ -432,7 +432,7 @@ specified database from the use statement. Example:
 -- Additional Params: -d MYCUSTOMDB
 USE [MY DATABASE]
 
-CREATE TABLE [TableName1].[TableName2](
+CREATE TABLE [TableName1].[TableName2](https://docs.snowflake.com/en/migrations/snowconvert-docs/translation-references/transact/
 	[ColumnName1] varchar NULL
 );
 ```
@@ -519,7 +519,7 @@ CALL PUBLIC.LOG_INFO_UDP('My message');
 ```
 
 Before you can begin logging messages, you must set up an event table. For more information, see:
-[Logging messages in Snowflake Scripting](../../../../developer-guide/logging-tracing/logging-snowflake-scripting)
+[Logging messages in Snowflake Scripting](https://docs.snowflake.com/en/migrations/snowconvert-docs/developer-guide/logging-tracing/logging-snowflake-scripting)
 
 ## System Stored Procedures[¶](#system-stored-procedures)
 
@@ -542,7 +542,7 @@ This functionality can be emulated in Snowflake through the EXECUTE IMMEDIATE st
 user-defined function (UDF) for embedded parameters.
 
 For more information about the user-defined function (UDF) used for this translation, check
-[TRANSFORM_SP_EXECUTE_SQL_STRING_UDF(STRING, STRING, ARRAY, ARRAY)](../../general/technical-documentation/function-references/sql-server/README.html#transform-sp-execute-sql-string-udf-string-string-array-array).
+[TRANSFORM_SP_EXECUTE_SQL_STRING_UDF(STRING, STRING, ARRAY, ARRAY)](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/function-references/sql-server/README#transform-sp-execute-sql-string-udf-string-string-array-array).
 
 #### Syntax[¶](#id21)
 
@@ -563,7 +563,7 @@ modify the SQL string to be executed when using embedded parameters.
 
 Warning
 
-[SSC-EWI-0030](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0030)
+[SSC-EWI-0030](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0030)
 (Usage of Dynamic SQL) will be added for all patterns. Even though the translation for SP_EXECUTESQL
 is equivalent to Snowflake, in this context, this EWI indicates that the SQL string might require
 manual fixes for the translation to execute as intended.
@@ -1315,7 +1315,7 @@ Snowflake Scripting procedures only allow one result set to be returned per proc
 To replicate Transact-SQL behavior, when two or more result sets are to be returned, they are stored
 in temporary tables. The Snowflake Scripting procedure will return an array containing the names of
 the temporary tables. For more information, check
-[SSC-FDM-0020](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0020).
+[SSC-FDM-0020](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0020).
 
 ##### Transact[¶](#id51)
 
@@ -1433,7 +1433,7 @@ supports executing multiple SQL statements, but need to be enclosed in a `BEGIN 
 Furthermore, when executing multiple statements from a `BEGIN ... END` block, the
 `EXECUTE IMMEDIATE` will not return a resultset. The translation for these cases is not yet
 supported by SnowConvert AI. For more information, check
-[SSC-EWI-0030](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0030).
+[SSC-EWI-0030](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0030).
 
 Thus, when this case is detected, in the translated code, the `EXECUTE IMMEDIATE` will not be
 assigned to the `ProcedureResultSet`.
@@ -1569,7 +1569,7 @@ CALL WITH_INVALID_CODE_NOT_DETECTED();
 If the SQL string starts with a SELECT statement and is followed by more statements, SnowConvert AI
 will detect this as a valid code and try to assign the result of the `EXECUTE IMMEDIATE` to the
 `ProcedureResultSet`. This leads to a compilation error. For more information, check
-[SSC-EWI-0030](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0030).
+[SSC-EWI-0030](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0030).
 
 ##### Transact[¶](#id64)
 
@@ -1646,11 +1646,11 @@ CALL WITH_INVALID_CODE_MISTAKEN_AS_VALID();
 
 ### Related EWIs[¶](#id68)
 
-1. [SSC-EWI-0030](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0030):
+1. [SSC-EWI-0030](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0030):
    The statement below has usages of dynamic SQL
-2. [SSC-FDM-TS0028](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM.html#ssc-fdm-ts0028):
+2. [SSC-FDM-TS0028](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM#ssc-fdm-ts0028):
    Output parameters must have the same order as they appear in the executed code.
-3. [SSC-FDM-0020](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0020):
+3. [SSC-FDM-0020](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0020):
    Multiple result sets are returned in temporary tables.
 
 ## SP_RENAME[¶](#sp-rename)
@@ -1740,5 +1740,5 @@ END;
 
 ### Related EWIs[¶](#id77)
 
-1. [SSC-EWI-TS0075](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/sqlServerEWI.html#ssc-ewi-ts0075):
+1. [SSC-EWI-TS0075](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/sqlServerEWI#ssc-ewi-ts0075):
    Translation for Built-In Procedure Is Not Currently Supported.

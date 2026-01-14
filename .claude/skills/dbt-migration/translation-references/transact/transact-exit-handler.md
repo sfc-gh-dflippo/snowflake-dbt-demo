@@ -274,7 +274,7 @@ When this pattern is encountered:
 
 #### Related EWIs[¶](#related-ewis)
 
-1. [SSC-EWI-0114](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0114):
+1. [SSC-EWI-0114](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0114):
    MIXED CONTINUE AND EXIT EXCEPTION HANDLERS IN THE SAME BLOCK ARE NOT SUPPORTED BY SNOWFLAKE
    SCRIPTING
 

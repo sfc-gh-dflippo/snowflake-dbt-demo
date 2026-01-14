@@ -107,7 +107,7 @@ table_test;
 
 ### Related EWIs[¶](#related-ewis)
 
-- [SSC-FDM-RS0001](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/redshiftFDM.html#ssc-fdm-rs0001):
+- [SSC-FDM-RS0001](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/redshiftFDM#ssc-fdm-rs0001):
   “Option” not supported. Data storage is automatically handled by Snowflake.
 
 ## COLUMNS[¶](#columns)
@@ -250,7 +250,7 @@ table_test;
 
 ### Related EWIs[¶](#id31)
 
-- [SSC-FDM-RS0001](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/redshiftFDM.html#ssc-fdm-rs0001):
+- [SSC-FDM-RS0001](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/redshiftFDM#ssc-fdm-rs0001):
   “Option” not supported. Data storage is automatically handled by Snowflake.
 
 ## DISTSTYLE[¶](#diststyle)
@@ -331,7 +331,7 @@ table_test;
 
 ### Related EWIs[¶](#id39)
 
-1. [SSC-FDM-RS0001](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/redshiftFDM.html#ssc-fdm-rs0001):
+1. [SSC-FDM-RS0001](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/redshiftFDM#ssc-fdm-rs0001):
    “Option” not supported. Data storage is automatically handled by Snowflake.
 
 ## SORTKEY[¶](#sortkey)
@@ -422,5 +422,5 @@ AS SELECT * FROM
 
 ### Related EWIs[¶](#id47)
 
-1. [SSC-FDM-RS0002](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/redshiftFDM.html#ssc-fdm-rs0002):
+1. [SSC-FDM-RS0002](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/redshiftFDM#ssc-fdm-rs0002):
    The performance of the CLUSTER BY may vary compared to the performance of Sortkey.

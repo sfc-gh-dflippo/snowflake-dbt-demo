@@ -141,7 +141,7 @@ order to avoid collisions between their usages.
 
 Finally, all the options for the bulk insert are being mapped to file format options if apply. If
 the option is not supported in Snowflake, it will be commented and a warning will be added. See also
-[SSC-FDM-TS0004](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM.html#ssc-fdm-ts0004).
+[SSC-FDM-TS0004](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM#ssc-fdm-ts0004).
 
 #### Supported bulk options[¶](#supported-bulk-options)
 
@@ -156,7 +156,7 @@ the option is not supported in Snowflake, it will be commented and a warning wil
 
 ### Related EWIs[¶](#related-ewis)
 
-1. [SSC-FDM-TS0004](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM.html#ssc-fdm-ts0004):
+1. [SSC-FDM-TS0004](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM#ssc-fdm-ts0004):
    PUT STATEMENT IS NOT SUPPORTED ON WEB UI.
 
 ## Common Table Expression (CTE)[¶](#common-table-expression-cte)
@@ -533,10 +533,10 @@ No issues were found.
 
 ### Related EWIs[¶](#id9)
 
-1. [SSC-EWI-0108](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0108):
+1. [SSC-EWI-0108](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0108):
    The following subquery matches at least one of the patterns considered invalid and may produce
    compilation errors.
-2. [SSC-PRF-TS0001](../../general/technical-documentation/issues-and-troubleshooting/performance-review/sqlServerPRF.html#ssc-prf-ts0001):
+2. [SSC-PRF-TS0001](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/performance-review/sqlServerPRF#ssc-prf-ts0001):
    Performance warning - recursion for CTE not checked. Might require a recursive keyword.
 
 ## DELETE[¶](#delete)
@@ -1020,7 +1020,7 @@ WHERE
 
 ### Related EWIs[¶](#id36)
 
-1. [SSC-EWI-TS0081](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/sqlServerEWI.html#ssc-ewi-ts0081):
+1. [SSC-EWI-TS0081](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/sqlServerEWI#ssc-ewi-ts0081):
    Using a full join in a delete statement is not supported
 
 ## DROP STATEMENT[¶](#drop-statement)
@@ -1456,9 +1456,9 @@ INSERT INTO exampleTable DEFAULT VALUES;
 
 ### Related EWIs[¶](#id61)
 
-1. [SSC-EWI-0073](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0073):
+1. [SSC-EWI-0073](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0073):
    Pending Functional Equivalence Review.
-2. [SSC-FDM-TS0026](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM.html#ssc-fdm-ts0026):
+2. [SSC-FDM-TS0026](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM#ssc-fdm-ts0026):
    DELETE case is not being considered.
 
 ## MERGE[¶](#merge)
@@ -1540,7 +1540,7 @@ WHEN MATCHED AND pi.Quantity - src.OrderQty >= 0 THEN
 
 ### Related EWIs[¶](#id67)
 
-1. [SSC-EWI-0021](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0021):
+1. [SSC-EWI-0021](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0021):
    Syntax not supported in Snowflake.
 
 ## SELECT[¶](#select)
@@ -1790,9 +1790,9 @@ ATable;
 
 ### Related EWIs[¶](#id86)
 
-1. [SSC-EWI-0040](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0040):
+1. [SSC-EWI-0040](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0040):
    Statement Not Supported.
-2. [SSC-FDM-TS0016](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM.html#ssc-fdm-ts0016):
+2. [SSC-FDM-TS0016](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM#ssc-fdm-ts0016):
    XML columns in Snowflake might have a different format
 
 ## SET OPERATORS[¶](#set-operators)
@@ -2082,7 +2082,7 @@ Col1 = 5;
 
 ### Related EWIs[¶](#id103)
 
-1. [SSC-EWI-0021](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0021):
+1. [SSC-EWI-0021](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0021):
    Syntax not supported in Snowflake.
 
 ## UPDATE WITH JOIN[¶](#update-with-join)

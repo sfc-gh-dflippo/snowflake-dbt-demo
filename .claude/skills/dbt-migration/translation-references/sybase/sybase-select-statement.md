@@ -608,29 +608,29 @@ MyTable
 
 ## Related EWIs[¶](#related-ewis)
 
-[SSC-FDM-0009](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0009):
+[SSC-FDM-0009](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0009):
 GLOBAL TEMPORARY TABLE FUNCTIONALITY NOT SUPPORTED.
 
-[SSC-FDM-SY0001](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/sybaseFDM.html#ssc-fdm-sy0001):
+[SSC-FDM-SY0001](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/sybaseFDM#ssc-fdm-sy0001):
 CALLING STORED PROCEDURE IN FROM CLAUSE MIGHT HAVE COMPILATION ERRORS
 
-[SSC-FDM-SY0002](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/sybaseFDM.html#ssc-fdm-sy0002):
+[SSC-FDM-SY0002](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/sybaseFDM#ssc-fdm-sy0002):
 FORCE INDEX IS NOT SUPPORTED IN SNOWFLAKE
 
-[SSC-EWI-SY0004](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/sybaseEWI.html#ssc-ewi-sy0004) -
+[SSC-EWI-SY0004](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/sybaseEWI#ssc-ewi-sy0004) -
 UNSUPPORTED SYNTAX TABLE FUNCTION CAN’T RECEIVE A QUERY AS PARAMETER
 
-[SSC-EWI-SY0005](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/sybaseEWI.html#ssc-ewi-sy0005) -
+[SSC-EWI-SY0005](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/sybaseEWI#ssc-ewi-sy0005) -
 UNSUPPORTED SYNTAX TABLE FUNCTION CAN’T BE USED WITH OVER EXPRESSION
 
-[SSC-EWI-SY0006](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/sybaseEWI.html#ssc-ewi-sy0006) -
+[SSC-EWI-SY0006](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/sybaseEWI#ssc-ewi-sy0006) -
 OPEN STRING IS NOT SUPPORTED IN SNOWFLAKE
 
-[SSC-EWI-SY0007](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/sybaseEWI.html#ssc-ewi-sy0007) -
+[SSC-EWI-SY0007](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/sybaseEWI#ssc-ewi-sy0007) -
 DML DERIVED TABLE NOT SUPPORTED IN SNOWFLAKE
 
-[SSC-EWI-SY0008](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/sybaseEWI.html#ssc-ewi-sy0008) -
+[SSC-EWI-SY0008](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/sybaseEWI#ssc-ewi-sy0008) -
 CONTAINS CLAUSE NOT SUPPORTED IN SNOWFLAKE
 
-[SSC-EWI-SY0009](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/sybaseEWI.html#ssc-ewi-sy0003) -
+[SSC-EWI-SY0009](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/sybaseEWI#ssc-ewi-sy0003) -
 KEY JOIN NOT SUPPORTED IN SNOWFLAKE

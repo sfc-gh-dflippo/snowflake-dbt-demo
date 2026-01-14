@@ -166,7 +166,7 @@ Snowflake.
 
 ### Related EWIs[¶](#id8)
 
-- [SSC-EWI-RS0007](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/redshiftEWI.html#ssc-ewi-rs0008):
+- [SSC-EWI-RS0007](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/redshiftEWI#ssc-ewi-rs0008):
   Date literal is not supported in Snowflake.
 
 ## Interval Literals[¶](#interval-literals)
@@ -337,9 +337,9 @@ No issues were found.
 
 ### Related EWIs[¶](#id19)
 
-1. [SSC-EWI-0107](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0107):
+1. [SSC-EWI-0107](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0107):
    Interval Literal Not Supported In Current Scenario.
-2. [SSC-EWI-0073](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0073):
+2. [SSC-EWI-0073](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0073):
    Pending Functional Equivalence Review.
 
 ## NULLS[¶](#nulls)

@@ -18,8 +18,8 @@ the inner logic.
 Simple UDFs, matches the SQL Server syntax with Snowflake syntax. This type doesn’t add any logic
 and goes straightforward to the result. These are usually match to Snowflake’s SQL UDFs. SnowConvert
 supports translating SQL Server Scalar User Defined Functions directly to
-[Snowflake Scripting UDFs](../../../../developer-guide/udf/sql/udf-sql-procedural-functions) when
-they meet specific criteria.
+[Snowflake Scripting UDFs](https://docs.snowflake.com/en/migrations/snowconvert-docs/developer-guide/udf/sql/udf-sql-procedural-functions)
+when they meet specific criteria.
 
 Complex UDFs, makes extensive use of a particular statements
 ([INSERT](https://docs.microsoft.com/en-us/sql/t-sql/statements/insert-transact-sql?view=sql-server-ver15),
@@ -596,11 +596,11 @@ No issues were found
 
 ### Related EWIs[¶](#related-ewis)
 
-1. [SSC-FDM-TS0012](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM.html#ssc-fdm-ts0012):
+1. [SSC-FDM-TS0012](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM#ssc-fdm-ts0012):
    Information for the expression was not found. CAST to STRING used
-2. [SSC-PRF-TS0001](../../general/technical-documentation/issues-and-troubleshooting/performance-review/sqlServerPRF.html#ssc-prf-ts0001):
+2. [SSC-PRF-TS0001](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/performance-review/sqlServerPRF#ssc-prf-ts0001):
    Performance warning - recursion for CTE not checked. Might require a recursive keyword.
-3. [SSC-EWI-0073](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0073):
+3. [SSC-EWI-0073](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0073):
    Pending Functional Equivalence Review
 
 ## MULTI-STATEMENT TABLE-VALUED[¶](#multi-statement-table-valued)
@@ -1585,9 +1585,9 @@ CALL product_history();
 
 ### Related EWIs[¶](#id72)
 
-1. [SSC-EWI-0040](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0040):
+1. [SSC-EWI-0040](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0040):
    Statement Not Supported.
-2. [SSC-EWI-0073](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0073):
+2. [SSC-EWI-0073](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0073):
    Pending Functional Equivalence Review
 
 ## SCALAR[¶](#scalar)
@@ -1923,7 +1923,7 @@ variable.
 
 This is all aggravated by nesting and complex querying that can be found on input code. That’s why a
 specific
-[EWI](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0068)
+[EWI](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0068)
 is added when these patterns are found.
 
 In the following scenario, the first `IF` statement can be transformed without problems, because the
@@ -2621,7 +2621,7 @@ end
 
 GO
 
-SELECT PURCHASING.[getCleanChargeCode]('16test') AS CleanChargeCode;
+SELECT PURCHASING.[getCleanChargeCode](https://docs.snowflake.com/en/migrations/snowconvert-docs/translation-references/transact/'16test') AS CleanChargeCode;
 ```
 
 ##### Result 1[¶](#result-1)
@@ -2934,17 +2934,17 @@ For the described scenarios above, consider the following limitations:
 
 ### Related EWIs[¶](#id138)
 
-1. [SSC-EWI-0067](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0067):
+1. [SSC-EWI-0067](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0067):
    UDF was transformed to Snowflake procedure, calling procedures inside a query is not supported.
-2. [SSC-EWI-0068](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0068):
+2. [SSC-EWI-0068](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0068):
    User defined function was transformed to a Snowflake procedure.
-3. [SSC-EWI-0073](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0073):
+3. [SSC-EWI-0073](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0073):
    Pending Functional Equivalence Review.
 
 ## Snowflake Script UDF (SCALAR)[¶](#snowflake-script-udf-scalar)
 
 Translation reference for SQL Server Scalar User Defined Functions to
-[Snowflake Scripting UDFs](../../../../developer-guide/udf/sql/udf-sql-procedural-functions)
+[Snowflake Scripting UDFs](https://docs.snowflake.com/en/migrations/snowconvert-docs/developer-guide/udf/sql/udf-sql-procedural-functions)
 
 Applies to
 
@@ -3426,9 +3426,9 @@ as these features are unsupported in SnowScripting UDFs:**
 
 ### Related EWIs[¶](#id165)
 
-1. [SSC-EWI-0067](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0067):
+1. [SSC-EWI-0067](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0067):
    UDF was transformed to Snowflake procedure, calling procedures inside a query is not supported.
-2. [SSC-EWI-0068](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0068):
+2. [SSC-EWI-0068](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0068):
    User defined function was transformed to a Snowflake procedure.
-3. [SSC-EWI-0073](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0073):
+3. [SSC-EWI-0073](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0073):
    Pending Functional Equivalence Review.

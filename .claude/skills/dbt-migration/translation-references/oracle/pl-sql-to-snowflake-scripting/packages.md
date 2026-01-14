@@ -76,7 +76,7 @@ No issues were found.
 
 ### Related EWIs[¶](#related-ewis)
 
-1. [SSC-FDM-OR0035](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM.html#ssc-fdm-or0035):
+1. [SSC-FDM-OR0035](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM#ssc-fdm-or0035):
    DBMS_OUTPUT.PUTLINE check UDF implementation.
 
 ## Constants[¶](#constants)
@@ -185,7 +185,7 @@ No issues were found.
 
 ### Related EWIs[¶](#id11)
 
-1. [SSC-FDM-0006](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0006):
+1. [SSC-FDM-0006](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0006):
    Number type column may not behave similarly in Snowflake.
 
 ## DECLARATION[¶](#declaration)
@@ -549,5 +549,5 @@ No issues were found.
 
 ### Related EWIs[¶](#id38)
 
-1. [SSC-FDM-0006](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0006):
+1. [SSC-FDM-0006](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0006):
    Number type column may not behave similarly in Snowflake.

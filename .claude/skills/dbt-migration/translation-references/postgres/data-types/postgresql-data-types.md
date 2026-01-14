@@ -45,7 +45,7 @@ appropriate/suitable locations.
 |CHAR|CHAR|
 |CHARACTER|CHARACTER _Note:_ Snowflake’s CHARACTER is an alias for VARCHAR.|
 |NCHAR|NCHAR|
-|BPCHAR|VARCHAR _Note: BPCHAR data type is **not supported** in Snowflake. VARCHAR is used instead. For more information please refer to_ [_SSC-FDM-PG0002_](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/postgresqlFDM.md#ssc-fdm-pg0002)_._|
+|BPCHAR|VARCHAR _Note: BPCHAR data type is **not supported** in Snowflake. VARCHAR is used instead. For more information please refer to_ [_SSC-FDM-PG0002_](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/postgresqlFDM.md#ssc-fdm-pg0002)_._|
 |CHARACTER VARYING|CHARACTER VARYING|
 |NATIONAL CHARACTER|NCHAR|
 |NATIONAL CHARACTER VARYING|NCHAR VARYING|
@@ -82,42 +82,42 @@ appropriate/suitable locations.
 |---|---|
 |DATE|DATE|
 |TIME|TIME|
-|TIME WITH TIME ZONE|TIME _Note: Time zone not supported for time data type. For more information, please refer to_ [_SSC-FDM-0005_](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.md#ssc-fdm-0005)_._|
+|TIME WITH TIME ZONE|TIME _Note: Time zone not supported for time data type. For more information, please refer to_ [_SSC-FDM-0005_](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.md#ssc-fdm-0005)_._|
 |TIME WITHOUT TIME ZONE|TIME|
 |TIMESTAMP|TIMESTAMP|
 |TIMESTAMPTZ|TIMESTAMP_TZ|
 |TIMESTAMP WITH TIME ZONE|TIMESTAMP_TZ|
 |TIMESTAMP WITHOUT TIME ZONE|TIMESTAMP_NTZ|
-|INTERVAL YEAR TO MONTH|VARCHAR _Note: Data type is **not supported** in Snowflake. VARCHAR is used instead. For more information please refer to_ [_SSC-EWI-0036_](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.md#ssc-ewi-0036)_._|
-|INTERVAL DAY TO SECOND|VARCHAR _Note: Data type is **not supported** in Snowflake. VARCHAR is used instead. For more information please refer to_ [_SSC-EWI-0036_](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.md#ssc-ewi-0036)_._|
+|INTERVAL YEAR TO MONTH|VARCHAR _Note: Data type is **not supported** in Snowflake. VARCHAR is used instead. For more information please refer to_ [_SSC-EWI-0036_](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.md#ssc-ewi-0036)_._|
+|INTERVAL DAY TO SECOND|VARCHAR _Note: Data type is **not supported** in Snowflake. VARCHAR is used instead. For more information please refer to_ [_SSC-EWI-0036_](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.md#ssc-ewi-0036)_._|
 
 ## Pseudo Types[¶](#pseudo-types)
 
 <!-- prettier-ignore -->
 |PostgreSQL|Snowflake|
 |---|---|
-|UNKNOWN|TEXT _Note: Data type is **not supported** in Snowflake. TEXT is used instead. For more information please refer to_ [_SSC-EWI-0036_](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.md#ssc-ewi-0036)_._|
+|UNKNOWN|TEXT _Note: Data type is **not supported** in Snowflake. TEXT is used instead. For more information please refer to_ [_SSC-EWI-0036_](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.md#ssc-ewi-0036)_._|
 
 ## Array Types[¶](#array-types)
 
 <!-- prettier-ignore -->
 |PostgreSQL|Snowflake|
 |---|---|
-|type []|ARRAY _Note: Strongly typed array transformed to ARRAY without type checking. For more information please refer to_ [_SSC-FDM-PG0016_](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/postgresqlFDM.md#ssc-fdm-pg0016)_._|
+|type []|ARRAY _Note: Strongly typed array transformed to ARRAY without type checking. For more information please refer to_ [_SSC-FDM-PG0016_](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/postgresqlFDM.md#ssc-fdm-pg0016)_._|
 
 ## Related EWIs[¶](#related-ewis)
 
-1. [SSC-FDM-PG0002](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/postgresqlFDM.html#ssc-fdm-pg0002):
+1. [SSC-FDM-PG0002](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/postgresqlFDM#ssc-fdm-pg0002):
    Bpchar converted to varchar.
-2. [SSC-FDM-PG0003](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/postgresqlFDM.html#ssc-fdm-pg0003):
+2. [SSC-FDM-PG0003](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/postgresqlFDM#ssc-fdm-pg0003):
    Bytea Converted To Binary
-3. [SSC-FDM-PG0014](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/postgresqlFDM.html#ssc-fdm-pg0014):
+3. [SSC-FDM-PG0014](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/postgresqlFDM#ssc-fdm-pg0014):
    Unknown Pseudotype transformed to Text Type
-4. [SSC-FDM-0005](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0005):
+4. [SSC-FDM-0005](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0005):
    TIME ZONE not supported for time data type.
-5. [SSC-EWI-0036](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0036):
+5. [SSC-EWI-0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0036):
    Data type converted to another data type.
-6. [SSC-EWI-PG0016](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/postgresqlEWI.html#ssc-ewi-pg0016):
+6. [SSC-EWI-PG0016](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/postgresqlEWI#ssc-ewi-pg0016):
    Bit String Type converted to Varchar Type.
-7. [SSC-FDM-PG0016](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/postgresqlFDM.html#ssc-fdm-pg0016):
+7. [SSC-FDM-PG0016](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/postgresqlFDM#ssc-fdm-pg0016):
    _Strongly typed array transformed to ARRAY without type checking_.

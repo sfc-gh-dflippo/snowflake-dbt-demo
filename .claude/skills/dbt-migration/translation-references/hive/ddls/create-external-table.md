@@ -232,15 +232,15 @@ CREATE EXTERNAL TABLE IF NOT EXISTS hive_format_orders_Andres
 
 ## Related EWIs [¶](#related-ewis)
 
-1. [SSC-EWI-0029](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0029):
+1. [SSC-EWI-0029](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0029):
    External table data format not supported in Snowflake
-2. [SSC-EWI-0032](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0032):
+2. [SSC-EWI-0032](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0032):
    External table requires an external stage to access an external location, define and replace the
    EXTERNAL_STAGE placeholder
-3. [SSC-FDM-0034](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0034):
+3. [SSC-FDM-0034](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0034):
    The INFER_SCHEMA function requires a file path without wildcards to generate the table template,
    replace the FILE_PATH placeholder with it
-4. [SSC-EWI-0016](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0016):
+4. [SSC-EWI-0016](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0016):
    Snowflake does not support the options clause.
-5. [SSC-FDM-HV0001](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/hiveFDM.html#ssc-fdm-hv0001):
+5. [SSC-FDM-HV0001](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/hiveFDM#ssc-fdm-hv0001):
    Inserting values into an external table is not supported in Snowflake.

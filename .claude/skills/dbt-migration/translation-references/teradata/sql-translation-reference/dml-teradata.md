@@ -138,7 +138,7 @@ The INTERSECT ALL is unsupported in Snowflake and then the part ALL will be comm
 
 ### Related EWIs[¶](#id3)
 
-1. [SSC-EWI-0040](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0040):
+1. [SSC-EWI-0040](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0040):
    Statement Not Supported.
 
 ## Update Statement[¶](#update-statement)
@@ -256,7 +256,7 @@ reordered into the unreferenced CTEs, then the CTE that calls the next CTE, and 
 
 Where there is a cycle detected in the WITH calling sequence, it will be left as the original,
 without any changes to the sequence as detailed in an example of the
-[SSC-EWI-TD0077](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/teradataEWI.html#ssc-ewi-td0077).
+[SSC-EWI-TD0077](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/teradataEWI#ssc-ewi-td0077).
 
 In the example below, there are two CTEs named n1 and n2, the n1 referring to n2. Then the n2 must
 be defined first in Snowflake as the corresponding converted code.
@@ -1050,9 +1050,9 @@ EXPAND ON pd AS bg BY INTERVAL '1' SECOND;
 
 ### Related EWIs[¶](#id63)
 
-1. [SSC-EWI-0073](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0073):
+1. [SSC-EWI-0073](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0073):
    Pending Functional Equivalence Review.
-2. [SSC-EWI-TD0053](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/teradataEWI.html#ssc-ewi-td0053):
+2. [SSC-EWI-TD0053](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/teradataEWI#ssc-ewi-td0053):
    Snowflake does not support the period datatype, all periods are handled as varchar instead.
 
 ## Normalize[¶](#normalize)
@@ -1277,11 +1277,11 @@ table1;
 
 ### Related EWIs[¶](#id76)
 
-1. [SSC-EWI-0073](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0073):
+1. [SSC-EWI-0073](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0073):
    Pending Functional Equivalence Review.
-2. [SSC-EWI-TD0079](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/teradataEWI.html#ssc-ewi-td0079):
+2. [SSC-EWI-TD0079](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/teradataEWI#ssc-ewi-td0079):
    The required period type column was not found.
-3. [SSC-EWI-TD0053](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/teradataEWI.html#ssc-ewi-td0053):
+3. [SSC-EWI-TD0053](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/teradataEWI#ssc-ewi-td0053):
    Snowflake does not support the period datatype, all periods are handled as varchar instead.
 
 ## Reset When[¶](#reset-when)
@@ -1726,7 +1726,7 @@ ORDER BY 1,2;
 
 ### Related EWIs[¶](#id90)
 
-- [SSC-EWI-TD0077](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/teradataEWI.html#ssc-ewi-td0077):
+- [SSC-EWI-TD0077](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/teradataEWI#ssc-ewi-td0077):
   RESET WHEN clause is not supported in this scenario due to its condition.
 
 ## SAMPLE clause[¶](#sample-clause)
@@ -2014,5 +2014,5 @@ ELSE 0.1 END;
 
 ### Related EWIs[¶](#id98)
 
-[SSC-EWI-0021](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0021):
+[SSC-EWI-0021](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0021):
 Syntax not supported in Snowflake.

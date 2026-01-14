@@ -70,7 +70,7 @@ No issues were found.
 
 ### Related EWIs[¶](#related-ewis)
 
-1. [SSC-FDM-TD0013](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/teradataFDM.html#ssc-fdm-td0013):
+1. [SSC-FDM-TD0013](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/teradataFDM#ssc-fdm-td0013):
    The Snowflake error code mismatch the original Teradata error code.
 
 ## EXIT or QUIT[¶](#exit-or-quit)
@@ -119,7 +119,7 @@ SnowConvert AI transforms it to return 0.
 
 ### Related EWIS[¶](#id5)
 
-1. [SSC-FDM-TD0013](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/teradataFDM.html#ssc-fdm-td0013):
+1. [SSC-FDM-TD0013](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/teradataFDM#ssc-fdm-td0013):
    The Snowflake error code mismatch the original Teradata error code.
 
 ## GOTO[¶](#goto)
@@ -252,13 +252,13 @@ No issues were found.
 
 ### Related EWIS[¶](#id9)
 
-1. [SSC-EWI-0001](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0001):
+1. [SSC-EWI-0001](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0001):
    Unrecognized token on the line of the source code.
-2. [SSC-FDM-0027](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0027):
+2. [SSC-FDM-0027](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0027):
    Removed next statement, not applicable in SnowFlake.
-3. [SSC-EWI-0073](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0073):
+3. [SSC-EWI-0073](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0073):
    Pending Functional Equivalence Review
-4. [SSC-FDM-TD0026](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/teradataFDM.html#ssc-fdm-td0026):
+4. [SSC-FDM-TD0026](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/teradataFDM#ssc-fdm-td0026):
    GOTO statement was removed due to if statement inversion.
 
 ## IF… THEN…[¶](#if-then)

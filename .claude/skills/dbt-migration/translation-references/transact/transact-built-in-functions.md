@@ -380,11 +380,11 @@ title: SnowConvert AI - SQL Server-Azure Synapse - Built-in functions | Snowflak
 |CURRENT_REQUEST_ID|_\*to be defined_||
 |CURRENT_TRANSACTION_ID|_\*to be defined_||
 |DECOMPRESS|_\*to be defined_|Snowflake has two functions for these: **DECOMPRESS_BINARY** and **DECOMPRESS_STRING**​|
-|ERROR_LINE|_\*to be defined_|SnowScript: Not supported in Snowflake with **[SSC-EWI-0040](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI)**. JavaScript: Will map to **ERROR_LINE** helper. EXEC helper will capture the Exception line property from the stack trace.|
+|ERROR_LINE|_\*to be defined_|SnowScript: Not supported in Snowflake with **[SSC-EWI-0040](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI)**. JavaScript: Will map to **ERROR_LINE** helper. EXEC helper will capture the Exception line property from the stack trace.|
 |ERROR_MESSAGE|SQLERRM|Added **SSC-FDM-TS0023** returned error message could be different in Snowflake.|
-|ERROR_NUMBER|_\*to be defined_|SnowScript: Not supported in Snowflake with **[SSC-EWI-0040](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI)**. JavaScript: Will map to **ERROR_NUMBER** helper. EXEC helper will capture the Exception code property.|
+|ERROR_NUMBER|_\*to be defined_|SnowScript: Not supported in Snowflake with **[SSC-EWI-0040](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI)**. JavaScript: Will map to **ERROR_NUMBER** helper. EXEC helper will capture the Exception code property.|
 |ERROR_PROCEDURE|_Mapped_|SnowScript: Use current procedure name, added **SSC-FDM-TS0023** result value is based on the stored procedure where the function is called instead of where the exception occurs. JavaScript: Will map to **ERROR_PROCEDURE** helper, taken from the `arguments.callee.name` procedure property|
-|ERROR_SEVERITY|_\*to be defined_|SnowScript: Not supported in Snowflake with **[SSC-EWI-0040](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI)**.|
+|ERROR_SEVERITY|_\*to be defined_|SnowScript: Not supported in Snowflake with **[SSC-EWI-0040](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI)**.|
 |ERROR_STATE|SQLSTATE|SnowScript: Converted to **SQLSTATE** snowflake property, added **SSC-FDM-TS0023** returned value could be different in Snowflake. JavaScript: Helper will capture Exception state property|
 |FORMATMESSAGE|FORMATEMESSAGE_UDF|It creates a UDF to emulate the same behavior of FORMATMESSAGE function but with some limitations.|
 |GET_FILESTREAM_TRANSACTION_CONTEXT|_\*to be defined_||
@@ -783,7 +783,7 @@ FORMATMESSAGE_UDF('This is the %s and this is the %s.', ARRAY_CONSTRUCT('first v
 
 ### Related EWIs[¶](#related-ewis)
 
-1. [SSC-FDM-TS0008](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM.html#ssc-fdm-ts0008):
+1. [SSC-FDM-TS0008](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM#ssc-fdm-ts0008):
    FORMATMESSAGE function was converted to UDF.
 
 ## FORMATMESSAGE_UDF[¶](#formatmessage-udf)
@@ -3720,7 +3720,7 @@ BUSINESSENTITYID|NATIONALIDNUMBER|DENSE_RANK|
 
 #### Related EWIs[¶](#id381)
 
-- [SSC-EWI-0001](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0001):
+- [SSC-EWI-0001](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0001):
   Unrecognized token on the line of the source code.
 
 ## RANK[¶](#rank)
@@ -3811,7 +3811,7 @@ BUSINESSENTITYID|NATIONALIDNUMBER|RANK|
 
 #### Related EWIs[¶](#id390)
 
-- [SSC-EWI-0001](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0001):
+- [SSC-EWI-0001](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0001):
   Unrecognized token on the line of the source code.
 
 ## ROW_NUMBER[¶](#row-number)
@@ -3921,7 +3921,7 @@ RowNumber|NAME                      |
 
 #### Related EWIs[¶](#id399)
 
-- [SSC-EWI-0001](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0001):
+- [SSC-EWI-0001](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0001):
   Unrecognized token on the line of the source code.
 
 ## Logical functions[¶](#logical-functions)
@@ -4113,7 +4113,7 @@ No issues were found.
 
 ### Related EWIs[¶](#id414)
 
-1. [SSC-EWI-0036](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0036):
+1. [SSC-EWI-0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0036):
    Data type converted to another data type.
 
 ## Value[¶](#value)
@@ -4237,7 +4237,7 @@ No issues were found.
 
 ### Related EWIs[¶](#id424)
 
-1. [SSC-EWI-0036](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0036):
+1. [SSC-EWI-0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0036):
    Data type converted to another data type.
 
 ## Aggregate functions[¶](#aggregate-functions)
@@ -4661,7 +4661,7 @@ No issues were found.
 
 ### Related EWIs[¶](#id459)
 
-1. [SSC-EWI-TS0075](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/sqlServerEWI.html#ssc-ewi-ts0075):
+1. [SSC-EWI-TS0075](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/sqlServerEWI#ssc-ewi-ts0075):
    Built In Procedure Not Supported.
 
 ## STR UDF[¶](#str-udf)
@@ -4921,7 +4921,7 @@ current database name.
 
 ### Related EWIs[¶](#id486)
 
-1. [SSC-FDM-TS0010](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM.html#ssc-fdm-ts0010):
+1. [SSC-FDM-TS0010](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM#ssc-fdm-ts0010):
    CURRENT_DATABASE function has different behavior in certain cases.
 
 ## OBJECT_ID[¶](#object-id)
@@ -5013,9 +5013,9 @@ that they are equivalent only when OBJECT_ID is used with not null condition.
 
 ### Related EWIs[¶](#id496)
 
-- [SSC-EWI-0001](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0001):
+- [SSC-EWI-0001](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0001):
   Unrecognized token on the line of the source code.
-- [SSC-FDM-0007](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0007):
+- [SSC-FDM-0007](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0007):
   Element with missing dependencies
 
 ## Analytic Functions[¶](#analytic-functions)
@@ -7690,7 +7690,7 @@ Let’s execute each one and compare the result.
 
 ### Related EWIs[¶](#id837)
 
-1. [SSC-FDM-TS0005](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM.html#ssc-fdm-ts0005):
+1. [SSC-FDM-TS0005](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM#ssc-fdm-ts0005):
    TRY_CONVERT/TRY_CAST could not be converted to TRY_CAST.
 
 ## Date & Time functions[¶](#date-time-functions)
@@ -7820,9 +7820,9 @@ CURRENT_TIMESTAMP() at time zone 'Turks And Caicos Standard Time';
 
 ### Related EWIs[¶](#id851)
 
-1. [SSC-FDM-TS0024](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM.html#ssc-fdm-ts0024):
+1. [SSC-FDM-TS0024](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM#ssc-fdm-ts0024):
    CURRENT_TIMESTAMP in At Time Zone statement may have a different behavior in certain cases.
-2. [SSC-EWI-TS0063](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/sqlServerEWI.html#ssc-ewi-ts0063):
+2. [SSC-EWI-TS0063](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/sqlServerEWI#ssc-ewi-ts0063):
    Time zone not supported in Snowflake.
 
 ## DATEADD[¶](#dateadd)

@@ -33,7 +33,7 @@ title: SnowConvert AI - Redshift - Data types | Snowflake Documentation
 |CHAR|CHAR|Snowflake’s CHAR is an alias for VARCHAR.|
 |CHARACTER|CHARACTER|Snowflake’s CHARACTER is an alias for VARCHAR.|
 |NCHAR|NCHAR|Snowflake’s NCHAR is an alias for VARCHAR.|
-|BPCHAR|VARCHAR|BPCHAR data type is **not supported** in Snowflake. VARCHAR is used instead. For more information please refer to [SSC-FDM-PG0002](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/postgresqlFDM.html#ssc-fdm-pg0002).|
+|BPCHAR|VARCHAR|BPCHAR data type is **not supported** in Snowflake. VARCHAR is used instead. For more information please refer to [SSC-FDM-PG0002](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/postgresqlFDM#ssc-fdm-pg0002).|
 |NVARCHAR|NVARCHAR|Snowflake’s NVARCHAR is an alias for VARCHAR.|
 |CHARACTER VARYING|CHARACTER VARYING|Snowflake’s CHARACTER VARYING is an alias for VARCHAR.|
 |NATIONAL CHARACTER|NCHAR|Snowflake’s NCHAR is an alias for VARCHAR.|
@@ -77,8 +77,8 @@ it is 8 MB (8,388,608 bytes). Please consider this reduction in the maximum leng
 |---|---|---|
 |DATE|DATE|DATE accepts dates in the most common forms (`YYYY-MM-DD`, `DD-MON-YYYY`, etc.)|
 |TIME|TIME|Storing times in the form of `HH:MI:SS`. Time precision can range from 0 (seconds) to 9 (nanoseconds). The default precision is 9.|
-|TIMETZ|TIME|Time zone not supported for time data type. For more information please refer to [SSC-FDM-0005](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0005).|
-|TIME WITH TIME ZONE|TIME|Time zone not supported for time data type. For more information please refer to [SSC-FDM-0005](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0005).|
+|TIMETZ|TIME|Time zone not supported for time data type. For more information please refer to [SSC-FDM-0005](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0005).|
+|TIME WITH TIME ZONE|TIME|Time zone not supported for time data type. For more information please refer to [SSC-FDM-0005](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0005).|
 |TIME WITHOUT TIME ZONE|TIME|Snowflake supports a single TIME data type for storing times in the form of `HH:MI:SS`.|
 |TIMESTAMP|TIMESTAMP|Timestamp precision can range from 0 (seconds) to 9 (nanoseconds).|
 |TIMESTAMPTZ|TIMESTAMP_TZ|TIMESTAMP*TZ internally stores UTC time together with an associated \_time zone offset*.|
@@ -94,18 +94,18 @@ it is 8 MB (8,388,608 bytes). Please consider this reduction in the maximum leng
 |---|---|---|
 |GEOMETRY|GEOMETRY|The coordinates are represented as pairs of real numbers (x, y). Currently, only 2D coordinates are supported.|
 |GEOGRAPHY|GEOGRAPHY|The GEOGRAPHY data type follows the WGS 84 standard.|
-|HLLSKETCH|N/A|Data type not supported in Snowflake. For more information please refer to [SSC-EWI-RS0004](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/redshiftEWI.html#ssc-ewi-rs0004).|
+|HLLSKETCH|N/A|Data type not supported in Snowflake. For more information please refer to [SSC-EWI-RS0004](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/redshiftEWI#ssc-ewi-rs0004).|
 |SUPER|VARIANT|Can contain a value of any other data type, including OBJECT and ARRAY values.|
 
 ## Related EWIs[¶](#related-ewis)
 
-1. [SSC-FDM-PG0002](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/postgresqlFDM.html#ssc-fdm-pg0002):
+1. [SSC-FDM-PG0002](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/postgresqlFDM#ssc-fdm-pg0002):
    Bpchar converted to varchar.
-2. [SSC-FDM-0005](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0005):
+2. [SSC-FDM-0005](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0005):
    TIME ZONE not supported for time data type.
-3. [SSC-EWI-0036](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0036):
+3. [SSC-EWI-0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0036):
    Data type converted to another data type.
-4. [SSC-EWI-RS0004](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/redshiftEWI.html#ssc-ewi-rs0004):
+4. [SSC-EWI-RS0004](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/redshiftEWI#ssc-ewi-rs0004):
    HLLSKETCH data type not supported in Snowflake.
 
 ## INTERVAL DAY TO SECOND Data Type[¶](#interval-day-to-second-data-type)
@@ -227,7 +227,7 @@ are supported, every other scenario is not supported.
 
 ### Related EWIs[¶](#id6)
 
-1. [SSC-EWI-0036](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0036):
+1. [SSC-EWI-0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0036):
    Data type converted to another data type.
 
 ## INTERVAL YEAR TO MONTH Data Type[¶](#interval-year-to-month-data-type)
@@ -352,7 +352,7 @@ are supported, every other scenario is not supported.
 
 ### Related EWIs[¶](#id22)
 
-- [SSC-EWI-0036](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0036):
+- [SSC-EWI-0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0036):
   Data type converted to another data type.
 
 ## Numeric Format Models[¶](#numeric-format-models)
@@ -546,5 +546,5 @@ Example
 
 ### Related EWIs[¶](#id44)
 
-- [SSC-EWI-0006](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0006):
+- [SSC-EWI-0006](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0006):
   The current date/numeric format may have a different behavior in Snowflake.

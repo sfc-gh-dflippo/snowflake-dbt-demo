@@ -181,9 +181,9 @@ for Oracle built-in packages is not supported by SnowConvert AI yet.
 
 ### Related EWIs[¶](#related-ewis)
 
-1. [SSC-FDM-0006](../../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0006):
+1. [SSC-FDM-0006](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0006):
    Number type column may not behave similarly in Snowflake.
-2. [SSC-EWI-0073](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0073):
+2. [SSC-EWI-0073](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0073):
    Pending Functional Equivalence Review.
 
 ## ANYDATASET[¶](#anydataset)
@@ -307,11 +307,11 @@ transformation for Oracle built-in packages is not supported by SnowConvert AI y
 
 ### Related EWIs[¶](#id14)
 
-1. [SSC-EWI-OR0076](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0076):
+1. [SSC-EWI-OR0076](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0076):
    Built In Package Not Supported.
-2. [SSC-FDM-0006:](../../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0006)
+2. [SSC-FDM-0006:](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0006)
    Number type column may not behave similarly in Snowflake
-3. [SSC-EWI-0028](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0028):
+3. [SSC-EWI-0028](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0028):
    Type not supported by Snowflake.
 
 ## ANYTYPE[¶](#anytype)
@@ -397,11 +397,11 @@ for Oracle built-in packages is not supported by SnowConvert AI yet.
 
 ### Related EWIs[¶](#id22)
 
-1. [SSC-EWI-0056](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0056):
+1. [SSC-EWI-0056](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0056):
    Create Type Not Supported.
-2. [SSC-EWI-0073](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0073):
+2. [SSC-EWI-0073](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0073):
    Pending Functional Equivalence Review.
-3. [SSC-EWI-0028](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0028):
+3. [SSC-EWI-0028](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0028):
    Type not supported in Snowflake.
-4. [SSC-FDM-0006](../../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0006):
+4. [SSC-FDM-0006](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0006):
    Number type column may not behave similarly in Snowflake.

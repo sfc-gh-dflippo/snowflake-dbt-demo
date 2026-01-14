@@ -130,7 +130,7 @@ CALL call_sp_calculate_sum_product();
 
 ### Related EWIs.[¶](#related-ewis)
 
-1. [SSC-EWI-0073](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0073):
+1. [SSC-EWI-0073](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0073):
    Pending Functional Equivalence Review
 
 ## CREATE DATABASE[¶](#create-database)
@@ -327,7 +327,7 @@ The transformation for Isolation Level is planned to be delivered in the future.
 
 ### Related EWIs[¶](#id35)
 
-- [SSC-EWI-0073](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0073):
+- [SSC-EWI-0073](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0073):
   Pending Functional Equivalence Review
 
 ## CREATE EXTERNAL TABLE[¶](#create-external-table)
@@ -444,7 +444,7 @@ local_table;
 
 ### Related EWIs[¶](#id47)
 
-1. [SSC-FDM-0004](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0004):
+1. [SSC-FDM-0004](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0004):
    External table translated to regular table
 
 ## CREATE MATERIALIZED VIEW[¶](#create-materialized-view)
@@ -517,7 +517,7 @@ Dynamic Table
 
 ### Related Ewis[¶](#id55)
 
-- [SSC-FDM-0031](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0031):
+- [SSC-FDM-0031](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0031):
   Dynamic Table required parameters set by default
 
 ## CREATE SCHEMA[¶](#create-schema)
@@ -840,7 +840,7 @@ implemented to cover this case.
 
 ### Related EWIs[¶](#id94)
 
-- [SSC-EWI-RS0003](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/redshiftEWI.html#ssc-ewi-rs0003):
+- [SSC-EWI-RS0003](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/redshiftEWI#ssc-ewi-rs0003):
   With no schema binding statement is not supported in Snowflake.
 
 ## DELETE[¶](#delete)
@@ -1269,9 +1269,9 @@ WHERE id = 2;
 
 ### Related EWIs[¶](#id133)
 
-1. [SSC-FDM-0031](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0031):
+1. [SSC-FDM-0031](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0031):
    Dynamic Table required parameters set by default.
-2. [SSC-EWI-RS0008](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/redshiftEWI.html#ssc-ewi-rs0008):
+2. [SSC-EWI-RS0008](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/redshiftEWI#ssc-ewi-rs0008):
    Delete statement cannot be used on dynamic tables.
 
 ## EXECUTE[¶](#execute)
@@ -1461,9 +1461,9 @@ to run so please take this into account:
 
 ### Related EWIs[¶](#id152)
 
-1. [SSC-EWI-0027](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0027):
+1. [SSC-EWI-0027](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0027):
    Variable with invalid query.
-2. [SSC-EWI-0030](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0030):
+2. [SSC-EWI-0030](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0030):
    The statement below has usages of dynamic SQL.
 
 ## INSERT[¶](#insert)
@@ -1804,9 +1804,9 @@ There are no known issues.
 
 ### Related EWIs[¶](#id188)
 
-1. [SSC-EWI-RS0009](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/redshiftEWI.html#ssc-ewi-rs0009):
+1. [SSC-EWI-RS0009](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/redshiftEWI#ssc-ewi-rs0009):
    Semantic information not found for the source table.
-2. [SSC-FDM-RS0005](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/redshiftFDM.html#ssc-fdm-rs0005):
+2. [SSC-FDM-RS0005](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/redshiftFDM#ssc-fdm-rs0005):
    Duplicates not allowed in source table.
 
 ## UPDATE[¶](#update)

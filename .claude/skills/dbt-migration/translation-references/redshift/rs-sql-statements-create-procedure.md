@@ -260,9 +260,9 @@ There are no known issues.
 
 ### Related EWIs[¶](#id17)
 
-1. [SCC-EWI-0028](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0028)
+1. [SCC-EWI-0028](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0028)
    : Type not supported by Snowflake.
-2. [SSC-EWI-RS0010](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/redshiftEWI.html#ssc-ewi-rs0010):
+2. [SSC-EWI-RS0010](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/redshiftEWI#ssc-ewi-rs0010):
    Top-level procedure call with out parameters is not supported.
 
 ## PROCEDURE BODY[¶](#procedure-body)
@@ -602,7 +602,7 @@ There are no known issues.
 
 ### Related EWIs[¶](#id62)
 
-1. [SSC-EWI-0094](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0094):
+1. [SSC-EWI-0094](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0094):
    Label declaration not supported
 
 ## NONATOMIC[¶](#nonatomic)
@@ -1136,7 +1136,7 @@ No issues were found.
 
 ### Related EWIs[¶](#id120)
 
-1. [SSC-FDM-PG0012](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/postgresqlFDM.html#ssc-fdm-pg0012):
+1. [SSC-FDM-PG0012](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/postgresqlFDM#ssc-fdm-pg0012):
    NOT NULL constraint has been removed. Assigning NULL to this variable will no longer cause a
    failure.
 
@@ -1444,7 +1444,7 @@ There are no known issues.
 
 ### Related EWIs[¶](#id147)
 
-1. [SSC-FDM-RS0006](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/redshiftFDM.html#ssc-fdm-rs0006):
+1. [SSC-FDM-RS0006](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/redshiftFDM#ssc-fdm-rs0006):
    Called procedure contains usages of COMMIT/ROLLBACK, modifying the current transaction in child
    scopes is not supported in Snowflake.
 
@@ -1817,10 +1817,10 @@ There are no known issues.
 
 ### Related EWIs[¶](#id181)
 
-1. [SSC-FDM-RS0006](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/redshiftFDM.html#ssc-fdm-rs0006):
+1. [SSC-FDM-RS0006](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/redshiftFDM#ssc-fdm-rs0006):
    Called procedure contains usages of COMMIT/ROLLBACK, modifying the current transaction in child
    scopes is not supported in Snowflake.
-2. [SSC-FDM-RS0007](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/redshiftFDM.html#ssc-fdm-rs0007):
+2. [SSC-FDM-RS0007](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/redshiftFDM#ssc-fdm-rs0007):
    DDL statements perform an automatic COMMIT, ROLLBACK will not work as expected.
 
 ## TRUNCATE[¶](#truncate)
@@ -2119,7 +2119,7 @@ There are no known issues.
 
 ### Related EWIs[¶](#id207)
 
-1. [SSC-FDM-RS0006](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/redshiftFDM.html#ssc-fdm-rs0006):
+1. [SSC-FDM-RS0006](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/redshiftFDM#ssc-fdm-rs0006):
    Called procedure contains usages of COMMIT/ROLLBACK, modifying the current transaction in child
    scopes is not supported in Snowflake.
 
@@ -2704,7 +2704,7 @@ There are no known issues.
 
 ### Related EWIs.[¶](#id264)
 
-1. [SSC-EWI-PG0006](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/postgresqlEWI.html#ssc-ewi-pg0006):
+1. [SSC-EWI-PG0006](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/postgresqlEWI#ssc-ewi-pg0006):
    Reference a variable using the Label is not supported by Snowflake.
 
 ## LOOP[¶](#loop)
@@ -3060,7 +3060,7 @@ There are no known issues.
 
 ### Related EWIs[¶](#id306)
 
-1. [SSC-EWI-PG0015](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/postgresqlEWI.html#ssc-ewi-pg0015):
+1. [SSC-EWI-PG0015](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/postgresqlEWI#ssc-ewi-pg0015):
    Fetch cursor without target variables is not supported in Snowflake
 
 ## OPEN CURSOR[¶](#open-cursor)

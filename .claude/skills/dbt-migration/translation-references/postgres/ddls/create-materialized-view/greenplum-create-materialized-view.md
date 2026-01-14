@@ -93,5 +93,5 @@ storage, these options will be removed in the migration.
 
 ## Related EWIs[¶](#related-ewis)
 
-1. [SSC-FDM-GP0001](../../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/greenplumFDM.html#ssc-fdm-gp0001):
+1. [SSC-FDM-GP0001](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/greenplumFDM#ssc-fdm-gp0001):
    The performance of the CLUSTER BY may vary compared to the performance of Distributed By.

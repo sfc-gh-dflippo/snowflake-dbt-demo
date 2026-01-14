@@ -601,9 +601,9 @@ statement and Snowflake’s do not work as expected.
 
 ### Related EWIs[¶](#id20)
 
-1. [SSC-FDM-0006](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0006):
+1. [SSC-FDM-0006](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0006):
    Number type column may not behave similarly in Snowflake.
-2. [SSC-FDM-OR0018](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM.html#ssc-fdm-or0018):
+2. [SSC-FDM-OR0018](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM#ssc-fdm-or0018):
    Merge statement may not work as expected
 
 ## SELECT INTO Statement[¶](#select-into-statement)
@@ -931,7 +931,7 @@ used just after the RESULTSET’s query is executed. For further information che
 
 ### Related EWIs[¶](#id41)
 
-1. [SSC-EWI-0036](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0036):
+1. [SSC-EWI-0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0036):
    Data type converted to another data type.
-2. [SSC-EWI-0056](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0056):
+2. [SSC-EWI-0056](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0056):
    Create Type Not Supported.

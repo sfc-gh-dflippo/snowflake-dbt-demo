@@ -99,7 +99,7 @@ No known errors detected at this time.
 
 ### Related EWIs[¶](#related-ewis)
 
-1. [SSC-FDM-0031](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0031):
+1. [SSC-FDM-0031](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0031):
    Dynamic Table required parameters set by default
 
 ## Schema[¶](#schema)
@@ -158,7 +158,7 @@ WITH ( PROPERTY1 = PROPERTYNAME, PROPERTY2 = PROPERTTYNAME, PROPERTY3 = PROPERTT
 
 ### Related EWIs[¶](#id4)
 
-1. [SSC-EWI-0073](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0073):
+1. [SSC-EWI-0073](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0073):
    Pending Functional Equivalence Review.
 
 ## Views[¶](#views)
@@ -322,9 +322,9 @@ In Snowflake, access to objects and elements is based on users and privileges.
 
 ### Related EWIs[¶](#id10)
 
-1. [SSC-FDM-0007](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0007):
+1. [SSC-FDM-0007](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0007):
    Element with missing dependencies.
-2. [SSC-FDM-0019](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0019):
+2. [SSC-FDM-0019](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0019):
    Sematic information could not be loaded.
 
 ## Tables[¶](#tables)
@@ -548,7 +548,7 @@ COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,
 Columns that match **Snowflake-specific reserved keywords** (e.g., `CONSTRAINT`, `CURRENT_DATE`,
 `CURRENT_TIME`) may still cause compilation issues even when wrapped in quotes. SnowConvert AI
 detects these instances and generates a warning with code
-[`SSC-EWI-0045`](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0045),
+[`SSC-EWI-0045`](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0045),
 prompting users to review and potentially rename these columns for compatibility.
 
 **Example:**
@@ -625,15 +625,15 @@ Global Temporary table option. It will be removed.
 
 ### Related EWIs[¶](#id29)
 
-1. [SSC-FDM-0009](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0009):
+1. [SSC-FDM-0009](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0009):
    GLOBAL TEMPORARY TABLE functionality not supported.
-2. [SSC-FDM-0019](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0019):
+2. [SSC-FDM-0019](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0019):
    Sematic information could not be loaded.
-3. [SSC-FDM-TD0024](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/teradataFDM.html#ssc-fdm-td0024):
+3. [SSC-FDM-TD0024](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/teradataFDM#ssc-fdm-td0024):
    Set table functionality not supported.
-4. [SSC-PRF-0007](../../../general/technical-documentation/issues-and-troubleshooting/performance-review/generalPRF.html#ssc-prf-0007):
+4. [SSC-PRF-0007](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/performance-review/generalPRF#ssc-prf-0007):
    CLUSTER BY performance review.
-5. [SSC-EWI-0045](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0045):
+5. [SSC-EWI-0045](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0045):
    Column Name is Snowflake Reserved Keyword.
 
 ## WITH DEFAULT[¶](#with-default)
@@ -837,9 +837,9 @@ will be set when transforming the `WITH DEFAULT` clause.
 
 ### Related EWIs[¶](#id36)
 
-1. [SSC-EWI-0021](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0021):
+1. [SSC-EWI-0021](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0021):
    Not Supported in Snowflake.
-2. [SSC-EWI-0036](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0036):
+2. [SSC-EWI-0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0036):
    Data type converted to another data type.
 
 ## CREATE MACRO[¶](#create-macro)
@@ -1681,7 +1681,7 @@ report as Top Level Objects. The SnowConvert AI team is now working on a fix for
 
 ### Related EWIs[¶](#id95)
 
-1. [SSC-EWI-0073](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0073):
+1. [SSC-EWI-0073](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0073):
    Pending Functional Equivalence Review.
-2. [SSC-FDM-0020](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0020):
+2. [SSC-FDM-0020](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0020):
    Multiple result sets are returned in temporary tables.

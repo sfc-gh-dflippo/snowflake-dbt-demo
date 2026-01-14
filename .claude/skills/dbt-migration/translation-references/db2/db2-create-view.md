@@ -13,7 +13,7 @@ IBM DB2 documentation page for this syntax.
 
 ## Grammar Syntax[¶](#grammar-syntax)
 
-![image](../../../../_images/create_view_overview.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/create_view_overview.png)
 
 Navigate to the following pages to get more details about the translation spec for the subsections
 of the CREATE VIEW grammar.
@@ -71,9 +71,9 @@ CREATE VIEW OF type-name is not supported in Snowflake.
 
 ### Grammar Syntax
 
-![image](../../../../_images/create_view_of_type_syntax_1.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/create_view_of_type_syntax_1.png)
 
-![image](../../../../_images/create_view_of_type_syntax_2.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/create_view_of_type_syntax_2.png)
 
 ### Sample Source Patterns
 
@@ -96,7 +96,7 @@ AS SELECT * FROM TestTable;
 
 ### Related EWIs
 
-1. [SSC-EWI-DB0015](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/db2EWI):
+1. [SSC-EWI-DB0015](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/db2EWI):
    CREATE VIEW OF TYPE IS NOT SUPPORTED
 
 ## WITH CHECK OPTION
@@ -114,7 +114,7 @@ WITH CHECK OPTION is not supported in Snowflake.
 
 ### Grammar Syntax[¶](#id6)
 
-![image](../../../../_images/create_view_check_option_syntax.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/create_view_check_option_syntax.png)
 
 ### Sample Source Patterns[¶](#id7)
 
@@ -151,7 +151,7 @@ WITH ROW MOVEMENT is not supported in Snowflake.
 
 ### Grammar Syntax
 
-![image](../../../../_images/create_view_row_movement_syntax.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/create_view_row_movement_syntax.png)
 
 ### Sample Source Patterns
 
@@ -178,5 +178,5 @@ WITH ROW MOVEMENT;
 
 ### Related EWIs
 
-1. [SSC-EWI-DB0005](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/db2EWI.html#ssc-ewi-db0005):
+1. [SSC-EWI-DB0005](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/db2EWI#ssc-ewi-db0005):
    MANIPULATION OF DATA IN VIEWS IS NOT SUPPORTED

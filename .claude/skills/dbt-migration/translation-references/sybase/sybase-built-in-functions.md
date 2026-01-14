@@ -205,13 +205,13 @@ title: SnowConvert AI - Sybase IQ - Built-in functions | Snowflake Documentation
 
 ## Related EWIs[¶](#related-ewis)
 
-[SSC-FDM-0009](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0009):
+[SSC-FDM-0009](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0009):
 GLOBAL TEMPORARY TABLE functionality not supported.
-[SSC-EWI-0073](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0073):
+[SSC-EWI-0073](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0073):
 Pending Functional Equivalence Review.
-[SSC-EWI-TS0060](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/sqlServerEWI.html#ssc-ewi-ts0060):
+[SSC-EWI-TS0060](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/sqlServerEWI#ssc-ewi-ts0060):
 Datetime interval not supported by Snowflake.
-[SSC-FDM-TS0025](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM.html#ssc-fdm-ts0025):
+[SSC-FDM-TS0025](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM#ssc-fdm-ts0025):
 DB_ID_UDF may have a different behavior in certain cases.
-[SSC-FDM-TS0010](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM.html#ssc-fdm-ts0010):
+[SSC-FDM-TS0010](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM#ssc-fdm-ts0010):
 CURRENT_DATABASE function has different behavior in certain cases.\

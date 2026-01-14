@@ -302,7 +302,7 @@ deployments.
 
 You will be able to see the rows you have inserted in the example above.
 
-![Query result](../../../../../_images/result.png)
+![Query result](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/result.png)
 
 ## Local Helpers Documentation[¶](#local-helpers-documentation)
 
@@ -349,24 +349,24 @@ server>
 
 This will open the browser with the documentation of your code like:
 
-![Home page for the generated local documentation](../../../../../_images/builtin.png)
+![Home page for the generated local documentation](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/builtin.png)
 
 Scroll thru the end of the page to see the installed packages. And you will see something similar
 to:
 
-![Local installed packages documentation index](../../../../../_images/scroll.png)
+![Local installed packages documentation index](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/scroll.png)
 
 Clicking in the SnowConvert AI(package) you will see something like:
 
-![Home page for the snowconvert-helpers documentation](../../../../../_images/other.png)
+![Home page for the snowconvert-helpers documentation](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/other.png)
 
 Clicking in the module helpers will display a screen similar to:
 
-![Home page for helpers module](../../../../../_images/module.png)
+![Home page for helpers module](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/module.png)
 
 Then you can scroll thru the functions and classes of the module.
 
-![Functions documentation](../../../../../_images/final.png)
+![Functions documentation](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/final.png)
 
 ## Known Issues [¶](#known-issues)
 

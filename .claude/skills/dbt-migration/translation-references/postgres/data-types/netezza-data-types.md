@@ -6,5 +6,5 @@ title: SnowConvert AI - Netezza - Data types | Snowflake Documentation
 
 ## Related EWIs[¶](#related-ewis)
 
-1. [SSC-EWI-0036](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0036):
+1. [SSC-EWI-0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0036):
    Data type converted to another data type.

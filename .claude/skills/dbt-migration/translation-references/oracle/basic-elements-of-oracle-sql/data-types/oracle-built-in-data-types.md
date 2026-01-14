@@ -215,7 +215,7 @@ levels of nesting in both engines.
 
 ### Related EWIs[¶](#id7)
 
-1. [SSC-EWI-0073](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0073):
+1. [SSC-EWI-0073](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0073):
    Pending Functional Equivalence Review
 
 ## LONG Data Type[¶](#long-data-type)
@@ -322,7 +322,7 @@ display an error when attempting to insert the data.
 
 ### Related EWIs[¶](#id17)
 
-1. [SSC-FDM-0006](../../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0006):
+1. [SSC-FDM-0006](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0006):
    Number type column may not behave similarly in Snowflake
 
 ## RAW and LONG RAW Data types[¶](#raw-and-long-raw-data-types)
@@ -637,7 +637,7 @@ to how intermediate values are stored within Snowflake, for more information ple
 on
 [Snowflake’s post on intermediate numbers in Snowflake](https://community.snowflake.com/s/question/0D50Z00008HhSHCSA3/sql-compilation-error-invalid-intermediate-datatype-number7148)
 or check the functional equivalence message
-[SSC-FDM-0006](../../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0006).
+[SSC-FDM-0006](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0006).
 
 ### Sample Source Patterns[¶](#id45)
 
@@ -886,14 +886,14 @@ number_data_type_table;
 
 When specifying a scale greater than the maximum allowed in Snowflake (37) it is being changed
 to 18. To get more information about this please go to the
-[SSC-FDM-0006](../../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0006)
+[SSC-FDM-0006](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0006)
 documentation.
 
 ##### 2. Negative scale[¶](#negative-scale)
 
 Snowflake does not allow negative scale, so it is being removed. This could cause functional
 inequivalence. To get more information about this issue please go to the
-[SSC-EWI-0R0092](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0092)
+[SSC-EWI-0R0092](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0092)
 documentation.
 
 ### Recommendations[¶](#id69)
@@ -924,11 +924,11 @@ return a.divide(b,RoundingMode.HALF_UP);
 
 ### Related EWIs[¶](#id70)
 
-1. [SSC-EWI-OR0092](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0092)
+1. [SSC-EWI-OR0092](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0092)
    Number datatype negative scale was removed from output.
-2. [SSC-FDM-0006](../../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0006):
+2. [SSC-FDM-0006](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0006):
    Number type column may not behave similarly in Snowflake
-3. [SSC-FDM-OR0010](../../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM.html#ssc-fdm-or0010)
+3. [SSC-FDM-OR0010](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM#ssc-fdm-or0010)
    Number datatype smaller precision was increased to match scale
 
 ## Floating-Point Numbers[¶](#floating-point-numbers)
@@ -1271,7 +1271,7 @@ ALTER SESSION SET DATE_INPUT_FORMAT = 'YYYY-DD-MM' DATE_OUTPUT_FORMAT = 'DD-MM-Y
 
 ### Related EWIs[¶](#id100)
 
-1. [SSC-FDM-OR0042](../../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM.html#ssc-fdm-or0042):
+1. [SSC-FDM-OR0042](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM#ssc-fdm-or0042):
    Date Type Transformed To Timestamp Has A Different Behavior
 
 ## INTERVAL DAY TO SECOND Data Type[¶](#interval-day-to-second-data-type)
@@ -1374,7 +1374,7 @@ are supported, every other scenario is not supported.
 
 ### Related EWIs[¶](#id110)
 
-1. [SSC-EWI-0036](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0036):
+1. [SSC-EWI-0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0036):
    Data type converted to another data type.
 
 ## INTERVAL YEAR TO MONTH Data Type[¶](#interval-year-to-month-data-type)
@@ -1481,7 +1481,7 @@ are supported, every other scenario is not supported.
 
 ### Related EWIs[¶](#id121)
 
-- [SSC-EWI-0036](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0036):
+- [SSC-EWI-0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0036):
   Data type converted to another data type.
 
 ## TIMESTAMP Data Type[¶](#timestamp-data-type)
@@ -1900,10 +1900,10 @@ combinations with date, timestamps, number, and unknown types.
 |---|---|---|---|---|---|---|
 |**Date**|INVALID|INVALID|Date + Interval day|Date + Interval IntervalUnit|DATEADD_UDF|DATEADD_UDF|
 |**Timestamp**|INVALID|INVALID|Timestamp + Interval day|Timestamp + Interval IntervalUnit|DATEADD_UDF|DATEADD_UDF|
-|**Number**|Date + Interval day|Timestamp + Interval day|Number + Number|INVALID|[SSC-EWI-OR0036](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0036)|Number + Float|
-|**Interval**|Date + Interval IntervalUnit|Timestamp + Interval IntervalUnit|INVALID|[SSC-EWI-OR0036](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0036)|Unknown + Interval IntervalUnit|INVALID|
-|**Unknown**|DATEADD_UDF|DATEADD_UDF|Unknown + Number|Unknown + Interval IntervalUnit|[SSC-EWI-OR0036](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0036)|[SSC-EWI-OR0036](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0036)|
-|**Float**|DATEADD_UDF|DATEADD_UDF|Float + Number|INVALID|[SSC-EWI-OR0036](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0036)|Float + Float|
+|**Number**|Date + Interval day|Timestamp + Interval day|Number + Number|INVALID|[SSC-EWI-OR0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0036)|Number + Float|
+|**Interval**|Date + Interval IntervalUnit|Timestamp + Interval IntervalUnit|INVALID|[SSC-EWI-OR0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0036)|Unknown + Interval IntervalUnit|INVALID|
+|**Unknown**|DATEADD_UDF|DATEADD_UDF|Unknown + Number|Unknown + Interval IntervalUnit|[SSC-EWI-OR0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0036)|[SSC-EWI-OR0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0036)|
+|**Float**|DATEADD_UDF|DATEADD_UDF|Float + Number|INVALID|[SSC-EWI-OR0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0036)|Float + Float|
 
 **Note:**
 
@@ -2106,10 +2106,10 @@ TIMES;
 |---|---|---|---|---|---|---|
 |**Date**|DATEDIFF|TIMESTAMP_DIFF\_\_\_UDF|Date - Interval day|Date - Interval IntervalUnit|DATEDIFF_UDF|DATEDIFF_UDF|
 |**Timestamp**|TIMESTAMP_DIFF\_\_\_UDF|TIMESTAMP_DIFF\_\_\_UDF|Timestamp - Interval day|Timestamp - Interval IntervalUnit|DATEDIFF_UDF|DATEDIFF_UDF|
-|**Number**|INVALID|INVALID|Number - Number|INVALID|[SSC-EWI-OR0036](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0036)|Number - Float|
-|**Interval**|INVALID|INVALID|INVALID|[SSC-EWI-OR0036](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0036)|Unknown - Interval IntervalUnit|NOT SUPPORTED IN ORACLE|
-|**Unknown**|DATEDIFF_UDF|DATEDIFF_UDF|[SSC-EWI-OR0036](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0036)|Unknown - Interval IntervalUnit|[SSC-EWI-OR0036](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0036)|[SSC-EWI-OR0036](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0036)|
-|**Float**|DATEDIFF_UDF|DATEDIFF_UDF|Float - Number|NOT SUPPORTED IN ORACLE|[SSC-EWI-OR0036](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0036)|Float - Float|
+|**Number**|INVALID|INVALID|Number - Number|INVALID|[SSC-EWI-OR0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0036)|Number - Float|
+|**Interval**|INVALID|INVALID|INVALID|[SSC-EWI-OR0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0036)|Unknown - Interval IntervalUnit|NOT SUPPORTED IN ORACLE|
+|**Unknown**|DATEDIFF_UDF|DATEDIFF_UDF|[SSC-EWI-OR0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0036)|Unknown - Interval IntervalUnit|[SSC-EWI-OR0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0036)|[SSC-EWI-OR0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0036)|
+|**Float**|DATEDIFF_UDF|DATEDIFF_UDF|Float - Number|NOT SUPPORTED IN ORACLE|[SSC-EWI-OR0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0036)|Float - Float|
 
 **Note:**
 
@@ -2538,10 +2538,10 @@ FROM
 
 ### Related EWIs[¶](#id213)
 
-1. [SSC-EWI-0108](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0108):
+1. [SSC-EWI-0108](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0108):
    The following subquery matches at least one of the patterns considered invalid and may produce
    compilation errors.
-2. [SSC-EWI-OR0036](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0036):
+2. [SSC-EWI-OR0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0036):
    Types resolution issues, the arithmetic operation may not behave correctly between string and
    date.
 
@@ -3018,7 +3018,7 @@ No issues were found.
 
 ### Related EWIs[¶](#id218)
 
-1. [SSC-FDM-OR0042](../../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM.html#ssc-fdm-or0042):
+1. [SSC-FDM-OR0042](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM#ssc-fdm-or0042):
    Date Type Transformed To Timestamp Has A Different Behavior
 
 ## PL SQL Data Types[¶](#pl-sql-data-types)
@@ -3331,7 +3331,7 @@ that may retrieve different results. For example, get the length of a column.
 
 ### Related EWIs[¶](#id242)
 
-1. [SSC-FDM-OR0015](../../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM.html#ssc-fdm-or0015):
+1. [SSC-FDM-OR0015](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM#ssc-fdm-or0015):
    LENGTHB transformed to OCTET_LENGTH.
 
 ## NCHAR Data Type[¶](#nchar-data-type)
@@ -3480,7 +3480,7 @@ that may retrieve different results. For example, get the length of a column.
 
 ### Related EWIs[¶](#id256)
 
-1. [SSC-FDM-OR0015](../../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM.html#ssc-fdm-or0015):
+1. [SSC-FDM-OR0015](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM#ssc-fdm-or0015):
    LENGTHB transformed to OCTET_LENGTH.
 
 ## NVARCHAR2 Data Type[¶](#nvarchar2-data-type)
@@ -3625,7 +3625,7 @@ that may retrieve different results. For example, get the length of a column.
 
 ### Related EWIs[¶](#id272)
 
-1. [SSC-FDM-OR0015](../../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM.html#ssc-fdm-or0015):
+1. [SSC-FDM-OR0015](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM#ssc-fdm-or0015):
    LENGTHB transformed to OCTET_LENGTH.
 
 ## VARCHAR Data Type[¶](#varchar-data-type)
@@ -3764,7 +3764,7 @@ No issues were found.
 
 ### Related EWIs[¶](#id287)
 
-1. [SSC-FDM-OR0015](../../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM.html#ssc-fdm-or0015):
+1. [SSC-FDM-OR0015](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM#ssc-fdm-or0015):
    LENGTHB transformed to OCTET_LENGTH.
 
 ## LOB Data Types[¶](#lob-data-types)
@@ -3899,7 +3899,7 @@ functions and there are no implemented workarounds yet.
 
 ### Related EWIs[¶](#id296)
 
-1. [SSC-EWI-OR0105](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0105):
+1. [SSC-EWI-OR0105](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0105):
    Additional work is needed for BFILE column usage. BUILD_STAGE_URL function is a recommended
    workaround.
 
@@ -4044,7 +4044,7 @@ functions and there are no implemented workarounds yet.
 
 ### Related EWIs[¶](#id311)
 
-1. [SSC-EWI-OR0076](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0076):
+1. [SSC-EWI-OR0076](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0076):
    Built In Package Not Supported.
 
 ## CLOB Data Type[¶](#clob-data-type)

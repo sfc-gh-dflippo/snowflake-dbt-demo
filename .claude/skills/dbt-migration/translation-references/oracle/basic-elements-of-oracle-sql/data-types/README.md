@@ -57,7 +57,7 @@ EWIs related to these data types are specified in the transformation of the [Ora
 
 SnowConvert AI enables Data Type Customization to specify rules for data type transformation based on data type origin and column name. This feature allows you to personalize data type conversions and set precision values more accurately during migration.
 
-For complete documentation on configuring data type customization, including JSON structure, configuration options, and priority rules, see [Data type mappings](../../../../general/getting-started/running-snowconvert/conversion/oracle-conversion-settings.html#data-type-mappings) in the Oracle Conversion Settings documentation.
+For complete documentation on configuring data type customization, including JSON structure, configuration options, and priority rules, see [Data type mappings](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/getting-started/running-snowconvert/conversion/oracle-conversion-settings#data-type-mappings) in the Oracle Conversion Settings documentation.
 
 ### NUMBER to DECFLOAT Transformation[¶](#number-to-decfloat-transformation)
 
@@ -95,4 +95,4 @@ INSERT INTO products VALUES (1, CAST(99.99 AS DECFLOAT));
 
 **Note:**
 
-The TypeMappings report (TypeMappings.csv) provides a detailed view of all data type transformations applied during conversion. See [TypeMappings Report](../../../../general/getting-started/running-snowconvert/review-results/reports/type-mappings-report) for more information.
+The TypeMappings report (TypeMappings.csv) provides a detailed view of all data type transformations applied during conversion. See [TypeMappings Report](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/getting-started/running-snowconvert/review-results/reports/type-mappings-report) for more information.

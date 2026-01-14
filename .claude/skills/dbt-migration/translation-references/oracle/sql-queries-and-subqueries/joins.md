@@ -172,7 +172,7 @@ different if no _Order By_ clause is defined in the query.
 
 ### Related EWIs[¶](#related-ewis)
 
-1. [SSC-EWI-0108](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0108):
+1. [SSC-EWI-0108](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0108):
    This subquery matches a pattern considered invalid and may cause compilation errors.
 
 ## Band Join[¶](#band-join)
@@ -282,7 +282,7 @@ FETCH FIRST 10 ROWS ONLY;
 Warning
 
 Migrating some `SELECT` statements without the corresponding tables could generate the
-[SSC-EWI-OR0036](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0036):
+[SSC-EWI-OR0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0036):
 Types resolution issues. To avoid this warning, include the `CREATE TABLE` inside the file.
 
 The results are the same making the BAND JOIN functional equivalent.
@@ -316,7 +316,7 @@ different if no _Order By_ clause is defined in the query.
 
 ### Related EWIs[¶](#id14)
 
-- [SSC-EWI-OR0036](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0036)[:](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0036)
+- [SSC-EWI-OR0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0036)[:](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0036)
   Types resolution issues, the arithmetic operation may not behave correctly between string and
   date.
 
@@ -1819,7 +1819,7 @@ FETCH FIRST 10 ROWS ONLY;
 
 ### Related EWIs[¶](#id115)
 
-1. [SSC-EWI-OR0090](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0090):
+1. [SSC-EWI-OR0090](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0090):
    Non-Ansi Outer Join has an invalid Between predicate.
 
 ## Self Join[¶](#self-join)

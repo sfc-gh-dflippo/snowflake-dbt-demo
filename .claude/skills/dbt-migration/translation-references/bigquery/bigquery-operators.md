@@ -29,7 +29,8 @@ even for `NULL` inputs.
 The UNNEST operator takes an array and returns a table with one row for each element in the array.
 ([BigQuery SQL Language Reference UNNEST operator](https://cloud.google.com/bigquery/docs/reference/standard-sql/query-syntax#unnest_operator)).
 
-This operator will be emulated using the [FLATTEN](../../../../sql-reference/functions/flatten)
+This operator will be emulated using the
+[FLATTEN](https://docs.snowflake.com/en/migrations/snowconvert-docs/sql-reference/functions/flatten)
 function, the `VALUE` and `INDEX` columns returned by the function will be renamed accordingly to
 match the UNNEST operator aliases
 

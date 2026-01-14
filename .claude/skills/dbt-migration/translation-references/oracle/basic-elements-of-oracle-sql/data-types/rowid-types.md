@@ -145,9 +145,9 @@ SQL compilation error: invalid identifier ‘ROWID’
 
 ### Related EWIs[¶](#related-ewis)
 
-1. [SSC-EWI-0036](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0036):
+1. [SSC-EWI-0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0036):
    Data type converted to another data type.
-2. [SSC-FDM-OR0030](../../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM.html#ssc-fdm-or0030):
+2. [SSC-FDM-OR0030](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM#ssc-fdm-or0030):
    ROWID pseudocolumn is not supported in Snowflake.
 
 ## UROWID Data Type[¶](#urowid-data-type)
@@ -294,7 +294,7 @@ This issue has been marked as critical and will be fixed in the upcoming release
 
 ### Related EWIs[¶](#id21)
 
-1. [SSC-EWI-0036](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0036):
+1. [SSC-EWI-0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0036):
    Data type converted to another data type.
-2. [SSC-FDM-OR0030](../../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM.html#ssc-fdm-or0030):
+2. [SSC-FDM-OR0030](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM#ssc-fdm-or0030):
    ROWID pseudocolumn is not supported in Snowflake.

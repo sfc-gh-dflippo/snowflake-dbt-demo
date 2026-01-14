@@ -104,7 +104,7 @@ $$
 
 SnowConvert AI supports the migration of BTEQ code with Bash Variable Placeholders used for shell
 scripts, these placeholders will be migrated to its SnowSQL equivalent and
-[SSC-FDM-TD0003](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/teradataFDM.html#ssc-fdm-td0003)
+[SSC-FDM-TD0003](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/teradataFDM#ssc-fdm-td0003)
 will be added to the code. Please consider the following when migrating code with these
 placeholders:
 
@@ -112,7 +112,7 @@ placeholders:
   please isolate it in a BTEQ file and supply it as input for the tool.
 - SnowSQL with variable substitution enabled is required to execute the migrated code, for more
   information on how to use SnowSQL please check
-  [SSC-FDM-TD0003](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/teradataFDM.html#ssc-fdm-td0003)
+  [SSC-FDM-TD0003](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/teradataFDM#ssc-fdm-td0003)
   and the
   [official documentation for SnowSQ](https://docs.snowflake.com/en/user-guide/snowsql-use.html#using-snowsql)L.
 
@@ -207,10 +207,10 @@ identified, marked with warnings in the output code, and documented in the furth
 
 ### Related EWIs [¶](#related-ewis)
 
-1. [SSC-EWI-0073](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0073):
+1. [SSC-EWI-0073](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0073):
    Pending Functional Equivalence Review.
-2. [SSC-FDM-TD0003](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/teradataFDM.html#ssc-fdm-td0003):
+2. [SSC-FDM-TD0003](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/teradataFDM#ssc-fdm-td0003):
    Bash variables found, using Snow SQL with variable substitution enabled is required to run this
    script.
-3. [SSC-FDM-TD0013](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/teradataFDM.html#ssc-fdm-td0013):
+3. [SSC-FDM-TD0013](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/teradataFDM#ssc-fdm-td0013):
    The Snowflake error code mismatch the original Teradata error code.

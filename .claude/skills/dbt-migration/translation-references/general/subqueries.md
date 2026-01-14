@@ -328,7 +328,7 @@ Oracle allows using the FETCH clause in subqueries, Snowflake only allows using 
 subquery is uncorrelated scalar, otherwise an exception will be generated.
 
 SnowConvert AI will mark any inalid usage of FETCH in subqueries with
-[SSC-EWI-0108](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0108)
+[SSC-EWI-0108](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0108)
 
 Oracle:
 
@@ -370,8 +370,8 @@ FROM
 
 ## Related EWIs[¶](#related-ewis)
 
-1. [SSC-FDM-0002](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0002):
+1. [SSC-FDM-0002](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0002):
    Correlated subquery may have functional differences
-2. [SSC-EWI-0108](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0108):
+2. [SSC-EWI-0108](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0108):
    The following subquery matches at least one of the patterns considered invalid and may produce
    compilation errors

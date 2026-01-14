@@ -14,8 +14,8 @@ CREATE TABLE [MYSCHEMA].[MYTABLE]
     [COL1] INT IDENTITY (1,1) NOT NULL,
     [COL2] INT,
     [COL2 COL3 COL4] VARCHAR,
-    [COL VARCHAR_SPANISH] [VARCHAR](20) COLLATE Modern_Spanish_CI_AI DEFAULT 'HOLA',
-    [COL VARCHAR_LATIN] [VARCHAR](20) COLLATE Latin1_General_CI_AI DEFAULT 'HELLO'
+    [COL VARCHAR_SPANISH] [VARCHAR](https://docs.snowflake.com/en/migrations/snowconvert-docs/translation-references/transact/20) COLLATE Modern_Spanish_CI_AI DEFAULT 'HOLA',
+    [COL VARCHAR_LATIN] [VARCHAR](https://docs.snowflake.com/en/migrations/snowconvert-docs/translation-references/transact/20) COLLATE Latin1_General_CI_AI DEFAULT 'HELLO'
 );
 ```
 
@@ -71,12 +71,12 @@ temporary table.
 ### Source[¶](#id1)
 
 ```
-CREATE TABLE [SCHEMA1].[TABLE1](
+CREATE TABLE [SCHEMA1].[TABLE1](https://docs.snowflake.com/en/migrations/snowconvert-docs/translation-references/transact/
 	[COL1] [varchar](20) NOT NULL
 ) ON [PRIMARY]
 GO
 
-CREATE TABLE [SCHEMA1].[TABLE2](
+CREATE TABLE [SCHEMA1].[TABLE2](https://docs.snowflake.com/en/migrations/snowconvert-docs/translation-references/transact/
 	[COL1] [varchar](20) NULL
 ) ON [PRIMARY]
 GO
@@ -149,14 +149,14 @@ COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":
 ### Source[¶](#id7)
 
 ```
-CREATE TABLE [SalesLT].[Address](
+CREATE TABLE [SalesLT].[Address](https://docs.snowflake.com/en/migrations/snowconvert-docs/translation-references/transact/
 	[AddressID] [int] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,
-	[AddressLine1] [nvarchar](60) NOT NULL,
-	[AddressLine2] [nvarchar](60) NULL,
-	[City] [nvarchar](30) NOT NULL,
+	[AddressLine1] [nvarchar](https://docs.snowflake.com/en/migrations/snowconvert-docs/translation-references/transact/60) NOT NULL,
+	[AddressLine2] [nvarchar](https://docs.snowflake.com/en/migrations/snowconvert-docs/translation-references/transact/60) NULL,
+	[City] [nvarchar](https://docs.snowflake.com/en/migrations/snowconvert-docs/translation-references/transact/30) NOT NULL,
 	[StateProvince] [dbo].[Name] NOT NULL,
 	[CountryRegion] [dbo].[Name] NOT NULL,
-	[PostalCode] [nvarchar](15) NOT NULL,
+	[PostalCode] [nvarchar](https://docs.snowflake.com/en/migrations/snowconvert-docs/translation-references/transact/15) NOT NULL,
 	[rowguid] [uniqueidentifier] ROWGUIDCOL  NOT NULL,
 	[ModifiedDate] [datetime] NOT NULL,
 	CONSTRAINT [PK_Address_AddressID] PRIMARY KEY CLUSTERED
@@ -261,7 +261,7 @@ more information.
 ### Source[¶](#id12)
 
 ```
-CREATE TABLE [TABLE1](
+CREATE TABLE [TABLE1](https://docs.snowflake.com/en/migrations/snowconvert-docs/translation-references/transact/
 [COL1] [nvarchar](255) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL
  CONSTRAINT [pk_dimAddress_AddressId] PRIMARY KEY CLUSTERED ([COL1])
  WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
@@ -286,7 +286,7 @@ Column sorting is not supported in Snowflake, the `ASC` or `DESC` keywords are b
 ### Source[¶](#id14)
 
 ```
-CREATE TABLE [TABLE1](
+CREATE TABLE [TABLE1](https://docs.snowflake.com/en/migrations/snowconvert-docs/translation-references/transact/
 	[COL1] [int] NOT NULL,
  CONSTRAINT [constraint1] PRIMARY KEY CLUSTERED ([COL1] ASC)
 ) ON [PRIMARY]
@@ -311,7 +311,7 @@ be able to deploy the table, for example.
 ### Source[¶](#id16)
 
 ```
-CREATE TABLE [TABLE1](
+CREATE TABLE [TABLE1](https://docs.snowflake.com/en/migrations/snowconvert-docs/translation-references/transact/
 	[COL2] [int] NOT NULL,
 	[COL2] [int] NOT NULL,
 	[COL1] AS (COL3 * COL2),
@@ -336,7 +336,7 @@ the expression return type will be used instead, like in the following example:
 ### Source[¶](#id18)
 
 ```
-CREATE TABLE [TABLE1](
+CREATE TABLE [TABLE1](https://docs.snowflake.com/en/migrations/snowconvert-docs/translation-references/transact/
 	[Col1] AS (CONVERT ([XML], ExpressionValue))
 )
 ```
@@ -374,7 +374,7 @@ available to Enterprise Edition only. Please review the following
 ```
 CREATE TABLE TABLE1
 (
-	[COL1] [nvarchar](50) MASKED WITH (FUNCTION = 'default()') NULL
+	[COL1] [nvarchar](https://docs.snowflake.com/en/migrations/snowconvert-docs/translation-references/transact/50) MASKED WITH (FUNCTION = 'default()') NULL
 );
 ```
 
@@ -446,25 +446,25 @@ No issues were found.
 
 ### Related EWIs[¶](#related-ewis)
 
-1. [SSC-EWI-0036](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0036):
+1. [SSC-EWI-0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0036):
    Data type converted to another data type.
-2. [SSC-EWI-0040](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0040):
+2. [SSC-EWI-0040](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0040):
    Statement Not Supported.
-3. [SSC-EWI-0073](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0073):
+3. [SSC-EWI-0073](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0073):
    Pending Functional Equivalence Review.
-4. [SSC-EWI-TS0017](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/sqlServerEWI.html#ssc-ewi-ts0017):
+4. [SSC-EWI-TS0017](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/sqlServerEWI#ssc-ewi-ts0017):
    Masking not supported.
-5. [SSC-FDM-0012](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0012):
+5. [SSC-FDM-0012](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0012):
    Constraint in default expression is not supported.
-6. [SSC-FDM-TS0002](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM.html#ssc-fdm-ts0002):
+6. [SSC-FDM-TS0002](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM#ssc-fdm-ts0002):
    This message is shown when there is a collate clause that is not supported in Snowflake.
-7. [SSC-FDM-TS0009](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM.html#ssc-fdm-ts0009):
+7. [SSC-FDM-TS0009](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM#ssc-fdm-ts0009):
    Encrypted with not supported in Snowflake.
-8. [SSC-FDM-TS0014](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM.html#ssc-fdm-ts0014):
+8. [SSC-FDM-TS0014](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM#ssc-fdm-ts0014):
    Computed column transformed.
-9. [SSC-EWI-TS0015](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/sqlServerEWI.html#ssc-ewi-ts0015):
+9. [SSC-EWI-TS0015](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/sqlServerEWI#ssc-ewi-ts0015):
    Data type is not supported in Snowflake.
-10. [SSC-PRF-0002](../../general/technical-documentation/issues-and-troubleshooting/performance-review/generalPRF.html#ssc-prf-0002):
+10. [SSC-PRF-0002](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/performance-review/generalPRF#ssc-prf-0002):
     Case-insensitive columns can decrease the performance of queries.
 
 ## Azure Synapse Analytics[¶](#azure-synapse-analytics)
@@ -580,7 +580,7 @@ No issues were found.
 
 ### Related EWIs[¶](#id26)
 
-1. [SSC-PRF-0007](../../general/technical-documentation/issues-and-troubleshooting/performance-review/generalPRF.html#ssc-prf-0007):
+1. [SSC-PRF-0007](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/performance-review/generalPRF#ssc-prf-0007):
    PERFORMANCE REVIEW - CLUSTER BY.
 
 ## TEXTIMAGE_ON[¶](#textimage-on)
@@ -614,7 +614,7 @@ syntax.
 #### SQL Server[¶](#sql-server)
 
 ```
- CREATE TABLE [dbo].[TEST_Person](
+ CREATE TABLE [dbo].[TEST_Person](https://docs.snowflake.com/en/migrations/snowconvert-docs/translation-references/transact/
 	[date_updated] [datetime] NULL
  ) TEXTIMAGE_ON [PRIMARY]
 ```

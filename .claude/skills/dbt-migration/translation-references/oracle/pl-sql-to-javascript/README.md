@@ -126,10 +126,10 @@ No issues were found.
 
 ### Related EWIS[¶](#related-ewis)
 
-1. [SSC-EWI-0036](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0036): Data type converted to another data type.
-2. [SSC-EWI-0056](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0056): Create Type Not Supported.
-3. [SSC-EWI-0058](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0058): Functionality is not currently supported by Snowflake Scripting.
-4. [SSC-EWI-0030](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0030): The statement below has usages of dynamic SQL
+1. [SSC-EWI-0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0036): Data type converted to another data type.
+2. [SSC-EWI-0056](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0056): Create Type Not Supported.
+3. [SSC-EWI-0058](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0058): Functionality is not currently supported by Snowflake Scripting.
+4. [SSC-EWI-0030](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0030): The statement below has usages of dynamic SQL
 
 ## Conditional Compilation[¶](#conditional-compilation)
 
@@ -197,7 +197,7 @@ $$;
 
 ### Related EWIs[¶](#id3)
 
-- [SSC-EWI-0073](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0073): Pending Functional Equivalence Review.
+- [SSC-EWI-0073](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0073): Pending Functional Equivalence Review.
 
 ## Control Statements[¶](#control-statements)
 
@@ -343,7 +343,7 @@ $$;
 
 ### Related EWIs[¶](#id10)
 
-1. [SSC-EWI-0053](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0053): Object may not work.
+1. [SSC-EWI-0053](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0053): Object may not work.
 
 ## Declarations[¶](#declarations)
 
@@ -628,8 +628,8 @@ No issues were found.
 
 No related EWIs.
 
-1. [SSC-EWI-0022](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0022): One or more identifiers in this statement were considered parameters by default.
-2. [SSC-EWI-0026](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0026): The variable may requiere a cast to date, time or timestamp.
+1. [SSC-EWI-0022](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0022): One or more identifiers in this statement were considered parameters by default.
+2. [SSC-EWI-0026](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0026): The variable may requiere a cast to date, time or timestamp.
 
 ## Expressions and operators[¶](#expressions-and-operators)
 
@@ -1091,8 +1091,8 @@ No issues were found.
 
 No related EWIs.
 
-1. [SSC-EWI-OR0013](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0013): NLS parameter is not supported.
-2. [SSC-FDM-OR0042](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM.html#ssc-fdm-or0042): Date Type Transformed To Timestamp Has A Different Behavior.
+1. [SSC-EWI-OR0013](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0013): NLS parameter is not supported.
+2. [SSC-FDM-OR0042](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM#ssc-fdm-or0042): Date Type Transformed To Timestamp Has A Different Behavior.
 
 ## User defined functions[¶](#user-defined-functions)
 
@@ -1594,9 +1594,9 @@ No issues were found.
 
 ### Related EWIs[¶](#id64)
 
-1. [SSC-EWI-0022](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0022): One or more identifiers in this statement were considered parameters by default.
-2. [SSC-EWI-0073](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0073): Pending Functional Equivalence Review.
-3. [SSC-FDM-0029](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0029): User defined function was transformed to a Snowflake procedure.
+1. [SSC-EWI-0022](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0022): One or more identifiers in this statement were considered parameters by default.
+2. [SSC-EWI-0073](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0073): Pending Functional Equivalence Review.
+3. [SSC-FDM-0029](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0029): User defined function was transformed to a Snowflake procedure.
 
 ## Packages[¶](#packages)
 
@@ -1610,7 +1610,7 @@ This section shows the equivalence between Oracle Package Declaration members an
 
 #### Package Translation options[¶](#package-translation-options)
 
-There are two options to migrate packages, each option will affect directly the naming of the objects inside the package. Check [here](../../../general/getting-started/running-snowconvert/conversion/oracle-conversion-settings) how you can change this mode in the UI.
+There are two options to migrate packages, each option will affect directly the naming of the objects inside the package. Check [here](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/getting-started/running-snowconvert/conversion/oracle-conversion-settings) how you can change this mode in the UI.
 
 Let’s suppose that we have the next scenario in Oracle:
 
@@ -2044,8 +2044,8 @@ No issues were found.
 
 #### Related EWIs[¶](#id85)
 
-1. [SSC-EWI-0053](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0053): Object may not work.
-2. [SSC-EWI-OR0049](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0049): Package constants in stateful package are not supported yet.
+1. [SSC-EWI-0053](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0053): Object may not work.
+2. [SSC-EWI-OR0049](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0049): Package constants in stateful package are not supported yet.
 
 ## Procedures[¶](#procedures)
 
@@ -2414,8 +2414,8 @@ No issues were found.
 
 ### Related EWIs[¶](#id93)
 
-1. [SSC-EWI-0022](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0022): One or more identifiers in this statement were considered parameters by default.
-2. [SSC-FDM-OR0012](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM.html#ssc-fdm-or0012): COMMIT and ROLLBACK statements require adequate setup to perform as intended.
+1. [SSC-EWI-0022](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0022): One or more identifiers in this statement were considered parameters by default.
+2. [SSC-FDM-OR0012](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM#ssc-fdm-or0012): COMMIT and ROLLBACK statements require adequate setup to perform as intended.
 
 ## SQL Language Elements[¶](#sql-language-elements)
 
@@ -3242,17 +3242,17 @@ No issues were found.
 
 ### Related EWIs[¶](#id115)
 
-1. [SSC-EWI-0022](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0022): One or more identifiers in a specific statement are considered parameters by default.
-2. [SSC-EWI-0053](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0053): Object may not work.
-3. [SSC-EWI-0073](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0073): Pending Functional Equivalence Review.
-4. [SSC-EWI-OR0052](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0052): Exception declaration is handled by the raise function.
-5. [SSC-EWI-OR0072](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0072): Procedural Member not supported.
-6. [SSC-EWI-OR0075](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0075): Current of clause is not supported in Snowflake.
-7. [SSC-EWI-OR0104](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0104): Unusable collection variable.
-8. [SSC-FDM-OR0007](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM.html#ssc-fdm-or0007): Snowflake does not support the versioning of objects. Developers should consider alternate approaches for code versioning.
-9. [SSC-FDM-OR0009](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM.html#ssc-fdm-or0009): SQL IMPLICIT CURSOR VALUES MAY DIFFER.
-10. [SSC-FDM-OR0011](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM.html#ssc-fdm-or0011): The Boolean argument was removed because the “add to stack” options is not supported.
-11. [SSC-FDM-OR0012:](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM.html#ssc-fdm-or0012) COMMIT and ROLLBACK statements require adequate setup to perform as intended.
+1. [SSC-EWI-0022](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0022): One or more identifiers in a specific statement are considered parameters by default.
+2. [SSC-EWI-0053](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0053): Object may not work.
+3. [SSC-EWI-0073](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0073): Pending Functional Equivalence Review.
+4. [SSC-EWI-OR0052](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0052): Exception declaration is handled by the raise function.
+5. [SSC-EWI-OR0072](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0072): Procedural Member not supported.
+6. [SSC-EWI-OR0075](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0075): Current of clause is not supported in Snowflake.
+7. [SSC-EWI-OR0104](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0104): Unusable collection variable.
+8. [SSC-FDM-OR0007](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM#ssc-fdm-or0007): Snowflake does not support the versioning of objects. Developers should consider alternate approaches for code versioning.
+9. [SSC-FDM-OR0009](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM#ssc-fdm-or0009): SQL IMPLICIT CURSOR VALUES MAY DIFFER.
+10. [SSC-FDM-OR0011](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM#ssc-fdm-or0011): The Boolean argument was removed because the “add to stack” options is not supported.
+11. [SSC-FDM-OR0012:](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM#ssc-fdm-or0012) COMMIT and ROLLBACK statements require adequate setup to perform as intended.
 
 ## DDL - DML Statements[¶](#ddl-dml-statements)
 
@@ -3566,7 +3566,7 @@ No issues were found.
 
 ### Related EWIs[¶](#id129)
 
-1. [SSC-EWI-0022](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0022): One or more identifiers in a specific statement are considered parameters by default.
+1. [SSC-EWI-0022](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0022): One or more identifiers in a specific statement are considered parameters by default.
 
 ## Synonyms[¶](#synonyms)
 
@@ -3668,8 +3668,8 @@ $$;
 
 ### Related EWIs[¶](#id134)
 
-1. [SSC-FDM-OR0005](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM.html#ssc-fdm-or0005): Synonyms are not supported in Snowflake but references to this synonym were changed by the original object name.
-2. [SSC-FDM-OR0042](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM.html#ssc-fdm-or0042): Date Type Transformed To Timestamp Has A Different Behavior.
+1. [SSC-FDM-OR0005](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM#ssc-fdm-or0005): Synonyms are not supported in Snowflake but references to this synonym were changed by the original object name.
+2. [SSC-FDM-OR0042](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM#ssc-fdm-or0042): Date Type Transformed To Timestamp Has A Different Behavior.
 
 ## Triggers[¶](#triggers)
 
@@ -4045,9 +4045,9 @@ When the referenced item data type could not be obtained the referencing item TY
 
 ### Related EWIS[¶](#id152)
 
-1. [SSC-EWI-0036](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0036): Data type converted to another data type.
-2. [SSC-EWI-0056](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0056): Create Type Not Supported.
-3. [SSC-EWI-0058](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0058): Functionality is not currently supported by Snowflake Scripting.
-4. [SSC-EWI-0062](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0062): Custom type usage changed to variant.
-5. [SSC-EWI-OR0129](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0129): The statement below has usages of nested cursors.
-6. [SSC-FDM-0006](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0006): Number type column may not behave similarly in Snowflake.
+1. [SSC-EWI-0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0036): Data type converted to another data type.
+2. [SSC-EWI-0056](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0056): Create Type Not Supported.
+3. [SSC-EWI-0058](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0058): Functionality is not currently supported by Snowflake Scripting.
+4. [SSC-EWI-0062](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0062): Custom type usage changed to variant.
+5. [SSC-EWI-OR0129](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0129): The statement below has usages of nested cursors.
+6. [SSC-FDM-0006](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0006): Number type column may not behave similarly in Snowflake.

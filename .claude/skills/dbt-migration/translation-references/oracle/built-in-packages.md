@@ -154,7 +154,7 @@ CALL PROC();
 
 #### Related EWIs[¶](#related-ewis)
 
-1. [SSC-FDM-OR0035](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM.html#ssc-fdm-or0035):
+1. [SSC-FDM-OR0035](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM#ssc-fdm-or0035):
    Check UDF implementation for DBMS_OUTPUT.PUT_LINE_UDF.
 
 ## DBMS_LOB[¶](#dbms-lob)
@@ -536,9 +536,9 @@ will return a substring of the file name, while Oracle would return a substring 
 
 #### Related EWIs[¶](#id27)
 
-1. [SSC-EWI-OR0076](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0076):
+1. [SSC-EWI-OR0076](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0076):
    Built In Package Not Supported.
-2. [SSC-FDM-OR0035](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM.html#ssc-fdm-or0035):
+2. [SSC-FDM-OR0035](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM#ssc-fdm-or0035):
    DBMS_OUTPUT.PUTLINE check UDF implementation.
 
 ## UTL_FILE[¶](#utl-file)
@@ -700,9 +700,9 @@ This procedure for now, only writes .CSV files.
 
 #### Related EWIs[¶](#id37)
 
-1. [SSC-FDM-0015](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0015):
+1. [SSC-FDM-0015](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0015):
    Data Type Not Recognized.
-2. [SSC-FDM-OR0036](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM.html#ssc-fdm-or0036):
+2. [SSC-FDM-OR0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM#ssc-fdm-or0036):
    Unnecessary built-in packages parameters.
 
 ### FOPEN procedure[¶](#fopen-procedure)
@@ -919,9 +919,9 @@ This procedure for now, only supports .CSV files.
 
 #### Related EWIs[¶](#id50)
 
-1. [SSC-FDM-0015](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0015):
+1. [SSC-FDM-0015](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0015):
    Data Type Not Recognized.
-2. [SSC-FDM-OR0036](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM.html#ssc-fdm-or0036):
+2. [SSC-FDM-OR0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM#ssc-fdm-or0036):
    UnnecessaryBuiltInPackagesParameters
 
 ### PUT_LINE procedure[¶](#id51)
@@ -1051,9 +1051,9 @@ is not used.
 
 #### Related EWIs[¶](#id61)
 
-1. [SSC-FDM-0015](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0015):
+1. [SSC-FDM-0015](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0015):
    Data Type Not Recognized.
-2. [SSC-FDM-OR0036](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM.html#ssc-fdm-or0036):
+2. [SSC-FDM-OR0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM#ssc-fdm-or0036):
    Unnecessary built-in packages parameters.
 
 ## DBMS_RANDOM[¶](#dbms-random)
@@ -1239,5 +1239,5 @@ No issues were found.
 
 #### Related EWIs[¶](#id79)
 
-1. [SSC-FDM-OR0033](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM.html#ssc-fdm-or0033):
+1. [SSC-FDM-OR0033](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM#ssc-fdm-or0033):
    DBMS_RANDOM.VALUE Built-In Package precision is lower in Snowflake.

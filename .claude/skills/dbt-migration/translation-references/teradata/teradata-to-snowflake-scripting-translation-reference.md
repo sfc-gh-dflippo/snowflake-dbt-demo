@@ -473,17 +473,17 @@ LOG_ID | OPERATION    	      | ROW_COUNT | LOG_TIMESTAMP            |
 
 1. If `ACTIVITY_COUNT` is called twice or more times before executing a DML statement, the
    transformation might not return the expected values. Check
-   [here](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/teradataFDM.html#ssc-fdm-td0033).
+   [here](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/teradataFDM#ssc-fdm-td0033).
 2. If `ACTIVITY_COUNT` is called after a non DML statement was executed, the transformation will not
    return the expected values. Check
-   [here](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/teradataFDM.html#ssc-fdm-td0033).
+   [here](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/teradataFDM#ssc-fdm-td0033).
 3. `ACTIVITY_COUNT` requires manual fixing when inside a `SELECT/SET INTO VARIABLE` statement and
    was not able to be identified as a column name. Check
-   [here](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/teradataEWI.html#ssc-ewi-td0003).
+   [here](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/teradataEWI#ssc-ewi-td0003).
 
 ### Related EWIs[¶](#id32)
 
-1. [SSC-FDM-TD0033](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/teradataFDM.html#ssc-fdm-td0033):
+1. [SSC-FDM-TD0033](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/teradataFDM#ssc-fdm-td0033):
    ‘ACTIVITY_COUNT’ TRANSFORMATION MIGHT REQUIRE MANUAL ADJUSTMENTS.
 
 ## BEGIN END[¶](#begin-end)
@@ -702,7 +702,7 @@ $$;
 
 ### Related EWIs[¶](#id55)
 
-1. [SSC-EWI-0058](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0058):
+1. [SSC-EWI-0058](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0058):
    Functionality is not currently supported by Snowflake Scripting.
 
 ## CASE[¶](#case)
@@ -1621,11 +1621,11 @@ The following parameters are not applicable in Snowflake Scripting.
 
 ### Related EWIs[¶](#id114)
 
-1. [SSC-FDM-0020](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0020):
+1. [SSC-FDM-0020](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0020):
    Multiple result sets are returned in temporary tables.
-2. [SSC-PRF-0003](../../general/technical-documentation/issues-and-troubleshooting/performance-review/generalPRF.html#ssc-prf-0003):
+2. [SSC-PRF-0003](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/performance-review/generalPRF#ssc-prf-0003):
    Fetch inside a loop is considered a complex pattern, this could degrade Snowflake performance.
-3. [SSC-PRF-0004](../../general/technical-documentation/issues-and-troubleshooting/performance-review/generalPRF.html#ssc-prf-0004):
+3. [SSC-PRF-0004](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/performance-review/generalPRF#ssc-prf-0004):
    This statement has usages of cursor for loop.
 
 ## DECLARE CONTINUE HANDLER[¶](#declare-continue-handler)
@@ -1765,7 +1765,7 @@ $$;
 
 ### Related EWIS[¶](#id126)
 
-1. [SSC-EWI-TD0004](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/teradataEWI.html#ssc-ewi-td0004):
+1. [SSC-EWI-TD0004](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/teradataEWI#ssc-ewi-td0004):
    Not supported SQL Exception on continue handler.
 
 ## DECLARE CONDITION HANDLER[¶](#declare-condition-handler)
@@ -1860,7 +1860,7 @@ $$;
 
 ### Related EWIS[¶](#id138)
 
-1. [SSC-EWI-0058:](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0058)
+1. [SSC-EWI-0058:](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0058)
    Functionality is not currently supported by Snowflake Scripting.
 
 ## DECLARE[¶](#id139)
@@ -2183,9 +2183,9 @@ $$;
 
 ### Related EWIS[¶](#id168)
 
-1. [SSC-EWI-0058](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0058):
+1. [SSC-EWI-0058](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0058):
    Functionality is not currently supported by Snowflake Scripting.
-2. [SSC-EWI-TD0004](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/teradataEWI.html#ssc-ewi-td0004):
+2. [SSC-EWI-TD0004](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/teradataEWI#ssc-ewi-td0004):
    Not supported SQL Exception on continue handler.
 
 ## EXECUTE/EXEC[¶](#execute-exec)
@@ -2360,9 +2360,9 @@ EXECUTE IMMEDIATE dummyMacro;
 
 ### Related EWIs[¶](#id182)
 
-1. [SSC-EWI-0030:](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0030)
+1. [SSC-EWI-0030:](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0030)
    The statement below has usages of dynamic SQL.
-2. [SSC-EWI-0073](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0073):
+2. [SSC-EWI-0073](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0073):
    Pending Functional Equivalence Review.
 
 ## EXECUTE IMMEDIATE[¶](#execute-immediate)
@@ -2516,7 +2516,7 @@ column1|column2                  |column3|
 
 ### Related EWIS[¶](#id195)
 
-1. [SSC-EWI-0030](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0030):
+1. [SSC-EWI-0030](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0030):
    The statement below has usages of dynamic SQL.
 
 ## FUNCTION OPTIONS OR DATA ACCESS[¶](#function-options-or-data-access)
@@ -2723,7 +2723,7 @@ $$;
 
 ### Related EWIS[¶](#id213)
 
-1. [SSC-EWI-0058](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0058):
+1. [SSC-EWI-0058](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0058):
    Functionality is not currently supported by Snowflake Scripting.
 
 ## IF[¶](#if)
@@ -3102,9 +3102,9 @@ No issues were found.
 
 ### Related EWIs[¶](#id232)
 
-1. [SSC-FDM-0001](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0001):
+1. [SSC-FDM-0001](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0001):
    Views selecting all columns from a single table are not required in Snowflake.
-2. [SSC-FDM-0007](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0007):
+2. [SSC-FDM-0007](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0007):
    Element with missing dependencies.
 
 ## LOOP[¶](#loop)
@@ -4563,11 +4563,11 @@ No issues were found.
 
 ### Related EWIs[¶](#id333)
 
-1. [SSC-FDM-0007](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0007):
+1. [SSC-FDM-0007](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0007):
    Element with missing dependencies.
-2. [SSC-FDM-TD0025](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/teradataFDM.html#ssc-fdm-td0025):
+2. [SSC-FDM-TD0025](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/teradataFDM#ssc-fdm-td0025):
    Teradata Database Temporal Table is not supported in Snowflake.
-3. [SSC-FDM-0031](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0031):
+3. [SSC-FDM-0031](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0031):
    Dynamic Table required parameters set by default
 
 ## WHILE[¶](#while)

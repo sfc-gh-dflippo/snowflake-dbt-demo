@@ -52,7 +52,7 @@ ALTER TABLE IF EXISTS Person.EmailAddress CHECK CONSTRAINT FK_EmailAddress_Perso
 
 ### Related EWIs[¶](#related-ewis)
 
-- [SSC-EWI-0035](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0035):
+- [SSC-EWI-0035](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0035):
   Check statement not supported.
 
 ## ADD[¶](#add)
@@ -273,11 +273,11 @@ COLUMN.
 
 ### Related EWIs[¶](#id10)
 
-1. [SSC-EWI-0035](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0035):
+1. [SSC-EWI-0035](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0035):
    Check statement not supported.
-2. [SSC-EWI-0040](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0040):
+2. [SSC-EWI-0040](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0040):
    Statement Not Supported.
-3. [SSC-FDM-TS0020](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM.html#ssc-fdm-ts0020):
+3. [SSC-FDM-TS0020](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM#ssc-fdm-ts0020):
    Default constraint was commented out and may have been added to a table definition.
 
 ## CHECK[¶](#check)
@@ -320,7 +320,7 @@ The entire ALTER TABLE CHECK clause is commented out, since it is not supported 
 
 ### Related EWIs[¶](#id16)
 
-- [SSC-EWI-0035](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0035):
+- [SSC-EWI-0035](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0035):
   Check statement not supported.
 
 ## CONNECTION[¶](#connection)
@@ -369,7 +369,7 @@ The entire ALTER TABLE CONNECTION clause is commented out, since it is not suppo
 
 ### Related EWIs[¶](#id22)
 
-- [SSC-EWI-0109](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0109):
+- [SSC-EWI-0109](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0109):
   Alter Table syntax is not applicable in Snowflake.
 
 ## DEFAULT[¶](#default)
@@ -446,7 +446,7 @@ The entire ALTER TABLE DEFAULT clause is commented out, since it is not supporte
 
 ### Related EWIs[¶](#id28)
 
-1. [SSC-FDM-TS0020](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM.html#ssc-fdm-ts0020):
+1. [SSC-FDM-TS0020](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM#ssc-fdm-ts0020):
    Default constraint was commented out and may have been added to a table definition.
 
 ## FOREIGN KEY[¶](#foreign-key)
@@ -1022,19 +1022,19 @@ entire statement is removed since it’s no longer adding anything.
 
 ### Related EWIs[¶](#id72)
 
-1. [SSC-EWI-0040](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0040):
+1. [SSC-EWI-0040](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0040):
    Statement Not Supported.
-2. [SSC-EWI-TS0061](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/sqlServerEWI.html#ssc-ewi-ts0061):
+2. [SSC-EWI-TS0061](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/sqlServerEWI#ssc-ewi-ts0061):
    ALTER COLUMN not supported.
-3. [SSC-EWI-TS0078](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/sqlServerEWI.html#ssc-ewi-ts0078):
+3. [SSC-EWI-TS0078](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/sqlServerEWI#ssc-ewi-ts0078):
    Default value not allowed in Snowflake.
-4. [SSC-FDM-TS0009](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM.html#ssc-fdm-ts0009):
+4. [SSC-FDM-TS0009](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM#ssc-fdm-ts0009):
    Encrypted with not supported in Snowflake.
-5. [SSC-FDM-TS0021](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM.html#ssc-fdm-ts0021):
+5. [SSC-FDM-TS0021](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM#ssc-fdm-ts0021):
    A MASKING POLICY was created as a substitute for MASKED WITH.
-6. [SSC-FDM-TS0022](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM.html#ssc-fdm-ts0022):
+6. [SSC-FDM-TS0022](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/sqlServerFDM#ssc-fdm-ts0022):
    The user must previously define the masking role.
-7. [SSC-PRF-0002](../../general/technical-documentation/issues-and-troubleshooting/performance-review/generalPRF.html#ssc-prf-0002):
+7. [SSC-PRF-0002](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/performance-review/generalPRF#ssc-prf-0002):
    Case-insensitive columns can decrease the performance of queries.
 
 ## COLUMN CONSTRAINT[¶](#column-constraint)
@@ -1159,7 +1159,7 @@ The entire ALTER TABLE CHECK clause is commented out, since it is not supported 
 
 ### Related EWIs[¶](#id82)
 
-- [SSC-EWI-0035](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0035):
+- [SSC-EWI-0035](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0035):
   Check statement not supported.
 
 ## FOREIGN KEY[¶](#id83)

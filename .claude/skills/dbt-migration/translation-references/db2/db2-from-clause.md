@@ -13,7 +13,7 @@ IBM DB2 documentation page for this syntax.
 
 ## Grammar Syntax[¶](#grammar-syntax)
 
-![image](../../../../_images/from_clause_overview.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/from_clause_overview.png)
 
 ## Table Reference[¶](#table-reference)
 
@@ -26,7 +26,7 @@ IBM DB2 documentation page for this syntax.
 
 ### Grammar Syntax[¶](#id2)
 
-![image](../../../../_images/table_reference_syntax.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/table_reference_syntax.png)
 
 Navigate to the following pages to get more details about the translation spec for the subsections
 of the Table Reference grammar.
@@ -46,7 +46,7 @@ Analyze Table Expressions are not supported in Snowflake. The output query can b
 
 ### Grammar Syntax
 
-![image](../../../../_images/analyze_table_syntax.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/analyze_table_syntax.png)
 
 ### Sample Source Patterns
 
@@ -74,7 +74,7 @@ ORDER BY 1;
 
 ### Related EWIs
 
-1. [SSC-EWI-DB0019](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/db2EWI):
+1. [SSC-EWI-DB0019](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/db2EWI):
    ANALYZE TABLE FACTOR IS NOT SUPPORTED
 
 ## Collection Derived Table
@@ -93,9 +93,9 @@ Collection Derived Tables are not supported in Snowflake.
 
 ### Grammar Syntax[¶](#id6)
 
-![image](../../../../_images/collection_derived_table_syntax_1.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/collection_derived_table_syntax_1.png)
 
-![image](../../../../_images/collection_derived_table_syntax_2.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/collection_derived_table_syntax_2.png)
 
 ### Sample Source Patterns[¶](#id7)
 
@@ -120,7 +120,7 @@ FROM
 
 ### Related EWIs[¶](#id10)
 
-1. [SSC-EWI-DB0016](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/db2EWI):
+1. [SSC-EWI-DB0016](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/db2EWI):
    UNNEST FUNCTION IS NOT SUPPORTED
 
 ## Data Change Table Reference[¶](#data-change-table-reference)
@@ -139,7 +139,7 @@ Data Change Table Reference is not supported in Snowflake. The output query can 
 
 ### Grammar Syntax
 
-![image](../../../../_images/data_change_table_syntax.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/data_change_table_syntax.png)
 
 ### Sample Source Patterns
 
@@ -164,7 +164,7 @@ FROM
 
 ### Related EWIs
 
-1. [SSC-EWI-DB0006](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/db2EWI.html#ssc-ewi-db0006):
+1. [SSC-EWI-DB0006](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/db2EWI#ssc-ewi-db0006):
    INTERMEDIATE RESULT TABLE IS NOT SUPPORTED.
 
 ## External Table Reference
@@ -182,7 +182,7 @@ External Table Reference is not supported in Snowflake. The output query can be 
 
 ### Grammar Syntax[¶](#id18)
 
-![image](../../../../_images/external_table_syntax.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/external_table_syntax.png)
 
 ### Sample Source Patterns[¶](#id19)
 
@@ -207,7 +207,7 @@ FROM
 
 ### Related EWIs[¶](#id22)
 
-1. [SSC-EWI-DB0014](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/db2EWI.html#ssc-ewi-db0014):
+1. [SSC-EWI-DB0014](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/db2EWI#ssc-ewi-db0014):
    THE USE OF EXTERNAL TABLE REFERENCES IS NOT SUPPORTED IN SNOWFLAKE
 
 ## Nested Table Expression[¶](#nested-table-expression)
@@ -227,7 +227,7 @@ Nested Table Expression is partially applicable in Snowflake.
 
 ### Grammar Syntax[¶](#id24)
 
-![image](../../../../_images/nested_table_syntax.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/nested_table_syntax.png)
 
 ### Sample Source Patterns[¶](#id25)
 
@@ -266,7 +266,7 @@ from
 
 ### Related EWIs[¶](#id28)
 
-1. [SSC-FDM-0027](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0027):
+1. [SSC-FDM-0027](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0027):
    REMOVED NEXT STATEMENT, NOT APPLICABLE IN SNOWFLAKE.
 
 ## ONLY TABLE REFERENCE[¶](#only-table-reference)
@@ -282,7 +282,7 @@ to navigate to the IBM DB2 documentation page for this syntax.
 
 ### Grammar Syntax[¶](#id30)
 
-![image](../../../../_images/only_table_syntax.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/only_table_syntax.png)
 
 ### Sample Source Patterns[¶](#id31)
 
@@ -315,7 +315,7 @@ OUTER TABLE REFERENCE is not applicable in Snowflake.
 
 ### Grammar Syntax[¶](#id35)
 
-![image](../../../../_images/outer_table_syntax.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/outer_table_syntax.png)
 
 ### Sample Source Patterns[¶](#id36)
 
@@ -334,7 +334,7 @@ OUTER TABLE REFERENCE is not applicable in Snowflake.
 
 ### Related EWIs[¶](#id39)
 
-1. [SSC-EWI-DB0004](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/db2EWI.html#ssc-ewi-db0004):
+1. [SSC-EWI-DB0004](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/db2EWI#ssc-ewi-db0004):
    OUTER TABLE REFERENCE IS NOT SUPPORTED IN SNOWFLAKE.
 
 ## Period Specification[¶](#period-specification)
@@ -351,7 +351,7 @@ Period Specification is currently not supported by Snowflake.
 
 ### Grammar Syntax
 
-![image](../../../../_images/period_specification_syntax.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/period_specification_syntax.png)
 
 ### Sample Source Patterns
 
@@ -378,7 +378,7 @@ FOR BUSINESS_TIME AS OF "12-12-12";
 
 ### Related EWIs
 
-1. [SSC-EWI-DB0003](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/db2EWI.html#ssc-ewi-db0003):
+1. [SSC-EWI-DB0003](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/db2EWI#ssc-ewi-db0003):
    PERIOD SPECIFICATION IS NOT SUPPORTED IN SNOWFLAKE.
 
 ## Table Function Reference
@@ -398,9 +398,9 @@ Table Function Reference is not applicable in Snowflake.
 
 ### Grammar Syntax[¶](#id46)
 
-![image](../../../../_images/table_function_syntax_1.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/table_function_syntax_1.png)
 
-![image](../../../../_images/table_function_syntax_2.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/table_function_syntax_2.png)
 
 ### Sample Source Patterns[¶](#id47)
 

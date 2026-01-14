@@ -150,7 +150,7 @@ No issues were found.
 
 ## Related EWIS[¶](#related-ewis)
 
-1. [SSC-FDM-OR0042](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM.html#ssc-fdm-or0042):
+1. [SSC-FDM-OR0042](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM#ssc-fdm-or0042):
    Date Type Transformed To Timestamp Has A Different Behavior
 
 ## Cursor for a return variable[¶](#cursor-for-a-return-variable)
@@ -335,9 +335,9 @@ No issues were found.
 
 ### Related EWIS[¶](#id7)
 
-1. [SSC-FDM-OR0042](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM.html#ssc-fdm-or0042):
+1. [SSC-FDM-OR0042](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM#ssc-fdm-or0042):
    Date Type Transformed To Timestamp Has A Different Behavior.
-2. [SSC-EWI-0073](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0073):
+2. [SSC-EWI-0073](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0073):
    Pending Functional Equivalence Review.
 
 ## Cursor with IF statement[¶](#cursor-with-if-statement)
@@ -936,18 +936,18 @@ No issues were found.
 
 ### Related EWIS[¶](#id29)
 
-1. [SSC-FDM-OR0042](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM.html#ssc-fdm-or0042):
+1. [SSC-FDM-OR0042](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM#ssc-fdm-or0042):
    Date Type Transformed To Timestamp Has A Different Behavior.
-2. [SSC-EWI-0073](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0073):
+2. [SSC-EWI-0073](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0073):
    Pending Functional Equivalence Review.
-3. [SSC-EWI-OR0036](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0036):
+3. [SSC-EWI-OR0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0036):
    Types resolution issues, the arithmetic operation may not behave correctly between string and
    date.
 
 ## Snowflake Script UDF (SCALAR)[¶](#snowflake-script-udf-scalar)
 
 Translation reference for Oracle User Defined Functions to
-[Snowflake Scripting UDFs](../../../../../developer-guide/udf/sql/udf-sql-procedural-functions)
+[Snowflake Scripting UDFs](https://docs.snowflake.com/en/migrations/snowconvert-docs/developer-guide/udf/sql/udf-sql-procedural-functions)
 
 **Note:**
 
@@ -1344,11 +1344,11 @@ as these features are unsupported in SnowScripting UDFs:**
 
 ### Related EWIs[¶](#id52)
 
-1. [SSC-EWI-0067](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0067):
+1. [SSC-EWI-0067](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0067):
    UDF was transformed to Snowflake procedure, calling procedures inside a query is not supported.
-2. [SSC-EWI-0068](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0068):
+2. [SSC-EWI-0068](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0068):
    User defined function was transformed to a Snowflake procedure.
-3. [SSC-EWI-0073](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0073):
+3. [SSC-EWI-0073](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0073):
    Pending Functional Equivalence Review.
-4. [SSC-FDM-OR0042](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM.html#ssc-fdm-or0042):
+4. [SSC-FDM-OR0042](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM#ssc-fdm-or0042):
    Date Type Transformed To Timestamp Has A Different Behavior.

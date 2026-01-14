@@ -267,7 +267,7 @@ if __name__ == "__main__":
 ```
 
 If you have any additional questions regarding this documentation, you can email us at
-[snowconvert-support@snowflake.com](mailto:snowconvert-support%40snowflake.com).
+[snowconvert-support@snowflake.com](https://docs.snowflake.com/en/migrations/snowconvert-docs/translation-references/teradata/scripts-to-python/mailto:snowconvert-support%40snowflake.com).
 
 ## Known Issues[¶](#known-issues)
 
@@ -275,9 +275,9 @@ No issues were found.
 
 ## Related EWIs[¶](#related-ewis)
 
-1. [SSC-FDM-0007](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0007):
+1. [SSC-FDM-0007](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0007):
    Element with missing dependencies.
-2. [SSC-FDM-0027](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0027):
+2. [SSC-FDM-0027](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0027):
    Removed next statement, not applicable in SnowFlake.
 
 ## BEGIN LOADING[¶](#begin-loading)
@@ -629,11 +629,11 @@ Extra specifications for the `SET RECORD VARTEXT` such as `TRIM` or `QUOTE` are 
 
 ### Related EWIs[¶](#id4)
 
-1. [SSC-FDM-0007](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0007):
+1. [SSC-FDM-0007](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0007):
    Element with missing dependencies.
-2. [SSC-FDM-0027](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0027):
+2. [SSC-FDM-0027](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0027):
    Removed next statement, not applicable in SnowFlake.
-3. [SSC-EWI-0021](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0021):
+3. [SSC-EWI-0021](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0021):
    Not supported.
-4. [SSC-FDM-TD0022](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/teradataFDM.html#ssc-fdm-td0022):
+4. [SSC-FDM-TD0022](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/teradataFDM#ssc-fdm-td0022):
    Shell variables found, running this code in a shell script is required.

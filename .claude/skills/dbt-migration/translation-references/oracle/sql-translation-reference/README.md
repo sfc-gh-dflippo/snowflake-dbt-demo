@@ -154,8 +154,8 @@ references TABLE2 (ID) ON DELETE CASCADE;
 
 ### Related EWIs[¶](#related-ewis)
 
-1. [SSC-EWI-0109](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0109): Alter Table syntax is not applicable in Snowflake.
-2. [SSC-EWI-OR0067](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0067): Multiple constraint definition in a single statement is not supported in Snowflake.
+1. [SSC-EWI-0109](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0109): Alter Table syntax is not applicable in Snowflake.
+2. [SSC-EWI-OR0067](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0067): Multiple constraint definition in a single statement is not supported in Snowflake.
 
 ## Create Database Link[¶](#create-database-link)
 
@@ -276,8 +276,8 @@ SELECT * FROM
 
 ### Related EWIs[¶](#id7)
 
-1. [SSC-EWI-OR0123](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0123): Db Link connections not supported.
-2. [SSC-FDM-0007](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0007): Element with missing dependencies.
+1. [SSC-EWI-OR0123](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0123): Db Link connections not supported.
+2. [SSC-FDM-0007](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0007): Element with missing dependencies.
 
 ## Drop Table[¶](#drop-table)
 
@@ -575,8 +575,8 @@ COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":
 
 ### Related EWIs[¶](#id16)
 
-1. [SSC-EWI-OR0069](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0069): The sequence CURRVAL property is not supported in Snowflake.
-2. [SSC-EWI-OR0068](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0068): The sequence start value exceeds the max value allowed by Snowflake.
+1. [SSC-EWI-OR0069](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0069): The sequence CURRVAL property is not supported in Snowflake.
+2. [SSC-EWI-OR0068](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0068): The sequence start value exceeds the max value allowed by Snowflake.
 
 ## Alter Session[¶](#alter-session)
 
@@ -772,6 +772,6 @@ VIEW_ORGINAL;
 
 ### Related EWIs[¶](#id25)
 
-1. [SSC-FDM-0001](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0001): Views selecting all columns from a single table are not required in Snowflake.
-2. [SSC-FDM-0006](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0006): Number type column may not behave similarly in Snowflake.
-3. [SSC-FDM-OR0005](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM.html#ssc-fdm-or0005): Synonyms are not supported in Snowflake but references to this synonym were changed by the original object name.
+1. [SSC-FDM-0001](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0001): Views selecting all columns from a single table are not required in Snowflake.
+2. [SSC-FDM-0006](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0006): Number type column may not behave similarly in Snowflake.
+3. [SSC-FDM-OR0005](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM#ssc-fdm-or0005): Synonyms are not supported in Snowflake but references to this synonym were changed by the original object name.

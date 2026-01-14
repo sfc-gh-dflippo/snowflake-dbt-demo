@@ -195,9 +195,9 @@ PARTITION BY transaction_date;
 
 ## Related EWIs[¶](#related-ewis)
 
-1. [SSC-EWI-BQ0001](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/bigqueryEWI.html#ssc-ewi-bq0001):
+1. [SSC-EWI-BQ0001](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/bigqueryEWI#ssc-ewi-bq0001):
    Snowflake does not support the options clause.
-2. [SSC-EWI-BQ0002](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/bigqueryEWI.html#ssc-ewi-bq0002):
+2. [SSC-EWI-BQ0002](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/bigqueryEWI#ssc-ewi-bq0002):
    Micro-partitioning is automatically performed on all Snowflake tables.
 
 ## COLUMN DEFINITION[¶](#column-definition)
@@ -296,7 +296,7 @@ CREATE TABLE table1 (
 
 ### Related EWIs[¶](#id21)
 
-1. [SSC-EWI-BQ0001](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/bigqueryEWI.html#ssc-ewi-bq0001):
+1. [SSC-EWI-BQ0001](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/bigqueryEWI#ssc-ewi-bq0001):
    Snowflake does not support the options clause.
 
 ## CREATE EXTERNAL TABLE[¶](#create-external-table)
@@ -863,23 +863,23 @@ OPTIONS(
 
 ### Related EWIs[¶](#id48)
 
-1. [SSC-EWI-BQ0013](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/bigqueryEWI.html#ssc-ewi-bq0013):
+1. [SSC-EWI-BQ0013](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/bigqueryEWI#ssc-ewi-bq0013):
    External table data format not supported in snowflake
-2. [SSC-EWI-BQ0014](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/bigqueryEWI.html#ssc-ewi-bq0014):
+2. [SSC-EWI-BQ0014](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/bigqueryEWI#ssc-ewi-bq0014):
    Hive partitioned external tables are not supported in snowflake
-3. [SSC-EWI-BQ0015](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/bigqueryEWI.html#ssc-ewi-bq0015):
+3. [SSC-EWI-BQ0015](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/bigqueryEWI#ssc-ewi-bq0015):
    External table requires an external stage to access a external location, define and replace the
    EXTERNAL_STAGE placeholder
-4. [SSC-FDM-BQ0004](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/bigqueryFDM.html#ssc-fdm-bq0004):
+4. [SSC-FDM-BQ0004](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/bigqueryFDM#ssc-fdm-bq0004):
    The INFER_SCHEMA function requires a file path without wildcards to generate the table template,
    replace the FILE_PATH placeholder with it
-5. [SSC-FDM-BQ0005](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/bigqueryFDM.html#ssc-fdm-bq0005):
+5. [SSC-FDM-BQ0005](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/bigqueryFDM#ssc-fdm-bq0005):
    Parsing the CSV header is not supported in external tables, columns must be renamed to match the
    original names
-6. [SSC-FDM-BQ0006](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/bigqueryFDM.html#ssc-fdm-bq0006):
+6. [SSC-FDM-BQ0006](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/bigqueryFDM#ssc-fdm-bq0006):
    Reading from Google Drive is not supported in Snowflake, upload the files to the external
    location and replace the FILE_PATH placeholders
-7. [SSC-FDM-BQ0007](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/bigqueryFDM.html#ssc-fdm-bq0007):
+7. [SSC-FDM-BQ0007](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/bigqueryFDM#ssc-fdm-bq0007):
    Reading from spreadsheets is not supported in snowflake, use the CSV file type instead
 
 ## CREATE TABLE CLONE[¶](#create-table-clone)

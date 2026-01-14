@@ -11,11 +11,11 @@ title: SnowConvert AI - Teradata - Data Types | Snowflake Documentation
 |---|---|---|---|---|
 |`ARRAY`|`ARRAY`||
 |`BIGINT`|`BIGINT`|`BIGINT`in Snowflake is an alias for `NUMBER(38,0).`[Check out [note](#integer-data-types)]|
-|`BLOB`|`BINARY`|Limited to 8MB. `BLOB`is not supported, warning [SSC-FDM-TD0001](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/teradataFDM.html#ssc-fdm-td0001) is generated|
+|`BLOB`|`BINARY`|Limited to 8MB. `BLOB`is not supported, warning [SSC-FDM-TD0001](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/teradataFDM#ssc-fdm-td0001) is generated|
 |`BYTE`|`BINARY`||
 |`BYTEINT`|`BYTEINT`||
 |`CHAR`|`CHAR`||
-|`CLOB`|`VARCHAR`|​Limited to 16MB. `CLOB`is not supported, warning [SSC-FDM-TD0002](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/teradataFDM.html#ssc-fdm-td0002) is generated|
+|`CLOB`|`VARCHAR`|​Limited to 16MB. `CLOB`is not supported, warning [SSC-FDM-TD0002](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/teradataFDM#ssc-fdm-td0002) is generated|
 |`DATE`|`DATE`||
 |`DECIMAL`|`DECIMAL`||
 |`DOUBLE PRECISION`|`DOUBLE PRECISION`||
@@ -38,7 +38,7 @@ title: SnowConvert AI - Teradata - Data Types | Snowflake Documentation
 |`SMALLINT`|`​SMALLINT`​|`SMALLINT` in Snowflake is an alias for `NUMBER(38,0).` [Check out [note](#integer-data-types)]|
 |`ST_GEOMETRY`|`GEOGRAPHY`||
 |`TIME`|`TIME`||
-|`TIME WITH TIME ZONE`|`TIME`|Warning [SSC-FDM-0005](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0005) is generated.|
+|`TIME WITH TIME ZONE`|`TIME`|Warning [SSC-FDM-0005](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0005) is generated.|
 |`TIMESTAMP`|`TIMESTAMP`||
 |`TIMESTAMP WITH TIME ZONE`|`TIMESTAMP_TZ`||
 |`VARBYTE`|`BINARY`||
@@ -66,14 +66,14 @@ comparison of the range of values that can be present in each data type:
   +99999999999999999999999999999999999999
 
 Warning
-[SSC-EWI-0036](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0036)
+[SSC-EWI-0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0036)
 is generated.
 
 ### Interval/Period Data Types[¶](#interval-period-data-types)
 
 Intervals and Periods are stored as a string (`VARCHAR`) in Snowflake. When converting, SnowConvert
 AI creates a UDF that recreates the same expression as a string. Warning
-[SSC-EWI-TD0053](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/teradataEWI.html#ssc-ewi-td0053)
+[SSC-EWI-TD0053](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/teradataEWI#ssc-ewi-td0053)
 is generated.
 
 You can see more of the UDF’s in the public repository of UDF’s currently created by Snowflake

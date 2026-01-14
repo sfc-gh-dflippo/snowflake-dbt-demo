@@ -535,9 +535,9 @@ No issues were found.
 
 ### Related EWIs[¶](#related-ewis)
 
-1. [SSC-EWI-0053](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0053):
+1. [SSC-EWI-0053](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0053):
    Object may not work.
-2. [SSC-FDM-OR0035](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM.html#ssc-fdm-or0035):
+2. [SSC-FDM-OR0035](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM#ssc-fdm-or0035):
    DBMS_OUTPUT.PUTLINE check UDF implementation
 
 ## Implicit Cursor attribute helper[¶](#implicit-cursor-attribute-helper)

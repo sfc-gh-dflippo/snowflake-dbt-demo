@@ -537,16 +537,16 @@ assigned to the cursor result contains values
 
 ## Related EWIs[¶](#related-ewis)
 
-1. [SSC-EWI-0036](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0036):
+1. [SSC-EWI-0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0036):
    Data type converted to another data type.
-2. [SSC-EWI-OR0002](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0002):
+2. [SSC-EWI-OR0002](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0002):
    Columns from expression not found.
-3. [SSC-EWI-OR0036](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0036):
+3. [SSC-EWI-OR0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0036):
    Types resolution issues, the arithmetic operation may not behave correctly between string and
    date.
-4. [SSC-PRF-0003](../../../general/technical-documentation/issues-and-troubleshooting/performance-review/generalPRF.html#ssc-prf-0003):
+4. [SSC-PRF-0003](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/performance-review/generalPRF#ssc-prf-0003):
    Fetch inside a loop is considered a complex pattern, this could degrade Snowflake performance.
-5. [SSC-PRF-0004](../../../general/technical-documentation/issues-and-troubleshooting/performance-review/generalPRF.html#ssc-prf-0004):
+5. [SSC-PRF-0004](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/performance-review/generalPRF#ssc-prf-0004):
    This statement has usages of cursor for loop.
 
 ## CURSOR DECLARATION[¶](#cursor-declaration)
@@ -879,9 +879,9 @@ No issues were found.
 
 ### Related EWIs[¶](#id20)
 
-1. [SSC-EWI-0030](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0030):
+1. [SSC-EWI-0030](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0030):
    The statement below has usages of dynamic SQL.
-2. [SSC-EWI-0058](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0058):
+2. [SSC-EWI-0058](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0058):
    Functionality is not currently supported by Snowflake Scripting.
 
 ## PARAMETRIZED CURSOR[¶](#parametrized-cursor)
@@ -985,11 +985,11 @@ $$;
 
 - Manually change the cursor to use bindings.
 - If you need more support, you can email us at
-  [snowconvert-support@snowflake.com](mailto:snowconvert-support%40snowflake.com)
+  [snowconvert-support@snowflake.com](https://docs.snowflake.com/en/migrations/snowconvert-docs/translation-references/oracle/pl-sql-to-snowflake-scripting/mailto:snowconvert-support%40snowflake.com)
 
 ### Related EWIs[¶](#id24)
 
-1. [SSC-PRF-0004](../../../general/technical-documentation/issues-and-troubleshooting/performance-review/generalPRF.html#ssc-prf-0004):
+1. [SSC-PRF-0004](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/performance-review/generalPRF#ssc-prf-0004):
    This statement has usages of cursor for loop.
 
 ## Workaround for cursors using parameters or procedure variables[¶](#workaround-for-cursors-using-parameters-or-procedure-variables)
@@ -1128,5 +1128,5 @@ $$;
 
 ### Related EWIs[¶](#id28)
 
-1. [SSC-PRF-0004](../../../general/technical-documentation/issues-and-troubleshooting/performance-review/generalPRF.html#ssc-prf-0004):
+1. [SSC-PRF-0004](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/performance-review/generalPRF#ssc-prf-0004):
    This statement has usages of cursor for loop

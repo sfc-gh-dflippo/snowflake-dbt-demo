@@ -96,7 +96,7 @@ No issues were found.
 
 ### Related EWIs[¶](#related-ewis)
 
-- [SSC-FDM-OR0030](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM.html#ssc-fdm-or0030):
+- [SSC-FDM-OR0030](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM#ssc-fdm-or0030):
   ROWID pseudocolumn is not supported in Snowflake
 
 ## ROWNUM[¶](#rownum)
@@ -209,5 +209,5 @@ No issues were found.
 
 ### Related EWIs[¶](#id11)
 
-1. [SSC-FDM-0006:](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0006)
+1. [SSC-FDM-0006:](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0006)
    Number type column may not behave similarly in Snowflake

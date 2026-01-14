@@ -266,5 +266,5 @@ FROM
 
 #### Related EWIs[¶](#id18)
 
-1. [SSC-EWI-BQ0001](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/bigqueryEWI.html#ssc-ewi-bq0001):
+1. [SSC-EWI-BQ0001](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/bigqueryEWI#ssc-ewi-bq0001):
    The OPTIONS clause within View is not supported in Snowflake.

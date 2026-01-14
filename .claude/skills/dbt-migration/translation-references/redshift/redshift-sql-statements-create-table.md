@@ -235,7 +235,7 @@ COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,
 
 ### Related EWIs[¶](#id26)
 
-1. [SSC-FDM-RS0001](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/redshiftFDM.html#ssc-fdm-rs0001):
+1. [SSC-FDM-RS0001](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/redshiftFDM#ssc-fdm-rs0001):
    Option not supported. Data storage is automatically handled by Snowflake.
 
 ## DISTSTYLE[¶](#diststyle)
@@ -319,7 +319,7 @@ COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,
 
 ### Related EWIs[¶](#id34)
 
-1. [SSC-FDM-RS0001](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/redshiftFDM.html#ssc-fdm-rs0001):
+1. [SSC-FDM-RS0001](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/redshiftFDM#ssc-fdm-rs0001):
    Option not supported. Data storage is automatically handled by Snowflake.
 
 ## ENCODE[¶](#encode)
@@ -446,9 +446,9 @@ COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,
 
 ### Related EWIs[¶](#id50)
 
-1. [SSC-FDM-RS0001](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/redshiftFDM.html#ssc-fdm-rs0001):
+1. [SSC-FDM-RS0001](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/redshiftFDM#ssc-fdm-rs0001):
    Option not supported. Data storage is automatically handled by Snowflake.
-2. [SSC-FDM-RS0002](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/redshiftFDM.html#ssc-fdm-rs0002):
+2. [SSC-FDM-RS0002](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/redshiftFDM#ssc-fdm-rs0002):
    The performance of the CLUSTER BY may vary compared to the performance of Sortkey.
 
 ## FOREIGN KEY[¶](#foreign-key)
@@ -501,7 +501,7 @@ COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,
 
 ### Related EWIs[¶](#id58)
 
-- [SSC-FDM-RSOOO3](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/redshiftFDM.html#ssc-fdm-rs0003):
+- [SSC-FDM-RSOOO3](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/redshiftFDM#ssc-fdm-rs0003):
   Foreign Key translation will be supported in the future.
 
 ## PRIMARY KEY[¶](#primary-key)
@@ -1111,5 +1111,5 @@ COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,
 
 ### Known issues[¶](#id158)
 
-1. [SSC-FDM-RS0002](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/redshiftFDM.html#ssc-fdm-rs0002):
+1. [SSC-FDM-RS0002](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/redshiftFDM#ssc-fdm-rs0002):
    The performance of the CLUSTER BY may vary compared to the performance of the Sortkey or Distkey.

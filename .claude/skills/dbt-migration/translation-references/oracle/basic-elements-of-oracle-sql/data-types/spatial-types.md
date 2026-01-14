@@ -265,7 +265,7 @@ SELECT * FROM
 
 ### Related EWIs[¶](#related-ewis)
 
-1. [SSC-EWI-0073](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0073):
+1. [SSC-EWI-0073](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0073):
    Pending Functional Equivalence Review.
 
 ## SDO_GEORASTER[¶](#sdo-georaster)
@@ -352,9 +352,9 @@ SDO_GEORASTER Data Type is not being transformed by SnowConvert.
 
 ### Related EWIs[¶](#id13)
 
-1. [SSC-EWI-0028](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0028):
+1. [SSC-EWI-0028](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0028):
    Type not supported.
-2. [SSC-EWI-OR0076:](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0076)
+2. [SSC-EWI-OR0076:](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0076)
    Built In Package Not Supported.
 
 ## SDO_TOPO_GEOMETRY[¶](#sdo-topo-geometry)
@@ -432,7 +432,7 @@ SDO_TOPO_GEOMETRY Data Type is not being transformed by SnowConvert.
 
 ### Related EWIs[¶](#id21)
 
-1. [SSC-EWI-0028](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0028):
+1. [SSC-EWI-0028](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0028):
    Type not supported.
-2. [SSC-EWI-0073:](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0073)
+2. [SSC-EWI-0073:](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0073)
    Pending functional equivalence review.

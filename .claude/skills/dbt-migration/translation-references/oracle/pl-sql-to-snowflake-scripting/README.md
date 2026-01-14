@@ -235,12 +235,12 @@ Currently, transformation for cursor, collection, record, and user-defined type 
 
 ### Related EWIs[¶](#related-ewis)
 
-1. [SSC-EWI-0036](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0036): Data type converted to another data type.
-2. [SSC-EWI-0058](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0058): Functionality is not currently supported by Snowflake Scripting.
-3. [SSC-EWI-0062](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0062): Custom type usage changed to variant.
-4. [SSC-EWI-OR0108](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0108): The Following Assignment Statement is Not Supported by Snowflake Scripting.
-5. [SSC-FDM-0006](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0006): Number type column may not behave similarly in Snowflake.
-6. [SSC-FDM-0007](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0007): Element with missing dependencies.
+1. [SSC-EWI-0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0036): Data type converted to another data type.
+2. [SSC-EWI-0058](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0058): Functionality is not currently supported by Snowflake Scripting.
+3. [SSC-EWI-0062](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0062): Custom type usage changed to variant.
+4. [SSC-EWI-OR0108](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0108): The Following Assignment Statement is Not Supported by Snowflake Scripting.
+5. [SSC-FDM-0006](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0006): Number type column may not behave similarly in Snowflake.
+6. [SSC-FDM-0007](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0007): Element with missing dependencies.
 
 ## CALL[¶](#call)
 
@@ -538,8 +538,8 @@ The labels are commented out or removed depending on their position.
 
 ### Related EWIS[¶](#id23)
 
-1. [SSC-EWI-0094](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0094): Label declaration not supported.
-2. [SSC-FDM-0007](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0007): Element with missing dependencies.
+1. [SSC-EWI-0094](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0094): Label declaration not supported.
+2. [SSC-FDM-0007](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0007): Element with missing dependencies.
 
 ## COMPOUND STATEMENTS[¶](#compound-statements)
 
@@ -1253,12 +1253,12 @@ Division by zero
 
 ### Related EWIs[¶](#id61)
 
-1. [SSC-EWI-0027](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0027):The following statement uses a variable/literal with an invalid query and it will not be executed.
-2. [SSC-EWI-OR0036](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0036): Types resolution issues, the arithmetic operation may not behave correctly between string and date.
-3. [SSC-FDM-OR0035](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM.html#ssc-fdm-or0035): DBMS_OUTPUT.PUTLINE check UDF implementation.
-4. [SSC-FDM-0006](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0006): Number type column may not behave similarly in Snowflake.
-5. [SSC-PRF-0004](../../../general/technical-documentation/issues-and-troubleshooting/performance-review/generalPRF.html#ssc-prf-0004): This statement has usages of cursor for loop.
-6. [SSC-EWI-0030](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0030): The statement below has usages of dynamic SQL
+1. [SSC-EWI-0027](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0027):The following statement uses a variable/literal with an invalid query and it will not be executed.
+2. [SSC-EWI-OR0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0036): Types resolution issues, the arithmetic operation may not behave correctly between string and date.
+3. [SSC-FDM-OR0035](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM#ssc-fdm-or0035): DBMS_OUTPUT.PUTLINE check UDF implementation.
+4. [SSC-FDM-0006](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0006): Number type column may not behave similarly in Snowflake.
+5. [SSC-PRF-0004](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/performance-review/generalPRF#ssc-prf-0004): This statement has usages of cursor for loop.
+6. [SSC-EWI-0030](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0030): The statement below has usages of dynamic SQL
 
 ## CONTINUE[¶](#continue)
 
@@ -1599,7 +1599,7 @@ No issues were found.
 
 ### Related EWIs[¶](#id77)
 
-1. [SSC-EWI-0094](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0094): Label declaration not supported.
+1. [SSC-EWI-0094](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0094): Label declaration not supported.
 
 ## DECLARE[¶](#declare)
 
@@ -1909,10 +1909,10 @@ There are some Oracle declaration statements that are not supported by the Snowf
 
 ### Related EWIS[¶](#id88)
 
-1. [SSC-EWI-OR0051](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0051): PRAGMA EXCEPTION_INIT is not supported.
-2. [SSC-EWI-OR0099](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0099): The exception code exceeds the Snowflake Scripting limit.
-3. [SSC-FDM-0016](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0016): Constants are not supported by Snowflake Scripting. It was transformed into a variable.
-4. [SSC-FDM-OR0025](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM.html#ssc-fdm-or0025): Not Null constraint is not supported in Snowflake Procedures.
+1. [SSC-EWI-OR0051](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0051): PRAGMA EXCEPTION_INIT is not supported.
+2. [SSC-EWI-OR0099](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0099): The exception code exceeds the Snowflake Scripting limit.
+3. [SSC-FDM-0016](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0016): Constants are not supported by Snowflake Scripting. It was transformed into a variable.
+4. [SSC-FDM-OR0025](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM#ssc-fdm-or0025): Not Null constraint is not supported in Snowflake Procedures.
 
 ## DEFAULT PARAMETERS[¶](#default-parameters)
 
@@ -2528,8 +2528,8 @@ $$;
 
 ### Related EWIs[¶](#id123)
 
-1. [SSC-EWI-0027](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0027): Variable with invalid query.
-2. [SSC-EWI-0030](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0030): The statement below has usages of dynamic SQL.
+1. [SSC-EWI-0027](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0027): Variable with invalid query.
+2. [SSC-EWI-0030](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0030): The statement below has usages of dynamic SQL.
 
 ## EXIT[¶](#exit)
 
@@ -2861,7 +2861,7 @@ No issues were found.
 
 ### Related EWIs[¶](#id139)
 
-1. [SSC-EWI-0094](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0094): Label declaration not supported.
+1. [SSC-EWI-0094](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0094): Label declaration not supported.
 
 ## EXPRESSIONS[¶](#expressions)
 
@@ -3069,7 +3069,7 @@ SELECT * FROM t_boolean_table;
 
 ### Related EWIs.[¶](#id148)
 
-1. [SSC-FDM-0016](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0016): Constants are not supported by Snowflake Scripting. It was transformed to a variable.
+1. [SSC-FDM-0016](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0016): Constants are not supported by Snowflake Scripting. It was transformed to a variable.
 
 ## FOR LOOP[¶](#for-loop)
 
@@ -3355,7 +3355,7 @@ Snowflake Scripting only allows an `INTEGER` or an expression that evaluates to 
 
 **4. Oracle Unsupported Clauses**
 
-Oracle allows additional clauses to the `FOR LOOP` condition. Like the **BY** clause for a stepped increment in the condition. And the **WHILE** and **WHEN** clause for boolean expressions. These additional clauses are not supported in Snowflake Scripting and are ignored during transformation. Check [SSC-EWI-OR0101](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0101).
+Oracle allows additional clauses to the `FOR LOOP` condition. Like the **BY** clause for a stepped increment in the condition. And the **WHILE** and **WHEN** clause for boolean expressions. These additional clauses are not supported in Snowflake Scripting and are ignored during transformation. Check [SSC-EWI-OR0101](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0101).
 
 ##### Oracle[¶](#id162)
 
@@ -3376,15 +3376,15 @@ END LOOP;
 
 **5. Unsupported Formats**
 
-Oracle allows different types of conditions for a `FOR LOOP`. It supports boolean expressions, collections, records… However, Snowflake scripting only supports `FOR LOOP` with defined integers as bounds. All other formats are marked as not supported and require additional manual effort to be transformed. Check [SSC-EWI-OR0103](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0103).
+Oracle allows different types of conditions for a `FOR LOOP`. It supports boolean expressions, collections, records… However, Snowflake scripting only supports `FOR LOOP` with defined integers as bounds. All other formats are marked as not supported and require additional manual effort to be transformed. Check [SSC-EWI-OR0103](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0103).
 
 ### Related EWIs[¶](#id164)
 
-1. [SSC-EWI-0058](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0058): Functionality is not currently supported by Snowflake Scripting.
-2. [SSC-EWI-0062](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0062): Custom type usage changed to variant.
-3. [SSC-EWI-OR0100](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0100): For Loop With Multiple Conditions Is Currently Not Supported By Snowflake Scripting. Only First Condition Is Used.
-4. [SSC-EWI-OR0101](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0101): Specific For Loop Clause Is Currently Not Supported By Snowflake Scripting.
-5. [SSC-EWI-OR0103](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0103): For Loop Format Is Currently Not Supported By Snowflake Scripting.
+1. [SSC-EWI-0058](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0058): Functionality is not currently supported by Snowflake Scripting.
+2. [SSC-EWI-0062](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0062): Custom type usage changed to variant.
+3. [SSC-EWI-OR0100](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0100): For Loop With Multiple Conditions Is Currently Not Supported By Snowflake Scripting. Only First Condition Is Used.
+4. [SSC-EWI-OR0101](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0101): Specific For Loop Clause Is Currently Not Supported By Snowflake Scripting.
+5. [SSC-EWI-OR0103](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0103): For Loop Format Is Currently Not Supported By Snowflake Scripting.
 
 ## FORALL[¶](#forall)
 
@@ -5277,16 +5277,16 @@ No issues were found.
 
 ### Related EWIs[¶](#id266)
 
-1. [SSC-EWI-0030](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0030): The statement below has usages of dynamic SQL.
-2. [SSC-EWI-0036](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0036): Data type converted to another data type.
-3. [SSC-EWI-0056](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0056): Create Type Not Supported.
-4. [SSC-EWI-0058](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0058): Functionality is not currently supported by Snowflake Scripting.
-5. [SSC-EWI-0062](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0062): Custom type usage changed to variant.
-6. [SSC-EWI-OR0049](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0049): Package constants in stateful package are not supported yet.
-7. [SSC-FDM-0006](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0006): Number type column may not behave similarly in Snowflake.
-8. [SSC-FDM-0015:](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0015) ​Referenced custom type in query not found.
-9. [SSC-PRF-0001](../../../general/technical-documentation/issues-and-troubleshooting/performance-review/generalPRF.html#ssc-prf-0001): This statement has usages of cursor fetch bulk operations.
-10. [SSC-PRF-0003](../../../general/technical-documentation/issues-and-troubleshooting/performance-review/generalPRF.html#ssc-prf-0003): Fetch inside a loop is considered a complex pattern, this could degrade Snowflake performance.
+1. [SSC-EWI-0030](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0030): The statement below has usages of dynamic SQL.
+2. [SSC-EWI-0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0036): Data type converted to another data type.
+3. [SSC-EWI-0056](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0056): Create Type Not Supported.
+4. [SSC-EWI-0058](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0058): Functionality is not currently supported by Snowflake Scripting.
+5. [SSC-EWI-0062](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0062): Custom type usage changed to variant.
+6. [SSC-EWI-OR0049](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0049): Package constants in stateful package are not supported yet.
+7. [SSC-FDM-0006](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0006): Number type column may not behave similarly in Snowflake.
+8. [SSC-FDM-0015:](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0015) ​Referenced custom type in query not found.
+9. [SSC-PRF-0001](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/performance-review/generalPRF#ssc-prf-0001): This statement has usages of cursor fetch bulk operations.
+10. [SSC-PRF-0003](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/performance-review/generalPRF#ssc-prf-0003): Fetch inside a loop is considered a complex pattern, this could degrade Snowflake performance.
 
 ## IF[¶](#if)
 
@@ -5836,13 +5836,13 @@ WHERE
 
 ### Related EWIs[¶](#id297)
 
-1. [SSC-EWI-0056](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0056): Create Type Not Supported.
-2. [SSC-EWI-0062](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0062): Custom type usage changed to variant.
-3. [SSC-EWI-0073](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0073): Pending Functional Equivalence Review.
-4. [SSC-EWI-OR0035](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0035): The table function is not supported when it is used as a collection of expressions.
-5. [SSC-FDM-0006](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0006): Number type column may not behave similarly in Snowflake.
-6. [SSC-FDM-0015:](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0015) ​Referenced custom type in query not found.
-7. [SSC-FDM-OR0035](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM.html#ssc-fdm-or0035): DBMS_OUTPUT.PUTLINE check UDF implementation.
+1. [SSC-EWI-0056](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0056): Create Type Not Supported.
+2. [SSC-EWI-0062](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0062): Custom type usage changed to variant.
+3. [SSC-EWI-0073](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0073): Pending Functional Equivalence Review.
+4. [SSC-EWI-OR0035](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0035): The table function is not supported when it is used as a collection of expressions.
+5. [SSC-FDM-0006](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0006): Number type column may not behave similarly in Snowflake.
+6. [SSC-FDM-0015:](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0015) ​Referenced custom type in query not found.
+7. [SSC-FDM-OR0035](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM#ssc-fdm-or0035): DBMS_OUTPUT.PUTLINE check UDF implementation.
 
 ## LOCK TABLE[¶](#lock-table)
 
@@ -6704,15 +6704,15 @@ No issues were found.
 
 ### Related EWIs[¶](#id366)
 
-1. [SSC-EWI-0030](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0030): The statement below has usages of dynamic SQL.
-2. [SSC-EWI-0036](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0036): Data type converted to another data type.
-3. [SSC-EWI-0058](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0058): Functionality is not currently supported by Snowflake Scripting.
-4. [SSC-EWI-0062](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0062): Custom type usage changed to variant.
-5. [SSC-EWI-OR0129](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0129): TYPE attribute could not be resolved.
-6. [SSC-FDM-0006](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0006): Number type column may not behave similarly in Snowflake.
-7. [SSC-FDM-OR0031:](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM.html#ssc-fdm-or0031) The error logging clause in DML statements is not supported by Snowflake.
-8. [SSC-PRF-0001](../../../general/technical-documentation/issues-and-troubleshooting/performance-review/generalPRF.html#ssc-prf-0001): This statement has usages of cursor fetch bulk operations.
-9. [SSC-PRF-0003](../../../general/technical-documentation/issues-and-troubleshooting/performance-review/generalPRF.html#ssc-prf-0003): Fetch inside a loop is considered a complex pattern, this could degrade Snowflake performance.
+1. [SSC-EWI-0030](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0030): The statement below has usages of dynamic SQL.
+2. [SSC-EWI-0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0036): Data type converted to another data type.
+3. [SSC-EWI-0058](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0058): Functionality is not currently supported by Snowflake Scripting.
+4. [SSC-EWI-0062](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0062): Custom type usage changed to variant.
+5. [SSC-EWI-OR0129](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0129): TYPE attribute could not be resolved.
+6. [SSC-FDM-0006](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0006): Number type column may not behave similarly in Snowflake.
+7. [SSC-FDM-OR0031:](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM#ssc-fdm-or0031) The error logging clause in DML statements is not supported by Snowflake.
+8. [SSC-PRF-0001](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/performance-review/generalPRF#ssc-prf-0001): This statement has usages of cursor fetch bulk operations.
+9. [SSC-PRF-0003](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/performance-review/generalPRF#ssc-prf-0003): Fetch inside a loop is considered a complex pattern, this could degrade Snowflake performance.
 
 ## LOOP[¶](#loop)
 
@@ -7311,9 +7311,9 @@ As seen in the transformation, when retrieving the value from the called procedu
 
 ### Related EWIs[¶](#id394)
 
-1. [SSC-FDM-0006](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0006): Number type column may not behave similarly in Snowflake.
-2. [SSC-FDM-0007](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0007): Element with missing dependencies.
-3. [SSC-FDM-0015](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0015): Data Type Not Recognized.
+1. [SSC-FDM-0006](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0006): Number type column may not behave similarly in Snowflake.
+2. [SSC-FDM-0007](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0007): Element with missing dependencies.
+3. [SSC-FDM-0015](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0015): Data Type Not Recognized.
 
 ## NESTED PROCEDURES[¶](#nested-procedures)
 
@@ -8019,10 +8019,10 @@ Transformation for nested procedures within anonymous blocks is currently pendin
 
 ### Related EWIs[¶](#id417)
 
-1. [SSC-FDM-OR0050](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM.html#ssc-fdm-or0050): Exceptions with `NOCOPY` parameters may lead to data inconsistency.
-2. [SSC-EWI-OR0057](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0057): Transformation for nested procedure or function is not supported.
-3. [SSC-EWI-0111](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0111): Only one level of nesting is allowed for nested procedures in Snowflake.
-4. [SSC-EWI-0112](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0112): Nested procedure overloading is not supported.
+1. [SSC-FDM-OR0050](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM#ssc-fdm-or0050): Exceptions with `NOCOPY` parameters may lead to data inconsistency.
+2. [SSC-EWI-OR0057](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0057): Transformation for nested procedure or function is not supported.
+3. [SSC-EWI-0111](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0111): Only one level of nesting is allowed for nested procedures in Snowflake.
+4. [SSC-EWI-0112](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0112): Nested procedure overloading is not supported.
 
 ## PROCEDURE CALL[¶](#procedure-call)
 
@@ -8310,8 +8310,8 @@ Snowflake does not have support for parameter modes, however, a solution is bein
 
 ### Related EWIs[¶](#id431)
 
-1. [SSC-EWI-0002](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0002): Default Parameters May Need To Be Reordered.
-2. [SSC-FDM-0007](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0007): Element with missing dependencies.
+1. [SSC-EWI-0002](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0002): Default Parameters May Need To Be Reordered.
+2. [SSC-FDM-0007](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0007): Element with missing dependencies.
 
 ## RAISE[¶](#raise)
 
@@ -8731,9 +8731,9 @@ THE FIRST EXCEPTION
 
 ### Related EWIs[¶](#id461)
 
-1. [SSC-EWI-OR0099](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0099): The exception code exceeds the Snowflake Scripting limit.
-2. [SSC-FDM-0029](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0029): User defined function was transformed to a Snowflake procedure.
-3. [SSC-FDM-OR0011](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM.html#ssc-fdm-or0011): The boolean argument was removed because the “add to stack” options is not supported.
+1. [SSC-EWI-OR0099](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0099): The exception code exceeds the Snowflake Scripting limit.
+2. [SSC-FDM-0029](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0029): User defined function was transformed to a Snowflake procedure.
+3. [SSC-FDM-OR0011](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM#ssc-fdm-or0011): The boolean argument was removed because the “add to stack” options is not supported.
 
 ## UDF CALL[¶](#udf-call)
 
@@ -8996,9 +8996,9 @@ In the supported scenarios, the function can effectively be migrated.
 
 ### Related EWIs[¶](#id476)
 
-1. [SSC-EWI-0073](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0073): Pending Functional Equivalence Review.
-2. [SSC-FDM-0006](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0006): Number type column may not behave similarly in Snowflake.
-3. [SSC-FDM-0029](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0029): User defined function was transformed to a Snowflake procedure.
+1. [SSC-EWI-0073](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0073): Pending Functional Equivalence Review.
+2. [SSC-FDM-0006](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0006): Number type column may not behave similarly in Snowflake.
+3. [SSC-FDM-0029](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0029): User defined function was transformed to a Snowflake procedure.
 
 ## WHILE[¶](#while)
 

@@ -383,9 +383,9 @@ migration.
 
 ## Related EWIs[¶](#related-ewis)
 
-1. [SSC-EWI-0035](../../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0035):
+1. [SSC-EWI-0035](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0035):
    Check statement not supported.
-2. [SSC-FDM-PG0005](../../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/postgresqlFDM.html#ssc-fdm-pg0005):
+2. [SSC-FDM-PG0005](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/postgresqlFDM#ssc-fdm-pg0005):
    UNLOGGED Table is not supported in Snowflake; data written may have different performance.
-3. [SSC-FDM-0008](../../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0008):
+3. [SSC-FDM-0008](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0008):
    On Commit not supported.

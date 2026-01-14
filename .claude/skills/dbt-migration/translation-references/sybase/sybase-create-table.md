@@ -169,7 +169,7 @@ COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,
 
 ### Related EWIs[¶](#related-ewis)
 
-[SSC-FDM-0009](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0009):
+[SSC-FDM-0009](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0009):
 GLOBAL TEMPORARY TABLE functionality not supported.
 
 ## IF NOT EXISTS[¶](#if-not-exists)
@@ -350,7 +350,7 @@ CREATE OR REPLACE TEMPORARY TABLE temp_projects (
 
 ### Related EWIs[¶](#id31)
 
-[SSC-FDM-0008](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0008):
+[SSC-FDM-0008](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0008):
 On Commit not supported.
 
 ## AT LOCATION[¶](#at-location)
@@ -401,7 +401,7 @@ COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,
 
 ### Related EWIs[¶](#id39)
 
-[SSC-EWI-SY0002](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/sybaseEWI.html#ssc-ewi-sy0002):
+[SSC-EWI-SY0002](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/sybaseEWI#ssc-ewi-sy0002):
 UNSUPPORTED REMOTE TABLE SYNTAX.
 
 ## PARTITION BY[¶](#partition-by)
@@ -588,10 +588,10 @@ COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,
 
 ### Related EWIs[¶](#id54)
 
-[SSC-EWI-0035](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0035):
+[SSC-EWI-0035](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0035):
 CHECK STATEMENT NOT SUPPORTED.
 
-[SSC-EWI-SY0003](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/sybaseEWI.html#ssc-ewi-sy0003):
+[SSC-EWI-SY0003](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/sybaseEWI#ssc-ewi-sy0003):
 UNSUPPORTED IQ UNIQUE CONSTRAINT.
 
 ## DEFAULT[¶](#default)

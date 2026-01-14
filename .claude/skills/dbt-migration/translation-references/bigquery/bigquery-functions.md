@@ -56,7 +56,7 @@ title: SnowConvert AI - BigQuery - Built-in functions | Snowflake Documentation
 |BigQuery|Snowflake|
 |---|---|
 |[CURRENT_DATE](https://cloud.google.com/bigquery/docs/reference/standard-sql/date_functions#current_date) [CURRENT_DATE](https://cloud.google.com/bigquery/docs/reference/standard-sql/date_functions#current_date)()|[CURRENT_DATE](https://docs.snowflake.com/en/sql-reference/functions/current_date) [CURRENT_DATE](https://docs.snowflake.com/en/sql-reference/functions/current_date)()|
-|[FORMAT_DATE](https://cloud.google.com/bigquery/docs/reference/standard-sql/date_functions#format_date)|[TO_CHAR](https://docs.snowflake.com/en/sql-reference/functions/to_char) _Note: For further details on this translation, please consult this_ [_page_](format_date.md)_._|
+|[FORMAT_DATE](https://cloud.google.com/bigquery/docs/reference/standard-sql/date_functions#format_date)|[TO_CHAR](https://docs.snowflake.com/en/sql-reference/functions/to_char) _Note: For further details on this translation, please consult this_ [_page_](https://docs.snowflake.com/en/migrations/snowconvert-docs/translation-references/bigquery/format_date.md)_._|
 
 ## Datetime Functions[¶](#datetime-functions)
 
@@ -70,8 +70,8 @@ title: SnowConvert AI - BigQuery - Built-in functions | Snowflake Documentation
 <!-- prettier-ignore -->
 |BigQuery|Snowflake|
 |---|---|
-|[ST_GEOGFROMTEXT](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_geogfromtext)|[ST_GEOGFROMTEXT](https://docs.snowflake.com/en/sql-reference/functions/st_geographyfromwkt) _Note: For further details on this translation, please consult this_ [_page_](st_geogfromtext.md)_._|
-|[ST_GEOGPOINT](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_geogpoint)|[ST_POINT](https://docs.snowflake.com/en/sql-reference/functions/st_makepoint) _Note: For further details on this translation, please consult this_ [_page_](st_geogpoint.md)_._|
+|[ST_GEOGFROMTEXT](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_geogfromtext)|[ST_GEOGFROMTEXT](https://docs.snowflake.com/en/sql-reference/functions/st_geographyfromwkt) _Note: For further details on this translation, please consult this_ [_page_](https://docs.snowflake.com/en/migrations/snowconvert-docs/translation-references/bigquery/st_geogfromtext.md)_._|
+|[ST_GEOGPOINT](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_geogpoint)|[ST_POINT](https://docs.snowflake.com/en/sql-reference/functions/st_makepoint) _Note: For further details on this translation, please consult this_ [_page_](https://docs.snowflake.com/en/migrations/snowconvert-docs/translation-references/bigquery/st_geogpoint.md)_._|
 
 ## JSON Functions[¶](#json-functions)
 
@@ -127,7 +127,7 @@ title: SnowConvert AI - BigQuery - Built-in functions | Snowflake Documentation
 |[LOWER](https://cloud.google.com/bigquery/docs/reference/standard-sql/string_functions#lower)|[LOWER](https://docs.snowflake.com/en/sql-reference/functions/lower)|
 |[LPAD](https://cloud.google.com/bigquery/docs/reference/standard-sql/string_functions#lpad)|[LPAD](https://docs.snowflake.com/en/sql-reference/functions/lpad)|
 |[LTRIM](https://cloud.google.com/bigquery/docs/reference/standard-sql/string_functions#ltrim)|[LTRIM](https://docs.snowflake.com/en/sql-reference/functions/ltrim)|
-|[REGEXP_CONTAINS](https://cloud.google.com/bigquery/docs/reference/standard-sql/string_functions#regexp_contains)(value, regexp)|[REGEXP_INSTR](../../../../sql-reference/functions/regexp_instr)(value, regexp) > 0|
+|[REGEXP_CONTAINS](https://cloud.google.com/bigquery/docs/reference/standard-sql/string_functions#regexp_contains)(value, regexp)|[REGEXP_INSTR](https://docs.snowflake.com/en/migrations/snowconvert-docs/sql-reference/functions/regexp_instr)(value, regexp) > 0|
 |[REGEXP_EXTRACT_ALL](https://cloud.google.com/bigquery/docs/reference/standard-sql/string_functions#regexp_extract_all)|[REGEXP_SUBSTR_ALL](https://docs.snowflake.com/en/sql-reference/functions/regexp_substr_all)|
 |[REPLACE](https://cloud.google.com/bigquery/docs/reference/standard-sql/string_functions#replace)|[REPLACE](https://docs.snowflake.com/en/sql-reference/functions/replace)|
 |[RIGHT](https://cloud.google.com/bigquery/docs/reference/standard-sql/string_functions#right)|[RIGHT](https://docs.snowflake.com/en/sql-reference/functions/right)|
@@ -337,9 +337,9 @@ VALUES
 
 ### Related EWI’s[¶](#related-ewi-s)
 
-1. [SSC-EWI-BQ0006](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/bigqueryEWI.html#ssc-ewi-bq0006):
+1. [SSC-EWI-BQ0006](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/bigqueryEWI#ssc-ewi-bq0006):
    Oriented parameter in the ST_GEOGFROMTEXT function is not supported in Snowflake.
-2. [SSC-FDM-BQ0010](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/bigqueryFDM.html#ssc-fdm-bq0010):
+2. [SSC-FDM-BQ0010](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/bigqueryFDM#ssc-fdm-bq0010):
    Geography function is not required in Snowflake.
 
 ## ST_GEOGPOINT[¶](#st-geogpoint)
@@ -420,5 +420,5 @@ VALUES (
 
 ### Related EWI’s[¶](#id15)
 
-1. [SSC-FDM-BQ0010](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/bigqueryFDM.html#ssc-fdm-bq0010):
+1. [SSC-FDM-BQ0010](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/bigqueryFDM#ssc-fdm-bq0010):
    Geography function is not required in Snowflake.

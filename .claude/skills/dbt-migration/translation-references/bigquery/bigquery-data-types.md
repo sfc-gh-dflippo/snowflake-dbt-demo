@@ -416,12 +416,12 @@ errors are thrown only for underflow cases, any index that would case an overflo
 generate a NULL value instead.
 
 When non-safe access to elements in an array is detected SnowConvert AI will generate
-[SSC-FDM-BQ0001](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/bigqueryFDM.html#ssc-fdm-bq0001)
+[SSC-FDM-BQ0001](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/bigqueryFDM#ssc-fdm-bq0001)
 to warn the user about this.
 
 ### Related EWIs[¶](#related-ewis)
 
-1. [SSC-FDM-BQ0001](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/bigqueryFDM.html#ssc-fdm-bq0001):
+1. [SSC-FDM-BQ0001](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/bigqueryFDM#ssc-fdm-bq0001):
    Accessing arrays produces NULL instead of an error for positive out of bounds indexes in
    Snowflake.
 
@@ -610,7 +610,7 @@ detects that the data follows the [WGS 84 standard](https://spatialreference.org
 
 ### Related EWI’s[¶](#related-ewi-s)
 
-1. [SSC-FDM-BQ0010](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/bigqueryFDM.html#ssc-fdm-bq0010):
+1. [SSC-FDM-BQ0010](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/bigqueryFDM#ssc-fdm-bq0010):
    Geography function is not required in Snowflake.
 
 ## INTERVAL[¶](#interval)
@@ -956,9 +956,9 @@ SELECT CURRENT_DATE + INTERVAL '-2-11 -28 -16:15:14.222' YEAR TO SECOND;
 
 ### Related EWIs[¶](#id48)
 
-1. [SSC-EWI-0036](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0036):
+1. [SSC-EWI-0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0036):
    Data type converted to another data type.
-2. [SSC-EWI-0107](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0107):
+2. [SSC-EWI-0107](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0107):
    Interval Literal Not Supported In Current Scenario.
 
 ## JSON[¶](#json)
@@ -1432,11 +1432,11 @@ WHERE COL1 != (COL2);
 
 ### Related EWIs[¶](#id81)
 
-1. [SSC-FDM-BQ0010](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/bigqueryFDM.html#ssc-fdm-bq0010):
+1. [SSC-FDM-BQ0010](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/bigqueryFDM#ssc-fdm-bq0010):
    Struct converted to VARIANT. Some of its usages might have functional differences.
-2. [SSC-EWI-BQ0012](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/bigqueryEWI.html#ssc-ewi-bq0012):
+2. [SSC-EWI-BQ0012](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/bigqueryEWI#ssc-ewi-bq0012):
    Unable to generate correct OBJECT_CONSTRUCT parameter.
-3. [SSC-FDM-BQ0008](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/bigqueryFDM.html#ssc-fdm-bq0008):
+3. [SSC-FDM-BQ0008](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/bigqueryFDM#ssc-fdm-bq0008):
    Where clause references a column of STRUCT type.
 
 ## TIMESTAMP[¶](#timestamp)

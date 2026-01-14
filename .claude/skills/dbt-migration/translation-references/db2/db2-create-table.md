@@ -16,7 +16,7 @@ title: SnowConvert AI - IBM DB2 - CREATE TABLE | Snowflake Documentation
 
 ## Grammar Syntax[¶](#grammar-syntax)
 
-![image](../../../../_images/create_table_overview.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/create_table_overview.png)
 
 ## As Result Table[¶](#as-result-table)
 
@@ -35,11 +35,11 @@ to navigate to the IBM DB2 documentation page for this syntax.
 
 ### Grammar Syntax[¶](#id2)
 
-![image](../../../../_images/result_table_syntax_1.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/result_table_syntax_1.png)
 
-![image](../../../../_images/result_table_syntax_2.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/result_table_syntax_2.png)
 
-![image](../../../../_images/result_table_syntax_3.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/result_table_syntax_3.png)
 
 ### Sample Source Patterns[¶](#sample-source-patterns)
 
@@ -94,9 +94,9 @@ to navigate to the IBM DB2 documentation page for this syntax.
 
 ### Grammar Syntax
 
-![image](../../../../_images/materialized_query_syntax_1.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/materialized_query_syntax_1.png)
 
-![image](../../../../_images/materialized_query_syntax_2.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/materialized_query_syntax_2.png)
 
 ### Sample Source Patterns
 
@@ -132,7 +132,7 @@ ENABLE QUERY OPTIMIZATION
 
 ### Related EWIs
 
-1. [SSC-EWI-DB0021](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/db2EWI):
+1. [SSC-EWI-DB0021](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/db2EWI):
    NODE NOT SUPPORTED
 
 ## Of Type
@@ -148,9 +148,9 @@ TYPED TABLES are not supported in Snowflake.
 
 ### Grammar Syntax[¶](#id11)
 
-![image](../../../../_images/typed_tables_syntax_1.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/typed_tables_syntax_1.png)
 
-![image](../../../../_images/typed_tables_syntax_2.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/typed_tables_syntax_2.png)
 
 ### Sample Source Patterns[¶](#id12)
 
@@ -172,7 +172,7 @@ CREATE TABLE TestTable5 OF Student_t UNDER Person
 
 ### Related EWIs[¶](#id15)
 
-1. [SSC-EWI-DB0017](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/db2EWI):
+1. [SSC-EWI-DB0017](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/db2EWI):
    NODE NOT SUPPORTED
 
 ## Staging Table Definition[¶](#staging-table-definition)
@@ -189,7 +189,7 @@ to navigate to the IBM DB2 documentation page for this syntax.
 
 ### Grammar Syntax
 
-![image](../../../../_images/staging_table_syntax.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/staging_table_syntax.png)
 
 ### Sample Source Patterns
 
@@ -208,7 +208,7 @@ create table TestTable6 for emp_summary propagate immediate;
 
 ### Related EWIs
 
-1. [SSC-EWI-DB0018](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/db2EWI):
+1. [SSC-EWI-DB0018](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/db2EWI):
    NODE NOT SUPPORTED
 
 ## Element List
@@ -230,9 +230,9 @@ platform differences. Check the code example to learn more.
 
 ### Grammar Syntax[¶](#id23)
 
-![image](../../../../_images/check_constraint_syntax_1.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/check_constraint_syntax_1.png)
 
-![image](../../../../_images/check_constraint_syntax_2.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/check_constraint_syntax_2.png)
 
 ### Sample Source Patterns[¶](#id24)
 
@@ -264,7 +264,7 @@ CREATE TABLE TestTable7 (
 
 ### Related EWIs[¶](#id27)
 
-1. [SSC-EWI-0035](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0035):
+1. [SSC-EWI-0035](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0035):
    Check Statement Not Supported.
 
 ## Period Definition[¶](#period-definition)
@@ -288,7 +288,7 @@ to navigate to the IBM DB2 documentation page for this syntax.
 
 ### Grammar Syntax[¶](#id29)
 
-![image](../../../../_images/period_definition_syntax.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/period_definition_syntax.png)
 
 ### Sample Source Patterns[¶](#id30)
 
@@ -316,7 +316,7 @@ COL1 DATE,
 
 ### Related EWIs[¶](#id31)
 
-1. [SSC-EWI-DB0003](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/db2EWI.html#ssc-ewi-db0003):
+1. [SSC-EWI-DB0003](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/db2EWI#ssc-ewi-db0003):
    Period definition is not applicable in Snowflake.
 
 ## Referential Constraint[¶](#referential-constraint)
@@ -332,9 +332,9 @@ to navigate to the IBM DB2 documentation page for this syntax.
 
 ### Grammar Syntax[¶](#id33)
 
-![image](../../../../_images/referential_constraint_syntax_1.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/referential_constraint_syntax_1.png)
 
-![image](../../../../_images/referential_constraint_syntax_2.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/referential_constraint_syntax_2.png)
 
 ### Sample Source Patterns[¶](#id34)
 
@@ -395,7 +395,7 @@ Snowflake.
 
 ### Grammar Syntax[¶](#id36)
 
-![image](../../../../_images/query_optimization_syntax.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/query_optimization_syntax.png)
 
 ### Sample Source Patterns[¶](#id37)
 
@@ -440,7 +440,7 @@ Snowflake.
 
 ### Grammar Syntax[¶](#id41)
 
-![image](../../../../_images/without_overlaps_syntax.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/without_overlaps_syntax.png)
 
 ### Sample Source Patterns[¶](#id42)
 
@@ -483,7 +483,7 @@ COMPRESS SYSTEM DEFAULT is removed because it is not applicable in Snowflake
 
 ### Grammar Syntax[¶](#id46)
 
-![image](../../../../_images/compress_system_default_syntax.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/compress_system_default_syntax.png)
 
 ### Sample Source Patterns[¶](#id47)
 
@@ -528,7 +528,7 @@ HIDDEN Option is removed because it is not applicable in Snowflake
 
 ### Grammar Syntax[¶](#id51)
 
-![image](../../../../_images/hidden_column_syntax.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/hidden_column_syntax.png)
 
 ### Sample Source Patterns[¶](#id52)
 
@@ -567,7 +567,7 @@ INLINE LENGTH is removed because it is not applicable in Snowflake.
 
 ### Grammar Syntax[¶](#id56)
 
-![image](../../../../_images/inline_length_syntax.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/inline_length_syntax.png)
 
 ```
 CREATE TABLE T1
@@ -617,7 +617,7 @@ LOB OPTIONS are removed because they are not applicable in Snowflake.
 
 ### Grammar Syntax[¶](#id62)
 
-![image](../../../../_images/lob_options_syntax.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/lob_options_syntax.png)
 
 ### Sample Source Patterns[¶](#id63)
 
@@ -662,7 +662,7 @@ SCOPE options are removed because they are not applicable in Snowflake.
 
 ### Grammar Syntax[¶](#id67)
 
-![image](../../../../_images/scope_syntax.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/scope_syntax.png)
 
 ### Sample Source Patterns[¶](#id68)
 
@@ -699,7 +699,7 @@ to navigate to the IBM DB2 documentation page for this syntax.
 
 ### Grammar Syntax[¶](#id72)
 
-![image](../../../../_images/security_label_syntax.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/security_label_syntax.png)
 
 ### Sample Source Patterns[¶](#id73)
 
@@ -731,7 +731,7 @@ COL1 VARCHAR(10),
 ### Known issues[¶](#id76)
 
 If multiple security labels are declared an
-[SSC-EWI-DB0001](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/db2EWI.html#ssc-ewi-db0001)will
+[SSC-EWI-DB0001](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/db2EWI#ssc-ewi-db0001)will
 appear in the Snowflake output code as shown below
 
 #### IBM DB2[¶](#id77)
@@ -764,7 +764,7 @@ COL1 VARCHAR(10),
 
 #### Related EWIs[¶](#id79)
 
-1. [SSC-EWI-DB0001](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/db2EWI.html#ssc-ewi-db0001)Multiple
+1. [SSC-EWI-DB0001](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/db2EWI#ssc-ewi-db0001)Multiple
    Row Access policies
 
 ## Table Options[¶](#table-options)
@@ -784,7 +784,7 @@ CCSID is not applicable in Snowflake.
 
 ### Grammar Syntax[¶](#id81)
 
-![image](../../../../_images/ccsid_syntax.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/ccsid_syntax.png)
 
 ### Sample Source Patterns[¶](#id82)
 
@@ -809,7 +809,7 @@ COL1 INT
 
 ### Related EWIs[¶](#id85)
 
-1. [SSC-FDM-0027](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0027):
+1. [SSC-FDM-0027](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0027):
    REMOVED STATEMENT, NOT APPLICABLE IN SNOWFLAKE.
 
 ## Compression Options[¶](#compression-options)
@@ -828,7 +828,7 @@ The Compression Options are not applicable in Snowflake.
 
 ### Grammar Syntax[¶](#id87)
 
-![image](../../../../_images/compression_options_syntax.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/compression_options_syntax.png)
 
 ### Sample Source Patterns[¶](#id88)
 
@@ -928,7 +928,7 @@ COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,
 
 ### Related EWIs[¶](#id91)
 
-1. [SSC-FDM-0027](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0027):
+1. [SSC-FDM-0027](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0027):
    REMOVED STATEMENT, NOT APPLICABLE IN SNOWFLAKE.
 
 ## Data Capture[¶](#data-capture)
@@ -946,7 +946,7 @@ DATA CAPTURE is not supported
 
 ### Grammar Syntax
 
-![image](../../../../_images/data_capture_syntax.png)
+![image](https://docs.snowflake.com/en/migrations/snowconvert-docs/_images/data_capture_syntax.png)
 
 ### Sample Source Patterns
 
@@ -973,7 +973,7 @@ COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,
 
 ### Related EWIs
 
-1. [SSC-EWI-DB0020](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/db2EWI):
+1. [SSC-EWI-DB0020](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/db2EWI):
    NODE NOT SUPPORTED
 
 ## REMOVED CLAUSES
@@ -1281,5 +1281,5 @@ COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,
 
 ### Related EWIs
 
-1. [SSC-FDM-0027](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0027):
+1. [SSC-FDM-0027](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0027):
    REMOVED STATEMENT, NOT APPLICABLE IN SNOWFLAKE.

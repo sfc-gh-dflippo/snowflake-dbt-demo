@@ -37,7 +37,7 @@ No issues were found.
 
 ### Related EWIS[¶](#related-ewis)
 
-1. [SSC-EWI-0107](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0107):
+1. [SSC-EWI-0107](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0107):
    Interval Literal Not Supported In Current Scenario.
 
 ## Interval Type and Date Type[¶](#interval-type-and-date-type)
@@ -121,15 +121,15 @@ SELECT
   [**Interval Constant**](https://docs.snowflake.com/en/sql-reference/data-types-datetime.html#interval-constants)
   when possible.
 - If you need more support, you can email us at
-  [snowconvert-support@snowflake.com](mailto:snowconvert-support%40snowflake.com)
+  [snowconvert-support@snowflake.com](https://docs.snowflake.com/en/migrations/snowconvert-docs/translation-references/oracle/basic-elements-of-oracle-sql/mailto:snowconvert-support%40snowflake.com)
 
 ### Related EWIS[¶](#id5)
 
-1. [SSC-EWI-0036](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0036):
+1. [SSC-EWI-0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0036):
    Data type converted to another data type.
-2. [SSC-EWI-OR0095](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0095):
+2. [SSC-EWI-OR0095](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI#ssc-ewi-or0095):
    Operation Between Interval Type and Date Type not Supported.
-3. [SSC-FDM-OR0042](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM.html#ssc-fdm-or0042):
+3. [SSC-FDM-OR0042](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/oracleFDM#ssc-fdm-or0042):
    Date Type Transformed To Timestamp Has A Different Behavior.
 
 ## Text literals[¶](#text-literals)

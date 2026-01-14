@@ -63,7 +63,7 @@ The following table shows the transformation from Db2 to Snowflake.
 |DATE|DATE||
 |TIME|TIME||
 |TIMESTAMP|TIMESTAMP||
-|XML|VARIANT|[SSC-EWI-0036](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0036)|
+|XML|VARIANT|[SSC-EWI-0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0036)|
 |BOOLEAN|BOOLEAN||
 
 ## Sample Source Patterns[¶](#sample-source-patterns)
@@ -280,10 +280,10 @@ SELECT id, CAST(amount AS DECFLOAT) FROM source_table;
 
 ### Related EWIs[¶](#related-ewis)
 
-1. [SSC-FDM-DB0002](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/db2FDM.html#ssc-fdm-db0002):
+1. [SSC-FDM-DB0002](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/db2FDM#ssc-fdm-db0002):
    DECFLOAT is not supported in this context.
 
 ## Related EWIs[¶](#id5)
 
-1. [SSC-EWI-0036](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0036):
+1. [SSC-EWI-0036](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0036):
    Data type converted to another data type.

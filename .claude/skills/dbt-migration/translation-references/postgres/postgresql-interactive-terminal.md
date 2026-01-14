@@ -41,5 +41,5 @@ SnowConvert AI retains the original PSQL command as a comment
 
 ## Related EWIs[¶](#related-ewis)
 
-1. [SSC-FDM-PG0015](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/postgresqlFDM.html#ssc-fdm-pg0015)
+1. [SSC-FDM-PG0015](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/postgresqlFDM#ssc-fdm-pg0015)
    : PSQL command is not applicable in Snowflake.

@@ -1043,10 +1043,10 @@ ON COLLATE(e.department, 'en-cs-rtrim') = d.department_name;
 
 #### Related EWIs[¶](#related-ewis)
 
-[SSC-EWI-TD0007](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/teradataEWI.html#ssc-ewi-td0007):
+[SSC-EWI-TD0007](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/teradataEWI#ssc-ewi-td0007):
 GROUP BY IS NOT EQUIVALENT IN TERADATA MODE
 
-[SC-FDM-TD0032](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/teradataFDM.html#ssc-fdm-td0032)
+[SC-FDM-TD0032](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/teradataFDM#ssc-fdm-td0032)
 : [NOT] CASESPECIFIC CLAUSE WAS REMOVED
 
 ## ANSI Mode For Strings Comparison - NO COLLATE[¶](#ansi-mode-for-strings-comparison-no-collate)
@@ -1668,7 +1668,7 @@ Warning
 **To ensure a functional equivalence, it is required to use the COLLATE expression.**
 
 Please review the
-[SSC-EWI-TD0007](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/teradataEWI.html#ssc-ewi-td0007)
+[SSC-EWI-TD0007](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/teradataEWI#ssc-ewi-td0007)
 for more information.
 
 ##### Case 1: Column constraint is NOT CASESPECIFIC and database mode is ANSI Mode[¶](#id210)
@@ -1973,7 +1973,7 @@ ON RTRIM(e.department) = RTRIM(d.department_name);
 
 ### Related EWIs[¶](#id246)
 
-[SSC-EWI-TD0007](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/teradataEWI.html#ssc-ewi-td0007):
+[SSC-EWI-TD0007](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/teradataEWI#ssc-ewi-td0007):
 GROUP BY IS NOT EQUIVALENT IN TERADATA MODE
 
 ## TERA Mode For Strings Comparison - COLLATE[¶](#tera-mode-for-strings-comparison-collate)
@@ -3014,10 +3014,10 @@ ON RTRIM(e.department) = RTRIM(d.department_name);
 
 ### Related EWIs[¶](#id378)
 
-[SSC-EWI-TD0007](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/teradataFDM.html#ssc-fdm-td0007):
+[SSC-EWI-TD0007](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/teradataFDM#ssc-fdm-td0007):
 GROUP BY REQUIRED COLLATE FOR CASE INSENSITIVE COLUMNS
 
-[SC-FDM-TD0032](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/teradataFDM.html#ssc-fdm-td0032)
+[SC-FDM-TD0032](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/teradataFDM#ssc-fdm-td0032)
 : [NOT] CASESPECIFIC CLAUSE WAS REMOVED
 
 ## TERA Mode For Strings Comparison - NO COLLATE[¶](#tera-mode-for-strings-comparison-no-collate)
@@ -4129,5 +4129,5 @@ ON UPPER(RTRIM(e.department)) = UPPER(RTRIM(d.department_name));
 
 ### Related EWIs[¶](#id512)
 
-[SSC-EWI-TD0007](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/teradataEWI.html#ssc-ewi-td0007):
+[SSC-EWI-TD0007](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/teradataEWI#ssc-ewi-td0007):
 GROUP BY IS NOT EQUIVALENT IN TERADATA MODE

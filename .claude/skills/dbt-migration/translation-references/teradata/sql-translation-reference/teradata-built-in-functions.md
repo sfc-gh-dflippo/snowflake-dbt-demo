@@ -111,7 +111,7 @@ title: SnowConvert AI - Teradata - Built-in Functions | Snowflake Documentation
 |DATABASE|CURRENT_DATABASE||
 |DATE|CURRENT_DATE||
 |NOW|CURRENT_TIMESTAMP||
-|PROFILE|CURRENT_ROLE|Check [SSC-EWI-TD0068](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/teradataEWI.html#ssc-ewi-td0068) for more details on this transformation|
+|PROFILE|CURRENT_ROLE|Check [SSC-EWI-TD0068](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/teradataEWI#ssc-ewi-td0068) for more details on this transformation|
 |SESSION|CURRENT_SESSION||
 |TIME|CURRENT_TIME||
 |USER|CURRENT_USER||
@@ -600,7 +600,7 @@ No known issues\_.\_
 
 ### Related EWIs[¶](#id4)
 
-- [SSC-EWI-TD0025](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/teradataEWI.html#ssc-ewi-td0025):
+- [SSC-EWI-TD0025](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/teradataEWI#ssc-ewi-td0025):
   Output format not supported.
 
 ## CURRENT_TIMESTAMP[¶](#current-timestamp)
@@ -631,7 +631,7 @@ CURRENT_TIMESTAMP(4);
 
 - Check if the TIME_OUTPUT\_\_\_FORMAT session parameter is set to get the behavior that you want.
 - If you need more support, you can email us at
-  [snowconvert-support@snowflake.com](mailto:snowconvert-support%40snowflake.com)
+  [snowconvert-support@snowflake.com](https://docs.snowflake.com/en/migrations/snowconvert-docs/translation-references/teradata/sql-translation-reference/mailto:snowconvert-support%40snowflake.com)
 
 ### Known Issues [¶](#id6)
 
@@ -814,7 +814,7 @@ Some parts in the output code are omitted for clarity reasons.
 
 ### Related EWIs[¶](#id23)
 
-1. [SSC-EWI-0031](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0031):
+1. [SSC-EWI-0031](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0031):
    FUNCTION NOT SUPPORTED
 
 ## GETQUERYBANDVALUE[¶](#getquerybandvalue)
@@ -1370,7 +1370,7 @@ SnowConvert AI finds a NEW JSON with binary data.
 
 ### Related EWIs[¶](#id78)
 
-1. [SSC-EWI-TD0039](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/teradataEWI.html#ssc-ewi-td0039):
+1. [SSC-EWI-TD0039](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/teradataEWI#ssc-ewi-td0039):
    Input format not supported.
 
 ## NVP[¶](#nvp)
@@ -1543,7 +1543,7 @@ could not be escaped and that it may cause different results in Snowflake.
 
 ### Related EWIs[¶](#id90)
 
-1. [SSC-FDM-TD0008](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/teradataFDM.html#ssc-fdm-td0008):
+1. [SSC-FDM-TD0008](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/teradataFDM#ssc-fdm-td0008):
    Non-literal delimiters with spaces need their backslash scaped in snowflake.
 
 ## OVERLAPS[¶](#overlaps)
@@ -1595,7 +1595,7 @@ supported yet.
 
 ### Related EWIs[¶](#id96)
 
-1. [SSC-EWI-TD0053](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/teradataEWI.html#ssc-ewi-td0053):
+1. [SSC-EWI-TD0053](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/teradataEWI#ssc-ewi-td0053):
    Snowflake does not support the period datatype, all periods are handled as varchar instead
 
 ## P_INTERSECT[¶](#p-intersect)
@@ -1647,7 +1647,7 @@ supported yet.
 
 ### Related EWIs[¶](#id103)
 
-1. [SSC-EWI-TD0053](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/teradataEWI.html#ssc-ewi-td0053):
+1. [SSC-EWI-TD0053](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/teradataEWI#ssc-ewi-td0053):
    Snowflake does not support the period datatype, all periods are handled as varchar instead
 
 ## PIVOT[¶](#pivot)
@@ -1902,7 +1902,7 @@ resulting table.
 
 ### Related EWIs[¶](#id124)
 
-1. [SSC-EWI-0015](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0015):
+1. [SSC-EWI-0015](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI#ssc-ewi-0015):
    The input pivot/unpivot statement form is not supported
 
 ## RANK[¶](#rank)
@@ -2178,9 +2178,9 @@ The function is currently not supported by Snowflake.
 
 ### Related EWIs[¶](#id149)
 
-1. [SSC-FDM-0007](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0007):
+1. [SSC-FDM-0007](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0007):
    Element with missing dependencies.
-2. [SSC-FDM-TD0016](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/teradataFDM.html#ssc-fdm-td0016):
+2. [SSC-FDM-TD0016](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/teradataFDM#ssc-fdm-td0016):
    Value ‘l’ for parameter ‘match_arg’ is not supported in Snowflake.
 
 ## STRTOK_SPLIT_TO_TABLE[¶](#strtok-split-to-table)
@@ -2552,7 +2552,7 @@ might be losing columns in the result.
 
 ### Related EWIs[¶](#id177)
 
-1. [SSC-EWI-TD0061](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/teradataEWI.html#ssc-ewi-td0061):
+1. [SSC-EWI-TD0061](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/teradataEWI#ssc-ewi-td0061):
    TD_UNPIVOT transformation requires column information that could not be found, columns missing in
    result.
 
@@ -2666,11 +2666,11 @@ COLUMN1  | COLUMN2 | COLUMN3       |
 Teradata offers an extensive list of format elements that may show different behavior in Snowflake
 after the transformation of the TO_CHAR function. For the list of elements with different or
 unsupported behaviors check
-[SSC-EWI-TD0029](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/teradataEWI.html#ssc-ewi-td0029).
+[SSC-EWI-TD0029](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/conversion-issues/teradataEWI#ssc-ewi-td0029).
 
 ### Related EWIs[¶](#id185)
 
-1. [SSC-FDM-TD0029](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/teradataFDM.html#ssc-fdm-td0029):
+1. [SSC-FDM-TD0029](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/teradataFDM#ssc-fdm-td0029):
    Snowflake supported formats for TO_CHAR differ from Teradata and may fail or have different
    behavior.
 

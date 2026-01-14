@@ -137,5 +137,5 @@ CREATE TABLE test.MyTable
 
 ## Related EWIs[¶](#related-ewis)
 
-1. [SSC-FDM-0019](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0019):
+1. [SSC-FDM-0019](https://docs.snowflake.com/en/migrations/snowconvert-docs/general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM#ssc-fdm-0019):
    Semantic information could not be loaded
