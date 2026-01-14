@@ -23,8 +23,6 @@ are not supported.
 SELECT INTERVAL '1-5' YEAR TO MONTH FROM DUAL;
 ```
 
-Copy
-
 ##### Snowflake[¶](#snowflake)
 
 ```
@@ -32,8 +30,6 @@ SELECT
 !!!RESOLVE EWI!!! /*** SSC-EWI-0107 - INTERVAL LITERAL IS NOT SUPPORTED BY SNOWFLAKE IN THIS SCENARIO  ***/!!!
  INTERVAL '1-5' YEAR TO MONTH FROM DUAL;
 ```
-
-Copy
 
 ### Known Issues[¶](#known-issues)
 
@@ -83,8 +79,6 @@ SELECT time_col + intervalDayToSecond_col FROM table_with_intervals;
 SELECT time_col - intervalYearToMonth_col FROM table_with_intervals;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id4)
 
 ```
@@ -118,8 +112,6 @@ SELECT
     !!!RESOLVE EWI!!! /*** SSC-EWI-OR0095 - OPERATION BETWEEN INTERVAL TYPE AND DATE TYPE NOT SUPPORTED ***/!!! time_col - intervalYearToMonth_col FROM
     table_with_intervals;
 ```
-
-Copy
 
 #### Recommendations[¶](#recommendations)
 
@@ -157,8 +149,6 @@ Copy
 }
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#sample-source-patterns)
 
 #### Empty string (‘’)[¶](#empty-string)
@@ -173,8 +163,6 @@ inside a procedure or not.
 SELECT UPPER('') FROM DUAL;
 ```
 
-Copy
-
 ##### Result[¶](#result)
 
 <!-- prettier-ignore -->
@@ -187,8 +175,6 @@ Copy
 ```
 SELECT UPPER(NULL) FROM DUAL;
 ```
-
-Copy
 
 ##### Result[¶](#id9)
 
@@ -222,8 +208,6 @@ CALL null_proc();
 
 SELECT * FROM empty_string_table;
 ```
-
-Copy
 
 ##### Result[¶](#id11)
 
@@ -268,8 +252,6 @@ SELECT * FROM
     empty_string_table;
 ```
 
-Copy
-
 ##### Result[¶](#id13)
 
 <!-- prettier-ignore -->
@@ -290,8 +272,6 @@ _CONCAT_ functions in order to keep the functional equivalence.
 SELECT REPLACE('Hello world', '', 'l'), CONCAT('A','') FROM DUAL;
 ```
 
-Copy
-
 ##### Result[¶](#id15)
 
 <!-- prettier-ignore -->
@@ -305,8 +285,6 @@ Copy
 SELECT REPLACE('Hello world', '', 'l'), CONCAT('A','') FROM DUAL;
 ```
 
-Copy
-
 ##### Result[¶](#id17)
 
 <!-- prettier-ignore -->
@@ -314,7 +292,7 @@ Copy
 |---|---|
 |Hello world|A|
 
-Note
+**Note:**
 
 If the empty strings are replaced by NULL for these cases, the results of the queries will be
 different.

@@ -12,8 +12,6 @@ title: SnowConvert AI - Oracle - Create View | Snowflake Documentation
 CREATE OR REPLACE VIEW View1 AS SELECT Column1 from Schema1.Table1;
 ```
 
-Copy
-
 ```
 CREATE OR REPLACE VIEW View1
 COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":0},{"attributes":{"component":"oracle"}}'
@@ -21,8 +19,6 @@ AS
 SELECT Column1 from
 Schema1.Table1;
 ```
-
-Copy
 
 The following clauses for Create View are removed:
 
@@ -45,8 +41,6 @@ AS SELECT Column1 from Schema1.Table1
 CONTAINER_MAP;
 ```
 
-Copy
-
 ```
 CREATE OR REPLACE VIEW Schema1.View1
 COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":0},{"attributes":{"component":"oracle"}}'
@@ -54,8 +48,6 @@ AS
 SELECT Column1 from
 Schema1.Table1;
 ```
-
-Copy
 
 ## Alter View[¶](#alter-view)
 
@@ -72,16 +64,12 @@ DROP VIEW Schema1.View1
 CASCADE CONSTRAINTS;
 ```
 
-Copy
-
 ```
 DROP VIEW Schema1.View1;
 
 DROP VIEW Schema1.View1
 CASCADE CONSTRAINTS !!!RESOLVE EWI!!! /*** SSC-EWI-0073 - PENDING FUNCTIONAL EQUIVALENCE REVIEW FOR 'DropBehavior' NODE ***/!!!;
 ```
-
-Copy
 
 ### Related EWIs[¶](#related-ewis)
 

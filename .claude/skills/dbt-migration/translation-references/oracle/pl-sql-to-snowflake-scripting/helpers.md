@@ -8,7 +8,7 @@ title: SnowConvert AI - Oracle - HELPERS | Snowflake Documentation
 
 ## Bulk Cursor Helpers[¶](#bulk-cursor-helpers)
 
-Note
+**Note:**
 
 You might also be interested in [Default FORALL transformation](README.html#forall).
 
@@ -30,8 +30,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### OPEN_BULK_CURSOR[¶](#open-bulk-cursor)
 
 These procedures creates a temporary table with the query of the cursor. An optional overload exists
@@ -52,8 +50,6 @@ $$
 $$;
 ```
 
-Copy
-
 ```
 CREATE OR REPLACE PROCEDURE OPEN_BULK_CURSOR(CURSOR OBJECT)
 RETURNS OBJECT
@@ -69,8 +65,6 @@ $$
   END;
 $$;
 ```
-
-Copy
 
 ### CLOSE_BULK_CURSOR[¶](#close-bulk-cursor)
 
@@ -93,8 +87,6 @@ $$
   return CURSOR;
 $$;
 ```
-
-Copy
 
 ### FETCH Helpers[¶](#fetch-helpers)
 
@@ -140,8 +132,6 @@ $$
 $$;
 ```
 
-Copy
-
 ```
 CREATE OR REPLACE PROCEDURE FETCH_BULK_COLLECTION_RECORDS(CURSOR OBJECT)
 RETURNS OBJECT
@@ -157,8 +147,6 @@ $$
   END;
 $$;
 ```
-
-Copy
 
 ```
 CREATE OR REPLACE PROCEDURE FETCH_BULK_COLLECTION_RECORDS(CURSOR OBJECT, LIMIT INTEGER)
@@ -176,8 +164,6 @@ $$
 $$;
 ```
 
-Copy
-
 ```
 CREATE OR REPLACE PROCEDURE FETCH_BULK_COLLECTION_RECORDS(CURSOR OBJECT, COLUMN_NAMES ARRAY)
 RETURNS OBJECT
@@ -193,8 +179,6 @@ $$
   END;
 $$;
 ```
-
-Copy
 
 #### FETCH_BULK_COLLECTIONS[¶](#fetch-bulk-collections)
 
@@ -233,8 +217,6 @@ $$
 $$;
 ```
 
-Copy
-
 ```
 CREATE OR REPLACE PROCEDURE FETCH_BULK_COLLECTIONS(CURSOR OBJECT)
 RETURNS OBJECT
@@ -250,8 +232,6 @@ $$
   END;
 $$;
 ```
-
-Copy
 
 #### FETCH_BULK_RECORD_COLLECTIONS[¶](#fetch-bulk-record-collections)
 
@@ -296,8 +276,6 @@ $$
 $$;
 ```
 
-Copy
-
 ```
 CREATE OR REPLACE PROCEDURE FETCH_BULK_RECORD_COLLECTIONS(CURSOR OBJECT)
 RETURNS OBJECT
@@ -313,8 +291,6 @@ $$
   END;
 $$;
 ```
-
-Copy
 
 ```
 CREATE OR REPLACE PROCEDURE FETCH_BULK_RECORD_COLLECTIONS(CURSOR OBJECT, LIMIT INTEGER)
@@ -332,8 +308,6 @@ $$
 $$;
 ```
 
-Copy
-
 ```
 CREATE OR REPLACE PROCEDURE FETCH_BULK_RECORD_COLLECTIONS(CURSOR OBJECT, COLUMN_NAMES ARRAY)
 RETURNS OBJECT
@@ -349,5 +323,3 @@ $$
   END;
 $$;
 ```
-
-Copy

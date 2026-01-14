@@ -16,7 +16,7 @@ Applies to
 - SQL Server
 - Azure Synapse Analytics
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -33,8 +33,6 @@ IF(@aValue BETWEEN 1 AND 2)
 END;
 GO
 ```
-
-Copy
 
 **Code Expected**
 
@@ -54,8 +52,6 @@ $$
    }
 $$;
 ```
-
-Copy
 
 ## BULK INSERT[¶](#bulk-insert)
 
@@ -104,8 +100,6 @@ WITH
 GO
 ```
 
-Copy
-
 ### Snowflake[¶](#snowflake)
 
 ```
@@ -136,8 +130,6 @@ $$
  EXEC(`COPY INTO T_temptable FROM @STAGE_638434968243607970/test.txt`);
 $$
 ```
-
-Copy
 
 As you see in the code above, SnowConvert AI identifies all the `BULK INSERTS` in the code, and for
 each instance, a new `STAGE` and `FILE FORMAT` will be created before the copy into execution. In
@@ -193,8 +185,6 @@ Subquery:
 SELECT ...
 ```
 
-Copy
-
 Recursive CTE:
 
 ```
@@ -206,8 +196,6 @@ Recursive CTE:
 SELECT ...
 ```
 
-Copy
-
 Where:
 
 ```
@@ -217,8 +205,6 @@ anchorClause ::=
  recursiveClause ::=
      SELECT <recursive_column_list> FROM ... [ JOIN ... ]
 ```
-
-Copy
 
 #### Noteworthy details[¶](#noteworthy-details)
 
@@ -249,8 +235,6 @@ WITH ctetable(col1, col2) AS
 
 SELECT * FROM #table2;
 ```
-
-Copy
 
 #### Snowflake:[¶](#id2)
 
@@ -302,8 +286,6 @@ CREATE OR REPLACE TEMPORARY TABLE T_table2 AS
 		       T_table2;
 ```
 
-Copy
-
 #### Common Table Expression with other expressions[¶](#common-table-expression-with-other-expressions)
 
 The following transformation occurs when the WITH expression is followed by INSERT or DELETE
@@ -318,8 +300,6 @@ SELECT a,b,c,d
 FROM CTE
 WHERE e IS NOT NULL;
 ```
-
-Copy
 
 #### Snowflake:[¶](#id4)
 
@@ -340,8 +320,6 @@ CTE AS CTE
 WHERE
 e IS NOT NULL;
 ```
-
-Copy
 
 #### Common Table Expression with Delete From[¶](#common-table-expression-with-delete-from)
 
@@ -369,8 +347,6 @@ Insert into WithQueryTest values(400, 400, 'Fourth');
 Insert into WithQueryTest values(100, 100, 'First');
 ```
 
-Copy
-
 Note that there is a duplicated value. The lines 8 and 12 insert the same value. Now we are going to
 eliminate the duplicates rows in a table.
 
@@ -382,8 +358,6 @@ FROM WithQueryTest
 DELETE FROM Duplicated
 WHERE Duplicated.RN > 1
 ```
-
-Copy
 
 If we execute a Select from the table, it will show the following result
 
@@ -406,8 +380,6 @@ QUALIFY ROW_NUMBER()
 OVER (PARTITION BY ID ORDER BY ID) = 1 ;
 ```
 
-Copy
-
 As you can see, the query is transformed to a Create Or Replace Table.
 
 Let’s try it in Snowflake, in order to test it, we need the table too.
@@ -426,8 +398,6 @@ Insert into PUBLIC.WithQueryTest values(300, 300, 'Third');
 Insert into PUBLIC.WithQueryTest values(400, 400, 'Fourth');
 Insert into PUBLIC.WithQueryTest values(100, 100, 'First');
 ```
-
-Copy
 
 Now, if we execute the result of the transformation, and then a Select to check if the duplicated
 rows were deleted, this would be the result.
@@ -465,8 +435,6 @@ WITH ctetable(col1, col2) as
   WHEN MATCHED THEN UPDATE SET target.ID = source.Col1
   WHEN NOT MATCHED THEN INSERT (ID, col1) VALUES (source.COL1, source.COL1 );
 ```
-
-Copy
 
 ##### Snowflake:[¶](#id6)
 
@@ -507,8 +475,6 @@ WHEN NOT MATCHED THEN
            INSERT (ID, col1) VALUES (source.COL1, source.COL1);
 ```
 
-Copy
-
 #### Common Table Expression with UPDATE statement[¶](#common-table-expression-with-update-statement)
 
 The following transformation occurs when the WITH expression is followed by an UPDATE statement and
@@ -529,8 +495,6 @@ SET ID = 8, COL1 = 8
 FROM table1 tab1
 INNER JOIN ctetable CTE ON tab1.ID = CTE.col1;
 ```
-
-Copy
 
 ##### Snowflake:[¶](#id8)
 
@@ -563,8 +527,6 @@ UPDATE dbo.table1 tab1
         tab1.ID = CTE.col1;
 ```
 
-Copy
-
 ### Known Issues[¶](#known-issues)
 
 No issues were found.
@@ -586,7 +548,7 @@ Applies to
 - SQL Server
 - Azure Synapse Analytics
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -631,8 +593,6 @@ DELETE
 }
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#sample-source-patterns)
 
 #### Sample Data[¶](#sample-data)
@@ -666,8 +626,6 @@ INSERT INTO Departments (DepartmentID, DepartmentName) VALUES
 (4, 'Finance');
 ```
 
-Copy
-
 ##### Snowflake[¶](#id11)
 
 ```
@@ -697,8 +655,6 @@ INSERT INTO Departments (DepartmentID, DepartmentName) VALUES
 (4, 'Finance');
 ```
 
-Copy
-
 #### Basic Case[¶](#basic-case)
 
 The transformation for the DELETE statement is fairly straightforward, with some caveats. One of
@@ -711,8 +667,6 @@ an equivalent in Snowflake as shown below.
  DELETE T1 FROM Departments T2, Employees T1 WHERE T1.DepartmentID = T2.DepartmentID
 ```
 
-Copy
-
 ##### Snowflake[¶](#id13)
 
 ```
@@ -723,9 +677,7 @@ WHERE
 T1.DepartmentID = T2.DepartmentID;
 ```
 
-Copy
-
-Note
+**Note:**
 
 Note that, since the original DELETE was for T1, the presence of TABLE2 T2 in the FROM clause
 requires the creation of the USING clause.
@@ -752,8 +704,6 @@ FROM original_table
 ) AS T
 WHERE DupRank > 1
 ```
-
-Copy
 
 The following example uses this approach to remove duplicates from a table and its equivalent in
 Snowflake. The transformation consists of performing an
@@ -789,20 +739,15 @@ insert into duplicatedRows VALUES(14, 1, 0, 1, 0);
 select * from duplicatedRows;
 ```
 
-Copy
-
 ##### Output[¶](#output)
 
 <!-- prettier-ignore -->
 |someID|col2|col3|col4|col5|
 |---|---|---|---|---|
 |10|true|false|false|true|
-|10|true|false|false|true|
 |11|true|true|false|true|
 |12|false|false|true|true|
-|12|false|false|true|true|
 |13|true|false|true|false|
-|14|true|false|true|false|
 |14|true|false|true|false|
 
 ##### Remove duplicates[¶](#remove-duplicates)
@@ -823,8 +768,6 @@ Copy
 
 select * from duplicatedRows;
 ```
-
-Copy
 
 ##### Output[¶](#id15)
 
@@ -864,20 +807,15 @@ insert into duplicatedRows VALUES(14, 1, 0, 1, 0);
 select * from duplicatedRows;
 ```
 
-Copy
-
 ##### Output[¶](#id18)
 
 <!-- prettier-ignore -->
 |someID|col2|col3|col4|col5|
 |---|---|---|---|---|
 |10|true|false|false|true|
-|10|true|false|false|true|
 |11|true|true|false|true|
 |12|false|false|true|true|
-|12|false|false|true|true|
 |13|true|false|true|false|
-|14|true|false|true|false|
 |14|true|false|true|false|
 
 ##### Remove duplicates[¶](#id19)
@@ -900,8 +838,6 @@ Copy
 
 select * from duplicatedRows;
 ```
-
-Copy
 
 ##### Output[¶](#id20)
 
@@ -931,8 +867,6 @@ ON ee.DepartmentID = dept.DepartmentID;
 SELECT * FROM Employees;
 ```
 
-Copy
-
 #### Output[¶](#id22)
 
 <!-- prettier-ignore -->
@@ -956,8 +890,6 @@ FROM
     Employees;
 ```
 
-Copy
-
 ##### Output[¶](#id24)
 
 <!-- prettier-ignore -->
@@ -978,8 +910,6 @@ WHERE Departments.DepartmentID IS NULL;
 
 SELECT * FROM Employees;
 ```
-
-Copy
 
 ##### Output[¶](#id26)
 
@@ -1007,8 +937,6 @@ FROM
     Employees;
 ```
 
-Copy
-
 ##### Output[¶](#id28)
 
 <!-- prettier-ignore -->
@@ -1031,8 +959,6 @@ WHERE Employees.DepartmentID IS NOT NULL;
 
 SELECT * FROM Employees;
 ```
-
-Copy
 
 ##### Output[¶](#id30)
 
@@ -1058,8 +984,6 @@ FROM
     Employees;
 ```
 
-Copy
-
 ##### Output[¶](#id32)
 
 <!-- prettier-ignore -->
@@ -1082,8 +1006,6 @@ ON Employees.DepartmentID = Departments.DepartmentID
 WHERE Departments.DepartmentID IS NULL;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id35)
 
 ```
@@ -1095,8 +1017,6 @@ WHERE
     Departments.DepartmentID IS NULL
     AND Employees.DepartmentID = Departments.DepartmentID;
 ```
-
-Copy
 
 ### Related EWIs[¶](#id36)
 
@@ -1123,15 +1043,11 @@ DROP TABLE [ IF EXISTS ] <table_name> [ ,...n ]
 [ ; ]
 ```
 
-Copy
-
 #### Snowflake[¶](#id37)
 
 ```
 DROP TABLE [ IF EXISTS ] <name> [ CASCADE | RESTRICT ]
 ```
-
-Copy
 
 #### Translation[¶](#translation)
 
@@ -1144,13 +1060,9 @@ For example:
 DROP TABLE IF EXISTS [table_name]
 ```
 
-Copy
-
 ```
 DROP TABLE IF EXISTS table_name;
 ```
-
-Copy
 
 The only noteworthy difference between SQL Server and Snowflake appears when the input statement
 drops more than one table. In these scenarios, a different `DROP TABLE` statement is created for
@@ -1164,8 +1076,6 @@ For example:
 DROP TABLE IF EXISTS [table_name], [table_name2], [table_name3]
 ```
 
-Copy
-
 ##### Snowflake[¶](#id39)
 
 ```
@@ -1175,8 +1085,6 @@ DROP TABLE IF EXISTS table_name2;
 
 DROP TABLE IF EXISTS table_name3;
 ```
-
-Copy
 
 ## EXISTS[¶](#exists)
 
@@ -1215,8 +1123,6 @@ IF(EXISTS(Select AValue from ATable))
 END;
 ```
 
-Copy
-
 #### Snowflake[¶](#id41)
 
 ```
@@ -1238,8 +1144,6 @@ $$
   }
 $$;
 ```
-
-Copy
 
 ## IN[¶](#in)
 
@@ -1279,8 +1183,6 @@ EXECUTE dbo.SP_IN_EXAMPLE
 GO
 ```
 
-Copy
-
 ### Snowflake[¶](#id43)
 
 ```
@@ -1307,8 +1209,6 @@ $$;
 -- =============================================
 CALL dbo.SP_IN_EXAMPLE();
 ```
-
-Copy
 
 ## INSERT[¶](#insert)
 
@@ -1343,8 +1243,6 @@ INSERT [ OVERWRITE ] INTO <target_table> [ ( <target_col_name> [ , ... ] ) ]
          <query>
        }
 ```
-
-Copy
 
 ##### SQL Server[¶](#id46)
 
@@ -1387,8 +1285,6 @@ INSERT
         [ OPTION ( <query_hint> [ ,...n ] ) ]
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id47)
 
 #### Basic INSERT[¶](#basic-insert)
@@ -1399,15 +1295,11 @@ Copy
 INSERT INTO TABLE1 VALUES (1, 2, 123, 'LiteralValue');
 ```
 
-Copy
-
 ##### Snowflake[¶](#id49)
 
 ```
 INSERT INTO TABLE1 VALUES (1, 2, 123, 'LiteralValue');
 ```
-
-Copy
 
 #### INSERT with assing operator[¶](#insert-with-assing-operator)
 
@@ -1417,15 +1309,11 @@ Copy
 INSERT INTO aTable (columnA = 'varcharValue', columnB = 1);
 ```
 
-Copy
-
 ##### Snowflake[¶](#id51)
 
 ```
 INSERT INTO aTable (columnA = 'varcharValue', columnB = 1);
 ```
-
-Copy
 
 #### INSERT with no INTO[¶](#insert-with-no-into)
 
@@ -1435,15 +1323,11 @@ Copy
 INSERT exampleTable VALUES ('Hello', 23);
 ```
 
-Copy
-
 ##### Snowflake[¶](#id53)
 
 ```
 INSERT INTO exampleTable VALUES ('Hello', 23);
 ```
-
-Copy
 
 #### INSERT with common table expression[¶](#insert-with-common-table-expression)
 
@@ -1453,8 +1337,6 @@ Copy
 WITH ctevalues (textCol, numCol) AS (SELECT 'cte string', 155)
 INSERT INTO exampleTable SELECT * FROM ctevalues;
 ```
-
-Copy
 
 ##### Snowflake[¶](#id55)
 
@@ -1469,8 +1351,6 @@ SELECT
 FROM
 ctevalues AS ctevalues;
 ```
-
-Copy
 
 #### INSERT with Table DML Factor with MERGE as DML[¶](#insert-with-table-dml-factor-with-merge-as-dml)
 
@@ -1501,8 +1381,6 @@ FROM (
  WHERE ACTION_OUT='UPDATE';
 ```
 
-Copy
-
 ##### Snowflake[¶](#id57)
 
 ```
@@ -1531,8 +1409,6 @@ FROM MERGE_OUT
 WHERE ACTION_OUT ='UPDATE';
 ```
 
-Copy
-
 **NOTE:** As the pattern’s name suggests, it is ONLY for cases where the insert comes with a
 select…from which the body contains a MERGE statement.
 
@@ -1551,16 +1427,12 @@ select…from which the body contains a MERGE statement.
 INSERT INTO exampleTable DEFAULT VALUES;
 ```
 
-Copy
-
 #### Snowflake[¶](#id60)
 
 ```
 !!!RESOLVE EWI!!! /*** SSC-EWI-0073 - PENDING FUNCTIONAL EQUIVALENCE REVIEW FOR 'INSERT WITH DEFAULT VALUES' NODE ***/!!!
 INSERT INTO exampleTable DEFAULT VALUES;
 ```
-
-Copy
 
 **2. Syntax elements not supported or irrelevant:**
 
@@ -1610,8 +1482,6 @@ MERGE
     { matchedClause | notMatchedClause } [ ... ]
 ```
 
-Copy
-
 #### Transact-SQL[¶](#id64)
 
 ```
@@ -1633,8 +1503,6 @@ MERGE
 ;
 ```
 
-Copy
-
 #### Example[¶](#example)
 
 Given the following source code:
@@ -1655,8 +1523,6 @@ OUTPUT $action, DELETED.v AS DELETED, INSERTED.v INSERTED INTO @localVar(col, li
 OPTION(RECOMPILE);
 ```
 
-Copy
-
 You can expect to get something like this:
 
 ##### Snowflake[¶](#id66)
@@ -1671,8 +1537,6 @@ WHEN MATCHED AND pi.Quantity - src.OrderQty >= 0 THEN
     !!!RESOLVE EWI!!! /*** SSC-EWI-0021 - OUTPUT CLAUSE NOT SUPPORTED IN SNOWFLAKE ***/!!!
    OUTPUT $action, DELETED.v AS DELETED, INSERTED.v INSERTED INTO @localVar(col, list);
 ```
-
-Copy
 
 ### Related EWIs[¶](#id67)
 
@@ -1718,8 +1582,6 @@ SELECT [ ALL | DISTINCT ]
     [ HAVING < search_condition > ]
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id69)
 
 #### SELECT WITH COLUMN ALIASES[¶](#select-with-column-aliases)
@@ -1739,8 +1601,6 @@ SELECT
 FROM TABLE1;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id71)
 
 ```
@@ -1753,8 +1613,6 @@ FROM
     TABLE1;
 ```
 
-Copy
-
 #### SELECT TOP[¶](#select-top)
 
 ##### SQL Server[¶](#id72)
@@ -1762,8 +1620,6 @@ Copy
 ```
 SELECT TOP 1 * from ATable;
 ```
-
-Copy
 
 ##### Snowflake[¶](#id73)
 
@@ -1773,8 +1629,6 @@ SELECT TOP 1
 from
 ATable;
 ```
-
-Copy
 
 #### SELECT INTO[¶](#select-into)
 
@@ -1788,8 +1642,6 @@ has to be with the `CREATE TABLE AS`.
 SELECT * INTO NEWTABLE FROM TABLE1;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id75)
 
 ```
@@ -1799,8 +1651,6 @@ SELECT
 FROM
 TABLE1;
 ```
-
-Copy
 
 Another case is when including set operators such as `EXCEPT` and `INTERSECT`. The transformation is
 basically the same as the previous one.
@@ -1814,8 +1664,6 @@ SELECT * FROM TABLE2
 INTERSECT
 SELECT * FROM TABLE3;
 ```
-
-Copy
 
 ##### Snowflake[¶](#id77)
 
@@ -1837,8 +1685,6 @@ FROM
 TABLE3;
 ```
 
-Copy
-
 #### SELECT TOP Aditional Arguments[¶](#select-top-aditional-arguments)
 
 Since `PERCENT` and `WITH TIES` keywords affect the result, and they are not supported by Snowflake,
@@ -1851,8 +1697,6 @@ SELECT TOP 1 PERCENT * from ATable;
 SELECT TOP 1 WITH TIES * from ATable;
 SELECT TOP 1 PERCENT WITH TIES * from ATable;
 ```
-
-Copy
 
 ##### Snowflake[¶](#id79)
 
@@ -1876,8 +1720,6 @@ from
 ATable;
 ```
 
-Copy
-
 #### SELECT FOR[¶](#select-for)
 
 Since the `FOR` clause is not supported in Snowflake, it is commented out and added as an error
@@ -1889,8 +1731,6 @@ during the transformation.
 SELECT column1, column2 FROM my_table FOR XML PATH('');
 ```
 
-Copy
-
 ##### Snowflake[¶](#id81)
 
 ```
@@ -1900,8 +1740,6 @@ FOR_XML_UDF(OBJECT_CONSTRUCT('column1', column1, 'column2', column2), '')
 FROM
 my_table;
 ```
-
-Copy
 
 #### SELECT OPTION[¶](#select-option)
 
@@ -1917,8 +1755,6 @@ or not needed in Snowflake.
 SELECT column1, column2 FROM my_table OPTION (HASH GROUP, FAST 10);
 ```
 
-Copy
-
 ##### Snowflake[¶](#id83)
 
 ```
@@ -1928,8 +1764,6 @@ column2
 FROM
 my_table;
 ```
-
-Copy
 
 #### SELECT WITH[¶](#select-with)
 
@@ -1945,8 +1779,6 @@ not relevant or not needed in Snowflake.
 SELECT AValue from ATable WITH(NOLOCK, NOWAIT);
 ```
 
-Copy
-
 ##### Snowflake[¶](#id85)
 
 ```
@@ -1955,8 +1787,6 @@ AValue
 from
 ATable;
 ```
-
-Copy
 
 ### Related EWIs[¶](#id86)
 
@@ -1990,8 +1820,6 @@ EXCEPT
 SELECT ...
 ```
 
-Copy
-
 ## TRUNCATE[¶](#truncate)
 
 Transact-SQL TRUNCATE statement transformation details
@@ -2009,15 +1837,11 @@ Some parts in the output code are omitted for clarity reasons.
 TRUNCATE TABLE TABLE1;
 ```
 
-Copy
-
 ### Snowflake[¶](#id88)
 
 ```
 TRUNCATE TABLE TABLE1;
 ```
-
-Copy
 
 ## UPDATE[¶](#update)
 
@@ -2028,7 +1852,7 @@ Applies to
 - SQL Server
 - Azure Synapse Analytics
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -2085,8 +1909,6 @@ UPDATE
     table_or_view_name}
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id90)
 
 ### Basic UPDATE[¶](#basic-update)
@@ -2102,8 +1924,6 @@ Update UpdateTest1
 Set Col1 = 5;
 ```
 
-Copy
-
 #### Snowflake[¶](#id92)
 
 ```
@@ -2111,8 +1931,6 @@ Update UpdateTest1
 Set
 Col1 = 5;
 ```
-
-Copy
 
 ### Cartesian Products[¶](#cartesian-products)
 
@@ -2141,8 +1959,6 @@ SET
 	ON a.BusinessEntityID = b.BusinessEntityID and a.ShiftID = b.ShiftID;
 ```
 
-Copy
-
 #### Snowflake[¶](#id94)
 
 ```
@@ -2161,8 +1977,6 @@ UPDATE HumanResources.EMPLOYEEDEPARTMENTHISTORY_COPY a
 		AND a.ShiftID(+) = b.ShiftID;
 ```
 
-Copy
-
 ### OUTPUT clause[¶](#output-clause)
 
 The OUTPUT clause is not supported by Snowflake.
@@ -2178,8 +1992,6 @@ OUTPUT
 	into ValuesTest;
 ```
 
-Copy
-
 #### Snowflake[¶](#id96)
 
 ```
@@ -2192,8 +2004,6 @@ OUTPUT
 	inserted.Col1
 	into ValuesTest;
 ```
-
-Copy
 
 ### CTE[¶](#cte)
 
@@ -2208,8 +2018,6 @@ Update x
 Set Col1 = 5
 from ut as x;
 ```
-
-Copy
 
 #### Snowflake[¶](#id98)
 
@@ -2231,8 +2039,6 @@ ut
 ) AS x;
 ```
 
-Copy
-
 ### TOP clause[¶](#top-clause)
 
 The TOP clause is not supported by Snowflake.
@@ -2243,8 +2049,6 @@ The TOP clause is not supported by Snowflake.
 Update TOP(10) UpdateTest4
 Set Col1 = 5;
 ```
-
-Copy
 
 #### Snowflake[¶](#id100)
 
@@ -2257,8 +2061,6 @@ Set
 Col1 = 5;
 ```
 
-Copy
-
 ### WITH TABLE HINT LIMITED[¶](#with-table-hint-limited)
 
 The Update WITH clause in not supported by Snowflake.
@@ -2270,8 +2072,6 @@ Update UpdateTest5 WITH(TABLOCK)
 Set Col1 = 5;
 ```
 
-Copy
-
 #### Snowflake[¶](#id102)
 
 ```
@@ -2279,8 +2079,6 @@ Update UpdateTest5
 Set
 Col1 = 5;
 ```
-
-Copy
 
 ### Related EWIs[¶](#id103)
 
@@ -2314,8 +2112,6 @@ SET column_name = expression [, ...]
 [OPTION (query_hint)]
 ```
 
-Copy
-
 - **`table_name`**: The table or view you are updating.
 - **`SET`**: Specifies the columns and their new values. The `SET` clause assigns a new value (or
   expression) to one or more columns.
@@ -2330,7 +2126,7 @@ Copy
 The Snowflake syntax can also be reviewed in the
 [Snowflake documentation](https://docs.snowflake.com/en/sql-reference/sql/update).
 
-Note
+**Note:**
 
 Snowflake does not support `JOINs` in `UPDATE` clause.
 
@@ -2340,8 +2136,6 @@ Snowflake does not support `JOINs` in `UPDATE` clause.
         [ FROM <additional_tables> ]
         [ WHERE <condition> ]
 ```
-
-Copy
 
 **Required parameters**
 
@@ -2403,8 +2197,6 @@ CREATE TABLE Products (
 );
 ```
 
-Copy
-
 ##### Snowflake[¶](#id106)
 
 ```
@@ -2433,8 +2225,6 @@ CREATE OR REPLACE TABLE Products (
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "transact",  "convertedOn": "11/12/2024",  "domain": "test" }}'
 ;
 ```
-
-Copy
 
 Data Insertion for samples
 
@@ -2521,8 +2311,6 @@ INSERT INTO Orders (OrderID, CustomerID, ProductID, Quantity, OrderDate) VALUES 
 INSERT INTO Orders (OrderID, CustomerID, ProductID, Quantity, OrderDate) VALUES (25, 25, 25, 3, '2024-11-25');
 ```
 
-Copy
-
 #### Case 1: Single `INNER JOIN` Update[¶](#case-1-single-inner-join-update)
 
 For INNER JOIN, if the table is used inside the FROM statements, it automatically turns into INNER
@@ -2544,8 +2332,6 @@ FROM Orders, Customers
 WHERE Orders.CustomerID = Customers.CustomerID
 AND Customers.CustomerName = 'John Doe';
 ```
-
-Copy
 
 ##### Output[¶](#id108)
 
@@ -2573,8 +2359,6 @@ WHERE Orders.CustomerID = Customers.CustomerID
 AND Customers.CustomerName = 'John Doe';
 ```
 
-Copy
-
 ##### Output[¶](#id110)
 
 <!-- prettier-ignore -->
@@ -2594,8 +2378,6 @@ WHEN MATCHED AND C.CustomerName = 'John Doe' THEN
   UPDATE SET O.Quantity = 10;
 ```
 
-Copy
-
 IN Operation
 
 ```
@@ -2604,8 +2386,6 @@ SET O.Quantity = 10
 WHERE O.CustomerID IN
   (SELECT CustomerID FROM Customers WHERE CustomerName = 'John Doe');
 ```
-
-Copy
 
 #### Case 2: Multiple `INNER JOIN` Update[¶](#case-2-multiple-inner-join-update)
 
@@ -2624,8 +2404,6 @@ SELECT Orders.CustomerID, Orders.Quantity, Customers.CustomerName FROM Orders, C
 WHERE Orders.CustomerID = Customers.CustomerID
 AND Customers.CustomerName = 'Alice Johnson';
 ```
-
-Copy
 
 ##### Output[¶](#id112)
 
@@ -2650,8 +2428,6 @@ SELECT Orders.CustomerID, Orders.Quantity, Customers.CustomerName FROM Orders, C
 WHERE Orders.CustomerID = Customers.CustomerID
 AND Customers.CustomerName = 'Alice Johnson';
 ```
-
-Copy
 
 ##### Output[¶](#id114)
 
@@ -2680,8 +2456,6 @@ WHERE C.CustomerID IN (SELECT CustomerID FROM Orders WHERE Quantity > 3)
 AND P.Price < 200;
 ```
 
-Copy
-
 ##### Output[¶](#id116)
 
 <!-- prettier-ignore -->
@@ -2708,8 +2482,6 @@ INNER JOIN Products P ON O.ProductID = P.ProductID
 WHERE C.CustomerID IN (SELECT CustomerID FROM Orders WHERE Quantity > 3)
 AND P.Price < 200;
 ```
-
-Copy
 
 ##### Output[¶](#id118)
 
@@ -2738,8 +2510,6 @@ SELECT * FROM orders
 WHERE CustomerID IS NULL;
 ```
 
-Copy
-
 ##### Output[¶](#id120)
 
 <!-- prettier-ignore -->
@@ -2766,8 +2536,6 @@ SELECT * FROM orders
 WHERE CustomerID IS NULL;
 ```
 
-Copy
-
 ##### Output[¶](#id122)
 
 <!-- prettier-ignore -->
@@ -2776,7 +2544,7 @@ Copy
 |5|null|5|7|2024-11-05|
 |13|null|13|13|2024-11-13|
 
-Note
+**Note:**
 
 This approach in Snowflake will not work because it does not update the necessary rows:
 
@@ -2787,7 +2555,7 @@ This approach in Snowflake will not work because it does not update the necessar
 This is a more complex pattern. To translate multiple LEFT JOINs, please review the following
 pattern:
 
-Note
+**Note:**
 
 `LEFT JOIN` and `RIGHT JOIN` will depend on the order in the `FROM` clause.
 
@@ -2797,8 +2565,6 @@ SET [all_set_statements]
 FROM [all_left_join_tables_separated_by_comma]
 WHERE [all_clauses_into_the_ON_part]
 ```
-
-Copy
 
 ##### SQL Server[¶](#id123)
 
@@ -2819,8 +2585,6 @@ LEFT JOIN Products P ON P.ProductID = O.ProductID
 WHERE C.CustomerName = 'Alice Johnson'
   AND P.ProductName = 'Tablet';
 ```
-
-Copy
 
 ##### Output[¶](#id124)
 
@@ -2848,8 +2612,6 @@ WHERE C.CustomerName = 'Alice Johnson'
   AND P.ProductName = 'Tablet';
 ```
 
-Copy
-
 ##### Output[¶](#id126)
 
 <!-- prettier-ignore -->
@@ -2876,8 +2638,6 @@ LEFT JOIN Customers C ON O.CustomerID = C.CustomerID
 WHERE C.CustomerID IS NULL AND P.ProductName = 'Monitor';
 ```
 
-Copy
-
 ##### Output[¶](#id128)
 
 <!-- prettier-ignore -->
@@ -2899,8 +2659,6 @@ INNER JOIN Products P ON O.ProductID = P.ProductID
 LEFT JOIN Customers C ON O.CustomerID = C.CustomerID
 WHERE C.CustomerID IS NULL AND P.ProductName = 'Monitor';
 ```
-
-Copy
 
 ##### Output[¶](#id130)
 
@@ -2935,8 +2693,6 @@ WHERE
     C.CustomerName = 'Alice Johnson';
 ```
 
-Copy
-
 ##### Output[¶](#id132)
 
 <!-- prettier-ignore -->
@@ -2968,8 +2724,6 @@ RIGHT JOIN Customers C ON O.CustomerID = C.CustomerID
 WHERE
     C.CustomerName = 'Alice Johnson';
 ```
-
-Copy
 
 ##### Output[¶](#id134)
 
@@ -3015,8 +2769,6 @@ SET column_name = expression [, ...]
 [OPTION (query_hint)]
 ```
 
-Copy
-
 - **`table_name`**: The table or view you are updating.
 - **`SET`**: Specifies the columns and their new values. The `SET` clause assigns a new value (or
   expression) to one or more columns.
@@ -3031,7 +2783,7 @@ Copy
 The Snowflake syntax can also be reviewed in the
 [Snowflake documentation](https://docs.snowflake.com/en/sql-reference/sql/update).
 
-Note
+**Note:**
 
 Snowflake does not support `JOINs` in `UPDATE` clause.
 
@@ -3040,8 +2792,6 @@ Snowflake does not support `JOINs` in `UPDATE` clause.
        SET <col_name> = <value> [ , <col_name> = <value> , ... ]
         [ FROM <additional_tables> ]
 ```
-
-Copy
 
 **Required parameters**
 
@@ -3122,8 +2872,6 @@ VALUES
 ('X3', 'Description3', 'A');
 ```
 
-Copy
-
 ##### Snowflake[¶](#id142)
 
 ```
@@ -3175,8 +2923,6 @@ VALUES
 ('X3', 'Description3', 'A');
 ```
 
-Copy
-
 #### LEFT JOIN[¶](#left-join)
 
 ##### SQL Server[¶](#id143)
@@ -3195,8 +2941,6 @@ LEFT JOIN GenericTable2 T2 ON
 LEFT JOIN GenericTable3 T3 ON
     T3.Col1 = T2.Col5 AND T3.Col3 = 'A';
 ```
-
-Copy
 
 ##### Output Before Query[¶](#output-before-query)
 
@@ -3235,8 +2979,6 @@ Copy
         AND T3.Col3 = 'A';
 ```
 
-Copy
-
 ##### Output Before Query[¶](#id145)
 
 <!-- prettier-ignore -->
@@ -3271,8 +3013,6 @@ RIGHT JOIN GenericTable1 T1 ON
     AND T2.Col4 = T1.Col4;
 ```
 
-Copy
-
 ##### Output Before Query[¶](#id148)
 
 <!-- prettier-ignore -->
@@ -3306,8 +3046,6 @@ Copy
         AND T2.Col3 = T1.Col3(+)
         AND T2.Col4 = T1.Col4(+);
 ```
-
-Copy
 
 ##### Output Before Query[¶](#id151)
 

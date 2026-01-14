@@ -28,8 +28,6 @@ where table_attributes are:
 [ [ COMPOUND | INTERLEAVED ] SORTKEY( column_name [, ...] ) ]
 ```
 
-Copy
-
 # SnowConvert AI - Redshift - Table Start[¶](#snowconvert-ai-redshift-table-start)
 
 ## BACKUP[¶](#backup)
@@ -51,8 +49,6 @@ the Amazon Redshift docs page for this syntax.
  BACKUP { YES | NO }
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#sample-source-patterns)
 
 #### NO option[¶](#no-option)
@@ -69,8 +65,6 @@ BACKUP NO
 AS SELECT * FROM table_test;
 ```
 
-Copy
-
 ##### Output Code:[¶](#output-code)
 
 ##### Snowflake[¶](#snowflake)
@@ -83,8 +77,6 @@ COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,
 AS SELECT * FROM
 table_test;
 ```
-
-Copy
 
 #### YES option[¶](#yes-option)
 
@@ -100,8 +92,6 @@ BACKUP YES
 AS SELECT * FROM table_test;
 ```
 
-Copy
-
 ##### Output Code:[¶](#id5)
 
 ##### Snowflake[¶](#id6)
@@ -112,8 +102,6 @@ COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,
 AS SELECT * FROM
 table_test;
 ```
-
-Copy
 
 ### [¶](#id7)
 
@@ -138,8 +126,6 @@ the Amazon Redshift docs page for this syntax.
  ( column_name [, ... ] )
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id10)
 
 #### Input Code:[¶](#id11)
@@ -154,8 +140,6 @@ Copy
 AS SELECT col1, col2, col3 FROM table_test;
 ```
 
-Copy
-
 ##### Output Code:[¶](#id13)
 
 ##### Snowflake[¶](#id14)
@@ -169,8 +153,6 @@ COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,
 AS SELECT col1, col2, col3 FROM
         table_test;
 ```
-
-Copy
 
 ### Related EWIs[¶](#id15)
 
@@ -194,8 +176,6 @@ the Amazon Redshift docs page for this syntax.
  LOCAL { TEMPORARY | TEMP }
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id18)
 
 #### Input Code:[¶](#id19)
@@ -207,8 +187,6 @@ Copy
 AS SELECT FROM table_test;
 ```
 
-Copy
-
 ##### Output Code:[¶](#id21)
 
 ##### Snowflake[¶](#id22)
@@ -219,8 +197,6 @@ COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,
 AS SELECT FROM
 table_test;
 ```
-
-Copy
 
 ### Related EWIs[¶](#id23)
 
@@ -247,8 +223,6 @@ the Amazon Redshift docs page for this syntax.
  DISTKEY ( column_name )
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id26)
 
 #### Input Code:[¶](#id27)
@@ -260,8 +234,6 @@ Copy
 DISTKEY (col1)
 AS SELECT * FROM table_test;
 ```
-
-Copy
 
 ##### Output Code:[¶](#id29)
 
@@ -275,8 +247,6 @@ COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,
 AS SELECT * FROM
 table_test;
 ```
-
-Copy
 
 ### Related EWIs[¶](#id31)
 
@@ -297,8 +267,6 @@ the Amazon Redshift docs page for this syntax.
 ```
  DISTSTYLE { AUTO | EVEN | KEY | ALL }
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id34)
 
@@ -324,8 +292,6 @@ DISTSTYLE KEY
 DISTKEY (col1)
 AS SELECT * FROM table_test;
 ```
-
-Copy
 
 ##### Output Code:[¶](#id37)
 
@@ -363,8 +329,6 @@ AS SELECT * FROM
 table_test;
 ```
 
-Copy
-
 ### Related EWIs[¶](#id39)
 
 1. [SSC-FDM-RS0001](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/redshiftFDM.html#ssc-fdm-rs0001):
@@ -387,8 +351,6 @@ the Amazon Redshift docs page for this syntax.
 ```
  [ COMPOUND | INTERLEAVED ] SORTKEY( column_name [, ...] )
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id42)
 
@@ -418,8 +380,6 @@ CREATE TABLE table3 (
 SORTKEY (col1)
 AS SELECT * FROM table_test;
 ```
-
-Copy
 
 ##### Output Code:[¶](#id45)
 
@@ -459,8 +419,6 @@ CLUSTER BY (col1)
 AS SELECT * FROM
         table_test;
 ```
-
-Copy
 
 ### Related EWIs[¶](#id47)
 

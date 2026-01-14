@@ -30,7 +30,7 @@ Standard SQL identifiers adhere to a set of rules and must:
 - Not be a reserved SQL keyword.
   ([Redshift SQL Language reference Standard identifiers](https://docs.aws.amazon.com/redshift/latest/dg/r_names.html#r_names-standard-identifiers))
 
-Note
+**Note:**
 
 This syntax is fully supported by Snowflake.
 
@@ -42,7 +42,7 @@ behavior, replace these unsupported special characters with a new value valid in
 
 - The **#** character is replaced by a **\_H\_**.
 
-Note
+**Note:**
 
 In Redshift, if you specify a table name that begins with **‘# ‘**, the table is created as a
 temporary table.
@@ -65,8 +65,6 @@ INSERT INTO #TABLE_NAME(COL#1, "col2#") VALUES (1,20),(2,21),(3,22);
 SELECT col#1, "col2#" as col# FROM #TABLE_NAME;
 ```
 
-Copy
-
 ##### Output Code:[¶](#output-code)
 
 ##### Snowflake[¶](#snowflake)
@@ -87,8 +85,6 @@ SELECT
 FROM
 	_H_TABLE_NAME;
 ```
-
-Copy
 
 ### Delimited identifiers [¶](#delimited-identifiers)
 
@@ -136,8 +132,6 @@ INSERT INTO lateral(INCREMENT, "local") VALUES (1,20),(2,21),(3,22);
 SELECT lateral.INCREMENT, "local" FROM LATERAL;
 ```
 
-Copy
-
 ##### Result[¶](#result)
 
 <!-- prettier-ignore -->
@@ -168,8 +162,6 @@ FROM
     "lateral";
 ```
 
-Copy
-
 ##### Result[¶](#id6)
 
 <!-- prettier-ignore -->
@@ -197,8 +189,6 @@ uppercase and the quotation marks will be removed.
  SELECT "getdate"();
 ```
 
-Copy
-
 ##### Result[¶](#id10)
 
 <!-- prettier-ignore -->
@@ -213,8 +203,6 @@ Copy
 ```
  SELECT GETDATE();
 ```
-
-Copy
 
 ##### Result[¶](#id13)
 
@@ -243,7 +231,7 @@ In Redshift you can use some of the
 column names, table names, etc. For this reason, it is necessary that these words are enclosed in
 double quotes in order to be able to use them.
 
-Note
+**Note:**
 
 Please be aware that in Snowflake when these names are enclosed in double quotes, they are
 **case-sensitive**. For this reason It is important to emphasize that when a reserved keyword is
@@ -272,8 +260,6 @@ DROP TABLE alter;
 DROP TABLE CONNECT;
 ```
 
-Copy
-
 ##### Output Code:[¶](#id18)
 
 ##### Snowflake[¶](#id19)
@@ -294,8 +280,6 @@ COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,
 DROP TABLE "alter";
 DROP TABLE "connect";
 ```
-
-Copy
 
 ### Related EWIs[¶](#related-ewis)
 

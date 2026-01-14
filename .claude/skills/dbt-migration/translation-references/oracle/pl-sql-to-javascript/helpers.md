@@ -19,11 +19,9 @@ var BetweenFunc = function (expression,startExpr,endExpr) {
 };
 ```
 
-Copy
-
 ## Concat Value Helper[¶](#concat-value-helper)
 
-Note
+**Note:**
 
 This helper also uses [IS NULL helper.](#is-null-helper)
 
@@ -37,11 +35,9 @@ check if values are null or not. Oracle handles null values as empty strings in 
  var concatValue = (arg) => IS_NULL(arg) ? "" : arg;
 ```
 
-Copy
-
 ## Cursor Helper[¶](#cursor-helper)
 
-Note
+**Note:**
 
 You might also be interested in:
 
@@ -49,7 +45,7 @@ You might also be interested in:
 - [OPEN, FETCH and CLOSE statements](README.html#open-fetch-and-close-statement).
 - [Cursor declaration.](README.html#cursor-declarations-and-definition)
 
-Note
+**Note:**
 
 This helper also uses [Raise helper](#raise-helper) and [EXEC helper](#exec-helper).
 
@@ -164,11 +160,9 @@ var CURSOR = function (stmt,binds,isRefCursor,isOut) {
 var outCursorResultNumber = 0;
 ```
 
-Copy
-
 ## EXEC Helper[¶](#exec-helper)
 
-Note
+**Note:**
 
 You might also be interested in:
 
@@ -176,7 +170,7 @@ You might also be interested in:
 - [Commit.](README.html#commit)
 - [Execute Immediate.](README.html#execute-immediate)
 
-Note
+**Note:**
 
 EXEC helper depends on [IS NULL helper](#is-null-helper).
 
@@ -287,8 +281,6 @@ var EXEC = function (stmt,binds,opts) {
 };
 ```
 
-Copy
-
 ### Usage Samples[¶](#usage-samples)
 
 The following code examples illustrates how EXEC works.
@@ -305,8 +297,6 @@ BEGIN
   EXECUTE IMMEDIATE 'CREATE TABLE HARDWARE (ID NUMBER, DEVICE VARCHAR2(15), COLOR VARCHAR(15))';
 END;
 ```
-
-Copy
 
 ##### Snowflake[¶](#snowflake)
 
@@ -327,8 +317,6 @@ $$
    COLOR VARCHAR(15))`);
 $$;
 ```
-
-Copy
 
 #### EXEC with bindings[¶](#exec-with-bindings)
 
@@ -355,8 +343,6 @@ BEGIN
   EXECUTE IMMEDIATE 'INSERT INTO HARDWARE VALUES (:DEV_ID, :DEV_VAR, :DEV_COLOR)' USING  ID_VAR, DEVICE_VAR, COLOR_VAR;
 END;
 ```
-
-Copy
 
 ##### Snowflake[¶](#id2)
 
@@ -391,8 +377,6 @@ VALUES (?, ?, ?)`,[ID_VAR,DEVICE_VAR,COLOR_VAR]);
 $$;
 ```
 
-Copy
-
 #### EXEC with options[¶](#exec-with-options)
 
 ##### Oracle[¶](#id3)
@@ -410,8 +394,6 @@ BEGIN
   DBMS_OUTPUT.PUT_LINE(ID_VAR || ' ' || DEVICE_VAR);
 END;
 ```
-
-Copy
 
 ##### Snowflake[¶](#id4)
 
@@ -444,15 +426,11 @@ CALL DBMS_OUTPUT.PUT_LINE_UDF(NVL(ID_VAR :: STRING, '') || ' ' || NVL(DEVICE_VAR
 $$;
 ```
 
-Copy
-
 For the following sample, EXEC call returns [12], with object destructuring `ID_VAR` stores 12:
 
 ```
 [ID_VAR] = EXEC(`SELECT ID FROM PUBLIC.HARDWARE WHERE COLOR = 'BLACK'`);
 ```
-
-Copy
 
 The following two EXEC calls are alternative ways for the previous sample without object
 destructuring:
@@ -462,8 +440,6 @@ ID_VAR = EXEC(`SELECT ID FROM PUBLIC.HARDWARE WHERE COLOR = 'BLACK'`)[0];
 ID_VAR = EXEC(`SELECT ID FROM PUBLIC.HARDWARE WHERE COLOR = 'BLACK'`, {vars:1});
 ```
 
-Copy
-
 Object destructuring also works with bindings as you may note on these statements (EXEC call returns
 [12, “MOUSE”] values):
 
@@ -471,8 +447,6 @@ Object destructuring also works with bindings as you may note on these statement
 COLOR_VAR = `BLACK`;
 [ID_VAR,DEVICE_VAR] = EXEC(`SELECT ID, DEVICE FROM PUBLIC.HARDWARE WHERE COLOR = ?`,[COLOR_VAR]);
 ```
-
-Copy
 
 To obtain the actual result set returned by Snowflake, you can use this synaxis:
 
@@ -490,11 +464,9 @@ RESULT_SET_COPY = EXEC(`SELECT * FROM PUBLIC.HARDWARE WHERE COLOR = 'BLACK'`, {r
 }*/
 ```
 
-Copy
-
 #### EXEC with record types[¶](#exec-with-record-types)
 
-Note
+**Note:**
 
 You might be interested in [Records transformation](README.html#collections-records).
 
@@ -516,8 +488,6 @@ BEGIN
   DBMS_OUTPUT.PUT_LINE(DEV_VARIABLE.ID || ' ' || DEV_VARIABLE.DEV_TYPE || ' ' || DEV_VARIABLE.COLOR);
 END;
 ```
-
-Copy
 
 ##### Snowflake[¶](#id6)
 
@@ -551,8 +521,6 @@ CALL DBMS_OUTPUT.PUT_LINE_UDF(NVL(? :: STRING, '') || ' ' || NVL(? :: STRING, ''
 $$;
 ```
 
-Copy
-
 Warning
 
 This is still a work in progress. The transformation to properly store the record values will be:
@@ -560,8 +528,6 @@ This is still a work in progress. The transformation to properly store the recor
 ```
 EXEC(`SELECT * FROM PUBLIC.HARDWARE WHERE COLOR = 'BLACK'`, {rec:DEV_VARIABLE});
 ```
-
-Copy
 
 ### Known Issues[¶](#known-issues)
 
@@ -596,8 +562,6 @@ In Snowflake code, inside the procedures, you will find the initialization of th
  };
 ```
 
-Copy
-
 The attribute ISOPEN is always false, just like in Oracle.
 
 ### Usage Samples[¶](#id7)
@@ -619,8 +583,6 @@ BEGIN
     SELECT SQL%ROWCOUNT FROM DUAL;
 END;
 ```
-
-Copy
 
 #### Snowflake[¶](#id9)
 
@@ -654,9 +616,7 @@ PKG.TEST_PROC2(?)`,[SQLCODE]);
 $$;
 ```
 
-Copy
-
-Note
+**Note:**
 
 SQLCODE and SQLERRM are converted into helper variables with the same name and are bound in the same
 way as the cursor variables.
@@ -681,8 +641,6 @@ Oracle handles empty strings as null values. This helper takes that into account
 ```
 var IS_NULL = (arg) => !(arg || arg === 0);
 ```
-
-Copy
 
 ## Like operator Helper[¶](#like-operator-helper)
 
@@ -713,18 +671,16 @@ function LIKE(expr,pattern,esc,cs) {
 }
 ```
 
-Copy
-
 ## Package variables helper[¶](#package-variables-helper)
 
-Note
+**Note:**
 
 You might also be interested in [variables declaration](README.html#variables-declaration) and
 [package variables inside procedures.](README.html#package-variables-inside-procedures)
 
 ### Package variables Helper Function Definition[¶](#package-variables-helper-function-definition)
 
-Note
+**Note:**
 
 Helper depends on [IS NULL helper](#is-null-helper)
 
@@ -795,8 +751,6 @@ function StateManager(packageName,keepInCache) {
 var PACKAGE_VARIABLES = new StateManager("PACKAGE_VARIABLES",true);
 ```
 
-Copy
-
 A helper instance is created for each package used to access its variables. Variables will be
 qualified with the name of the package if they are not qualified with it.
 
@@ -808,11 +762,9 @@ Note that in the following statement, name of the variable will change to match 
 var PACKAGE_VARIABLES = new StateManager("PACKAGE_VARIABLES",true);
 ```
 
-Copy
-
 ## Raise Helper[¶](#raise-helper)
 
-Note
+**Note:**
 
 You might be interested in
 [Errors and Exception Handling.](README.html#errors-and-exception-handling)
@@ -829,11 +781,9 @@ var RAISE = function (code,name,message) {
 };
 ```
 
-Copy
-
 ## ROWTYPE Helper[¶](#rowtype-helper)
 
-Note
+**Note:**
 
 You might be interested in [ROWTYPE Record Declaration.](#raise-helper-function-definition)
 
@@ -846,5 +796,3 @@ var ROWTYPE = (stmt, binds = [], obj = new Object()) => {
       return obj;
    };
 ```
-
-Copy

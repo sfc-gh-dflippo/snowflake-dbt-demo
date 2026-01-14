@@ -14,7 +14,7 @@ For Oracle
 [Cursor Variables](https://docs.oracle.com/en/database/oracle/oracle-database/21/lnpls/static-sql.html#GUID-4A6E054A-4002-418D-A1CA-DE849CD7E6D5)
 there is no equivalent in Snowflake Scripting.
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -32,15 +32,11 @@ CURSOR cursor
    [ RETURN rowtype] IS select_statement ;
 ```
 
-Copy
-
 **Cursor Open**
 
 ```
 OPEN cursor [ ( cursor_parameter [ [,] actual_cursor_parameter ]... ) ] ;
 ```
-
-Copy
 
 **Cursor Fetch**
 
@@ -49,23 +45,17 @@ FETCH { cursor | cursor_variable | :host_cursor_variable }
   { into_clause | bulk_collect_into_clause [ LIMIT numeric_expression ] } ;
 ```
 
-Copy
-
 **Cursor Close**
 
 ```
 CLOSE { cursor | cursor_variable | :host_cursor_variable } ;
 ```
 
-Copy
-
 **Cursor Attributes**
 
 ```
 named_cursor%{ ISOPEN | FOUND | NOTFOUND | ROWCOUNT }
 ```
-
-Copy
 
 **Cursor FOR Loop**
 
@@ -77,8 +67,6 @@ Copy
   }
     LOOP statement... END LOOP [label] ;
 ```
-
-Copy
 
 Snowflake Scripting has support for cursors, however, they have fewer functionalities compared to
 Oracle. To check more information regarding these cursors, check
@@ -92,15 +80,11 @@ Oracle. To check more information regarding these cursors, check
 <cursor_name> CURSOR FOR <query>
 ```
 
-Copy
-
 **Cursor Open**
 
 ```
 OPEN <cursor_name> [ USING (bind_variable_1 [, bind_variable_2 ...] ) ] ;
 ```
-
-Copy
 
 **Cursor Fetch**
 
@@ -108,15 +92,11 @@ Copy
 FETCH <cursor_name> INTO <variable> [, <variable> ... ] ;
 ```
 
-Copy
-
 **Cursor Close**
 
 ```
 CLOSE <cursor_name> ;
 ```
-
-Copy
 
 **Cursor FOR Loop**
 
@@ -126,8 +106,6 @@ FOR <row_variable> IN <cursor_name> DO
     [ statement; ... ]
 END FOR [ <label> ] ;
 ```
-
-Copy
 
 ## Sample Source Patterns[¶](#sample-source-patterns)
 
@@ -145,8 +123,6 @@ BEGIN
     CLOSE cursor1;
 END;
 ```
-
-Copy
 
 ##### Snowflake Scripting Cursor Example[¶](#snowflake-scripting-cursor-example)
 
@@ -175,8 +151,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### 2. Explicit Cursor For Loop[¶](#explicit-cursor-for-loop)
 
 #### Oracle Explicit Cursor For Loop Example[¶](#oracle-explicit-cursor-for-loop-example)
@@ -190,8 +164,6 @@ BEGIN
     END LOOP;
 END;
 ```
-
-Copy
 
 ##### Snowflake Scripting Explicit Cursor For Loop Example[¶](#snowflake-scripting-explicit-cursor-for-loop-example)
 
@@ -221,8 +193,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### 3. Implicit Cursor For Loop[¶](#implicit-cursor-for-loop)
 
 #### Oracle Implicit Cursor For Loop Example[¶](#oracle-implicit-cursor-for-loop-example)
@@ -235,8 +205,6 @@ BEGIN
     END LOOP;
 END;
 ```
-
-Copy
 
 ##### Snowflake Scripting Implicit Cursor For Loop Example[¶](#snowflake-scripting-implicit-cursor-for-loop-example)
 
@@ -262,8 +230,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### 4. Parameterized Cursor[¶](#parameterized-cursor)
 
 You can use “?” In the filter condition of the cursor at the declaration section define the bind
@@ -285,8 +251,6 @@ BEGIN
     CLOSE cursor1;
 END;
 ```
-
-Copy
 
 ##### Snowflake Parameterized Cursor Example[¶](#snowflake-parameterized-cursor-example)
 
@@ -312,8 +276,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### 4.2 Parameterized Cursors With Multiple Sending Parameters[¶](#parameterized-cursors-with-multiple-sending-parameters)
 
 ##### Oracle Parameterized Cursor Example[¶](#id1)
@@ -332,8 +294,6 @@ BEGIN
     CLOSE cursor1;
 END;
 ```
-
-Copy
 
 ##### Snowflake Parameterized Cursor Example[¶](#id2)
 
@@ -364,8 +324,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### 4.3 Parameterized Cursors With Use Of Procedure Parameters In Query[¶](#parameterized-cursors-with-use-of-procedure-parameters-in-query)
 
 ##### Oracle Parameterized Cursor Example[¶](#id3)
@@ -381,8 +339,6 @@ BEGIN
 END;
 CALL parameterized_cursor_for_sample(5);
 ```
-
-Copy
 
 ##### Snowflake Parameterized Cursor Example[¶](#id4)
 
@@ -410,8 +366,6 @@ $$;
 CALL parameterized_cursor_for_sample(5);
 ```
 
-Copy
-
 ### 5. Using Cursors In Fetch And For Loop[¶](#using-cursors-in-fetch-and-for-loop)
 
 Cursors can be controlled through the use of the FOR statement, allowing each and every record of a
@@ -435,8 +389,6 @@ BEGIN
     END LOOP;
 END;
 ```
-
-Copy
 
 ##### Snowflake Cursor For Loop Example[¶](#snowflake-cursor-for-loop-example)
 
@@ -476,8 +428,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### 5.2 Cursors Fetch[¶](#cursors-fetch)
 
 ##### Oracle Cursor Fetch Example[¶](#oracle-cursor-fetch-example)
@@ -498,8 +448,6 @@ BEGIN
     CLOSE c_product;
 END;
 ```
-
-Copy
 
 ##### Snowflake Cursor Fetch Example[¶](#snowflake-cursor-fetch-example)
 
@@ -542,8 +490,6 @@ $$
  END;
 $$;
 ```
-
-Copy
 
 ## Known Issues[¶](#known-issues)
 
@@ -605,7 +551,7 @@ assigned to the cursor result contains values
 
 ## CURSOR DECLARATION[¶](#cursor-declaration)
 
-Note
+**Note:**
 
 Non-relevant statement.
 
@@ -614,7 +560,7 @@ Warning
 **Notice that this statement removed from the migration; because it is a non-relevant syntax. It
 means that it is not required in Snowflake.**
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -645,8 +591,6 @@ BEGIN
 END
 ```
 
-Copy
-
 ##### Snowflake[¶](#snowflake)
 
 ```
@@ -663,8 +607,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### Known Issues[¶](#id8)
 
 No issues were found.
@@ -677,7 +619,7 @@ No related EWIs.
 
 Translation reference for cursor variables and the OPEN FOR statement
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -702,15 +644,11 @@ TYPE type IS REF CURSOR
   ] ;
 ```
 
-Copy
-
 **Cursor variable declaration**
 
 ```
 cursor_variable type;
 ```
-
-Copy
 
 **OPEN FOR statement**
 
@@ -718,8 +656,6 @@ Copy
 OPEN { cursor_variable | :host_cursor_variable}
   FOR select_statement [ using_clause ] ;
 ```
-
-Copy
 
 Warning
 
@@ -742,8 +678,6 @@ BEGIN
 	CLOSE cursor_var;
 END;
 ```
-
-Copy
 
 ##### Snowflake Scripting Exaple[¶](#snowflake-scripting-exaple)
 
@@ -772,8 +706,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### 2. OPEN FOR statement with dynamic SQL inside a string literal.[¶](#open-for-statement-with-dynamic-sql-inside-a-string-literal)
 
 ##### Oracle Example[¶](#id12)
@@ -787,8 +719,6 @@ BEGIN
     CLOSE cursor_var;
 END;
 ```
-
-Copy
 
 ##### Snowflake Scripting Example[¶](#snowflake-scripting-example)
 
@@ -816,8 +746,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### 3. OPEN FOR statement with SELECT statement[¶](#open-for-statement-with-select-statement)
 
 ##### Oracle Example[¶](#id13)
@@ -831,8 +759,6 @@ BEGIN
 	CLOSE cursor_var;
 END;
 ```
-
-Copy
 
 ##### Snowflake Scripting Example[¶](#id14)
 
@@ -856,8 +782,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### 4. Cursor Variable declared with REF CURSOR type[¶](#cursor-variable-declared-with-ref-cursor-type)
 
 ##### Oracle Example[¶](#id15)
@@ -873,8 +797,6 @@ BEGIN
     CLOSE cursor_var;
 END;
 ```
-
-Copy
 
 ##### Snowflake Scripting Example[¶](#id16)
 
@@ -905,8 +827,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### 5. OPEN FOR statement with USING clause[¶](#open-for-statement-with-using-clause)
 
 ##### Oracle Example[¶](#id17)
@@ -922,8 +842,6 @@ BEGIN
     CLOSE cursor_var;
 END;
 ```
-
-Copy
 
 ##### Snowflake Scripting Example[¶](#id18)
 
@@ -955,8 +873,6 @@ WHERE col1 = ?';
 $$;
 ```
 
-Copy
-
 ### Known Issues[¶](#id19)
 
 No issues were found.
@@ -972,7 +888,7 @@ No issues were found.
 
 Parametrized Cursor is not supported by Snowflake Scripting
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -998,8 +914,6 @@ BEGIN
     END LOOP;
 END;
 ```
-
-Copy
 
 ##### Snowflake[¶](#id23)
 
@@ -1037,8 +951,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### Recommendations[¶](#recommendations)
 
 - Try using bindings for the query in the cursor and open the cursor with the `USING` clause. Keep
@@ -1071,8 +983,6 @@ $$
 $$;
 ```
 
-Copy
-
 - Manually change the cursor to use bindings.
 - If you need more support, you can email us at
   [snowconvert-support@snowflake.com](mailto:snowconvert-support%40snowflake.com)
@@ -1090,13 +1000,11 @@ This section describes how to simulate the usage of cursor parameters and proced
 the query of a cursor. The name of the variables or parameters is replaced with bindings using the
 `?` sign. Then, when the cursor is opened, the values should be passed with the `USING` clause.
 
-Note
+**Note:**
 
 ```
 Some parts in the output code are omitted for clarity reasons.
 ```
-
-Copy
 
 #### Cursor with local variables[¶](#cursor-with-local-variables)
 
@@ -1122,8 +1030,6 @@ BEGIN
     END LOOP;
 END;
 ```
-
-Copy
 
 ##### Snowflake Scripting Cursor[¶](#snowflake-scripting-cursor)
 
@@ -1162,8 +1068,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### Cursor with parameters[¶](#cursor-with-parameters)
 
 Use bindings for the query in the cursor for each parameter used and open the cursor with the
@@ -1185,8 +1089,6 @@ BEGIN
     END LOOP;
 END;
 ```
-
-Copy
 
 ##### Snowflake Scripting Cursor[¶](#id27)
 
@@ -1223,8 +1125,6 @@ $$
     END;
 $$;
 ```
-
-Copy
 
 ### Related EWIs[¶](#id28)
 

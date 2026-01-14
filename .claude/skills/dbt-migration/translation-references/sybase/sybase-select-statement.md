@@ -174,8 +174,6 @@ simple-expression:
      | FINAL [ AS ] <correlation-name>
 ```
 
-Copy
-
 ## Sample Source Patterns[¶](#sample-source-patterns)
 
 ### Row Limitation[¶](#row-limitation)
@@ -209,8 +207,6 @@ FROM TABLE1
 LIMIT 1 OFFSET 2;
 ```
 
-Copy
-
 #### Output Code:[¶](#output-code)
 
 ##### Snowflake[¶](#snowflake)
@@ -241,8 +237,6 @@ TABLE1
 LIMIT 1 OFFSET 2;
 ```
 
-Copy
-
 ### Into Clause[¶](#into-clause)
 
 In Sybase a Table can be defined by selecting multiple rows and defining a name to stored the date
@@ -265,8 +259,6 @@ SELECT
 * INTO #mynewtable
 FROM TABLE1;
 ```
-
-Copy
 
 #### Output Code:[¶](#id3)
 
@@ -292,8 +284,6 @@ FROM
 TABLE1;
 ```
 
-Copy
-
 ### Force Index[¶](#force-index)
 
 Snowflake does not contain indexes for query optimization.
@@ -305,8 +295,6 @@ Snowflake does not contain indexes for query optimization.
 ```
  SELECT * FROM MyTable FORCE INDEX (MyIndex);
 ```
-
-Copy
 
 #### Output Code:[¶](#id7)
 
@@ -321,8 +309,6 @@ MyTable
 --        FORCE INDEX (MyIndex)
                              ;
 ```
-
-Copy
 
 ### TABLE FUNCTIONS[¶](#table-functions)
 
@@ -350,8 +336,6 @@ SELECT * FROM
 MyProcedure(
 TABLE (SELECT * FROM AnotherTable) );
 ```
-
-Copy
 
 #### Output Code:[¶](#id11)
 
@@ -388,8 +372,6 @@ TABLE(MyProcedure(
 TABLE (SELECT * FROM AnotherTable) ));
 ```
 
-Copy
-
 ### OPEN STRING[¶](#open-string)
 
 Snowflake does not support
@@ -417,8 +399,6 @@ OPENSTRING (FILE '/path/to/file.csv')
 WITH (Col1 INT, Col2 VARCHAR(20))
 OPTION (DELIMITED BY ',' QUOTE '"') AS OS;
 ```
-
-Copy
 
 #### Output Code:[¶](#id15)
 
@@ -451,8 +431,6 @@ WITH (Col1 INT, Col2 VARCHAR(20))
 OPTION (DELIMITED BY ',' QUOTE '"') AS OS;
 ```
 
-Copy
-
 ### DML Derived Table[¶](#dml-derived-table)
 
 In Sybase, during execution, the DML statement specified in the dml-derived table is executed first,
@@ -474,8 +452,6 @@ SELECT * FROM (UPDATE TargetTable SET Col2 = 'updated' WHERE Col1 = 1) REFERENCI
 -- DML derived table with delete
 SELECT * FROM (DELETE FROM TargetTable WHERE Col1 = 1) REFERENCING (OLD AS O);
 ```
-
-Copy
 
 #### Output Code:[¶](#id19)
 
@@ -501,8 +477,6 @@ FROM
 !!!RESOLVE EWI!!! /*** SSC-EWI-SY0007 - DML DERIVED TABLE NOT SUPPORTED IN SNOWFLAKE ***/!!! (DELETE FROM TargetTable WHERE Col1 = 1) REFERENCING (OLD AS O);
 ```
 
-Copy
-
 ### KEY JOIN[¶](#key-join)
 
 Snowflake does not support KEY join but when the ON CLAUSE is defined in the query the KEY keyword
@@ -516,8 +490,6 @@ and removed otherwise an EWI is inserted.
  SELECT * FROM Table1 KEY JOIN Table2;
 SELECT * FROM Table1 KEY JOIN Table2 ON Table1.ID = Table2.ID;
 ```
-
-Copy
 
 #### Output Code:[¶](#id23)
 
@@ -541,8 +513,6 @@ Table2
 ON Table1.ID = Table2.ID;
 ```
 
-Copy
-
 ### OUTER-CROSS APPLY[¶](#outer-cross-apply)
 
 Snowflake transforms the clause the CROSS APPLY into LEFT OUTER JOIN and OUTER APPLY to INNER JOIN.
@@ -558,8 +528,6 @@ SELECT * FROM Table1 CROSS APPLY (SELECT Col2 FROM Table2 WHERE Table1.ID = Tabl
 -- Apply outer apply
 SELECT * FROM Table1 OUTER APPLY (SELECT Col2 FROM Table2 WHERE Table1.ID = Table2.ID) AS AP;
 ```
-
-Copy
 
 #### Output Code:[¶](#id27)
 
@@ -595,8 +563,6 @@ FROM
     ) AS AP;
 ```
 
-Copy
-
 ### CONTAINS Clause[¶](#contains-clause)
 
 In Sybase the
@@ -617,8 +583,6 @@ SELECT * FROM MyTable CONTAINS (TextColumn, 'search term') AS Score;
 -- Contains clause with multiple columns.
 SELECT * FROM MyTable CONTAINS (TextColumn,TextColumn2, 'search term') AS Score;
 ```
-
-Copy
 
 #### Output Code:[¶](#id31)
 
@@ -641,8 +605,6 @@ MyTable
         !!!RESOLVE EWI!!! /*** SSC-EWI-SY0008 - CONTAINS CLAUSE NOT SUPPORTED IN SNOWFLAKE ***/!!!
         CONTAINS (TextColumn,TextColumn2, 'search term') AS Score;
 ```
-
-Copy
 
 ## Related EWIs[¶](#related-ewis)
 

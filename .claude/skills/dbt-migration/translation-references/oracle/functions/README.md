@@ -61,15 +61,11 @@ The Oracle `MAX KEEP DENSE_RANK` function is an aggregate function that returns 
 MAX(expression) KEEP (DENSE_RANK FIRST ORDER BY order_by_expression [ASC|DESC])
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#snowflake-sql)
 
 ```
 FIRST_VALUE(expression) OVER (ORDER BY order_by_expression [ASC|DESC])
 ```
-
-Copy
 
 ### Examples[¶](#examples)
 
@@ -83,8 +79,6 @@ SELECT department_id,
 FROM employees
 GROUP BY department_id;
 ```
-
-Copy
 
 #### Snowflake SQL[¶](#id2)
 
@@ -100,9 +94,7 @@ FROM
 GROUP BY department_id;
 ```
 
-Copy
-
-Note
+**Note:**
 
 To ensure a deterministic order for the rows in a window function’s results, the ORDER BY clause must include a key or combination of keys that makes each row unique.
 
@@ -122,15 +114,11 @@ The Oracle `MIN KEEP DENSE_RANK` function is an aggregate function that returns 
 MIN(expression) KEEP (DENSE_RANK LAST ORDER BY order_by_expression [ASC|DESC])
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id7)
 
 ```
 LAST_VALUE(expression) OVER (ORDER BY order_by_expression [ASC|DESC])
 ```
-
-Copy
 
 ### Examples[¶](#id8)
 
@@ -144,8 +132,6 @@ SELECT department_id,
 FROM employees
 GROUP BY department_id;
 ```
-
-Copy
 
 #### Snowflake SQL[¶](#id10)
 
@@ -161,9 +147,7 @@ FROM
 GROUP BY department_id;
 ```
 
-Copy
-
-Note
+**Note:**
 
 To ensure a deterministic order for the rows in a window function’s results, the ORDER BY clause must include a key or combination of keys that makes each row unique.
 
@@ -183,8 +167,6 @@ NLSSORT returns a collation key for the character value char and an explicitly o
 NLSSORT(char [, 'nlsparam' ])
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id15)
 
 [Snowflake SQL Documentation](https://docs.snowflake.com/en/sql-reference/functions/collate)
@@ -192,8 +174,6 @@ Copy
 ```
 COLLATE(<string_expression>, '<collation_specification>')
 ```
-
-Copy
 
 ### Examples[¶](#id16)
 
@@ -211,8 +191,6 @@ SELECT *
   FROM test
   ORDER BY NLSSORT(name, 'NLS_SORT = XDanish');
 ```
-
-Copy
 
 **Result:**
 
@@ -247,8 +225,6 @@ SELECT *
 ORDER BY
 COLLATE(name, '');
 ```
-
-Copy
 
 **Result:**
 
@@ -329,8 +305,6 @@ select cast(' $123.45' as number, 'L999.99') from dual;
 select cast('$123.45' as number, 'FML999.99') from dual;
 select cast('1234567890+' as number, '9999999999S') from dual;
 ```
-
-Copy
 
 ```
  SELECT
@@ -429,8 +403,6 @@ select
  TO_NUMBER('1234567890+', '9999999999S', 38, 0)
 from dual;
 ```
-
-Copy
 
 #### Recommendations[¶](#recommendations)
 

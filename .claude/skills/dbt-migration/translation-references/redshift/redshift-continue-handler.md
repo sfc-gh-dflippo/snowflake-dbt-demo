@@ -35,8 +35,6 @@ DECLARE CONTINUE HANDLER FOR condition_value
   handler_action_statement;
 ```
 
-Copy
-
 In Redshift, exception handling uses:
 
 ```
@@ -47,8 +45,6 @@ EXCEPTION
     -- handler statements
 END;
 ```
-
-Copy
 
 ## Sample Source Patterns[¶](#sample-source-patterns)
 
@@ -76,8 +72,6 @@ BEGIN
     INSERT INTO results VALUES (result_var);
 END;
 ```
-
-Copy
 
 #### Output Code:[¶](#output-code)
 
@@ -109,8 +103,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### CONTINUE HANDLER with SQLEXCEPTION[¶](#continue-handler-with-sqlexception)
 
 #### Input Code:[¶](#id1)
@@ -133,8 +125,6 @@ BEGIN
     INSERT INTO table3 VALUES (1, 'Success');
 END;
 ```
-
-Copy
 
 #### Output Code:[¶](#id3)
 
@@ -170,8 +160,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### CONTINUE HANDLER for NOT FOUND[¶](#continue-handler-for-not-found)
 
 #### Input Code:[¶](#id5)
@@ -203,8 +191,6 @@ BEGIN
     CLOSE cur;
 END;
 ```
-
-Copy
 
 #### Output Code:[¶](#id7)
 
@@ -244,8 +230,6 @@ $$
     END;
 $$;
 ```
-
-Copy
 
 ## Known Issues[¶](#known-issues)
 
@@ -293,8 +277,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Snowflake[¶](#snowflake)
 
 ```
@@ -310,8 +292,6 @@ EXCEPTION
         INSERT INTO error_log VALUES (:SQLCODE, :SQLERRM);
 END;
 ```
-
-Copy
 
 ## Best Practices[¶](#best-practices)
 

@@ -29,8 +29,6 @@ Adds a new extended property to a database object.
 [ ; ]
 ```
 
-Copy
-
 ### Custom UDP[¶](#custom-udp)
 
 Keeps the same parameters as the original procedure
@@ -115,20 +113,14 @@ RETURN str_result;
 END;
 ```
 
-Copy
-
 ##### SQL Server[¶](#sql-server)
 
 ```
  EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Technical identifier.' , @level0type=N'SCHEMA',@level0name=N'Monitoring', @level1type=N'TABLE',@level1name=N'tProcessingIssue', @level2type=N'COLUMN',@level2name=N'ID'
 ```
 
-Copy
-
 ##### Snowflake[¶](#snowflake)
 
 ```
  CALL SP_ADDEXTENDEDPROPERTY_UDP('MS_Description', 'Technical identifier.', 'SCHEMA', 'Monitoring', 'TABLE', 'tProcessingIssue', 'COLUMN', 'ID');
 ```
-
-Copy

@@ -18,11 +18,9 @@ title: SnowConvert AI - Oracle - Spatial Types | Snowflake Documentation
 { SDO_Geometry | SDO_Topo_Geometry |SDO_GeoRaster }
 ```
 
-Copy
-
 ## SDO_GEOMETRY[¶](#sdo-geometry)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -45,8 +43,6 @@ CREATE TYPE SDO_GEOMETRY AS OBJECT
 /
 ```
 
-Copy
-
 The `SDO_GEOMETRY` object is **not supported** in Snowflake. A workaround for this data type is to
 use [Snowflake GEOGRAPHY](https://docs.snowflake.com/en/sql-reference/data-types-geospatial.html),
 however that transformation is currently not supported by SnowConvert.
@@ -63,8 +59,6 @@ CREATE TABLE geometry_table(
 );
 ```
 
-Copy
-
 ##### Snowflake[¶](#snowflake)
 
 ```
@@ -74,8 +68,6 @@ CREATE OR REPLACE TABLE geometry_table (
     COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":0},{"attributes":{"component":"oracle"}}'
     ;
 ```
-
-Copy
 
 #### Inserting data in SDO_GEOMETRY Table[¶](#inserting-data-in-sdo-geometry-table)
 
@@ -116,8 +108,6 @@ SDO_GEOMETRY(
 INSERT INTO geometry_table VALUES (
 NULL);
 ```
-
-Copy
 
 ##### Snowflake[¶](#id3)
 
@@ -164,8 +154,6 @@ VALUES (
 NULL);
 ```
 
-Copy
-
 #### Migration using the GEOGRAPHY data type[¶](#migration-using-the-geography-data-type)
 
 ##### Oracle[¶](#id4)
@@ -210,8 +198,6 @@ SDO_GEOMETRY(
 
 SELECT * FROM geometry_table;
 ```
-
-Copy
 
 ##### Result[¶](#result)
 
@@ -269,8 +255,6 @@ SELECT * FROM
 	    geometry_table;
 ```
 
-Copy
-
 ##### Result[¶](#id6)
 
 <!-- prettier-ignore -->
@@ -286,7 +270,7 @@ Copy
 
 ## SDO_GEORASTER[¶](#sdo-georaster)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -308,9 +292,7 @@ CREATE TYPE SDO_GEORASTER AS OBJECT
 /
 ```
 
-Copy
-
-Note
+**Note:**
 
 SDO_GEORASTER is disabled by default, to enable its usage, follow the steps described in
 [this section](https://docs.oracle.com/database/121/SPATL/ensuring-that-georaster-works-properly-installation-or-upgrade.htm#GUID-20119C51-6B07-4535-954E-7C55850F51F3)
@@ -330,8 +312,6 @@ CREATE TABLE georaster_table(
 );
 ```
 
-Copy
-
 ##### Snowflake[¶](#id10)
 
 ```
@@ -343,8 +323,6 @@ CREATE OR REPLACE TABLE georaster_table (
     ;
 ```
 
-Copy
-
 ##### Inserting data in SDO_GEORASTER Table[¶](#inserting-data-in-sdo-georaster-table)
 
 ##### Oracle[¶](#id11)
@@ -353,8 +331,6 @@ Copy
 INSERT INTO georaster_table VALUES (null);
 INSERT INTO georaster_table VALUES (sdo_geor.init('RDT_11', 1));
 ```
-
-Copy
 
 ##### Snowflake[¶](#id12)
 
@@ -367,8 +343,6 @@ VALUES (
 !!!RESOLVE EWI!!! /*** SSC-EWI-OR0076 - TRANSLATION FOR BUILT-IN PACKAGE 'sdo_geor.init' IS NOT CURRENTLY SUPPORTED. ***/!!!
 '' AS init);
 ```
-
-Copy
 
 ### Known Issues[¶](#known-issues)
 
@@ -385,7 +359,7 @@ SDO_GEORASTER Data Type is not being transformed by SnowConvert.
 
 ## SDO_TOPO_GEOMETRY[¶](#sdo-topo-geometry)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -406,8 +380,6 @@ CREATE TYPE SDO_TOPO_GEOMETRY AS OBJECT
 /
 ```
 
-Copy
-
 The `SDO_TOPO_GEOMETRY` object is **not supported** in Snowflake.
 
 ### Sample Source Patterns[¶](#id15)
@@ -422,8 +394,6 @@ CREATE TABLE topo_geometry_table(
 );
 ```
 
-Copy
-
 ##### Snowflake[¶](#id17)
 
 ```
@@ -435,8 +405,6 @@ CREATE OR REPLACE TABLE topo_geometry_table (
     ;
 ```
 
-Copy
-
 #### Inserting data in SDO_TOPO_GEOMETRY Table[¶](#inserting-data-in-sdo-topo-geometry-table)
 
 ##### Oracle[¶](#id18)
@@ -445,8 +413,6 @@ Copy
 INSERT INTO topo_geometry_table VALUES (SDO_TOPO_GEOMETRY(1,2,3,4));
 INSERT INTO topo_geometry_table VALUES (NULL);
 ```
-
-Copy
 
 ##### Snowflake[¶](#id19)
 
@@ -457,8 +423,6 @@ VALUES (SDO_TOPO_GEOMETRY(1,2,3,4) !!!RESOLVE EWI!!! /*** SSC-EWI-0073 - PENDING
 INSERT INTO topo_geometry_table
 VALUES (NULL);
 ```
-
-Copy
 
 ### Known Issues[¶](#id20)
 

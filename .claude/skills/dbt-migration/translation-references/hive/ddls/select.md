@@ -36,8 +36,6 @@ file_format.`file_path`
 select_statement { INTERSECT | EXCEPT } { ALL | DISTINCT } select_statement
 ```
 
-Copy
-
 ## Grammar Syntax[¶](#grammar-syntax)
 
 ```
@@ -72,8 +70,6 @@ LATERAL(subquery) |
 file_format.`file_path`
 ```
 
-Copy
-
 ## Sample Source Patterns[¶](#sample-source-patterns)
 
 ### GROUP BY[¶](#group-by)
@@ -105,8 +101,6 @@ SELECT city, car_model, sum(quantity) AS sum FROM dealer
 SELECT city, car_model, sum(quantity) AS sum FROM dealer
     GROUP BY city, car_model WITH CUBE;
 ```
-
-Copy
 
 #### Output Code:[¶](#output-code)
 
@@ -149,8 +143,6 @@ GROUP BY
     CUBE(city, car_model);
 ```
 
-Copy
-
 ### Hints[¶](#hints)
 
 Snowflake performs automatic optimization of JOINs and partitioning, meaning that hints are
@@ -165,8 +157,6 @@ SELECT
 FROM my_table;
 ```
 
-Copy
-
 #### Output Code:[¶](#id2)
 
 ```
@@ -176,8 +166,6 @@ SELECT
 FROM
 my_table;
 ```
-
-Copy
 
 ### CTE[¶](#cte)
 
@@ -194,8 +182,6 @@ FROM my_cte
 WHERE id = 1;
 ```
 
-Copy
-
 #### Output Code:[¶](#id4)
 
 ```
@@ -208,8 +194,6 @@ FROM
      my_cte
 WHERE id = 1;
 ```
-
-Copy
 
 ### LIMIT[¶](#limit)
 
@@ -224,8 +208,6 @@ SELECT * FROM my_table LIMIT ALL;
 SELECT * FROM my_table LIMIT 5;
 ```
 
-Copy
-
 #### Output Code:[¶](#id6)
 
 ```
@@ -237,52 +219,50 @@ my_table
 LIMIT 5;
 ```
 
-Copy
-
 ### ORDER BY[¶](#order-by)
 
-Note
+**Note:**
 
 This clause is fully supported in Snowflake
 
 ### WHERE[¶](#where)
 
-Note
+**Note:**
 
 This clause is fully supported in Snowflake
 
 ### HAVING[¶](#having)
 
-Note
+**Note:**
 
 This clause is fully supported in Snowflake
 
 ### FROM table_relation[¶](#from-table-relation)
 
-Note
+**Note:**
 
 This clause is fully supported in Snowflake
 
 ### FROM inline_table[¶](#from-inline-table)
 
-Note
+**Note:**
 
 This clause is fully supported in Snowflake
 
 ### UNION [ALL | DISTINCT][¶](#union-all-distinct)
 
-Note
+**Note:**
 
 This clause is fully supported in Snowflake
 
 ### INTERSECT (no keywords)[¶](#intersect-no-keywords)
 
-Note
+**Note:**
 
 This clause is fully supported in Snowflake
 
 ### EXCEPT (no keywords)[¶](#except-no-keywords)
 
-Note
+**Note:**
 
 This clause is fully supported in Snowflake

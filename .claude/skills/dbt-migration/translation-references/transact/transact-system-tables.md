@@ -76,7 +76,7 @@ Applies to
 - SQL Server
 - Azure Synapse Analytics
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -147,8 +147,6 @@ SELECT ('column_name' | * )
 FROM sys.foreign_keys;
 ```
 
-Copy
-
 ##### Syntax in Snowflake[¶](#syntax-in-snowflake)
 
 ```
@@ -157,9 +155,7 @@ FROM information_schema.table_constraints
 WHERE CONSTRAINT_TYPE = 'FOREIGN KEY';
 ```
 
-Copy
-
-Note
+**Note:**
 
 Since the equivalence for the system foreign keys is the catalog view in Snowflake for in
 ormation_schema.table_constraints, it is necessary to define the type of the constraint in an
@@ -200,8 +196,6 @@ VALUES
     (103, 2, '2023-09-03', 50.00);
 ```
 
-Copy
-
 ##### Snowflake[¶](#snowflake)
 
 ```
@@ -236,8 +230,6 @@ VALUES
     (103, 2, '2023-09-03', 50.00);
 ```
 
-Copy
-
 #### 1. Simple Select Case[¶](#simple-select-case)
 
 ##### SQL Server[¶](#id1)
@@ -246,8 +238,6 @@ Copy
 SELECT *
 FROM sys.foreign_keys;
 ```
-
-Copy
 
 ##### Result[¶](#result)
 
@@ -265,8 +255,6 @@ INFORMATION_SCHEMA.TABLE_CONSTRAINTS
 WHERE
 CONSTRAINT_TYPE = 'FOREIGN KEY';
 ```
-
-Copy
 
 ##### Result[¶](#id3)
 
@@ -288,8 +276,6 @@ checked.
 SELECT * FROM sys.foreign_keys WHERE name = 'FK_Name_Test';
 ```
 
-Copy
-
 ##### Result[¶](#id5)
 
 <!-- prettier-ignore -->
@@ -306,8 +292,6 @@ WHERE
 CONSTRAINT_NAME = 'FK_NAME_TEST'
 AND CONSTRAINT_TYPE = 'FOREIGN KEY';
 ```
-
-Copy
 
 ##### Result[¶](#id7)
 
@@ -360,8 +344,6 @@ VALUES
 
 SELECT * FROM sys.foreign_keys WHERE name = 'FK_Name_Test' AND parent_object_id = OBJECT_ID(N'database_name_test.schema_name_test.Orders')
 ```
-
-Copy
 
 ##### Result[¶](#id9)
 
@@ -419,8 +401,6 @@ WHERE
     AND CONSTRAINT_TYPE = 'FOREIGN KEY';
 ```
 
-Copy
-
 ##### Result[¶](#id11)
 
 <!-- prettier-ignore -->
@@ -448,8 +428,6 @@ specify the foreign key from all the table constraints.
  SELECT * FROM sys.foreign_keys WHERE type = 'F';
 ```
 
-Copy
-
 ##### Result[¶](#id13)
 
 <!-- prettier-ignore -->
@@ -465,8 +443,6 @@ Copy
 WHERE
     type = 'F' AND CONSTRAINT_TYPE = 'FOREIGN KEY';
 ```
-
-Copy
 
 ##### Result[¶](#id15)
 
@@ -491,8 +467,6 @@ WHERE
     type_desc = 'FOREIGN_KEY_CONSTRAINT';
 ```
 
-Copy
-
 ##### Result[¶](#id17)
 
 <!-- prettier-ignore -->
@@ -511,8 +485,6 @@ WHERE
     type_desc = 'FOREIGN_KEY_CONSTRAINT' AND CONSTRAINT_TYPE = 'FOREIGN KEY';
 ```
 
-Copy
-
 ##### Result[¶](#id19)
 
 <!-- prettier-ignore -->
@@ -530,15 +502,11 @@ FROM sys.foreign_keys
 WHERE modify_date = CURRENT_TIMESTAMP;
 ```
 
-Copy
-
 ##### Result[¶](#id21)
 
 ```
 The query produced no results.
 ```
-
-Copy
 
 ##### Snowflake[¶](#id22)
 
@@ -551,15 +519,11 @@ WHERE
     AND CONSTRAINT_TYPE = 'FOREIGN KEY';
 ```
 
-Copy
-
 ##### Result[¶](#id23)
 
 ```
 The query produced no results.
 ```
-
-Copy
 
 #### 7. Modify Date Column with DATEDIFF() Case[¶](#modify-date-column-with-datediff-case)
 
@@ -576,15 +540,11 @@ FROM sys.foreign_keys
 WHERE DATEDIFF(DAY, modify_date, GETDATE()) <= 30;
 ```
 
-Copy
-
 ##### Result[¶](#id25)
 
 ```
 The foreign keys altered in the last 30 days.
 ```
-
-Copy
 
 ##### Snowflake[¶](#id26)
 
@@ -597,15 +557,11 @@ WHERE
     AND CONSTRAINT_TYPE = 'FOREIGN KEY';
 ```
 
-Copy
-
 ##### Result[¶](#id27)
 
 ```
 The foreign keys altered in the last 30 days.
 ```
-
-Copy
 
 #### 8. Create Date Column Case[¶](#create-date-column-case)
 
@@ -617,15 +573,11 @@ FROM sys.foreign_keys
 WHERE create_date = '2023-09-12 14:36:38.060';
 ```
 
-Copy
-
 ##### Result[¶](#id29)
 
 ```
 The foreign keys that were created on the specified date and time.
 ```
-
-Copy
 
 ##### Snowflake[¶](#id30)
 
@@ -638,15 +590,11 @@ WHERE
     AND CONSTRAINT_TYPE = 'FOREIGN KEY';
 ```
 
-Copy
-
 ##### Result[¶](#id31)
 
 ```
 The foreign keys that were created on the specified date and time.
 ```
-
-Copy
 
 Warning
 
@@ -662,8 +610,6 @@ execute the objects at another time in the new Snowflake queries.
 SELECT name
 FROM sys.foreign_keys;
 ```
-
-Copy
 
 ##### Result[¶](#id33)
 
@@ -683,8 +629,6 @@ WHERE
     CONSTRAINT_TYPE = 'FOREIGN KEY';
 ```
 
-Copy
-
 ##### Result[¶](#id35)
 
 <!-- prettier-ignore -->
@@ -701,8 +645,6 @@ SELECT
     fk.name
 FROM sys.foreign_keys AS fk;
 ```
-
-Copy
 
 ##### Result[¶](#id37)
 
@@ -721,8 +663,6 @@ FROM
 WHERE
     CONSTRAINT_TYPE = 'FOREIGN KEY';
 ```
-
-Copy
 
 ##### Result[¶](#id39)
 
@@ -762,8 +702,6 @@ SELECT name AS ForeignKeyName,
 FROM sys.foreign_keys;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id41)
 
 ```
@@ -776,8 +714,6 @@ FROM
 WHERE
     CONSTRAINT_TYPE = 'FOREIGN KEY';
 ```
-
-Copy
 
 ##### 5. SCHEMA_NAME() and TYPE_NAME() functions are also not supported yet.[¶](#schema-name-and-type-name-functions-are-also-not-supported-yet)
 

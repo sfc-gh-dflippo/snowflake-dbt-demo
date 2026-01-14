@@ -41,7 +41,7 @@ When creating a new table, Oracle and Snowflake handle some data types as synony
 
 To get more information about the translation specification of the Oracle data types, go to [Oracle Built-in Data Types](oracle-built-in-data-types).
 
-Note
+**Note:**
 
 VARCHAR\*: Almost all the ANSI datatypes compile in Snowflake, but those marked with an asterisk, are manually converted to VARCHAR.
 
@@ -82,8 +82,6 @@ CREATE TABLE products (
 INSERT INTO products VALUES (1, 99.99);
 ```
 
-Copy
-
 ##### Snowflake (with DECFLOAT customization for price column)[¶](#snowflake-with-decfloat-customization-for-price-column)
 
 ```
@@ -95,8 +93,6 @@ CREATE OR REPLACE TABLE products (
 INSERT INTO products VALUES (1, CAST(99.99 AS DECFLOAT));
 ```
 
-Copy
-
-Note
+**Note:**
 
 The TypeMappings report (TypeMappings.csv) provides a detailed view of all data type transformations applied during conversion. See [TypeMappings Report](../../../../general/getting-started/running-snowconvert/review-results/reports/type-mappings-report) for more information.

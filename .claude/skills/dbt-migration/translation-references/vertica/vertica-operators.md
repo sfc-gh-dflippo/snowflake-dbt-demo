@@ -33,8 +33,6 @@ To replicate this functionality SnowConvert AI translates this operator to the
 FROM raw_measurements;
 ```
 
-Copy
-
 #### Snowflake[¶](#snowflake)
 
 ```
@@ -45,5 +43,3 @@ Copy
 FROM
     raw_measurements;
 ```
-
-Copy

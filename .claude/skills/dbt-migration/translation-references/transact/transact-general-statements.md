@@ -47,8 +47,6 @@ SELECT 'a' COLLATE Latin1_General_CI_AS_KS_WS;
 SELECT 'a' COLLATE Albanian_CI_AI;
 ```
 
-Copy
-
 ### Expected[¶](#expected)
 
 ```
@@ -73,8 +71,6 @@ SELECT 'a'
                        ;
 ```
 
-Copy
-
 Let’s see an example of collate in a Create Table
 
 ### Source[¶](#id1)
@@ -86,8 +82,6 @@ CREATE TABLE TABLECOLLATE
 );
 ```
 
-Copy
-
 ### Expected[¶](#id2)
 
 ```
@@ -98,8 +92,6 @@ CREATE OR REPLACE TABLE TABLECOLLATE
 COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":0},{"attributes":{"component":"transact"}}'
 ;
 ```
-
-Copy
 
 As you can see, the transformation of Collate inside a Select or a Table is the same.
 
@@ -135,8 +127,6 @@ CREATE TABLE [TestTable](
 );
 ```
 
-Copy
-
 ##### Output Code:[¶](#output-code)
 
 ```
@@ -146,8 +136,6 @@ CREATE OR REPLACE TABLE TestTable (
 COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":0},{"attributes":{"component":"transact"}}'
 ;
 ```
-
-Copy
 
 #### Recommendations[¶](#recommendations)
 
@@ -169,7 +157,7 @@ Applies to
 - SQL Server
 - Azure Synapse Analytics
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -186,8 +174,6 @@ right-side rowset expression returns an empty rowset for that row.
        'CROSS' 'APPLY'
   |    'OUTER' 'APPLY'.
 ```
-
-Copy
 
 ### Snowflake equivalence[¶](#snowflake-equivalence)
 
@@ -206,9 +192,7 @@ FROM <left_hand_table_expression> INNER JOIN LATERAL ( <inline_view> )
 ...
 ```
 
-Copy
-
-Note
+**Note:**
 
 _<inline_view>_ must not be a table name.
 
@@ -219,8 +203,6 @@ And, the single LATERAL statement is shown below:
 FROM <left_hand_table_expression>, LATERAL ( <inline_view> )
 ...
 ```
-
-Copy
 
 ### Sample source[¶](#sample-source)
 
@@ -239,8 +221,6 @@ OUTER APPLY (
     FROM Employees e
 ) e;
 ```
-
-Copy
 
 #### Output[¶](#output)
 
@@ -276,8 +256,6 @@ FROM
                        Employees e
                ) e;
 ```
-
-Copy
 
 #### Output[¶](#id5)
 
@@ -324,8 +302,6 @@ OUTER APPLY (
 );
 ```
 
-Copy
-
 ##### Translation output[¶](#translation-output)
 
 ```
@@ -346,8 +322,6 @@ FROM
                                     ORDER BY GLOBE_KEY
                         );
 ```
-
-Copy
 
 - Specific statements that are not supported may comment out all the block code (example taken from:
   [JSON Example](https://learn.microsoft.com/en-us/sql/relational-databases/json/validate-query-and-change-json-data-with-built-in-functions-sql-server?view=sql-server-ver16)).
@@ -373,8 +347,6 @@ INNER JOIN LATERAL (
 );
 ```
 
-Copy
-
 ##### Translation output[¶](#id8)
 
 ```
@@ -394,8 +366,6 @@ FROM
 --			OUTER APPLY OPENJSON (pets)
 --			WITH (givenName nvarchar(100))  as p
 ```
-
-Copy
 
 ### Related EWIs[¶](#id9)
 
@@ -423,15 +393,11 @@ Snowflake.
 USE [MY DATABASE]
 ```
 
-Copy
-
 #### Output[¶](#id11)
 
 ```
 USE DATABASE "MY DATABASE";
 ```
-
-Copy
 
 #### Database name[¶](#database-name)
 
@@ -446,16 +412,12 @@ Example:
 [[[MYDATABASE]]
 ```
 
-Copy
-
 ##### Output[¶](#id13)
 
 ```
 "MYDATABASE"
 "[[MYDATABASE]"
 ```
-
-Copy
 
 #### User Defined Database[¶](#user-defined-database)
 
@@ -475,8 +437,6 @@ CREATE TABLE [TableName1].[TableName2](
 );
 ```
 
-Copy
-
 ##### Output[¶](#id15)
 
 ```
@@ -489,8 +449,6 @@ CREATE OR REPLACE TABLE MYCUSTOMDB.TableName1.TableName2 (
 COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":0},{"attributes":{"component":"transact"}}'
 ;
 ```
-
-Copy
 
 ### Known Issues[¶](#id16)
 
@@ -510,7 +468,7 @@ Applies to
 The translation for **Exec** or **Execute** Statements is not supported in Snowflake, but it will be
 translated to **CALL** statement.
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -520,15 +478,11 @@ Some parts in the output code are omitted for clarity reasons.
 Exec db.sp1
 ```
 
-Copy
-
 ### Output[¶](#id18)
 
 ```
 CALL db.sp1();
 ```
-
-Copy
 
 For more information about Execute visit:
 [Execute inside Procedures](transact-create-procedure.html#exec-execute)
@@ -549,15 +503,11 @@ closest equivalent, the **SYSTEM$LOG_INFO** built-in function.
 PRINT 'My message';
 ```
 
-Copy
-
 ### Output (Inside SnowScript)[¶](#output-inside-snowscript)
 
 ```
 SYSTEM$LOG_INTO('My message');
 ```
-
-Copy
 
 ### Output (Outside of SnowScript)[¶](#output-outside-of-snowscript)
 
@@ -567,8 +517,6 @@ a SnowConvert AI UDP.
 ```
 CALL PUBLIC.LOG_INFO_UDP('My message');
 ```
-
-Copy
 
 Before you can begin logging messages, you must set up an event table. For more information, see:
 [Logging messages in Snowflake Scripting](../../../../developer-guide/logging-tracing/logging-snowflake-scripting)
@@ -608,8 +556,6 @@ For more information about the user-defined function (UDF) used for this transla
 ]
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#sample-source-patterns)
 
 All patterns will transform SP_EXECUTESQL into Snowflake’s EXECUTE IMMEDIATE statement and only
@@ -640,8 +586,6 @@ INSERT INTO PERSONS VALUES ('Mary Keller', 3, 32);
 INSERT INTO PERSONS VALUES ('Mundane Man', 4, 18);
 ```
 
-Copy
-
 ##### Snowflake[¶](#id23)
 
 ```
@@ -659,8 +603,6 @@ INSERT INTO PERSONS VALUES ('John Doe', 2, 21);
 INSERT INTO PERSONS VALUES ('Mary Keller', 3, 32);
 INSERT INTO PERSONS VALUES ('Mundane Man', 4, 18);
 ```
-
-Copy
 
 #### Without embedded parameters[¶](#without-embedded-parameters)
 
@@ -682,8 +624,6 @@ GO
 
 EXEC SIMPLE_SINGLE_QUERY;
 ```
-
-Copy
 
 ##### Results[¶](#results)
 
@@ -725,8 +665,6 @@ $$;
 CALL SIMPLE_SINGLE_QUERY();
 ```
 
-Copy
-
 ##### Results[¶](#id26)
 
 <!-- prettier-ignore -->
@@ -765,8 +703,6 @@ GO
 
 EXEC QUERY_WITH_DATA_BINDING_PARAMS;
 ```
-
-Copy
 
 ##### Results[¶](#id28)
 
@@ -813,8 +749,6 @@ $$;
 CALL QUERY_WITH_DATA_BINDING_PARAMS();
 ```
 
-Copy
-
 ##### Results[¶](#id30)
 
 <!-- prettier-ignore -->
@@ -859,8 +793,6 @@ GO
 
 EXEC QUERY_WITH_OUTPUT_PARAMS;
 ```
-
-Copy
 
 ##### Results[¶](#id32)
 
@@ -911,8 +843,6 @@ $$;
 CALL QUERY_WITH_OUTPUT_PARAMS();
 ```
 
-Copy
-
 ##### Results[¶](#id34)
 
 <!-- prettier-ignore -->
@@ -950,8 +880,6 @@ GO
 
 EXEC QUERY_WITH_BOTH_PARAMS;
 ```
-
-Copy
 
 ##### Results[¶](#id36)
 
@@ -1016,8 +944,6 @@ $$;
 CALL QUERY_WITH_BOTH_PARAMS();
 ```
 
-Copy
-
 ##### Results[¶](#id38)
 
 <!-- prettier-ignore -->
@@ -1079,8 +1005,6 @@ GO
 
 EXEC QUERY_PARAMS_NOT_IN_ORDER_OF_DEF_2;
 ```
-
-Copy
 
 ##### Results[¶](#id40)
 
@@ -1197,8 +1121,6 @@ $$;
 CALL QUERY_PARAMS_NOT_IN_ORDER_OF_DEF_2();
 ```
 
-Copy
-
 ##### Results[¶](#id42)
 
 <!-- prettier-ignore -->
@@ -1240,8 +1162,6 @@ GO
 
 EXEC QUERY_WITH_DIRECT_PARAMS_VALUES_ALL;
 ```
-
-Copy
 
 ##### Results[¶](#id44)
 
@@ -1296,8 +1216,6 @@ $$;
 CALL QUERY_WITH_DIRECT_PARAMS_VALUES_ALL();
 ```
 
-Copy
-
 ##### Results[¶](#id46)
 
 <!-- prettier-ignore -->
@@ -1336,8 +1254,6 @@ GO
 
 EXEC DYNAMIC_WITH_PARAMS;
 ```
-
-Copy
 
 ##### Results[¶](#id48)
 
@@ -1385,8 +1301,6 @@ $$;
 CALL DYNAMIC_WITH_PARAMS();
 ```
 
-Copy
-
 ##### Results[¶](#id50)
 
 <!-- prettier-ignore -->
@@ -1427,8 +1341,6 @@ GO
 
 EXECUTE WITH_MULTIPLE_RETURNS;
 ```
-
-Copy
 
 ##### Results[¶](#id52)
 
@@ -1505,8 +1417,6 @@ $$;
 CALL WITH_MULTIPLE_RETURNS();
 ```
 
-Copy
-
 ##### Results[¶](#id54)
 
 <!-- prettier-ignore -->
@@ -1543,8 +1453,6 @@ GO
 
 EXEC WITH_INVALID_CODE_DETECTED;
 ```
-
-Copy
 
 ##### Results[¶](#id57)
 
@@ -1583,15 +1491,11 @@ $$;
 CALL WITH_INVALID_CODE_DETECTED();
 ```
 
-Copy
-
 ##### Results[¶](#id59)
 
 ```
 000006 (0A000): Uncaught exception of type 'STATEMENT_ERROR' on line 10 at position 4 : Multiple SQL statements in a single API call are not supported; use one API call per statement instead.
 ```
-
-Copy
 
 #### 2. Valid or Invalid code is not detected[¶](#valid-or-invalid-code-is-not-detected)
 
@@ -1616,8 +1520,6 @@ GO
 
 EXEC WITH_INVALID_CODE_NOT_DETECTED;
 ```
-
-Copy
 
 ##### Results[¶](#id61)
 
@@ -1656,15 +1558,11 @@ $$;
 CALL WITH_INVALID_CODE_NOT_DETECTED();
 ```
 
-Copy
-
 ##### Results[¶](#id63)
 
 ```
 000006 (0A000): Uncaught exception of type 'STATEMENT_ERROR' on line 10 at position 4 : Multiple SQL statements in a single API call are not supported; use one API call per statement instead.
 ```
-
-Copy
 
 #### 3. Invalid code is mistaken as valid[¶](#invalid-code-is-mistaken-as-valid)
 
@@ -1688,8 +1586,6 @@ GO
 
 EXEC WITH_INVALID_CODE_MISTAKEN_AS_VALID;
 ```
-
-Copy
 
 ##### Results[¶](#id65)
 
@@ -1742,15 +1638,11 @@ $$;
 CALL WITH_INVALID_CODE_MISTAKEN_AS_VALID();
 ```
 
-Copy
-
 ##### Results[¶](#id67)
 
 ```
 000006 (0A000): Uncaught exception of type 'STATEMENT_ERROR' on line 10 at position 4 : Multiple SQL statements in a single API call are not supported; use one API call per statement instead.
 ```
-
-Copy
 
 ### Related EWIs[¶](#id68)
 
@@ -1782,15 +1674,11 @@ original parameters.
 EXEC sp_rename 'TABLE1', 'TABLENEW1'
 ```
 
-Copy
-
 #### Output[¶](#id70)
 
 ```
 EXECUTE IMMEDIATE 'ALTER TABLE TABLE1 RENAME TO TABLENEW1';
 ```
-
-Copy
 
 ##### Source[¶](#id71)
 
@@ -1799,8 +1687,6 @@ DECLARE @varname1 nvarchar(50) = 'previous_name'
 DECLARE @varname2 nvarchar(50) = 'newer_name'
 EXEC sp_rename @varname1, @varname2
 ```
-
-Copy
 
 ##### Output[¶](#id72)
 
@@ -1813,8 +1699,6 @@ EXECUTE IMMEDIATE 'ALTER TABLE ' || :VARNAME1 || ' RENAME TO ' || :VARNAME2;
 END;
 ```
 
-Copy
-
 #### Translation Examples for Columns[¶](#translation-examples-for-columns)
 
 ##### Source[¶](#id73)
@@ -1824,8 +1708,6 @@ EXEC sp_rename 'sample_BACKUP_2.column_old', 'column_new', 'COLUMN'
 EXEC sp_rename 'database1.sample_BACKUP_3.column_old', 'column_new', 'COLUMN'
 ```
 
-Copy
-
 ##### Output[¶](#id74)
 
 ```
@@ -1833,8 +1715,6 @@ EXECUTE IMMEDIATE 'ALTER TABLE sample_BACKUP_2 RENAME COLUMN column_old TO colum
 
 EXECUTE IMMEDIATE 'ALTER TABLE database1.sample_BACKUP_3 RENAME COLUMN column_old TO column_new';
 ```
-
-Copy
 
 ##### Source[¶](#id75)
 
@@ -1844,8 +1724,6 @@ DECLARE @newColumnName nvarchar(50) = 'newer_name'
 DECLARE @tableName nvarchar(50) = 'TABLE'
 EXEC sp_rename @objname = @tableName + '.' + @oldColumnName, @newname = @newColumnName, @objtype = 'COLUMN';
 ```
-
-Copy
 
 ##### Output[¶](#id76)
 
@@ -1859,8 +1737,6 @@ BEGIN
 EXEC sp_rename OBJNAME = :TABLENAME || '.' || :OLDCOLUMNNAME, NEWNAME = :NEWCOLUMNNAME, OBJTYPE = 'COLUMN';
 END;
 ```
-
-Copy
 
 ### Related EWIs[¶](#id77)
 

@@ -17,8 +17,6 @@ to get more information about this statement.
  SET ANSI_NULLS { ON | OFF }
 ```
 
-Copy
-
 ## Sample Source Patterns[¶](#sample-source-patterns)
 
 ### SET ANSI_NULLS ON[¶](#set-ansi-nulls-on)
@@ -40,16 +38,12 @@ can find an explanation of the
  SET ANSI_NULLS ON;
 ```
 
-Copy
-
 #### Snowflake[¶](#snowflake)
 
 ```
  ----** SSC-FDM-TS0027 - SET ANSI_NULLS ON STATEMENT MAY HAVE A DIFFERENT BEHAVIOR IN SNOWFLAKE **
 --SET ANSI_NULLS ON
 ```
-
-Copy
 
 ### SET ANSI_NULLS OFF[¶](#set-ansi-nulls-off)
 
@@ -68,16 +62,12 @@ because it requires extra manual effort.
  SET ANSI_NULLS OFF;
 ```
 
-Copy
-
 #### Snowflake[¶](#id2)
 
 ```
 !!!RESOLVE EWI!!! /*** SSC-EWI-0040 - THE 'SIMPLE SET STATEMENT' CLAUSE IS NOT SUPPORTED IN SNOWFLAKE ***/!!!
 SET ANSI_NULLS OFF;
 ```
-
-Copy
 
 ## Related EWIs[¶](#related-ewis)
 

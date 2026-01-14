@@ -20,8 +20,6 @@ to get more information about this statement.
  SET QUOTED_IDENTIFIER { ON | OFF }
 ```
 
-Copy
-
 ## Behavior Comparison[¶](#behavior-comparison)
 
 ### SQL Server Behavior[¶](#sql-server-behavior)
@@ -65,8 +63,6 @@ containing spaces or special characters.
  SELECT "Order ID", "Product Name" FROM "Order Details";
 ```
 
-Copy
-
 #### Snowflake[¶](#snowflake)
 
 ```
@@ -88,8 +84,6 @@ Copy
      "Order Details";
 ```
 
-Copy
-
 **Example of the Difference**
 
 Let’s assume you’ve migrated a table from a SQL Server database with a case-insensitive collation
@@ -105,8 +99,6 @@ SELECT "MyColumn" FROM "MyTable";
 SELECT "mycolumn" FROM "MyTable";
 ```
 
-Copy
-
 In this case, the \_CI collation makes the two SELECT statements interchangeable.
 
 #### Snowflake:[¶](#id1)
@@ -120,8 +112,6 @@ SELECT "mycolumn" FROM "MyTable";
 -- ERROR:  SQL compilation error: error in select clause: mycolumn does not exist
 ```
 
-Copy
-
 The Snowflake behavior is different because it respects the case of the quoted identifier by
 default. It could be approachable by altering the session using.
 
@@ -129,15 +119,11 @@ default. It could be approachable by altering the session using.
 ALTER SESSION SET QUOTED_IDENTIFIERS_IGNORE_CASE = TRUE;
 ```
 
-Copy
-
 If you want to set the parameter at the account level, you can use the following command:
 
 ```
 ALTER ACCOUNT SET QUOTED_IDENTIFIERS_IGNORE_CASE = TRUE;
 ```
-
-Copy
 
 This will set the parameter for all sessions associated with the account. For further information,
 check the following [documentation](https://docs.snowflake.com/en/sql-reference/identifiers-syntax);
@@ -158,8 +144,6 @@ When `QUOTED_IDENTIFIER` is OFF in SQL Server, double quotes are treated as stri
  SELECT [Order ID] FROM [Order Details];
 ```
 
-Copy
-
 #### Snowflake[¶](#id3)
 
 ```
@@ -171,8 +155,6 @@ Copy
  -- Double quotes delimit identifiers (case-sensitive)
  SELECT "Order ID" FROM "Order Details";
 ```
-
-Copy
 
 ## Migration Considerations[¶](#migration-considerations)
 

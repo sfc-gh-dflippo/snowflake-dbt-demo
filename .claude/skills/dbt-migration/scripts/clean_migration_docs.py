@@ -43,13 +43,19 @@ PATTERNS_TO_REMOVE = [
     r"\n---\n\n\*\*Related topics\*\*[\s\S]*$",
     r"\n---\n\nWas this page helpful\?[\s\S]*$",
     r"\nVisit Snowflake[\s\S]*$",
-    # Copy button placeholders
-    r"\nCopy\n",
-    # Link anchors that are just noise
+    # Copy button placeholders (after code blocks)
+    r"\n\nCopy\n",
+    # Link anchor title text that is just noise
     r'\s*"Link to this heading"',
     # Empty sections
     r"\n## \n",
     r"\n### \n",
+]
+
+# Patterns to replace (not remove)
+PATTERNS_TO_REPLACE = [
+    # Standalone "Note" should be formatted as "**Note:**"
+    (r"\n\nNote\n\n", r"\n\n**Note:**\n\n"),
 ]
 
 
@@ -105,6 +111,10 @@ def clean_content(content: str) -> str:
 
     for pattern in PATTERNS_TO_REMOVE:
         content = re.sub(pattern, "", content)
+
+    # Apply replacements
+    for pattern, replacement in PATTERNS_TO_REPLACE:
+        content = re.sub(pattern, replacement, content)
 
     # Clean up multiple consecutive blank lines
     content = re.sub(r"\n{3,}", "\n\n", content)

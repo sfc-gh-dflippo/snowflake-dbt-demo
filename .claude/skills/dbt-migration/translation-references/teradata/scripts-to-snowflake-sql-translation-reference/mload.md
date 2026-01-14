@@ -48,8 +48,6 @@ INSERT INTO my_table(col1, col2) VALUES (:col1, :col2);
 .LOGOFF;
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#snowflake-sql)
 
 ```
@@ -107,8 +105,6 @@ $$
 $$
 ```
 
-Copy
-
 ##### 2. DML label with upsert[¶](#dml-label-with-upsert)
 
 ###### Teradata MLoad[¶](#id1)
@@ -143,8 +139,6 @@ VALUES (:col1, :col2);
 .END MLOAD;
 .LOGOFF;
 ```
-
-Copy
 
 ###### Snowflake SQL[¶](#id2)
 
@@ -206,8 +200,6 @@ $$
 $$
 ```
 
-Copy
-
 ##### 3. Layout or DML label not found[¶](#layout-or-dml-label-not-found)
 
 ###### Teradata MLoad[¶](#id3)
@@ -240,8 +232,6 @@ INSERT INTO my_table(col1, col2)VALUES (:col1, :col2);
 .END MLOAD;
 .LOGOFF;pl
 ```
-
-Copy
 
 ###### Snowflake SQL[¶](#id4)
 
@@ -294,8 +284,6 @@ $$
 $$
 ```
 
-Copy
-
 ##### 4. Conditions not found in update statement[¶](#conditions-not-found-in-update-statement)
 
 ###### Teradata MLoad[¶](#id5)
@@ -329,8 +317,6 @@ VALUES (:col1, :col2);
 .END MLOAD;
 .LOGOFF;
 ```
-
-Copy
 
 ###### Snowflake SQL[¶](#id6)
 
@@ -374,8 +360,6 @@ $$
   END
 $$
 ```
-
-Copy
 
 ### Known Issues[¶](#known-issues)
 

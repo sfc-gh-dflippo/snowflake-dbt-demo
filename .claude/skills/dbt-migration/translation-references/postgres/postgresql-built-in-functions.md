@@ -10,7 +10,7 @@ title: SnowConvert AI - PostgreSQL - Built-in functions | Snowflake Documentatio
 - Greenplum
 - Netezza
 
-Note
+**Note:**
 
 For more information about built-in functions and their Snowflake equivalents, also see
 [Common built-in functions](../general/built-in-functions).
@@ -71,7 +71,7 @@ For more information about built-in functions and their Snowflake equivalents, a
 |[EXTRACT](https://www.postgresql.org/docs/current/functions-datetime.html#FUNCTIONS-DATETIME-EXTRACT)|[EXTRACT](https://docs.snowflake.com/en/sql-reference/functions/extract) _Notes:_ Part-time or Date time supported: DAY, DOW, DOY, EPOCH, HOUR, MINUTE, MONTH, QUARTER, SECOND, WEEK, YEAR.|
 |[TIMEZONE](https://www.postgresql.org/docs/16/functions-datetime.html#FUNCTIONS-DATETIME-ZONECONVERT)|[CONVERT_TIMEZONE](https://docs.snowflake.com/en/sql-reference/functions/convert_timezone)|
 
-Note
+**Note:**
 
 PostgreSQL timestamps default to microsecond precision (6 digits); Snowflake defaults to nanosecond
 precision (9 digits). Adjust precision as needed using ALTER SESSION (e.g.,
@@ -119,7 +119,7 @@ might maintain functional equivalence between platforms.
 |[TAN](https://www.postgresql.org/docs/12/functions-math.html)|[TAN](https://docs.snowflake.com/en/sql-reference/functions/tan)|
 |[TRUNC](https://www.postgresql.org/docs/12/functions-math.html)|[TRUNC](https://docs.snowflake.com/en/sql-reference/functions/trunc)|
 
-Note
+**Note:**
 
 PostgreSQL and Snowflake results may differ in scale.
 

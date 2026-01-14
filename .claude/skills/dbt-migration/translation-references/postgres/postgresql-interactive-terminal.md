@@ -30,8 +30,6 @@ SnowConvert AI retains the original PSQL command as a comment
 \set ON_ERROR_STOP TRUE
 ```
 
-Copy
-
 ### Output Code:[¶](#output-code)
 
 #### Snowflake[¶](#snowflake)
@@ -40,8 +38,6 @@ Copy
 ----** SSC-FDM-PG0015 - PSQL COMMAND IS NOT APPLICABLE IN SNOWFLAKE. **
 --\set ON_ERROR_STOP TRUE
 ```
-
-Copy
 
 ## Related EWIs[¶](#related-ewis)
 

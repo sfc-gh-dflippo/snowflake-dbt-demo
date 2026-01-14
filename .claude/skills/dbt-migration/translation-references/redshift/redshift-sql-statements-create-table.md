@@ -52,8 +52,6 @@ and table_attributes are:
   [ ENCODE AUTO ]
 ```
 
-Copy
-
 ## BACKUP[¶](#backup)
 
 ### Description[¶](#id1)
@@ -73,8 +71,6 @@ the Amazon Redshift docs page for this syntax.
  BACKUP { YES | NO }
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#sample-source-patterns)
 
 #### Input Code:[¶](#input-code)
@@ -88,8 +84,6 @@ Copy
 BACKUP YES;
 ```
 
-Copy
-
 ##### Output Code:[¶](#output-code)
 
 ##### Snowflake[¶](#snowflake)
@@ -101,8 +95,6 @@ Copy
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "redshift",  "convertedOn": "09/17/2024" }}'
 ;
 ```
-
-Copy
 
 ### Related EWIs[¶](#related-ewis)
 
@@ -125,8 +117,6 @@ the Amazon Redshift docs page for this syntax.
  IF NOT EXISTS
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id5)
 
 #### Input Code:[¶](#id6)
@@ -139,8 +129,6 @@ Copy
 );
 ```
 
-Copy
-
 ##### Output Code:[¶](#id8)
 
 ##### Snowflake[¶](#id9)
@@ -151,8 +139,6 @@ Copy
 )
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "redshift",  "convertedOn": "09/17/2024" }}';
 ```
-
-Copy
 
 ### Related EWIs[¶](#id10)
 
@@ -176,8 +162,6 @@ the Amazon Redshift docs page for this syntax.
  LOCAL { TEMPORARY | TEMP }
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id13)
 
 #### Input Code:[¶](#id14)
@@ -190,8 +174,6 @@ Copy
 );
 ```
 
-Copy
-
 ##### Output Code:[¶](#id16)
 
 ##### Snowflake[¶](#id17)
@@ -202,8 +184,6 @@ Copy
 )
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "redshift",  "convertedOn": "09/17/2024" }}';
 ```
-
-Copy
 
 ### Related EWIs[¶](#id18)
 
@@ -227,8 +207,6 @@ the Amazon Redshift docs page for this syntax.
  DISTKEY ( column_name )
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id21)
 
 #### Input Code:[¶](#id22)
@@ -242,8 +220,6 @@ Copy
 DISTKEY (col1);
 ```
 
-Copy
-
 ##### Output Code:[¶](#id24)
 
 ##### Snowflake[¶](#id25)
@@ -256,8 +232,6 @@ Copy
 --DISTKEY (col1)
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "redshift",  "convertedOn": "03/03/2025",  "domain": "test" }}';
 ```
-
-Copy
 
 ### Related EWIs[¶](#id26)
 
@@ -278,8 +252,6 @@ the Amazon Redshift docs page for this syntax.
 ```
  DISTSTYLE { AUTO | EVEN | KEY | ALL }
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id29)
 
@@ -309,8 +281,6 @@ CREATE TABLE table4 (
 )
 DISTSTYLE ALL;
 ```
-
-Copy
 
 ##### Output Code:[¶](#id32)
 
@@ -347,8 +317,6 @@ CREATE TABLE table4 (
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "redshift",  "convertedOn": "09/17/2024" }}';
 ```
 
-Copy
-
 ### Related EWIs[¶](#id34)
 
 1. [SSC-FDM-RS0001](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/redshiftFDM.html#ssc-fdm-rs0001):
@@ -371,8 +339,6 @@ the Amazon Redshift docs page for this syntax.
  ENCODE AUTO
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id37)
 
 #### Input Code:[¶](#id38)
@@ -386,8 +352,6 @@ Copy
 ENCODE AUTO;
 ```
 
-Copy
-
 ##### Output Code:[¶](#id40)
 
 ##### Snowflake[¶](#id41)
@@ -399,8 +363,6 @@ Copy
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "redshift",  "convertedOn": "09/17/2024" }}'
 ;
 ```
-
-Copy
 
 ### Related EWIs[¶](#id42)
 
@@ -423,8 +385,6 @@ the Amazon Redshift docs page for this syntax.
 ```
  [COMPOUND | INTERLEAVED ] SORTKEY ( column_name [,...]) | [ SORTKEY AUTO ]
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id45)
 
@@ -451,8 +411,6 @@ CREATE TABLE table3 (
 )
 SORTKEY AUTO;
 ```
-
-Copy
 
 ##### Output Code:[¶](#id48)
 
@@ -486,8 +444,6 @@ CREATE TABLE table3 (
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "redshift",  "convertedOn": "09/17/2024" }}';
 ```
 
-Copy
-
 ### Related EWIs[¶](#id50)
 
 1. [SSC-FDM-RS0001](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/redshiftFDM.html#ssc-fdm-rs0001):
@@ -516,8 +472,6 @@ The translation for Foreign Key will be delivered in the future.
  FOREIGN KEY (column_name [, ... ] ) REFERENCES reftable [ ( refcolumn )
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id53)
 
 #### Input Code:[¶](#id54)
@@ -530,8 +484,6 @@ Copy
     FOREIGN KEY (col1) REFERENCES table_test (col1)
 );
 ```
-
-Copy
 
 ##### Output Code:[¶](#id56)
 
@@ -547,8 +499,6 @@ Copy
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "redshift",  "convertedOn": "09/26/2024" }}';
 ```
 
-Copy
-
 ### Related EWIs[¶](#id58)
 
 - [SSC-FDM-RSOOO3](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/redshiftFDM.html#ssc-fdm-rs0003):
@@ -563,7 +513,7 @@ Specifies that a column or a number of columns of a table can contain only uniqu
 Click [here](https://docs.aws.amazon.com/redshift/latest/dg/r_CREATE_TABLE_NEW.html) to navigate to
 the Amazon Redshift docs page for this syntax.
 
-Note
+**Note:**
 
 In Snowflake, unique, primary and foreign keys are used for documentation and do not enforce
 constraints or uniqueness. They help describe table relationships but don’t impact data integrity or
@@ -574,8 +524,6 @@ performance.
 ```
  PRIMARY KEY ( column_name [, ... ] )
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id61)
 
@@ -591,8 +539,6 @@ Copy
 );
 ```
 
-Copy
-
 ##### Output Code:[¶](#id64)
 
 ##### Snowflake[¶](#id65)
@@ -607,8 +553,6 @@ COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,
 ;
 ```
 
-Copy
-
 ### Related EWIs[¶](#id66)
 
 There are no known issues.
@@ -622,7 +566,7 @@ Specifies that a group of one or more columns of a table can contain only unique
 Click [here](https://docs.aws.amazon.com/redshift/latest/dg/r_CREATE_TABLE_NEW.html) to navigate to
 the Amazon Redshift docs page for this syntax.
 
-Note
+**Note:**
 
 In Snowflake, unique, primary and foreign keys are used for documentation and do not enforce
 constraints or uniqueness. They help describe table relationships but don’t impact data integrity or
@@ -633,8 +577,6 @@ performance.
 ```
  UNIQUE ( column_name [, ... ] )
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id69)
 
@@ -650,8 +592,6 @@ Copy
 );
 ```
 
-Copy
-
 ##### Output Code:[¶](#id72)
 
 ##### Snowflake[¶](#id73)
@@ -665,8 +605,6 @@ Copy
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "redshift",  "convertedOn": "09/17/2024" }}'
 ;
 ```
-
-Copy
 
 ### Related EWIs[¶](#id74)
 
@@ -688,8 +626,6 @@ the Amazon Redshift docs page for this syntax.
  NOT NULL | NULL
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id77)
 
 #### Input Code:[¶](#id78)
@@ -703,8 +639,6 @@ Copy
 );
 ```
 
-Copy
-
 ##### Output Code:[¶](#id80)
 
 ##### Snowflake[¶](#id81)
@@ -717,8 +651,6 @@ Copy
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "redshift",  "convertedOn": "09/17/2024" }}'
 ;
 ```
-
-Copy
 
 ### Related EWIs[¶](#id82)
 
@@ -740,8 +672,6 @@ the Amazon Redshift docs page for this syntax.
  REFERENCES reftable [ ( refcolumn ) ]
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id85)
 
 #### Input Code:[¶](#id86)
@@ -754,8 +684,6 @@ Copy
 );
 ```
 
-Copy
-
 ##### Output Code:[¶](#id88)
 
 ##### Snowflake[¶](#id89)
@@ -767,8 +695,6 @@ Copy
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "redshift",  "convertedOn": "09/17/2024" }}'
 ;
 ```
-
-Copy
 
 ### Related EWIs[¶](#id90)
 
@@ -786,7 +712,7 @@ storage level.
 Click [here](https://docs.aws.amazon.com/redshift/latest/dg/r_CREATE_TABLE_NEW.html) to navigate to
 the Amazon Redshift docs page for this syntax.
 
-Note
+**Note:**
 
 In Snowflake, unique, primary and foreign keys are used for documentation and do not enforce
 constraints or uniqueness. They help describe table relationships but don’t impact data integrity or
@@ -797,8 +723,6 @@ performance.
 ```
  UNIQUE | PRIMARY KEY
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id93)
 
@@ -813,8 +737,6 @@ Copy
 );
 ```
 
-Copy
-
 ##### Output Code:[¶](#id96)
 
 ##### Snowflake[¶](#id97)
@@ -827,8 +749,6 @@ Copy
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "redshift",  "convertedOn": "09/17/2024" }}'
 ;
 ```
-
-Copy
 
 ### Related EWIs[¶](#id98)
 
@@ -843,7 +763,7 @@ Specifies whether string search or comparison on the column is CASE_SENSITIVE or
 Click [here](https://docs.aws.amazon.com/redshift/latest/dg/r_CREATE_TABLE_NEW.html) to navigate to
 the Amazon Redshift docs page for this syntax.
 
-Note
+**Note:**
 
 The default collation language is English. If your database uses a different language, please update
 the ‘en-’ prefix to match your database’s language. For more information, please refer to this
@@ -854,8 +774,6 @@ the ‘en-’ prefix to match your database’s language. For more information, 
 ```
  COLLATE CASE_SENSITIVE | COLLATE CASE_INSENSITIVE
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id101)
 
@@ -870,8 +788,6 @@ Copy
 );
 ```
 
-Copy
-
 ##### Output Code:[¶](#id104)
 
 ##### Snowflake[¶](#id105)
@@ -884,8 +800,6 @@ Copy
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "redshift",  "convertedOn": "09/17/2024" }}'
 ;
 ```
-
-Copy
 
 ### Known issues[¶](#known-issues)
 
@@ -907,8 +821,6 @@ to navigate to the Amazon Redshift docs page for this syntax.
  DEFAULT default_expr
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id108)
 
 #### Input Code:[¶](#id109)
@@ -921,8 +833,6 @@ Copy
 );
 ```
 
-Copy
-
 ##### Output Code:[¶](#id111)
 
 ##### Snowflake[¶](#id112)
@@ -934,8 +844,6 @@ Copy
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "redshift",  "convertedOn": "09/17/2024" }}'
 ;
 ```
-
-Copy
 
 ### Related EWIs[¶](#id113)
 
@@ -960,8 +868,6 @@ the Amazon Redshift docs page for this syntax.
  DISTKEY
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id117)
 
 #### Input Code:[¶](#id118)
@@ -974,8 +880,6 @@ Copy
 );
 ```
 
-Copy
-
 ##### Output Code:[¶](#id120)
 
 ##### Snowflake[¶](#id121)
@@ -987,8 +891,6 @@ Copy
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "redshift",  "convertedOn": "09/17/2024" }}'
 ;
 ```
-
-Copy
 
 ### Related EWIs[¶](#id122)
 
@@ -1012,8 +914,6 @@ to navigate to the Amazon Redshift docs page for this syntax.
  ENCODE encoding
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id126)
 
 #### Input Code:[¶](#id127)
@@ -1026,8 +926,6 @@ Copy
 );
 ```
 
-Copy
-
 ##### Output Code:[¶](#id129)
 
 ##### Snowflake[¶](#id130)
@@ -1039,8 +937,6 @@ Copy
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "redshift",  "convertedOn": "09/17/2024" }}'
 ;
 ```
-
-Copy
 
 ### Related EWIs[¶](#id131)
 
@@ -1063,8 +959,6 @@ to navigate to the Amazon Redshift docs page for this syntax.
  GENERATED BY DEFAULT AS IDENTITY ( seed, step )
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id134)
 
 #### Input Code:[¶](#id135)
@@ -1077,8 +971,6 @@ Copy
 );
 ```
 
-Copy
-
 ##### Output Code:[¶](#id137)
 
 ##### Snowflake[¶](#id138)
@@ -1090,8 +982,6 @@ Copy
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "redshift",  "convertedOn": "09/17/2024" }}'
 ;
 ```
-
-Copy
 
 ### Related EWIs[¶](#id139)
 
@@ -1109,8 +999,6 @@ There are no known issues.
 ```
  IDENTITY ( seed, step )
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id142)
 
@@ -1131,8 +1019,6 @@ INSERT INTO table1 (doc) VALUES (1),(2),(3);
 
 SELECT * FROM table1;
 ```
-
-Copy
 
 ##### Results[¶](#results)
 
@@ -1162,8 +1048,6 @@ INSERT INTO table1 (doc) VALUES (1),(2),(3);
 SELECT * FROM
  table1;
 ```
-
-Copy
 
 ##### Results[¶](#id147)
 
@@ -1200,8 +1084,6 @@ Amazon Redshift docs page for this syntax.
  SORTKEY
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id153)
 
 #### Input Code:[¶](#id154)
@@ -1213,8 +1095,6 @@ Copy
     col1 INTEGER SORTKEY
 );
 ```
-
-Copy
 
 ##### Output Code:[¶](#id156)
 
@@ -1228,8 +1108,6 @@ Copy
 CLUSTER BY (col1)
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "redshift",  "convertedOn": "09/17/2024" }}';
 ```
-
-Copy
 
 ### Known issues[¶](#id158)
 

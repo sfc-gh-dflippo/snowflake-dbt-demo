@@ -37,8 +37,6 @@ in
     employees1
 ```
 
-Copy
-
 **Snowflake Connection in the Power Query Editor**
 
 ```
@@ -51,8 +49,6 @@ let
 in
     Employees1
 ```
-
-Copy
 
 ### Entity Repointing Case: View[¶](#entity-repointing-case-view)
 
@@ -70,8 +66,6 @@ in
     EmployeeSalaryBonusView1
 ```
 
-Copy
-
 **Snowflake Connection in the Power Query Editor**
 
 ```
@@ -84,8 +78,6 @@ let
 in
     EmployeeSalaryBonusView1
 ```
-
-Copy
 
 ### Embedded SQL Case[¶](#embedded-sql-case)
 
@@ -103,8 +95,6 @@ in
     Source
 ```
 
-Copy
-
 **Snowflake Connection in the Power Query Editor**
 
 ```
@@ -114,8 +104,6 @@ let
 in
     Source
 ```
-
-Copy
 
 ### ODBC.Query Case[¶](#odbc-query-case)
 
@@ -135,8 +123,6 @@ in
   Source
 ```
 
-Copy
-
 **Snowflake Connection in the Power Query Editor**
 
 ```
@@ -145,5 +131,3 @@ let
 in
    Source
 ```
-
-Copy

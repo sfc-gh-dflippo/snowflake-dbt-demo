@@ -16,8 +16,6 @@ following:
  query_expression_1 UNION [ ALL ] query_expression_2
 ```
 
-Copy
-
 For more information, please review the following
 [Teradata](https://docs.teradata.com/r/Enterprise_IntelliFlex_VMware/SQL-Data-Manipulation-Language/Set-Operators/UNION-Operator/UNION-Operator-Syntax)
 documentation.
@@ -31,7 +29,7 @@ less space in the columns.
 
 #### Teradata behavior[¶](#teradata-behavior)
 
-Note
+**Note:**
 
 **Same behavior in ANSI and TERA session modes.**
 
@@ -57,8 +55,6 @@ INSERT INTO table2 VALUES('t2 row 1 a');
 INSERT INTO table2 VALUES('t2 row 2 a');
 INSERT INTO table2 VALUES('t2 row 3 a');
 ```
-
-Copy
 
 ##### Snowflake setup data[¶](#snowflake-setup-data)
 
@@ -93,8 +89,6 @@ INSERT INTO table2
 VALUES ('t2 row 3 a');
 ```
 
-Copy
-
 #### **Case 1 - one single column: UNION ALL for a column varchar (20) over a column varchar (10)**[¶](#case-1-one-single-column-union-all-for-a-column-varchar-20-over-a-column-varchar-10)
 
 SuccessPlaceholder
@@ -109,8 +103,6 @@ UNION ALL
 SELECT col1 FROM table2;
 ```
 
-Copy
-
 ##### Teradata output[¶](#teradata-output)
 
 ```
@@ -120,8 +112,6 @@ value 2 abcdefghijk
 t2 row 1 a
 t2 row 2 a
 ```
-
-Copy
 
 ##### Snowflake input[¶](#snowflake-input)
 
@@ -135,8 +125,6 @@ col1 FROM
 table2;
 ```
 
-Copy
-
 ##### Snowflake output[¶](#snowflake-output)
 
 ```
@@ -146,8 +134,6 @@ value 2 abcdefghijk
 t2 row 1 a
 t2 row 2 a
 ```
-
-Copy
 
 #### **Case 2 - one single column: UNION ALL for a column varchar (10) over a column varchar (20)**[¶](#case-2-one-single-column-union-all-for-a-column-varchar-10-over-a-column-varchar-20)
 
@@ -166,8 +152,6 @@ UNION ALL
 SELECT col1 FROM table1;
 ```
 
-Copy
-
 ##### Teradata output[¶](#id2)
 
 ```
@@ -177,8 +161,6 @@ t2 row 1 a
 t2 row 2 a
 value 2 ab --> truncated
 ```
-
-Copy
 
 ##### Snowflake input[¶](#id3)
 
@@ -192,8 +174,6 @@ col1 FROM
 table1;
 ```
 
-Copy
-
 ##### Snowflake output[¶](#id4)
 
 ```
@@ -203,8 +183,6 @@ t2 row 1 a
 t2 row 2 a
 value 2 abcdefghijk --> NOT truncated
 ```
-
-Copy
 
 **Workaround to get the same functionality**
 
@@ -221,8 +199,6 @@ UNION ALL
 SELECT LEFT(col1, 10) AS col1 FROM table1;
 ```
 
-Copy
-
 ##### Snowflake output[¶](#id6)
 
 ```
@@ -232,8 +208,6 @@ t2 row 3 a
 value 1 ab
 value 2 ab
 ```
-
-Copy
 
 #### **Case 3 - multiple columns - same size by table: UNION ALL for columns varchar (20) over columns varchar (10)**[¶](#case-3-multiple-columns-same-size-by-table-union-all-for-columns-varchar-20-over-columns-varchar-10)
 
@@ -261,8 +235,6 @@ INSERT INTO table4 VALUES('t2 row 1 a', 't2 row 1 b');
 INSERT INTO table4 VALUES('t2 row 2 a', 't2 row 2 b');
 INSERT INTO table4 VALUES('t2 row 3 a', 't2 row 3 b');
 ```
-
-Copy
 
 ##### Snowflake setup data[¶](#id8)
 
@@ -299,11 +271,9 @@ INSERT INTO table4
 VALUES ('t2 row 3 a', 't2 row 3 b');
 ```
 
-Copy
-
 Once the new tables and data are created, the following query can be evaluated.
 
-Note
+**Note:**
 
 For this case, the functional equivalence is the same
 
@@ -314,8 +284,6 @@ For this case, the functional equivalence is the same
 union all
 select col1, col2 from table4;
 ```
-
-Copy
 
 ##### Teradata output[¶](#id10)
 
@@ -339,8 +307,6 @@ SELECT
 col1, col2 FROM
 table4;
 ```
-
-Copy
 
 ##### Snowflake output[¶](#id12)
 
@@ -367,8 +333,6 @@ union all
 select col1, col2 from table3;
 ```
 
-Copy
-
 ##### Teradata output[¶](#id14)
 
 <!-- prettier-ignore -->
@@ -392,8 +356,6 @@ col1, col2 FROM
 table3;
 ```
 
-Copy
-
 ##### Snowflake output[¶](#id16)
 
 <!-- prettier-ignore -->
@@ -416,8 +378,6 @@ Apply the column size to the second `SELECT` on the columns to get the same func
 UNION ALL
 SELECT LEFT(col1, 10) AS col1, LEFT(col2, 10) AS col2 FROM table3;
 ```
-
-Copy
 
 ##### Snowflake output[¶](#id18)
 
@@ -457,8 +417,6 @@ INSERT INTO table6 VALUES('t2 row 2 a', 't2 row 2 b');
 INSERT INTO table6 VALUES('t2 row 3 a', 't2 row 3 b');
 ```
 
-Copy
-
 ##### Snowflake setup data[¶](#id20)
 
 ```
@@ -494,11 +452,9 @@ INSERT INTO table6
 VALUES ('t2 row 3 a', 't2 3b');
 ```
 
-Copy
-
 Once the new tables and data are created, the following query can be evaluated.
 
-Note
+**Note:**
 
 For this case, the functional equivalence is the same
 
@@ -509,8 +465,6 @@ For this case, the functional equivalence is the same
 union all
 select col1, col2 from table6;
 ```
-
-Copy
 
 ##### Teradata output[¶](#id22)
 
@@ -534,8 +488,6 @@ SELECT
 col1, col2 FROM
 table6;
 ```
-
-Copy
 
 ##### Snowflake output[¶](#id24)
 
@@ -562,8 +514,6 @@ union all
 select col1, col2 from table5;
 ```
 
-Copy
-
 ##### Teradata output[¶](#id26)
 
 <!-- prettier-ignore -->
@@ -586,8 +536,6 @@ SELECT
 col1, col2 FROM
 table5;
 ```
-
-Copy
 
 ##### Snowflake output[¶](#id28)
 
@@ -617,8 +565,6 @@ LEFT(col1, 5) as col1, LEFT(col2, 5) AS col2 FROM
 table5;
 ```
 
-Copy
-
 ##### Snowflake output[¶](#id30)
 
 <!-- prettier-ignore -->
@@ -636,7 +582,7 @@ Use the data set up
 [here](#case-3-multiple-columns-same-size-by-table-union-all-for-columns-varchar-20-over-columns-varchar-10).
 Once the new tables and data are created, the following query can be evaluated.
 
-Note
+**Note:**
 
 For this case, the functional equivalence is the same
 
@@ -647,8 +593,6 @@ For this case, the functional equivalence is the same
 union all
 select col1 || col2 from table4;
 ```
-
-Copy
 
 ##### Teradata output[¶](#id32)
 
@@ -672,8 +616,6 @@ SELECT
 col1 || col2 FROM
 table4;
 ```
-
-Copy
 
 ##### Snowflake output[¶](#id34)
 
@@ -700,8 +642,6 @@ union all
 select col1 || col2 from table3;
 ```
 
-Copy
-
 ##### Teradata output[¶](#id36)
 
 <!-- prettier-ignore -->
@@ -724,8 +664,6 @@ SELECT
 col1 || col2 FROM
 table3;
 ```
-
-Copy
 
 ##### Snowflake output[¶](#id38)
 
@@ -760,8 +698,6 @@ SELECT
 LEFT(col1 || col2, 20) FROM
 table3;
 ```
-
-Copy
 
 ##### Snowflake output[¶](#id40)
 
@@ -805,5 +741,3 @@ SELECT col1 FROM table12
 UNION ALL
 SELECT col1 FROM table11;
 ```
-
-Copy

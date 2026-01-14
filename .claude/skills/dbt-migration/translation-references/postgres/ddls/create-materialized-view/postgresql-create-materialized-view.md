@@ -30,8 +30,6 @@ CREATE MATERIALIZED VIEW [ IF  NOT EXISTS ] <table_name>
     [ WITH [ NO ] DATA ]
 ```
 
-Copy
-
 ## Code Examples[¶](#code-examples)
 
 ### Simple Case[¶](#simple-case)
@@ -49,8 +47,6 @@ SELECT
 FROM products
 GROUP BY category;
 ```
-
-Copy
 
 Output Code:
 
@@ -72,8 +68,6 @@ FROM
 GROUP BY category;
 ```
 
-Copy
-
 ### IF NOT EXISTS[¶](#if-not-exists)
 
 Hint
@@ -84,7 +78,7 @@ This clause has been removed during the migration from PostgreSQL to Snowflake.
 
 ### USING, TABLESPACE, and WITH[¶](#using-tablespace-and-with)
 
-Note
+**Note:**
 
 This syntax is not needed in Snowflake.
 

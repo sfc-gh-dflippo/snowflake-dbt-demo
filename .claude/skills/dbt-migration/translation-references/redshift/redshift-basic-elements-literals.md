@@ -38,8 +38,6 @@ SELECT 'Hello, World!' AS simple_string,
     'The value is ' || 42 AS mixed_literal;
 ```
 
-Copy
-
 ##### Result[¶](#result)
 
 <!-- prettier-ignore -->
@@ -70,8 +68,6 @@ SELECT 'Hello, World!' AS simple_string,
     'The value is ' || 42 AS mixed_literal;
 ```
 
-Copy
-
 ##### Result[¶](#id1)
 
 <!-- prettier-ignore -->
@@ -96,8 +92,6 @@ a test
 of a tag literal
 $MyTagForLiteral$ as c1;
 ```
-
-Copy
 
 ## Related EWIs[¶](#related-ewis)
 
@@ -135,8 +129,6 @@ DATEADD(month, 1, '01/02/00'),
 DATEADD(month, 1, '31-Jan-2000');
 ```
 
-Copy
-
 Output Code:
 
 ##### Snowflake[¶](#id6)
@@ -166,8 +158,6 @@ SELECT
  DATEADD(month, 1, '01/02/00'),
  DATEADD(month, 1, '31-Jan-2000');
 ```
-
-Copy
 
 ### Know Issues[¶](#id7)
 
@@ -200,8 +190,6 @@ This grammar is partially supported in
 INTERVAL quoted-string [ day_to_second_qualifier ] [ (fractional_precision) ]
 ```
 
-Copy
-
 [Snowflake Intervals](https://docs.snowflake.com/en/sql-reference/data-types-datetime#interval-constants)
 can only be used in arithmetic operations. Intervals used in any other scenario are not supported.
 
@@ -213,8 +201,6 @@ optional fields and most of the abbreviations without interval styles:
 2. hh:mm:ss.ms
 3. 1 year 1 month 1 day hh:mm:ss.ms
 ```
-
-Copy
 
 Snowflake does not support literals with arithmetic signs. If the Literal contains an hour
 expression the expression can be partially transformed.
@@ -249,8 +235,6 @@ expression the expression can be partially transformed.
 ;
 ```
 
-Copy
-
 ##### Output Code:[¶](#output-code)
 
 ##### Snowflake[¶](#id13)
@@ -276,8 +260,6 @@ Copy
 ('2024-01-01 00:00:00':: TIMESTAMP_NTZ + INTERVAL '1 year, 1 mon') AS c16
 ;
 ```
-
-Copy
 
 #### Pending translation scenarios[¶](#pending-translation-scenarios)
 
@@ -315,8 +297,6 @@ INTERVAL '1year 1month 1day 2hour 3 minute 4.1233455second',
 ('2024-01-01 00:00:00'::timestamp without time zone + ('3 days')::interval day) AS c26;
 ```
 
-Copy
-
 ##### Output Code:[¶](#id16)
 
 ##### Snowflake[¶](#id17)
@@ -351,8 +331,6 @@ INTERVAL '1year 1month 1day 2hour 3 minute 4.1233455second' !!!RESOLVE EWI!!! /*
 ('2024-01-01 00:00:00':: TIMESTAMP_NTZ + ('3 days'):: VARCHAR !!!RESOLVE EWI!!! /*** SSC-EWI-0036 - INTERVAL DATA TYPE CONVERTED TO VARCHAR ***/!!!!!!RESOLVE EWI!!! /*** SSC-EWI-0073 - PENDING FUNCTIONAL EQUIVALENCE REVIEW FOR 'INTERVAL FORMAT' NODE ***/!!!) AS c26;
 ```
 
-Copy
-
 ### Know Issues[¶](#id18)
 
 No issues were found.
@@ -386,8 +364,6 @@ constraints. A null is not equivalent to the value zero or to an empty string.
 SELECT 1 + NULL, 1 - NULL, 1 * NULL, 1 / NULL, 1 % NULL;
 ```
 
-Copy
-
 ##### Result[¶](#id24)
 
 <!-- prettier-ignore -->
@@ -408,8 +384,6 @@ Output Code:
  SELECT NULL IN (NULL, 0, 1, 2 ,3, 4);
 SELECT 1 + NULL, 1 - NULL, 1 * NULL, 1 / NULL, 1 % NULL;
 ```
-
-Copy
 
 ##### Result[¶](#id26)
 

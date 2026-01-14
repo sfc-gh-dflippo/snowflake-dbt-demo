@@ -455,15 +455,11 @@ Teradata and Snowflake. For example, the following Teradata code:
  SELECT INDEX(35, '5');
 ```
 
-Copy
-
 Returns 4, while the CHARINDEX equivalent in Snowflake:
 
 ```
  SELECT CHARINDEX('5', 35);
 ```
-
-Copy
 
 Returns 2, this happens because Teradata has its own
 [default formats](https://docs.teradata.com/r/S0Fw2AVH8ff3MDA0wDOHlQ/Xh8u4~A7KI46wOdMG9DSHQ) which
@@ -492,8 +488,6 @@ After these changes, the resulting code would be:
  SELECT CHARINDEX( '5', TO_VARCHAR(35, 'MI999'));
 ```
 
-Copy
-
 Which returns 4, the same as the Teradata code.
 
 ## Known Issues [¶](#known-issues)
@@ -514,8 +508,6 @@ check [COALESCE](https://docs.teradata.com/r/kmuOwjp1zEYg98JsB8fu_A/Wo3afkb7dFsU
 ```
 COALESCE(element_1, element_2 [, element_3, ..., element_n])
 ```
-
-Copy
 
 Both Teradata and Snowflake COALESCE functions allow mixing numeric with string and date with
 timestamp parameters. However, they handle these two cases differently:
@@ -542,8 +534,6 @@ timestamps when casting them so it is removed during transformation.
  SELECT COALESCE(125, 'hello', cast(850 as format '-999'));
 ```
 
-Copy
-
 **Result**
 
 ```
@@ -551,8 +541,6 @@ COLUMN1|
 -------+
 125    |
 ```
-
-Copy
 
 ##### _Snowflake_[¶](#snowflake)
 
@@ -563,8 +551,6 @@ SELECT
  COALESCE(TO_VARCHAR(125), 'hello', TO_VARCHAR(850, '9000'));
 ```
 
-Copy
-
 **Result**
 
 ```
@@ -572,8 +558,6 @@ COLUMN1|
 -------+
 125    |
 ```
-
-Copy
 
 #### Timestamp mixed with date parameters[¶](#timestamp-mixed-with-date-parameters)
 
@@ -593,8 +577,6 @@ COLUMN1    |
 2021-09-14 |
 ```
 
-Copy
-
 ##### _Snowflake_[¶](#id2)
 
 **Query**
@@ -604,8 +586,6 @@ SELECT
  COALESCE(TO_DATE(TIMESTAMP '2021-09-14 10:14:59' !!!RESOLVE EWI!!! /*** SSC-EWI-TD0025 - OUTPUT FORMAT 'HH:MI:SSBDD-MM-YYYY' NOT SUPPORTED. ***/!!!), CURRENT_DATE());
 ```
 
-Copy
-
 **Result**
 
 ```
@@ -613,8 +593,6 @@ COLUMN1    |
 -----------+
 2021-09-14 |
 ```
-
-Copy
 
 ### Known Issues[¶](#id3)
 
@@ -642,16 +620,12 @@ parameter.
 SELECT current_timestamp(4) at local;
 ```
 
-Copy
-
 #### Output code:[¶](#output-code)
 
 ```
 SELECT
 CURRENT_TIMESTAMP(4);
 ```
-
-Copy
 
 ### Recommendations[¶](#recommendations)
 
@@ -679,8 +653,6 @@ information check
 DAYNUMBER_OF_MONTH(expression [, calendar_name])
 ```
 
-Copy
-
 Both Teradata and Snowflake handle the DAYNUMBER_OF_MONTH function in the same way, except in one
 case:
 
@@ -703,8 +675,6 @@ SELECT
     DAYNUMBER_OF_MONTH (DATE'2022-12-22', 'COMPATIBLE');
 ```
 
-Copy
-
 **Result**
 
 ```
@@ -712,8 +682,6 @@ COLUMN1|COLUMN2|COLUMN3|COLUMN4|
 -------+-------+-------+-------+
 22     |22     |22     |22     |
 ```
-
-Copy
 
 #### _Snowflake_[¶](#id11)
 
@@ -727,8 +695,6 @@ SELECT
     DAYOFMONTH(DATE'2022-12-22');
 ```
 
-Copy
-
 **Result**
 
 ```
@@ -736,8 +702,6 @@ COLUMN1|COLUMN2|COLUMN3|COLUMN4|
 -------+-------+-------+-------+
 22     |22     |22     |22     |
 ```
-
-Copy
 
 #### ISO calendar[¶](#iso-calendar)
 
@@ -749,8 +713,6 @@ Copy
 SELECT DAYNUMBER_OF_MONTH (DATE'2022-12-22', 'ISO');
 ```
 
-Copy
-
 **Result**
 
 ```
@@ -758,8 +720,6 @@ COLUMN1|
 -------+
 25     |
 ```
-
-Copy
 
 ##### _Snowflake_[¶](#id13)
 
@@ -770,8 +730,6 @@ SELECT
 PUBLIC.DAYNUMBER_OF_MONTH_UDF(DATE'2022-12-22');
 ```
 
-Copy
-
 **Result**
 
 ```
@@ -779,8 +737,6 @@ COLUMN1|
 -------+
 25     |
 ```
-
-Copy
 
 ### Known Issues [¶](#id14)
 
@@ -817,8 +773,6 @@ FROM_BYTES('5A3F'XB, 'ASCII'), --returns 'Z\ESC '
 FROM_BYTES('5A1B'XB, 'base16'); -- returns '5A1B'
 ```
 
-Copy
-
 ##### Result[¶](#result)
 
 ```
@@ -826,8 +780,6 @@ COLUMN1    | COLUMN2    | COLUMN3 |
 -----------+------------+---------+
 23067      |  Z\ESC     | 5A1B    |
 ```
-
-Copy
 
 ##### Snowflake[¶](#id19)
 
@@ -843,8 +795,6 @@ FROM_BYTES(TO_BINARY('5A3F'), 'ASCII'),
 TO_BINARY('5A1B', 'HEX'); -- returns '5A1B'
 ```
 
-Copy
-
 ##### Result[¶](#id21)
 
 ```
@@ -853,9 +803,7 @@ COLUMN1    | COLUMN2    | COLUMN3 |
 23067      |  Z\ESC     | 5A1B    |
 ```
 
-Copy
-
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -887,8 +835,6 @@ in the Teradata documentation.
 [SYSLIB.]GetQueryBandValue([QueryBandIn,] SearchType, Name);
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id25)
 
 #### Setup data[¶](#setup-data)
@@ -901,8 +847,6 @@ Copy
  SET QUERY_BAND = 'hola=hello;adios=bye;' FOR SESSION;
 ```
 
-Copy
-
 ##### _Snowflake_[¶](#id28)
 
 ##### Query[¶](#id29)
@@ -910,8 +854,6 @@ Copy
 ```
  ALTER SESSION SET QUERY_TAG = 'hola=hello;adios=bye;';
 ```
-
-Copy
 
 #### GetQueryBandValue with QueryBandIn parameter[¶](#getquerybandvalue-with-querybandin-parameter)
 
@@ -929,8 +871,6 @@ GETQUERYBANDVALUE('=T> user=Mark;account=Mark200; =S> user=Sara;account=SaraDB;r
 GETQUERYBANDVALUE('=T> user=Mark;account=Mark200; =S> user=Sara;account=SaraDB;role=DbAdmin =P> user=Peter;account=Peter3;', 1, 'role') as Example6;
 ```
 
-Copy
-
 ##### Result[¶](#id32)
 
 ```
@@ -942,8 +882,6 @@ Copy
 |Mark200|Mark200|SaraDB|Peter3|DbAdmin||
 +----------+----------+----------+----------+----------+----------+
 ```
-
-Copy
 
 ##### _Snowflake_[¶](#id33)
 
@@ -959,8 +897,6 @@ GETQUERYBANDVALUE_UDF('=T> user=Mark;account=Mark200; =S> user=Sara;account=Sara
 GETQUERYBANDVALUE_UDF('=T> user=Mark;account=Mark200; =S> user=Sara;account=SaraDB;role=DbAdmin =P> user=Peter;account=Peter3;', 1, 'role') as Example6;
 ```
 
-Copy
-
 ##### Result[¶](#id35)
 
 ```
@@ -972,8 +908,6 @@ Copy
 |Mark200|Mark200|SaraDB|Peter3|DbAdmin||
 +----------+----------+----------+----------+----------+----------+
 ```
-
-Copy
 
 #### GetQueryBandValue without QueryBandIn parameter[¶](#getquerybandvalue-without-querybandin-parameter)
 
@@ -987,8 +921,6 @@ GETQUERYBANDVALUE(2, 'hola') as Example1,
 GETQUERYBANDVALUE(2, 'adios') as Example2;
 ```
 
-Copy
-
 ##### Result[¶](#id38)
 
 ```
@@ -1001,8 +933,6 @@ Copy
 +----------+----------+
 ```
 
-Copy
-
 ##### _Snowflake_[¶](#id39)
 
 ##### Query[¶](#id40)
@@ -1012,8 +942,6 @@ Copy
 GETQUERYBANDVALUE_UDF('hola') as Example1,
 GETQUERYBANDVALUE_UDF('adios') as Example2;
 ```
-
-Copy
 
 ##### Result[¶](#id41)
 
@@ -1027,9 +955,7 @@ Copy
 +----------+----------+
 ```
 
-Copy
-
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -1064,8 +990,6 @@ For more information regarding Teradata JSON_CHECK, check
 [TD_SYSFNLIB.]JSON_CHECK(string_expr);
 ```
 
-Copy
-
 ### Sample Source Pattern[¶](#sample-source-pattern)
 
 #### Basic Source Pattern[¶](#basic-source-pattern)
@@ -1078,8 +1002,6 @@ Copy
 SELECT JSON_CHECK('{"key": "value"}');
 ```
 
-Copy
-
 ##### Snowflake Scripting[¶](#snowflake-scripting)
 
 **Query**
@@ -1088,8 +1010,6 @@ Copy
 SELECT
 IFNULL(CHECK_JSON('{"key": "value"}'), 'OK');
 ```
-
-Copy
 
 #### JSON_CHECK inside CASE transformation[¶](#json-check-inside-case-transformation)
 
@@ -1100,8 +1020,6 @@ Copy
 ```
 SELECT CASE WHEN JSON_CHECK('{}') = 'OK' then 'OKK' ELSE 'NOT OK' END;
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id47)
 
@@ -1114,8 +1032,6 @@ WHEN UPPER(RTRIM(IFNULL(CHECK_JSON('{}'), 'OK'))) = UPPER(RTRIM('OK'))
 THEN 'OKK' ELSE 'NOT OK'
 END;
 ```
-
-Copy
 
 ### Known Issues [¶](#id48)
 
@@ -1149,8 +1065,6 @@ JSON_expr.JSONExtractLargeValue(JSONPath_expr)
 JSON_expr.JSONExtract(JSONPath_expr)
 ```
 
-Copy
-
 The JSON_EXTRACT_UDF is a Snowflake implementation of the JSONPath specification that uses a
 modified version of the original JavaScript implementation developed by
 [Stefan Goessner](https://goessner.net/index.html).
@@ -1169,8 +1083,6 @@ modified version of the original JavaScript implementation developed by
 FROM BookStores;
 ```
 
-Copy
-
 ##### Snowflake Scripting[¶](#id54)
 
 ##### Query[¶](#id55)
@@ -1184,9 +1096,7 @@ Copy
     BookStores;
 ```
 
-Copy
-
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -1208,8 +1118,6 @@ For example, if the original JSON is:
 }
 ```
 
-Copy
-
 Using the Snowflake
 [PARSE_JSON()](https://docs.snowflake.com/en/sql-reference/functions/parse_json.html) that
 interprets an input string as a JSON document, producing a VARIANT value. The inserted JSON will be:
@@ -1223,8 +1131,6 @@ interprets an input string as a JSON document, producing a VARIANT value. The in
 }
 ```
 
-Copy
-
 Note how “age” is now the first element. However, the array of “cities” maintains its original
 order.
 
@@ -1236,7 +1142,7 @@ No related EWIs.
 
 Translation specification for the transformation of JSON_TABLE into a equivalent query in Snowflake
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -1254,8 +1160,6 @@ Creates a table based on the contents of a JSON document. See
   [AS] correlation_name [(column_name [,...])]
 )
 ```
-
-Copy
 
 The conversion of JSON_TABLE has the considerations shown below:
 
@@ -1292,8 +1196,6 @@ new json('{
 }'));
 ```
 
-Copy
-
 ##### _Snowflake_[¶](#id63)
 
 ##### Query[¶](#id64)
@@ -1319,8 +1221,6 @@ VALUES (1, TO_JSON(PARSE_JSON('{
 }')));
 ```
 
-Copy
-
 #### Pattern code 1[¶](#pattern-code-1)
 
 ##### _Teradata_[¶](#id65)
@@ -1337,8 +1237,6 @@ colexpr('[ {"jsonpath" : "$.name",
              "type" : "VARCHAR(20)"}]')) AS JT(ID, "Song name", Genre);
 ```
 
-Copy
-
 ##### Result[¶](#id67)
 
 ```
@@ -1352,8 +1250,6 @@ ID | Song name  | Genre |
 ---+------------+-------+
 1  | Raining    | Blues |
 ```
-
-Copy
 
 ##### _Snowflake_[¶](#id68)
 
@@ -1374,8 +1270,6 @@ WHERE col1 = 1
 ) JT;
 ```
 
-Copy
-
 ##### Result[¶](#id70)
 
 ```
@@ -1389,8 +1283,6 @@ ID | Song name  | Genre |
 ---+------------+-------+
 1  | Raining    | Blues |
 ```
-
-Copy
 
 ### Known Issues[¶](#id71)
 
@@ -1422,8 +1314,6 @@ JSON_string_spec := JSON_String_literal [, { LATIN | UNICODE | BSON | UBJSON } ]
 JSON_binary_data_spec := JSON_binary_literal [, { BSON | UBJSON } ]
 ```
 
-Copy
-
 The second parameter of the NEW JSON function is always omitted by SnowConvert AI since Snowflake
 works only with UTF-8.
 
@@ -1439,8 +1329,6 @@ works only with UTF-8.
 SELECT NEW JSON ('{"name" : "cameron", "age" : 24}'),
 NEW JSON ('{"name" : "cameron", "age" : 24}', LATIN);
 ```
-
-Copy
 
 **Result**
 
@@ -1459,8 +1347,6 @@ TO_JSON(PARSE_JSON('{"name" : "cameron", "age" : 24}')),
 !!!RESOLVE EWI!!! /*** SSC-EWI-TD0039 - INPUT FORMAT 'LATIN' NOT SUPPORTED ***/!!!
 TO_JSON(PARSE_JSON('{"name" : "cameron", "age" : 24}'));
 ```
-
-Copy
 
 **Result**
 
@@ -1505,8 +1391,6 @@ name_to_search
 )
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id80)
 
 #### NVP basic case[¶](#nvp-basic-case)
@@ -1522,8 +1406,6 @@ NVP('Hello=bye|name=Lucas|Hello=world!', 'Hello', '|', '=', 2),
 NVP('Player=Mario$Game&Tenis%Player/Susana$Game=Chess', 'Player', '% $', '= & /', 2);
 ```
 
-Copy
-
 **Result**
 
 ```
@@ -1531,8 +1413,6 @@ COLUMN1        | COLUMN2 | COLUMN3 |
 ---------------+---------+---------+
 orange chicken | world!  | Susana  |
 ```
-
-Copy
 
 ##### _Snowflake_[¶](#id82)
 
@@ -1545,8 +1425,6 @@ PUBLIC.NVP_UDF('Hello=bye|name=Lucas|Hello=world!', 'Hello', '|', '=', 2),
 PUBLIC.NVP_UDF('Player=Mario$Game&Tenis%Player/Susana$Game=Chess', 'Player', '% $', '= & /', 2);
 ```
 
-Copy
-
 **Result**
 
 ```
@@ -1554,8 +1432,6 @@ COLUMN1        | COLUMN2 | COLUMN3 |
 ---------------+---------+---------+
 orange chicken | world!  | Susana  |
 ```
-
-Copy
 
 #### NVP with optional parameters ignored[¶](#nvp-with-optional-parameters-ignored)
 
@@ -1570,8 +1446,6 @@ NVP('City=Los Angeles&Color=Green&Color=Blue&City=San Jose', 'Color', 2),
 NVP('City=Los Angeles#Color=Green#Color=Blue#City=San Jose', 'City', '#', '=');
 ```
 
-Copy
-
 **Result**
 
 ```
@@ -1579,8 +1453,6 @@ COLUMN1 | COLUMN2 | COLUMN3     |
 --------+---------+-------------+
 Green   | Blue    | Los Angeles |
 ```
-
-Copy
 
 ##### _Snowflake_[¶](#id84)
 
@@ -1593,8 +1465,6 @@ SELECT
     PUBLIC.NVP_UDF('City=Los Angeles#Color=Green#Color=Blue#City=San Jose', 'City', '#', '=', 1);
 ```
 
-Copy
-
 **Result**
 
 ```
@@ -1602,8 +1472,6 @@ COLUMN1 | COLUMN2 | COLUMN3     |
 --------+---------+-------------+
 Green   | Blue    | Los Angeles |
 ```
-
-Copy
 
 #### NVP with spaces in delimiters[¶](#nvp-with-spaces-in-delimiters)
 
@@ -1617,8 +1485,6 @@ NVP('store = whole foods&&store: ?Bristol farms','store', '&&', '\ =\  :\ ?', 2)
 NVP('Hello = bye|name = Lucas|Hello = world!', 'Hello', '|', '\ =\ ', 2);
 ```
 
-Copy
-
 **Result**
 
 ```
@@ -1626,8 +1492,6 @@ COLUMN1       | COLUMN2 |
 --------------+---------+
 Bristol farms | world!  |
 ```
-
-Copy
 
 ##### _Snowflake_[¶](#id86)
 
@@ -1639,8 +1503,6 @@ PUBLIC.NVP_UDF('store = whole foods&&store: ?Bristol farms', 'store', '&&', '\\ 
 PUBLIC.NVP_UDF('Hello = bye|name = Lucas|Hello = world!', 'Hello', '|', '\\ =\\ ', 2);
 ```
 
-Copy
-
 **Result**
 
 ```
@@ -1648,8 +1510,6 @@ COLUMN1       | COLUMN2 |
 --------------+---------+
 Bristol farms | world!  |
 ```
-
-Copy
 
 #### NVP with non-literal delimiters[¶](#nvp-with-non-literal-delimiters)
 
@@ -1661,8 +1521,6 @@ Copy
 SELECT NVP('store = whole foods&&store: ?Bristol farms','store', '&&', valueDelimiter, 2);
 ```
 
-Copy
-
 ##### _Snowflake_[¶](#id88)
 
 **Query**
@@ -1671,8 +1529,6 @@ Copy
 SELECT
 PUBLIC.NVP_UDF('store = whole foods&&store: ?Bristol farms', 'store', '&&', valueDelimiter, 2) /*** SSC-FDM-TD0008 - WHEN NVP_UDF FOURTH PARAMETER IS NON-LITERAL AND IT CONTAINS A BACKSLASH, THAT BACKSLASH NEEDS TO BE ESCAPED ***/;
 ```
-
-Copy
 
 ### Known Issues[¶](#id89)
 
@@ -1706,8 +1562,6 @@ OVERLAPS
 period_expression
 ```
 
-Copy
-
 The PERIOD_OVERLAPS_UDF is a Snowflake implementation of the OVERLAPS operator in Teradata.
 
 ### Sample Source Pattern[¶](#id92)
@@ -1723,8 +1577,6 @@ SELECT
     PERIOD(DATE '2009-02-01', DATE '2009-06-24');
 ```
 
-Copy
-
 #### Snowflake Scripting[¶](#id94)
 
 **Query**
@@ -1733,8 +1585,6 @@ Copy
 SELECT
     PUBLIC.PERIOD_OVERLAPS_UDF(ARRAY_CONSTRUCT(PUBLIC.PERIOD_UDF(DATE '2009-01-01', DATE '2010-09-24') !!!RESOLVE EWI!!! /*** SSC-EWI-TD0053 - SNOWFLAKE DOES NOT SUPPORT THE PERIOD DATATYPE, ALL PERIODS ARE HANDLED AS VARCHAR INSTEAD ***/!!!, PUBLIC.PERIOD_UDF(DATE '2009-02-01', DATE '2009-06-24') !!!RESOLVE EWI!!! /*** SSC-EWI-TD0053 - SNOWFLAKE DOES NOT SUPPORT THE PERIOD DATATYPE, ALL PERIODS ARE HANDLED AS VARCHAR INSTEAD ***/!!!)) !!!RESOLVE EWI!!! /*** SSC-EWI-TD0053 - SNOWFLAKE DOES NOT SUPPORT THE PERIOD DATATYPE, ALL PERIODS ARE HANDLED AS VARCHAR INSTEAD ***/!!!;
 ```
-
-Copy
 
 ### Known Issues[¶](#id95)
 
@@ -1764,8 +1614,6 @@ P_INTERSECT
 period_expression
 ```
 
-Copy
-
 The PERIOD_INTERSECT_UDF is a Snowflake implementation of the P_INTERSECT operator in Teradata.
 
 ### Sample Source Pattern[¶](#id98)
@@ -1781,8 +1629,6 @@ SELECT
     PERIOD(DATE '2009-02-01', DATE '2009-06-24');
 ```
 
-Copy
-
 #### Snowflake Scripting[¶](#id100)
 
 **Query**
@@ -1791,8 +1637,6 @@ Copy
 SELECT
     PUBLIC.PERIOD_INTERSECT_UDF(ARRAY_CONSTRUCT(PUBLIC.PERIOD_UDF(DATE '2009-01-01', DATE '2010-09-24') !!!RESOLVE EWI!!! /*** SSC-EWI-TD0053 - SNOWFLAKE DOES NOT SUPPORT THE PERIOD DATATYPE, ALL PERIODS ARE HANDLED AS VARCHAR INSTEAD ***/!!!, PUBLIC.PERIOD_UDF(DATE '2009-02-01', DATE '2009-06-24') !!!RESOLVE EWI!!! /*** SSC-EWI-TD0053 - SNOWFLAKE DOES NOT SUPPORT THE PERIOD DATATYPE, ALL PERIODS ARE HANDLED AS VARCHAR INSTEAD ***/!!!)) !!!RESOLVE EWI!!! /*** SSC-EWI-TD0053 - SNOWFLAKE DOES NOT SUPPORT THE PERIOD DATATYPE, ALL PERIODS ARE HANDLED AS VARCHAR INSTEAD ***/!!!;
 ```
-
-Copy
 
 ### Known Issues[¶](#id101)
 
@@ -1810,7 +1654,7 @@ supported yet.
 
 Translation specification for the PIVOT function form Teradata to Snowflake
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -1840,8 +1684,6 @@ expr_spec_2 := ( expr [,...] ) [ [AS] expr_alias_name ]
 with_spec := aggr_fn ( { cname [,...] | * } ) [AS] aggr_alias
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id105)
 
 #### Setup data[¶](#id106)
@@ -1866,8 +1708,6 @@ insert into star1 values ('Canada', 'BC', 2001, 'Q3', 10, 0);
 insert into star1 values ('USA', 'NY', 2001, 'Q1', 45, 25);
 insert into star1 values ('USA', 'CA', 2001, 'Q2', 50, 20);
 ```
-
-Copy
 
 ##### _Snowflake_[¶](#id109)
 
@@ -1901,8 +1741,6 @@ INSERT INTO star1
 VALUES ('USA', 'CA', 2001, 'Q2', 50, 20);
 ```
 
-Copy
-
 #### Basic PIVOT transformation[¶](#basic-pivot-transformation)
 
 ##### _Teradata_[¶](#id111)
@@ -1918,8 +1756,6 @@ FROM star1 PIVOT (
         'Q3')
 )Tmp;
 ```
-
-Copy
 
 ##### Result[¶](#id113)
 
@@ -1938,8 +1774,6 @@ USA 	| CA 	| 2001 | 15   | 30   | null | null |
 --------+-------+------+------+------+------+------+
 ```
 
-Copy
-
 ##### _Snowflake_[¶](#id114)
 
 ##### Query[¶](#id115)
@@ -1953,8 +1787,6 @@ FROM
 	   	'Q2',
 	       'Q3'))Tmp;
 ```
-
-Copy
 
 ##### Result[¶](#id116)
 
@@ -1973,8 +1805,6 @@ USA 	| CA 	| 2001 | 15   | 30   | null | null |
 --------+-------+------+------+------+------+------+
 ```
 
-Copy
-
 #### PIVOT with aliases transformation[¶](#pivot-with-aliases-transformation)
 
 ##### _Teradata_[¶](#id117)
@@ -1990,8 +1820,6 @@ FROM star1 PIVOT (
         'Q3' AS Quarter3)
 )Tmp;
 ```
-
-Copy
 
 ##### Result[¶](#id119)
 
@@ -2009,8 +1837,6 @@ USA 	| CA 	| 2001 | 20   | null         | 50           | null         |
 USA 	| CA 	| 2001 | 15   | 30           | null         | null         |
 --------+-------+------+------+--------------+--------------+--------------+
 ```
-
-Copy
 
 ##### _Snowflake_[¶](#id120)
 
@@ -2031,8 +1857,6 @@ FROM
 	       'Q3'))Tmp;
 ```
 
-Copy
-
 ##### Result[¶](#id122)
 
 ```
@@ -2049,8 +1873,6 @@ USA 	| CA 	| 2001 | 20   | null         | 50           | null         |
 USA 	| CA 	| 2001 | 15   | 30           | null         | null         |
 --------+-------+------+------+--------------+--------------+--------------+
 ```
-
-Copy
 
 ### Known Issues[¶](#id123)
 
@@ -2100,8 +1922,6 @@ of each row in the result.
  RANK ( sort_expression [ ASC | DESC ] [,...] )
 ```
 
-Copy
-
 #### Snowflake syntax[¶](#snowflake-syntax)
 
 ```
@@ -2112,8 +1932,6 @@ Copy
     [ <window_frame> ]
 )
 ```
-
-Copy
 
 ### Sample Source Pattern[¶](#id126)
 
@@ -2136,8 +1954,6 @@ INSERT INTO Sales (Product, Sales) VALUES ('D', 150);
 INSERT INTO Sales (Product, Sales) VALUES ('E', 120);
 INSERT INTO Sales (Product, Sales) VALUES ('F', NULL);
 ```
-
-Copy
 
 ##### Snowflake[¶](#id130)
 
@@ -2170,8 +1986,6 @@ INSERT INTO Sales (Product, Sales)
 VALUES ('F', NULL);
 ```
 
-Copy
-
 #### RANK() using ASC, DESC, and DEFAULT order[¶](#rank-using-asc-desc-and-default-order)
 
 ##### Teradata[¶](#id132)
@@ -2193,8 +2007,6 @@ FROM
   Sales;
 ```
 
-Copy
-
 ##### Result[¶](#id134)
 
 <!-- prettier-ignore -->
@@ -2202,7 +2014,6 @@ Copy
 |---|---|---|---|
 |NULL|6|6|6|
 |200|5|1|1|
-|150|3|2|2|
 |150|3|2|2|
 |120|2|4|4|
 |100|1|5|5|
@@ -2227,8 +2038,6 @@ Copy
     Sales;
 ```
 
-Copy
-
 ##### Result[¶](#id137)
 
 <!-- prettier-ignore -->
@@ -2236,7 +2045,6 @@ Copy
 |---|---|---|---|
 |NULL|6|6|6|
 |200|5|1|1|
-|150|3|2|2|
 |150|3|2|2|
 |120|2|4|4|
 |100|1|5|5|
@@ -2267,8 +2075,6 @@ REGEXP_SIMILAR(source. regexp [, match])
 REGEXP_SPLIT_TO_TABLE(inKey. source. regexp, match)
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id142)
 
 #### Setup data[¶](#id143)
@@ -2286,8 +2092,6 @@ CREATE TABLE regexpTable
 INSERT INTO regexpTable VALUES('hola');
 ```
 
-Copy
-
 ##### _Snowflake_[¶](#id145)
 
 **Query**
@@ -2304,8 +2108,6 @@ INSERT INTO regexpTable
 VALUES ('hola');
 ```
 
-Copy
-
 #### Regex transformation example[¶](#regex-transformation-example)
 
 ##### _Teradata_[¶](#id146)
@@ -2321,8 +2123,6 @@ REGEXP_SIMILAR(COL1,'.*(h(i|o))', 'xl')
 FROM regexpTable;
 ```
 
-Copy
-
 **Result**
 
 ```
@@ -2330,8 +2130,6 @@ COLUMN1|COLUMN2|COLUMN3|COLUMN4|
 -------+-------+-------+-------+
 hala   |null   |1      |0      |
 ```
-
-Copy
 
 ##### _Snowflake_[¶](#id147)
 
@@ -2349,8 +2147,6 @@ FROM
 regexpTable;
 ```
 
-Copy
-
 **Result**
 
 ```
@@ -2358,8 +2154,6 @@ COLUMN1|COLUMN2|COLUMN3|COLUMN4|
 -------+-------+-------+-------+
 hala   |null   |1      |FALSE  |
 ```
-
-Copy
 
 ### Known Issues[¶](#id148)
 
@@ -2401,8 +2195,6 @@ Split a string into a table using the provided delimiters. For more information 
   RETURNS ( outkey, tokennum, token )
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id151)
 
 #### Setup data[¶](#id152)
@@ -2421,8 +2213,6 @@ CREATE TABLE strtokTable
 INSERT INTO strtokTable VALUES(4, 'hello-world-split-me');
 INSERT INTO strtokTable VALUES(1, 'string$split$by$dollars');
 ```
-
-Copy
 
 ##### _Snowflake_[¶](#id154)
 
@@ -2444,8 +2234,6 @@ INSERT INTO strtokTable
 VALUES (1, 'string$split$by$dollars');
 ```
 
-Copy
-
 #### STRTOK_SPLIT_TO_TABLE transformation[¶](#strtok-split-to-table-transformation)
 
 ##### _Teradata_[¶](#id155)
@@ -2457,8 +2245,6 @@ SELECT outkey, tokennum, token FROM table(STRTOK_SPLIT_TO_TABLE(strtokTable.col1
 RETURNS (outkey INTEGER, tokennum INTEGER, token VARCHAR(100))) AS testTable
 ORDER BY outkey, tokennum;
 ```
-
-Copy
 
 **Result**
 
@@ -2481,8 +2267,6 @@ outkey |tokennum | token  |
 -------+---------+--------+
 4      |4        |me      |
 ```
-
-Copy
 
 ##### _Snowflake_[¶](#id156)
 
@@ -2499,8 +2283,6 @@ table(STRTOK_SPLIT_TO_TABLE(strtokTable.col2, '-$')) AS testTable
 ORDER BY outkey, tokennum;
 ```
 
-Copy
-
 **Result**
 
 ```
@@ -2522,8 +2304,6 @@ outkey |tokennum | token  |
 -------+---------+--------+
 4      |4        |me      |
 ```
-
-Copy
 
 ### Known Issues[¶](#id157)
 
@@ -2546,8 +2326,6 @@ SUBSTRING(string_expr FROM n1 [FOR n2])
 SUBSTR(string_expr, n1, [, n2])
 ```
 
-Copy
-
 When the value to start getting the substring (n1) is less than one SUBSTR_UDF is inserted instead.
 
 ### Sample Source Patterns[¶](#id160)
@@ -2565,8 +2343,6 @@ SUBSTRING('Hello World!' FROM 2 FOR 6),
 SUBSTRING('Hello World!' FROM -2 FOR 6);
 ```
 
-Copy
-
 **Result**
 
 ```
@@ -2574,8 +2350,6 @@ COLUMN1 |COLUMN2 |COLUMN3 | COLUMN4 |
 --------+--------+--------+---------+
 ello W  |Hel     |ello W  |Hel      |
 ```
-
-Copy
 
 ##### _Snowflake_[¶](#id162)
 
@@ -2589,8 +2363,6 @@ SUBSTRING('Hello World!', 2, 6),
 PUBLIC.SUBSTR_UDF('Hello World!', -2, 6);
 ```
 
-Copy
-
 **Result**
 
 ```
@@ -2598,8 +2370,6 @@ COLUMN1 |COLUMN2 |COLUMN3 | COLUMN4 |
 --------+--------+--------+---------+
 ello W  |Hel     |ello W  |Hel      |
 ```
-
-Copy
 
 ### Related EWIs[¶](#id163)
 
@@ -2609,7 +2379,7 @@ No related EWIs.
 
 Translation specification for the transformation of TD_UNPIVOT into an equivalent query in Snowflake
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -2631,8 +2401,6 @@ specified table into rows. For more information see
   ]
 )
 ```
-
-Copy
 
 The following transformation is able to generate a SQL query in Snowflake that unpivots multiple
 columns at the same time, the same way it works in Teradata.
@@ -2659,8 +2427,6 @@ INSERT INTO superUnpivottest VALUES (2018, 18325.25, 25220.65, 15560.45, 15680.3
 INSERT INTO superUnpivottest VALUES (2019, 23855.75, 34220.22, 14582.55, 24122);
 ```
 
-Copy
-
 ##### _Snowflake_[¶](#id168)
 
 ##### Query[¶](#id169)
@@ -2686,8 +2452,6 @@ INSERT INTO superUnpivottest
 VALUES (2019, 23855.75, 34220.22, 14582.55, 24122);
 ```
 
-Copy
-
 #### TD_UNPIVOT transformation[¶](#td-unpivot-transformation)
 
 ##### _Teradata_[¶](#id170)
@@ -2706,8 +2470,6 @@ Copy
  )X ORDER BY mykey, Semester;
 ```
 
-Copy
-
 ##### Result[¶](#id172)
 
 ```
@@ -2725,8 +2487,6 @@ myKey |Semester |Income   | Expenses |
 ------+---------+---------+----------+
 2020  |Second   |25430.57 |12355.36  |
 ```
-
-Copy
 
 ##### _Snowflake_[¶](#id173)
 
@@ -2757,8 +2517,6 @@ Copy
  ) X ORDER BY mykey, Semester;
 ```
 
-Copy
-
 ##### Result[¶](#id175)
 
 ```
@@ -2776,8 +2534,6 @@ myKey |Semester |Income   | Expenses |
 ------+---------+---------+----------+
 2020  |Second   |25430.57 |12355.36  |
 ```
-
-Copy
 
 ### Known Issues[¶](#id176)
 
@@ -2816,8 +2572,6 @@ The TO_CHAR function casts a DateTime or numeric value to a string. For more inf
 [TD_SYSFNLIB.]TO_CHAR(dateTime_expr [, format_arg])
 ```
 
-Copy
-
 Both Snowflake and Teradata have their own version of the TO_CHAR function, however, Teradata
 supports plenty of formats that are not natively supported by Snowflake. To support these format
 elements SnowConvert AI uses Snowflake built-in functions and custom UDFs to generate a
@@ -2838,8 +2592,6 @@ TO_CHAR(date '2012-12-23', 'DS'),
 TO_CHAR(date '2012-12-23', 'DAY DD, MON YY');
 ```
 
-Copy
-
 **Result**
 
 ```
@@ -2847,8 +2599,6 @@ COLUMN1    | COLUMN2    | COLUMN3           |
 -----------+------------+-------------------+
 2012/12/23 | 12/23/2012 | SUNDAY 23, DEC 12 |
 ```
-
-Copy
 
 ##### _Snowflake_[¶](#id181)
 
@@ -2861,8 +2611,6 @@ TO_CHAR(date '2012-12-23', 'MM/DD/YYYY') /*** SSC-FDM-TD0029 - SNOWFLAKE SUPPORT
 PUBLIC.DAYNAME_LONG_UDF(date '2012-12-23', 'uppercase') || TO_CHAR(date '2012-12-23', ' DD, ') || PUBLIC.MONTH_SHORT_UDF(date '2012-12-23', 'uppercase') || TO_CHAR(date '2012-12-23', ' YY') /*** SSC-FDM-TD0029 - SNOWFLAKE SUPPORTED FORMATS FOR TO_CHAR DIFFER FROM TERADATA AND MAY FAIL OR HAVE DIFFERENT BEHAVIOR ***/;
 ```
 
-Copy
-
 **Result**
 
 ```
@@ -2870,8 +2618,6 @@ COLUMN1    | COLUMN2    | COLUMN3           |
 -----------+------------+-------------------+
 2012/12/23 | 12/23/2012 | SUNDAY 23, DEC 12 |
 ```
-
-Copy
 
 #### TO_CHAR(Numeric) transformation[¶](#to-char-numeric-transformation)
 
@@ -2886,8 +2632,6 @@ TO_CHAR(1255.495, '9.9EEEE'),
 TO_CHAR(1255.495, 'SC9999.9999', 'nls_iso_currency = ''EUR''');
 ```
 
-Copy
-
 **Result**
 
 ```
@@ -2895,8 +2639,6 @@ COLUMN1  | COLUMN2 | COLUMN3       |
 ---------+---------+---------------+
 1255.495 | 1.3E+03 | +EUR1255.4950 |
 ```
-
-Copy
 
 ##### _Snowflake_[¶](#id183)
 
@@ -2909,8 +2651,6 @@ TO_CHAR(1255.495, '9.0EEEE') /*** SSC-FDM-TD0029 - SNOWFLAKE SUPPORTED FORMATS F
 PUBLIC.INSERT_CURRENCY_UDF(TO_CHAR(1255.495, 'S9999.0000'), 2, 'EUR') /*** SSC-FDM-TD0029 - SNOWFLAKE SUPPORTED FORMATS FOR TO_CHAR DIFFER FROM TERADATA AND MAY FAIL OR HAVE DIFFERENT BEHAVIOR ***/;
 ```
 
-Copy
-
 **Result**
 
 ```
@@ -2918,8 +2658,6 @@ COLUMN1  | COLUMN2 | COLUMN3       |
 ---------+---------+---------------+
 1255.495 | 1.3E+03 | +EUR1255.4950 |
 ```
-
-Copy
 
 ### Known Issues[¶](#id184)
 
@@ -2953,8 +2691,6 @@ XMLAGG (
 order_by_spec := sort_key [ ASC | DESC ] [ NULLS { FIRST | LAST } ]
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id187)
 
 #### Setup data[¶](#id188)
@@ -2973,8 +2709,6 @@ insert into orders values (2,100000);
 insert into orders values (3,600000);
 insert into orders values (4,700000);
 ```
-
-Copy
 
 ##### _Snowflake_[¶](#id190)
 
@@ -3000,8 +2734,6 @@ INSERT INTO orders
 VALUES (4,700000);
 ```
 
-Copy
-
 #### XMLAGG transformation[¶](#xmlagg-transformation)
 
 ##### _Teradata_[¶](#id191)
@@ -3015,8 +2747,6 @@ from orders
 where o_totalprice > 5;
 ```
 
-Copy
-
 **Result**
 
 ```
@@ -3024,8 +2754,6 @@ COLUMN1 |
 --------+
 4 3 1 2 |
 ```
-
-Copy
 
 ##### _Snowflake_[¶](#id192)
 
@@ -3041,8 +2769,6 @@ SELECT
     where o_totalprice > 5;
 ```
 
-Copy
-
 **Result**
 
 ```
@@ -3050,8 +2776,6 @@ COLUMN1 |
 --------+
 4 3 1 2 |
 ```
-
-Copy
 
 ### Known Issues[¶](#id193)
 
@@ -3082,8 +2806,6 @@ formats to keep the equivalence among platforms.
 SELECT '"'||cast(cast(12 as BYTEINT) as varchar(10))||'"';
 ```
 
-Copy
-
 **Result**
 
 ```
@@ -3091,8 +2813,6 @@ Copy
 ----------------+
 "12"            |
 ```
-
-Copy
 
 ##### _Snowflake_[¶](#id197)
 
@@ -3103,8 +2823,6 @@ SELECT
 '"'|| LEFT(TO_VARCHAR(cast(12 as BYTEINT), 'TM'), 10) ||'"';
 ```
 
-Copy
-
 **Result**
 
 ```
@@ -3112,8 +2830,6 @@ Copy
 ---------------------------------------------------------------
 "12"
 ```
-
-Copy
 
 #### SMALLINT[¶](#smallint)
 
@@ -3125,8 +2841,6 @@ Copy
 SELECT '"'||cast(cast(123 as SMALLINT) as varchar(10))||'"';
 ```
 
-Copy
-
 **Result**
 
 ```
@@ -3134,8 +2848,6 @@ Copy
 -----------------+
 "123"            |
 ```
-
-Copy
 
 ##### _Snowflake_[¶](#id199)
 
@@ -3145,8 +2857,6 @@ Copy
 SELECT
 '"'|| LEFT(TO_VARCHAR(CAST(123 AS SMALLINT), 'TM'), 10) ||'"';
 ```
-
-Copy
 
 **Result**
 
@@ -3166,8 +2876,6 @@ Copy
 SELECT '"'||cast(cast(12345 as INTEGER) as varchar(10))||'"';
 ```
 
-Copy
-
 **Result**
 
 ```
@@ -3175,8 +2883,6 @@ Copy
 -------------------+
 "12345"            |
 ```
-
-Copy
 
 ##### _Snowflake_[¶](#id201)
 
@@ -3187,8 +2893,6 @@ SELECT
 '"'|| LEFT(TO_VARCHAR(CAST(12345 AS INTEGER), 'TM'), 10) ||'"';
 ```
 
-Copy
-
 **Result**
 
 ```
@@ -3196,8 +2900,6 @@ Copy
 ------------------------------------------------------------------
 "12345"
 ```
-
-Copy
 
 #### BIGINT[¶](#bigint)
 
@@ -3209,8 +2911,6 @@ Copy
 SELECT '"'||cast(cast(12345 as BIGINT) as varchar(10))||'"';
 ```
 
-Copy
-
 **Result**
 
 ```
@@ -3218,8 +2918,6 @@ Copy
 -------------------+
 "12345"            |
 ```
-
-Copy
 
 ##### _Snowflake_[¶](#id203)
 
@@ -3230,8 +2928,6 @@ SELECT
        '"'|| LEFT(TO_VARCHAR(CAST(12345 AS BIGINT), 'TM'), 10) ||'"';
 ```
 
-Copy
-
 **Result**
 
 ```
@@ -3239,8 +2935,6 @@ Copy
 -----------------------------------------------------------------
 "12345"
 ```
-
-Copy
 
 #### DECIMAL[(n[,m])] or NUMERIC[(n[,m])][¶](#decimal-n-m-or-numeric-n-m)
 
@@ -3253,8 +2947,6 @@ SELECT '"'||cast(cast(12345 as DECIMAL) as varchar(10))||'"',
        '"'||cast(cast(12345 as DECIMAL(12, 2)) as varchar(10))||'"';
 ```
 
-Copy
-
 **Result**
 
 ```
@@ -3262,8 +2954,6 @@ Copy
 -------------------+-------------------+
 "12345."           |"12345.00"         |
 ```
-
-Copy
 
 ##### _Snowflake_[¶](#id205)
 
@@ -3274,8 +2964,6 @@ SELECT
 '"'|| LEFT(TO_VARCHAR(CAST(12345 AS DECIMAL), 'TM.'), 10) ||'"',
 '"'|| LEFT(TO_VARCHAR(CAST(12345 AS DECIMAL(12, 2)), 'TM'), 10) ||'"';
 ```
-
-Copy
 
 **Result**
 
@@ -3298,8 +2986,6 @@ SELECT '"'||cast(cast(-0.1 as DECIMAL(12, 2)) as varchar(10))||'"' AS column1,
        '"'||cast(cast(0.1 as DECIMAL(12, 2)) as varchar(10))||'"' AS column2;
 ```
 
-Copy
-
 **Result**
 
 ```
@@ -3307,8 +2993,6 @@ COLUMN1          |COLUMN2
 -----------------+--------------+
 "-.10"           |".10"         |
 ```
-
-Copy
 
 #### _Snowflake_[¶](#id208)
 
@@ -3320,8 +3004,6 @@ SELECT
 '"'|| LEFT(TO_VARCHAR(CAST(0.1 AS DECIMAL(12, 2)), 'TM'), 10) ||'"' AS column2;
 ```
 
-Copy
-
 **Result**
 
 ```
@@ -3329,8 +3011,6 @@ COLUMN1           |COLUMN2
 ------------------+---------------+
 "-0.10"           |"0.10"         |
 ```
-
-Copy
 
 ### Related EWIs [¶](#id209)
 
@@ -3347,8 +3027,6 @@ definition inside curly braces.
 SELECT {d '1233-10-10'}
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id211)
 
 #### Cast to DATE using curly braces[¶](#cast-to-date-using-curly-braces)
@@ -3361,8 +3039,6 @@ Copy
 SELECT * FROM RESOURCE_DETAILS where change_ts >= {d '2022-09-10'};
 ```
 
-Copy
-
 **Snowflake**
 
 **Cast to Date**
@@ -3373,8 +3049,6 @@ SELECT
 PUBLIC.RESOURCE_DETAILS
 where change_ts >= DATE('2022-09-10');
 ```
-
-Copy
 
 ## Cast to INTERVAL datatype[¶](#cast-to-interval-datatype)
 
@@ -3404,8 +3078,6 @@ TIMESTAMP '2022-10-15 10:30:00' + CAST(-5 AS INTERVAL YEAR(4)) AS NUMBER_TO_INTE
 CAST('07:00' AS INTERVAL HOUR(2) TO MINUTE) AS OUTSIDE_DATETIME_OPERATION;
 ```
 
-Copy
-
 **Result**
 
 ```
@@ -3413,8 +3085,6 @@ VARCHAR_TO_INTERVAL | NUMBER_TO_INTERVAL | OUTSIDE_DATETIME_OPERATION |
 --------------------+--------------------+----------------------------+
 2022-10-15 23:04:56 |2017-10-15 10:30:00 | 7:00                       |
 ```
-
-Copy
 
 ##### _Snowflake_[¶](#id215)
 
@@ -3427,8 +3097,6 @@ TIMESTAMP '2022-10-15 10:30:00' + INTERVAL '-5 YEAR' AS NUMBER_TO_INTERVAL,
 '07:00' AS OUTSIDE_DATETIME_OPERATION;
 ```
 
-Copy
-
 **Result**
 
 ```
@@ -3436,8 +3104,6 @@ VARCHAR_TO_INTERVAL     | NUMBER_TO_INTERVAL     | OUTSIDE_DATETIME_OPERATION |
 ------------------------+------------------------+----------------------------+
 2022-10-15 23:04:56.780 |2017-10-15 10:30:00.000 | 07:00                      |
 ```
-
-Copy
 
 #### Non-literal and non-interval values[¶](#non-literal-and-non-interval-values)
 
@@ -3450,8 +3116,6 @@ SELECT TIMESTAMP '2022-10-15 10:30:00' + CAST('20 ' || '10' AS INTERVAL DAY TO H
 CAST('20 ' || '10' AS INTERVAL DAY TO HOUR) AS OUTSIDE_DATETIME_OPERATION;
 ```
 
-Copy
-
 **Result**
 
 ```
@@ -3459,8 +3123,6 @@ DATETIME_OPERATION  | OUTSIDE_DATETIME_OPERATION |
 --------------------+----------------------------+
 2022-11-04 20:30:00 | 20 10                      |
 ```
-
-Copy
 
 ##### _Snowflake_[¶](#id217)
 
@@ -3472,8 +3134,6 @@ PUBLIC.DATETIMEINTERVALADD_UDF(TIMESTAMP '2022-10-15 10:30:00', CAST('20 ' || '1
 CAST('20 ' || '10' AS VARCHAR(21)) AS OUTSIDE_DATETIME_OPERATION;
 ```
 
-Copy
-
 **Result**
 
 ```
@@ -3481,8 +3141,6 @@ DATETIME_OPERATION      | OUTSIDE_DATETIME_OPERATION |
 ------------------------+----------------------------+
 2022-11-04 20:30:00.000 | 20 10                      |
 ```
-
-Copy
 
 #### Cast of interval to another interval[¶](#cast-of-interval-to-another-interval)
 
@@ -3496,8 +3154,6 @@ TIMESTAMP '2022-10-15 10:30:00' + CAST(INTERVAL '5999' MINUTE AS INTERVAL DAY TO
 CAST(INTERVAL '5999' MINUTE AS INTERVAL DAY TO HOUR) AS OUTSIDE_DATETIME_OPERATION;
 ```
 
-Copy
-
 **Result**
 
 ```
@@ -3505,8 +3161,6 @@ DATETIME_OPERATION  | OUTSIDE_DATETIME_OPERATION |
 --------------------+----------------------------+
 2022-10-19 13:30:00 | 4 03                       |
 ```
-
-Copy
 
 ##### _Snowflake_[¶](#id219)
 
@@ -3519,8 +3173,6 @@ TIMESTAMP '2022-10-15 10:30:00', PUBLIC.INTERVALTOINTERVAL_UDF('5999', 'MINUTE',
 PUBLIC.INTERVALTOINTERVAL_UDF('5999', 'MINUTE', 'MINUTE', 'DAY', 'HOUR') AS OUTSIDE_DATETIME_OPERATION;
 ```
 
-Copy
-
 **Result**
 
 ```
@@ -3528,8 +3180,6 @@ DATETIME_OPERATION      | OUTSIDE_DATETIME_OPERATION |
 ------------------------+----------------------------+
 2022-10-19 13:30:00.000 | 4 03                       |
 ```
-
-Copy
 
 ### Known Issues[¶](#id220)
 

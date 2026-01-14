@@ -23,11 +23,9 @@ CREATE TABLE <table_name> (
     | DISTRIBUTED REPLICATED ]
 ```
 
-Copy
-
 ## ENCODING[¶](#encoding)
 
-Note
+**Note:**
 
 This syntax is not needed in Snowflake.
 
@@ -41,8 +39,6 @@ For this reason, the ENCODING statement is removed during migration.
 ENCODING ( <storage_directive> [, ...] )
 ```
 
-Copy
-
 ### Sample Source[¶](#sample-source)
 
 #### Input Code:[¶](#input-code)
@@ -55,8 +51,6 @@ CREATE TABLE TABLE1 (
 );
 ```
 
-Copy
-
 #### Output Code:[¶](#output-code)
 
 ##### Snowflake[¶](#snowflake)
@@ -68,8 +62,6 @@ CREATE TABLE TABLE1 (
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "greenplum",  "convertedOn": "03/26/2025",  "domain": "test" }}'
 ;
 ```
-
-Copy
 
 ## DISTRIBUTED BY[¶](#distributed-by)
 
@@ -88,8 +80,6 @@ micro-partitions.
 DISTRIBUTED BY ( <column> [<opclass>] [, ... ] )
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#sample-source-patterns)
 
 #### Input Code:[¶](#id3)
@@ -100,8 +90,6 @@ Copy
 CREATE TABLE table1 (colum1 int, colum2 int, colum3 smallint, colum4 int )
 DISTRIBUTED BY (colum1, colum2);
 ```
-
-Copy
 
 #### Output Code:[¶](#id5)
 
@@ -115,11 +103,9 @@ COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,
 ;
 ```
 
-Copy
-
 ## DISTRIBUTED RANDOMLY - REPLICATED[¶](#distributed-randomly-replicated)
 
-Note
+**Note:**
 
 This syntax is not needed in Snowflake.
 
@@ -133,8 +119,6 @@ storage, these options will be removed in the migration.
 DISTRIBUTED RANDOMLY | DISTRIBUTED REPLICATED
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id8)
 
 #### Input Code:[¶](#id9)
@@ -146,8 +130,6 @@ CREATE TABLE table1 (colum1 int, colum2 int, colum3 smallint, colum4 int )
 DISTRIBUTED RANDOMLY;
 ```
 
-Copy
-
 #### Output Code:[¶](#id11)
 
 ##### Snowflake[¶](#id12)
@@ -157,8 +139,6 @@ CREATE TABLE table1 (colum1 int, colum2 int, colum3 smallint, colum4 int )
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "greenplum",  "convertedOn": "03/26/2025",  "domain": "test" }}'
 ;
 ```
-
-Copy
 
 ## Related EWIs[¶](#related-ewis)
 

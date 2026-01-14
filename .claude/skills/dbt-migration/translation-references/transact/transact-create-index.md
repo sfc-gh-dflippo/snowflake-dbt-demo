@@ -15,8 +15,6 @@ CREATE TABLE table_1(
 ) ON [PRIMARY]
 ```
 
-Copy
-
 ## Snowflake[¶](#snowflake)
 
 ```
@@ -33,9 +31,7 @@ COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,
 ;
 ```
 
-Copy
-
-Note
+**Note:**
 
 Due to architectural reasons, Snowflake does not support indexes so, SnowConvert AI will remove all
 the code related to the creation of indexes. Snowflake automatically creates micro-partitions for

@@ -22,7 +22,7 @@ such as Open, Fetch, Next, and Close.
 - _CLOSE(),_ removes the temporary table from the \_OUTQUERIES (if it was added in the EXEC helper)
   and unsets the necessary variables.
 
-Note
+**Note:**
 
 Some parts of the output code are omitted for clarity reasons.
 
@@ -64,8 +64,6 @@ begin
 end;
 ```
 
-Copy
-
 Snowflake output
 
 ```
@@ -104,8 +102,6 @@ from
     return PROCRESULTS();
 $$;
 ```
-
-Copy
 
 #### Cursor Helper Function Definition[¶](#cursor-helper-function-definition)
 
@@ -181,8 +177,6 @@ Copy
 	};
 ```
 
-Copy
-
 ### Known Issues [¶](#known-issues)
 
 No issues were found.
@@ -236,9 +230,7 @@ done to manage properly the date types in Snowflake. Both functions are defined 
 	};
 ```
 
-Copy
-
-Note
+**Note:**
 
 Some parts of the output code are omitted for clarity reasons.
 
@@ -260,8 +252,6 @@ end case
 
 END;
 ```
-
-Copy
 
 Snowflake output
 
@@ -287,8 +277,6 @@ $$
   }
 $$;
 ```
-
-Copy
 
 #### Exec Helper Definition[¶](#exec-helper-definition)
 
@@ -322,8 +310,6 @@ Copy
 	};
 ```
 
-Copy
-
 ### Known Issues [¶](#id1)
 
 No issues were found.
@@ -354,8 +340,6 @@ for date comparisons.
 }
 ```
 
-Copy
-
 ### **_BetweenFunc_**[¶](#betweenfunc)
 
 A function to handle the _BETWEEN_ statement in Teradata.
@@ -368,8 +352,6 @@ A function to handle the _BETWEEN_ statement in Teradata.
 	return expression >= startExpr && expression <= endExpr;
 };
 ```
-
-Copy
 
 ### **_LikeFunction()_**[¶](#likefunction)
 
@@ -389,8 +371,6 @@ A function to handle the _LIKE_ statement in Teradata.
 	return likeResult;
 };
 ```
-
-Copy
 
 ### **_ERROR_HANDLERS()_**[¶](#error-handlers)
 
@@ -412,8 +392,6 @@ var ERROR_HANDLERS = function (error) {
    }
 };
 ```
-
-Copy
 
 ### **_INSERT_TEMP_**[¶](#insert-temp)
 
@@ -446,8 +424,6 @@ var INSERT_TEMP = function (query,parameters) {
 };
 ```
 
-Copy
-
 ### **_IS_NOT_FOUND()_**[¶](#is-not-found)
 
 A function that validates when a SELECT returns no values or a sentence affects zero rows. This is
@@ -477,8 +453,6 @@ for NOT FOUND EXCEPTIONS.
 	};
 ```
 
-Copy
-
 ### **_HANDLE_NOTFOUND()_**[¶](#handle-notfound)
 
 This function uses the above _IS_NOT_\_FOUND function to validate when an artificial error ‘NOT
@@ -490,8 +464,6 @@ FOUND’ is being thrown.
 	};
 ```
 
-Copy
-
 ### PROCRESULTS()[¶](#procresults)
 
 A function that takes zero or multiple output parameters and binds them with the \_OUTQUERIES in an
@@ -500,8 +472,6 @@ array in order to be returned.
 ```
  let PROCRESULTS = (...OUTPARAMS) => JSON.stringify([...OUTPARAMS,[..._OUTQUERIES]]);
 ```
-
-Copy
 
 ### Known Issues [¶](#id3)
 
@@ -527,9 +497,7 @@ Fetch Function is described below.
 => rows.getColumnValue(i + 1))) || [];
 ```
 
-Copy
-
-Note
+**Note:**
 
 Some parts of the output code are omitted for clarity reasons.
 
@@ -547,8 +515,6 @@ SET monat      = (SELECT column1
              FROM table1);
 END;
 ```
-
-Copy
 
 Snowflake output
 
@@ -570,15 +536,11 @@ $$
 $$;
 ```
 
-Copy
-
 ### Into Helper function Definition[¶](#into-helper-function-definition)
 
 ```
  var INTO = () => fetch(ROW_COUNT,_ROWS,_RS);
 ```
-
-Copy
 
 ### Known Issues [¶](#id5)
 

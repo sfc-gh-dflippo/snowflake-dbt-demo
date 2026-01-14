@@ -33,8 +33,6 @@ in
     public_products
 ```
 
-Copy
-
 **Snowflake Connection in the Power Query Editor**
 
 ```
@@ -47,8 +45,6 @@ let
 in
     public_products
 ```
-
-Copy
 
 ### Entity Repointing Case: View[¶](#entity-repointing-case-view)
 
@@ -67,8 +63,6 @@ in
     public_expensive_products
 ```
 
-Copy
-
 **Snowflake Connection in the Power Query Editor**
 
 ```
@@ -81,8 +75,6 @@ let
 in
     public_expensive_products
 ```
-
-Copy
 
 ### Embedded SQL Case[¶](#embedded-sql-case)
 
@@ -100,8 +92,6 @@ in
     Source
 ```
 
-Copy
-
 **Snowflake Connection in the Power Query Editor**
 
 ```
@@ -112,5 +102,3 @@ expensive_products", null, [EnableFolding=true]),
 in
     Source
 ```
-
-Copy

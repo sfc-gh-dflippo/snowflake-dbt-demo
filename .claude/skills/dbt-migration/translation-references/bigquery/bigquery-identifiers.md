@@ -28,8 +28,6 @@ SELECT `col#1` FROM test.quotedIdentTable;
 SELECT `COL#1` FROM test.quotedIdentTable;
 ```
 
-Copy
-
 In Snowflake, case sensitivity of quoted identifiers depends on the session parameter
 [QUOTED_IDENTIFIERS_IGNORE_CASE](https://docs.snowflake.com/en/sql-reference/parameters#quoted-identifiers-ignore-case),
 by default quoted identifiers comparison is case sensitive, this means that the result code from
@@ -53,8 +51,6 @@ SELECT
 FROM
   test.quotedIdentTable;
 ```
-
-Copy
 
 Will fail when executing the second select unless the session parameter is set to TRUE.
 
@@ -81,8 +77,6 @@ FROM
 `test.identsTable1`;
 ```
 
-Copy
-
 ### Snowflake[¶](#id2)
 
 ```
@@ -99,8 +93,6 @@ SELECT
 FROM
   test.identsTable1;
 ```
-
-Copy
 
 ## Known issues[¶](#known-issues)
 
@@ -122,8 +114,6 @@ CREATE TABLE test.MyTable
 );
 ```
 
-Copy
-
 However, unquoted identifiers in Snowflake are
 [always stored and compared in uppercase](https://docs.snowflake.com/en/sql-reference/identifiers-syntax),
 meaning that `test.MyTable` will raise a duplicated object error when trying to create it.
@@ -144,8 +134,6 @@ CREATE TABLE test.MyTable
   col1 INTEGER
 );
 ```
-
-Copy
 
 ## Related EWIs[¶](#related-ewis)
 

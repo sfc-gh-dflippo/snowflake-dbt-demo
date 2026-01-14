@@ -23,8 +23,6 @@ create_view_clauses :=
 [ TBLPROPERTIES ( property_name = property_value [ , ... ] ) ]
 ```
 
-Copy
-
 ## Sample Source Patterns[¶](#sample-source-patterns)
 
 ### COMMENT clause[¶](#comment-clause)
@@ -43,8 +41,6 @@ FROM
    person;
 ```
 
-Copy
-
 #### Output Code:[¶](#output-code)
 
 ```
@@ -59,28 +55,26 @@ FROM
    person;
 ```
 
-Copy
-
 ### OR REPLACE[¶](#or-replace)
 
-Note
+**Note:**
 
 This clause is fully supported in Snowflake
 
 ### TEMPORARY (non-GLOBAL) VIEW[¶](#temporary-non-global-view)
 
-Note
+**Note:**
 
 This clause is fully supported in Snowflake
 
 ### IF NOT EXISTS[¶](#if-not-exists)
 
-Note
+**Note:**
 
 This clause is fully supported in Snowflake
 
 ### Columns list[¶](#columns-list)
 
-Note
+**Note:**
 
 This clause is fully supported in Snowflake

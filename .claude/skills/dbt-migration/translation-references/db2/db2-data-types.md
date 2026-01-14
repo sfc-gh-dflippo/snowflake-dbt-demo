@@ -133,8 +133,6 @@ The following table shows the transformation from Db2 to Snowflake.
 );
 ```
 
-Copy
-
 #### Snowflake[¶](#snowflake)
 
 ```
@@ -192,8 +190,6 @@ Copy
  COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "db2",  "convertedOn": "08/29/2025",  "domain": "no-domain-provided" }}';
 ```
 
-Copy
-
 ## DECFLOAT Data Type[¶](#decfloat-data-type)
 
 ### Description[¶](#id1)
@@ -242,8 +238,6 @@ CREATE TABLE prices (
 INSERT INTO prices VALUES (1, 99.99);
 ```
 
-Copy
-
 ##### Snowflake[¶](#id2)
 
 ```
@@ -254,8 +248,6 @@ CREATE OR REPLACE TABLE prices (
 
 INSERT INTO prices VALUES (1, CAST(99.99 AS DECFLOAT));
 ```
-
-Copy
 
 #### INSERT with SELECT[¶](#insert-with-select)
 
@@ -274,8 +266,6 @@ INSERT INTO prices (product_id, price)
 SELECT id, amount FROM source_table;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id4)
 
 ```
@@ -287,8 +277,6 @@ CREATE OR REPLACE TABLE prices (
 INSERT INTO prices (product_id, price)
 SELECT id, CAST(amount AS DECFLOAT) FROM source_table;
 ```
-
-Copy
 
 ### Related EWIs[¶](#related-ewis)
 

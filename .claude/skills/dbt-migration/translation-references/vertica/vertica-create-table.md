@@ -20,8 +20,6 @@ ENCODING encoding-type
 ACCESSRANK integer
 ```
 
-Copy
-
 ## Grammar Syntax[¶](#grammar-syntax)
 
 ```
@@ -60,8 +58,6 @@ column-name data-type
 }
 ```
 
-Copy
-
 ## Tables Options[¶](#tables-options)
 
 ### Order By[¶](#order-by)
@@ -86,8 +82,6 @@ CREATE TABLE metrics
 ORDER BY measurement_date, business_unit, metric_category;
 ```
 
-Copy
-
 ##### Snowflake[¶](#snowflake)
 
 ```
@@ -102,8 +96,6 @@ CREATE TABLE metrics
 ORDER BY measurement_date, business_unit, metric_category
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "vertica",  "convertedOn": "06/17/2025",  "domain": "no-domain-provided" }}';
 ```
-
-Copy
 
 ### Projections Clauses[¶](#projections-clauses)
 
@@ -129,8 +121,6 @@ original code:
 [ KSAFE [safety] ]
 [ partition-clause]
 ```
-
-Copy
 
 ### Inherited Schema Privileges Clause[¶](#inherited-schema-privileges-clause)
 
@@ -158,8 +148,6 @@ CREATE TABLE metrics
 INCLUDE SCHEMA PRIVILEGES;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id3)
 
 ```
@@ -174,8 +162,6 @@ CREATE TABLE metrics
 INCLUDE SCHEMA PRIVILEGES
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "vertica",  "convertedOn": "06/17/2025",  "domain": "no-domain-provided" }}';
 ```
-
-Copy
 
 ## Constraints[¶](#constraints)
 
@@ -204,8 +190,6 @@ CREATE TABLE customers2 (
 );
 ```
 
-Copy
-
 ##### Snowflake[¶](#id6)
 
 ```
@@ -221,8 +205,6 @@ CREATE TABLE customers2 (
 )
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "vertica",  "convertedOn": "06/17/2025",  "domain": "no-domain-provided" }}';
 ```
-
-Copy
 
 ### CHECK Constraint[¶](#check-constraint)
 
@@ -245,8 +227,6 @@ CREATE TABLE table1 (
 );
 ```
 
-Copy
-
 ##### Snowflake[¶](#id9)
 
 ```
@@ -257,8 +237,6 @@ CREATE TABLE table1 (
 )
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "vertica",  "convertedOn": "06/17/2025",  "domain": "no-domain-provided" }}';
 ```
-
-Copy
 
 ### DEFAULT Constraint[¶](#default-constraint)
 
@@ -284,8 +262,6 @@ CREATE TABLE table1 (
 );
 ```
 
-Copy
-
 ##### Snowflake[¶](#id12)
 
 ```
@@ -296,8 +272,6 @@ CREATE TABLE table1 (
 )
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "vertica",  "convertedOn": "06/17/2025",  "domain": "no-domain-provided" }}';
 ```
-
-Copy
 
 ### PRIMARY KEY - UNIQUE - FOREIGN KEY[¶](#primary-key-unique-foreign-key)
 
@@ -323,8 +297,6 @@ CREATE OR REPLACE TABLE employees (
 );
 ```
 
-Copy
-
 ##### Snowflake[¶](#id15)
 
 ```
@@ -336,8 +308,6 @@ CREATE OR REPLACE TABLE employees (
 )
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "vertica",  "convertedOn": "06/17/2025",  "domain": "no-domain-provided" }}';
 ```
-
-Copy
 
 ## Related EWIs[¶](#related-ewis)
 
@@ -371,8 +341,6 @@ This syntax is partially supported in Snowflake. Translation pending for the fol
 [ GROUPED ( column-reference[,...] ) ]
 ```
 
-Copy
-
 ### Grammar Syntax[¶](#id17)
 
 ```
@@ -388,8 +356,6 @@ column-name-list
     [ GROUPED ( column-reference[,...] ) ]
 ```
 
-Copy
-
 ### Tables Options[¶](#id18)
 
 #### Segmentation Clause[¶](#segmentation-clause)
@@ -397,7 +363,7 @@ Copy
 This syntax isn’t required in Snowflake and is removed from the original code. For more information,
 please refer to [**Projections Clauses**](#projections-clauses).
 
-Note
+**Note:**
 
 This syntax is not required in Snowflake.
 
@@ -433,8 +399,6 @@ This syntax is partially supported in Snowflake. Translation pending for the fol
 DISK_QUOTA quota
 ```
 
-Copy
-
 ### Grammar Syntax[¶](#id22)
 
 ```
@@ -444,8 +408,6 @@ CREATE TABLE [ IF NOT EXISTS ] [[database.]schema.]table
   [ {INCLUDE | EXCLUDE} [SCHEMA] PRIVILEGES ]
   [ DISK_QUOTA quota ]
 ```
-
-Copy
 
 ### Tables Options[¶](#id23)
 

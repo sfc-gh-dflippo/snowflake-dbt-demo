@@ -13,7 +13,7 @@ Applies to
 - SQL Server
 - Azure Synapse Analytics
 
-Note
+**Note:**
 
 Multiple result sets are returned in temporary tables
 
@@ -39,8 +39,6 @@ BEGIN
         SELECT * from AdventureWorks.HumanResources.Department;
 END
 ```
-
-Copy
 
 ##### Output[¶](#output)
 
@@ -89,8 +87,6 @@ $$
 $$;
 ```
 
-Copy
-
 ##### Output[¶](#id2)
 
 <!-- prettier-ignore -->
@@ -128,8 +124,6 @@ BEGIN
         SELECT * from AdventureWorks.HumanResources.Shift;
 END
 ```
-
-Copy
 
 ##### Output[¶](#id4)
 
@@ -197,8 +191,6 @@ $$
 $$;
 ```
 
-Copy
-
 ##### Output[¶](#id7)
 
 <!-- prettier-ignore -->
@@ -246,7 +238,7 @@ Applies to
 
 ### Description[¶](#id8)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -263,9 +255,7 @@ specify the rows affected by an `INSERT`, `UPDATE`, `MERGE`, or `DELETE` stateme
  TOP (expression) [PERCENT] [ WITH TIES ]
 ```
 
-Copy
-
-Note
+**Note:**
 
 To get more information about the **`TOP`** arguments please check the
 [Transact-SQL TOP documentation](https://learn.microsoft.com/en-us/sql/t-sql/queries/top-transact-sql?view=sql-server-ver16#arguments).
@@ -276,9 +266,7 @@ To get more information about the **`TOP`** arguments please check the
  TOP <n>
 ```
 
-Copy
-
-Note
+**Note:**
 
 To get more information about **`TOP`** arguments please check the
 [Snowflake TOP documentation](https://docs.snowflake.com/en/sql-reference/constructs/top_n#parameters).
@@ -303,8 +291,6 @@ INSERT Cars VALUES ('sedan', 10000, 'red'),
 ('sub', 8000, 'green');
 ```
 
-Copy
-
 ##### Snowflake[¶](#snowflake)
 
 ```
@@ -323,8 +309,6 @@ INSERT INTO Cars VALUES ('sedan', 10000, 'red'),
 ('sub', 8000, 'green');
 ```
 
-Copy
-
 #### Common Case[¶](#common-case)
 
 ##### Transact-SQL[¶](#id11)
@@ -336,8 +320,6 @@ Copy
 FROM Cars
 WHERE Color = 'red'
 ```
-
-Copy
 
 ##### Result[¶](#result)
 
@@ -362,8 +344,6 @@ WHERE
 Color = 'red';
 ```
 
-Copy
-
 ##### Result[¶](#id14)
 
 <!-- prettier-ignore -->
@@ -380,8 +360,6 @@ Copy
 ```
  SELECT TOP(50)PERCENT Model, Color, Price FROM Cars
 ```
-
-Copy
 
 ##### Result[¶](#id17)
 
@@ -405,8 +383,6 @@ Price
 FROM
 Cars;
 ```
-
-Copy
 
 ##### Result[¶](#id20)
 
@@ -434,8 +410,6 @@ that’s why the result of executing the query in Snowflake is not equivalent to
  SELECT TOP(50)PERCENT WITH TIES Model, Color, Price FROM Cars ORDER BY Price;
 ```
 
-Copy
-
 ##### Result[¶](#id23)
 
 <!-- prettier-ignore -->
@@ -459,8 +433,6 @@ Copy
   Cars
  ORDER BY Price;
 ```
-
-Copy
 
 ##### Result[¶](#id26)
 

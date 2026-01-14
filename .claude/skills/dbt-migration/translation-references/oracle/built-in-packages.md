@@ -35,8 +35,6 @@ functionality of Oracle `DBMS_OUTPUT.PUT_LINE` function.
  DBMS_OUTPUT.PUT_LINE(LOG VARCHAR);
 ```
 
-Copy
-
 #### Custom procedure[¶](#custom-procedure)
 
 ##### Setup data[¶](#setup-data)
@@ -47,8 +45,6 @@ The `DBMS_OUTPUT` schema must be created.
 CREATE SCHEMA IF NOT EXISTS DBMS_OUTPUT
 COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":0},"attributes":{"component":"udf"}}';
 ```
-
-Copy
 
 ##### DBMS_OUTPUT.PUT_LINE(VARCHAR)[¶](#dbms-output-put-line-varchar)
 
@@ -82,9 +78,7 @@ AS $$
 $$;
 ```
 
-Copy
-
-Note
+**Note:**
 
 - Note that this is using a temporary table, if you want the data to persist after a session ends,
   please remove TEMPORARY from the CREATE TABLE.
@@ -114,8 +108,6 @@ END;
 CALL PROC();
 ```
 
-Copy
-
 ###### Result[¶](#result)
 
 ```
@@ -124,8 +116,6 @@ Copy
 |---|
 |test|
 ```
-
-Copy
 
 ###### Snowflake[¶](#snowflake)
 
@@ -146,8 +136,6 @@ $$;
 CALL PROC();
 ```
 
-Copy
-
 ###### Result[¶](#id3)
 
 ```
@@ -156,8 +144,6 @@ Copy
 |---|---|---|---|
 |1|2022-04-25 11:16:23.844|CODETEST|test|
 ```
-
-Copy
 
 #### Known Issues[¶](#known-issues)
 
@@ -194,7 +180,7 @@ This built-in function is replaced with Snowflake
 [SUBSTR function](https://docs.snowflake.com/en/sql-reference/functions/substr.html#substr-substring).
 However, there are some differences.
 
-Note
+**Note:**
 
 The **amount** and **offset** parameters are inverted in Snowflake
 
@@ -219,8 +205,6 @@ DBMS_LOB.SUBSTR (
    offset      IN    INTEGER := 1)
   RETURN RAW;
 ```
-
-Copy
 
 #### Function overloads[¶](#function-overloads)
 
@@ -247,8 +231,6 @@ DBMS_LOB.SUBSTR('some magic here', 250, 16) "6"
 FROM DUAL;
 ```
 
-Copy
-
 ###### Result[¶](#id9)
 
 ```
@@ -256,8 +238,6 @@ Copy
 ---------------+----+-------------+-----+----+-+
 some magic here|some|me magic here|magic|here| |
 ```
-
-Copy
 
 ###### Snowflake[¶](#id10)
 
@@ -278,8 +258,6 @@ SUBSTR('some magic here', 16, 250) "6"
 FROM DUAL;
 ```
 
-Copy
-
 ###### Result[¶](#id11)
 
 ```
@@ -287,8 +265,6 @@ Copy
 ---------------+----+-------------+-----+----+-+
 some magic here|some|me magic here|magic|here| |
 ```
-
-Copy
 
 ##### DBMS_LOB.SUBSTR(**B**LOB, amount, offset)[¶](#dbms-lob-substr-blob-amount-offset)
 
@@ -335,8 +311,6 @@ DBMS_LOB.SUBSTR(blob_column, 250, 16) "6"
 FROM BLOBTABLE;
 ```
 
-Copy
-
 ###### Result[¶](#id14)
 
 ```
@@ -344,8 +318,6 @@ Copy
 ---------------+----+-------------+-----+----+-+
 some magic here|some|me magic here|magic|here| |
 ```
-
-Copy
 
 ###### Snowflake[¶](#id15)
 
@@ -380,8 +352,6 @@ FROM
 BLOBTABLE;
 ```
 
-Copy
-
 ###### Result[¶](#id16)
 
 ```
@@ -389,8 +359,6 @@ Copy
 ---------------+----+-------------+-----+----+-+
 some magic here|some|me magic here|magic|here| |
 ```
-
-Copy
 
 Warning
 
@@ -427,8 +395,6 @@ DBMS_LOB.SUBSTR(clob_column, 250, 16) "6"
 FROM clobtable;
 ```
 
-Copy
-
 ###### Result[¶](#id19)
 
 ```
@@ -436,8 +402,6 @@ Copy
 ---------------+----+-------------+-----+----+-+
 some magic here|some|me magic here|magic|here| |
 ```
-
-Copy
 
 ###### Snowflake[¶](#id20)
 
@@ -470,8 +434,6 @@ FROM
 clobtable;
 ```
 
-Copy
-
 ###### Result[¶](#id21)
 
 ```
@@ -479,8 +441,6 @@ Copy
 ---------------+----+-------------+-----+----+-+
 some magic here|some|me magic here|magic|here| |
 ```
-
-Copy
 
 Warning
 
@@ -504,8 +464,6 @@ SUBSTR function on BFILE types.
 some magic here
 ```
 
-Copy
-
 ###### Oracle[¶](#id23)
 
 ```
@@ -521,8 +479,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 ###### Console Log[¶](#console-log)
 
 ```
@@ -530,8 +486,6 @@ DBMS_OUTPUT.PUT_LINE(UTL_RAW.CAST_TO_VARCHAR2(DBMS_LOB.SUBSTR(fil,4,1))) |
 -------------------------------------------------------------------------|
 some magi                                                                |
 ```
-
-Copy
 
 ###### Snowflake[¶](#id24)
 
@@ -564,8 +518,6 @@ $$
     END;
 $$;
 ```
-
-Copy
 
 ###### Result[¶](#id25)
 
@@ -609,7 +561,7 @@ This procedure is implemented using Snowflake
 [STAGE](https://docs.snowflake.com/en/sql-reference/sql/create-stage.html) to store the written text
 files.
 
-Note
+**Note:**
 
 This procedure requires to be used in conjunction with:
 
@@ -623,8 +575,6 @@ UTL_FILE.FCLOSE(
     );
 ```
 
-Copy
-
 #### Setup data[¶](#id31)
 
 - The `UTL_FILE` schema must be created.
@@ -634,15 +584,11 @@ CREATE SCHEMA IF NOT EXISTS UTL_FILE
 COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":0},"attributes":{"component":"udf"}}';
 ```
 
-Copy
-
 - If you want to download the file, run the following command.
 
 ```
 GET @UTL_FILE.utlfile_local_directory/<filename> file://<path_to_file>/<filename>;
 ```
-
-Copy
 
 Warning
 
@@ -690,9 +636,7 @@ $$
 $$;
 ```
 
-Copy
-
-Note
+**Note:**
 
 - Note that this procedure uses the **stage** that was created previously. For now, if you want to
   write the file in another stage, you must modify the name.
@@ -712,8 +656,6 @@ BEGIN
     UTL_FILE.FCLOSE(w_file);
 END;
 ```
-
-Copy
 
 Warning
 
@@ -740,8 +682,6 @@ BEGIN
     RETURN call_results;
 END;
 ```
-
-Copy
 
 #### Known Issues[¶](#id36)
 
@@ -781,7 +721,7 @@ The user is in charge of uploading the local files to the
 [STAGE](https://docs.snowflake.com/en/sql-reference/sql/create-stage.html) to be used by the
 procedure.
 
-Note
+**Note:**
 
 This procedure requires to be used in conjunction with:
 
@@ -798,8 +738,6 @@ UTL_FILE.FOPEN(
     );
 ```
 
-Copy
-
 #### Setup data[¶](#id40)
 
 - The `UTL_FILE` schema must be created.
@@ -808,8 +746,6 @@ Copy
 CREATE SCHEMA IF NOT EXISTS UTL_FILE
 COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":0},"attributes":{"component":"udf"}}';
 ```
-
-Copy
 
 - Create the stage `utlfile_local_directory`.
 
@@ -820,16 +756,12 @@ CREATE OR REPLACE STAGE utlfile_local_directory
   file_format = my_csv_format;
 ```
 
-Copy
-
 - If the value in the `OPEN_MODE` parameter is **w** or **r** it is necessary to upload the file in
   the `utlfile_local_directory`.
 
 ```
 PUT file://<path_to_file>/<filename> @UTL_FILE.utlfile_local_directory auto_compress=false;
 ```
-
-Copy
 
 Warning
 
@@ -922,9 +854,7 @@ AS $$
 $$;
 ```
 
-Copy
-
-Note
+**Note:**
 
 - Note that this procedure uses the **stage** that was created previously. For now, if you want to
   use another name for the stage, you must modify the procedure.
@@ -943,8 +873,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 Warning
 
 To run this example, see
@@ -961,8 +889,6 @@ BEGIN
     UTL_FILE.FOPEN_UDF('MY_DIR','test.csv','w',1024);
 END;
 ```
-
-Copy
 
 #### Known Issues[¶](#id47)
 
@@ -1017,8 +943,6 @@ UTL_FILE.PUT_LINE(
     );
 ```
 
-Copy
-
 #### Setup data[¶](#id54)
 
 - The `UTL_FILE` schema must be created.
@@ -1027,8 +951,6 @@ Copy
 CREATE SCHEMA IF NOT EXISTS UTL_FILE
 COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":0},"attributes":{"component":"udf"}}';
 ```
-
-Copy
 
 #### Custom UDF[¶](#custom-udf)
 
@@ -1076,8 +998,6 @@ $$;
 SELECT * FROM UTL_FILE.FOPEN_TABLES_LINES;
 ```
 
-Copy
-
 Warning
 
 **Note:**
@@ -1096,8 +1016,6 @@ BEGIN
     UTL_FILE.PUT_LINE(w_file,'New line');
 END;
 ```
-
-Copy
 
 Warning
 
@@ -1121,8 +1039,6 @@ BEGIN
     RETURN call_results;
 END;
 ```
-
-Copy
 
 #### Known Issues[¶](#id60)
 
@@ -1175,8 +1091,6 @@ DBMS_RANDOM.VALUE(
     RETURN NUMBER;
 ```
 
-Copy
-
 #### Custom UDF overloads[¶](#custom-udf-overloads)
 
 ##### Setup data[¶](#id65)
@@ -1187,8 +1101,6 @@ The `DBMS_RANDOM` schema must be created.
 CREATE SCHEMA IF NOT EXISTS DBMS_RANDOM
 COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":0},"attributes":{"component":"udf"}}';
 ```
-
-Copy
 
 ##### DBMS_RANDOM.VALUE()[¶](#dbms-random-value)
 
@@ -1207,9 +1119,7 @@ $$
 $$;
 ```
 
-Copy
-
-Note
+**Note:**
 
 **Note:** The UDF only supports approximately between 9 and 10 digits in the decimal part of the
 number (9 or 10 digits of precision)
@@ -1222,8 +1132,6 @@ number (9 or 10 digits of precision)
 SELECT DBMS_RANDOM.VALUE() FROM DUAL;
 ```
 
-Copy
-
 ###### Result[¶](#id69)
 
 ```
@@ -1233,9 +1141,7 @@ Copy
 |0.47337471168356406022193430290380483126|
 ```
 
-Copy
-
-Note
+**Note:**
 
 The function can be called either\_`DBMS_RANDOM.VALUE()`\_ or _`DBMS_RANDOM.VALUE.`_
 
@@ -1247,8 +1153,6 @@ SELECT
 DBMS_RANDOM.VALUE_UDF() FROM DUAL;
 ```
 
-Copy
-
 ###### Result[¶](#id71)
 
 ```
@@ -1258,9 +1162,7 @@ Copy
 |0.1014560867|
 ```
 
-Copy
-
-Note
+**Note:**
 
 In Snowflake, you must put the parentheses.
 
@@ -1289,9 +1191,7 @@ $$
 $$;
 ```
 
-Copy
-
-Note
+**Note:**
 
 - The Oracle DBMS_RANDOM.VALUE(low, high) function does not require parameters to have a specific
   order so the Snowflake UDF is implemented to support this feature by always taking out the highest
@@ -1307,8 +1207,6 @@ Note
 SELECT DBMS_RANDOM.VALUE(-10,30) FROM DUAL;
 ```
 
-Copy
-
 ###### Result[¶](#id75)
 
 ```
@@ -1318,8 +1216,6 @@ Copy
 |16.0298681859960167648070354679783928085|
 ```
 
-Copy
-
 ###### Snowflake[¶](#id76)
 
 ```
@@ -1327,8 +1223,6 @@ SELECT
 --** SSC-FDM-OR0033 - DBMS_RANDOM.VALUE DIGITS OF PRECISION ARE LOWER IN SNOWFLAKE **
 DBMS_RANDOM.VALUE_UDF(-10,30) FROM DUAL;
 ```
-
-Copy
 
 ###### Result[¶](#id77)
 
@@ -1338,8 +1232,6 @@ Copy
 |---|
 |-6.346055187|
 ```
-
-Copy
 
 #### Known Issues[¶](#id78)
 

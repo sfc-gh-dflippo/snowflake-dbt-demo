@@ -6,7 +6,7 @@ title: SnowConvert AI - Oracle - CREATE PROCEDURE | Snowflake Documentation
 
 ## Description[¶](#description)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -36,8 +36,6 @@ PROCEDURE
     { java_declaration | c_declaration } } ;
 ```
 
-Copy
-
 For more information regarding Snowflake Create Procedure, check
 [here](https://docs.snowflake.com/en/sql-reference/sql/create-procedure.html#create-procedure).
 
@@ -54,8 +52,6 @@ CREATE [ OR REPLACE ] PROCEDURE <name> ( [ <arg_name> <arg_data_type> ] [ , ... 
   AS '<procedure_definition>'
 ```
 
-Copy
-
 ## Sample Source Patterns[¶](#sample-source-patterns)
 
 ### 1. Basic Procedure[¶](#basic-procedure)
@@ -69,8 +65,6 @@ BEGIN
 null;
 END;
 ```
-
-Copy
 
 ##### Snow Scripting[¶](#snow-scripting)
 
@@ -87,8 +81,6 @@ null;
 END;
 $$;
 ```
-
-Copy
 
 ### 2. Procedure with Different Parameters[¶](#procedure-with-different-parameters)
 
@@ -108,8 +100,6 @@ BEGIN
 	p2 := 93;
 END;
 ```
-
-Copy
 
 ##### Snow Scripting[¶](#id2)
 
@@ -131,8 +121,6 @@ $$
 	END;
 $$;
 ```
-
-Copy
 
 #### Output parameters[¶](#output-parameters)
 
@@ -158,8 +146,6 @@ NULL;
 END;
 ```
 
-Copy
-
 ##### Snow Scripting[¶](#id4)
 
 ```
@@ -175,8 +161,6 @@ NULL;
 END;
 $$;
 ```
-
-Copy
 
 ### 4. Procedure with Basic Statements[¶](#procedure-with-basic-statements)
 
@@ -223,8 +207,6 @@ BEGIN
     END IF;
 END proc3;
 ```
-
-Copy
 
 ##### Snow Scripting[¶](#id6)
 
@@ -297,8 +279,6 @@ WHERE COL1 =' || NVL(:localVar1 :: STRING, '');
 $$;
 ```
 
-Copy
-
 ### 5. Procedure with empty `RETURN` statements[¶](#procedure-with-empty-return-statements)
 
 In Oracle procedures you can have empty `RETURN` statements to finish the execution of a procedure.
@@ -317,8 +297,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Snowflake Scripting[¶](#snowflake-scripting)
 
 ```
@@ -336,8 +314,6 @@ $$
    END;
 $$;
 ```
-
-Copy
 
 #### `RETURN` statements in procedures with output parameters[¶](#return-statements-in-procedures-with-output-parameters)
 
@@ -364,8 +340,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Snowflake Scripting[¶](#id9)
 
 ```
@@ -388,8 +362,6 @@ $$
     END;
 $$;
 ```
-
-Copy
 
 ### 6. Procedure with DEFAULT parameters[¶](#procedure-with-default-parameters)
 
@@ -414,8 +386,6 @@ BEGIN
     TEST(Y => 'Y');
 END;
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id11)
 
@@ -447,8 +417,6 @@ CREATE OR REPLACE PROCEDURE TEST (
         RETURN call_results;
         END;
 ```
-
-Copy
 
 ## Known Issues[¶](#known-issues)
 

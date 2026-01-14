@@ -52,8 +52,6 @@ Input:
 SELECT * FROM UNNEST ([10,20,30]) AS numbers WITH OFFSET position;
 ```
 
-Copy
-
 Generated code:
 
 ```
@@ -69,5 +67,3 @@ numbers,
 THIS
 );
 ```
-
-Copy

@@ -26,15 +26,11 @@ The syntax for this statement is as follows:
  EXPLAIN [ <SQL_statement> ];
 ```
 
-Copy
-
 ### Query[¶](#query)
 
 ```
  EXPLAIN SELECT * FROM table_1
 ```
-
-Copy
 
 #### Result[¶](#result)
 
@@ -50,8 +46,6 @@ Copy
 ```
     EXPLAIN SELECT * FROM table_1
 ```
-
-Copy
 
 ##### Result[¶](#id2)
 

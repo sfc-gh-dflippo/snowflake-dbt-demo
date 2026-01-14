@@ -37,8 +37,6 @@ SELECT * FROM table1;
 .QUIT 0
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#snowflake-sql)
 
 ```
@@ -66,8 +64,6 @@ $$
 $$
 ```
 
-Copy
-
 ### Known Issues[¶](#known-issues)
 
 No issues were found.
@@ -92,8 +88,6 @@ return code value unless an argument is explicitly supplied.
 <Status_variable> := ACTIVITY_COUNT | ERRORCODE | ERRORLEVEL
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id1)
 
 #### Basic IF example[¶](#basic-if-example)
@@ -104,8 +98,6 @@ Copy
 -- Additional Params: -q SnowScript
 .QUIT ERRORCODE;
 ```
-
-Copy
 
 ##### Snowflake SQL[¶](#id3)
 
@@ -119,8 +111,6 @@ $$
   END
 $$
 ```
-
-Copy
 
 ### Known Issues[¶](#id4)
 
@@ -143,8 +133,6 @@ SnowConvert AI transforms it to return 0.
 ```
 .GOTO LabelName;
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id6)
 
@@ -179,8 +167,6 @@ INSERT INTO TABLEB VALUES (1);
 .logoff
 .exit
 ```
-
-Copy
 
 ##### Snowflake[¶](#snowflake)
 
@@ -260,8 +246,6 @@ $$
 $$
 ```
 
-Copy
-
 ### Known Issues [¶](#id8)
 
 No issues were found.
@@ -293,8 +277,6 @@ No issues were found.
 <Action> := BTEQ_command | SQL_request
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id11)
 
 #### Basic IF example[¶](#id12)
@@ -305,8 +287,6 @@ Copy
 -- Additional Params: -q SnowScript
 .IF ACTIVITYCOUNT <> 0 THEN .GOTO InsertEmployee;
 ```
-
-Copy
 
 ##### Snowflake SQL[¶](#id14)
 
@@ -323,8 +303,6 @@ $$
   END
 $$
 ```
-
-Copy
 
 ### Related EWIS[¶](#id15)
 

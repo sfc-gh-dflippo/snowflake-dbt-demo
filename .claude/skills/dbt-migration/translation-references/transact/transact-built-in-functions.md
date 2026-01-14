@@ -463,8 +463,6 @@ Replaces NULL with the specified replacement value.
 ISNULL ( check_expression , replacement_value )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#snowflake-sql)
 
 [Snowflake SQL Documentation](https://docs.snowflake.com/en/sql-reference/functions/nvl.html)
@@ -473,8 +471,6 @@ Copy
 NVL( <expr1> , <expr2> )
 ```
 
-Copy
-
 ### Examples[¶](#examples)
 
 #### SQL Server[¶](#id1)
@@ -482,8 +478,6 @@ Copy
 ```
 SELECT ISNULL(NULL, 'SNOWFLAKE') AS COMPANYNAME;
 ```
-
-Copy
 
 **Result:**
 
@@ -498,8 +492,6 @@ Copy
 SELECT
 NVL(NULL, 'SNOWFLAKE') AS COMPANYNAME;
 ```
-
-Copy
 
 **Result:**
 
@@ -530,8 +522,6 @@ Creates a unique value of type uniqueidentifier.
 NEWID ( )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id7)
 
 [Snowflake SQL Documentation](https://docs.snowflake.com/en/sql-reference/functions/nvl.html)
@@ -539,8 +529,6 @@ Copy
 ```
 UUID_STRING()
 ```
-
-Copy
 
 ### Examples[¶](#id8)
 
@@ -553,8 +541,6 @@ Outputs may differ because it generates a unique ID in runtime
 ```
 SELECT NEWID ( ) AS ID;
 ```
-
-Copy
 
 **Result:**
 
@@ -569,8 +555,6 @@ Copy
 SELECT
 UUID_STRING( ) AS ID;
 ```
-
-Copy
 
 **Result:**
 
@@ -600,8 +584,6 @@ Returns a null value if the two specified expressions are equal.
 NULLIF ( check_expression , replacement_value )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id15)
 
 [Snowflake SQL Documentation](https://docs.snowflake.com/en/sql-reference/functions/nullif.html)
@@ -610,8 +592,6 @@ Copy
 NULLIF( <expr1> , <expr2> )
 ```
 
-Copy
-
 ### Examples[¶](#id16)
 
 #### SQL Server[¶](#id17)
@@ -619,8 +599,6 @@ Copy
 ```
 SELECT NULLIF(6,9) AS RESULT1, NULLIF(5,5) AS RESULT2;
 ```
-
-Copy
 
 **Result:**
 
@@ -636,8 +614,6 @@ SELECT
 NULLIF(6,9) AS RESULT1,
 NULLIF(5,5) AS RESULT2;
 ```
-
-Copy
 
 **Result:**
 
@@ -667,8 +643,6 @@ Returns the number of rows affected by the last statement.
 @@ROWCOUNT
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id23)
 
 [Snowflake SQL Documentation](https://docs.snowflake.com/en/developer-guide/snowflake-scripting/dml-status)
@@ -676,8 +650,6 @@ Copy
 ```
 SQLROWCOUNT
 ```
-
-Copy
 
 ### Examples[¶](#id24)
 
@@ -704,8 +676,6 @@ GO
 
 EXEC procedure1;
 ```
-
-Copy
 
 **Result:**
 
@@ -750,8 +720,6 @@ $$;
 CALL procedure1();
 ```
 
-Copy
-
 **Result:**
 
 <!-- prettier-ignore -->
@@ -783,8 +751,6 @@ Since Snowflake does not support `FORMATMESSAGE` function, the
 FORMATMESSAGE ( { msg_number  | ' msg_string ' | @msg_variable} , [ param_value [ ,...n ] ] )
 ```
 
-Copy
-
 ### Examples[¶](#id31)
 
 #### SQL Server[¶](#id32)
@@ -792,8 +758,6 @@ Copy
 ```
 SELECT FORMATMESSAGE('This is the %s and this is the %s.', 'first variable', 'second variable') AS RESULT;
 ```
-
-Copy
 
 **Result:**
 
@@ -809,8 +773,6 @@ SELECT
 --** SSC-FDM-TS0008 - FORMATMESSAGE WAS CONVERTED TO CUSTOM UDF FORMATMESSAGE_UDF AND IT MIGHT HAVE A DIFFERENT BEHAVIOR. **
 FORMATMESSAGE_UDF('This is the %s and this is the %s.', ARRAY_CONSTRUCT('first variable', 'second variable')) AS RESULT;
 ```
-
-Copy
 
 **Result:**
 
@@ -842,8 +804,6 @@ def format_py(message,args):
   return message % (*args,)
 $$;
 ```
-
-Copy
 
 This UDF may not work correctly on some cases:
 
@@ -880,8 +840,6 @@ Returns a single-byte character with the integer sent as a parameter on the ASCI
 CHAR( expression )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id37)
 
 [Snowflake SQL complete documentation](https://docs.snowflake.com/en/sql-reference/functions/chr.html)
@@ -889,8 +847,6 @@ Copy
 ```
 {CHR | CHAR} ( <input> )
 ```
-
-Copy
 
 ##### JavaScript[¶](#javascript)
 
@@ -900,8 +856,6 @@ Copy
 String.fromCharCode( expression1, ... , expressionN )
 ```
 
-Copy
-
 ### Examples[¶](#id38)
 
 #### SQL Server[¶](#id39)
@@ -909,8 +863,6 @@ Copy
 ```
 SELECT CHAR(170) AS SMALLEST_A
 ```
-
-Copy
 
 **Output:**
 
@@ -925,8 +877,6 @@ Copy
 SELECT
 CHAR(170) AS SMALLEST_A;
 ```
-
-Copy
 
 **Result:**
 
@@ -948,8 +898,6 @@ $$;
 
 SELECT GET_CHAR(170) SMALLEST_A;
 ```
-
-Copy
 
 **Result:**
 
@@ -980,8 +928,6 @@ Returns the index of the first occurrence of the specified value sent as a param
 CHARINDEX( expression_to_find, expression_to_search [, start] )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id46)
 
 [Snowflake SQL complete documentation](https://docs.snowflake.com/en/sql-reference/functions/charindex.html)
@@ -989,8 +935,6 @@ Copy
 ```
 CHARINDEX( <expr1>, <expr2> [ , <start_pos> ] )
 ```
-
-Copy
 
 ##### JavaScript[¶](#id47)
 
@@ -1000,8 +944,6 @@ Copy
 String.indexOf( search_value [, index] )
 ```
 
-Copy
-
 ### Examples[¶](#id48)
 
 #### SQL Server[¶](#id49)
@@ -1009,8 +951,6 @@ Copy
 ```
 SELECT CHARINDEX('t', 'Customer') AS MatchPosition;
 ```
-
-Copy
 
 **Result:**
 
@@ -1026,8 +966,6 @@ SELECT
 CHARINDEX('t', 'Customer') AS MatchPosition;
 ```
 
-Copy
-
 **Result:**
 
 <!-- prettier-ignore -->
@@ -1037,7 +975,7 @@ Copy
 
 ##### JavaScript[¶](#id51)
 
-Note
+**Note:**
 
 Indexes in Transact start at 1, instead of JavaScript which start at 0.
 
@@ -1058,8 +996,6 @@ $$;
 SELECT GET_INDEX('and', 'Give your heart and soul to me, and life will always be la vie en rose', 20) AS INDEX;
 ```
 
-Copy
-
 **Result:**
 
 <!-- prettier-ignore -->
@@ -1074,7 +1010,7 @@ Applies to
 - SQL Server
 - Azure Synapse Analytics
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -1095,8 +1031,6 @@ initially doesn’t evaluate to NULL. For example,SELECT COALESCE(NULL, NULL, �
 COALESCE ( expression [ ,...n ] )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id56)
 
 [Snowflake SQL Documentation](https://docs.snowflake.com/en/sql-reference/functions/coalesce.html)
@@ -1104,8 +1038,6 @@ Copy
 ```
 COALESCE( <expr1> , <expr2> [ , ... , <exprN> ] )
 ```
-
-Copy
 
 ### Examples[¶](#id57)
 
@@ -1116,8 +1048,6 @@ SELECT TOP 10 StartDate,
 COALESCE(EndDate,'2000-01-01') AS FIRST_NOT_NULL
 FROM HumanResources.EmployeeDepartmentHistory
 ```
-
-Copy
 
 **Result:**
 
@@ -1144,8 +1074,6 @@ COALESCE(EndDate,'2000-01-01') AS FIRST_NOT_NULL
 FROM
 HumanResources.EmployeeDepartmentHistory;
 ```
-
-Copy
 
 **Result:**
 
@@ -1185,8 +1113,6 @@ Makes a concatenation of string values with others.
 CONCAT ( string_value1, string_value2 [, string_valueN ] )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id64)
 
 [Snowflake SQL complete documentation](https://docs.snowflake.com/en/sql-reference/functions/concat.html)
@@ -1197,8 +1123,6 @@ CONCAT( <expr1> [ , <exprN> ... ] )
 <expr1> || <expr2> [ || <exprN> ... ]
 ```
 
-Copy
-
 ##### JavaScript[¶](#id65)
 
 [JavaScript complete documentation](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/concat)
@@ -1207,8 +1131,6 @@ Copy
  String.concat( expression1, ..., expressionN )
 ```
 
-Copy
-
 ### Examples[¶](#id66)
 
 #### SQL Server[¶](#id67)
@@ -1216,8 +1138,6 @@ Copy
 ```
 SELECT CONCAT('Ray',' ','of',' ','Light') AS TITLE;
 ```
-
-Copy
 
 **Output:**
 
@@ -1232,8 +1152,6 @@ Copy
 SELECT
 CONCAT('Ray',' ','of',' ','Light') AS TITLE;
 ```
-
-Copy
 
 **Output:**
 
@@ -1257,15 +1175,11 @@ $$;
 SELECT concatenate_strs(array_construct('Ray',' ','of',' ','Light')) TITLE;
 ```
 
-Copy
-
 **Output:**
 
 ```
    TITLE|
 ```
-
-Copy
 
 ————| Ray of Light|
 
@@ -1291,8 +1205,6 @@ Returns the right part of a character string with the specified number of charac
 LEFT ( character_expression , integer_expression )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id74)
 
 [Snowflake SQL complete documentation](https://docs.snowflake.com/en/sql-reference/functions/left.html)
@@ -1300,8 +1212,6 @@ Copy
 ```
 LEFT ( <expr> , <length_expr> )
 ```
-
-Copy
 
 ##### JavaScript[¶](#id75)
 
@@ -1317,8 +1227,6 @@ function LEFT(string, index){
 return LEFT(STR, INDEX);
 ```
 
-Copy
-
 ### Examples[¶](#id76)
 
 #### SQL Server[¶](#id77)
@@ -1326,8 +1234,6 @@ Copy
 ```
 SELECT LEFT('John Smith', 5) AS FIRST_NAME;
 ```
-
-Copy
 
 **Output:**
 
@@ -1341,8 +1247,6 @@ Copy
 ```
 SELECT LEFT('John Smith', 5) AS FIRST_NAME;
 ```
-
-Copy
 
 **Output:**
 
@@ -1369,8 +1273,6 @@ $$
 $$;
 SELECT LEFT_STR('John Smith', 5) AS FIRST_NAME;
 ```
-
-Copy
 
 **Output:**
 
@@ -1401,8 +1303,6 @@ Returns the length of a string
 LEN( string_expression )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id84)
 
 [Snowflake SQL complete documentation](https://docs.snowflake.com/en/sql-reference/functions/length.html)
@@ -1412,8 +1312,6 @@ LENGTH( <expression> )
 LEN( <expression> )
 ```
 
-Copy
-
 ##### JavaScript[¶](#id85)
 
 [JavaScript SQL complete documentation](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/String/length)
@@ -1422,8 +1320,6 @@ Copy
  string.length
 ```
 
-Copy
-
 ### Examples[¶](#id86)
 
 #### SQL Server[¶](#id87)
@@ -1431,8 +1327,6 @@ Copy
 ```
 SELECT LEN('Sample text') AS [LEN];
 ```
-
-Copy
 
 **Output:**
 
@@ -1446,8 +1340,6 @@ Copy
 ```
 SELECT LEN('Sample text') AS LEN;
 ```
-
-Copy
 
 **Output:**
 
@@ -1468,8 +1360,6 @@ $$
 $$;
 SELECT GET_LEN('Sample text') LEN;
 ```
-
-Copy
 
 **Output:**
 
@@ -1500,8 +1390,6 @@ Converts a string to lowercase
 LOWER ( character_expression )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id94)
 
 [Snowflake SQL complete documentation](https://docs.snowflake.com/en/sql-reference/functions/lower.html)
@@ -1509,8 +1397,6 @@ Copy
 ```
 LOWER( <expr> )
 ```
-
-Copy
 
 ##### JavaScript[¶](#id95)
 
@@ -1520,8 +1406,6 @@ Copy
  String.toLowerCase( )
 ```
 
-Copy
-
 ### Examples[¶](#id96)
 
 #### SQL Server[¶](#id97)
@@ -1529,8 +1413,6 @@ Copy
 ```
 SELECT LOWER('YOU ARE A PREDICTION OF THE GOOD ONES') AS LOWERCASE;
 ```
-
-Copy
 
 **Output:**
 
@@ -1544,8 +1426,6 @@ Copy
 ```
 SELECT LOWER('YOU ARE A PREDICTION OF THE GOOD ONES') AS LOWERCASE;
 ```
-
-Copy
 
 **Output:**
 
@@ -1567,8 +1447,6 @@ $$;
 
 SELECT TO_LOWER('YOU ARE A PREDICTION OF THE GOOD ONES') LOWERCASE;
 ```
-
-Copy
 
 **Output:**
 
@@ -1597,8 +1475,6 @@ Returns the UNICODE character of an integer sent as a parameter
 NCHAR( expression )
 ```
 
-Copy
-
 ##### Arguments[¶](#arguments)
 
 `expression`: Integer expression.
@@ -1615,8 +1491,6 @@ String value, it depends on the input received.
 SELECT NCHAR(170);
 ```
 
-Copy
-
 ##### Result[¶](#result)
 
 <!-- prettier-ignore -->
@@ -1624,7 +1498,7 @@ Copy
 |---|
 |ª|
 
-Note
+**Note:**
 
 The equivalence for this function in JavaScript is documented in [CHAR](#char).
 
@@ -1650,8 +1524,6 @@ Replaces all occurrences of a specified string value with another string value.
 REPLACE ( string_expression , string_pattern , string_replacement )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id108)
 
 [Snowflake SQL complete documentation](https://docs.snowflake.com/en/sql-reference/functions/replace.html)
@@ -1660,15 +1532,11 @@ Copy
 REPLACE( <subject> , <pattern> [ , <replacement> ] )
 ```
 
-Copy
-
 ##### JavaScript[¶](#id109)
 
 ```
  String.replace( pattern, new_expression)
 ```
-
-Copy
 
 ### Examples[¶](#id110)
 
@@ -1678,8 +1546,6 @@ Copy
 SELECT REPLACE('Real computer software', 'software','science') AS COLUMNNAME;
 ```
 
-Copy
-
 **Output:**
 
 ```
@@ -1687,8 +1553,6 @@ COLUMNNAME           |
 ---------------------|
 Real computer science|
 ```
-
-Copy
 
 ##### Snowflake SQL[¶](#id112)
 
@@ -1696,8 +1560,6 @@ Copy
 SELECT REPLACE('Real computer software', 'software','science') AS COLUMNNAME;
 ```
 
-Copy
-
 **Output:**
 
 ```
@@ -1705,8 +1567,6 @@ COLUMNNAME           |
 ---------------------|
 Real computer science|
 ```
-
-Copy
 
 ##### JavaScript[¶](#id113)
 
@@ -1722,8 +1582,6 @@ $$;
 SELECT REPLACER('Real computer software', 'software', 'science') AS COLUMNNAME;
 ```
 
-Copy
-
 **Output:**
 
 ```
@@ -1731,8 +1589,6 @@ COLUMNNAME             |
 ---------------------|
 Real computer science|
 ```
-
-Copy
 
 ## REPLICATE[¶](#replicate)
 
@@ -1756,8 +1612,6 @@ Replicates a string value a specified number of times
 REPLICATE( string_expression, number_expression )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id118)
 
 [Snowflake SQL Documentation](https://docs.snowflake.com/en/sql-reference/functions/repeat.html)
@@ -1765,8 +1619,6 @@ Copy
 ```
 REPEAT(<input>, <n>)
 ```
-
-Copy
 
 ##### JavaScript[¶](#id119)
 
@@ -1776,8 +1628,6 @@ Copy
 String.repeat( number_expression )
 ```
 
-Copy
-
 ### Examples[¶](#id120)
 
 #### SQL Server[¶](#id121)
@@ -1786,8 +1636,6 @@ Copy
 SELECT REPLICATE('Staying alive',5) AS RESULT
 ```
 
-Copy
-
 **Result:**
 
 ```
@@ -1795,8 +1643,6 @@ RESULT                                                           |
 -----------------------------------------------------------------|
 Staying aliveStaying aliveStaying aliveStaying aliveStaying alive|
 ```
-
-Copy
 
 ##### Snowflake SQL[¶](#id122)
 
@@ -1804,8 +1650,6 @@ Copy
 SELECT REPEAT('Staying alive',5) AS RESULT;
 ```
 
-Copy
-
 **Result:**
 
 ```
@@ -1813,8 +1657,6 @@ RESULT                                                           |
 -----------------------------------------------------------------|
 Staying aliveStaying aliveStaying aliveStaying aliveStaying alive|
 ```
-
-Copy
 
 ##### JavaScript[¶](#id123)
 
@@ -1831,8 +1673,6 @@ $$;
 SELECT REPEAT_STR('Staying alive ', 5) AS RESULT;
 ```
 
-Copy
-
 **Result:**
 
 ```
@@ -1840,8 +1680,6 @@ RESULT                                                           |
 -----------------------------------------------------------------|
 Staying aliveStaying aliveStaying aliveStaying aliveStaying alive|
 ```
-
-Copy
 
 ## RIGHT[¶](#right)
 
@@ -1865,8 +1703,6 @@ Returns the right part of a character string with the specified number of charac
 RIGHT ( character_expression , integer_expression )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id128)
 
 [Snowflake SQL complete documentation](https://docs.snowflake.com/en/sql-reference/functions/right.html)
@@ -1874,8 +1710,6 @@ Copy
 ```
 RIGHT( <expr> , <length_expr> )
 ```
-
-Copy
 
 ##### JavaScript[¶](#id129)
 
@@ -1890,8 +1724,6 @@ UDF used to emulate the behavior
     }
 ```
 
-Copy
-
 ### Examples[¶](#id130)
 
 #### SQL Server[¶](#id131)
@@ -1900,8 +1732,6 @@ Copy
 SELECT RIGHT('John Smith', 5) AS LAST_NAME;
 ```
 
-Copy
-
 **Output:**
 
 ```
@@ -1909,8 +1739,6 @@ Copy
 ------------|
        Smith|
 ```
-
-Copy
 
 ##### Snowflake SQL[¶](#id132)
 
@@ -1918,8 +1746,6 @@ Copy
 SELECT RIGHT('John Smith', 5) AS LAST_NAME;
 ```
 
-Copy
-
 **Output:**
 
 ```
@@ -1927,8 +1753,6 @@ Copy
 ------------|
        Smith|
 ```
-
-Copy
 
 ##### JavaScript[¶](#id133)
 
@@ -1950,8 +1774,6 @@ $$;
 SELECT RIGHT_STR('John Smith', 5) AS LAST_NAME;
 ```
 
-Copy
-
 **Output:**
 
 ```
@@ -1959,8 +1781,6 @@ Copy
 ------------|
        Smith|
 ```
-
-Copy
 
 ## RTRIM[¶](#rtrim)
 
@@ -1984,8 +1804,6 @@ Returns a character expression after it removes leading blanks
 RTRIM( string_expression )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id138)
 
 [Snowflake SQL complete documentation](https://docs.snowflake.com/en/sql-reference/functions/rtrim.html)
@@ -1993,8 +1811,6 @@ Copy
 ```
 RTRIM(<expr> [, <characters> ])
 ```
-
-Copy
 
 ##### JavaScript[¶](#id139)
 
@@ -2006,8 +1822,6 @@ Custom function used to emulate the behavior
 }
 ```
 
-Copy
-
 ### Examples[¶](#id140)
 
 #### SQL Server[¶](#id141)
@@ -2018,8 +1832,6 @@ Copy
 SELECT RTRIM('LAST TWO BLANK SPACES  ') AS [RTRIM]
 ```
 
-Copy
-
 **Output:**
 
 ```
@@ -2028,15 +1840,11 @@ RTRIM                |
 LAST TWO BLANK SPACES|
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id142)
 
 ```
 SELECT RTRIM('LAST TWO BLANK SPACES  ') AS RTRIM;
 ```
-
-Copy
 
 **Result:**
 
@@ -2045,8 +1853,6 @@ RTRIM                |
 ---------------------|
 LAST TWO BLANK SPACES|
 ```
-
-Copy
 
 ##### JavaScript[¶](#id143)
 
@@ -2065,8 +1871,6 @@ $$;
 SELECT RTRIM('LAST TWO BLANK SPACES  ') AS RTRIM;
 ```
 
-Copy
-
 **Result:**
 
 ```
@@ -2074,8 +1878,6 @@ RTRIM                |
 ---------------------|
 LAST TWO BLANK SPACES|
 ```
-
-Copy
 
 ## SPACE[¶](#space)
 
@@ -2099,8 +1901,6 @@ Returns a number of occurrences of blank spaces
 SPACE ( integer_expression )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id148)
 
 [Snowflake SQL complete documentation](https://docs.snowflake.com/en/sql-reference/functions/space.html)
@@ -2108,8 +1908,6 @@ Copy
 ```
 SPACE(<n>)
 ```
-
-Copy
 
 ##### JavaScript[¶](#id149)
 
@@ -2121,8 +1919,6 @@ Custom function used to emulate the behavior
 }
 ```
 
-Copy
-
 ### Examples[¶](#id150)
 
 #### SQL Server[¶](#id151)
@@ -2133,8 +1929,6 @@ Copy
 SELECT CONCAT('SOME', SPACE(5), 'TEXT') AS RESULT;
 ```
 
-Copy
-
 **Output:**
 
 ```
@@ -2142,8 +1936,6 @@ RESULT       |
 -------------|
 SOME     TEXT|
 ```
-
-Copy
 
 ##### Snowflake SQL[¶](#id152)
 
@@ -2153,8 +1945,6 @@ Copy
 SELECT CONCAT('SOME', SPACE(5), 'TEXT') AS RESULT;
 ```
 
-Copy
-
 **Output:**
 
 ```
@@ -2162,8 +1952,6 @@ RESULT       |
 -------------|
 SOME     TEXT|
 ```
-
-Copy
 
 ##### JavaScript[¶](#id153)
 
@@ -2184,8 +1972,6 @@ $$;
 SELECT CONCAT('SOME', SPACE(5), 'TEXT') RESULT;
 ```
 
-Copy
-
 **Output:**
 
 ```
@@ -2193,8 +1979,6 @@ RESULT       |
 -------------|
 SOME     TEXT|
 ```
-
-Copy
 
 ## SUBSTRING[¶](#substring)
 
@@ -2218,8 +2002,6 @@ Returns a character expression after it removes leading blanks
 SUBSTRING( string_expression, start, length )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id158)
 
 [Snowflake SQL complete documentation](https://docs.snowflake.com/en/sql-reference/functions/substr.html)
@@ -2230,8 +2012,6 @@ SUBSTR( <base_expr>, <start_expr> [ , <length_expr> ] )
 SUBSTRING( <base_expr>, <start_expr> [ , <length_expr> ] )
 ```
 
-Copy
-
 ##### JavaScript[¶](#id159)
 
 Custom function used to emulate the behavior
@@ -2239,8 +2019,6 @@ Custom function used to emulate the behavior
 ```
  string.substring( indexA [, indexB])
 ```
-
-Copy
 
 ### Examples[¶](#id160)
 
@@ -2252,8 +2030,6 @@ Copy
 SELECT SUBSTRING('abcdef', 2, 3) AS SOMETEXT;
 ```
 
-Copy
-
 **Output:**
 
 ```
@@ -2262,15 +2038,11 @@ SOMETEXT|
 bcd     |
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id162)
 
 ```
 SELECT SUBSTRING('abcdef', 2, 3) AS SOMETEXT;
 ```
-
-Copy
 
 **Result:**
 
@@ -2279,8 +2051,6 @@ SOMETEXT|
 --------|
 bcd     |
 ```
-
-Copy
 
 ##### JavaScript[¶](#id163)
 
@@ -2298,8 +2068,6 @@ $$;
 SELECT REPLACER_LENGTH('abcdef', 2, 3) AS SOMETEXT;
 ```
 
-Copy
-
 **Result:**
 
 ```
@@ -2307,8 +2075,6 @@ SOMETEXT|
 --------|
 bcd     |
 ```
-
-Copy
 
 ## UPPER[¶](#upper)
 
@@ -2332,8 +2098,6 @@ Converts a string to uppercase
 UPPER( string_expression )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id168)
 
 [Snowflake SQL complete documentation](https://docs.snowflake.com/en/sql-reference/functions/upper.html)
@@ -2341,8 +2105,6 @@ Copy
 ```
 UPPER( <expr> )
 ```
-
-Copy
 
 ##### JavaScript[¶](#id169)
 
@@ -2352,8 +2114,6 @@ Copy
  String.toUpperCase( )
 ```
 
-Copy
-
 ### Examples[¶](#id170)
 
 #### SQL Server[¶](#id171)
@@ -2362,8 +2122,6 @@ Copy
 SELECT UPPER('you are a prediction of the good ones') AS [UPPER]
 ```
 
-Copy
-
 **Output:**
 
 ```
@@ -2375,8 +2133,6 @@ Copy
 |YOU ARE A PREDICTION OF THE GOOD ONES|
 +-------------------------------------|
 ```
-
-Copy
 
 ##### Snowflake SQL[¶](#id172)
 
@@ -2385,8 +2141,6 @@ SELECT
 UPPER('you are a prediction of the good ones') AS UPPER;
 ```
 
-Copy
-
 **Output:**
 
 ```
@@ -2398,8 +2152,6 @@ Copy
 |YOU ARE A PREDICTION OF THE GOOD ONES|
 +-------------------------------------|
 ```
-
-Copy
 
 ##### JavaScript[¶](#id173)
 
@@ -2415,8 +2167,6 @@ $$;
 SELECT TO_UPPER('you are a prediction of the good ones') UPPER;
 ```
 
-Copy
-
 **Output:**
 
 ```
@@ -2424,8 +2174,6 @@ UPPER                                |
 -------------------------------------|
 YOU ARE A PREDICTION OF THE GOOD ONES|
 ```
-
-Copy
 
 ## ASCII[¶](#ascii)
 
@@ -2447,8 +2195,6 @@ Returns the number code of a character on the ASCII table
 ASCII( expression )
 ```
 
-Copy
-
 #### Arguments[¶](#id177)
 
 `expression`: `VARCVHAR` or `CHAR` expression.
@@ -2465,8 +2211,6 @@ Copy
 SELECT ASCII('A') AS A , ASCII('a') AS a;
 ```
 
-Copy
-
 #### Result[¶](#id181)
 
 ```
@@ -2474,8 +2218,6 @@ Copy
 -----------| ----------|
          65|         97|
 ```
-
-Copy
 
 ## ASCII in JS[¶](#ascii-in-js)
 
@@ -2496,8 +2238,6 @@ This function returns the number code of a character on the ASCII table
 ```
  string.charCodeAt( [index] )
 ```
-
-Copy
 
 ##### Arguments[¶](#id185)
 
@@ -2524,8 +2264,6 @@ $$;
 SELECT GET_ASCII('A') A, GET_ASCII('a') a;
 ```
 
-Copy
-
 ##### Result[¶](#id189)
 
 ```
@@ -2533,8 +2271,6 @@ Copy
 -----------| ----------|
          65|         97|
 ```
-
-Copy
 
 ## QUOTENAME[¶](#quotename)
 
@@ -2556,8 +2292,6 @@ Returns a string delimited using quotes
 QUOTENAME( string_expression [, quote_character])
 ```
 
-Copy
-
 #### Arguments[¶](#id193)
 
 `string_expression`: String to delimit.
@@ -2576,8 +2310,6 @@ Copy
 SELECT QUOTENAME('Hello', '`') AS HELLO;
 ```
 
-Copy
-
 #### Result[¶](#id197)
 
 ```
@@ -2585,8 +2317,6 @@ Copy
 ---------|
   `Hello`|
 ```
-
-Copy
 
 ## QUOTENAME in JS[¶](#quotename-in-js)
 
@@ -2609,8 +2339,6 @@ predefined functions.
     return quote.concat(string, quote);
 }
 ```
-
-Copy
 
 ##### Arguments[¶](#id200)
 
@@ -2645,8 +2373,6 @@ $$;
 SELECT QUOTENAME('Hola', '`') HELLO;
 ```
 
-Copy
-
 ##### Result[¶](#id204)
 
 ```
@@ -2654,8 +2380,6 @@ Copy
 ---------|
   `Hello`|
 ```
-
-Copy
 
 ## CONCAT_WS[¶](#concat-ws)
 
@@ -2677,8 +2401,6 @@ Makes a concatenation of string values with others using a separator between the
 CONCAT_WS( separator, expression1, ... ,expressionN )
 ```
 
-Copy
-
 #### Arguments[¶](#id208)
 
 `separator`: Separator to join.
@@ -2697,8 +2419,6 @@ String value, depends on the input received.
 SELECT CONCAT_WS(' ', 'Mariah','Carey') AS NAME;
 ```
 
-Copy
-
 #### Result[¶](#id212)
 
 ```
@@ -2706,8 +2426,6 @@ Copy
 ------------|
 Mariah Carey|
 ```
-
-Copy
 
 ## Join in JS[¶](#join-in-js)
 
@@ -2728,8 +2446,6 @@ Concatenates the string arguments to the calling string using a separator
 ```
  Array.join( separator )
 ```
-
-Copy
 
 ##### Arguments[¶](#id216)
 
@@ -2754,8 +2470,6 @@ $$;
 SELECT join_strs(' ',array_construct('Mariah','Carey')) NAME;
 ```
 
-Copy
-
 ##### Result[¶](#id220)
 
 ```
@@ -2763,8 +2477,6 @@ Copy
 ------------|
 Mariah Carey|
 ```
-
-Copy
 
 ## SOUNDEX[¶](#soundex)
 
@@ -2786,8 +2498,6 @@ Returns a four-character code to evaluate the similarity of two strings
 SOUNDEX( string_expression )
 ```
 
-Copy
-
 #### Arguments[¶](#id224)
 
 `string_expression`: String expression to reverse.
@@ -2804,8 +2514,6 @@ The same data type of the string expression sent as a parameter.
 SELECT SOUNDEX('two') AS TWO , SOUNDEX('too') AS TOO;
 ```
 
-Copy
-
 #### Result[¶](#id228)
 
 ```
@@ -2813,8 +2521,6 @@ Copy
 ---------|---------|
      T000|     T000|
 ```
-
-Copy
 
 ## SOUNDEX in JS[¶](#soundex-in-js)
 
@@ -2855,8 +2561,6 @@ be implemented manually.
 
   }
 ```
-
-Copy
 
 ##### Arguments[¶](#id232)
 
@@ -2903,8 +2607,6 @@ $$;
 SELECT GET_SOUNDEX('two') AS TWO , GET_SOUNDEX('too') AS TOO;
 ```
 
-Copy
-
 ##### Result[¶](#id236)
 
 ```
@@ -2912,8 +2614,6 @@ Copy
 ---------|---------|
      T000|     T000|
 ```
-
-Copy
 
 ## REVERSE[¶](#reverse)
 
@@ -2935,8 +2635,6 @@ Reverses a string
 REVERSE( string_expression )
 ```
 
-Copy
-
 #### Arguments[¶](#id240)
 
 `string_expression`: String expression to reverse.
@@ -2953,8 +2651,6 @@ The same data type of the string expression sent as a parameter.
 SELECT REVERSE('rotator') AS PALINDROME;
 ```
 
-Copy
-
 #### Result[¶](#id244)
 
 ```
@@ -2962,8 +2658,6 @@ Copy
 ----------------|
          rotator|
 ```
-
-Copy
 
 ## reverse in JS[¶](#reverse-in-js)
 
@@ -2986,8 +2680,6 @@ predefined functions.
     return string.split("").reverse().join("");
 }
 ```
-
-Copy
 
 ##### Arguments[¶](#id248)
 
@@ -3013,8 +2705,6 @@ $$;
 SELECT REVERSE('rotator') PALINDROME;
 ```
 
-Copy
-
 ##### Result[¶](#id252)
 
 ```
@@ -3022,8 +2712,6 @@ Copy
 ----------------|
          rotator|
 ```
-
-Copy
 
 ## STRING_ESCAPE[¶](#string-escape)
 
@@ -3045,8 +2733,6 @@ Escapes special characters in texts and returns text with escaped characters.
 STRING_ESCAPE( text, type )
 ```
 
-Copy
-
 #### Arguments[¶](#id256)
 
 `text`: Text to escape characters.
@@ -3065,8 +2751,6 @@ Copy
 SELECT STRING_ESCAPE('\   /  \\    "     ', 'json') AS [ESCAPE];
 ```
 
-Copy
-
 #### Result[¶](#id260)
 
 ```
@@ -3074,8 +2758,6 @@ ESCAPE|
 --------------------------|
   \\   \/  \\\\    \"     |
 ```
-
-Copy
 
 ## stringify in JS[¶](#stringify-in-js)
 
@@ -3096,8 +2778,6 @@ Converts an object to a JSON string format
 ```
  JSON.stringify( value )
 ```
-
-Copy
 
 ##### Arguments[¶](#id264)
 
@@ -3123,8 +2803,6 @@ $$;
 SELECT STRING_ESCAPE('\   /  \\    "     ') ESCAPE;
 ```
 
-Copy
-
 ##### Result[¶](#id268)
 
 ```
@@ -3132,8 +2810,6 @@ Copy
 --------------------------|
   \\   \/  \\\\    \"     |
 ```
-
-Copy
 
 ## TRIM[¶](#trim)
 
@@ -3155,8 +2831,6 @@ Returns a character expression without blank spaces
 TRIM( string_expression )
 ```
 
-Copy
-
 #### Arguments[¶](#id272)
 
 `string_expression:` String expressions to convert.
@@ -3173,8 +2847,6 @@ Copy
 SELECT TRIM('  FIRST AND LAST TWO BLANK SPACES  ') AS [TRIM];
 ```
 
-Copy
-
 **Output:**
 
 ```
@@ -3186,8 +2858,6 @@ Copy
 |FIRST AND LAST TWO BLANK SPACES|
 +-------------------------------|
 ```
-
-Copy
 
 #### Snowflake SQL[¶](#id276)
 
@@ -3195,8 +2865,6 @@ Copy
 SELECT TRIM('  FIRST AND LAST TWO BLANK SPACES  ') AS TRIM;
 ```
 
-Copy
-
 **Output:**
 
 ```
@@ -3208,8 +2876,6 @@ Copy
 |FIRST AND LAST TWO BLANK SPACES|
 +-------------------------------|
 ```
-
-Copy
 
 ## trim in JS[¶](#trim-in-js)
 
@@ -3230,8 +2896,6 @@ Replaces the occurrences of a pattern using a new one sent as a parameter
 ```
  String.trim( )
 ```
-
-Copy
 
 ##### Arguments[¶](#id280)
 
@@ -3257,8 +2921,6 @@ $$;
 SELECT TRIM_STR('  FIRST AND LAST TWO BLANK SPACES  ')TRIM
 ```
 
-Copy
-
 ##### Result[¶](#id284)
 
 ```
@@ -3266,8 +2928,6 @@ Copy
 -------------------------------|
 FIRST AND LAST TWO BLANK SPACES|
 ```
-
-Copy
 
 ## DIFFERENCE[¶](#difference)
 
@@ -3290,8 +2950,6 @@ It counts the common characters of the strings resulting by executing the SOUNDE
 DIFFERENCE( expression1, expression1 )
 ```
 
-Copy
-
 #### Arguments[¶](#id288)
 
 `expression1, expression2:` String expressions to be compared.
@@ -3308,8 +2966,6 @@ Copy
 SELECT DIFFERENCE('Like', 'Mike');
 ```
 
-Copy
-
 #### Result[¶](#id292)
 
 ```
@@ -3317,8 +2973,6 @@ Copy
 -----------|
          3 |
 ```
-
-Copy
 
 ## DIFFERENCE in JS[¶](#difference-in-js)
 
@@ -3331,7 +2985,7 @@ Applies to
 
 Unfortunately, this functionality is not available in JS, but this can be implemented easily.
 
-Note
+**Note:**
 
 This functions requires the [SOUNDEX algorithm implementation](#soundex-in-js).
 
@@ -3349,8 +3003,6 @@ This functions requires the [SOUNDEX algorithm implementation](#soundex-in-js).
     return count;
 }
 ```
-
-Copy
 
 ##### Arguments[¶](#id296)
 
@@ -3385,8 +3037,6 @@ $$;
 SELECT SOUNDEX_DIFFERENCE(GET_SOUNDEX('two'), GET_SOUNDEX('too')) DIFFERENCE;
 ```
 
-Copy
-
 ##### Result[¶](#id300)
 
 ```
@@ -3394,8 +3044,6 @@ Copy
 -------------|
             4|
 ```
-
-Copy
 
 ## FORMAT[¶](#format)
 
@@ -3416,8 +3064,6 @@ Returns a value formatted with the specified format and optional culture
 ```
 FORMAT( value, format [, culture])
 ```
-
-Copy
 
 #### Arguments[¶](#id304)
 
@@ -3460,8 +3106,6 @@ NULL if the culture parameter is invalid, otherwise, it follows the next data ty
 SELECT FORMAT(CAST('2022-01-24' AS DATE), 'd', 'en-gb')  AS 'Great Britain';
 ```
 
-Copy
-
 #### Result[¶](#id308)
 
 ```
@@ -3470,15 +3114,11 @@ Copy
      24/01/2022|
 ```
 
-Copy
-
 ##### Query[¶](#id309)
 
 ```
 SELECT FORMAT(244900.25, 'C', 'cr-CR')  AS 'CURRENCY';
 ```
-
-Copy
 
 ##### Result[¶](#id310)
 
@@ -3507,8 +3147,6 @@ functionalities are not integrated into one method.
  Intl.DateTimeFormat( format ).format( value )
 ```
 
-Copy
-
 ##### Arguments[¶](#id313)
 
 `locales` (Optional): String expression of the format to apply.
@@ -3529,8 +3167,6 @@ Copy
 ```
  Intl.NumberFormat( [locales [, options]] ).format( value )
 ```
-
-Copy
 
 ##### Arguments[¶](#id316)
 
@@ -3562,8 +3198,6 @@ $$;
 SELECT FORMAT_DATE(TO_DATE('2022-01-24'), 'en-gb') GREAT_BRITAIN;
 ```
 
-Copy
-
 ##### Result[¶](#id320)
 
 ```
@@ -3571,8 +3205,6 @@ Copy
 ---------------|
      24/01/2022|
 ```
-
-Copy
 
 #### Numeric[¶](#numeric)
 
@@ -3589,8 +3221,6 @@ $$;
 SELECT FORMAT_NUMERIC(244900.25, 'de-DE', PARSE_JSON('{ style: "currency", currency: "CRC" }')) CURRENCY;
 ```
 
-Copy
-
 ##### Result[¶](#id322)
 
 ```
@@ -3598,8 +3228,6 @@ Copy
 ---------------|
  244.900,25 CRC|
 ```
-
-Copy
 
 ## PATINDEX[¶](#patindex)
 
@@ -3621,8 +3249,6 @@ Returns the starting position of the first occurrence of a pattern in a specifie
 PATINDEX( pattern, expression )
 ```
 
-Copy
-
 #### Arguments[¶](#id326)
 
 `pattern`: Pattern to find.
@@ -3641,8 +3267,6 @@ Integer. Returns 0 if the pattern is not found.
 SELECT PATINDEX( '%on%', 'No, no, non esistono più') AS [PATINDEX]
 ```
 
-Copy
-
 #### Result[¶](#id330)
 
 ```
@@ -3650,8 +3274,6 @@ Copy
 ------------|
           10|
 ```
-
-Copy
 
 ## search in JS[¶](#search-in-js)
 
@@ -3672,8 +3294,6 @@ Finds the index of a pattern using REGEX
 ```
  String.search( regex )
 ```
-
-Copy
 
 ##### Arguments[¶](#id334)
 
@@ -3702,8 +3322,6 @@ $$;
 SELECT GET_INDEX_PATTERN('on+', 'No, no, non esistono più') PATINDEX;
 ```
 
-Copy
-
 ##### Result[¶](#id338)
 
 ```
@@ -3711,8 +3329,6 @@ Copy
 ------------|
           10|
 ```
-
-Copy
 
 ## STR[¶](#str)
 
@@ -3737,15 +3353,11 @@ specified length and decimal precision.
 STR ( float_expression [ , length [ , decimal ] ] )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id343)
 
 ```
 STR_UDF( numeric_expression, number_format )
 ```
-
-Copy
 
 #### Arguments[¶](#id344)
 
@@ -3780,8 +3392,6 @@ SELECT STR(123.45, 6);
 SELECT STR(123.45, 6, 1);
 ```
 
-Copy
-
 **Output:**
 
 ```
@@ -3790,8 +3400,6 @@ Copy
 3) 123
 4) 123.5
 ```
-
-Copy
 
 #### Snowflake SQL[¶](#id348)
 
@@ -3815,8 +3423,6 @@ SELECT
 PUBLIC.STR_UDF(123.45, '9999.9');
 ```
 
-Copy
-
 **Output:**
 
 ```
@@ -3827,8 +3433,6 @@ Copy
 3) 123
 4) 123.5
 ```
-
-Copy
 
 ## STR in JS[¶](#str-in-js)
 
@@ -3866,8 +3470,6 @@ predefined functions for strings.
     return number.toFixed(max_length - float_precision);
 }
 ```
-
-Copy
 
 ##### Arguments[¶](#id352)
 
@@ -3911,8 +3513,6 @@ $$;
 SELECT STR(12345.674, 12, 6);
 ```
 
-Copy
-
 ##### Result[¶](#id356)
 
 ```
@@ -3920,8 +3520,6 @@ Copy
 --------------|
   12345.674000|
 ```
-
-Copy
 
 ## LTRIM[¶](#ltrim)
 
@@ -3943,8 +3541,6 @@ Returns a character expression after it removes leading blanks
 LTRIM( string_expression )
 ```
 
-Copy
-
 #### Arguments[¶](#id360)
 
 `string_expression:` String expressions to convert.
@@ -3961,8 +3557,6 @@ Copy
 SELECT LTRIM('  FIRST TWO BLANK SPACES') AS [LTRIM]
 ```
 
-Copy
-
 #### Result[¶](#id364)
 
 ```
@@ -3970,8 +3564,6 @@ Copy
 ----------------------|
 FIRST TWO BLANK SPACES|
 ```
-
-Copy
 
 ## LTRIM in JS[¶](#ltrim-in-js)
 
@@ -3994,8 +3586,6 @@ expressions.
     return string.replace(/^s+/,"");
 }
 ```
-
-Copy
 
 ##### Arguments[¶](#id368)
 
@@ -4024,8 +3614,6 @@ $$;
 SELECT LTRIM('  FIRST TWO BLANK SPACES') AS LTRIM;
 ```
 
-Copy
-
 ##### Result[¶](#id372)
 
 ```
@@ -4033,8 +3621,6 @@ Copy
 ----------------------|
 FIRST TWO BLANK SPACES|
 ```
-
-Copy
 
 ## Ranking functions[¶](#ranking-functions)
 
@@ -4048,7 +3634,7 @@ Applies to
 - SQL Server
 - Azure Synapse Analytics
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -4069,8 +3655,6 @@ before that specific row.
  DENSE_RANK ( ) OVER ( [ <partition_by_clause> ] < order_by_clause > )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id377)
 
 [Snowflake SQL Documentation](https://docs.snowflake.com/en/sql-reference/functions/dense_rank.html)
@@ -4081,8 +3665,6 @@ Copy
 --              OVER ( [ <partition_by_clause> ] < order_by_clause > )
 ```
 
-Copy
-
 ### Examples[¶](#id378)
 
 #### SQL Server[¶](#id379)
@@ -4090,8 +3672,6 @@ Copy
 ```
 SELECT TOP 10 BUSINESSENTITYID, NATIONALIDNUMBER, RANK() OVER (ORDER BY NATIONALIDNUMBER) AS RANK FROM HUMANRESOURCES.EMPLOYEE AS TOTAL
 ```
-
-Copy
 
 **Result:**
 
@@ -4109,8 +3689,6 @@ BUSINESSENTITYID|NATIONALIDNUMBER|DENSE_RANK|
              214|131471224       |         9|
               51|132674823       |        10|
 ```
-
-Copy
 
 ##### Snowflake SQL[¶](#id380)
 
@@ -4123,8 +3701,6 @@ FROM
 HUMANRESOURCES.EMPLOYEE AS TOTAL;
 ```
 
-Copy
-
 **Result:**
 
 ```
@@ -4141,8 +3717,6 @@ BUSINESSENTITYID|NATIONALIDNUMBER|DENSE_RANK|
              214|131471224       |         9|
               51|132674823       |        10|
 ```
-
-Copy
 
 #### Related EWIs[¶](#id381)
 
@@ -4172,8 +3746,6 @@ number of ranks that come before the row in question.
  RANK ( ) OVER ( [ partition_by_clause ] order_by_clause )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id386)
 
 [Snowflake SQL Documentation](https://docs.snowflake.com/en/sql-reference/functions/rank.html)
@@ -4184,8 +3756,6 @@ Copy
 --        OVER ( [ partition_by_clause ] order_by_clause )
 ```
 
-Copy
-
 ### Examples[¶](#id387)
 
 #### SQL Server[¶](#id388)
@@ -4193,8 +3763,6 @@ Copy
 ```
 SELECT TOP 10 BUSINESSENTITYID, NATIONALIDNUMBER, RANK() OVER (ORDER BY NATIONALIDNUMBER) AS RANK FROM HUMANRESOURCES.EMPLOYEE AS TOTAL
 ```
-
-Copy
 
 **Result:**
 
@@ -4212,8 +3780,6 @@ BUSINESSENTITYID|NATIONALIDNUMBER|RANK|
              214|131471224       |   9|
               51|132674823       |  10|
 ```
-
-Copy
 
 ##### Snowflake SQL[¶](#id389)
 
@@ -4226,8 +3792,6 @@ FROM
 HUMANRESOURCES.EMPLOYEE AS TOTAL;
 ```
 
-Copy
-
 **Result:**
 
 ```
@@ -4244,8 +3808,6 @@ BUSINESSENTITYID|NATIONALIDNUMBER|RANK|
              214|131471224       |   9|
               51|132674823       |  10|
 ```
-
-Copy
 
 #### Related EWIs[¶](#id390)
 
@@ -4259,7 +3821,7 @@ Applies to
 - SQL Server
 - Azure Synapse Analytics
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -4280,8 +3842,6 @@ a partition of a result set, starting at 1 for the first row in each partition.
     OVER ( [ PARTITION BY value_expression , ... [ n ] ] order_by_clause )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id395)
 
 [Snowflake SQL complete documentation](https://docs.snowflake.com/en/sql-reference/functions/row_number.html)
@@ -4291,8 +3851,6 @@ Copy
 -- ** SSC-EWI-0001 - UNRECOGNIZED TOKEN ON LINE '2' COLUMN '5' OF THE SOURCE CODE STARTING AT 'OVER'. EXPECTED 'BATCH' GRAMMAR. CODE '80'. **
 --    OVER ( [ PARTITION BY value_expression , ... [ n ] ] order_by_clause )
 ```
-
-Copy
 
 ### Examples[¶](#id396)
 
@@ -4305,8 +3863,6 @@ NAME
 FROM HUMANRESOURCES.DEPARTMENT
 ```
 
-Copy
-
 **Output:**
 
 ```
@@ -4329,8 +3885,6 @@ RowNumber|NAME                      |
        15|Shipping and Receiving    |
        16|Tool Design               |
 ```
-
-Copy
 
 ##### Snowflake SQL[¶](#id398)
 
@@ -4342,8 +3896,6 @@ FROM
 HUMANRESOURCES.DEPARTMENT;
 ```
 
-Copy
-
 **Output:**
 
 ```
@@ -4366,8 +3918,6 @@ RowNumber|NAME                      |
        15|Shipping and Receiving    |
        16|Tool Design               |
 ```
-
-Copy
 
 #### Related EWIs[¶](#id399)
 
@@ -4401,8 +3951,6 @@ Returns one of two values, depending on whether the Boolean expression evaluates
 IIF( boolean_expression, true_value, false_value )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id404)
 
 [Snowflake SQL Documentation](https://docs.snowflake.com/en/sql-reference/functions/iff.html)
@@ -4410,8 +3958,6 @@ Copy
 ```
 IFF( <condition> , <expr1> , <expr2> )
 ```
-
-Copy
 
 ### Examples[¶](#id405)
 
@@ -4421,8 +3967,6 @@ Copy
 SELECT IIF( 2 > 3, 'TRUE', 'FALSE' ) AS RESULT
 ```
 
-Copy
-
 **Result:**
 
 ```
@@ -4430,8 +3974,6 @@ RESULT|
 ------|
  FALSE|
 ```
-
-Copy
 
 ##### Snowflake SQL[¶](#id407)
 
@@ -4440,8 +3982,6 @@ SELECT
 IFF( 2 > 3, 'TRUE', 'FALSE' ) AS RESULT;
 ```
 
-Copy
-
 **Result:**
 
 ```
@@ -4449,8 +3989,6 @@ RESULT|
 ------|
  FALSE|
 ```
-
-Copy
 
 ## XML Functions[¶](#xml-functions)
 
@@ -4511,8 +4049,6 @@ SELECT
 from xml_demo;
 ```
 
-Copy
-
 ##### Output[¶](#output)
 
 ```
@@ -4521,8 +4057,6 @@ Copy
 <Warranty>1 year parts and labor</Warranty>   | <Maintenance>3 year parts and labor extended maintenance is available</Maintenance>  |
 <Warranty>1 year parts and labor</Warranty>   | <Maintenance>3 year parts and labor extended maintenance is available</Maintenance>  |
 ```
-
-Copy
 
 ##### Snowflake SQL [¶](#id411)
 
@@ -4564,8 +4098,6 @@ from
     xml_demo;
 ```
 
-Copy
-
 ##### Output[¶](#id413)
 
 ```
@@ -4574,8 +4106,6 @@ Copy
 <Warranty>1 year parts and labor</Warranty>   | <Maintenance>3 year parts and labor extended maintenance is available</Maintenance>  |
 <Warranty>1 year parts and labor</Warranty>   | <Maintenance>3 year parts and labor extended maintenance is available</Maintenance>  |
 ```
-
-Copy
 
 ### Known Issues[¶](#known-issues)
 
@@ -4642,8 +4172,6 @@ SELECT
 from xml_demo;
 ```
 
-Copy
-
 ##### Output[¶](#id419)
 
 ```
@@ -4652,8 +4180,6 @@ Copy
 1   | Road Bike   | 1 year parts and labor |
 2   | Skate       | 1 year parts and labor |
 ```
-
-Copy
 
 ##### Snowflake SQL [¶](#id420)
 
@@ -4696,8 +4222,6 @@ from
     xml_demo;
 ```
 
-Copy
-
 ##### Output[¶](#id422)
 
 ```
@@ -4706,8 +4230,6 @@ Copy
 1   | Road Bike   | 1 year parts and labor |
 2   | Skate       | 1 year parts and labor |
 ```
-
-Copy
 
 ### Known Issues[¶](#id423)
 
@@ -4730,7 +4252,7 @@ Applies to
 - SQL Server
 - Azure Synapse Analytics
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -4751,8 +4273,6 @@ an int data type value. COUNT_BIG always returns a bigint data type value.
 COUNT ( { [ [ ALL | DISTINCT ] expression ] | * } )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id429)
 
 [Snowflake SQL Documentation](https://docs.snowflake.com/en/sql-reference/functions/count.html)
@@ -4761,8 +4281,6 @@ Copy
 COUNT( [ DISTINCT ] <expr1> [ , <expr2> ... ] )
 ```
 
-Copy
-
 ### Examples[¶](#id430)
 
 #### SQL Server[¶](#id431)
@@ -4770,8 +4288,6 @@ Copy
 ```
 SELECT COUNT(NATIONALIDNUMBER) FROM HUMANRESOURCES.EMPLOYEE AS TOTAL;
 ```
-
-Copy
 
 **Result:**
 
@@ -4788,8 +4304,6 @@ COUNT(NATIONALIDNUMBER) FROM
 HUMANRESOURCES.EMPLOYEE AS TOTAL;
 ```
 
-Copy
-
 **Result:**
 
 <!-- prettier-ignore -->
@@ -4804,7 +4318,7 @@ Applies to
 - SQL Server
 - Azure Synapse Analytics
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -4825,8 +4339,6 @@ returns a bigint data type value. COUNT always returns an int data type value.
 COUNT_BIG ( { [ [ ALL | DISTINCT ] expression ] | * } )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id437)
 
 [Snowflake SQL Documentation](https://docs.snowflake.com/en/sql-reference/functions/count.html)
@@ -4835,8 +4347,6 @@ Copy
 COUNT( [ DISTINCT ] <expr1> [ , <expr2> ... ] )
 ```
 
-Copy
-
 ### Examples[¶](#id438)
 
 #### SQL Server[¶](#id439)
@@ -4844,8 +4354,6 @@ Copy
 ```
 SELECT COUNT_BIG(NATIONALIDNUMBER) FROM HUMANRESOURCES.EMPLOYEE AS TOTAL;
 ```
-
-Copy
 
 **Result:**
 
@@ -4862,8 +4370,6 @@ COUNT(NATIONALIDNUMBER) FROM
 HUMANRESOURCES.EMPLOYEE AS TOTAL;
 ```
 
-Copy
-
 **Result:**
 
 <!-- prettier-ignore -->
@@ -4878,7 +4384,7 @@ Applies to
 - SQL Server
 - Azure Synapse Analytics
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -4898,8 +4404,6 @@ with numeric columns only. Null values are ignored.
 SUM ( [ ALL | DISTINCT ] expression )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id445)
 
 [Snowflake SQL Documentation](https://docs.snowflake.com/en/sql-reference/functions/sum.html)
@@ -4908,8 +4412,6 @@ Copy
 SUM( [ DISTINCT ] <expr1> )
 ```
 
-Copy
-
 ### Examples[¶](#id446)
 
 #### SQL Server[¶](#id447)
@@ -4917,8 +4419,6 @@ Copy
 ```
 SELECT SUM(VACATIONHOURS) FROM HUMANRESOURCES.EMPLOYEE AS TOTALVACATIONHOURS;
 ```
-
-Copy
 
 **Result:**
 
@@ -4934,8 +4434,6 @@ SELECT
 SUM(VACATIONHOURS) FROM
 HUMANRESOURCES.EMPLOYEE AS TOTALVACATIONHOURS;
 ```
-
-Copy
 
 **Result:**
 
@@ -4962,7 +4460,7 @@ Applies to
 - SQL Server
 - Azure Synapse Analytics
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -5047,8 +4545,6 @@ return toNormalJSON(XML);
 $$;
 ```
 
-Copy
-
 ##### Transact-SQL[¶](#transact-sql)
 
 ##### Query[¶](#id451)
@@ -5076,8 +4572,6 @@ SELECT *  FROM OPENXML (@idoc, '/ROOT/Customer',1)
 WITH (CustomerID  VARCHAR(10), ContactName VARCHAR(20));
 ```
 
-Copy
-
 ##### Result[¶](#id452)
 
 ```
@@ -5087,11 +4581,9 @@ VINET     | Paul Henriot
 LILAS     | Carlos Gonzlez
 ```
 
-Copy
-
 ##### Snowflake[¶](#id453)
 
-Note
+**Note:**
 
 The following example is isolated into a stored procedure because environment variables only support
 256 bytes of storage, and the XML demo code uses more than that limit.
@@ -5132,8 +4624,6 @@ RETURN TABLE(BlockResultSet);
 END;
 ```
 
-Copy
-
 ##### Result[¶](#id455)
 
 <!-- prettier-ignore -->
@@ -5157,8 +4647,6 @@ Left(value:Customer['@CustomerID'],10) as "CustomerID",
 Left(value:Customer['@ContactName'],20) as "ContactName"
 FROM TABLE(OPENXML_UDF($code,'ROOT:Customer'));
 ```
-
-Copy
 
 ##### Result[¶](#id457)
 
@@ -5219,8 +4707,6 @@ $$
 $$;
 ```
 
-Copy
-
 ##### Transact-SQL[¶](#id463)
 
 ##### Query[¶](#id464)
@@ -5232,8 +4718,6 @@ SELECT
     STR(123.45, 6) as C,
     STR(123.45, 6, 1) as D;
 ```
-
-Copy
 
 ##### Result[¶](#id465)
 
@@ -5253,8 +4737,6 @@ SELECT
     PUBLIC.STR_UDF(123.45, '999999') as C,
     PUBLIC.STR_UDF(123.45, '9999.9') as D;
 ```
-
-Copy
 
 ## SWITCHOFFSET_UDF[¶](#switchoffset-udf)
 
@@ -5329,8 +4811,6 @@ END
 $$;
 ```
 
-Copy
-
 ##### Transact-SQL[¶](#id471)
 
 ##### Query[¶](#id472)
@@ -5341,8 +4821,6 @@ SELECT
   SWITCHOFFSET('1998-09-20 7:45:50.71345 +02:00', '-06:00') as cr_time;
 ```
 
-Copy
-
 ##### Result[¶](#id473)
 
 ```
@@ -5350,8 +4828,6 @@ SELECT
   '1998-09-20 7:45:50.71345 +02:00' as fr_time,
   SWITCHOFFSET('1998-09-20 7:45:50.71345 +02:00', '-06:00') as cr_time;
 ```
-
-Copy
 
 ##### Snowflake[¶](#id474)
 
@@ -5362,8 +4838,6 @@ SELECT
   '1998-09-20 7:45:50.71345 +02:00' as fr_time,
   PUBLIC.SWITCHOFFSET_UDF('1998-09-20 7:45:50.71345 +02:00', '-06:00') as cr_time;
 ```
-
-Copy
 
 ##### Result[¶](#id476)
 
@@ -5399,8 +4873,6 @@ database.([DB_NAME in Transact-SQL](https://learn.microsoft.com/en-us/sql/t-sql/
  DB_NAME ( [ database_id ] )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id481)
 
 [Snowflake SQL Documentation](https://docs.snowflake.com/en/sql-reference/functions/current_database.html)
@@ -5409,8 +4881,6 @@ Copy
  CURRENT_DATABASE() /*** SSC-FDM-TS0010 - CURRENT_DATABASE function has different behavior in certain cases ***/
 ```
 
-Copy
-
 ### Examples[¶](#id482)
 
 #### SQL Server[¶](#id483)
@@ -5418,8 +4888,6 @@ Copy
 ```
 SELECT DB_NAME();
 ```
-
-Copy
 
 **Result:**
 
@@ -5434,8 +4902,6 @@ Copy
 SELECT
 CURRENT_DATABASE() /*** SSC-FDM-TS0010 - CURRENT_DATABASE function has different behavior in certain cases ***/;
 ```
-
-Copy
 
 **Result:**
 
@@ -5477,8 +4943,6 @@ object.[(OBJECT_ID in Transact-SQL)](https://learn.microsoft.com/en-us/sql/t-sql
   object_name' [ ,'object_type' ] )
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id488)
 
 #### 1. Default transformation[¶](#default-transformation)
@@ -5491,8 +4955,6 @@ Copy
         END IF;
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id490)
 
 ```
@@ -5504,8 +4966,6 @@ DROP TABLE IF EXISTS TABLE1;
 END;
 ```
 
-Copy
-
 #### 2. Unknown database[¶](#unknown-database)
 
 ##### SQL Server[¶](#id491)
@@ -5516,8 +4976,6 @@ Copy
         END IF;
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id492)
 
 ```
@@ -5526,8 +4984,6 @@ Copy
      DROP TABLE IF EXISTS TABLE1;
  END IF;
 ```
-
-Copy
 
 #### 3. Different object names[¶](#different-object-names)
 
@@ -5539,8 +4995,6 @@ Copy
         END IF;
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id494)
 
 ```
@@ -5549,8 +5003,6 @@ Copy
      DROP TABLE IF EXISTS TABLE1;
  END IF;
 ```
-
-Copy
 
 ### Known issues[¶](#id495)
 
@@ -5578,7 +5030,7 @@ Applies to
 - SQL Server
 - Azure Synapse Analytics
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -5600,8 +5052,6 @@ LAG (scalar_expression [,offset] [,default])
     OVER ( [ partition_by_clause ] order_by_clause )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id501)
 
 [Snowflake SQL Documentation](https://docs.snowflake.com/en/sql-reference/functions/count.html)
@@ -5609,8 +5059,6 @@ Copy
 ```
 COUNT( [ DISTINCT ] <expr1> [ , <expr2> ... ] )
 ```
-
-Copy
 
 ### Examples[¶](#id502)
 
@@ -5622,8 +5070,6 @@ LAG(E.VacationHours,1) OVER(ORDER BY E.NationalIdNumber) as PREVIOUS,
 E.VacationHours AS ACTUAL
 FROM HumanResources.Employee E
 ```
-
-Copy
 
 **Result:**
 
@@ -5650,8 +5096,6 @@ E.VacationHours AS ACTUAL
 FROM
 HumanResources.Employee E;
 ```
-
-Copy
 
 **Result:**
 
@@ -5696,8 +5140,6 @@ This function returns the number of bytes used to represent any expression.
 DATALENGTH ( expression )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id509)
 
 [Snowflake SQL Documentation](https://docs.snowflake.com/en/sql-reference/functions/cast.html)
@@ -5706,8 +5148,6 @@ Copy
 OCTET_LENGTH(<string_or_binary>)
 ```
 
-Copy
-
 ### Examples[¶](#id510)
 
 #### SQL Server[¶](#id511)
@@ -5715,8 +5155,6 @@ Copy
 ```
 SELECT DATALENGTH('SomeString') AS SIZE;
 ```
-
-Copy
 
 **Result:**
 
@@ -5730,8 +5168,6 @@ Copy
 ```
 SELECT OCTET_LENGTH('SomeString') AS SIZE;
 ```
-
-Copy
 
 **Result:**
 
@@ -5769,8 +5205,6 @@ positive values.)
 ABS( expression )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id517)
 
 [Snowflake SQL Documentation](https://docs.snowflake.com/en/sql-reference/functions/abs.html)
@@ -5778,8 +5212,6 @@ Copy
 ```
 ABS( <num_expr> )
 ```
-
-Copy
 
 ##### JavaScript[¶](#id518)
 
@@ -5789,8 +5221,6 @@ Copy
 Math.abs( expression )
 ```
 
-Copy
-
 ### Examples[¶](#id519)
 
 #### SQL Server[¶](#id520)
@@ -5798,8 +5228,6 @@ Copy
 ```
 SELECT ABS(-5);
 ```
-
-Copy
 
 **Result:**
 
@@ -5813,8 +5241,6 @@ Copy
 ```
 SELECT ABS(-5);
 ```
-
-Copy
 
 **Result:**
 
@@ -5837,8 +5263,6 @@ $$
 SELECT COMPUTE_ABS(-5);
 ```
 
-Copy
-
 **Result:**
 
 <!-- prettier-ignore -->
@@ -5859,7 +5283,7 @@ Applies to
 
 ### Description[¶](#id523)
 
-Note
+**Note:**
 
 SnowConvert AI Helpers Code section is omitted.
 
@@ -5877,8 +5301,6 @@ AVG ( [ ALL | DISTINCT ] expression )
    [ OVER ( [ partition_by_clause ] order_by_clause ) ]
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id527)
 
 [Snowflake SQL Documentation](https://docs.snowflake.com/en/sql-reference/functions/avg.html)
@@ -5892,8 +5314,6 @@ AVG( [ DISTINCT ] <expr1> ) OVER (
                                  )
 ```
 
-Copy
-
 ### Examples[¶](#id528)
 
 #### SQL Server[¶](#id529)
@@ -5901,8 +5321,6 @@ Copy
 ```
 SELECT AVG(VACATIONHOURS) AS AVG_VACATIONS FROM HUMANRESOURCES.EMPLOYEE;
 ```
-
-Copy
 
 **Result:**
 
@@ -5916,8 +5334,6 @@ Copy
 ```
 SELECT AVG(VACATIONHOURS) AS AVG_VACATIONS FROM HUMANRESOURCES.EMPLOYEE;
 ```
-
-Copy
 
 **Result:**
 
@@ -5949,23 +5365,17 @@ as a parameter
 CEILING( expression )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id535)
 
 ```
 CEIL( <input_expr> [, <scale_expr> ] )
 ```
 
-Copy
-
 ##### JavaScript[¶](#id536)
 
 ```
  Math.ceil( expression )
 ```
-
-Copy
 
 ### Examples[¶](#id537)
 
@@ -5974,8 +5384,6 @@ Copy
 ```
 SELECT CEILING(642.20);
 ```
-
-Copy
 
 **Result:**
 
@@ -5989,8 +5397,6 @@ Copy
 ```
 SELECT CEIL(642.20);
 ```
-
-Copy
 
 **Result:**
 
@@ -6013,8 +5419,6 @@ $$
 SELECT COMPUTE_CEIL(642.20);
 ```
 
-Copy
-
 **Result:**
 
 ```
@@ -6022,8 +5426,6 @@ COMPUTE_CEIL(642.20)|
 --------------------|
                  643|
 ```
-
-Copy
 
 ## FLOOR[¶](#floor)
 
@@ -6047,8 +5449,6 @@ Returns the largest integer less than or equal to the specified numeric expressi
 FLOOR ( numeric_expression )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id545)
 
 [Snowflake SQL Documentation](https://docs.snowflake.com/en/sql-reference/functions/floor.html)
@@ -6056,8 +5456,6 @@ Copy
 ```
 FLOOR( <input_expr> [, <scale_expr> ] )
 ```
-
-Copy
 
 ### Examples[¶](#id546)
 
@@ -6067,8 +5465,6 @@ Copy
 SELECT FLOOR (124.87) AS FLOOR;
 ```
 
-Copy
-
 **Result:**
 
 ```
@@ -6076,8 +5472,6 @@ FLOOR|
 -----|
   124|
 ```
-
-Copy
 
 ##### Snowflake SQL[¶](#id548)
 
@@ -6085,8 +5479,6 @@ Copy
 SELECT FLOOR (124.87) AS FLOOR;
 ```
 
-Copy
-
 **Result:**
 
 ```
@@ -6094,8 +5486,6 @@ FLOOR|
 -----|
   124|
 ```
-
-Copy
 
 ## POWER[¶](#power)
 
@@ -6119,8 +5509,6 @@ Returns the value of the specified expression to the specified power.
 POWER ( float_expression , y )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id553)
 
 [Snowflake SQL Documentation](https://docs.snowflake.com/en/sql-reference/functions/pow.html)
@@ -6131,8 +5519,6 @@ POW(x, y)
 POWER (x, y)
 ```
 
-Copy
-
 ### Examples[¶](#id554)
 
 #### SQL Server[¶](#id555)
@@ -6141,8 +5527,6 @@ Copy
 SELECT POWER(2, 10.0) AS IntegerResult
 ```
 
-Copy
-
 **Result:**
 
 ```
@@ -6150,8 +5534,6 @@ IntegerResult |
 --------------|
           1024|
 ```
-
-Copy
 
 ##### Snowflake SQL[¶](#id556)
 
@@ -6159,8 +5541,6 @@ Copy
 SELECT POWER(2, 10.0) AS IntegerResult;
 ```
 
-Copy
-
 **Result:**
 
 ```
@@ -6168,8 +5548,6 @@ IntegerResult |
 --------------|
           1024|
 ```
-
-Copy
 
 ### Related Documentation[¶](#id557)
 
@@ -6197,8 +5575,6 @@ Returns a numeric value, rounded to the specified length or precision.
 ROUND ( numeric_expression , length [ ,function ] )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id562)
 
 [Snowflake SQL Documentation](https://docs.snowflake.com/en/sql-reference/functions/round.html)
@@ -6206,8 +5582,6 @@ Copy
 ```
 ROUND( <input_expr> [, <scale_expr> ] )
 ```
-
-Copy
 
 ### Examples[¶](#id563)
 
@@ -6217,8 +5591,6 @@ Copy
 SELECT ROUND(123.9994, 3) AS COL1, ROUND(123.9995, 3) AS COL2;
 ```
 
-Copy
-
 **Result:**
 
 ```
@@ -6227,16 +5599,12 @@ COL1    |COL2    |
 123.9990|124.0000|
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id565)
 
 ```
 SELECT ROUND(123.9994, 3) AS COL1,
 ROUND(123.9995, 3) AS COL2;
 ```
-
-Copy
 
 **Result:**
 
@@ -6245,8 +5613,6 @@ COL1   | COL2  |
 --------|------|
 123.999|124.000|
 ```
-
-Copy
 
 ### Related Documentation[¶](#id566)
 
@@ -6274,8 +5640,6 @@ Returns the square root of the specified float value.
 SQRT ( float_expression )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id571)
 
 [Snowflake SQL Documentation](https://docs.snowflake.com/en/sql-reference/functions/sqrt.html)
@@ -6283,8 +5647,6 @@ Copy
 ```
 SQRT(expr)
 ```
-
-Copy
 
 ### Examples[¶](#id572)
 
@@ -6294,8 +5656,6 @@ Copy
 SELECT SQRT(25) AS RESULT;
 ```
 
-Copy
-
 **Result:**
 
 ```
@@ -6303,8 +5663,6 @@ RESULT|
 ------|
    5.0|
 ```
-
-Copy
 
 ##### Snowflake SQL[¶](#id574)
 
@@ -6312,8 +5670,6 @@ Copy
 SELECT SQRT(25) AS RESULT;
 ```
 
-Copy
-
 **Result:**
 
 ```
@@ -6321,8 +5677,6 @@ RESULT|
 ------|
    5.0|
 ```
-
-Copy
 
 ## SQUARE[¶](#square)
 
@@ -6346,8 +5700,6 @@ Returns the square of the specified float value.
 SQUARE ( float_expression )  ****
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id579)
 
 [Snowflake SQL Documentation](https://docs.snowflake.com/en/sql-reference/functions/square.html)
@@ -6355,8 +5707,6 @@ Copy
 ```
 SQUARE(expr)
 ```
-
-Copy
 
 ### Examples[¶](#id580)
 
@@ -6366,8 +5716,6 @@ Copy
 SELECT SQUARE (5) AS SQUARE;
 ```
 
-Copy
-
 **Result:**
 
 ```
@@ -6376,15 +5724,11 @@ SQUARE|
   25.0|
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id582)
 
 ```
 SELECT SQUARE (5) AS SQUARE;
 ```
-
-Copy
 
 **Result:**
 
@@ -6394,8 +5738,6 @@ SQUARE|
     25|
 ```
 
-Copy
-
 ## STDEV[¶](#stdev)
 
 Applies to
@@ -6403,7 +5745,7 @@ Applies to
 - SQL Server
 - Azure Synapse Analytics
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -6422,8 +5764,6 @@ Returns the statistical standard deviation of all values in the specified expres
  STDEV ( [ ALL | DISTINCT ] expression )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id587)
 
 [Snowflake SQL Documentation](https://docs.snowflake.com/en/sql-reference/functions/stddev.html)
@@ -6431,8 +5771,6 @@ Copy
 ```
  STDDEV( [ DISTINCT ] <expression_1> )
 ```
-
-Copy
 
 ### Examples[¶](#id588)
 
@@ -6445,8 +5783,6 @@ FROM
     HUMANRESOURCES.EMPLOYEE AS STDEV;
 ```
 
-Copy
-
 **Result:**
 
 ```
@@ -6454,8 +5790,6 @@ Copy
 ----------------|
 28.7862150320948|
 ```
-
-Copy
 
 ##### Snowflake SQL[¶](#id590)
 
@@ -6466,8 +5800,6 @@ FROM
     HUMANRESOURCES.EMPLOYEE AS STDEV;
 ```
 
-Copy
-
 **Result:**
 
 ```
@@ -6476,8 +5808,6 @@ Copy
 28.786215034|
 ```
 
-Copy
-
 ## STDEVP[¶](#stdevp)
 
 Applies to
@@ -6485,7 +5815,7 @@ Applies to
 - SQL Server
 - Azure Synapse Analytics
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -6505,8 +5835,6 @@ expression.
 STDEVP ( [ ALL | DISTINCT ] expression )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id595)
 
 [Snowflake SQL Documentation](https://docs.snowflake.com/en/sql-reference/functions/stddev_pop.html)
@@ -6514,8 +5842,6 @@ Copy
 ```
 STDDEV_POP( [ DISTINCT ] expression_1)
 ```
-
-Copy
 
 ### Examples[¶](#id596)
 
@@ -6528,8 +5854,6 @@ FROM
     HumanResources.Employee;
 ```
 
-Copy
-
 **Result:**
 
 ```
@@ -6537,8 +5861,6 @@ STDEVP_VACATIONHOURS|
 --------------------|
   28.736540767245085|
 ```
-
-Copy
 
 ##### Snowflake SQL[¶](#id598)
 
@@ -6549,8 +5871,6 @@ FROM
     HumanResources.Employee;
 ```
 
-Copy
-
 **Result:**
 
 ```
@@ -6559,8 +5879,6 @@ STDEVP_VACATIONHOURS|
         28.736540763|
 ```
 
-Copy
-
 ## VAR[¶](#var)
 
 Applies to
@@ -6568,7 +5886,7 @@ Applies to
 - SQL Server
 - Azure Synapse Analytics
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -6587,15 +5905,11 @@ Returns the statistical variance of all values in the specified expression.
 VAR ( [ ALL | DISTINCT ] expression )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id603)
 
 ```
 VAR_SAMP( [DISTINCT] <expr1> )
 ```
-
-Copy
 
 ### Examples[¶](#id604)
 
@@ -6608,8 +5922,6 @@ FROM
     HUMANRESOURCES.EMPLOYEE AS VAR;
 ```
 
-Copy
-
 **Result:**
 
 ```
@@ -6617,8 +5929,6 @@ Copy
 ----------------|
 28.7862150320948|
 ```
-
-Copy
 
 ##### Snowflake SQL[¶](#id606)
 
@@ -6629,8 +5939,6 @@ FROM
     HUMANRESOURCES.EMPLOYEE AS VAR;
 ```
 
-Copy
-
 **Result:**
 
 ```
@@ -6638,8 +5946,6 @@ Copy
 ----------|
 828.646176|
 ```
-
-Copy
 
 ## POWER[¶](#id607)
 
@@ -6660,8 +5966,6 @@ Returns the value of the specified expression for a specific power.
 ```
 POWER( base, exp )
 ```
-
-Copy
 
 #### Arguments[¶](#id611)
 
@@ -6689,8 +5993,6 @@ The return type depends on the input expression:
 SELECT POWER(2, 3)
 ```
 
-Copy
-
 #### Result[¶](#id615)
 
 ```
@@ -6698,8 +6000,6 @@ POWER(2, 3)|
 -----------|
         8.0|
 ```
-
-Copy
 
 ## POW in JS[¶](#pow-in-js)
 
@@ -6720,8 +6020,6 @@ Returns the base of the exponent power.
 ```
  Math.pow( base, exp )
 ```
-
-Copy
 
 ##### Arguments[¶](#id619)
 
@@ -6747,8 +6045,6 @@ $$
 SELECT COMPUTE_POW(2, 3);
 ```
 
-Copy
-
 ##### Result[¶](#id623)
 
 ```
@@ -6756,8 +6052,6 @@ COMPUTE_POW(2, 3)|
 -----------------|
                 8|
 ```
-
-Copy
 
 ## ACOS[¶](#acos)
 
@@ -6787,8 +6081,6 @@ For $$y = cos^{-1}(x)$$:
 ACOS ( expression )
 ```
 
-Copy
-
 #### Arguments[¶](#id627)
 
 `expression`: Numeric **float** expression, where expression is in$$[-1,1]$$.
@@ -6806,8 +6098,6 @@ domain $$[-1, 1]$$, the database engine throws an error.
 SELECT ACOS(-1.0);
 ```
 
-Copy
-
 #### Result[¶](#id631)
 
 ```
@@ -6815,8 +6105,6 @@ ACOS(-1.0)       |
 -----------------|
 3.141592653589793|
 ```
-
-Copy
 
 ## ACOS in JS[¶](#acos-in-js)
 
@@ -6837,8 +6125,6 @@ Function that returns the arccosine of a specified number
 ```
  Math.acos( expression )
 ```
-
-Copy
 
 ##### Arguments[¶](#id635)
 
@@ -6865,8 +6151,6 @@ $$
 SELECT COMPUTE_ACOS(-1);
 ```
 
-Copy
-
 ##### Result[¶](#id639)
 
 ```
@@ -6874,8 +6158,6 @@ COMPUTE_ACOS(-1)|
 ---------------|
     3.141592654|
 ```
-
-Copy
 
 ## ASIN[¶](#asin)
 
@@ -6906,8 +6188,6 @@ For $$y = sin^{-1}(x)$$:
 ASIN( expression )
 ```
 
-Copy
-
 #### Arguments[¶](#id643)
 
 `expression`: Numeric **float** expression, where expression is in$$[-1,1]$$.
@@ -6925,8 +6205,6 @@ sent by parameter is not in $$[-1, 1]$$, the database engine throws an error.
 SELECT ASIN(0.5);
 ```
 
-Copy
-
 #### Result[¶](#id647)
 
 ```
@@ -6934,8 +6212,6 @@ ASIN(0.5)         |
 ------------------|
 0.5235987755982989|
 ```
-
-Copy
 
 ## ASIN in JS[¶](#asin-in-js)
 
@@ -6956,8 +6232,6 @@ Function that returns the arcsine of a specified number
 ```
  Math.asin( expression )
 ```
-
-Copy
 
 ##### Arguments[¶](#id651)
 
@@ -6984,8 +6258,6 @@ $$
 SELECT COMPUTE_ASIN(0.5);
 ```
 
-Copy
-
 ##### Result[¶](#id655)
 
 ```
@@ -6993,8 +6265,6 @@ COMPUTE_ASIN(1)   |
 ------------------|
       0.5235987756|
 ```
-
-Copy
 
 ## COS[¶](#cos)
 
@@ -7021,8 +6291,6 @@ The cosine is defined as: $$y = cos(x)$$ Where:
 COS( expression )
 ```
 
-Copy
-
 #### Arguments[¶](#id659)
 
 `expression`: Numeric **float** expression, where expression is in $$\mathbb{R}$$.
@@ -7039,8 +6307,6 @@ Numeric float expression in $$[-1, 1]$$.
 SELECT COS(PI())
 ```
 
-Copy
-
 #### Result[¶](#id663)
 
 ```
@@ -7048,8 +6314,6 @@ COS(PI())|
 ---------|
      -1.0|
 ```
-
-Copy
 
 ## COS in JS[¶](#cos-in-js)
 
@@ -7070,8 +6334,6 @@ Static function that returns the cosine of an angle in radians
 ```
  Math.cos( expression )
 ```
-
-Copy
 
 ##### Arguments[¶](#id667)
 
@@ -7097,8 +6359,6 @@ $$
 SELECT COMPUTE_COS(PI());
 ```
 
-Copy
-
 ##### Result[¶](#id671)
 
 ```
@@ -7106,8 +6366,6 @@ COMPUTE_COS(PI())|
 -----------------|
                -1|
 ```
-
-Copy
 
 ## COT[¶](#cot)
 
@@ -7133,8 +6391,6 @@ functions.
 COT( expression )
 ```
 
-Copy
-
 #### Arguments[¶](#id675)
 
 `expression`: Numeric **float** expression, where expression is in
@@ -7152,8 +6408,6 @@ Numeric float expression in $$\mathbb{R}$$.
 SELECT COT(1)
 ```
 
-Copy
-
 #### Result[¶](#id679)
 
 ```
@@ -7161,8 +6415,6 @@ COT(1)            |
 ------------------|
 0.6420926159343306|
 ```
-
-Copy
 
 ## COT in JS[¶](#cot-in-js)
 
@@ -7185,8 +6437,6 @@ of a given angle. This could be calculated using the equation: $$cot(x) = \frac{
     return Math.cos(angle)/Math.sin(angle);
 }
 ```
-
-Copy
 
 ##### Arguments[¶](#id683)
 
@@ -7216,8 +6466,6 @@ $$
 SELECT COMPUTE_COT(1);
 ```
 
-Copy
-
 ##### Result[¶](#id687)
 
 ```
@@ -7225,8 +6473,6 @@ COMPUTE_COT(1);   |
 ------------------|
 0.6420926159343308|
 ```
-
-Copy
 
 ## RADIANS[¶](#radians)
 
@@ -7248,8 +6494,6 @@ Converts degrees to radians.
 RADIANS( expression )
 ```
 
-Copy
-
 #### Arguments[¶](#id691)
 
 `expression`: Numeric expression in degrees.
@@ -7266,8 +6510,6 @@ Same data type sent through parameter as a numeric expression in radians.
 SELECT RADIANS(180.0)
 ```
 
-Copy
-
 #### Result[¶](#id695)
 
 <!-- prettier-ignore -->
@@ -7275,7 +6517,7 @@ Copy
 |---|
 |3.141592653589793116|
 
-Note
+**Note:**
 
 Cast the parameter of this function to float, otherwise, the above statement will return 3 instead
 of PI value.
@@ -7301,8 +6543,6 @@ calculated using the equation: $$Radians = \frac{\pi}{180^{\circ}} \cdot angle$$
     return (Math.PI/180) * angle;
 }
 ```
-
-Copy
 
 ##### Arguments[¶](#id699)
 
@@ -7331,8 +6571,6 @@ $$
 SELECT RADIANS(180);
 ```
 
-Copy
-
 ##### Result[¶](#id703)
 
 <!-- prettier-ignore -->
@@ -7360,8 +6598,6 @@ Returns the constant value of PI
 PI( )
 ```
 
-Copy
-
 #### Arguments[¶](#id707)
 
 This method does not receive any parameters.
@@ -7383,8 +6619,6 @@ GO:
 EXEC CIRCUMFERENCE @radius = 2;
 ```
 
-Copy
-
 #### Result[¶](#id711)
 
 ```
@@ -7392,8 +6626,6 @@ CIRCUMFERENCE @radius = 2 |
 --------------------------|
           12.5663706143592|
 ```
-
-Copy
 
 ## PI in JS[¶](#pi-in-js)
 
@@ -7415,8 +6647,6 @@ Constant which represents the PI number (approximately 3.141592…)
  Math.PI
 ```
 
-Copy
-
 ### Examples[¶](#id715)
 
 #### Query[¶](#id716)
@@ -7436,8 +6666,6 @@ $$
 SELECT CIRCUMFERENCE(2);
 ```
 
-Copy
-
 ##### Result[¶](#id717)
 
 ```
@@ -7445,8 +6673,6 @@ Copy
 ------------------|
 12.566370614359172|
 ```
-
-Copy
 
 ## DEGREES[¶](#degrees)
 
@@ -7468,8 +6694,6 @@ Converts the angle in radians sent through parameters to degrees
 DEGREES( expression )
 ```
 
-Copy
-
 #### Arguments[¶](#id721)
 
 `expression`: Numeric **float** expression in radians.
@@ -7486,8 +6710,6 @@ Same data type sent through parameter as a numeric expression.
 SELECT DEGREES(PI())
 ```
 
-Copy
-
 #### Result[¶](#id725)
 
 ```
@@ -7495,8 +6717,6 @@ DEGREES(PI())|
 -------------|
         180.0|
 ```
-
-Copy
 
 ## DEGREES in JS[¶](#degrees-in-js)
 
@@ -7519,8 +6739,6 @@ calculated using the equation: $$Degrees = \frac{180^{\circ}}{\pi} \cdot angle$$
     return (180/Math.PI) * angle;
 }
 ```
-
-Copy
 
 ##### Arguments[¶](#id729)
 
@@ -7550,8 +6768,6 @@ $$
 SELECT COMPUTE_DEGREES(PI());
 ```
 
-Copy
-
 ##### Result[¶](#id733)
 
 ```
@@ -7559,8 +6775,6 @@ COMPUTE_DEGREES(PI())|
 ---------------------|
                 180.0|
 ```
-
-Copy
 
 ## LOG[¶](#log)
 
@@ -7582,8 +6796,6 @@ Returns the natural logarithm of a number
 LOG( expression [, base ] )
 ```
 
-Copy
-
 #### Arguments[¶](#id737)
 
 `expression`: Numeric expression.
@@ -7602,8 +6814,6 @@ Float.
 SELECT LOG(8, 2)
 ```
 
-Copy
-
 #### Result[¶](#id741)
 
 ```
@@ -7611,8 +6821,6 @@ LOG(8, 2)  |
 -----------|
           3|
 ```
-
-Copy
 
 ## LOG in JS[¶](#log-in-js)
 
@@ -7638,8 +6846,6 @@ parameters, but this can be solved by dividing the base by the argument.
 ```
  Math.log( expression )
 ```
-
-Copy
 
 ##### Arguments[¶](#id745)
 
@@ -7668,8 +6874,6 @@ $$
 SELECT BASE_LOG(2, 8);
 ```
 
-Copy
-
 ##### Result[¶](#id749)
 
 ```
@@ -7677,8 +6881,6 @@ BASE_LOG(2, 8)|
 --------------|
              3|
 ```
-
-Copy
 
 ## ATAN[¶](#atan)
 
@@ -7709,8 +6911,6 @@ For $$y = tan^{-1}(x)$$:
 ATAN( expression )
 ```
 
-Copy
-
 #### Arguments[¶](#id753)
 
 `expression`: Numeric **float** expression, or a numeric type which could be converted to float.
@@ -7727,8 +6927,6 @@ Numeric float expression between $$-\frac{\pi}{2}$$ and $$\frac{\pi}{2}$$.
 SELECT ATAN(-30);
 ```
 
-Copy
-
 #### Result[¶](#id757)
 
 ```
@@ -7736,8 +6934,6 @@ ATAN(-30)          |
 -------------------|
 -1.5374753309166493|
 ```
-
-Copy
 
 ## ATAN in JS[¶](#atan-in-js)
 
@@ -7758,8 +6954,6 @@ Function that returns the arctangent of a specified number
 ```
  Math.atan( expression )
 ```
-
-Copy
 
 ##### Arguments[¶](#id761)
 
@@ -7785,8 +6979,6 @@ $$
 SELECT COMPUTE_ATAN(-30);
 ```
 
-Copy
-
 ##### Result[¶](#id765)
 
 ```
@@ -7794,8 +6986,6 @@ COMPUTE_ATAN(-30)|
 -----------------|
      -1.537475331|
 ```
-
-Copy
 
 ## ATN2[¶](#atn2)
 
@@ -7822,8 +7012,6 @@ For $$z = tan^{-1}(x, y)$$:
 ATN2( expression_1, expression_2 )
 ```
 
-Copy
-
 #### Arguments[¶](#id769)
 
 `expression1`and `expression2`: Numeric expressions.
@@ -7840,8 +7028,6 @@ Numeric expression between $$-\pi$$ and $$\pi$$.
 SELECT ATN2(7.5, 2);
 ```
 
-Copy
-
 #### Result[¶](#id773)
 
 ```
@@ -7849,8 +7035,6 @@ ATN2(7.5, 2)      |
 ------------------|
 1.3101939350475555|
 ```
-
-Copy
 
 ## ATAN2 in JS[¶](#atan2-in-js)
 
@@ -7871,8 +7055,6 @@ Function that returns the arctangent of two parameters
 ```
  Math.atan2( expression_1, expression_2 )
 ```
-
-Copy
 
 ##### Arguments[¶](#id777)
 
@@ -7898,8 +7080,6 @@ $$
 SELECT COMPUTE_ATAN2(7.5, 2);
 ```
 
-Copy
-
 ##### Result[¶](#id781)
 
 ```
@@ -7907,8 +7087,6 @@ ATAN2(7.5, 3)     |
 ------------------|
        1.310193935|
 ```
-
-Copy
 
 ## LOG10[¶](#log10)
 
@@ -7930,8 +7108,6 @@ Returns the base 10 logarithm of a number
 LOG10( expression )
 ```
 
-Copy
-
 #### Arguments[¶](#id785)
 
 `expression`: Numeric expression, must be positive.
@@ -7948,8 +7124,6 @@ Float.
 SELECT LOG10(5)
 ```
 
-Copy
-
 #### Result[¶](#id789)
 
 ```
@@ -7957,8 +7131,6 @@ LOG10(5)         |
 -----------------|
 0.698970004336019|
 ```
-
-Copy
 
 ## LOG10 in JS[¶](#log10-in-js)
 
@@ -7979,8 +7151,6 @@ Returns the base 10 logarithm of a number
 ```
  Math.log10( expression )
 ```
-
-Copy
 
 ##### Arguments[¶](#id793)
 
@@ -8006,8 +7176,6 @@ $$
 SELECT COMPUTE_LOG10(7.5);
 ```
 
-Copy
-
 ##### Result[¶](#id797)
 
 ```
@@ -8015,8 +7183,6 @@ COMPUTE_LOG10(5)|
 ----------------|
     0.6989700043|
 ```
-
-Copy
 
 ## EXP[¶](#exp)
 
@@ -8038,8 +7204,6 @@ Returns the exponential value of Euler
 EXP( expression )
 ```
 
-Copy
-
 #### Arguments[¶](#id801)
 
 `expression`: Numeric expression.
@@ -8057,8 +7221,6 @@ SELECT EXP(LOG(20)), LOG(EXP(20))
 GO
 ```
 
-Copy
-
 #### Result[¶](#id805)
 
 ```
@@ -8066,8 +7228,6 @@ EXP(LOG(20))   |LOG(EXP(20))    |
 ---------------|----------------|
            20.0|            20.0|
 ```
-
-Copy
 
 ## EXP in JS[¶](#exp-in-js)
 
@@ -8091,8 +7251,6 @@ supports the exponential of Euler.
  Math.E
 ```
 
-Copy
-
 ### Examples[¶](#id809)
 
 #### Query[¶](#id810)
@@ -8109,8 +7267,6 @@ $$
 SELECT COMPUTE_EXP(LN(20)), LN(COMPUTE_EXP(20));
 ```
 
-Copy
-
 ##### Result[¶](#id811)
 
 ```
@@ -8118,8 +7274,6 @@ COMPUTE_EXP(LOG(20))|LOG(COMPUTE_EXP(20))|
 --------------------|--------------------|
                 20.0|                20.0|
 ```
-
-Copy
 
 ## Conversion functions[¶](#conversion-functions)
 
@@ -8148,8 +7302,6 @@ Convert an expression of one data type to another.
 CONVERT ( data_type [ ( length ) ] , expression [ , style ] )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id816)
 
 [Snowflake SQL Documentation](https://docs.snowflake.com/en/sql-reference/functions/cast.html)
@@ -8158,8 +7310,6 @@ Copy
 CAST( <source_expr> AS <target_data_type> )
 ```
 
-Copy
-
 ### Examples[¶](#id817)
 
 #### SQL Server[¶](#id818)
@@ -8167,8 +7317,6 @@ Copy
 ```
 SELECT CONVERT(INT, '1998') as MyDate
 ```
-
-Copy
 
 ##### Result[¶](#id819)
 
@@ -8183,8 +7331,6 @@ Copy
 SELECT
 CAST('1998' AS INT) as MyDate;
 ```
-
-Copy
 
 ##### Result[¶](#id821)
 
@@ -8201,8 +7347,6 @@ Copy
 SELECT CONVERT(varchar, getdate(), 1) AS RESULT;
 ```
 
-Copy
-
 ##### Result[¶](#id823)
 
 <!-- prettier-ignore -->
@@ -8216,8 +7360,6 @@ Copy
 SELECT
 TO_VARCHAR(CURRENT_TIMESTAMP() :: TIMESTAMP, 'mm/dd/yy') AS RESULT;
 ```
-
-Copy
 
 ##### Result[¶](#id824)
 
@@ -8234,8 +7376,6 @@ Copy
 SELECT CONVERT(varchar(2), getdate(), 1) AS RESULT;
 ```
 
-Copy
-
 ##### Result[¶](#id826)
 
 <!-- prettier-ignore -->
@@ -8249,8 +7389,6 @@ Copy
 SELECT
 LEFT(TO_VARCHAR(CURRENT_TIMESTAMP() :: TIMESTAMP, 'mm/dd/yy'), 2) AS RESULT;
 ```
-
-Copy
 
 ##### Result[¶](#id828)
 
@@ -8348,8 +7486,6 @@ Returns a value cast to the specified data type if the cast succeeds; otherwise,
 TRY_CONVERT ( data_type [ ( length ) ], expression [, style ] )
 ```
 
-Copy
-
 ### Source Patterns[¶](#source-patterns)
 
 #### Basic Transformation[¶](#basic-transformation)
@@ -8360,16 +7496,12 @@ In order to transform this function, we have to check the parameters of the TRY_
 TRY_CONVERT( INT, 'test')
 ```
 
-Copy
-
 If the expression that needs to be casted is a string, it will be transfomed to TRY_CAST, which is a
 function of Snowflake.
 
 ```
 TRY_CAST( 'test' AS INT)
 ```
-
-Copy
 
 #### TRY_CAST[¶](#try-cast)
 
@@ -8399,8 +7531,6 @@ SELECT TRY_CAST('12345' AS NUMERIC) NUMERIC_RESULT,
  TRY_CAST('LINESTRING(-122.360 47.656, -122.343 47.656 )' AS GEOGRAPHY) GEOGRAPHY_RESULT;
 ```
 
-Copy
-
 The result will be the same with the example of TRY_CONVERT.
 
 ##### Snowflake[¶](#id832)
@@ -8424,8 +7554,6 @@ SELECT
  TRY_CAST('LINESTRING(-122.360 47.656, -122.343 47.656 )' AS GEOGRAPHY) GEOGRAPHY_RESULT;
 ```
 
-Copy
-
 ### Known Issues[¶](#id833)
 
 If the data type is Varchar or Char, then it will be transformed differently.
@@ -8435,8 +7563,6 @@ TRY_CONVERT(VARCHAR, 1234);
 TRY_CONVERT(CHAR, 1);
 ```
 
-Copy
-
 If TRY_CAST is used with VARCHAR or CHAR in Snowflake, it will cause an error, so it will be
 transformed to
 
@@ -8445,8 +7571,6 @@ TO_VARCHAR(1234);
 TO_CHAR(1);
 ```
 
-Copy
-
 The same happens with the data types of SQL_VARIANT and GEOGRAPHY.
 
 ```
@@ -8454,16 +7578,12 @@ TRY_CONVERT(SQL_VARIANT, '2017-01-01 12:00:00');
 TRY_CONVERT(GEOGRAPHY, 'LINESTRING(-122.360 47.656, -122.343 47.656 )');
 ```
 
-Copy
-
 Are transformed to
 
 ```
 TO_VARIANT('2017-01-01 12:00:00');
 TO_GEOGRAPHY('LINESTRING(-122.360 47.656, -122.343 47.656 )');
 ```
-
-Copy
 
 If the expression is not a string, there is a very high chance that it will fail, since the TRY_CAST
 of snowflake works only with string expressions.
@@ -8474,15 +7594,11 @@ In this case, another transformation will be done
 TRY_CAST(14.85 AS INT)
 ```
 
-Copy
-
 Will be transformed to
 
 ```
 CAST(14.85 AS INT) /*** SSC-FDM-TS0005 - TRY_CONVERT/TRY_CAST COULD NOT BE CONVERTED TO TRY_CAST ***/
 ```
-
-Copy
 
 Now, with these transformation, there could be problems depending on what is being done with the
 functions. The TRY_CONVERT of SqlServer returns nulls if the convertion was not possible.
@@ -8497,8 +7613,6 @@ SELECT
         ELSE 'SUCCEDDED'
     END;
 ```
-
-Copy
 
 That type of conditions with the TRY_CONVERT can be used with the TRY_CAST, but what happens if it
 is transformed to TO_VARCHAR, TOCHAR or to the CAST? If the convertion in those functions fails, it
@@ -8530,8 +7644,6 @@ SELECT TRY_CONVERT(NUMERIC, '12345') NUMERIC_RESULT,
  TRY_CONVERT(GEOGRAPHY, 'LINESTRING(-122.360 47.656, -122.343 47.656 )') GEOGRAPHY_RESULT;
 ```
 
-Copy
-
 If we migrate that select, we will get the following result
 
 ##### Snowflake[¶](#id836)
@@ -8554,8 +7666,6 @@ SELECT
  TO_VARIANT('2017-01-01 12:00:00') SQL_VARIANT_RESULT,
  TO_GEOGRAPHY('LINESTRING(-122.360 47.656, -122.343 47.656 )') GEOGRAPHY_RESULT;
 ```
-
-Copy
 
 Let’s execute each one and compare the result.
 
@@ -8610,8 +7720,6 @@ Converts an _inputdate_ to the corresponding _datetimeoffset_ value in the targe
 inputdate AT TIME ZONE timezone
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id842)
 
 [Snowflake SQL Documentation](https://docs.snowflake.com/en/sql-reference/functions/convert_timezone.html)
@@ -8622,8 +7730,6 @@ CONVERT_TIMEZONE( <source_tz> , <target_tz> , <source_timestamp_ntz> )
 CONVERT_TIMEZONE( <target_tz> , <source_timestamp> )
 ```
 
-Copy
-
 ### Examples[¶](#id843)
 
 #### SQL Server[¶](#id844)
@@ -8632,8 +7738,6 @@ Copy
 SELECT CAST('2022-11-24 11:00:45.2000000 +00:00' as datetimeoffset) at time zone 'Alaskan Standard Time';
 ```
 
-Copy
-
 **Result:**
 
 ```
@@ -8641,8 +7745,6 @@ Copy
 ------------------------------|
 2022-11-24 02:00:45.200 -09:00|
 ```
-
-Copy
 
 ##### Snowflake SQL[¶](#id845)
 
@@ -8651,8 +7753,6 @@ SELECT
 CONVERT_TIMEZONE('America/Anchorage', CAST('2022-11-24 11:00:45.2000000 +00:00' as TIMESTAMP_TZ(7)));
 ```
 
-Copy
-
 **Result:**
 
 ```
@@ -8661,15 +7761,11 @@ Copy
 2022-11-24 02:00:45.200 -09:00|
 ```
 
-Copy
-
 ##### SQL Server[¶](#id846)
 
 ```
 SELECT current_timestamp at time zone 'Central America Standard Time';
 ```
-
-Copy
 
 **Result:**
 
@@ -8678,8 +7774,6 @@ Copy
 ------------------------------|
 2022-10-10 10:55:50.090 -06:00|
 ```
-
-Copy
 
 ##### Snowflake SQL[¶](#id847)
 
@@ -8688,8 +7782,6 @@ SELECT
 CONVERT_TIMEZONE('America/Costa_Rica', CURRENT_TIMESTAMP() /*** SSC-FDM-TS0024 - CURRENT_TIMESTAMP in At Time Zone statement may have a different behavior in certain cases ***/);
 ```
 
-Copy
-
 **Result:**
 
 ```
@@ -8697,8 +7789,6 @@ Copy
 ------------------------------|
 2022-10-10 10:55:50.090 -06:00|
 ```
-
-Copy
 
 ### Known Issues[¶](#id848)
 
@@ -8712,8 +7802,6 @@ Copy
 SELECT current_timestamp at time zone 'Turks And Caicos Standard Time';
 ```
 
-Copy
-
 **Result:**
 
 ```
@@ -8722,8 +7810,6 @@ Copy
 2022-12-14 20:04:18.317 -05:00|
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id850)
 
 ```
@@ -8731,8 +7817,6 @@ SELECT
 !!!RESOLVE EWI!!! /*** SSC-EWI-TS0063 - TIME ZONE NOT SUPPORTED IN SNOWFLAKE ***/!!!
 CURRENT_TIMESTAMP() at time zone 'Turks And Caicos Standard Time';
 ```
-
-Copy
 
 ### Related EWIs[¶](#id851)
 
@@ -8763,8 +7847,6 @@ This function returns an integer representing the specified datepart of the spec
 DATEADD (datepart , number , date )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id856)
 
 [Snowflake SQL Documentation](https://docs.snowflake.com/en/sql-reference/functions/dateadd.html)
@@ -8772,8 +7854,6 @@ Copy
 ```
 DATEADD( <date_or_time_part>, <value>, <date_or_time_expr> )
 ```
-
-Copy
 
 ### Examples[¶](#id857)
 
@@ -8783,8 +7863,6 @@ Copy
 SELECT DATEADD(year,123, '20060731') as ADDDATE;
 ```
 
-Copy
-
 **Result:**
 
 ```
@@ -8792,8 +7870,6 @@ Copy
 ------------------------|
  2129-07-31 00:00:00.000|
 ```
-
-Copy
 
 ##### Snowflake SQL[¶](#id859)
 
@@ -8802,8 +7878,6 @@ SELECT
 DATEADD(year, 123, '20060731') as ADDDATE;
 ```
 
-Copy
-
 **Result:**
 
 ```
@@ -8811,8 +7885,6 @@ Copy
 ------------------------|
  2129-07-31 00:00:00.000|
 ```
-
-Copy
 
 ## DATEDIFF[¶](#datediff)
 
@@ -8837,8 +7909,6 @@ crossed between the specified startdate and enddate.
 DATEDIFF ( datepart , startdate , enddate )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id864)
 
 [Snowflake SQL Documentation](https://docs.snowflake.com/en/sql-reference/functions/datediff.html)
@@ -8847,8 +7917,6 @@ Copy
 DATEDIFF( <date_or_time_part>, <date_or_time_expr1>, <date_or_time_expr2> )
 ```
 
-Copy
-
 ### Examples[¶](#id865)
 
 #### SQL Server[¶](#id866)
@@ -8856,8 +7924,6 @@ Copy
 ```
 SELECT DATEDIFF(year,'2005-12-31 23:59:59.9999999', '2006-01-01 00:00:00.0000000');
 ```
-
-Copy
 
 **Result:**
 
@@ -8871,8 +7937,6 @@ Copy
 ```
 SELECT DATEDIFF(year,'2005-12-31 23:59:59.9999999', '2006-01-01 00:00:00.0000000');
 ```
-
-Copy
 
 **Result:**
 
@@ -8903,8 +7967,6 @@ values.([DATEFROMPARTS in Transact-SQL](https://docs.microsoft.com/en-us/sql/t-s
 DATEFROMPARTS ( year, month, day )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id872)
 
 [Snowflake SQL Documentation](https://docs.snowflake.com/en/sql-reference/functions/date_from_parts.html)
@@ -8913,8 +7975,6 @@ Copy
 DATE_FROM_PARTS( <year>, <month>, <day> )
 ```
 
-Copy
-
 ### Examples[¶](#id873)
 
 #### SQL Server[¶](#id874)
@@ -8922,8 +7982,6 @@ Copy
 ```
 SELECT DATEFROMPARTS ( 2010, 12, 31 ) AS RESULT;
 ```
-
-Copy
 
 **Result:**
 
@@ -8937,8 +7995,6 @@ Copy
 ```
 SELECT DATE_FROM_PARTS ( 2010, 12, 31 ) AS RESULT;
 ```
-
-Copy
 
 **Result:**
 
@@ -8969,11 +8025,9 @@ This function returns a character string representing the specified datepart of 
 DATENAME ( datepart , date )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id880)
 
-Note
+**Note:**
 
 This transformation uses several functions depending on the inputs
 
@@ -8982,8 +8036,6 @@ DATE_PART( <date_or_time_part> , <date_or_time_expr> )
 MONTHNAME( <date_or_timestamp_expr> )
 DAYNAME( <date_or_timestamp_expr> )
 ```
-
-Copy
 
 ### Examples[¶](#id881)
 
@@ -8994,8 +8046,6 @@ SELECT DATENAME(month, getdate()) AS DATE1,
 DATENAME(day, getdate()) AS DATE2,
 DATENAME(dw, GETDATE()) AS DATE3;
 ```
-
-Copy
 
 **Result:**
 
@@ -9012,8 +8062,6 @@ MONTHNAME_UDF(CURRENT_TIMESTAMP() :: TIMESTAMP) AS DATE1,
 DAYNAME_UDF(CURRENT_TIMESTAMP() :: TIMESTAMP) AS DATE2,
 DAYNAME(CURRENT_TIMESTAMP() :: TIMESTAMP) AS DATE3;
 ```
-
-Copy
 
 **Result:**
 
@@ -9044,8 +8092,6 @@ This function returns an integer representing the specified datepart of the spec
 DATEPART ( datepart , date )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id888)
 
 [Snowflake SQL Documentation](https://docs.snowflake.com/en/sql-reference/functions/date_part.html)
@@ -9054,8 +8100,6 @@ Copy
 DATE_PART( <date_or_time_part> , <date_or_time_expr> )
 ```
 
-Copy
-
 ### Examples[¶](#id889)
 
 #### SQL Server[¶](#id890)
@@ -9063,8 +8107,6 @@ Copy
 ```
 SELECT DATEPART(YEAR, '10-10-2022') as YEAR
 ```
-
-Copy
 
 **Result:**
 
@@ -9079,8 +8121,6 @@ Copy
 SELECT
 DATE_PART(YEAR, '10-10-2022' :: TIMESTAMP) as YEAR;
 ```
-
-Copy
 
 **Result:**
 
@@ -9111,8 +8151,6 @@ This function returns an integer that represents the day (day of the month) of t
 DAY ( date )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id896)
 
 [Snowflake SQL Documentation](https://docs.snowflake.com/en/sql-reference/functions/year.html)
@@ -9121,8 +8159,6 @@ Copy
 DAY( <date_or_timestamp_expr> )
 ```
 
-Copy
-
 ### Examples[¶](#id897)
 
 #### SQL Server[¶](#id898)
@@ -9130,8 +8166,6 @@ Copy
 ```
 SELECT DAY('10-10-2022') AS DAY
 ```
-
-Copy
 
 **Result:**
 
@@ -9145,8 +8179,6 @@ Copy
 ```
 SELECT DAY('10-10-2022' :: TIMESTAMP) AS DAY;
 ```
-
-Copy
 
 **Result:**
 
@@ -9178,8 +8210,6 @@ offset.
 EOMONTH ( start_date [, month_to_add ] )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id904)
 
 [Snowflake SQL Documentation](https://docs.snowflake.com/en/sql-reference/functions/last_day.html)
@@ -9188,8 +8218,6 @@ Copy
 LAST_DAY( <date_or_time_expr> [ , <date_part> ] )
 ```
 
-Copy
-
 ### Examples[¶](#id905)
 
 #### SQL Server[¶](#id906)
@@ -9197,8 +8225,6 @@ Copy
 ```
 SELECT EOMONTH (GETDATE()) AS Result;
 ```
-
-Copy
 
 **Result:**
 
@@ -9213,8 +8239,6 @@ Copy
 SELECT
 LAST_DAY(DATEADD('month', 0, CURRENT_TIMESTAMP() :: TIMESTAMP)) AS Result;
 ```
-
-Copy
 
 **Result:**
 
@@ -9246,8 +8270,6 @@ offset.
 GETDATE()
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id912)
 
 [Snowflake SQL Documentation](https://docs.snowflake.com/en/sql-reference/functions/current_timestamp.html)
@@ -9256,8 +8278,6 @@ Copy
 CURRENT_TIMESTAMP( [ <fract_sec_precision> ] )
 ```
 
-Copy
-
 ### Examples[¶](#id913)
 
 #### SQL Server[¶](#id914)
@@ -9265,8 +8285,6 @@ Copy
 ```
 SELECT GETDATE() AS DATE;
 ```
-
-Copy
 
 **Result:**
 
@@ -9280,8 +8298,6 @@ Copy
 ```
 SELECT CURRENT_TIMESTAMP() :: TIMESTAMP AS DATE;
 ```
-
-Copy
 
 **Result:**
 
@@ -9312,8 +8328,6 @@ Returns an integer that represents the month of the specified _date_.
 MONTH( date )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id920)
 
 [Snowflake SQL Documentation](https://docs.snowflake.com/en/sql-reference/functions/year.html)
@@ -9322,8 +8336,6 @@ Copy
 MONTH ( <date_or_timestamp_expr> )
 ```
 
-Copy
-
 ### Examples[¶](#id921)
 
 #### SQL Server[¶](#id922)
@@ -9331,8 +8343,6 @@ Copy
 ```
 SELECT MONTH('10-10-2022') AS MONTH
 ```
-
-Copy
 
 **Result:**
 
@@ -9346,8 +8356,6 @@ Copy
 ```
 SELECT MONTH('10-10-2022' :: TIMESTAMP) AS MONTH;
 ```
-
-Copy
 
 **Result:**
 
@@ -9382,15 +8390,11 @@ as the SQLServer’s SWITCHOFFSET function.
  SWITCHOFFSET ( datetimeoffset_expression, timezoneoffset_expression )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id927)
 
 ```
  SWITCHOFFSET_UDF ( timestamp_tz_expression, timezoneoffset_expression )
 ```
-
-Copy
 
 #### Example[¶](#id928)
 
@@ -9401,8 +8405,6 @@ SELECT
   '1998-09-20 7:45:50.71345 +02:00' as fr_time,
   SWITCHOFFSET('1998-09-20 7:45:50.71345 +02:00', '-06:00') as cr_time;
 ```
-
-Copy
 
 **Result:**
 
@@ -9418,8 +8420,6 @@ SELECT
   '1998-09-20 7:45:50.71345 +02:00' as fr_time,
   PUBLIC.SWITCHOFFSET_UDF('1998-09-20 7:45:50.71345 +02:00', '-06:00') as cr_time;
 ```
-
-Copy
 
 **Result:**
 
@@ -9451,8 +8451,6 @@ of SQL Server is running.
 SYSDATETIME ( )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id935)
 
 [Snowflake SQL Documentation](https://docs.snowflake.com/en/sql-reference/functions/localtime.html)
@@ -9461,8 +8459,6 @@ Copy
 LOCALTIME()
 ```
 
-Copy
-
 ### Examples[¶](#id936)
 
 #### SQL Server[¶](#id937)
@@ -9470,8 +8466,6 @@ Copy
 ```
 SELECT SYSDATETIME ( ) AS SYSTEM_DATETIME;
 ```
-
-Copy
 
 **Result:**
 
@@ -9485,8 +8479,6 @@ Copy
 ```
 SELECT LOCALTIME ( ) AS SYSTEM_DATETIME;
 ```
-
-Copy
 
 **Result:**
 
@@ -9518,8 +8510,6 @@ of SQL Server is running.
 SYSUTCDATETIME ( )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id943)
 
 [Snowflake SQL Documentation](https://docs.snowflake.com/en/sql-reference/functions/localtime.html)
@@ -9528,8 +8518,6 @@ Copy
 SYSDATE()
 ```
 
-Copy
-
 ### Examples[¶](#id944)
 
 #### SQL Server[¶](#id945)
@@ -9537,8 +8525,6 @@ Copy
 ```
 SELECT SYSUTCDATETIME() as SYS_UTC_DATETIME;
 ```
-
-Copy
 
 **Result:**
 
@@ -9553,8 +8539,6 @@ Copy
 SELECT
 SYSDATE() as SYS_UTC_DATETIME;
 ```
-
-Copy
 
 **Result:**
 
@@ -9585,8 +8569,6 @@ Returns an integer that represents the year of the specified _date_.
 YEAR( date )
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id951)
 
 [Snowflake SQL Documentation](https://docs.snowflake.com/en/sql-reference/functions/year.html)
@@ -9595,8 +8577,6 @@ Copy
 YEAR ( <date_or_timestamp_expr> )
 ```
 
-Copy
-
 ### Examples[¶](#id952)
 
 #### SQL Server[¶](#id953)
@@ -9604,8 +8584,6 @@ Copy
 ```
 SELECT YEAR('10-10-2022') AS YEAR
 ```
-
-Copy
 
 **Result:**
 
@@ -9619,8 +8597,6 @@ Copy
 ```
 SELECT YEAR('10-10-2022' :: TIMESTAMP) AS YEAR;
 ```
-
-Copy
 
 **Result:**
 

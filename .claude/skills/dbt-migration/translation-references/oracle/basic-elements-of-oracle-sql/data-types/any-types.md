@@ -29,8 +29,6 @@ The `ANYDATA` data type is **not supported** in Snowflake.
 { SYS.ANYDATA | ANYDATA }
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#sample-source-patterns)
 
 #### Create Table with ANYDATA[¶](#create-table-with-anydata)
@@ -46,8 +44,6 @@ CREATE TABLE anydatatable
 );
 ```
 
-Copy
-
 ##### Snowflake[¶](#snowflake)
 
 ```
@@ -61,8 +57,6 @@ CREATE OR REPLACE TABLE anydatatable
     ;
 ```
 
-Copy
-
 #### Inserting data into ANYDATA column[¶](#inserting-data-into-anydata-column)
 
 ##### Oracle[¶](#id2)
@@ -74,8 +68,6 @@ INSERT INTO anydatatable VALUES(
 );
 ```
 
-Copy
-
 ##### Snowflake[¶](#id3)
 
 ```
@@ -85,8 +77,6 @@ VALUES(
 	ANYDATA.ConvertVarchar('Another Test Text') !!!RESOLVE EWI!!! /*** SSC-EWI-0073 - PENDING FUNCTIONAL EQUIVALENCE REVIEW FOR 'ANYDATA.ConvertVarchar' NODE ***/!!!
 );
 ```
-
-Copy
 
 #### Functional Example[¶](#functional-example)
 
@@ -132,8 +122,6 @@ SELECT
 FROM anydatatable_example;
 ```
 
-Copy
-
 ##### Result[¶](#result)
 
 <!-- prettier-ignore -->
@@ -177,8 +165,6 @@ FROM
 	anydatatable_example;
 ```
 
-Copy
-
 ##### Result[¶](#id6)
 
 <!-- prettier-ignore -->
@@ -202,7 +188,7 @@ for Oracle built-in packages is not supported by SnowConvert AI yet.
 
 ## ANYDATASET[¶](#anydataset)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -222,8 +208,6 @@ however that transformation is currently not supported by SnowConvert.
 { SYS.ANYDATASET | ANYDATASET }
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id8)
 
 #### Create Table with ANYDATASET[¶](#create-table-with-anydataset)
@@ -239,8 +223,6 @@ CREATE TABLE anydatasettable
 );
 ```
 
-Copy
-
 ##### Snowflake[¶](#id10)
 
 ```
@@ -255,8 +237,6 @@ CREATE OR REPLACE TABLE anydatasettable
 	COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":0},"attributes":{"component":"oracle"}}'
 	;
 ```
-
-Copy
 
 #### Inserting data into ANYDATASET column[¶](#inserting-data-into-anydataset-column)
 
@@ -280,8 +260,6 @@ BEGIN
     INSERT INTO anydatasettable VALUES (123, anydataset_example);
 END;
 ```
-
-Copy
 
 ##### Snowflake[¶](#id12)
 
@@ -314,8 +292,6 @@ BEGIN
     VALUES (123, :anydataset_example);
 END;
 ```
-
-Copy
 
 ### Known Issues[¶](#id13)
 
@@ -351,8 +327,6 @@ The `ANYTYPE` data type is **not supported** in Snowflake.
 { SYS.ANYTYPE | ANYTYPE }
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id16)
 
 #### Create Table with ANYTYPE[¶](#create-table-with-anytype)
@@ -367,8 +341,6 @@ CREATE TABLE anytypetable
 	col3 SYS.ANYTYPE
 );
 ```
-
-Copy
 
 ##### Snowflake[¶](#id18)
 
@@ -385,8 +357,6 @@ CREATE OR REPLACE TABLE anytypetable
 	;
 ```
 
-Copy
-
 #### Inserting data into ANYTYPE column[¶](#inserting-data-into-anytype-column)
 
 ##### Oracle[¶](#id19)
@@ -401,8 +371,6 @@ INSERT INTO anytypetable VALUES(
     GETANYTYPEFROMPERSISTENT ('HR', 'EXAMPLE_TYPE')
 );
 ```
-
-Copy
 
 ##### Snowflake[¶](#id20)
 
@@ -419,8 +387,6 @@ VALUES(
     GETANYTYPEFROMPERSISTENT ('HR', 'EXAMPLE_TYPE') !!!RESOLVE EWI!!! /*** SSC-EWI-0073 - PENDING FUNCTIONAL EQUIVALENCE REVIEW FOR 'GETANYTYPEFROMPERSISTENT' NODE ***/!!!
 );
 ```
-
-Copy
 
 ### Known Issues[¶](#id21)
 

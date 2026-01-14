@@ -16,8 +16,6 @@ CREATE [ OR REPLACE ] VIEW [[database.]schema.]view [ (column[,...]) ]
   [ {INCLUDE|EXCLUDE} [SCHEMA] PRIVILEGES ] AS query
 ```
 
-Copy
-
 ## Sample Source Patterns[¶](#sample-source-patterns)
 
 Success
@@ -35,8 +33,6 @@ AS
 SELECT lastname FROM users;
 ```
 
-Copy
-
 #### Snowflake[¶](#snowflake)
 
 ```
@@ -48,8 +44,6 @@ AS
 SELECT lastname FROM
     users;
 ```
-
-Copy
 
 ### Inherited Schema Privileges Clause[¶](#inherited-schema-privileges-clause)
 
@@ -73,8 +67,6 @@ AS
 SELECT lastname FROM users;
 ```
 
-Copy
-
 #### Snowflake[¶](#id1)
 
 ```
@@ -88,8 +80,6 @@ AS
 SELECT lastname FROM
     users;
 ```
-
-Copy
 
 ### Known Issues[¶](#known-issues)
 

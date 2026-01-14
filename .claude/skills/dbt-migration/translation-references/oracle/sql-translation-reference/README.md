@@ -10,7 +10,7 @@ title: SnowConvert AI - Oracle - SQL Statements | Snowflake Documentation
 
 This section shows you the translations related to ALTER TABLE.
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -35,9 +35,7 @@ ALTER TABLE [ schema. ] table
   ;
 ```
 
-Copy
-
-Note
+**Note:**
 
 To review Snowflake syntax, review the following [documentation](https://docs.snowflake.com/en/sql-reference/sql/alter-table).
 
@@ -61,8 +59,6 @@ MEMOPTIMIZE FOR WRITE
 ENABLE TABLE LOCK;
 ```
 
-Copy
-
 ##### Snowflake[¶](#snowflake)
 
 ```
@@ -70,9 +66,7 @@ ALTER TABLE SOMESCHEMA.SOMENAME
 ADD (SOMECOLUMN NUMBER(38, 18), SOMEOTHERCOLUMN VARCHAR(23));
 ```
 
-Copy
-
-Note
+**Note:**
 
 Only some **column_clauses and constraint_clauses** are applicable in Snowflake. In Oracle alter table allows modifying properties from partitions created but in Snowflake, these actions are not required
 
@@ -88,8 +82,6 @@ ALTER TABLE SOMENAME MODIFY(SCOLUMN VISIBLE,SCOLUMN INVISIBLE);
 ALTER TABLE SOMENAME MODIFY VARRAY VARRAYITEM (
 STORAGE(PCTINCREASE 10));
 ```
-
-Copy
 
 ##### Snowflake[¶](#id2)
 
@@ -109,8 +101,6 @@ ALTER TABLE SOMENAME
 MODIFY VARRAY VARRAYITEM (
 STORAGE(PCTINCREASE 10));
 ```
-
-Copy
 
 #### 2.3. ADD CONSTRAINT action[¶](#add-constraint-action)
 
@@ -138,8 +128,6 @@ CONSTRAINT TABLE1_FK foreign key(ID2)
 references TABLE2 (ID) ON DELETE CASCADE);
 ```
 
-Copy
-
 ##### Snowflake[¶](#id4)
 
 ```
@@ -159,8 +147,6 @@ ADD
 CONSTRAINT TABLE1_FK foreign key(ID2)
 references TABLE2 (ID) ON DELETE CASCADE;
 ```
-
-Copy
 
 ### Known Issues[¶](#known-issues)
 
@@ -191,8 +177,6 @@ USING 'connect string'
 CREATE PUBLIC DATABASE LINK db_link_name3
 ```
 
-Copy
-
 ### Snowflake output[¶](#snowflake-output)
 
 ```
@@ -210,8 +194,6 @@ Copy
 
 --CREATE PUBLIC DATABASE LINK db_link_name3
 ```
-
-Copy
 
 ### Database Link References[¶](#database-link-references)
 
@@ -246,8 +228,6 @@ DELETE FROM employees@mylink2
 -- a database link that is not created
 SELECT * FROM products@mylink;
 ```
-
-Copy
 
 #### Snowflake output[¶](#id6)
 
@@ -294,8 +274,6 @@ SELECT * FROM
     products;
 ```
 
-Copy
-
 ### Related EWIs[¶](#id7)
 
 1. [SSC-EWI-OR0123](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0123): Db Link connections not supported.
@@ -303,7 +281,7 @@ Copy
 
 ## Drop Table[¶](#drop-table)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -317,15 +295,11 @@ In Oracle, the Drop Table syntax is:
 DROP TABLE <table_name> [ CASCADE CONSTRAINTS ] [ PURGE ]
 ```
 
-Copy
-
 In Snowflake, the Drop table syntax is:
 
 ```
 DROP TABLE [ IF EXISTS ] <table_name> [ CASCADE | RESTRICT ]
 ```
-
-Copy
 
 The main difference is that Snowflake does not have an equal for the PURGE clause, as the table will not be permanently removed from the system. Though, the CASCADE CONSTRAINTS and the CASCADE clauses _are_ the same. Both drop the table, even if foreign keys exist that reference this table.
 
@@ -343,15 +317,11 @@ This example uses the **Drop Table** statement as simple as possible.
 DROP TABLE TEST_TABLE1;
 ```
 
-Copy
-
 **Transformed Code:**
 
 ```
 DROP TABLE TEST_TABLE1;
 ```
-
-Copy
 
 ##### Example 2:[¶](#example-2)
 
@@ -363,15 +333,11 @@ This example uses the **Drop Table** statement with the PURGE clause. Remember t
 DROP TABLE TEST_TABLE1 PURGE;
 ```
 
-Copy
-
 **Transformed Code:**
 
 ```
 DROP TABLE TEST_TABLE1;
 ```
-
-Copy
 
 ##### Example 3:[¶](#example-3)
 
@@ -383,15 +349,11 @@ This example uses the **Drop Table** statement with the CASCADE CONSTRAINTS clau
 DROP TABLE TEST_TABLE1 CASCADE CONSTRAINTS;
 ```
 
-Copy
-
 **Transformed Code:**
 
 ```
 DROP TABLE TEST_TABLE1 CASCADE;
 ```
-
-Copy
 
 In the transformed code, the CONSTRAINTS word is removed from the CASCADE CONSTRAINTS clause.
 
@@ -405,15 +367,11 @@ This example uses the **Drop Table** statement with the CASCADE CONSTRAINTS and 
 DROP TABLE TEST_TABLE1 CASCADE CONSTRAINTS PURGE;
 ```
 
-Copy
-
 **Transformed Code:**
 
 ```
 DROP TABLE TEST_TABLE1 CASCADE;
 ```
-
-Copy
 
 As seen, the code changes. In the new Snowflake code, the PURGE clause is removed and the CONSTRAINTS word is also removed from the CASCADE clause.
 
@@ -436,8 +394,6 @@ CREATE TABLE OTHER_TABLE (
 DROP TABLE TEST_TABLE2 CASCADE CONSTRAINTS PURGE;
 ```
 
-Copy
-
 **Snowflake:**
 
 ```
@@ -456,8 +412,6 @@ CREATE OR REPLACE TABLE TEST_TABLE2 (
 
    DROP TABLE TEST_TABLE2 CASCADE;
 ```
-
-Copy
 
 ### Related EWIs[¶](#id9)
 
@@ -503,9 +457,7 @@ CREATE INDEX COL1_INDEX ON TABLE1 (COL1 DESC, COL2 ASC) INDEXTYPE IS INDEXTYPE1 
 CREATE INDEX COL1_INDEX ON TABLE1 (COL1 ASC) INDEXTYPE IS XDB.XMLINDEX LOCAL ( PARTITION PARTITION1) PARALLEL 6 UNUSABLE IMMEDIATE INVALIDATION;
 ```
 
-Copy
-
-Note
+**Note:**
 
 Due to architectural reasons, Snowflake does not support indexes so, SnowConvert AI will remove all the code related to the creation of indexes. Snowflake automatically creates micro-partitions for every table that help speed up the performance of DML operations, the user does not have to worry about creating or managing these micro-partitions.
 
@@ -525,8 +477,6 @@ NOCACHE
 NOCYCLE;
 ```
 
-Copy
-
 ### Snowflake:[¶](#id11)
 
 ```
@@ -535,8 +485,6 @@ START WITH 1000
 INCREMENT BY 1
 COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":0},{"attributes":{"component":"oracle"}}';
 ```
-
-Copy
 
 The first change that it is done is to apply the schema or datawarehouse to the name of the sequence. The second transformation consists in removing some elements and add then as comments, since oracle has some elements in the create sequence that are not supported in snowflake.
 
@@ -586,8 +534,6 @@ select seq1.nextval from dual;
 select seq1.currval from dual;
 ```
 
-Copy
-
 #### Snowflake:[¶](#id13)
 
 ```
@@ -596,8 +542,6 @@ select seq1.nextval from dual;
 select
 !!!RESOLVE EWI!!! /*** SSC-EWI-OR0069 - THE SEQUENCE CURRVAL PROPERTY IS NOT SUPPORTED IN SNOWFLAKE. ***/!!! seq1.currval from dual;
 ```
-
-Copy
 
 ### Sequence START WITH[¶](#sequence-start-with)
 
@@ -615,8 +559,6 @@ CREATE SEQUENCE SEQUENCE2
 START WITH -9223372036854775809;
 ```
 
-Copy
-
 ##### Snowflake:[¶](#id15)
 
 ```
@@ -630,8 +572,6 @@ CREATE OR REPLACE SEQUENCE SEQUENCE2
 START WITH -9223372036854775809
 COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":0},{"attributes":{"component":"oracle"}}';
 ```
-
-Copy
 
 ### Related EWIs[¶](#id16)
 
@@ -650,19 +590,15 @@ Alter session has an equivalent in Snowflake and some the variables are mapped t
 alter session set nls_date_format = 'DD-MM-YYYY';
 ```
 
-Copy
-
 #### Snowflake:[¶](#id19)
 
 ```
 ALTER SESSION SET DATE_INPUT_FORMAT = 'DD-MM-YYYY' DATE_OUTPUT_FORMAT = 'DD-MM-YYYY';
 ```
 
-Copy
-
 ### Session Parameters Reference[¶](#session-parameters-reference)
 
-Note
+**Note:**
 
 The session parameters that doesn’t appear in the table are not currently being transformed.
 
@@ -682,7 +618,7 @@ No related EWIs.
 
 ## Create Synonym[¶](#create-synonym)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -696,8 +632,6 @@ Synonyms are not supported in Snowflake. The references to the Synonyms will be 
 CREATE OR REPLACE SYNONYM B.TABLITA_SYNONYM FOR TABLITA;
 ```
 
-Copy
-
 #### Snowflake:[¶](#id24)
 
 ```
@@ -705,8 +639,6 @@ Copy
 --CREATE OR REPLACE SYNONYM B.TABLITA_SYNONYM FOR TABLITA
                                                        ;
 ```
-
-Copy
 
 #### **Example 1**: Synonym that refers to a table.[¶](#example-1-synonym-that-refers-to-a-table)
 
@@ -722,8 +654,6 @@ CREATE OR REPLACE SYNONYM B.TABLITA_SYNONYM FOR TABLITA;
 
 SELECT * FROM B.TABLITA_SYNONYM WHERE B.TABLITA_SYNONYM.COLUMN1 = 20;
 ```
-
-Copy
 
 Snowflake migrated code: you’ll notice that the `SELECT` originally refers to a synonym, but now it refers to the table that points the synonym.
 
@@ -746,8 +676,6 @@ SELECT * FROM
     TABLITA.COLUMN1 = 20;
 ```
 
-Copy
-
 #### **Example 2**: Synonym that refers to another synonym.[¶](#example-2-synonym-that-refers-to-another-synonym)
 
 Oracle source code:
@@ -767,8 +695,6 @@ UPDATE C.TABLITA_SYNONYM2 SET COLUMN1 = 10;
 
 INSERT INTO C.TABLITA_SYNONYM2 VALUES (1);
 ```
-
-Copy
 
 Snowflake migrated code: you’ll notice that originally the `SELECT` , `UPDATE`, `INSERT` refers to a synonym, and now it refers to the atomic object, which is a table.
 
@@ -801,8 +727,6 @@ SELECT * FROM
     VALUES (1);
 ```
 
-Copy
-
 #### **Example 3**: Synonym that refers to a view[¶](#example-3-synonym-that-refers-to-a-view)
 
 Oracle Source Code
@@ -818,8 +742,6 @@ CREATE OR REPLACE SYNONYM VIEW_SYNONYM FOR VIEW_ORGINAL;
 
 SELECT * FROM VIEW_SYNONYM;
 ```
-
-Copy
 
 Snowflake migrated code: you’ll notice that the `SELECT` originally refers to a synonym, and now it refers to the atomic objects, which is a view.
 
@@ -847,8 +769,6 @@ TABLITA;
 SELECT * FROM
 VIEW_ORGINAL;
 ```
-
-Copy
 
 ### Related EWIs[¶](#id25)
 

@@ -27,8 +27,6 @@ CREATE [OR REPLACE] [TEMP | TEMPORARY] [RECURSIVE] VIEW <name> [ ( <column_name>
     [ WITH [ CASCADED | LOCAL ] CHECK OPTION ]
 ```
 
-Copy
-
 ## Code Examples[¶](#code-examples)
 
 ### [OR REPLACE] [TEMP | TEMPORARY] [RECURSIVE][¶](#or-replace-temp-temporary-recursive)
@@ -61,8 +59,6 @@ CREATE TEMPORARY RECURSIVE VIEW view2 AS
         product_id;
 ```
 
-Copy
-
 #### Output Code:[¶](#output-code)
 
 ##### Snowflake[¶](#snowflake)
@@ -91,8 +87,6 @@ table1
         product_id;
 ```
 
-Copy
-
 ### WITH CHECK CLAUSE[¶](#with-check-clause)
 
 This WITH CHECK CLAUSE clause on a view enforces that any data inserted or updated through the view
@@ -116,8 +110,6 @@ CREATE VIEW updatable_products AS
 WITH LOCAL CHECK OPTION;
 ```
 
-Copy
-
 #### Output Code:[¶](#id3)
 
 ##### Snowflake[¶](#id4)
@@ -131,8 +123,6 @@ AS
 products
     WHERE price > 0;
 ```
-
-Copy
 
 ### WITH PARAMETERS OPTIONS[¶](#with-parameters-options)
 
@@ -155,8 +145,6 @@ CREATE VIEW large_orders WITH (security_barrier=true, check_option=local) AS
     WHERE total_amount > 1000;
 ```
 
-Copy
-
 #### Output Code:[¶](#id7)
 
 ##### Snowflake[¶](#id8)
@@ -170,8 +158,6 @@ AS
 orders
     WHERE total_amount > 1000;
 ```
-
-Copy
 
 ### VALUES OPTION[¶](#values-option)
 
@@ -187,8 +173,6 @@ This syntax is fully supported in Snowflake.
 CREATE VIEW numbers_view (number_1) AS
     VALUES (1,2), (2,2), (3,2), (4,2), (5,2);
 ```
-
-Copy
 
 #### Output Code:[¶](#id11)
 
@@ -206,5 +190,3 @@ FROM
         number_1
 );
 ```
-
-Copy

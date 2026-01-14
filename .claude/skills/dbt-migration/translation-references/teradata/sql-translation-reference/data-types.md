@@ -47,7 +47,7 @@ title: SnowConvert AI - Teradata - Data Types | Snowflake Documentation
 
 ## Notes[¶](#notes)
 
-Note
+**Note:**
 
 See the documentation on Teradata
 [data types](https://docs.teradata.com/reader/~_sY_PYVxZzTnqKq45UXkQ/I_xWuywcishQ9U3Xal6zjA)
@@ -94,16 +94,12 @@ Input code:
  SELECT TIMESTAMP '2018-05-13 10:30:45' + INTERVAL '10 05:30' DAY TO MINUTE;
 ```
 
-Copy
-
 Output code:
 
 ```
  SELECT
 TIMESTAMP '2018-05-13 10:30:45' + INTERVAL '10 DAY, 05 HOUR, 30 MINUTE';
 ```
-
-Copy
 
 Cases where the interval is being multiplied/divided by a numerical expression are transformed to
 equivalent `DATEADD` function calls instead:
@@ -114,16 +110,12 @@ Input code:
  SELECT TIME '03:45:15' - INTERVAL '15:32:01' HOUR TO SECOND * 10;
 ```
 
-Copy
-
 Output code:
 
 ```
  SELECT
 DATEADD('SECOND', 10 * -1, DATEADD('MINUTE', 10 * -32, DATEADD('HOUR', 10 * -15, TIME '03:45:15')));
 ```
-
-Copy
 
 ### JSON Data Type[¶](#json-data-type)
 
@@ -141,8 +133,6 @@ For example, if the original JSON is:
 }
 ```
 
-Copy
-
 Using the Snowflake
 [PARSE_JSON()](https://docs.snowflake.com/en/sql-reference/functions/parse_json.html) that
 interprets an input string as a JSON document, producing a VARIANT value. The inserted JSON will be:
@@ -155,8 +145,6 @@ interprets an input string as a JSON document, producing a VARIANT value. The in
    "lastName": "Andre"
 }
 ```
-
-Copy
 
 Note how “age” is now the first element. However, the array of “cities” maintains its original
 order.

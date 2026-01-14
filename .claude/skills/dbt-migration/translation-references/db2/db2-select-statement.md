@@ -68,8 +68,6 @@ ROW CHANGE Expressions and RID/RID_BIT scalar functions are not supported in Sno
 select * from product group by ROW CHANGE TIMESTAMP FOR product;
 ```
 
-Copy
-
 ##### Snowflake
 
 ```
@@ -80,15 +78,11 @@ select * from
                                          ;
 ```
 
-Copy
-
 ##### IBM DB2
 
 ```
     select * from product group by RID();
 ```
-
-Copy
 
 ##### Snowflake
 
@@ -99,8 +93,6 @@ select * from
 --group by RID()
               ;
 ```
-
-Copy
 
 #### Related EWIs
 
@@ -135,8 +127,6 @@ SELECT * FROM Product FETCH Next Row ONLY;
 SELECT * FROM Product FETCH Next Rows ONLY;
 ```
 
-Copy
-
 ###### Snowflake
 
 ```
@@ -144,8 +134,6 @@ SELECT * FROM
    Product
 FETCH NEXT 1 ROW ONLY;
 ```
-
-Copy
 
 ## Offset Clause
 
@@ -174,8 +162,6 @@ IBM DB2 documentation page for this syntax.
 SELECT * FROM Product OFFSET 3 ROWS;
 ```
 
-Copy
-
 ##### Snowflake
 
 ```
@@ -185,8 +171,6 @@ LIMIT NULL
 OFFSET 3;
 ```
 
-Copy
-
 #### Limit X,Y
 
 ##### IBM DB2
@@ -194,8 +178,6 @@ Copy
 ```
 SELECT * FROM Product LIMIT 3,2;
 ```
-
-Copy
 
 ##### Snowflake
 
@@ -205,8 +187,6 @@ SELECT * FROM
 OFFSET 3 ROWS
 FETCH NEXT 2 ROWS ONLY;
 ```
-
-Copy
 
 ## Order by Clause
 
@@ -235,8 +215,6 @@ Select * from ORDERBYTest ORDER BY ORDER OF TableDesignator;
 Select * from ORDERBYTest ORDER BY INPUT SEQUENCE;
 ```
 
-Copy
-
 ##### Snowflake
 
 ```
@@ -252,8 +230,6 @@ Select * from
 ORDER BY INPUT SEQUENCE;
 ```
 
-Copy
-
 ### Related EWIs
 
 1. [SSC-EWI-0021](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0021):
@@ -266,7 +242,7 @@ Copy
 > Derives a result table by specifying the actual values, using expressions or row expressions, for
 > each column of a row in the result table. hin
 
-Note
+**Note:**
 
 The VALUES clause is not supported in Snowflake. For this reason, it is translated to a SELECT
 statement, as shown in the examples below.
@@ -286,8 +262,6 @@ a select query.
 VALUES 1, 2, 3
 ```
 
-Copy
-
 <!-- prettier-ignore -->
 |     |
 |---|
@@ -300,8 +274,6 @@ Copy
 ```
 SELECT 1, 2, 3
 ```
-
-Copy
 
 <!-- prettier-ignore -->
 |     |     |     |
@@ -317,8 +289,6 @@ VALUES (1, 1, 1),
     (2, 2, 2),
     (3, 3, 3)
 ```
-
-Copy
 
 <!-- prettier-ignore -->
 |     |     |     |
@@ -339,8 +309,6 @@ UNION
 SELECT
    3, 3, 3
 ```
-
-Copy
 
 <!-- prettier-ignore -->
 |     |     |     |
@@ -408,8 +376,6 @@ FROM
 WITH RR USE AND KEEP EXCLUSIVE LOCKS;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id32)
 
 ```
@@ -447,5 +413,3 @@ SELECT
 FROM
    Table1;
 ```
-
-Copy

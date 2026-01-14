@@ -29,9 +29,7 @@ For more information regarding Teradata GET DIAGNOSTICS, check
 }
 ```
 
-Copy
-
-Note
+**Note:**
 
 Some parts of the output code are omitted for clarity reasons.
 
@@ -51,8 +49,6 @@ BEGIN
     GET DIAGNOSTICS EXCEPTION 1 V_MESSAGE = MESSAGE_TEXT;
 END;
 ```
-
-Copy
 
 ##### Snowflake [¶](#snowflake)
 
@@ -76,8 +72,6 @@ $$
     V_MESSAGE = MESSAGE_TEXT;
 $$;
 ```
-
-Copy
 
 ### Know Issues[¶](#know-issues)
 
@@ -105,16 +99,12 @@ The transformation for the
  IF value = 2 THEN
 ```
 
-Copy
-
 **Snowflake**
 
 ```
  if(value == 2){
 }
 ```
-
-Copy
 
 ## **Case**[¶](#case)
 
@@ -132,8 +122,6 @@ else
 end case
 ```
 
-Copy
-
 **Snowflake**
 
 ```
@@ -144,8 +132,6 @@ Copy
         break;
 }
 ```
-
-Copy
 
 ## **Cursor Declare, OPEN, FETCH and CLOSE**[¶](#cursor-declare-open-fetch-and-close)
 
@@ -191,8 +177,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 **Snowflake**
 
 #### JavaScript Cursor[¶](#javascript-cursor)
@@ -228,8 +212,6 @@ $$
 $$;
 ```
 
-Copy
-
 ## **While**[¶](#while)
 
 The transformation for
@@ -245,8 +227,6 @@ is:
     set counter = counter + 1;
 ```
 
-Copy
-
 ### Snowflake[¶](#id2)
 
 #### While[¶](#id3)
@@ -256,8 +236,6 @@ Copy
     counter = counter + 1;
 }
 ```
-
-Copy
 
 ## **Security**[¶](#security)
 
@@ -300,8 +278,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 **Snowflake**
 
 #### JavaScript For-Cursor-For-Loop[¶](#javascript-for-cursor-for-loop)
@@ -336,8 +312,6 @@ VALUES (:lgNumber, :1, (',' || :
 $$;
 ```
 
-Copy
-
 _Note: The FOR loop present in the Teradata procedure is transformed to a FOR block in javascript
 that emulates its functionality._
 
@@ -367,8 +341,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 **Snowflake**
 
 #### JavaScript prameters and variables[¶](#javascript-prameters-and-variables)
@@ -397,8 +369,6 @@ $$
     EXEC(`INSERT INTO TABLE2 (col1, col2, col3, col4, col5) VALUES (:1, :2, :3, :4, :5)`,[PARAM1,PARAM2,VAR1,VAR2,WEEKSTART]);
 $$;
 ```
-
-Copy
 
 _Note: Whenever a procedure parameter or a variable declared inside the procedure is referenced
 inside a Teradata statement that has to be converted,_ _this reference is escaped from the resulting
@@ -449,8 +419,6 @@ LABEL_WHILE:
 END;
 ```
 
-Copy
-
 **Snowflake**
 
 #### JavaScript Leave[¶](#javascript-leave)
@@ -487,8 +455,6 @@ $$
 $$;
 ```
 
-Copy
-
 ## Getting Results from Procedures[¶](#getting-results-from-procedures)
 
 ### Description of the translation[¶](#description-of-the-translation)
@@ -516,8 +482,6 @@ REPLACE PROCEDURE Procedure1(OUT P1 INTEGER)
         SET P1 = (SEL CAST(AVG(AGE) AS INTEGER) FROM EMPLOYEE);
     END;
 ```
-
-Copy
 
 **Snowflake**
 
@@ -552,8 +516,6 @@ $$
 $$;
 ```
 
-Copy
-
 In this converted SQL, there are several conversions that take place:
 
 - The `DYNAMIC RESULT SETS 2` definition is converted to a `DYNAMIC_RESULTS` variable.
@@ -561,8 +523,6 @@ In this converted SQL, there are several conversions that take place:
 ```
      var DYNAMIC_RESULTS = 2;
 ```
-
-Copy
 
 - When a cursor with an `WITH RETURN`attribute is opened (and therefore a query is executed), its
   query ID is stored in the`_OUTQUERIES`collection in order to be later returned. The query id is
@@ -577,8 +537,6 @@ Copy
      var RESULTSET = new CURSOR(() => FIRSTSTATEMENT,[],true);
 ```
 
-Copy
-
 - The output parameters are supported via the return statement of the procedure. An array is created
   containing the value of each output parameter and the`_OUTQUERIES`collection.
   The`PROCRESULTS`function deals with the creation and filling of this array. See
@@ -587,8 +545,6 @@ Copy
 ```
      return PROCRESULTS(P1);
 ```
-
-Copy
 
 ### Example of getting data from a Stored Procedure[¶](#example-of-getting-data-from-a-stored-procedure)
 
@@ -607,8 +563,6 @@ BEGIN
     CALL Procedure1(x);
 END;
 ```
-
-Copy
 
 **Snowflake**
 
@@ -629,12 +583,10 @@ $$
 $$;
 ```
 
-Copy
-
 - The value of the`P1`argument from`Procedure1`is returned and stored in the`X`variable.
 - The`_OUTQUERIES`returned from`Procedure1`are stored in the`resultset`variable.
 
-Note
+**Note:**
 
 This behavior also applies to the INOUT parameters.
 

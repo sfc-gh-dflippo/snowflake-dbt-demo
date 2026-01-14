@@ -53,8 +53,6 @@ $$
 $$;
 ```
 
-Copy
-
 ##### Oracle[¶](#oracle)
 
 ```
@@ -67,8 +65,6 @@ INSERT INTO bfile_table VALUES ( BFILENAME('mydirectory', 'myfile.png') );
 --Select
 SELECT * FROM bfile_table;
 ```
-
-Copy
 
 ##### Result[¶](#result)
 
@@ -97,8 +93,6 @@ SELECT * FROM
 bfile_table;
 ```
 
-Copy
-
 ##### Result[¶](#id2)
 
 <!-- prettier-ignore -->
@@ -120,7 +114,7 @@ functions and there are no implemented workarounds yet.
 
 ## CAST_DATE UDF[¶](#cast-date-udf)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -153,8 +147,6 @@ $$
 $$;
 ```
 
-Copy
-
 ##### Oracle[¶](#id6)
 
 ```
@@ -174,8 +166,6 @@ CALL jsdateudf_proc('20-03-1996');
 --Select
 SELECT * FROM jsdateudf_table;
 ```
-
-Copy
 
 ##### Result[¶](#id7)
 
@@ -214,8 +204,6 @@ CALL jsdateudf_proc('20-03-1996');
 SELECT * FROM
     jsdateudf_table;
 ```
-
-Copy
 
 ##### Result[¶](#id9)
 
@@ -268,8 +256,6 @@ $$
 ;
 ```
 
-Copy
-
 #### Usage Example[¶](#usage-example)
 
 ##### Oracle[¶](#id15)
@@ -287,8 +273,6 @@ INSERT INTO datetojulian_table VALUES (DATE '2000-12-31');
 --Select
 SELECT TO_CHAR(col1, 'J') FROM datetojulian_table;
 ```
-
-Copy
 
 ##### Snowflake[¶](#id16)
 
@@ -320,8 +304,6 @@ PUBLIC.DATE_TO_JULIAN_DAYS_UDF(col1)
 FROM
 datetojulian_table;
 ```
-
-Copy
 
 ### Known Issues[¶](#id17)
 
@@ -362,8 +344,6 @@ SELECT FIRST_PARAM + SECOND_PARAM::NUMBER
 $$;
 ```
 
-Copy
-
 #### DATEADD_UDF(float, date)[¶](#dateadd-udf-float-date)
 
 **Parameters**
@@ -384,8 +364,6 @@ $$
 SELECT FIRST_PARAM::NUMBER + SECOND_PARAM
 $$;
 ```
-
-Copy
 
 #### DATEADD_UDF(timestamp, float)[¶](#dateadd-udf-timestamp-float)
 
@@ -408,8 +386,6 @@ SELECT DATEADD(day, SECOND_PARAM,FIRST_PARAM)
 $$;
 ```
 
-Copy
-
 #### DATEADD_UDF(float, timestamp)[¶](#dateadd-udf-float-timestamp)
 
 **Parameters**
@@ -431,8 +407,6 @@ SELECT DATEADD(day, FIRST_PARAM,SECOND_PARAM)
 $$;
 ```
 
-Copy
-
 #### Usage example[¶](#id25)
 
 ##### Oracle[¶](#id26)
@@ -442,8 +416,6 @@ SELECT
     TO_TIMESTAMP('03/08/2009, 12:47 AM', 'dd/mm/yy, hh:mi AM')+62.40750856543442
 FROM DUAL;
 ```
-
-Copy
 
 ##### Result[¶](#id27)
 
@@ -459,8 +431,6 @@ SELECT
     PUBLIC.DATEADD_UDF(TO_TIMESTAMP('03/08/2009, 12:47 AM', 'dd/mm/yy, hh:mi AM'), 62.40750856543442)
 FROM DUAL;
 ```
-
-Copy
 
 ##### Result[¶](#id29)
 
@@ -485,7 +455,7 @@ No EWIs related.
 
 ## DATEDIFF UDF[¶](#datediff-udf)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -517,8 +487,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### DATEDIFF_UDF(date, **timestamp**)[¶](#datediff-udf-date-timestamp)
 
 **Parameters**
@@ -539,8 +507,6 @@ $$
 	FIRST_PARAM - SECOND_PARAM::DATE
 $$;
 ```
-
-Copy
 
 #### DATEDIFF_UDF(date, integer)[¶](#datediff-udf-date-integer)
 
@@ -563,8 +529,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### DATEDIFF_UDF(timestamp, timestamp)[¶](#datediff-udf-timestamp-timestamp)
 
 **Parameters**
@@ -585,8 +549,6 @@ $$
 	DATEDIFF(day,SECOND_PARAM ,FIRST_PARAM)
 $$;
 ```
-
-Copy
 
 #### DATEDIFF_UDF(timestamp, date)[¶](#datediff-udf-timestamp-date)
 
@@ -609,8 +571,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### DATEDIFF_UDF(timestamp, number)[¶](#datediff-udf-timestamp-number)
 
 **Parameters**
@@ -632,16 +592,14 @@ $$
 $$;
 ```
 
-Copy
-
 #### Usage example[¶](#id40)
 
-Note
+**Note:**
 
 The unknown is a column whose type could not be resolved, it could be a timestamp, date integer, or
 number.
 
-Note
+**Note:**
 
 **`--disableDateAsTimestamp`**
 
@@ -661,8 +619,6 @@ SELECT unknown - AsTimeStamp FROM times;
 SELECT AsTimeStamp - unknown FROM times;
 SELECT unknown - AsDate FROM times;
 ```
-
-Copy
 
 ##### Snowflake[¶](#id42)
 
@@ -701,8 +657,6 @@ PUBLIC.DATEDIFF_UDF(
 times;
 ```
 
-Copy
-
 ### Known Issues[¶](#id43)
 
 #### 1. Functional differences for timestamps[¶](#functional-differences-for-timestamps)
@@ -721,8 +675,6 @@ INSERT INTO TIMES VALUES (TO_TIMESTAMP('05/11/21, 11:00 A.M.', 'dd/mm/yy, hh:mi 
 
 SELECT AsTimeStamp - unknown FROM times, unknown_table;
 ```
-
-Copy
 
 ##### Result[¶](#id45)
 
@@ -752,8 +704,6 @@ times,
 unknown_table;
 ```
 
-Copy
-
 ##### Result[¶](#id47)
 
 <!-- prettier-ignore -->
@@ -773,7 +723,7 @@ Copy
 
 Translation reference to convert Oracle JSON_VALUE function to Snowflake
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -791,8 +741,6 @@ JSON_VALUE
     [ JSON_value_on_empty_clause ][ JSON_value_on_mismatch_clause ]
   )
 ```
-
-Copy
 
 The JSON_VALUE_UDF is a Snowflake implementation of the JSONPath specification that uses a modified
 version of the original JavaScript implementation developed by
@@ -845,8 +793,6 @@ INSERT INTO MY_TAB VALUES ('{
   }');
 ```
 
-Copy
-
 ##### Snowflake[¶](#id51)
 
 ```
@@ -890,8 +836,6 @@ CREATE OR REPLACE TABLE MY_TAB (
     }
   }');
 ```
-
-Copy
 
 #### JSON_VALUE Patterns[¶](#json-value-patterns)
 
@@ -953,8 +897,6 @@ SELECT JSON_VALUE(MY_JSON, '$..book[0].title' RETURNING DATE ERROR ON ERROR) AS 
 -- ORA-40450: invalid ON ERROR clause
 SELECT JSON_VALUE(MY_JSON, '$..book[0].title' ERROR ON MISMATCH) AS VALUE FROM MY_TAB;
 ```
-
-Copy
 
 ##### Results[¶](#results)
 
@@ -1070,8 +1012,6 @@ SELECT
 SON_VALUE_UDF(MY_JSON, '$..book[0].title', NULL, NULL, NULL) AS VALUE FROM
 MY_TAB;
 ```
-
-Copy
 
 ##### Results[¶](#id54)
 
@@ -1253,8 +1193,6 @@ $$
 ;
 ```
 
-Copy
-
 ### Usage Example[¶](#id60)
 
 #### Oracle[¶](#id61)
@@ -1262,8 +1200,6 @@ Copy
 ```
 select to_date('2020001', 'J') from dual;
 ```
-
-Copy
 
 ##### Result[¶](#id62)
 
@@ -1288,8 +1224,6 @@ select
 PUBLIC.JULIAN_TO_GREGORIAN_DATE_UDF('2020001', 'J')
 from dual;
 ```
-
-Copy
 
 ##### Result[¶](#id64)
 
@@ -1327,8 +1261,6 @@ is **Snowflake**
 MONTHS_BETWEEN(date1, date2)
 ```
 
-Copy
-
 Oracle `MONTHS_BETWEEN` and Snowflake `MONTHS_BETWEEN` function, have some functional differences,
 to minimize these differences and replicate Oracle `MONTHS_BETWEEN` function better, we added a
 custom UDF.
@@ -1356,8 +1288,6 @@ $$
 ;
 ```
 
-Copy
-
 ##### Oracle[¶](#id69)
 
 ```
@@ -1368,8 +1298,6 @@ SELECT
 	MONTHS_BETWEEN('1999-12-25 01:15:16', '1900-12-11 02:05:16')
 FROM DUAL;
 ```
-
-Copy
 
 ##### Result[¶](#id70)
 
@@ -1388,8 +1316,6 @@ SELECT
 	MONTHS_BETWEEN('1999-12-25 01:15:16', '1900-12-11 02:05:16')
 FROM DUAL;
 ```
-
-Copy
 
 ##### Result[¶](#id72)
 
@@ -1410,7 +1336,7 @@ No related EWIs.
 
 ## REGEXP LIKE UDF[¶](#regexp-like-udf)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -1423,8 +1349,6 @@ Some parts in the output code are omitted for clarity reasons.
 ```
 REGEXP_LIKE(source_char, pattern [, match_param ])
 ```
-
-Copy
 
 Oracle `REGEXP_LIKE` and Snowflake `REGEXP_LIKE` condition, have some functional differences, to
 minimize these differences and replicate Oracle `REGEXP_LIKE` function better, we added a custom
@@ -1455,8 +1379,6 @@ $$
 return COL.match(new RegExp(PATTERN));
 $$;
 ```
-
-Copy
 
 ##### Oracle[¶](#id79)
 
@@ -1494,8 +1416,6 @@ $$
 return COL.match(new RegExp(PATTERN, MATCHPARAM));
 $$;
 ```
-
-Copy
 
 ##### Oracle[¶](#id83)
 
@@ -1557,8 +1477,6 @@ WITH RESULTS(days,hours,min,sec,millisecond,sign) AS
 $$;
 ```
 
-Copy
-
 ##### Oracle[¶](#id89)
 
 ```
@@ -1574,8 +1492,6 @@ INSERT INTO timestampdiff_table VALUES ('1999-12-25 01:15:16', '1900-12-11 02:05
 --Select
 SELECT col1 - col2 FROM timestampdiff_table;
 ```
-
-Copy
 
 ##### Result[¶](#id90)
 
@@ -1616,8 +1532,6 @@ PUBLIC.TIMESTAMP_DIFF_UDF( col1, col2) FROM
 timestampdiff_table;
 ```
 
-Copy
-
 ##### Result[¶](#id92)
 
 <!-- prettier-ignore -->
@@ -1651,8 +1565,6 @@ No related EWIs.
 ```
 TRUNC(date [, fmt ])
 ```
-
-Copy
 
 Oracle `TRUNC` and Snowflake `TRUNC` function with date arguments have some functional differences.
 
@@ -1697,8 +1609,6 @@ $$
 $$;
 ```
 
-Copy
-
 ##### Oracle[¶](#id98)
 
 ```
@@ -1708,8 +1618,6 @@ TRUNC(
 	)
 "Date" FROM DUAL;
 ```
-
-Copy
 
 ##### Result[¶](#id99)
 
@@ -1727,8 +1635,6 @@ TRUNC(
 	)
 "Date" FROM DUAL;
 ```
-
-Copy
 
 ##### Result[¶](#id101)
 
@@ -1801,8 +1707,6 @@ $$
 ;
 ```
 
-Copy
-
 ### TRUNC format scenarios[¶](#trunc-format-scenarios)
 
 Warning
@@ -1827,8 +1731,6 @@ SELECT TRUNC(TO_DATE('20/04/2022 13:21:10','DD/MM/YYYY HH24:MI:SS'),'DD') FROM D
 SELECT TRUNC(TO_DATE('20/04/2022 13:21:10','DD/MM/YYYY HH24:MI:SS'),'HH') FROM DUAL UNION ALL
 SELECT TRUNC(TO_DATE('20/04/2022 13:21:10','DD/MM/YYYY HH24:MI:SS'),'MI') FROM DUAL;
 ```
-
-Copy
 
 ##### Result[¶](#id104)
 
@@ -1865,8 +1767,6 @@ SELECT TRUNC(TO_DATE('20/04/2022 13:21:10','DD/MM/YYYY HH24:MI:SS'),'HH') FROM D
 SELECT TRUNC(TO_DATE('20/04/2022 13:21:10','DD/MM/YYYY HH24:MI:SS'),'MI') FROM DUAL;
 ```
 
-Copy
-
 ##### Result[¶](#id106)
 
 <!-- prettier-ignore -->
@@ -1901,8 +1801,6 @@ SELECT TRUNC(TO_DATE('20/04/2022 13:21:10','DD/MM/YYYY HH24:MI:SS'),'HH12') FROM
 SELECT TRUNC(TO_DATE('20/04/2022 13:21:10','DD/MM/YYYY HH24:MI:SS'),'HH24') FROM DUAL;
 ```
 
-Copy
-
 ##### Result[¶](#id108)
 
 <!-- prettier-ignore -->
@@ -1932,8 +1830,6 @@ SELECT TRUNC(TO_DATE('20/04/2022 13:21:10','DD/MM/YYYY HH24:MI:SS'), 'HH') FROM 
 SELECT TRUNC(TO_DATE('20/04/2022 13:21:10','DD/MM/YYYY HH24:MI:SS'), 'HH') FROM DUAL;
 ```
 
-Copy
-
 ##### Result[¶](#id110)
 
 <!-- prettier-ignore -->
@@ -1959,8 +1855,6 @@ SELECT TRUNC(TO_DATE('20/04/2022 13:21:10','DD/MM/YYYY HH24:MI:SS'),'DY') FROM D
 SELECT TRUNC(TO_DATE('20/04/2022 13:21:10','DD/MM/YYYY HH24:MI:SS'),'D') FROM DUAL;
 ```
 
-Copy
-
 ##### Result[¶](#id112)
 
 <!-- prettier-ignore -->
@@ -1980,8 +1874,6 @@ TRUNC_UDF(TO_DATE('20/04/2022 13:21:10','DD/MM/YYYY HH24:MI:SS'),'DY') FROM DUAL
 SELECT
 TRUNC_UDF(TO_DATE('20/04/2022 13:21:10','DD/MM/YYYY HH24:MI:SS'),'D') FROM DUAL;
 ```
-
-Copy
 
 ##### Result[¶](#id114)
 
@@ -2005,8 +1897,6 @@ SELECT TRUNC(TO_DATE('20/04/2022 13:21:10','DD/MM/YYYY HH24:MI:SS'),'I') FROM DU
 SELECT TRUNC(TO_DATE('20/04/2022 13:21:10','DD/MM/YYYY HH24:MI:SS'),'WW') FROM DUAL UNION ALL
 SELECT TRUNC(TO_DATE('20/04/2022 13:21:10','DD/MM/YYYY HH24:MI:SS'),'W') FROM DUAL;
 ```
-
-Copy
 
 ##### Result[¶](#id116)
 
@@ -2040,8 +1930,6 @@ SELECT
 TRUNC_UDF(TO_DATE('20/04/2022 13:21:10','DD/MM/YYYY HH24:MI:SS'),'W') FROM DUAL;
 ```
 
-Copy
-
 ##### Result[¶](#id118)
 
 <!-- prettier-ignore -->
@@ -2055,7 +1943,7 @@ Copy
 |2022-04-16|
 |2022-04-15|
 
-Note
+**Note:**
 
 When the `TRUNC` function is used with an unsupported format or a parameter that cannot be handled
 by SnowConvert AI. To avoid any issues, the format is replaced with a valid format, or `TRUNC_UDF`
@@ -2085,8 +1973,6 @@ No related EWIs.
 TRUNC(n1 [, n2 ])
 ```
 
-Copy
-
 TRUNC_UDF for numeric values will be added to handle cases **where the first column has an
 unrecognized data type.**
 
@@ -2095,8 +1981,6 @@ Example:
 ```
 SELECT TRUNC(column1) FROM DUAL;
 ```
-
-Copy
 
 If the definition of `column1` was not provided to the tool. Then the `TRUNC_UDF` will be added and
 in execution time, the overload of `TRUNC_UDF` will handle the case if it is a numeric or a date
@@ -2132,8 +2016,6 @@ $$
 $$;
 ```
 
-Copy
-
 ##### Oracle[¶](#id125)
 
 ```
@@ -2145,8 +2027,6 @@ SELECT
 	TRUNC ( 135.135 )
 FROM DUAL;
 ```
-
-Copy
 
 ##### Result[¶](#id126)
 
@@ -2166,8 +2046,6 @@ SELECT
 	TRUNC ( 135.135 )
 FROM DUAL;
 ```
-
-Copy
 
 ##### Result[¶](#id128)
 
@@ -2200,8 +2078,6 @@ $$
     TRUNC(INPUT, SCALE)
 $$;
 ```
-
-Copy
 
 ##### Oracle[¶](#id130)
 
@@ -2240,8 +2116,6 @@ SELECT
 	TRUNC ( 135.135, 5 )
 FROM DUAL;
 ```
-
-Copy
 
 ##### Result[¶](#id131)
 
@@ -2287,8 +2161,6 @@ SELECT
 	TRUNC ( 135.135, 5 )
 FROM DUAL;
 ```
-
-Copy
 
 ##### Result[¶](#id133)
 
@@ -2395,11 +2267,9 @@ END
 $$;
 ```
 
-Copy
-
 ## DATEADD UDF INTERVAL[¶](#dateadd-udf-interval)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -2414,7 +2284,7 @@ This UDF is used to resolve operations with intervals like:
 - INTERVAL + UNKNOWN
 - UNKNOWN + INTERVAL
 
-Note
+**Note:**
 
 An UNKNOWN type is a column or expression whose type could not be resolved by Snow Convert, it use
 to happen when the DDLs for tables are not included in the migration or when there is an expression
@@ -2455,8 +2325,6 @@ FROM VARS
 $$;
 ```
 
-Copy
-
 #### DATEADD_UDF(date, string)[¶](#dateadd-udf-date-string)
 
 **Parameters**
@@ -2489,8 +2357,6 @@ SELECT
 FROM VARS
 $$;
 ```
-
-Copy
 
 #### DATEADD_UDF(string, timestamp)[¶](#dateadd-udf-string-timestamp)
 
@@ -2525,8 +2391,6 @@ FROM VARS
 $$;
 ```
 
-Copy
-
 #### DATEADD_UDF(timestamp, string)[¶](#dateadd-udf-timestamp-string)
 
 **Parameters**
@@ -2560,11 +2424,9 @@ FROM VARS
 $$;
 ```
 
-Copy
-
 #### Usage example[¶](#id142)
 
-Note
+**Note:**
 
 **`--disableDateAsTimestamp`**
 
@@ -2613,8 +2475,6 @@ SELECT
 FROM TIMES, UNKNOWN_TABLE;
 ```
 
-Copy
-
 ##### Results[¶](#id144)
 
 ```
@@ -2624,11 +2484,9 @@ Copy
 |2022-12-05 11:00:00.000|2023-12-05 11:00:00.000|2021-12-05 11:00:00.000|2022-01-05 11:00:00.000|2022-12-06 00:00:00.000|2023-12-06 00:00:00.000|2021-12-06 00:00:00.000|2022-01-06 00:00:00.000|2009-10-02 13:00:00.222|2009-10-02 13:10:00.000|2009-10-02 13:00:00.000|2021-12-05 11:00:00.000|2021-12-06 00:00:00.000|2009-11-01 12:00:00.000|2022-01-05 11:00:00.000|2022-01-06 00:00:00.000|2009-12-01 12:00:00.000|
 ```
 
-Copy
-
 ##### Snowflake[¶](#id145)
 
-Note
+**Note:**
 
 This configuration was used in Snowflake
 
@@ -2636,8 +2494,6 @@ This configuration was used in Snowflake
 ALTER SESSION SET TIMESTAMP_NTZ_OUTPUT_FORMAT= 'DD-MON-YY HH.MI.SS.FF6 AM';
 ALTER SESSION SET DATE_OUTPUT_FORMAT= 'DD-MON-YY';
 ```
-
-Copy
 
 ```
 -- DROP TABLE UNKNOWN_TABLE;
@@ -2697,8 +2553,6 @@ FROM
  UNKNOWN_TABLE;
 ```
 
-Copy
-
 ##### Results[¶](#id146)
 
 ```
@@ -2707,8 +2561,6 @@ Copy
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 |2022-12-05 11:00:00.000|2023-12-05 11:00:00.000|2021-12-05 11:00:00.000|2022-01-05 11:00:00.000|2022-12-06|2023-12-06|2021-12-06|2022-01-06|2009-10-02 13:00:00.222|2009-10-02 13:10:00.000|2009-10-02 13:00:00.000|2021-12-05 11:00:00.000|2021-12-06|2009-11-01 12:00:00.000|2022-01-05 11:00:00.000|2022-01-06|2009-12-01 12:00:00.000|
 ```
-
-Copy
 
 ### Known Issues[¶](#id147)
 
@@ -2730,7 +2582,7 @@ Snowflake does not support INTERVAL + INTERVAL operations.
 
 ## DATEDIFF UDF INTERVAL[¶](#datediff-udf-interval)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -2743,7 +2595,7 @@ This UDF is used to resolve operations with intervals like:
 - DATE - INTERVAL
 - TIMESTAMP - INTERVAL
 
-Note
+**Note:**
 
 An UNKNOWN type is a column or expression whose type could not be resolved by Snow Convert, it use
 to happen when the DDLs for tables are not included in the migration or when there is an expression
@@ -2783,8 +2635,6 @@ FROM VARS
 $$;
 ```
 
-Copy
-
 #### DATEADD_DIFF(date, string)[¶](#dateadd-diff-date-string)
 
 **Parameters**
@@ -2816,8 +2666,6 @@ SELECT
 FROM VARS
 $$;
 ```
-
-Copy
 
 #### DATEADD_DIFF(string, timestamp)[¶](#dateadd-diff-string-timestamp)
 
@@ -2851,8 +2699,6 @@ FROM VARS
 $$;
 ```
 
-Copy
-
 #### DATEADD_DIFF(timestamp, string)[¶](#dateadd-diff-timestamp-string)
 
 **Parameters**
@@ -2885,11 +2731,9 @@ FROM VARS
 $$;
 ```
 
-Copy
-
 #### Usage example[¶](#id155)
 
-Note
+**Note:**
 
 **`--disableDateAsTimestamp`**
 
@@ -2932,8 +2776,6 @@ SELECT
 FROM TIMES, UNKNOWN_TABLE;
 ```
 
-Copy
-
 ##### Result[¶](#id157)
 
 ```
@@ -2943,11 +2785,9 @@ Copy
 |2020-10-05 11:00:00.000|2019-10-05 11:00:00.000|2021-10-05 11:00:00.000|2021-09-05 11:00:00.000|2020-10-06 00:00:00.000|2019-10-06 00:00:00.000|2021-10-06 00:00:00.000|2021-09-06 00:00:00.000|2009-09-30 10:59:59.778|2009-09-30 10:50:00.000|2009-09-30 11:00:00.000|
 ```
 
-Copy
-
 ##### Snowflake[¶](#id158)
 
-Note
+**Note:**
 
 This configuration was used in Snowflake
 
@@ -2955,8 +2795,6 @@ This configuration was used in Snowflake
 ALTER SESSION SET TIMESTAMP_NTZ_OUTPUT_FORMAT= 'DD-MON-YY HH.MI.SS.FF6 AM';
 ALTER SESSION SET DATE_OUTPUT_FORMAT= 'DD-MON-YY';
 ```
-
-Copy
 
 ```
 -- DROP TABLE UNKNOWN_TABLE;
@@ -3004,8 +2842,6 @@ FROM
  UNKNOWN_TABLE;
 ```
 
-Copy
-
 ##### Result[¶](#id159)
 
 ```
@@ -3014,8 +2850,6 @@ Copy
 |---|---|---|---|---|---|---|---|---|---|---|
 |2020-10-05 11:00:00.000|2019-10-05 11:00:00.000|2021-10-05 11:00:00.000|2021-09-05 11:00:00.000|2020-10-06|2019-10-06|2021-10-06|2021-09-06|2009-09-30 10:59:59.778|2009-09-30 10:50:00.000|2009-09-30 11:00:00.000|
 ```
-
-Copy
 
 ### Known Issues[¶](#id160)
 

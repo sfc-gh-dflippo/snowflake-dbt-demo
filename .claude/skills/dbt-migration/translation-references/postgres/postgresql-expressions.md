@@ -21,8 +21,6 @@ title: SnowConvert AI - PostgreSQL - Expressions | Snowflake Documentation
 expression operator ALL (array expression)
 ```
 
-Copy
-
 To support this expression SnowConvert AI translates the `<> ALL` to `NOT IN` and the `= ANY` to
 `IN`
 
@@ -41,8 +39,6 @@ FROM someTable
 WHERE column_name = ANY (ARRAY[1, 2, 3]);
 ```
 
-Copy
-
 ##### Output Code:[¶](#output-code)
 
 ##### Snowflake[¶](#snowflake)
@@ -55,8 +51,6 @@ SELECT *
  FROM someTable
  WHERE column_name IN (1, 2, 3);
 ```
-
-Copy
 
 #### Known Issues [¶](#known-issues)
 

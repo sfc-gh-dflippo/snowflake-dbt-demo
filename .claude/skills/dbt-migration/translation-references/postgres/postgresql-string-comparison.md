@@ -19,8 +19,6 @@ insert into table1 values ('a','a ','a','a ');
 insert into table1 values ('b','b','b','b');
 ```
 
-Copy
-
 ### NULLIF[¶](#nullif)
 
 #### Varchar Data Type[¶](#varchar-data-type)
@@ -33,8 +31,6 @@ Input Code:
 SELECT NULLIF(c3,c4) FROM table1;
 ```
 
-Copy
-
 Output Code:
 
 ##### Snowflake[¶](#snowflake)
@@ -45,8 +41,6 @@ NULLIF(c3,c4) FROM
 table1;
 ```
 
-Copy
-
 #### Char Data Types[¶](#char-data-types)
 
 Input Code:
@@ -56,8 +50,6 @@ Input Code:
 ```
 select nullif(c1,c2) AS case2 from table1;
 ```
-
-Copy
 
 Output Code:
 
@@ -70,8 +62,6 @@ nullif(c1,c2) AS case2 from
 table1;
 ```
 
-Copy
-
 ### GREATEST or LEAST[¶](#greatest-or-least)
 
 Input Code:
@@ -82,8 +72,6 @@ Input Code:
 select '"' || greatest(c1, c2) || '"' AS greatest, '"' || least(c1, c2) || '"' AS least from table1;
 ```
 
-Copy
-
 Output Code:
 
 ##### Snowflake[¶](#id4)
@@ -93,5 +81,3 @@ Output Code:
 select '"' || GREATEST_IGNORE_NULLS(c1, c2) || '"' AS greatest, '"' || LEAST_IGNORE_NULLS(c1, c2) || '"' AS least from
 table1;
 ```
-
-Copy

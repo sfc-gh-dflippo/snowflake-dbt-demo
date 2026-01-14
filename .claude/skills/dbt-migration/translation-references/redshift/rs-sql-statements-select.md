@@ -32,6 +32,4 @@ SELECT
 [ OFFSET start ]
 ```
 
-Copy
-
 For more information please refer to each of the following links:

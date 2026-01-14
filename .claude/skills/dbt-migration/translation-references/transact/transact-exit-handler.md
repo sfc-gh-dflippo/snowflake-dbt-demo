@@ -34,8 +34,6 @@ DECLARE EXIT HANDLER FOR condition_value
   handler_action_statement;
 ```
 
-Copy
-
 ## Sample Source Patterns[¶](#sample-source-patterns)
 
 ### EXIT HANDLER Conversion from DB2/Teradata[¶](#exit-handler-conversion-from-db2-teradata)
@@ -65,8 +63,6 @@ BEGIN
     INSERT INTO audit_log VALUES ('Transaction completed successfully');
 END;
 ```
-
-Copy
 
 #### Output Code:[¶](#output-code)
 
@@ -99,8 +95,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### EXIT HANDLER with Specific Error Codes[¶](#exit-handler-with-specific-error-codes)
 
 #### Input Code:[¶](#id1)
@@ -123,8 +117,6 @@ BEGIN
     INSERT INTO success_log VALUES ('All inserts completed');
 END;
 ```
-
-Copy
 
 #### Output Code:[¶](#id3)
 
@@ -159,8 +151,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### EXIT HANDLER with NOT FOUND[¶](#exit-handler-with-not-found)
 
 #### Input Code:[¶](#id5)
@@ -184,8 +174,6 @@ BEGIN
     INSERT INTO results VALUES (v_name);
 END;
 ```
-
-Copy
 
 #### Output Code:[¶](#id7)
 
@@ -216,8 +204,6 @@ $$
     END;
 $$;
 ```
-
-Copy
 
 ## Known Issues[¶](#known-issues)
 
@@ -256,8 +242,6 @@ DECLARE EXIT HANDLER FOR SQLEXCEPTION
     INSERT INTO log VALUES ('General error');
 ```
 
-Copy
-
 #### Snowflake[¶](#snowflake)
 
 ```
@@ -271,8 +255,6 @@ EXCEPTION
             INSERT INTO log VALUES ('General error');
         END IF;
 ```
-
-Copy
 
 ### Mixed CONTINUE and EXIT Handlers[¶](#mixed-continue-and-exit-handlers)
 

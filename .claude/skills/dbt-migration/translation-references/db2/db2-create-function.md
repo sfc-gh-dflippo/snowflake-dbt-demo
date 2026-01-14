@@ -68,8 +68,6 @@ CREATE [ OR REPLACE ] FUNCTION function_name
            END }
 ```
 
-Copy
-
 ## UDF Option List[¶](#udf-option-list)
 
 ### Description[¶](#id1)
@@ -102,7 +100,7 @@ The following table shows the DB2 to Snowflake UDF option equivalencies:
 |`SECURED` / `NOT SECURED`|Not Needed|Snowflake uses different security model|
 |`PARAMETER CCSID`|Not Needed|Character set handling differs in Snowflake|
 
-Note
+**Note:**
 
 Options marked as “Not Needed” will be removed during migration because Snowflake either handles the
 functionality automatically (e.g., parallelization, NULL input handling) or the option is not
@@ -119,7 +117,7 @@ clause followed by a simple expression, calculation, or query.
 SnowConvert AI preserves these as **Inline Functions** in Snowflake, maintaining their simplicity
 and performance characteristics.
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -139,8 +137,6 @@ CONTAINS SQL
 RETURN price * tax_rate;
 ```
 
-Copy
-
 ### Output Code:[¶](#output-code)
 
 #### Snowflake[¶](#snowflake)
@@ -157,8 +153,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### Input Code:[¶](#id3)
 
 #### Db2 - Inline UDF with Select[¶](#db2-inline-udf-with-select)
@@ -171,8 +165,6 @@ DETERMINISTIC
 READS SQL DATA
 RETURN SELECT COUNT(*) FROM employees WHERE department_id = dept_id;
 ```
-
-Copy
 
 ### Output Code:[¶](#id4)
 
@@ -192,8 +184,6 @@ $$
      WHERE department_id = :dept_id
 $$;
 ```
-
-Copy
 
 ### Known Issues[¶](#known-issues)
 
@@ -217,7 +207,7 @@ it will be translated to a **Snowflake Scripting UDF**. This preserves the funct
 adapting it to Snowflake’s UDF implementation. Functions that contain unsupported constructs will be
 converted to stored procedures instead.
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -253,8 +243,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 ### Output Code:[¶](#id9)
 
 #### Snowflake[¶](#id10)
@@ -286,8 +274,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### Input Code:[¶](#id11)
 
 #### Db2 - Scalar UDF with WHILE Loop[¶](#db2-scalar-udf-with-while-loop)
@@ -313,8 +299,6 @@ BEGIN
     RETURN amount;
 END;
 ```
-
-Copy
 
 ### Output Code:[¶](#id12)
 
@@ -342,8 +326,6 @@ $$
     END
 $$;
 ```
-
-Copy
 
 ### Input Code:[¶](#id14)
 
@@ -376,8 +358,6 @@ BEGIN
     RETURN v_FinalPrice;
 END;
 ```
-
-Copy
 
 ### Output Code:[¶](#id15)
 
@@ -412,8 +392,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### Input Code:[¶](#id17)
 
 #### Db2 - Scalar UDF with Values statement for variable assignment.[¶](#db2-scalar-udf-with-values-statement-for-variable-assignment)
@@ -444,8 +422,6 @@ BEGIN
     RETURN v_FinalPrice;
 END;
 ```
-
-Copy
 
 ### Output Code:[¶](#id18)
 
@@ -481,8 +457,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### Known Issues[¶](#id20)
 
 Warning
@@ -515,7 +489,7 @@ adapting them to Snowflake’s implementation. Functions that contain unsupporte
 [Snowflake Scripting](https://docs.snowflake.com/en/developer-guide/udf/sql/udf-sql-procedural-functions)
 elements will be converted to stored procedures that return result sets instead.
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -543,8 +517,6 @@ RETURN
     ORDER BY emp_name;
 ```
 
-Copy
-
 ### Output Code:[¶](#id25)
 
 #### Snowflake[¶](#id26)
@@ -569,8 +541,6 @@ $$
     ORDER BY emp_name
 $$;
 ```
-
-Copy
 
 ### Input Code:[¶](#id27)
 
@@ -599,8 +569,6 @@ RETURN
       AND s.amount >= min_amount
     ORDER BY s.sale_date DESC, s.amount DESC;
 ```
-
-Copy
 
 ### Output Code:[¶](#id28)
 
@@ -635,8 +603,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### Known Issues[¶](#id30)
 
 There are no known issues.
@@ -658,7 +624,7 @@ functions as **Stored Procedures** instead.
 **SnowConvert AI Migration**: These UDFs are converted to stored procedures with an **EWI** message
 explaining why the direct UDF migration was not possible.
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -682,8 +648,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 #### Output Code:[¶](#id35)
 
 ##### Snowflake[¶](#id36)
@@ -706,8 +670,6 @@ BEGIN
 END
 $$;
 ```
-
-Copy
 
 ### Known Issues[¶](#id37)
 

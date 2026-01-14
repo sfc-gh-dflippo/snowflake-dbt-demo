@@ -24,8 +24,6 @@ AS <query>
 ]
 ```
 
-Copy
-
 ## DISTRIBUTED BY[¶](#distributed-by)
 
 Hint
@@ -44,8 +42,6 @@ performance by distributing data efficiently.
 DISTRIBUTED BY ( <column> [<opclass>] [, ... ] )
 ```
 
-Copy
-
 ### Sample Source[¶](#sample-source)
 
 Input Code:
@@ -62,8 +58,6 @@ FROM products
 GROUP BY category
 DISTRIBUTED BY (category);
 ```
-
-Copy
 
 Output Code:
 
@@ -87,11 +81,9 @@ FROM
     GROUP BY category;
 ```
 
-Copy
-
 ## DISTRIBUTED RANDOMLY - REPLICATED[¶](#distributed-randomly-replicated)
 
-Note
+**Note:**
 
 This syntax is not needed in Snowflake.
 

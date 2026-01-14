@@ -44,8 +44,6 @@ BEGIN
 END
 ```
 
-Copy
-
 ##### Begin/Commit transaction with label[¶](#begin-commit-transaction-with-label)
 
 ```
@@ -60,8 +58,6 @@ BEGIN
       COMMIT TRANSACTION LabelA;
 END
 ```
-
-Copy
 
 ##### Snowflake SQL[¶](#snowflake-sql)
 
@@ -89,8 +85,6 @@ $$
 $$;
 ```
 
-Copy
-
 ##### BEGIN/COMMIT transaction with label[¶](#id1)
 
 ```
@@ -116,8 +110,6 @@ $$
     END;
 $$;
 ```
-
-Copy
 
 ### Known Issues[¶](#known-issues)
 
@@ -152,7 +144,7 @@ Applies to
 - SQL Server
 - Azure Synapse Analytics
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -187,8 +179,6 @@ CASE
 END
 ```
 
-Copy
-
 Note: Transact-SQL allows to optionally encapsulate the input_expression and the boolean_expression
 in parentheses; Snowflake Scripting too.
 
@@ -219,8 +209,6 @@ GO
 EXEC SelectCaseDemoProcedure;
 ```
 
-Copy
-
 ##### Searched CASE[¶](#searched-case)
 
 ```
@@ -238,8 +226,6 @@ GO
 
 EXEC SelectCaseDemoProcedure;
 ```
-
-Copy
 
 ##### Result[¶](#result)
 
@@ -296,8 +282,6 @@ $$;
 CALL SelectCaseDemoProcedure();
 ```
 
-Copy
-
 ##### Searched CASE[¶](#id7)
 
 ```
@@ -327,8 +311,6 @@ $$;
 
 CALL SelectCaseDemoProcedure();
 ```
-
-Copy
 
 ##### Result[¶](#id8)
 
@@ -378,8 +360,6 @@ EXEC @result = SetCaseDemoProcedure;
 PRINT @result;
 ```
 
-Copy
-
 ##### Searched Case[¶](#id11)
 
 ```
@@ -405,8 +385,6 @@ DECLARE @result INT;
 EXEC @result = SetCaseDemoProcedure;
 PRINT @result;
 ```
-
-Copy
 
 ##### Result[¶](#id12)
 
@@ -464,8 +442,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Searched Case[¶](#id14)
 
 ```
@@ -508,8 +484,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Result[¶](#id15)
 
 <!-- prettier-ignore -->
@@ -531,7 +505,7 @@ Applies to
 - SQL Server
 - Azure Synapse Analytics
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -561,8 +535,6 @@ AS { [ BEGIN ] sql_statement [;] [ ...n ] [ END ] }
 [;]
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id18)
 
 #### Stored procedure without body[¶](#stored-procedure-without-body)
@@ -578,8 +550,6 @@ equivalence.
 ```
 CREATE PROC SampleProcedure AS;
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id20)
 
@@ -597,8 +567,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### Basic stored procedure[¶](#basic-stored-procedure)
 
 The following example details a simple stored procedure that will include a new Privacy department
@@ -611,8 +579,6 @@ CREATE OR ALTER PROCEDURE Add_Privacy_Department
 AS
 EXECUTE ('INSERT INTO HumanResources.Department VALUES (''Privacy'', ''Executive General and Administration'', default)');
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id22)
 
@@ -631,8 +597,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### Alter procedure[¶](#alter-procedure)
 
 The transformation for the ALTER procedure is equivalent to the basic procedure.
@@ -644,8 +608,6 @@ ALTER PROCEDURE procedureName
 AS
 SELECT 1 AS ThisDB;
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id24)
 
@@ -667,8 +629,6 @@ END;
 $$;
 ```
 
-Copy
-
 #### Using parameters[¶](#using-parameters)
 
 You can use parameters to drive your logic or construct dynamic SQL statements inside your stored
@@ -686,8 +646,6 @@ AS
     EXECUTE (@dynSqlStatement);
   END;
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id26)
 
@@ -715,8 +673,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### Output Parameters[¶](#output-parameters)
 
 Transact-SQL output keyword indicates that the parameter is an output parameter, whose value will be
@@ -736,8 +692,6 @@ BEGIN
    WHERE NationalIDNumber = @employeeID
 END;
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id28)
 
@@ -762,8 +716,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### Optional Parameters[¶](#optional-parameters)
 
 A parameter is considered optional if the parameter has a default value specified when it is
@@ -783,8 +735,6 @@ GO
 EXEC OPTIONAL_PARAMETER @VAR2 = 4
 ```
 
-Copy
-
 ##### Snowflake Scripting[¶](#id30)
 
 ```
@@ -802,8 +752,6 @@ $$;
 
 CALL OPTIONAL_PARAMETER(VAR2 => 4);
 ```
-
-Copy
 
 #### EXECUTE AS[¶](#execute-as)
 
@@ -829,8 +777,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Snowflake Scripting[¶](#id32)
 
 ```
@@ -855,8 +801,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### Caller[¶](#caller)
 
 ##### Transact-SQL[¶](#id33)
@@ -873,8 +817,6 @@ BEGIN
    WHERE NationalIDNumber = @employeeID
 END;
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id34)
 
@@ -900,8 +842,6 @@ $$
 $$;
 ```
 
-Copy
-
 Warning
 
 SELF and specific user (‘user_name’) execution contexts are not supported in Snowflake Scripting.
@@ -921,8 +861,6 @@ BEGIN
    SELECT * FROM Table1;
 END;
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id36)
 
@@ -946,8 +884,6 @@ $$
    END;
 $$;
 ```
-
-Copy
 
 ### Known Issues[¶](#id37)
 
@@ -984,7 +920,7 @@ Applies to
 - SQL Server
 - Azure Synapse Analytics
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -1014,8 +950,6 @@ DECLARE cursor_name CURSOR [ LOCAL | GLOBAL ]
 [;]
 ```
 
-Copy
-
 ```
  FETCH
           [ [ NEXT | PRIOR | FIRST | LAST
@@ -1028,25 +962,17 @@ Copy
 [ INTO @variable_name [ ,...n ] ]
 ```
 
-Copy
-
 ```
 OPEN { { [ GLOBAL ] cursor_name } | cursor_variable_name }
 ```
-
-Copy
 
 ```
 CLOSE { { [ GLOBAL ] cursor_name } | cursor_variable_name }
 ```
 
-Copy
-
 ```
 DEALLOCATE { { [ GLOBAL ] cursor_name } | @cursor_variable_name }
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id40)
 
@@ -1100,15 +1026,11 @@ AS
 GO
 ```
 
-Copy
-
 ##### Result[¶](#id43)
 
 ```
 B
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id44)
 
@@ -1168,15 +1090,11 @@ $$
 $$;
 ```
 
-Copy
-
 ##### Result[¶](#id46)
 
 ```
 B
 ```
-
-Copy
 
 ### Known Issues[¶](#id47)
 
@@ -1226,8 +1144,6 @@ WHILE 1=0
 END;
 ```
 
-Copy
-
 ##### Snowflake[¶](#snowflake)
 
 ```
@@ -1258,8 +1174,6 @@ $$
    END;
 $$;
 ```
-
-Copy
 
 #### OPEN[¶](#open)
 
@@ -1296,8 +1210,6 @@ AS
     CLOSE @CursorVar;
 GO
 ```
-
-Copy
 
 Environment variables
 
@@ -1360,8 +1272,6 @@ DECLARE
      }
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id50)
 
 #### Declare variables[¶](#declare-variables)
@@ -1379,8 +1289,6 @@ DECLARE @find2 VARCHAR(30) = 'Default';
 DECLARE @var VARCHAR(5), @var2 varchar(5);
 ```
 
-Copy
-
 ##### Snowflake Scripting[¶](#id52)
 
 ```
@@ -1393,8 +1301,6 @@ BEGIN
     RETURN '';
 END;
 ```
-
-Copy
 
 #### Declare table variables[¶](#declare-table-variables)
 
@@ -1409,8 +1315,6 @@ DECLARE @MyTableVar TABLE(
     column1 varchar(10));
 ```
 
-Copy
-
 ##### Snowflake Scripting[¶](#id54)
 
 ```
@@ -1420,8 +1324,6 @@ BEGIN
             column1 VARCHAR(10));
 END;
 ```
-
-Copy
 
 #### DECLARE statement outside routines (functions and procedures)[¶](#declare-statement-outside-routines-functions-and-procedures)
 
@@ -1438,8 +1340,6 @@ SET @Group = N'North America';
 SET @Sales = 2000000;
 ```
 
-Copy
-
 ##### Snowflake Scripting[¶](#id56)
 
 ```
@@ -1452,8 +1352,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 If there is a scenario with only DECLARE statements, the BEGIN…END block should have a RETURN NULL
 statement to avoid errors, since this block can’t be empty.
 
@@ -1462,8 +1360,6 @@ statement to avoid errors, since this block can’t be empty.
 ```
 DECLARE @Group nvarchar(50), @Sales MONEY;
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id58)
 
@@ -1476,8 +1372,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 ## EXECUTE[¶](#execute)
 
 Translation reference to convert Transact-SQL Execute statement to Snowflake
@@ -1487,7 +1381,7 @@ Applies to
 - SQL Server
 - Azure Synapse Analytics
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -1521,8 +1415,6 @@ information regarding Transact-SQL EXECUTE, check
 [;]
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id60)
 
 #### Execution of character string[¶](#execution-of-character-string)
@@ -1538,8 +1430,6 @@ CREATE OR ALTER PROCEDURE AddPrivacyDepartment
 AS
 EXECUTE ('INSERT INTO HumanResources.Department VALUES (''Privacy'', ''Executive General and Administration'', default)');
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id62)
 
@@ -1558,8 +1448,6 @@ END;
 $$;
 ```
 
-Copy
-
 #### Execution of stored procedure[¶](#execution-of-stored-procedure)
 
 EXECUTE can also be used to call an existing stored procedure. The following example will call the
@@ -1572,8 +1460,6 @@ new department was successfully included.
 EXECUTE AddPrivacyDepartment;
 SELECT DepartmentID, Name, GroupName FROM HumanResources.Department;
 ```
-
-Copy
 
 ##### Result[¶](#id64)
 
@@ -1610,8 +1496,6 @@ GroupName
 FROM
 HumanResources.Department;
 ```
-
-Copy
 
 ##### Result[¶](#id66)
 
@@ -1661,8 +1545,6 @@ EXECUTE Set_New_Price @ProductID = 707, @NewPrice = 34.99;
 SELECT ListPrice FROM Production.ProductListPriceHistory WHERE ProductID = 707 AND EndDate IS NULL;
 ```
 
-Copy
-
 ##### Result[¶](#id68)
 
 <!-- prettier-ignore -->
@@ -1704,8 +1586,6 @@ FROM
 WHERE
   ProductID = 707 AND EndDate IS NULL;
 ```
-
-Copy
 
 ##### Result[¶](#id70)
 
@@ -1754,8 +1634,6 @@ GO
 EXECUTE Set_New_Price @ProductID = 707;
 SELECT ListPrice FROM Production.ProductListPriceHistory WHERE ProductID = 707 AND EndDate IS NULL;
 ```
-
-Copy
 
 ##### Result[¶](#id74)
 
@@ -1818,8 +1696,6 @@ WHERE
   ProductID = 707 AND EndDate IS NULL;
 ```
 
-Copy
-
 #### Unsupported Optional arguments[¶](#id76)
 
 - @return_status
@@ -1857,8 +1733,6 @@ For more information for Transact-SQL IF…ELSE, check
 [ ELSE
      { sql_statement | statement_block } ]
 ```
-
-Copy
 
 Note: To define a statement block, use the control-of-flow keywords `BEGIN` and `END`.
 
@@ -1898,8 +1772,6 @@ EXEC @result = IfElseDemoProcedure;
 PRINT @result;
 ```
 
-Copy
-
 ##### Result[¶](#id81)
 
 <!-- prettier-ignore -->
@@ -1909,7 +1781,7 @@ Copy
 
 ##### Snowflake Scripting[¶](#id82)
 
-Note
+**Note:**
 
 Notice that in Snowflake Scripting, the embedded IF… ELSE condition is called ELSEIF.
 
@@ -1957,8 +1829,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Result[¶](#id84)
 
 <!-- prettier-ignore -->
@@ -1984,8 +1854,6 @@ IF @maxWeight <= 99
 ELSE
     SELECT @productKey, 'This product is available for shipping or pickup.'
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id86)
 
@@ -2016,8 +1884,6 @@ BEGIN
     RETURN return_arr;
 END;
 ```
-
-Copy
 
 ### Related EWIs[¶](#id87)
 
@@ -2066,8 +1932,6 @@ Fail:
 END
 ```
 
-Copy
-
 ##### Snowflake SQL[¶](#id91)
 
 ##### Labeled statements[¶](#id92)
@@ -2107,8 +1971,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### LABEL and GOTO statement outside routines (functions and procedures)[¶](#label-and-goto-statement-outside-routines-functions-and-procedures)
 
 ##### Transact-SQL[¶](#id93)
@@ -2121,8 +1983,6 @@ FirstStat:
 SecondStat:
     INSERT INTO T12 VALUES (2);
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id94)
 
@@ -2144,8 +2004,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 ### Related EWIs[¶](#id95)
 
 1. [SSC-EWI-TS0045](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/sqlServerEWI.html#ssc-ewi-ts0045):
@@ -2163,7 +2021,7 @@ Applies to
 - SQL Server
 - Azure Synapse Analytics
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -2203,8 +2061,6 @@ EXEC dbo.outmain
     @name = @name OUTPUT;
 ```
 
-Copy
-
 ##### Snowflake Scripting[¶](#id100)
 
 ```
@@ -2237,8 +2093,6 @@ $$
     END;
 $$;
 ```
-
-Copy
 
 #### Multiple OUT parameters[¶](#multiple-out-parameters)
 
@@ -2278,8 +2132,6 @@ GO
 EXEC basicProcCall;
 ```
 
-Copy
-
 ##### Snowflake Scripting[¶](#id102)
 
 ```
@@ -2317,8 +2169,6 @@ $$;
 CALL basicProcCall();
 ```
 
-Copy
-
 #### OUT parameters and return values[¶](#out-parameters-and-return-values)
 
 Transact-SQL allows procedures to have return values. When a procedure has both a return value and
@@ -2346,8 +2196,6 @@ DECLARE @returnValue INT;
 EXEC @returnValue = dbo.outmain
     @name = @name OUTPUT;
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id104)
 
@@ -2387,8 +2235,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### Customer data type OUT parameters[¶](#customer-data-type-out-parameters)
 
 when the output parameter is a customer type, the process is similar to a regular data type.
@@ -2406,8 +2252,6 @@ BEGIN
   WHERE employee_id = @p_employee_id;
 END;
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id106)
 
@@ -2432,8 +2276,6 @@ $$
   END;
 $$;
 ```
-
-Copy
 
 ### Known Issues[¶](#id107)
 
@@ -2492,8 +2334,6 @@ SET
 }
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id110)
 
 #### Transact-SQL[¶](#id111)
@@ -2536,8 +2376,6 @@ EXEC @result = SetProcedure;
 PRINT @result;
 ```
 
-Copy
-
 ##### Case 2[¶](#case-2)
 
 ```
@@ -2558,8 +2396,6 @@ AS
 	WHERE LastName like 'B%';
 GO
 ```
-
-Copy
 
 ##### Result 1[¶](#result-1)
 
@@ -2629,8 +2465,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Case 2[¶](#id114)
 
 ```
@@ -2665,8 +2499,6 @@ $$
 $$;
 ```
 
-Copy
-
 ##### Result 1[¶](#id115)
 
 <!-- prettier-ignore -->
@@ -2689,8 +2521,6 @@ SET @Group = N'North America';
 SET @Sales = 2000000;
 ```
 
-Copy
-
 ##### Snowflake Scripting[¶](#id117)
 
 ```
@@ -2703,8 +2533,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 If there is a scenario with only SET statements, the DECLARE block is not necessary. Probably this
 scenario will produce runtime errors if there is an attempt of setting a value to a variable that is
 not declared.
@@ -2715,8 +2543,6 @@ not declared.
 SET @Group = N'North America';
 ```
 
-Copy
-
 ##### Snowflake Scripting[¶](#id119)
 
 ```
@@ -2724,8 +2550,6 @@ BEGIN
     _GROUP := 'North America';
 END;
 ```
-
-Copy
 
 ### Known Issues[¶](#id120)
 
@@ -2739,8 +2563,6 @@ DECLARE @p Point;
 SET @p.X = @p.X + 1.1;
 ```
 
-Copy
-
 ##### 2. SET of a local variable with mutator method[¶](#set-of-a-local-variable-with-mutator-method)
 
 This type of set is not currently supported by Snowflake scripting.
@@ -2749,8 +2571,6 @@ This type of set is not currently supported by Snowflake scripting.
  // TSQL custom data type with mutator method
 SET @p.SetXY(22, 23);
 ```
-
-Copy
 
 ### Related EWIs[¶](#id121)
 
@@ -2797,16 +2617,12 @@ BEGIN
 END;
 ```
 
-Copy
-
 #### Output[¶](#output)
 
 ```
 <!-- prettier-ignore -->
 |error|
 ```
-
-Copy
 
 ##### Snowflake SQL[¶](#id125)
 
@@ -2832,16 +2648,12 @@ $$
 $$;
 ```
 
-Copy
-
 ##### Output[¶](#id126)
 
 ```
 <!-- prettier-ignore -->
 |error|
 ```
-
-Copy
 
 #### Try catch outside routines (functions and procedures)[¶](#try-catch-outside-routines-functions-and-procedures)
 
@@ -2855,8 +2667,6 @@ BEGIN CATCH
     SELECT 'error';
 END CATCH;
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id128)
 
@@ -2883,8 +2693,6 @@ BEGIN
     RETURN return_arr;
 END;
 ```
-
-Copy
 
 ### Related EWIs[¶](#id129)
 
@@ -2914,8 +2722,6 @@ For more information for Transact-SQL While, check
      { sql_statement | statement_block | BREAK | CONTINUE }
 ```
 
-Copy
-
 Note: To define a statement block, use the control-of-flow keywords `BEGIN` and `END`.
 
 ### Sample Source Patterns[¶](#id131)
@@ -2927,7 +2733,7 @@ Note: To define a statement block, use the control-of-flow keywords `BEGIN` and 
 The following code refers to a While Loop in Transact-SQL that iterates the @Iteration variable and
 controls the flow of the loop to terminate when the value of @Iteration equals 10.
 
-Note
+**Note:**
 
 Statements after the `CONTINUE` keyword will not be executed.
 
@@ -2960,8 +2766,6 @@ EXEC @result = WhileDemoProcedure;
 PRINT @result;
 ```
 
-Copy
-
 ##### Result[¶](#id134)
 
 <!-- prettier-ignore -->
@@ -2971,7 +2775,7 @@ Copy
 
 ##### Snowflake Scripting[¶](#id135)
 
-Note
+**Note:**
 
 As well as Transact-SQL, in Snowflake Scripting the statements after the `CONTINUE` keyword will not
 be executed.
@@ -3018,8 +2822,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Loop keyword[¶](#loop-keyword)
 
 Snowflake Scripting allows to use `LOOP` keyword instead of `DO` and the `END LOOP` expression
@@ -3030,8 +2832,6 @@ WHILE (Boolean_expression) LOOP
     -- statement or statement block
 END LOOP;
 ```
-
-Copy
 
 ##### Result[¶](#id137)
 
@@ -3044,7 +2844,7 @@ Copy
 
 ##### Transact-SQL[¶](#id138)
 
-Note
+**Note:**
 
 Please note this example was written while the IF ELSE statement was not supported, the differences
 in the results should disappear when support for the statement is implemented.
@@ -3069,8 +2869,6 @@ DECLARE @result INT;
 EXEC @result = WhileEmptyBodyProc;
 PRINT @result;
 ```
-
-Copy
 
 ##### Result[¶](#id139)
 
@@ -3116,8 +2914,6 @@ $$
 $$;
 ```
 
-Copy
-
 ##### Result[¶](#id141)
 
 <!-- prettier-ignore -->
@@ -3150,8 +2946,6 @@ BEGIN
     END;
 ```
 
-Copy
-
 ##### Snowflake Scripting[¶](#id143)
 
 ```
@@ -3172,8 +2966,6 @@ BEGIN
     END LOOP;
 END;
 ```
-
-Copy
 
 ### Related EWIs[¶](#id144)
 

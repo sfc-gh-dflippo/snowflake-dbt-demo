@@ -24,8 +24,6 @@ For more information on Teradata
 ROLLBACK [WORK] [abort_message] [FROM clause] [WHERE clause];
 ```
 
-Copy
-
 ### Sample Source Patterns [¶](#sample-source-patterns)
 
 #### Basic ABORT and ROLLBACK[¶](#basic-abort-and-rollback)
@@ -41,8 +39,6 @@ BEGIN
     ROLLBACK;
 END;
 ```
-
-Copy
 
 ##### Snowflake Scripting [¶](#snowflake-scripting)
 
@@ -63,8 +59,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### Conditional ABORT and ROLLBACK[¶](#conditional-abort-and-rollback)
 
 ##### Teradata [¶](#id2)
@@ -79,8 +73,6 @@ BEGIN
     ROLLBACK WHERE (AnotherValueProc > 2);
 END;
 ```
-
-Copy
 
 ##### Snowflake Scripting [¶](#id4)
 
@@ -105,8 +97,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### ABORT and ROLLBACK with table references and FROM clause[¶](#abort-and-rollback-with-table-references-and-from-clause)
 
 ##### Teradata [¶](#id6)
@@ -128,8 +118,6 @@ BEGIN
         WHERE ReferenceTable.ColumnValue = ReferenceTable2.ColumnValue;
 END;
 ```
-
-Copy
 
 ##### Snowflake Scripting [¶](#id8)
 
@@ -185,8 +173,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### ABORT and ROLLBACK with table references without FROM clause[¶](#abort-and-rollback-with-table-references-without-from-clause)
 
 ##### Teradata [¶](#id10)
@@ -203,8 +189,6 @@ BEGIN
     ABORT WHERE ReferenceTable.ColumnValue > 4;
 END;
 ```
-
-Copy
 
 ##### Snowflake Scripting [¶](#id12)
 
@@ -252,8 +236,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### Known Issues[¶](#known-issues)
 
 #### 1. Custom Error Message[¶](#custom-error-message)
@@ -270,8 +252,6 @@ supported.
 ROLLBACK  'Error message for rollback';
 ```
 
-Copy
-
 ##### Snowflake Scripting [¶](#id15)
 
 ##### Error message[¶](#id16)
@@ -280,8 +260,6 @@ Copy
  ABORT 'Error message for abort';
 ROLLBACK  'Error message for rollback';
 ```
-
-Copy
 
 ##### 2. Aggregate function[¶](#aggregate-function)
 
@@ -296,8 +274,6 @@ The use of the aggregate function combined with ABORT/ROLLBACK is not supported
 ABORT WHERE SUM(ATable.AValue) < 2;
 ```
 
-Copy
-
 ##### Snowflake Scripting [¶](#id19)
 
 ##### Aggregate function[¶](#id20)
@@ -306,8 +282,6 @@ Copy
  ROLLBACK WHERE SUM(ATable.AValue) < 2;
 ABORT WHERE SUM(ATable.AValue) < 2;
 ```
-
-Copy
 
 ### Related EWIS[¶](#related-ewis)
 
@@ -329,8 +303,6 @@ There is no direct equivalent in Snowflake. However, there is a workaround to em
 ```
  SELECT $1 FROM TABLE(RESULT_SCAN(LAST_QUERY_ID()));
 ```
-
-Copy
 
 This query retrieves and returns the first column of the result set from the last executed query in
 the current session. Furthermore, `$1` can be replaced by `"number of rows inserted"`,
@@ -376,8 +348,6 @@ CREATE TABLE activity_log (
 );
 ```
 
-Copy
-
 ##### _Snowflake_[¶](#snowflake)
 
 ##### Query[¶](#id25)
@@ -414,8 +384,6 @@ COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,
 ;
 ```
 
-Copy
-
 #### Supported usage[¶](#supported-usage)
 
 ##### _Teradata_[¶](#id26)
@@ -444,8 +412,6 @@ CALL UpdateEmployeeSalaryAndLog();
 SELECT * FROM ACTIVITY_LOG;
 ```
 
-Copy
-
 ##### Result[¶](#result)
 
 ```
@@ -453,8 +419,6 @@ LOG_ID | OPERATION    	      | ROW_COUNT | LOG_TIMESTAMP              |
 -------+----------------------+-----------+----------------------------+
 1      | UPDATE WHERE dept=10 |	3         | 2024-07-10 15:58:46.490000 |
 ```
-
-Copy
 
 ##### _Snowflake_[¶](#id28)
 
@@ -497,8 +461,6 @@ SELECT
     ACTIVITY_LOG;
 ```
 
-Copy
-
 ##### Result[¶](#id30)
 
 ```
@@ -506,8 +468,6 @@ LOG_ID | OPERATION    	      | ROW_COUNT | LOG_TIMESTAMP            |
 -------+----------------------+-----------+--------------------------+
 102    | UPDATE WHERE dept=10 |	3         | 2024-07-11T12:42:35.280Z |
 ```
-
-Copy
 
 ### Known Issues[¶](#id31)
 
@@ -546,8 +506,6 @@ For more information regarding Teradata BEGIN END Transaction, check
 [ END TRANSACTION | ET ];
 ```
 
-Copy
-
 #### Sample Source Pattern [¶](#sample-source-pattern)
 
 ##### Teradata [¶](#id34)
@@ -563,8 +521,6 @@ BEGIN
     END TRANSACTION;
 END;
 ```
-
-Copy
 
 ##### Snowflake Scripting [¶](#id36)
 
@@ -589,8 +545,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### BEGIN END REQUEST[¶](#begin-end-request)
 
 #### Description[¶](#id38)
@@ -607,8 +561,6 @@ For more information regarding Teradata BEGIN END Request, check
 END REQUEST;
 ```
 
-Copy
-
 #### Sample Source Pattern [¶](#id39)
 
 ##### Teradata [¶](#id40)
@@ -624,8 +576,6 @@ BEGIN
     END REQUEST;
 END;
 ```
-
-Copy
 
 ##### Snowflake Scripting [¶](#id42)
 
@@ -654,8 +604,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### BEGIN END COMPOUND[¶](#begin-end-compound)
 
 #### Description[¶](#id44)
@@ -672,8 +620,6 @@ For more information regarding Teradata BEGIN END Compound, check
 END label_name;
 ```
 
-Copy
-
 #### Sample Source Pattern [¶](#id45)
 
 ##### Teradata [¶](#id46)
@@ -689,8 +635,6 @@ BEGIN
     END label_name;
 END;
 ```
-
-Copy
 
 ##### Snowflake Scripting [¶](#id48)
 
@@ -717,8 +661,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### Known Issues[¶](#id50)
 
 #### 1. Labels not supported in outer BEGIN END blocks[¶](#labels-not-supported-in-outer-begin-end-blocks)
@@ -734,8 +676,6 @@ label_name: BEGIN
     SET HELLOSTRING = 'HELLO WORLD';
 END label_name;
 ```
-
-Copy
 
 ##### Snowflake Scripting [¶](#id53)
 
@@ -759,8 +699,6 @@ $$
     END;
 $$;
 ```
-
-Copy
 
 ### Related EWIs[¶](#id55)
 
@@ -804,8 +742,6 @@ CASE
 END CASE;
 ```
 
-Copy
-
 ### Sample Source Patterns [¶](#id57)
 
 #### Sample auxiliar table[¶](#sample-auxiliar-table)
@@ -816,8 +752,6 @@ Copy
  CREATE TABLE case_table(col varchar(30));
 ```
 
-Copy
-
 ##### Snowflake[¶](#id59)
 
 ```
@@ -826,8 +760,6 @@ col varchar(30))
 COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":0},{"attributes":{"component":"teradata"}}'
 ;
 ```
-
-Copy
 
 #### Simple Case[¶](#simple-case)
 
@@ -854,8 +786,6 @@ CALL caseExample1(10);
 SELECT * FROM CASE_TABLE;
 ```
 
-Copy
-
 ##### Result[¶](#id62)
 
 ```
@@ -866,8 +796,6 @@ Copy
 |No such grade|
 |Excellent|
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id63)
 
@@ -911,8 +839,6 @@ CALL caseExample1(10);
 SELECT * FROM CASE_TABLE;
 ```
 
-Copy
-
 ##### Result[¶](#id65)
 
 ```
@@ -923,8 +849,6 @@ Copy
 |No such grade|
 |Excellent|
 ```
-
-Copy
 
 #### Searched Case[¶](#searched-case)
 
@@ -951,8 +875,6 @@ CALL caseExample2(10);
 SELECT * FROM CASE_TABLE;
 ```
 
-Copy
-
 ##### Result[¶](#id68)
 
 ```
@@ -963,8 +885,6 @@ Copy
 |No such grade|
 |Excellent|
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id69)
 
@@ -1013,8 +933,6 @@ SELECT
     CASE_TABLE;
 ```
 
-Copy
-
 ##### Result[¶](#id71)
 
 ```
@@ -1025,8 +943,6 @@ Copy
 |No such grade|
 |Excellent|
 ```
-
-Copy
 
 ### Known Issues[¶](#id72)
 
@@ -1060,15 +976,11 @@ returned by an SQL query. For more information check
 ;
 ```
 
-Copy
-
 ```
  FETCH [ [ NEXT | FIRST ] FROM ] cursor_name INTO
     [ variable_name | parameter_name ] [ ,...n ]
 ;
 ```
-
-Copy
 
 ```
  OPEN cursor_name
@@ -1076,13 +988,9 @@ Copy
 ;
 ```
 
-Copy
-
 ```
  CLOSE cursor_name ;
 ```
-
-Copy
 
 ### Sample Source Patterns [¶](#id75)
 
@@ -1121,8 +1029,6 @@ SELECT * FROM TEST_TABLE;
 INSERT INTO TEST_TABLE VALUES (1, '1', '1');
 INSERT INTO TEST_TABLE VALUES (2, '2', '2');
 ```
-
-Copy
 
 ##### Snowflake[¶](#id78)
 
@@ -1180,8 +1086,6 @@ SELECT
     VALUES (2, '2', '2');
 ```
 
-Copy
-
 #### Basic Cursor[¶](#basic-cursor)
 
 ##### Teradata[¶](#id79)
@@ -1208,15 +1112,11 @@ CALL CursorsTest();
 SELECT * FROM ResTable;
 ```
 
-Copy
-
 ##### Result[¶](#id80)
 
 ```
 Johnson
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id81)
 
@@ -1257,15 +1157,11 @@ SELECT
     ResTable;
 ```
 
-Copy
-
 ##### Result[¶](#id83)
 
 ```
 Johnson
 ```
-
-Copy
 
 #### Single Returnable Cursor[¶](#single-returnable-cursor)
 
@@ -1291,8 +1187,6 @@ END;
 CALL spSimple();
 ```
 
-Copy
-
 ##### Result[¶](#id86)
 
 ```
@@ -1306,8 +1200,6 @@ PersonID|LastName|FirstName|
        4|Williams|Gracey   |
        2|Johnson |Jhon     |
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id87)
 
@@ -1333,8 +1225,6 @@ $$;
 CALL spSimple();
 ```
 
-Copy
-
 ##### Result[¶](#id89)
 
 ```
@@ -1348,8 +1238,6 @@ PERSONID|LASTNAME|FIRSTNAME|
        6|Miller  |Peter    |
        7|Davis   |Jannys   |
 ```
-
-Copy
 
 #### Multiple Returnable Cursors[¶](#multiple-returnable-cursors)
 
@@ -1377,8 +1265,6 @@ END;
 CALL spTwoOrMore();
 ```
 
-Copy
-
 ##### Result[¶](#id92)
 
 ```
@@ -1397,8 +1283,6 @@ PersonID|LastName|FirstName|
        4|Williams|Gracey   |
        2|Johnson |Jhon     |
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id93)
 
@@ -1452,8 +1336,6 @@ $$;
 CALL spTwoOrMore();
 ```
 
-Copy
-
 ##### Results[¶](#results)
 
 ```
@@ -1478,8 +1360,6 @@ PersonID|LastName|FirstName|
        2|Johnson |Jhon     |
 ```
 
-Copy
-
 #### Cursors With Binding Variables[¶](#cursors-with-binding-variables)
 
 The following cursor uses binding variables as the were condition to perform the query.
@@ -1500,8 +1380,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Result[¶](#id97)
 
 ```
@@ -1511,8 +1389,6 @@ Copy
 <!-- prettier-ignore -->
 |2|2|2|
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id98)
 
@@ -1543,8 +1419,6 @@ $$
 $$;
 ```
 
-Copy
-
 ##### Result[¶](#id100)
 
 ```
@@ -1554,8 +1428,6 @@ Copy
 <!-- prettier-ignore -->
 |2|2|2|
 ```
-
-Copy
 
 #### Cursor For Loop[¶](#cursor-for-loop)
 
@@ -1581,8 +1453,6 @@ CALL TestProcedure();
 SELECT * FROM ResTable;
 ```
 
-Copy
-
 ##### Result[¶](#id103)
 
 ```
@@ -1593,8 +1463,6 @@ Copy
 |1|
 |2|
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id104)
 
@@ -1635,8 +1503,6 @@ SELECT
     ResTable;
 ```
 
-Copy
-
 ##### Result[¶](#id106)
 
 ```
@@ -1647,8 +1513,6 @@ Copy
 |1|
 |2|
 ```
-
-Copy
 
 #### Cursor Fetch inside a Loop[¶](#cursor-fetch-inside-a-loop)
 
@@ -1677,8 +1541,6 @@ CALL teradata_fetch_inside_loop();
 SELECT * FROM ResTable;
 ```
 
-Copy
-
 ##### Result[¶](#id109)
 
 ```
@@ -1688,8 +1550,6 @@ Copy
 <!-- prettier-ignore -->
 |2|
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id110)
 
@@ -1731,8 +1591,6 @@ SELECT
     ResTable;
 ```
 
-Copy
-
 ##### Result[¶](#id112)
 
 ```
@@ -1742,8 +1600,6 @@ Copy
 <!-- prettier-ignore -->
 |2|
 ```
-
-Copy
 
 ### Known Issues[¶](#id113)
 
@@ -1794,8 +1650,6 @@ For more information regarding the Teradata DECLARE CONTINUE handler, check
   } handler_action_statement ;
 ```
 
-Copy
-
 ### Sample Source Patterns [¶](#id116)
 
 #### DECLARE CONTINUE HANDLER[¶](#id117)
@@ -1824,8 +1678,6 @@ BEGIN
 
 END;
 ```
-
-Copy
 
 ##### Snowflake Scripting [¶](#id120)
 
@@ -1868,8 +1720,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### Known Issues[¶](#id122)
 
 #### DECLARE CONTINUE HANDLER FOR SQLSTATE[¶](#declare-continue-handler-for-sqlstate)
@@ -1892,8 +1742,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Snowflake Scripting [¶](#id125)
 
 ```
@@ -1914,8 +1762,6 @@ $$
    END;
 $$;
 ```
-
-Copy
 
 ### Related EWIS[¶](#id126)
 
@@ -1938,8 +1784,6 @@ For more information regarding the Teradata DECLARE CONDITION handler, check
     [ FOR SQLSTATE [ VALUE ] sqlstate_code ] ;
 ```
 
-Copy
-
 ### Sample Source Patterns [¶](#id128)
 
 #### DECLARE CONDITION[¶](#declare-condition)
@@ -1955,8 +1799,6 @@ BEGIN
     ...
 END;
 ```
-
-Copy
 
 ##### Snowflake Scripting [¶](#id131)
 
@@ -1977,8 +1819,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### Known Issues[¶](#id133)
 
 #### DECLARE CONDITION FOR SQLSTATE[¶](#declare-condition-for-sqlstate)
@@ -1996,8 +1836,6 @@ BEGIN
     DECLARE ERROR_EXISTS CONDITION FOR SQLSTATE VALUE '42000';
 END;
 ```
-
-Copy
 
 ##### Snowflake Scripting [¶](#id136)
 
@@ -2020,8 +1858,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### Related EWIS[¶](#id138)
 
 1. [SSC-EWI-0058:](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0058)
@@ -2042,8 +1878,6 @@ For more information regarding Teradata DECLARE, check
  DECLARE variable_name [, variable_name ]... DATA_TYPE [ DEFAULT default_value]
 ```
 
-Copy
-
 ### Sample Source Patterns [¶](#id141)
 
 #### Teradata [¶](#id142)
@@ -2057,8 +1891,6 @@ BEGIN
     DECLARE COL_COUNT, COL_LEN INTEGER;
 END;
 ```
-
-Copy
 
 ##### Snowflake Scripting [¶](#id144)
 
@@ -2084,8 +1916,6 @@ $$
     END;
 $$;
 ```
-
-Copy
 
 ### Known Issues[¶](#id146)
 
@@ -2117,7 +1947,7 @@ procedures or not. For further information check the following links.
 
 Translation reference to convert Teradata EXCEPTION HANDLERS clause to Snowflake Scripting
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -2133,8 +1963,6 @@ For more information regarding Teradata EXCEPTION HANDLERS, check
  DECLARE < handler_type > HANDLER
   FOR  < condition_value_list > < handler_action > ;
 ```
-
-Copy
 
 ### Sample Source Patterns [¶](#id150)
 
@@ -2153,8 +1981,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Multiple handlers[¶](#multiple-handlers)
 
 ```
@@ -2168,8 +1994,6 @@ BEGIN
     SELECT * FROM Proc_Error_Table;
 END;
 ```
-
-Copy
 
 ##### Snowflake Scripting [¶](#id152)
 
@@ -2195,8 +2019,6 @@ $$
     END;
 $$;
 ```
-
-Copy
 
 ##### Multiple handlers[¶](#id154)
 
@@ -2227,8 +2049,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### User-Defined Handlers[¶](#user-defined-handlers)
 
 ##### Teradata [¶](#id155)
@@ -2245,8 +2065,6 @@ BEGIN
     SELECT * FROM Proc_Error_Table;
 END;
 ```
-
-Copy
 
 ##### Snowflake Scripting [¶](#id157)
 
@@ -2274,8 +2092,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### Known Issues[¶](#id159)
 
 #### CONTINUE Handler[¶](#continue-handler)
@@ -2298,8 +2114,6 @@ BEGIN
     SELECT * FROM Proc_Error_Table;
 END;
 ```
-
-Copy
 
 ##### Snowflake Scripting [¶](#id162)
 
@@ -2325,8 +2139,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### Other not supported handlers[¶](#other-not-supported-handlers)
 
 Danger
@@ -2345,8 +2157,6 @@ BEGIN
     SELECT * FROM Proc_Error_Table;
 END;
 ```
-
-Copy
 
 ##### Snowflake Scripting [¶](#id166)
 
@@ -2371,8 +2181,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### Related EWIS[¶](#id168)
 
 1. [SSC-EWI-0058](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0058):
@@ -2384,7 +2192,7 @@ Copy
 
 Translation reference to convert Teradata EXECUTE or EXEC statement to Snowflake Scripting
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -2413,8 +2221,6 @@ EXECUTE prepare_indentifier [<using>|<usingDescriptor>]
 <usingDescriptor>:= USING DESCRIPTOR [:] descript_area
 ```
 
-Copy
-
 ### Sample Source Patterns [¶](#id170)
 
 #### Setup data[¶](#id171)
@@ -2434,8 +2240,6 @@ CREATE MACRO dummyMacro AS(
   SELECT * FROM INVENTORY;
 );
 ```
-
-Copy
 
 ##### Snowflake[¶](#id173)
 
@@ -2464,8 +2268,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### Execute prepared statement[¶](#execute-prepared-statement)
 
 ##### Teradata[¶](#id174)
@@ -2486,8 +2288,6 @@ CALL InsertProductInInventory('''Chocolate''', 75);
 CALL InsertProductInInventory('''Sugar''', 65);
 CALL InsertProductInInventory('''Rice''', 100);
 ```
-
-Copy
 
 ##### Snowflake Scripting [¶](#id175)
 
@@ -2521,8 +2321,6 @@ CALL InsertProductInInventory('''Sugar''', 65);
 CALL InsertProductInInventory('''Rice''', 100);
 ```
 
-Copy
-
 #### Execute macro statement[¶](#execute-macro-statement)
 
 ##### Teradata[¶](#id177)
@@ -2532,8 +2330,6 @@ Copy
 ```
  EXECUTE dummyMacro;
 ```
-
-Copy
 
 ##### Result[¶](#id179)
 
@@ -2553,8 +2349,6 @@ Copy
 +---------------+-------+
 ```
 
-Copy
-
 ##### Snowflake Scripting [¶](#id180)
 
 ##### Execute[¶](#id181)
@@ -2563,8 +2357,6 @@ Copy
  !!!RESOLVE EWI!!! /*** SSC-EWI-0030 - THE STATEMENT BELOW HAS USAGES OF DYNAMIC SQL. ***/!!!
 EXECUTE IMMEDIATE dummyMacro;
 ```
-
-Copy
 
 ### Related EWIs[¶](#id182)
 
@@ -2577,7 +2369,7 @@ Copy
 
 Translation reference to convert Teradata EXECUTE IMMENDIATE statement to Snowflake Scripting
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -2596,8 +2388,6 @@ EXECUTE IMMEDIATE <dynamic_statement>
 <dynamic_statement> := {string_literal | string_variable}
 ```
 
-Copy
-
 ### Sample Source Patterns [¶](#id184)
 
 #### Setup data[¶](#id185)
@@ -2613,8 +2403,6 @@ The following code is necessary to execute the sample patterns present in this s
 );
 ```
 
-Copy
-
 ##### Snowflake[¶](#id187)
 
 ```
@@ -2625,8 +2413,6 @@ Copy
 COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":0},{"attributes":{"component":"teradata"}}'
 ;
 ```
-
-Copy
 
 #### Execute Example [¶](#execute-example)
 
@@ -2649,8 +2435,6 @@ CALL InsertProductInInventory('''Rice''', 100);
 SELECT product_name, price FROM inventory;
 ```
 
-Copy
-
 ##### Result[¶](#id190)
 
 ```
@@ -2668,8 +2452,6 @@ Copy
 |Rice|100|
 +--------------+-------+
 ```
-
-Copy
 
 ##### Snowflake Scripting [¶](#id191)
 
@@ -2706,8 +2488,6 @@ SELECT
 	inventory;
 ```
 
-Copy
-
 ##### Result[¶](#id193)
 
 ```
@@ -2726,8 +2506,6 @@ Copy
 +--------------+-------+
 ```
 
-Copy
-
 ##### Result[¶](#id194)
 
 ```
@@ -2736,8 +2514,6 @@ column1|column2                  |column3|
       3|Mundo3                   |    3.3|
 ```
 
-Copy
-
 ### Related EWIS[¶](#id195)
 
 1. [SSC-EWI-0030](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0030):
@@ -2745,11 +2521,11 @@ Copy
 
 ## FUNCTION OPTIONS OR DATA ACCESS[¶](#function-options-or-data-access)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
-Note
+**Note:**
 
 Non-relevant statement.
 
@@ -2789,8 +2565,6 @@ Snowflake.
    RETURN A + B;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id199)
 
 ```
@@ -2804,8 +2578,6 @@ Copy
    $$;
 ```
 
-Copy
-
 ### Known Issues [¶](#id200)
 
 No issues were found.
@@ -2818,7 +2590,7 @@ No related EWIs.
 
 Translation reference to convert Teradata GET DIAGNOSTICS EXCEPTION statement to Snowflake Scripting
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -2841,8 +2613,6 @@ For more information regarding Teradata GET DIAGNOSTICS, check
 }
 ```
 
-Copy
-
 ### Sample Source Patterns [¶](#id203)
 
 #### Teradata [¶](#id204)
@@ -2861,8 +2631,6 @@ BEGIN
         V_CODE = RETURNED_SQLSTATE;
 END;
 ```
-
-Copy
 
 ##### Snowflake Scripting [¶](#id206)
 
@@ -2894,8 +2662,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### Known Issues[¶](#id208)
 
 #### CLASS_ORIGIN, CONDITION_NUMBER[¶](#class-origin-condition-number)
@@ -2920,8 +2686,6 @@ BEGIN
         V_COND = CONDITION_NUMBER;
 END;
 ```
-
-Copy
 
 ##### Snowflake Scripting [¶](#id211)
 
@@ -2957,8 +2721,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### Related EWIS[¶](#id213)
 
 1. [SSC-EWI-0058](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0058):
@@ -2968,7 +2730,7 @@ Copy
 
 Translation reference to convert Teradata IF statement to Snowflake Scripting
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -2992,8 +2754,6 @@ For more information regarding Teradata IF, check
 END IF;
 ```
 
-Copy
-
 ### Sample Source Patterns [¶](#id215)
 
 #### Sample auxiliar table[¶](#id216)
@@ -3004,8 +2764,6 @@ Copy
  CREATE TABLE if_table(col1 varchar(30));
 ```
 
-Copy
-
 ##### Snowflake[¶](#id218)
 
 ```
@@ -3014,8 +2772,6 @@ col1 varchar(30))
 COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":0},{"attributes":{"component":"teradata"}}'
 ;
 ```
-
-Copy
 
 #### Possible IF variations[¶](#possible-if-variations)
 
@@ -3035,8 +2791,6 @@ CALL ifExample1(1);
 SELECT * FROM if_table;
 ```
 
-Copy
-
 ##### Code 2[¶](#code-2)
 
 ```
@@ -3052,8 +2806,6 @@ END;
 CALL ifExample2(2);
 SELECT * FROM if_table;
 ```
-
-Copy
 
 ##### Code 3[¶](#code-3)
 
@@ -3072,8 +2824,6 @@ END;
 CALL ifExample3(3);
 SELECT * FROM if_table;
 ```
-
-Copy
 
 ##### Code 4[¶](#code-4)
 
@@ -3095,8 +2845,6 @@ CALL ifExample4(4);
 SELECT * FROM if_table;
 ```
 
-Copy
-
 ##### Result 1[¶](#result-1)
 
 ```
@@ -3105,8 +2853,6 @@ Copy
 |---|
 |one|
 ```
-
-Copy
 
 ##### Result 2[¶](#result-2)
 
@@ -3117,8 +2863,6 @@ Copy
 |Unexpected input.|
 ```
 
-Copy
-
 ##### Result 3[¶](#result-3)
 
 ```
@@ -3128,8 +2872,6 @@ Copy
 |three|
 ```
 
-Copy
-
 ##### Result 4[¶](#result-4)
 
 ```
@@ -3138,8 +2880,6 @@ Copy
 |---|
 |Unexpected input.|
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id220)
 
@@ -3168,8 +2908,6 @@ SELECT
    if_table;
 ```
 
-Copy
-
 ##### Query 2[¶](#query-2)
 
 ```
@@ -3197,8 +2935,6 @@ SELECT
    * FROM
    if_table;
 ```
-
-Copy
 
 ##### Query 3[¶](#query-3)
 
@@ -3230,8 +2966,6 @@ SELECT
    * FROM
    if_table;
 ```
-
-Copy
 
 ##### Query 4[¶](#query-4)
 
@@ -3267,8 +3001,6 @@ SELECT
    if_table;
 ```
 
-Copy
-
 ##### Result 1[¶](#id221)
 
 ```
@@ -3277,8 +3009,6 @@ Copy
 |---|
 |one|
 ```
-
-Copy
 
 ##### Result 2[¶](#id222)
 
@@ -3289,8 +3019,6 @@ Copy
 |Unexpected input.|
 ```
 
-Copy
-
 ##### Result 3[¶](#id223)
 
 ```
@@ -3300,8 +3028,6 @@ Copy
 |three|
 ```
 
-Copy
-
 ##### Result 4[¶](#id224)
 
 ```
@@ -3310,8 +3036,6 @@ Copy
 |---|
 |Unexpected input.|
 ```
-
-Copy
 
 ### Known Issues [¶](#id225)
 
@@ -3323,11 +3047,11 @@ No related EWIs.
 
 ## LOCKING FOR ACCESS[¶](#locking-for-access)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
-Note
+**Note:**
 
 Non-relevant statement.
 
@@ -3359,8 +3083,6 @@ LOCKING ROW FOR ACCESS
 SELECT * FROM SCHEMA1.TABLE1;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id230)
 
 ```
@@ -3373,8 +3095,6 @@ SELECT
 * FROM
 SCHEMA1.TABLE1;
 ```
-
-Copy
 
 ### Known Issues [¶](#id231)
 
@@ -3391,7 +3111,7 @@ No issues were found.
 
 Translation reference to convert Teradata LOOP statement to Snowflake Scripting
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -3407,8 +3127,6 @@ For more information on Teradata Loop, check
     { sql_statement }
 END LOOP [label_name];
 ```
-
-Copy
 
 ### Sample Source Patterns [¶](#id234)
 
@@ -3434,8 +3152,6 @@ END;
 CALL loopProcedure(:?);
 ```
 
-Copy
-
 ##### Result[¶](#id237)
 
 ```
@@ -3444,8 +3160,6 @@ Copy
 |---|
 |10|
 ```
-
-Copy
 
 ##### Snowflake Scripting [¶](#id238)
 
@@ -3476,8 +3190,6 @@ $$;
 CALL loopProcedure(:?);
 ```
 
-Copy
-
 ##### Result[¶](#id240)
 
 ```
@@ -3486,8 +3198,6 @@ Copy
 |---|
 |10|
 ```
-
-Copy
 
 ### Known Issues [¶](#id241)
 
@@ -3502,7 +3212,7 @@ No related EWIs.
 This article is about the current transformation of the output parameters and how their
 functionality is being emulated.
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -3530,8 +3240,6 @@ BEGIN
   INSERT INTO demo.TABLE20 VALUES(mytestvar,432);
 END;
 ```
-
-Copy
 
 ##### Snowflake[¶](#id246)
 
@@ -3567,8 +3275,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### Multiple out parameter[¶](#multiple-out-parameter)
 
 ##### Teradata[¶](#id247)
@@ -3589,8 +3295,6 @@ BEGIN
     INSERT INTO demo.TABLE20 VALUES(var1,var2);
 END;
 ```
-
-Copy
 
 ##### Snowflake[¶](#id248)
 
@@ -3630,8 +3334,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### Related EWIs [¶](#id249)
 
 No related EWIs.
@@ -3655,8 +3357,6 @@ For more information, please review the following
  PREPARE statement_name FROM { 'statement_string' | statement_string_variable } ;
 ```
 
-Copy
-
 Where:
 
 - **statement_name** is the same identifier as `statement_name` in a **DECLARE CURSOR** statement.
@@ -3664,7 +3364,7 @@ Where:
 - **statement_string_variable** is the name of an SQL local variable, or an SQL parameter or string
   variable, that contains the SQL text string to be executed dynamically.
 
-Note
+**Note:**
 
 **Important information**
 
@@ -3694,8 +3394,6 @@ CREATE TABLE MyStatusTable (
 SELECT * FROM MyStatusTable;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id253)
 
 ```
@@ -3717,8 +3415,6 @@ SELECT * FROM MyTemporaryTable;
 
 SELECT * FROM MyStatusTable;
 ```
-
-Copy
 
 #### Simple scenario[¶](#simple-scenario)
 
@@ -3749,8 +3445,6 @@ CALL databaseTest.simple_scenario();
 SELECT * FROM MyStatusTable;
 ```
 
-Copy
-
 ##### Output[¶](#output)
 
 <!-- prettier-ignore -->
@@ -3760,7 +3454,7 @@ Copy
 
 ##### Snowflake Scripting [¶](#id256)
 
-Note
+**Note:**
 
 Usages for cursors must be renamed and declared again.
 
@@ -3808,8 +3502,6 @@ CALL databaseTest.simple_scenario();
 SELECT * FROM MyStatusTable;
 ```
 
-Copy
-
 ##### Output[¶](#id258)
 
 <!-- prettier-ignore -->
@@ -3840,8 +3532,6 @@ CALL databaseTest.simple_scenario();
 SELECT * FROM MyStatusTable;
 ```
 
-Copy
-
 ##### Output[¶](#id261)
 
 <!-- prettier-ignore -->
@@ -3851,7 +3541,7 @@ Copy
 
 ##### Snowflake Scripting [¶](#id262)
 
-Note
+**Note:**
 
 Usages for cursors must be renamed and declared again.
 
@@ -3893,8 +3583,6 @@ CALL databaseTest.simple_scenario();
 SELECT * FROM MyStatusTable;
 ```
 
-Copy
-
 ##### Output[¶](#id264)
 
 <!-- prettier-ignore -->
@@ -3926,19 +3614,15 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Output[¶](#id267)
 
 ```
 No returning information.
 ```
 
-Copy
-
 ##### Snowflake Scripting [¶](#id268)
 
-Note
+**Note:**
 
 Usages for cursors must be renamed and declared again.
 
@@ -3992,15 +3676,11 @@ WHERE col1 = 1';
 $$;
 ```
 
-Copy
-
 ##### Output[¶](#id270)
 
 ```
 No returning information.
 ```
-
-Copy
 
 #### Modified query before usage[¶](#modified-query-before-usage)
 
@@ -4030,8 +3710,6 @@ CALL databaseTest.simple_scenario();
 SELECT * FROM MyStatusTable;
 ```
 
-Copy
-
 ##### Output[¶](#id273)
 
 <!-- prettier-ignore -->
@@ -4041,7 +3719,7 @@ Copy
 
 ##### Snowflake Scripting [¶](#id274)
 
-Note
+**Note:**
 
 Usages for cursors must be renamed and declared again.
 
@@ -4095,8 +3773,6 @@ CALL databaseTest.simple_scenario();
 SELECT * FROM MyStatusTable;
 ```
 
-Copy
-
 ##### Output[¶](#id276)
 
 <!-- prettier-ignore -->
@@ -4138,8 +3814,6 @@ CALL databaseTest.simple_scenario();
 SELECT * FROM MyStatusTable;
 ```
 
-Copy
-
 ##### Output[¶](#id279)
 
 <!-- prettier-ignore -->
@@ -4149,7 +3823,7 @@ Copy
 
 ##### Snowflake Scripting [¶](#id280)
 
-Note
+**Note:**
 
 Usages for cursors must be renamed and declared again.
 
@@ -4214,8 +3888,6 @@ CALL databaseTest.simple_scenario();
 SELECT * FROM MyStatusTable;
 ```
 
-Copy
-
 ##### Output[¶](#id282)
 
 <!-- prettier-ignore -->
@@ -4250,19 +3922,15 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Output[¶](#id285)
 
 ```
 No returning information.
 ```
 
-Copy
-
 ##### Snowflake Scripting [¶](#id286)
 
-Note
+**Note:**
 
 Usages for cursors must be renamed and declared again.
 
@@ -4320,15 +3988,11 @@ WHERE col1 = 1';
 $$;
 ```
 
-Copy
-
 ##### Output[¶](#id288)
 
 ```
 No returning information.
 ```
-
-Copy
 
 #### Variable markers without variable reordering[¶](#variable-markers-without-variable-reordering)
 
@@ -4365,8 +4029,6 @@ CALL PREPARE_ST_TEST();
 SELECT * FROM MyStatusTable;
 ```
 
-Copy
-
 ##### Output[¶](#id291)
 
 <!-- prettier-ignore -->
@@ -4376,7 +4038,7 @@ Copy
 
 ##### Snowflake Scripting [¶](#id292)
 
-Note
+**Note:**
 
 Usages for cursors must be renamed and declared again.
 
@@ -4423,8 +4085,6 @@ $$
 $$;
 ```
 
-Copy
-
 ##### Output[¶](#id294)
 
 <!-- prettier-ignore -->
@@ -4438,7 +4098,7 @@ Warning
 
 **This case is not supported yet.**
 
-Note
+**Note:**
 
 When there are variables setting the value into different ones between the `PREPARE` statement and
 `OPEN` cursor in Teradata, It is necessary to move this variable before the `EXECUTE IMMEDIATE` in
@@ -4475,19 +4135,15 @@ CALL PREPARE_ST_TEST();
 SELECT * FROM MyStatusTable;
 ```
 
-Copy
-
 ##### Output[¶](#id297)
 
 ```
 "MyStatusTable" should be empty.
 ```
 
-Copy
-
 ##### Snowflake Scripting [¶](#id298)
 
-Note
+**Note:**
 
 Usages for cursors must be renamed and declared again.
 
@@ -4541,15 +4197,11 @@ CALL PREPARE_ST_TEST();
 SELECT * FROM MyStatusTable;
 ```
 
-Copy
-
 ##### Output[¶](#id300)
 
 ```
 "MyStatusTable" should be empty.
 ```
-
-Copy
 
 #### Anonymous blocks - Declaration outside the block[¶](#anonymous-blocks-declaration-outside-the-block)
 
@@ -4588,15 +4240,11 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Output[¶](#id303)
 
 ```
 No returning information.
 ```
-
-Copy
 
 ##### Query[¶](#id304)
 
@@ -4659,15 +4307,11 @@ WHERE col1 = 1';
 $$;
 ```
 
-Copy
-
 ##### Output[¶](#id305)
 
 ```
 No returning information.
 ```
-
-Copy
 
 ### Known Issues[¶](#id306)
 
@@ -4681,7 +4325,7 @@ No related EWIs.
 
 Translation reference to convert Teradata REPEAT statement to Snowflake Scripting
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -4698,8 +4342,6 @@ For more information on Teradata Repeat, check
     UNTIL conditional_expression
 END REPEAT [label_name];
 ```
-
-Copy
 
 ### Sample Source Patterns [¶](#id309)
 
@@ -4723,8 +4365,6 @@ END;
 CALL repeatProcedure(:?);
 ```
 
-Copy
-
 ##### Result[¶](#id312)
 
 ```
@@ -4733,8 +4373,6 @@ Copy
 |---|
 |11|
 ```
-
-Copy
 
 ##### Snowflake Scripting [¶](#id313)
 
@@ -4763,8 +4401,6 @@ $$;
 CALL repeatProcedure(:?);
 ```
 
-Copy
-
 ##### Result[¶](#id315)
 
 ```
@@ -4773,8 +4409,6 @@ Copy
 |---|
 |1|
 ```
-
-Copy
 
 ### Known Issues [¶](#id316)
 
@@ -4788,7 +4422,7 @@ No related EWIs.
 
 Translation reference to convert Teradata SET statement to Snowflake Scripting
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -4802,8 +4436,6 @@ For more information regarding Teradata SET, check
 ```
  SET assigment_target = assigment_source ;
 ```
-
-Copy
 
 ### Sample Source Patterns [¶](#id319)
 
@@ -4820,8 +4452,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Result[¶](#id322)
 
 ```
@@ -4830,8 +4460,6 @@ Copy
 |---|
 |4|
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id323)
 
@@ -4855,8 +4483,6 @@ $$
 $$;
 ```
 
-Copy
-
 ##### Result[¶](#id325)
 
 ```
@@ -4865,8 +4491,6 @@ Copy
 |---|
 |4|
 ```
-
-Copy
 
 ### Known Issues [¶](#id326)
 
@@ -4878,11 +4502,11 @@ No related EWIs.
 
 ## SYSTEM_DEFINED[¶](#system-defined)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
-Note
+**Note:**
 
 Non-relevant statement.
 
@@ -4913,8 +4537,6 @@ FROM MY_TESTS.myParts
 UNIQUE PRIMARY INDEX (part_id);
 ```
 
-Copy
-
 ##### Snowflake[¶](#id331)
 
 ```
@@ -4935,8 +4557,6 @@ AS
         MY_TESTS.myParts;
 ```
 
-Copy
-
 ### Known Issues [¶](#id332)
 
 No issues were found.
@@ -4954,7 +4574,7 @@ No issues were found.
 
 Translation reference to convert Teradata WHILE statement to Snowflake Scripting
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -4970,8 +4590,6 @@ For more information on Teradata While, check
     { sql_statement }
 END WHILE [label_name];
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id335)
 
@@ -4992,8 +4610,6 @@ END;
 CALL whileProcedure(:?);
 ```
 
-Copy
-
 ##### Result[¶](#id338)
 
 ```
@@ -5002,8 +4618,6 @@ Copy
 |---|
 |10|
 ```
-
-Copy
 
 ##### Snowflake Scripting [¶](#id339)
 
@@ -5031,8 +4645,6 @@ $$;
 CALL whileProcedure(:?);
 ```
 
-Copy
-
 ##### Result[¶](#id341)
 
 ```
@@ -5041,8 +4653,6 @@ Copy
 |---|
 |10|
 ```
-
-Copy
 
 ### Known Issues [¶](#id342)
 

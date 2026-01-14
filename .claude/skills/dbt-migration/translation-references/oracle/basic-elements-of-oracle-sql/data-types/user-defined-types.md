@@ -23,7 +23,7 @@ subpages.
 
 ## Object Types[¶](#object-types)
 
-Note
+**Note:**
 
 SnowConvert AI offers partial translation for Object Types, for more information on this, please
 refer to the next section:
@@ -89,7 +89,7 @@ No related EWIs.
 
 ## REF Data Types[¶](#id1)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -117,8 +117,6 @@ SELECT v.ref_col, v.make_ref_col
 FROM generic_view v
 WHERE v.ref_col IS NOT DANGLING AND v.make_ref_col IS NOT DANGLING
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#sample-source-patterns)
 
@@ -158,8 +156,6 @@ CREATE VIEW email_object_view OF email_typ_demo WITH OBJECT IDENTIFIER (email_id
 SELECT * FROM email_table_demo;
 ```
 
-Copy
-
 #### Selects and Views using REFs[¶](#selects-and-views-using-refs)
 
 ##### Oracle[¶](#id3)
@@ -180,8 +176,6 @@ SELECT c.customer_reference.cust_first_name, c.email_ref.email
 FROM customer_view c
 WHERE c.email_ref IS NOT DANGLING;
 ```
-
-Copy
 
 ##### Result with danglings[¶](#result-with-danglings)
 
@@ -227,8 +221,6 @@ WHERE c.email_ref;
 -- ** SSC-EWI-0001 - UNRECOGNIZED TOKEN ON LINE '14' COLUMN '19' OF THE SOURCE CODE STARTING AT 'IS'. EXPECTED 'STATEMENT' GRAMMAR. LAST MATCHING TOKEN WAS ';' ON LINE '10' COLUMN '21'. FAILED TOKEN WAS 'IS' ON LINE '14' COLUMN '19'. CODE '94'. **
 --                   IS NOT DANGLING
 ```
-
-Copy
 
 ### Known Issues[¶](#id4)
 

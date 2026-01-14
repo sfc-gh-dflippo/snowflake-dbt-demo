@@ -54,8 +54,6 @@ CREATE TABLE [IF NOT EXISTS] table_identifier LIKE source_table_identifier
     [ LOCATION path ]
 ```
 
-Copy
-
 ## IF NOT EXISTS [¶](#if-not-exists)
 
 ## Description[¶](#id1)
@@ -79,8 +77,6 @@ This syntax is fully supported in Snowflake.
 IF NOT EXISTS
 ```
 
-Copy
-
 ## Sample Source Patterns[¶](#sample-source-patterns)
 
 ## Input Code:[¶](#input-code)
@@ -91,8 +87,6 @@ CREATE TABLE IF NOT EXISTS table1 (
 );
 ```
 
-Copy
-
 ## Output Code:[¶](#output-code)
 
 ```
@@ -101,8 +95,6 @@ CREATE TABLE IF NOT EXISTS table1 (
 )
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "sybase",  "convertedOn": "03/19/2024" }}';
 ```
-
-Copy
 
 ## PARTITION BY[¶](#partition-by)
 
@@ -124,8 +116,6 @@ This syntax is not needed in Snowflake.
 PARTITIONED BY ( { partition_column [ column_type ] } [, ...] )
 ```
 
-Copy
-
 ## Sample Source Patterns[¶](#id6)
 
 ## Input Code:[¶](#id7)
@@ -141,8 +131,6 @@ CREATE TABLE orders (
 PARTITIONED BY (order_status);
 ```
 
-Copy
-
 ## Output Code:[¶](#id8)
 
 ```
@@ -154,8 +142,6 @@ CREATE TABLE orders (
     order_status STRING
 );
 ```
-
-Copy
 
 ## CLUSTERED BY[¶](#clustered-by)
 
@@ -180,8 +166,6 @@ CLUSTERED BY (column_name1 [ASC|DESC], ...)
 INTO num_buckets BUCKETS
 ```
 
-Copy
-
 - The **`CLUSTERED BY`** clause, used for performance optimization, will be converted to
   **`CLUSTER BY`** in Snowflake. Performance may vary between the two architectures.
 - The **`SORTED BY`** clause can be removed during migration, as Snowflake automatically handles
@@ -198,16 +182,12 @@ CREATE TABLE table_name (
 column1 data_type, column2 data_type, ... ) USING format CLUSTERED BY (bucketing_column1) SORTED BY (sorting_column1 DESC, sorting_column2 ASC) INTO 10 BUCKETS;
 ```
 
-Copy
-
 ## Output Code:[¶](#id14)
 
 ```
 CREATE TABLE table_name ( column1 data_type, column2 data_type, ... ) USING format
 CLUSTER BY (bucketing_column1);
 ```
-
-Copy
 
 ## ROW FORMAT[¶](#row-format)
 
@@ -237,8 +217,6 @@ row_format:
        [ NULL DEFINED AS null_char ] } }
 ```
 
-Copy
-
 ## Sample Source Patterns[¶](#id18)
 
 ## Input Code:[¶](#id19)
@@ -247,16 +225,12 @@ Copy
 CREATE TABLE parquet_table ( id INT, data STRING )  STORED AS TEXTFILE LOCATION '/mnt/delimited/target' ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' ESCAPED BY '\\' COLLECTION ITEMS TERMINATED BY ';' MAP KEYS TERMINATED BY ':' LINES TERMINATED BY '\n' NULL DEFINED AS 'NULL_VALUE';
 ```
 
-Copy
-
 ## Output Code:[¶](#id20)
 
 ```
 CREATE TABLE delimited_like_delta LIKE source_delta_table STORED AS TEXTFILE LOCATION '/mnt/delimited/target'
 !!!RESOLVE EWI!!! /*** SSC-EWI-HV0002 - THE ROW FORMAT CLAUSE IS NOT SUPPORTED IN SNOWFLAKE ***/!!! ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' ESCAPED BY '\\' COLLECTION ITEMS TERMINATED BY ';' MAP KEYS TERMINATED BY ':' LINES TERMINATED BY '\n' NULL DEFINED AS 'NULL_VALUE';
 ```
-
-Copy
 
 ## STORED AS[¶](#stored-as)
 

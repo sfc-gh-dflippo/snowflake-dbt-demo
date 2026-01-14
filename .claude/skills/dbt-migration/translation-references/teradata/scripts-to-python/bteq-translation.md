@@ -60,8 +60,6 @@ SELECT * FROM MyTable2;
 SELECT * FROM MyTable3;
 ```
 
-Copy
-
 In the example above, there were five commands. Two of them were`.Label`commands. The
 command`FIRSTLABEL`was transformed into a function with the statement(s) that follow it below until
 another`.LABEL`command is found. When another label is called (in this case, `SECONDLABEL`), that
@@ -110,8 +108,6 @@ if __name__ == "__main__":
   main()
 ```
 
-Copy
-
 _Notice there is a call to the function_`FIRSTLABEL`_, this function has only one statement, which
 would be the only non-label command that follows`FIRSTLABEL`in the original code. Before
 the`FIRSTLABEL`function ends, it calls_ `SECONDLABEL`_, with the statements that followed it._
@@ -130,8 +126,6 @@ the [snowconvert.helpers](snowconvert-script-helpers). Take for example the foll
 ```
  CREATE TABLE aTable (aColumn BYTEINT);
 ```
-
-Copy
 
 This is converted to:
 
@@ -159,8 +153,6 @@ if __name__ == "__main__":
   main()
 ```
 
-Copy
-
 ### Execute Script Files[¶](#execute-script-files)
 
 Files that contain a user’s BTEQ commands and Teradata SQL statements are called scripts, run files,
@@ -173,15 +165,11 @@ BTEQ script:
    .LOGOFF
 ```
 
-Copy
-
 To execute the run file, enter either form of the BTEQ RUN command:
 
 ```
 .RUN FILE=sampfile
 ```
-
-Copy
 
 If you convert the second code, the result is the following:
 
@@ -207,8 +195,6 @@ if __name__ == "__main__":
   main()
 ```
 
-Copy
-
 The `snowconvert.helpers.readrun("sampfile")` will return each line from the SAMPFILE and in
 the`FOR`statement, each one of the lines will be passed to the `eval` function, a method that parses
 the expression passed to it and runs python expression (the SAMPFILE should be converted to work)
@@ -223,15 +209,11 @@ SQL file called NEWSQL:
  CREATE TABLE aTable (aColumn BYTEINT);
 ```
 
-Copy
-
 This can be executed during a script with the following line:
 
 ```
  $(<$NEWSQL)
 ```
-
-Copy
 
 And after the conversion of the script the result is:
 
@@ -259,8 +241,6 @@ if __name__ == "__main__":
   main()
 ```
 
-Copy
-
 The `exec_file` helper function will read each line from the NEWSQL file and then use the exec
 function as explained in the section [Execute query statement](#execute-query-statements).
 
@@ -276,7 +256,7 @@ No issues were found.
 
 Translation specification for the REPEAT statement.
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -293,8 +273,6 @@ REPEAT [ n [ PACK p [ REQBUFLEN b ] ] | * | RECS r]
 <sql_request>
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#sample-source-patterns)
 
 With this input data:
@@ -307,16 +285,12 @@ D E F
 G H I
 ```
 
-Copy
-
 ##### inputData2.dat[¶](#inputdata2-dat)
 
 ```
 * [
 ] *
 ```
-
-Copy
 
 #### Teradata:[¶](#teradata)
 
@@ -351,8 +325,6 @@ USING (var_1 CHARACTER, var_2 CHARACTER)
 INSERT INTO testtabu (c1) VALUES (:var_1)
 ;INSERT INTO testtabu (c1) VALUES (:var_2);
 ```
-
-Copy
 
 ##### TESTTABU Result[¶](#testtabu-result)
 
@@ -490,8 +462,6 @@ if __name__ == "__main__":
   main()
 ```
 
-Copy
-
 ##### TESTTABU Result[¶](#id2)
 
 <!-- prettier-ignore -->
@@ -545,7 +515,7 @@ No related EWIs.
 
 Translation specification for the USING REQUEST MODIFIER query.
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -562,8 +532,6 @@ The syntax for this statement is as follows:
 <using_spec> ::= using_variable_name data_type [ data_type_attribute [...] ]
   [ AS { DEFERRED [BY NAME] | LOCATOR } ]
 ```
-
-Copy
 
 As stated in Teradata’s documentation, the USING REQUEST MODIFIER needs to be preceded by an .IMPORT
 statement for it to load the data into the defined parameters.
@@ -582,8 +550,6 @@ With this input data:
 ```
  A,B,C
 ```
-
-Copy
 
 **Teradata (MultiLoad)**
 
@@ -605,8 +571,6 @@ INSERT INTO testtabu (c1) VALUES (:var_1)
    SET c2 = 'Z'
    WHERE c1 = :var_3;
 ```
-
-Copy
 
 #### Result[¶](#result)
 
@@ -674,8 +638,6 @@ def main():
 if __name__ == "__main__":
   main()
 ```
-
-Copy
 
 ##### Result[¶](#id8)
 

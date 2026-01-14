@@ -52,8 +52,6 @@ The default behavior of the ConversionTool for these statements is to comment th
 ERRLIMIT 25;
 ```
 
-Copy
-
 **Snowflake (Python)**
 
 ```
@@ -81,8 +79,6 @@ if __name__ == "__main__":
   main()
 ```
 
-Copy
-
 Nonetheless, there are some exceptions that must be converted to specific Python statements in order
 to work as intended in Snowflake.
 
@@ -104,8 +100,6 @@ found, the default delimiter will be set to ‘,’ (comma). Else, the defined d
  BEGIN LOADING FastTable ERRORFILES Error1,Error2
    CHECKPOINT 10000;
 ```
-
-Copy
 
 **Snowflake (Python)**
 
@@ -130,8 +124,6 @@ def main():
 if __name__ == "__main__":
   main()
 ```
-
-Copy
 
 In the example above, `FastTable` is the name of the table associated to the `BEGIN LOADING`
 command. Note the use of the python variable`inputDataPlaceholder`, that must be defined by the user
@@ -163,8 +155,6 @@ Dropping an error table is commented out if inside a FastLoad file.
 DROP TABLE Error2;
 ```
 
-Copy
-
 **Snowflake (Python)**
 
 ```
@@ -192,8 +182,6 @@ if __name__ == "__main__":
   main()
 ```
 
-Copy
-
 ### Large Example[¶](#large-example)
 
 Given the transformations shown above for a variety of commands, consider the following example.
@@ -218,8 +206,6 @@ INSERT INTO FastTable (ID, UFACTOR, MISC) VALUES
    (:ID, :MISC);
 END LOADING;
 ```
-
-Copy
 
 **Snowflake (Python)**
 
@@ -280,8 +266,6 @@ if __name__ == "__main__":
   main()
 ```
 
-Copy
-
 If you have any additional questions regarding this documentation, you can email us at
 [snowconvert-support@snowflake.com](mailto:snowconvert-support%40snowflake.com).
 
@@ -325,8 +309,6 @@ SET RECORD UNFORMATTED QUOTE NO OPTIONAL;
 SET RECORD BINARY QUOTE NO YES 'q';
 SET RECORD TEXT QUOTE OPTIONAL;
 ```
-
-Copy
 
 **Snowflake (Python)**
 
@@ -383,8 +365,6 @@ if __name__ == "__main__":
   main()
 ```
 
-Copy
-
 ### DEFINE[¶](#define)
 
 The transformation for the `DEFINE` command sets the `ssc_define_columns` and `ssc_define_file`
@@ -412,8 +392,6 @@ FILE=/tmp/inputData.txt;
 
 DEFINE;
 ```
-
-Copy
 
 **Snowflake (Python)**
 
@@ -460,8 +438,6 @@ if __name__ == "__main__":
   main()
 ```
 
-Copy
-
 ### BEGIN LOADING[¶](#id2)
 
 The `BEGIN LOADING` command is commented out since the relevant information for the transformation
@@ -476,8 +452,6 @@ necessary for the transformation and thus commented out.
 BEGIN LOADING FastTable ERRORFILES Error1,Error2
    CHECKPOINT 10000;
 ```
-
-Copy
 
 **Snowflake (Python)**
 
@@ -502,8 +476,6 @@ def main():
 if __name__ == "__main__":
   main()
 ```
-
-Copy
 
 ### INSERT[¶](#insert)
 
@@ -537,8 +509,6 @@ VALUES
     CURRENT_DATE
 );
 ```
-
-Copy
 
 **Snowflake (Python)**
 
@@ -582,8 +552,6 @@ if __name__ == "__main__":
   main()
 ```
 
-Copy
-
 Internally, the `import_file_to_table` function creates a temporary stage and puts the local file in
 the stage to load into the specified table. However, the file might be already stored in one the
 supported cloud provider by
@@ -614,8 +582,6 @@ BeginLoading.import_file_to_table(
   input_data_place_holder="s3://mybucket/data/files")
 ```
 
-Copy
-
 ### END LOADING[¶](#end-loading)
 
 The `END LOADING` command is commented out since is not necessary for the transformation of the
@@ -626,8 +592,6 @@ The `END LOADING` command is commented out since is not necessary for the transf
 ```
 END LOADING;
 ```
-
-Copy
 
 **Snowflake (Python)**
 
@@ -652,8 +616,6 @@ def main():
 if __name__ == "__main__":
   main()
 ```
-
-Copy
 
 ### Known Issues[¶](#id3)
 

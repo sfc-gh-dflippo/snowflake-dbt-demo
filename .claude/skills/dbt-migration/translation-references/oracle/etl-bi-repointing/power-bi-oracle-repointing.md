@@ -33,8 +33,6 @@ in
     EMPLOYEES_B1
 ```
 
-Copy
-
 **Snowflake Connection in the Power Query Editor**
 
 ```
@@ -47,8 +45,6 @@ let
 in
     EMPLOYEES_B1
 ```
-
-Copy
 
 ### Entity Repointing Case: View[¶](#entity-repointing-case-view)
 
@@ -66,8 +62,6 @@ in
     DEPARTMENTS_V1
 ```
 
-Copy
-
 **Snowflake Connection in the Power Query Editor**
 
 ```
@@ -80,8 +74,6 @@ let
 in
     DEPARTMENTS_V1
 ```
-
-Copy
 
 ### Embedded SQL Case[¶](#embedded-sql-case)
 
@@ -99,8 +91,6 @@ in
     Source
 ```
 
-Copy
-
 **Snowflake Connection in the Power Query Editor**
 
 ```
@@ -111,5 +101,3 @@ DEPARTMENTS_V", null, [EnableFolding=true]),
 in
     Source
 ```
-
-Copy

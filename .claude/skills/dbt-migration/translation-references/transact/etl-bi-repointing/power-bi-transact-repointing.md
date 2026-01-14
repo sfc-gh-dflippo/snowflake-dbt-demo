@@ -37,8 +37,6 @@ in
     dbo_Authors
 ```
 
-Copy
-
 **Snowflake SQL Connection in the Power Query Editor**
 
 ```
@@ -51,8 +49,6 @@ let
 in
     dbo_Books
 ```
-
-Copy
 
 ### Simple Entity With Multiple Lines Repointing Case[¶](#simple-entity-with-multiple-lines-repointing-case)
 
@@ -71,8 +67,6 @@ in
   #"Filtered Rows"
 ```
 
-Copy
-
 **Snowflake SQL Connection in the Power Query Editor**
 
 ```
@@ -86,8 +80,6 @@ let
 in
   #"Filtered Rows"
 ```
-
-Copy
 
 ### Embedded SQL Query Repointing Case[¶](#embedded-sql-query-repointing-case)
 
@@ -103,8 +95,6 @@ let
 in
     Source
 ```
-
-Copy
 
 **Snowflake SQL Connection in the Power Query Editor**
 
@@ -132,8 +122,6 @@ in
     Source
 ```
 
-Copy
-
 ### Embedded SQL Query With Multiple Lines Repointing Case[¶](#embedded-sql-query-with-multiple-lines-repointing-case)
 
 This case showcases the connection with SQL queries and multiple lines of logic after the connection
@@ -148,8 +136,6 @@ let
 in
  #"Filtered Rows"
 ```
-
-Copy
 
 **Snowflake SQL Connection in the Power Query Editor**
 
@@ -170,8 +156,6 @@ in
   #"Filtered Rows"
 ```
 
-Copy
-
 ### Embedded SQL Query With Column Renaming Repointing Case[¶](#embedded-sql-query-with-column-renaming-repointing-case)
 
 At the moment, column renaing for SQL queries cases are only applied if the internal infromation of
@@ -185,8 +169,6 @@ let
 in
     Source
 ```
-
-Copy
 
 **Snowflake SQL Connection in the Power Query Editor**
 
@@ -207,8 +189,6 @@ in
     Source
 ```
 
-Copy
-
 ### Function For Entity Case Repointing Case[¶](#function-for-entity-case-repointing-case)
 
 Currently, the functions are only supported for entities import case, and Transact only.
@@ -224,8 +204,6 @@ in
   #"Invoked Functiondbo_MultiParam1"
 ```
 
-Copy
-
 **Snowflake SQL Connection in the Power Query Editor**
 
 ```
@@ -238,5 +216,3 @@ let
 in
   #"Invoked Functiondbo_MultiParam1"
 ```
-
-Copy

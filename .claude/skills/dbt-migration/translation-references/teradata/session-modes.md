@@ -98,8 +98,6 @@ INSERT INTO departments (department_id, department_name, location) VALUES (103, 
 INSERT INTO departments (department_id, department_name, location) VALUES (104, 'Finance', 'Boston');
 ```
 
-Copy
-
 ##### Snowflake[¶](#snowflake)
 
 ```
@@ -164,8 +162,6 @@ INSERT INTO departments (department_id, department_name, location)
 VALUES (104, 'Finance', 'Boston');
 ```
 
-Copy
-
 #### Comparison operation[¶](#comparison-operation)
 
 ##### Case 1: Column constraint is NOT CASESPECIFIC and database mode is ANSI Mode[¶](#case-1-column-constraint-is-not-casespecific-and-database-mode-is-ansi-mode)
@@ -179,8 +175,6 @@ Copy
 FROM employees
 WHERE first_name = 'GEorge ';
 ```
-
-Copy
 
 ##### Output[¶](#output)
 
@@ -202,8 +196,6 @@ WHERE
     COLLATE(first_name, 'en-cs-rtrim') = RTRIM('George');
 ```
 
-Copy
-
 ##### Output[¶](#id4)
 
 <!-- prettier-ignore -->
@@ -222,8 +214,6 @@ Copy
 FROM employees
 WHERE last_name = 'SNOW ';
 ```
-
-Copy
 
 ##### Output[¶](#id7)
 
@@ -246,8 +236,6 @@ WHERE
  RTRIM(last_name) = RTRIM('SNOW ');
 ```
 
-Copy
-
 ##### Output[¶](#id10)
 
 <!-- prettier-ignore -->
@@ -266,8 +254,6 @@ Copy
  SELECT * FROM employees WHERE first_name = 'George   ' (CASESPECIFIC);
 ```
 
-Copy
-
 ##### Output[¶](#id13)
 
 <!-- prettier-ignore -->
@@ -277,7 +263,7 @@ Copy
 
 ##### Snowflake[¶](#id14)
 
-Note
+**Note:**
 
 COLLATE ‘en-cs’ is required for functional equivalence.
 
@@ -291,8 +277,6 @@ FROM
 WHERE
     COLLATE(first_name, 'en-cs-rtrim') = 'George   ' /*** SSC-FDM-TD0032 - CASESPECIFIC CLAUSE WAS REMOVED ***/;
 ```
-
-Copy
 
 ##### Output[¶](#id16)
 
@@ -310,8 +294,6 @@ Copy
 ```
  SELECT * FROM employees WHERE first_name = 'GEorge   ' (NOT CASESPECIFIC) ;
 ```
-
-Copy
 
 ##### Output[¶](#id19)
 
@@ -335,8 +317,6 @@ WHERE
    RTRIM(first_name) = RTRIM('GEorge   ' /*** SSC-FDM-TD0032 - NOT CASESPECIFIC CLAUSE WAS REMOVED ***/);
 ```
 
-Copy
-
 ##### Output[¶](#id22)
 
 <!-- prettier-ignore -->
@@ -356,8 +336,6 @@ Copy
  SELECT * FROM employees WHERE first_name (NOT CASESPECIFIC)  = 'George    ';
 ```
 
-Copy
-
 ##### Output[¶](#id25)
 
 <!-- prettier-ignore -->
@@ -367,7 +345,7 @@ Copy
 
 ##### Snowflake[¶](#id26)
 
-Note
+**Note:**
 
 It requires COLLATE.
 
@@ -381,8 +359,6 @@ FROM
 WHERE
    COLLATE(first_name /*** SSC-FDM-TD0032 - NOT CASESPECIFIC CLAUSE WAS REMOVED ***/, 'en-cs-rtrim') = 'George    ';
 ```
-
-Copy
 
 ##### Output[¶](#id28)
 
@@ -405,8 +381,6 @@ FROM employees
 WHERE first_name LIKE 'George';
 ```
 
-Copy
-
 ##### Output[¶](#id32)
 
 <!-- prettier-ignore -->
@@ -423,8 +397,6 @@ Copy
 FROM employees
 WHERE COLLATE(first_name, 'en-cs-rtrim') LIKE 'George';
 ```
-
-Copy
 
 ##### Output[¶](#id35)
 
@@ -445,8 +417,6 @@ FROM employees
 WHERE last_name LIKE 'Snow';
 ```
 
-Copy
-
 ##### Output[¶](#id39)
 
 <!-- prettier-ignore -->
@@ -464,8 +434,6 @@ Copy
 FROM employees
 WHERE RTRIM(last_name) LIKE RTRIM('Snow');
 ```
-
-Copy
 
 ##### Output[¶](#id42)
 
@@ -487,8 +455,6 @@ FROM employees
 WHERE first_name LIKE 'Mary' (CASESPECIFIC);
 ```
 
-Copy
-
 ##### Output[¶](#id46)
 
 <!-- prettier-ignore -->
@@ -509,8 +475,6 @@ WHERE
    COLLATE(first_name, 'en-cs-rtrim') LIKE 'Mary' /*** SSC-FDM-TD0032 - CASESPECIFIC CLAUSE WAS REMOVED ***/;
 ```
 
-Copy
-
 ##### Output[¶](#id49)
 
 <!-- prettier-ignore -->
@@ -529,8 +493,6 @@ Copy
 FROM employees
 WHERE last_name LIKE 'SNO%' (NOT CASESPECIFIC);
 ```
-
-Copy
 
 ##### Output[¶](#id52)
 
@@ -552,8 +514,6 @@ FROM
 WHERE
    RTRIM(last_name) LIKE RTRIM('SNO%' /*** SSC-FDM-TD0032 - NOT CASESPECIFIC CLAUSE WAS REMOVED ***/);
 ```
-
-Copy
 
 ##### Output[¶](#id55)
 
@@ -577,8 +537,6 @@ FROM employees
 WHERE first_name IN ('George   ');
 ```
 
-Copy
-
 ##### Output[¶](#id59)
 
 <!-- prettier-ignore -->
@@ -588,7 +546,7 @@ Copy
 
 ##### Snowflake[¶](#id60)
 
-Note
+**Note:**
 
 This case requires `COLLATE(`_`column_name`_`, 'en-cs-rtrim')`
 
@@ -603,8 +561,6 @@ WHERE
    RTRIM(first_name) IN (COLLATE('George   ', 'en-cs-rtrim'));
 ```
 
-Copy
-
 ##### Output[¶](#id62)
 
 <!-- prettier-ignore -->
@@ -616,7 +572,7 @@ Copy
 
 ##### Teradata[¶](#id64)
 
-Note
+**Note:**
 
 For this case, the column does not have a column constraint, but the default constraint in Teradata
 ANSI mode is `CASESPECIFIC`.
@@ -628,8 +584,6 @@ ANSI mode is `CASESPECIFIC`.
 FROM employees
 WHERE department IN ('EngineerinG    ');
 ```
-
-Copy
 
 ##### Output[¶](#id66)
 
@@ -651,8 +605,6 @@ WHERE
    RTRIM(department) IN (RTRIM('EngineerinG    '));
 ```
 
-Copy
-
 ##### Output[¶](#id69)
 
 <!-- prettier-ignore -->
@@ -673,8 +625,6 @@ Copy
 FROM employees
 ORDER BY first_name;
 ```
-
-Copy
 
 ##### Output[¶](#id73)
 
@@ -708,8 +658,6 @@ FROM
 ORDER BY first_name;
 ```
 
-Copy
-
 ##### Output[¶](#id76)
 
 <!-- prettier-ignore -->
@@ -738,8 +686,6 @@ FROM employees
 ORDER BY last_name;
 ```
 
-Copy
-
 ##### Output[¶](#id80)
 
 <!-- prettier-ignore -->
@@ -767,8 +713,6 @@ FROM
    employees
 ORDER BY last_name;
 ```
-
-Copy
 
 ##### Output[¶](#id83)
 
@@ -800,8 +744,6 @@ FROM employees
 GROUP BY first_name;
 ```
 
-Copy
-
 ##### Output[¶](#id87)
 
 <!-- prettier-ignore -->
@@ -820,7 +762,7 @@ Warning
 
 **The case or order may differ in output.**
 
-Note
+**Note:**
 
 `RTRIM` is required in selected columns.
 
@@ -833,8 +775,6 @@ Note
    employees
   GROUP BY first_name;
 ```
-
-Copy
 
 ##### Output[¶](#id90)
 
@@ -860,8 +800,6 @@ FROM employees
 GROUP BY last_name;
 ```
 
-Copy
-
 ##### Output[¶](#id94)
 
 <!-- prettier-ignore -->
@@ -876,7 +814,7 @@ Copy
 
 ##### Snowflake[¶](#id95)
 
-Note
+**Note:**
 
 _The order may differ._
 
@@ -889,8 +827,6 @@ _The order may differ._
    employees
   GROUP BY last_name;
 ```
-
-Copy
 
 ##### Output[¶](#id97)
 
@@ -932,15 +868,11 @@ GROUP BY first_name
 HAVING first_name = 'Mary';
 ```
 
-Copy
-
 ##### Output[¶](#id100)
 
 ```
 Mary
 ```
-
-Copy
 
 ##### Snowflake[¶](#id101)
 
@@ -956,15 +888,11 @@ HAVING
    COLLATE(first_name, 'en-cs-rtrim') = 'Mary';
 ```
 
-Copy
-
 ##### Output[¶](#id103)
 
 ```
 Mary
 ```
-
-Copy
 
 #### CASE WHEN statement[¶](#case-when-statement)
 
@@ -997,8 +925,6 @@ FROM employees
 WHERE last_name = '';
 ```
 
-Copy
-
 ##### Output[¶](#id106)
 
 <!-- prettier-ignore -->
@@ -1028,8 +954,6 @@ FROM
    employees
 WHERE RTRIM(last_name) = RTRIM('');
 ```
-
-Copy
 
 ##### Output[¶](#id109)
 
@@ -1080,8 +1004,6 @@ ON
     e.department = d.department_name;
 ```
 
-Copy
-
 ##### Output[¶](#id113)
 
 <!-- prettier-ignore -->
@@ -1092,7 +1014,7 @@ Copy
 
 ##### Snowflake[¶](#id114)
 
-Note
+**Note:**
 
 `d.department_name` is `NOT CASESPECIFIC`, so it requires `COLLATE`.
 
@@ -1110,8 +1032,6 @@ JOIN
    departments d
 ON COLLATE(e.department, 'en-cs-rtrim') = d.department_name;
 ```
-
-Copy
 
 ##### Output[¶](#id116)
 
@@ -1181,8 +1101,6 @@ INSERT INTO departments (department_id, department_name, location) VALUES (103, 
 INSERT INTO departments (department_id, department_name, location) VALUES (104, 'Finance', 'Boston');
 ```
 
-Copy
-
 ##### Snowflake[¶](#id121)
 
 ```
@@ -1247,8 +1165,6 @@ INSERT INTO departments (department_id, department_name, location)
 VALUES (104, 'Finance', 'Boston');
 ```
 
-Copy
-
 #### Comparison operation[¶](#id122)
 
 ##### Case 1: Column constraint is NOT CASESPECIFIC and database mode is ANSI Mode[¶](#id123)
@@ -1262,8 +1178,6 @@ Copy
 FROM employees
 WHERE first_name = 'George      ';
 ```
-
-Copy
 
 ##### Output[¶](#id126)
 
@@ -1285,8 +1199,6 @@ WHERE
 RTRIM(first_name) = RTRIM('George      ');
 ```
 
-Copy
-
 ##### Output[¶](#id129)
 
 <!-- prettier-ignore -->
@@ -1305,8 +1217,6 @@ Copy
 FROM employees
 WHERE last_name = 'SNOW ';
 ```
-
-Copy
 
 ##### Output[¶](#id133)
 
@@ -1328,8 +1238,6 @@ employees
 WHERE
  RTRIM(last_name) = RTRIM('SNOW ');
 ```
-
-Copy
 
 ##### Output[¶](#id136)
 
@@ -1353,8 +1261,6 @@ The (`CASESPECIFIC`) overwrite the column constraint in the table definition.
  SELECT * FROM employees WHERE first_name = 'GEorge   ' (CASESPECIFIC);
 ```
 
-Copy
-
 ##### Output[¶](#id140)
 
 <!-- prettier-ignore -->
@@ -1371,8 +1277,6 @@ Copy
  SELECT * FROM workers
 WHERE RTRIM(first_name) = RTRIM(UPPER('GEorge   '));
 ```
-
-Copy
 
 ##### Output[¶](#id143)
 
@@ -1393,8 +1297,6 @@ Copy
 WHERE last_name = 'SnoW   ' (NOT CASESPECIFIC) ;
 ```
 
-Copy
-
 ##### Output[¶](#id147)
 
 <!-- prettier-ignore -->
@@ -1410,8 +1312,6 @@ Copy
  SELECT * FROM employees
 WHERE RTRIM(last_name) = RTRIM('SnoW   ');
 ```
-
-Copy
 
 ##### Output[¶](#id150)
 
@@ -1434,8 +1334,6 @@ FROM employees
 WHERE first_name LIKE 'Georg%';
 ```
 
-Copy
-
 ##### Output[¶](#id155)
 
 <!-- prettier-ignore -->
@@ -1452,8 +1350,6 @@ Copy
 FROM employees
 WHERE first_name LIKE 'Georg%';
 ```
-
-Copy
 
 ##### Output[¶](#id158)
 
@@ -1474,8 +1370,6 @@ FROM employees
 WHERE last_name LIKE 'Snow';
 ```
 
-Copy
-
 ##### Output[¶](#id162)
 
 <!-- prettier-ignore -->
@@ -1492,8 +1386,6 @@ Copy
 FROM employees
 WHERE last_name LIKE 'Snow';
 ```
-
-Copy
 
 ##### Output[¶](#id165)
 
@@ -1513,8 +1405,6 @@ Copy
 FROM employees
 WHERE first_name LIKE 'George' (NOT CASESPECIFIC);
 ```
-
-Copy
 
 ##### Output[¶](#id168)
 
@@ -1537,8 +1427,6 @@ WHERE
    first_name ILIKE 'George' /*** SSC-FDM-TD0032 - NOT CASESPECIFIC CLAUSE WAS REMOVED ***/;
 ```
 
-Copy
-
 ##### Output[¶](#id171)
 
 <!-- prettier-ignore -->
@@ -1558,8 +1446,6 @@ Copy
 FROM employees
 WHERE last_name LIKE 'SNO%' (NOT CASESPECIFIC);
 ```
-
-Copy
 
 ##### Output[¶](#id175)
 
@@ -1581,8 +1467,6 @@ FROM
 WHERE
    last_name LIKE 'SNO%' /*** SSC-FDM-TD0032 - NOT CASESPECIFIC CLAUSE WAS REMOVED ***/;
 ```
-
-Copy
 
 ##### Output[¶](#id178)
 
@@ -1606,8 +1490,6 @@ FROM employees
 WHERE first_name IN ('GEORGE   ');
 ```
 
-Copy
-
 ##### Output[¶](#id183)
 
 <!-- prettier-ignore -->
@@ -1625,8 +1507,6 @@ Copy
 FROM employees
 WHERE RTRIM(first_name) IN (RTRIM('GEORGE   '));
 ```
-
-Copy
 
 ##### Output[¶](#id186)
 
@@ -1648,8 +1528,6 @@ FROM employees
 WHERE department IN ('SaleS');
 ```
 
-Copy
-
 ##### Output[¶](#id190)
 
 <!-- prettier-ignore -->
@@ -1667,8 +1545,6 @@ FROM employees
 WHERE RTRIM(department) IN (RTRIM('SaleS'));
 ```
 
-Copy
-
 ##### Output[¶](#id193)
 
 <!-- prettier-ignore -->
@@ -1678,7 +1554,7 @@ Copy
 
 #### ORDER BY clause[¶](#id194)
 
-Note
+**Note:**
 
 **Notice that this functional equivalence can differ.**
 
@@ -1693,8 +1569,6 @@ Note
 FROM departments
 ORDER BY department_name;
 ```
-
-Copy
 
 ##### Output[¶](#id198)
 
@@ -1714,7 +1588,7 @@ Copy
 
 ##### Snowflake[¶](#id199)
 
-Note
+**Note:**
 
 **Please review FDM. The order differs in the order of insertion of data.**
 
@@ -1728,8 +1602,6 @@ FROM
 ORDER BY
    UPPER(department_name);
 ```
-
-Copy
 
 ##### Output[¶](#id201)
 
@@ -1759,8 +1631,6 @@ FROM employees
 ORDER BY last_name;
 ```
 
-Copy
-
 ##### Output[¶](#id205)
 
 <!-- prettier-ignore -->
@@ -1780,8 +1650,6 @@ Copy
 FROM employees
 ORDER BY last_name;
 ```
-
-Copy
 
 ##### Output[¶](#id208)
 
@@ -1815,8 +1683,6 @@ FROM employees
 GROUP BY first_name;
 ```
 
-Copy
-
 ##### Output[¶](#id213)
 
 <!-- prettier-ignore -->
@@ -1841,8 +1707,6 @@ FROM
 !!!RESOLVE EWI!!! /*** SSC-EWI-TD0007 - GROUP BY IS NOT EQUIVALENT IN TERADATA MODE ***/!!!
 GROUP BY first_name;
 ```
-
-Copy
 
 ##### Output[¶](#id216)
 
@@ -1872,8 +1736,6 @@ FROM employees
 GROUP BY last_name;
 ```
 
-Copy
-
 ##### Output[¶](#id220)
 
 <!-- prettier-ignore -->
@@ -1898,8 +1760,6 @@ FROM
 !!!RESOLVE EWI!!! /*** SSC-EWI-TD0007 - GROUP BY IS NOT EQUIVALENT IN TERADATA MODE ***/!!!
 GROUP BY last_name;
 ```
-
-Copy
 
 ##### Output[¶](#id223)
 
@@ -1941,15 +1801,11 @@ GROUP BY first_name
 HAVING first_name = 'GEORGE';
 ```
 
-Copy
-
 ##### Output[¶](#id228)
 
 ```
 GEORGE
 ```
-
-Copy
 
 ##### Snowflake[¶](#id229)
 
@@ -1965,15 +1821,11 @@ HAVING
    RTRIM(first_name) = RTRIM('GEORGE');
 ```
 
-Copy
-
 ##### Output[¶](#id231)
 
 ```
 GEORGE
 ```
-
-Copy
 
 #### CASE WHEN statement[¶](#id232)
 
@@ -2006,8 +1858,6 @@ FROM employees
 WHERE last_name = '   ';
 ```
 
-Copy
-
 ##### Output[¶](#id235)
 
 <!-- prettier-ignore -->
@@ -2038,8 +1888,6 @@ FROM
 WHERE
       UPPER(RTRIM( last_name)) = UPPER(RTRIM('   '));
 ```
-
-Copy
 
 ##### Output[¶](#id238)
 
@@ -2090,8 +1938,6 @@ ON
     e.department = d.department_name;
 ```
 
-Copy
-
 ##### Output[¶](#id242)
 
 <!-- prettier-ignore -->
@@ -2116,8 +1962,6 @@ JOIN
       departments d
 ON RTRIM(e.department) = RTRIM(d.department_name);
 ```
-
-Copy
 
 ##### Output[¶](#id245)
 
@@ -2184,8 +2028,6 @@ INSERT INTO departments (department_id, department_name, location) VALUES (103, 
 INSERT INTO departments (department_id, department_name, location) VALUES (104, 'Finance', 'Boston');
 ```
 
-Copy
-
 ##### Snowflake[¶](#id251)
 
 ```
@@ -2250,8 +2092,6 @@ INSERT INTO departments (department_id, department_name, location)
 VALUES (104, 'Finance', 'Boston');
 ```
 
-Copy
-
 #### Comparison operation[¶](#id252)
 
 ##### Case 1: Column constraint is NOT CASESPECIFIC and database mode is TERA Mode[¶](#case-1-column-constraint-is-not-casespecific-and-database-mode-is-tera-mode)
@@ -2265,8 +2105,6 @@ Copy
 FROM employees
 WHERE first_name = 'GEorge ';
 ```
-
-Copy
 
 ##### Output[¶](#id255)
 
@@ -2290,8 +2128,6 @@ WHERE
  RTRIM(first_name) = RTRIM('GEorge ');
 ```
 
-Copy
-
 ##### Output[¶](#id258)
 
 <!-- prettier-ignore -->
@@ -2312,8 +2148,6 @@ Copy
 FROM employees
 WHERE last_name = 'SNOW ';
 ```
-
-Copy
 
 ##### Output[¶](#id261)
 
@@ -2336,8 +2170,6 @@ WHERE
  RTRIM(last_name) = RTRIM('SNOW ');
 ```
 
-Copy
-
 ##### Output[¶](#id264)
 
 <!-- prettier-ignore -->
@@ -2348,7 +2180,7 @@ Copy
 
 ##### Case 3: CAST NOT CASESPECIFIC column to CASESPECIFIC and database mode is TERA Mode[¶](#case-3-cast-not-casespecific-column-to-casespecific-and-database-mode-is-tera-mode)
 
-Note
+**Note:**
 
 Notice that the following queries
 
@@ -2364,8 +2196,6 @@ will return the same values.
 ```
  SELECT * FROM employees WHERE first_name = 'JOHN   ' (CASESPECIFIC);
 ```
-
-Copy
 
 ##### Output[¶](#id267)
 
@@ -2388,8 +2218,6 @@ WHERE
     COLLATE(first_name, 'en-cs-rtrim') = 'JOHN   ' /*** SSC-FDM-TD0032 - CASESPECIFIC CLAUSE WAS REMOVED ***/;
 ```
 
-Copy
-
 ##### Output[¶](#id270)
 
 <!-- prettier-ignore -->
@@ -2400,7 +2228,7 @@ Copy
 
 ##### Case 4: CAST CASESPECIFIC column to NOT CASESPECIFIC and database mode is TERA Mode[¶](#case-4-cast-casespecific-column-to-not-casespecific-and-database-mode-is-tera-mode)
 
-Note
+**Note:**
 
 CAST to a column on the left side of the comparison has priority.
 
@@ -2417,8 +2245,6 @@ For example:
 ```
  SELECT * FROM employees WHERE last_name (NOT CASESPECIFIC)  = 'snoW' ;
 ```
-
-Copy
 
 ##### Output[¶](#id273)
 
@@ -2443,8 +2269,6 @@ FROM
 WHERE
    COLLATE(last_name /*** SSC-FDM-TD0032 - NOT CASESPECIFIC CLAUSE WAS REMOVED ***/, 'en-ci-rtrim') = 'snoW' ;
 ```
-
-Copy
 
 ##### Output[¶](#id276)
 
@@ -2471,8 +2295,6 @@ FROM employees
 WHERE first_name LIKE 'GeorgE';
 ```
 
-Copy
-
 ##### Output[¶](#id281)
 
 <!-- prettier-ignore -->
@@ -2494,8 +2316,6 @@ WHERE
    RTRIM(first_name) LIKE RTRIM('GeorgE');
 ```
 
-Copy
-
 ##### Output[¶](#id284)
 
 <!-- prettier-ignore -->
@@ -2515,8 +2335,6 @@ Copy
 FROM employees
 WHERE last_name LIKE 'Snow';
 ```
-
-Copy
 
 ##### Output[¶](#id288)
 
@@ -2538,8 +2356,6 @@ WHERE
    RTRIM(last_name) LIKE RTRIM('Snow');
 ```
 
-Copy
-
 ##### Output[¶](#id291)
 
 <!-- prettier-ignore -->
@@ -2558,8 +2374,6 @@ Copy
 FROM employees
 WHERE first_name LIKE 'George' (CASESPECIFIC);
 ```
-
-Copy
 
 ##### Output[¶](#id295)
 
@@ -2581,8 +2395,6 @@ WHERE
     COLLATE(first_name, 'en-cs-rtrim') LIKE 'George';
 ```
 
-Copy
-
 ##### Output[¶](#id298)
 
 <!-- prettier-ignore -->
@@ -2601,8 +2413,6 @@ Copy
 FROM employees
 WHERE last_name LIKE 'SNO%' (NOT CASESPECIFIC);
 ```
-
-Copy
 
 ##### Output[¶](#id302)
 
@@ -2624,8 +2434,6 @@ FROM
 WHERE
    RTRIM(last_name) LIKE RTRIM('SNO%' /*** SSC-FDM-TD0032 - NOT CASESPECIFIC CLAUSE WAS REMOVED ***/);
 ```
-
-Copy
 
 ##### Output[¶](#id305)
 
@@ -2649,8 +2457,6 @@ FROM employees
 WHERE first_name IN ('George   ');
 ```
 
-Copy
-
 ##### Output[¶](#id310)
 
 <!-- prettier-ignore -->
@@ -2673,8 +2479,6 @@ WHERE
    RTRIM(first_name) IN (RTRIM('George   '));
 ```
 
-Copy
-
 ##### Output[¶](#id313)
 
 <!-- prettier-ignore -->
@@ -2686,7 +2490,7 @@ Copy
 
 ##### Case 2: Column constraint is not defined and database mode is TERA Mode[¶](#case-2-column-constraint-is-not-defined-and-database-mode-is-tera-mode)
 
-Note
+**Note:**
 
 In Tera mode, not defined case specification means `NOT CASESPECIFIC`.
 
@@ -2699,8 +2503,6 @@ In Tera mode, not defined case specification means `NOT CASESPECIFIC`.
 FROM employees
 WHERE department IN ('Sales    ');
 ```
-
-Copy
 
 ##### Output[¶](#id316)
 
@@ -2726,8 +2528,6 @@ WHERE
    RTRIM(department) IN (RTRIM('Sales    '));
 ```
 
-Copy
-
 ##### Output[¶](#id319)
 
 <!-- prettier-ignore -->
@@ -2751,8 +2551,6 @@ FROM employees
 WHERE last_name IN ('SNOW   ');
 ```
 
-Copy
-
 ##### Output[¶](#id322)
 
 <!-- prettier-ignore -->
@@ -2773,8 +2571,6 @@ FROM
 WHERE
    RTRIM(last_name) IN (RTRIM('SNOW   '));
 ```
-
-Copy
 
 ##### Output[¶](#id325)
 
@@ -2797,8 +2593,6 @@ Copy
 FROM employees
 ORDER BY employee_id, first_name;
 ```
-
-Copy
 
 ##### Output[¶](#id330)
 
@@ -2825,8 +2619,6 @@ Copy
 FROM employees
 ORDER BY employee_id, first_name;
 ```
-
-Copy
 
 ##### Output[¶](#id333)
 
@@ -2856,8 +2648,6 @@ FROM employees
 ORDER BY employee_id, last_name;
 ```
 
-Copy
-
 ##### Output[¶](#id337)
 
 <!-- prettier-ignore -->
@@ -2883,8 +2673,6 @@ Copy
 FROM employees
 ORDER BY employee_id, last_name;
 ```
-
-Copy
 
 ##### Output[¶](#id340)
 
@@ -2916,8 +2704,6 @@ FROM employees
 GROUP BY first_name;
 ```
 
-Copy
-
 ##### Output[¶](#id345)
 
 <!-- prettier-ignore -->
@@ -2946,8 +2732,6 @@ FROM
 GROUP BY first_name;
 ```
 
-Copy
-
 ##### Output[¶](#id348)
 
 <!-- prettier-ignore -->
@@ -2972,8 +2756,6 @@ FROM employees
 GROUP BY last_name;
 ```
 
-Copy
-
 ##### Output[¶](#id352)
 
 <!-- prettier-ignore -->
@@ -2997,8 +2779,6 @@ FROM
    employees
 GROUP BY last_name;
 ```
-
-Copy
 
 ##### Output[¶](#id355)
 
@@ -3031,7 +2811,7 @@ The following sample showcases a pattern with evaluation operation.
 
 ##### Teradata[¶](#id357)
 
-Note
+**Note:**
 
 Case specification in output may vary depending on the number of columns selected. This is also
 related to the `GROUP BY` clause.
@@ -3044,8 +2824,6 @@ FROM employees
 GROUP BY first_name
 HAVING first_name = 'George  ';
 ```
-
-Copy
 
 ##### Output[¶](#id359)
 
@@ -3070,8 +2848,6 @@ GROUP BY employee_id, first_name
 HAVING
    RTRIM(first_name) = RTRIM('George  ');
 ```
-
-Copy
 
 ##### Output[¶](#id362)
 
@@ -3113,8 +2889,6 @@ FROM employees
 WHERE last_name = '';
 ```
 
-Copy
-
 ##### Output[¶](#id366)
 
 <!-- prettier-ignore -->
@@ -3145,8 +2919,6 @@ FROM
 WHERE
    RTRIM( last_name) = RTRIM('');
 ```
-
-Copy
 
 ##### Output[¶](#id369)
 
@@ -3197,8 +2969,6 @@ ON
     e.department = d.department_name;
 ```
 
-Copy
-
 ##### Output[¶](#id374)
 
 <!-- prettier-ignore -->
@@ -3228,8 +2998,6 @@ JOIN
    departments d
 ON RTRIM(e.department) = RTRIM(d.department_name);
 ```
-
-Copy
 
 ##### Output[¶](#id377)
 
@@ -3302,8 +3070,6 @@ INSERT INTO departments (department_id, department_name, location) VALUES (103, 
 INSERT INTO departments (department_id, department_name, location) VALUES (104, 'Finance', 'Boston');
 ```
 
-Copy
-
 ##### Snowflake[¶](#id383)
 
 ```
@@ -3368,8 +3134,6 @@ INSERT INTO departments (department_id, department_name, location)
 VALUES (104, 'Finance', 'Boston');
 ```
 
-Copy
-
 #### Comparison operation[¶](#id384)
 
 ##### Case 1: Column constraint is NOT CASESPECIFIC and database mode is TERA Mode[¶](#id385)
@@ -3392,8 +3156,6 @@ FROM employees
 WHERE first_name = 'GEorge ';
 ```
 
-Copy
-
 ##### Output[¶](#id388)
 
 <!-- prettier-ignore -->
@@ -3415,8 +3177,6 @@ FROM
 WHERE
  RTRIM(UPPER(first_name)) = RTRIM(UPPER('GEorge '));
 ```
-
-Copy
 
 ##### Output[¶](#id391)
 
@@ -3445,8 +3205,6 @@ FROM employees
 WHERE last_name = 'SNOW ';
 ```
 
-Copy
-
 ##### Output[¶](#id395)
 
 <!-- prettier-ignore -->
@@ -3467,8 +3225,6 @@ FROM
 WHERE
  RTRIM(last_name) = RTRIM('SNOW ');
 ```
-
-Copy
 
 ##### Output[¶](#id398)
 
@@ -3492,8 +3248,6 @@ The (`CASESPECIFIC`) overrides the column constraint in the table definition.
  SELECT * FROM employees WHERE first_name = 'GEORGE   ' (CASESPECIFIC);
 ```
 
-Copy
-
 ##### Output[¶](#id401)
 
 <!-- prettier-ignore -->
@@ -3504,7 +3258,7 @@ Copy
 
 ##### Snowflake[¶](#id402)
 
-Note
+**Note:**
 
 RTRIM is required on the left side, and RTRIM is required on the right side.
 
@@ -3518,8 +3272,6 @@ FROM
 WHERE
    RTRIM(first_name) = RTRIM('GEORGE   ' /*** SSC-FDM-TD0032 - CASESPECIFIC CLAUSE WAS REMOVED ***/);
 ```
-
-Copy
 
 ##### Output[¶](#id404)
 
@@ -3538,8 +3290,6 @@ Copy
 ```
  SELECT * FROM employees WHERE first_name = 'GEorge   ' (NOT CASESPECIFIC) ;
 ```
-
-Copy
 
 ##### Output[¶](#id407)
 
@@ -3563,8 +3313,6 @@ WHERE
    UPPER(RTRIM(first_name)) = UPPER(RTRIM('GEorge   ' /*** SSC-FDM-TD0032 - NOT CASESPECIFIC CLAUSE WAS REMOVED ***/));
 ```
 
-Copy
-
 ##### Output[¶](#id410)
 
 <!-- prettier-ignore -->
@@ -3585,8 +3333,6 @@ Copy
 FROM employees
 WHERE last_name = '   ';
 ```
-
-Copy
 
 ##### Output[¶](#id413)
 
@@ -3611,8 +3357,6 @@ WHERE
    RTRIM(last_name) = RTRIM('   ');
 ```
 
-Copy
-
 ##### Output[¶](#id416)
 
 <!-- prettier-ignore -->
@@ -3625,7 +3369,7 @@ Copy
 
 #### LIKE operation[¶](#id417)
 
-Note
+**Note:**
 
 This operation works differently from another one. Blank spaces must be the same quantity to
 retrieve information.
@@ -3634,7 +3378,7 @@ retrieve information.
 
 This example is expected to display one row because the case specification is not relevant.
 
-Note
+**Note:**
 
 In Snowflake, the migration uses the
 [ILIKE](https://docs.snowflake.com/en/sql-reference/functions/ilike) operation. This performs a
@@ -3649,8 +3393,6 @@ case-insensitive comparison.
 FROM employees
 WHERE first_name LIKE 'GeorgE';
 ```
-
-Copy
 
 ##### Output[¶](#id421)
 
@@ -3669,8 +3411,6 @@ Copy
 FROM employees
 WHERE first_name ILIKE 'GeorgE';
 ```
-
-Copy
 
 ##### Output[¶](#id424)
 
@@ -3692,8 +3432,6 @@ FROM employees
 WHERE last_name LIKE 'Snow';
 ```
 
-Copy
-
 ##### Output[¶](#id428)
 
 <!-- prettier-ignore -->
@@ -3711,8 +3449,6 @@ Copy
 FROM employees
 WHERE last_name LIKE 'Snow';
 ```
-
-Copy
 
 ##### Output[¶](#id431)
 
@@ -3733,8 +3469,6 @@ Copy
 FROM employees
 WHERE first_name LIKE 'George' (NOT CASESPECIFIC);
 ```
-
-Copy
 
 ##### Output[¶](#id435)
 
@@ -3757,8 +3491,6 @@ WHERE
    first_name ILIKE 'George' /*** SSC-FDM-TD0032 - NOT CASESPECIFIC CLAUSE WAS REMOVED ***/;
 ```
 
-Copy
-
 ##### Output[¶](#id438)
 
 <!-- prettier-ignore -->
@@ -3769,7 +3501,7 @@ Copy
 
 ##### Case 4: CAST NOT CASESPECIFIC column to NOT CASESPECIFIC and database mode is ANSI Mode[¶](#case-4-cast-not-casespecific-column-to-not-casespecific-and-database-mode-is-ansi-mode)
 
-Note
+**Note:**
 
 This case requires the translation to `ILIKE`.
 
@@ -3782,8 +3514,6 @@ This case requires the translation to `ILIKE`.
 FROM employees
 WHERE first_name LIKE 'GE%' (NOT CASESPECIFIC);
 ```
-
-Copy
 
 ##### Output[¶](#id441)
 
@@ -3806,8 +3536,6 @@ FROM
 WHERE
    first_name ILIKE 'GE%' /*** SSC-FDM-TD0032 - NOT CASESPECIFIC CLAUSE WAS REMOVED ***/;
 ```
-
-Copy
 
 ##### Output[¶](#id444)
 
@@ -3832,8 +3560,6 @@ FROM employees
 WHERE first_name IN ('GeorgE');
 ```
 
-Copy
-
 ##### Output[¶](#id449)
 
 <!-- prettier-ignore -->
@@ -3852,8 +3578,6 @@ Copy
 FROM employees
 WHERE RTRIM(UPPER(first_name)) IN (RTRIM(UPPER('GeorgE')));
 ```
-
-Copy
 
 ##### Output[¶](#id452)
 
@@ -3879,8 +3603,6 @@ FROM employees
 WHERE last_name IN ('SnoW');
 ```
 
-Copy
-
 ##### Output[¶](#id456)
 
 <!-- prettier-ignore -->
@@ -3897,8 +3619,6 @@ Copy
 FROM employees
 WHERE RTRIM(last_name) IN (RTRIM('SnoW'));
 ```
-
-Copy
 
 ##### Output[¶](#id459)
 
@@ -3925,8 +3645,6 @@ FROM employees
 ORDER BY department;
 ```
 
-Copy
-
 ##### Output[¶](#id464)
 
 <!-- prettier-ignore -->
@@ -3952,8 +3670,6 @@ Copy
 FROM employees
 ORDER BY UPPER(department);
 ```
-
-Copy
 
 ##### Output[¶](#id467)
 
@@ -3987,8 +3703,6 @@ FROM employees
 ORDER BY last_name;
 ```
 
-Copy
-
 ##### Output[¶](#id471)
 
 <!-- prettier-ignore -->
@@ -4014,8 +3728,6 @@ Copy
 FROM employees
 ORDER BY last_name;
 ```
-
-Copy
 
 ##### Output[¶](#id474)
 
@@ -4069,8 +3781,6 @@ INSERT INTO students(first_name) VALUES ('George');
 INSERT INTO students(first_name) VALUES ('   George');
 ```
 
-Copy
-
 Notice that this sample does not allow inserting values with upper and lower case letters in the
 `NOT CASESPECIFIC` column because it takes it as the same value. Because the column does not
 supervise the case specification, the ‘GEORGE’ and ‘george’ values are checked as the same
@@ -4087,8 +3797,6 @@ INSERT INTO students(first_name) VALUES ('GEorge');
 INSERT INTO students(first_name) VALUES ('George');
 ```
 
-Copy
-
 ##### Case 1: Column constraint is NOT CASESPECIFIC and database mode is TERA Mode[¶](#id476)
 
 ##### Teradata[¶](#id477)
@@ -4100,8 +3808,6 @@ Copy
 FROM employees
 GROUP BY first_name;
 ```
-
-Copy
 
 ##### Output[¶](#id479)
 
@@ -4127,8 +3833,6 @@ FROM
 !!!RESOLVE EWI!!! /*** SSC-EWI-TD0007 - GROUP BY IS NOT EQUIVALENT IN TERADATA MODE ***/!!!
 GROUP BY first_name;
 ```
-
-Copy
 
 ##### Output[¶](#id482)
 
@@ -4158,8 +3862,6 @@ FROM employees
 GROUP BY last_name;
 ```
 
-Copy
-
 ##### Output[¶](#id486)
 
 <!-- prettier-ignore -->
@@ -4184,8 +3886,6 @@ FROM
 !!!RESOLVE EWI!!! /*** SSC-EWI-TD0007 - GROUP BY IS NOT EQUIVALENT IN TERADATA MODE ***/!!!
 GROUP BY last_name;
 ```
-
-Copy
 
 ##### Output[¶](#id489)
 
@@ -4228,8 +3928,6 @@ GROUP BY last_name
 HAVING last_name = 'Snow';
 ```
 
-Copy
-
 ##### Output[¶](#id493)
 
 <!-- prettier-ignore -->
@@ -4247,8 +3945,6 @@ FROM employees
 GROUP BY last_name
 HAVING RTRIM(last_name) = RTRIM('Snow');
 ```
-
-Copy
 
 ##### Output[¶](#id496)
 
@@ -4287,8 +3983,6 @@ The following sample showcases a pattern with evaluation operation.
 FROM employees;
 ```
 
-Copy
-
 ##### Output[¶](#id500)
 
 <!-- prettier-ignore -->
@@ -4323,8 +4017,6 @@ Copy
 FROM
    employees;
 ```
-
-Copy
 
 ##### Output[¶](#id503)
 
@@ -4381,8 +4073,6 @@ ON
     e.department = d.department_name;
 ```
 
-Copy
-
 ##### Output[¶](#id508)
 
 <!-- prettier-ignore -->
@@ -4412,8 +4102,6 @@ JOIN
    departments d
 ON UPPER(RTRIM(e.department)) = UPPER(RTRIM(d.department_name));
 ```
-
-Copy
 
 ##### Output[¶](#id511)
 

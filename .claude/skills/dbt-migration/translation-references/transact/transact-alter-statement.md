@@ -22,7 +22,7 @@ Applies to
 
 ### Description[¶](#id1)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -39,16 +39,12 @@ ALTER TABLE
 GO
 ```
 
-Copy
-
 #### Snowflake[¶](#snowflake)
 
 ```
 !!!RESOLVE EWI!!! /*** SSC-EWI-0035 - CHECK STATEMENT NOT SUPPORTED ***/!!!
 ALTER TABLE IF EXISTS Person.EmailAddress CHECK CONSTRAINT FK_EmailAddress_Person_BusinessEntityID;
 ```
-
-Copy
 
 ### Known Issues[¶](#known-issues)
 
@@ -63,7 +59,7 @@ Copy
 
 ### Description[¶](#id2)
 
-Note
+**Note:**
 
 In SQL Server, the ADD clause permits multiple actions per ADD, whereas Snowflake only allows a
 sequence of ADD column actions. Consequently, SnowConvert AI divides the ALTER TABLE ADD clause into
@@ -83,7 +79,7 @@ Applies to
 
 - SQL Server
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -134,8 +130,6 @@ These parts include:
 }
 ```
 
-Copy
-
 #### Syntax in [**Snowflake**](https://docs.snowflake.com/en/sql-reference/sql/create-table-constraint.html#inline-unique-primary-foreign-key)[¶](#syntax-in-snowflake)
 
 ```
@@ -158,8 +152,6 @@ Copy
   [ VALIDATE | NOVALIDATE ]
   [ RELY | NORELY ]
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id4)
 
@@ -186,8 +178,6 @@ ADD
 GO
 ```
 
-Copy
-
 ##### Snowflake[¶](#id6)
 
 ```
@@ -203,8 +193,6 @@ WITH CHECK
 ADD
     CONSTRAINT FK_EmailAddress_Person_BusinessEntityID FOREIGN KEY(BusinessEntityID) REFERENCES Person.Person (BusinessEntityID) ON DELETE CASCADE ;
 ```
-
-Copy
 
 #### DEFAULT within constraints[¶](#default-within-constraints)
 
@@ -237,8 +225,6 @@ ADD
     CONSTRAINT [DF_Table1_COL_DATE] DEFAULT (getdate()) FOR [COL_DATE]
 GO
 ```
-
-Copy
 
 ##### Snowflake[¶](#id8)
 
@@ -276,8 +262,6 @@ ADD COL_NEWCOLUMN VARCHAR;
                                                                                          ;
 ```
 
-Copy
-
 ### Known Issues[¶](#id9)
 
 **1. DEFAULT is only supported within** `CREATE TABLE` and `ALTER TABLE ... ADD COLUMN`
@@ -304,7 +288,7 @@ Applies to
 
 ### Description[¶](#id11)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -320,8 +304,6 @@ ALTER TABLE dbo.doc_exd
 ADD CONSTRAINT exd_check CHECK NOT FOR REPLICATION (column_a > 1);
 ```
 
-Copy
-
 #### Snowflake[¶](#id14)
 
 ```
@@ -329,8 +311,6 @@ Copy
 ALTER TABLE dbo.doc_exd
 ADD CONSTRAINT exd_check CHECK NOT FOR REPLICATION (column_a > 1);
 ```
-
-Copy
 
 ### Known Issues[¶](#id15)
 
@@ -351,7 +331,7 @@ Applies to
 
 ### Description[¶](#id17)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -368,8 +348,6 @@ ADD COL2 VARCHAR(32), CONSTRAINT EC_BOUGHT1 CONNECTION (Customer TO Product, Sup
 ON DELETE NO ACTION;
 ```
 
-Copy
-
 #### Snowflake[¶](#id20)
 
 ```
@@ -382,8 +360,6 @@ ADD
 CONSTRAINT EC_BOUGHT1 CONNECTION (Customer TO Product, Supplier TO Product)
 ON DELETE NO ACTION;
 ```
-
-Copy
 
 ### Known Issues[¶](#id21)
 
@@ -432,8 +408,6 @@ ALTER TABLE table1
 ADD CONSTRAINT col3_constraint DEFAULT getdate() FOR col3;
 ```
 
-Copy
-
 #### Snowflake[¶](#id26)
 
 ```
@@ -464,8 +438,6 @@ COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":
                                                                                 ;
 ```
 
-Copy
-
 ### Known Issues[¶](#id27)
 
 **1. ALTER TABLE DEFAULT clause is not supported in Snowflake.**
@@ -485,7 +457,7 @@ Applies to
 
 ### Description[¶](#id29)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -503,8 +475,6 @@ FOREIGN KEY
         [ NOT FOR REPLICATION ]
 ```
 
-Copy
-
 #### Snowflake[¶](#id31)
 
 ```
@@ -521,8 +491,6 @@ Copy
   [ RELY | NORELY ]
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id32)
 
 #### SQL Server[¶](#id33)
@@ -535,8 +503,6 @@ ON DELETE NO ACTION
 NOT FOR REPLICATION;
 ```
 
-Copy
-
 #### Snowflake[¶](#id34)
 
 ```
@@ -546,9 +512,7 @@ ON UPDATE CASCADE
 ON DELETE NO ACTION;
 ```
 
-Copy
-
-Note
+**Note:**
 
 Constraints are not enforced in Snowflake, excepting NOT NULL.
 
@@ -560,7 +524,7 @@ Applies to
 
 - SQL Server
 
-Note
+**Note:**
 
 Non-relevant statement.
 
@@ -571,7 +535,7 @@ means that it is not required in Snowflake.
 
 ### Description[¶](#id35)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -595,8 +559,6 @@ CONSTRAINT constraint_name UNIQUE
 ON partition_scheme_name (partition_column_name);
 ```
 
-Copy
-
 ##### Snowflake[¶](#id39)
 
 ```
@@ -604,8 +566,6 @@ ALTER TABLE table_name
 ADD column_name INTEGER
 CONSTRAINT constraint_name UNIQUE;
 ```
-
-Copy
 
 ## PRIMARY KEY[¶](#primary-key)
 
@@ -615,7 +575,7 @@ Applies to
 
 ### Description[¶](#id40)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -633,8 +593,6 @@ statement will be commented out.
 [ ON { partition_scheme_name ( partition_column_name ... )  | filegroup | "default" } ]
 ```
 
-Copy
-
 #### Syntax in Snowflake[¶](#id42)
 
 ```
@@ -647,8 +605,6 @@ Copy
 [ VALIDATE | NOVALIDATE ]
 [ RELY | NORELY ]
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id43)
 
@@ -667,16 +623,12 @@ ALTER TABLE Production.TransactionHistoryArchive
    ON "DEFAULTLOCATION";
 ```
 
-Copy
-
 #### Snowflake[¶](#id45)
 
 ```
 ALTER TABLE Production.TransactionHistoryArchive
    ADD CONSTRAINT PK_TransactionHistoryArchive_TransactionID PRIMARY KEY (TransactionID);
 ```
-
-Copy
 
 ## COLUMN DEFINITION[¶](#column-definition)
 
@@ -687,7 +639,7 @@ Applies to
 - SQL Server
 - Azure Synapse Analytics
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -735,8 +687,6 @@ column_name <data_type>
 [ <column_constraint> [ ...n ] ]
 ```
 
-Copy
-
 #### Snowflake[¶](#id48)
 
 ```
@@ -747,8 +697,6 @@ ADD [ COLUMN ] <col_name> <col_type>
         [ inlineConstraint ]
         [ [ WITH ] MASKING POLICY <policy_name> [ USING ( <col1_name> , cond_col_1 , ... ) ] ]
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id49)
 
@@ -763,16 +711,12 @@ ALTER TABLE table_name
 ADD column_name INTEGER;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id51)
 
 ```
 ALTER TABLE IF EXISTS table_name
 ADD column_name INTEGER;
 ```
-
-Copy
 
 #### COLLATE[¶](#collate)
 
@@ -786,8 +730,6 @@ ADD COLUMN new_column_name VARCHAR
 COLLATE Latin1_General_CI_AS;
 ```
 
-Copy
-
 Since the collation rule nomenclature varies from SQL Server to Snowflake, it is necessary to make
 adjustments.
 
@@ -797,8 +739,6 @@ adjustments.
 ALTER TABLE IF EXISTS table_name
 ADD COLUMN new_column_name VARCHAR COLLATE 'EN-CI-AS' /*** SSC-PRF-0002 - CASE INSENSITIVE COLUMNS CAN DECREASE THE PERFORMANCE OF QUERIES ***/;
 ```
-
-Copy
 
 #### MASKED WITH[¶](#masked-with)
 
@@ -816,8 +756,6 @@ ALTER COLUMN column_name
 ADD MASKED WITH ( FUNCTION = ' random(1, 999) ' );
 ```
 
-Copy
-
 ##### Snowflake[¶](#id55)
 
 ```
@@ -833,8 +771,6 @@ END;
 
 ALTER TABLE IF EXISTS table_name MODIFY COLUMN column_name/*** SSC-FDM-TS0021 - A MASKING POLICY WAS CREATED AS SUBSTITUTE FOR MASKED WITH ***/  SET MASKING POLICY "random_1_999";
 ```
-
-Copy
 
 #### DEFAULT[¶](#id56)
 
@@ -853,8 +789,6 @@ ALTER TABLE table_name
 ADD datecol DATE DEFAULT CURRENT_TIMESTAMP;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id58)
 
 ```
@@ -869,8 +803,6 @@ ADD datecol DATE
                  !!!RESOLVE EWI!!! /*** SSC-EWI-TS0078 - DEFAULT OPTION NOT ALLOWED IN SNOWFLAKE ***/!!!
                  DEFAULT CURRENT_TIMESTAMP;
 ```
-
-Copy
 
 #### ENCRYPTED WITH[¶](#encrypted-with)
 
@@ -889,8 +821,6 @@ ENCRYPTED WITH
   );
 ```
 
-Copy
-
 ##### Snowflake[¶](#id60)
 
 ```
@@ -904,8 +834,6 @@ ADD encryptedcol VARCHAR(20)
 --  )
    ;
 ```
-
-Copy
 
 #### NOT NULL[¶](#not-null)
 
@@ -921,8 +849,6 @@ column_test2 INTEGER NULL,
 column_test3 INTEGER;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id62)
 
 ```
@@ -932,8 +858,6 @@ ALTER TABLE IF EXISTS table2 ADD column_test2 INTEGER NULL;
 
 ALTER TABLE IF EXISTS table2 ADD column_test3 INTEGER;
 ```
-
-Copy
 
 #### IDENTITY[¶](#identity)
 
@@ -947,15 +871,11 @@ ALTER TABLE table3 ADD
 column_test INTEGER IDENTITY(1, 100) NOT FOR REPLICATION;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id64)
 
 ```
 ALTER TABLE IF EXISTS table3 ADD column_test INTEGER IDENTITY(1, 100) ORDER;
 ```
-
-Copy
 
 ### Unsupported clauses[¶](#unsupported-clauses)
 
@@ -972,8 +892,6 @@ ADD column1 varbinary(max)
 FILESTREAM;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id66)
 
 ```
@@ -982,8 +900,6 @@ ADD column1 VARBINARY
 !!!RESOLVE EWI!!! /*** SSC-EWI-0040 - THE 'FILESTREAM COLUMN OPTION' CLAUSE IS NOT SUPPORTED IN SNOWFLAKE ***/!!!
 FILESTREAM;
 ```
-
-Copy
 
 #### SPARSE[¶](#sparse)
 
@@ -1018,8 +934,6 @@ ALTER TABLE table3
 ALTER COLUMN column1 INT NULL SPARSE;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id68)
 
 ```
@@ -1050,8 +964,6 @@ ALTER COLUMN column1
                      INT NULL SPARSE;
 ```
 
-Copy
-
 #### ROWGUIDCOL[¶](#rowguidcol)
 
 ##### SQL Server[¶](#id69)
@@ -1062,8 +974,6 @@ ADD column_name UNIQUEIDENTIFIER
 ROWGUIDCOL;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id70)
 
 ```
@@ -1072,8 +982,6 @@ ADD column_name VARCHAR
 !!!RESOLVE EWI!!! /*** SSC-EWI-0040 - THE 'ROWGUIDCOL COLUMN OPTION' CLAUSE IS NOT SUPPORTED IN SNOWFLAKE ***/!!!
 ROWGUIDCOL;
 ```
-
-Copy
 
 ### Known Issues[¶](#id71)
 
@@ -1092,7 +1000,7 @@ SnowConvert AI does not perform this setup automatically.
 higher-rankThe Snowflake documentation states that masking policies are available on Entreprise or
 higher rank accounts.
 
-Note
+**Note:**
 
 For further details visit
 [CREATE MASKING POLICY — Snowflake Documentation](https://docs.snowflake.com/en/sql-reference/sql/create-masking-policy.html#create-masking-policy).
@@ -1167,8 +1075,6 @@ added to a table by using
 }
 ```
 
-Copy
-
 #### Snowflake[¶](#id75)
 
 ```
@@ -1178,8 +1084,6 @@ CREATE TABLE <name> ( <col1_name> <col1_type>    [ NOT NULL ] { inlineUniquePK |
 
 ALTER TABLE <name> ADD COLUMN <col_name> <col_type> [ NOT NULL ] { inlineUniquePK | inlineFK }
 ```
-
-Copy
 
 Where:
 
@@ -1194,8 +1098,6 @@ inlineUniquePK ::=
   [ VALIDATE | NOVALIDATE ]
   [ RELY | NORELY ]
 ```
-
-Copy
 
 ```
 inlineFK :=
@@ -1213,8 +1115,6 @@ inlineFK :=
   [ RELY | NORELY ]
 ```
 
-Copy
-
 ## CHECK[¶](#id76)
 
 Applies to
@@ -1223,7 +1123,7 @@ Applies to
 
 ### Description[¶](#id77)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -1241,8 +1141,6 @@ CONSTRAINT constraint_name
 CHECK NOT FOR REPLICATION (column_name > 1);
 ```
 
-Copy
-
 #### Snowflake[¶](#id80)
 
 ```
@@ -1252,8 +1150,6 @@ ADD column_name VARCHAR(255)
 CONSTRAINT constraint_name
 CHECK NOT FOR REPLICATION (column_name > 1);
 ```
-
-Copy
 
 ### Known Issues[¶](#id81)
 
@@ -1293,8 +1189,6 @@ REFERENCES [ schema_name . ] referenced_table_name
 [ NOT FOR REPLICATION ]
 ```
 
-Copy
-
 #### Snowflake[¶](#id86)
 
 ```
@@ -1310,8 +1204,6 @@ REFERENCES <ref_table_name> [ ( <ref_col_name> ) ]
 [ VALIDATE | NOVALIDATE ]
 [ RELY | NORELY ]
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id87)
 
@@ -1330,8 +1222,6 @@ REFERENCES dbo.emp(id)
 NOT FOR REPLICATION;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id89)
 
 ```
@@ -1343,8 +1233,6 @@ ALTER TABLE dbo.student
 ADD CONSTRAINT Fk_empid FOREIGN KEY(emp_id)
 REFERENCES dbo.emp (id);
 ```
-
-Copy
 
 #### WITH CHECK / NO CHECK case[¶](#with-check-no-check-case)
 
@@ -1366,8 +1254,6 @@ WITH NOCHECK ADD CONSTRAINT testFK2 FOREIGN KEY (table_id)
 REFERENCES otherTable (Othertable_id);
 ```
 
-Copy
-
 ##### Snowflake[¶](#id91)
 
 ```
@@ -1382,8 +1268,6 @@ ALTER TABLE testTable
 ADD CONSTRAINT testFK2 FOREIGN KEY (table_id)
 REFERENCES otherTable (Othertable_id);
 ```
-
-Copy
 
 ### Known Issues[¶](#id92)
 
@@ -1420,8 +1304,6 @@ All of the optional clauses of the PRIMARY KEY / UNIQUE constraint are removed i
         | filegroup | "default" } ]
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id94)
 
 #### SQL Server[¶](#id95)
@@ -1452,8 +1334,6 @@ CONSTRAINT constraint_name UNIQUE
 ON partition_scheme_name (partition_column_name);
 ```
 
-Copy
-
 #### Snowflake[¶](#id96)
 
 ```
@@ -1481,5 +1361,3 @@ ALTER TABLE table_name
 ADD column_name INTEGER
 CONSTRAINT constraint_name UNIQUE;
 ```
-
-Copy

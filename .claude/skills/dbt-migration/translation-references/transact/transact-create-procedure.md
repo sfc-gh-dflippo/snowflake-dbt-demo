@@ -23,8 +23,6 @@ AS
 GO
 ```
 
-Copy
-
 ### Snowflake[¶](#snowflake)
 
 ```
@@ -38,8 +36,6 @@ $$
     // SnowConvert AI Helpers Code section is omitted.
 $$;
 ```
-
-Copy
 
 ### Parameter’s DATA TYPE[¶](#parameter-s-data-type)
 
@@ -129,8 +125,6 @@ The following code block represents the EXEC helper inside a procedure:
    };
 ```
 
-Copy
-
 **Simple EXEC example**
 
 This is a simple example of an EXEC call inside a Stored Procedure
@@ -145,8 +139,6 @@ AS
 GO
 ```
 
-Copy
-
 ```
  -- =============================================
 -- Example to execute the stored procedure
@@ -154,8 +146,6 @@ Copy
 EXECUTE dbo.EXEC_EXAMPLE_1
 GO
 ```
-
-Copy
 
 **Expected code**
 
@@ -225,8 +215,6 @@ $$
 $$;
 ```
 
-Copy
-
 **EXEC within a Store Procedure with a parameter**
 
 In this example, the EXEC command is inside a Stored Procedure and receives a parameter value
@@ -242,8 +230,6 @@ AS
 GO
 ```
 
-Copy
-
 ```
  -- =============================================
 -- Example to execute the stored procedure
@@ -251,8 +237,6 @@ Copy
 EXECUTE dbo.EXEC_EXAMPLE_2 N'''Hello World!'''
 GO
 ```
-
-Copy
 
 **Expected Code**
 
@@ -271,8 +255,6 @@ $$
 $$;
 ```
 
-Copy
-
 **EXEC invoking a Store Procedure with a parameter**
 
 In this example, the EXEC invokes another Stored Procedure and pass adds a parameter
@@ -288,8 +270,6 @@ AS
 GO
 ```
 
-Copy
-
 ```
  -- =============================================
 -- Example to execute the stored procedure
@@ -297,8 +277,6 @@ Copy
 EXECUTE dbo.EXEC_EXAMPLE_3 N'''Hello World!'''
 GO
 ```
-
-Copy
 
 **Expected Code**
 
@@ -315,8 +293,6 @@ $$
 	EXEC(`CALL EXEC_EXAMPLE_2(?)`,[P1]);
 $$;
 ```
-
-Copy
 
 ### Parameters with Default Value.[¶](#parameters-with-default-value)
 
@@ -336,8 +312,6 @@ BEGIN
 END
 ```
 
-Copy
-
 #### Snowflake[¶](#id1)
 
 ```
@@ -353,13 +327,9 @@ $$
 $$;
 ```
 
-Copy
-
 ```
 CALL PROC_WITH_DEFAULT_PARAMS1(param2 => 10, param4 => 15);
 ```
-
-Copy
 
 ### CURSOR helper[¶](#cursor-helper)
 
@@ -467,8 +437,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### Insert Into EXEC Helper[¶](#insert-into-exec-helper)
 
 The Insert into Exec helper generates a function called Insert `insertIntoTemporaryTable(sql).` This
@@ -479,7 +447,7 @@ and then re-adding it into the original Insert.
 For more information on how the code for this statement is modified look at the section for Insert
 Into Exec
 
-Note
+**Note:**
 
 This Generated code for the INSERT INTO EXEC, may present performance issues when handling EXECUTE
 statements containing multiple queries inside.
@@ -495,8 +463,6 @@ statements containing multiple queries inside.
   EXEC(`DROP TABLE SnowConvertPivotTemporaryTable`)
 ```
 
-Copy
-
 ### LIKE Helper[¶](#like-helper)
 
 In case that a like expression is found in a procedure, for example
@@ -510,8 +476,6 @@ BEGIN
 	END;
 END;
 ```
-
-Copy
 
 Since the inside of the procedure is transformed to javascript, the like expression will throw an
 error. In order to avoid and keep the functionality, a function is added at the start of the
@@ -542,8 +506,6 @@ procedure if a like expression is found.
   }
 ```
 
-Copy
-
 With this function, we can replicate the functionality of the like expression of sql. Let’s see the
 diferent cases that it can be used
 
@@ -565,8 +527,6 @@ BEGIN
 	END;
 END;
 ```
-
-Copy
 
 In the last code, there is a normal like a not like, and a like with escape. The transformation will
 be
@@ -608,8 +568,6 @@ $$
 $$;
 ```
 
-Copy
-
 Note that the likes are transformed to function calls
 
 ```
@@ -617,8 +575,6 @@ LIKE(VARIABLEVALUE,`%c%`)
 !LIKE(VARIABLEVALUE,`%c%`)
 LIKE(VARIABLEVALUE,`%c!%%`,`!`)
 ```
-
-Copy
 
 The parameters that the function LIKE receive are the followings:
 
@@ -641,8 +597,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 In this case, it will generate the following code with the SELECT helper
 
 ```
@@ -663,8 +617,6 @@ $$
 $$;
 ```
 
-Copy
-
 The SELECT helper could be used as well to insert into a local value a retrieved value from a query.
 The helper was designed specifically to support the same behavour of the SQL Server
 [SELECT @local_variable](https://docs.microsoft.com/en-us/sql/t-sql/language-elements/select-local-variable-transact-sql?view=sql-server-ver15).
@@ -681,8 +633,6 @@ select @VAR1 = col1 + col2, @VAR2 += col1 from table1;
 
 GO
 ```
-
-Copy
 
 In this case the variable assignments will be translated to `JavaScript` lambdas in order to emulate
 the SQL Server behavior.
@@ -706,8 +656,6 @@ SELECT(`   col1 + col2,
 $$;
 ```
 
-Copy
-
 ### RAISERROR Helper[¶](#raiserror-helper)
 
 This helper is generated when there exists usages of a RAISERROR call in the source code. Example:
@@ -722,8 +670,6 @@ This helper is generated when there exists usages of a RAISERROR call in the sou
     throw msg;
   };
 ```
-
-Copy
 
 The RAISERROR executes the _UPDATE_ERROR_VARS_UDF_ in order to store the value of the error message,
 severity and state as environment variables, in case they need to be used by calling any of the
@@ -742,8 +688,6 @@ is used on a Select Into inside a procedure.
       return EXEC(sequenceString);
 ```
 
-Copy
-
 The parameters for this helper are the same as the original function, it is created in order to
 generate a sequence to mimic the identity function behavior in TSQL, the changes to the original
 code are:
@@ -757,8 +701,6 @@ code are:
    EXEC(`CREATE TABLE PUBLIC.department_table3 AS SELECT IDENTITY_UDF() /*** MSC-WARNING - MSCEWI1046 - 'identity' FUNCTION MAPPED TO 'IDENTITY_UDF', FUNCTIONAL EQUIVALENCE VERIFICATION PENDING ***/ as Primary_Rank
 from PUBLIC.department_table`);
 ```
-
-Copy
 
 Just like in the TSQL if no parameters are given (1,1) will be the default values.
 
@@ -775,8 +717,6 @@ but is now a procedure as a result of the translation process.
    };
 ```
 
-Copy
-
 The purpose of this helper is to encapsulate the logic required for calling procedures as if they
 were functions.
 
@@ -791,15 +731,11 @@ DECLARE @VAR1 INT = FooSelfAssign(1);
 DECLARE @VAR4 INT = FooSelfAssign(FooSelfAssign(FooSelfAssign(FooSelfAssign(4))));
 ```
 
-Copy
-
 ```
  // Output code
 let VAR1 = CALL(`FooSelfAssign(1)`)
 let VAR4 = CALL(`FooSelfAssign(?)`,[CALL(`FooSelfAssign(?)`,[CALL(`FooSelfAssign(?)`,[CALL(`FooSelfAssign(4)`)])])]);
 ```
-
-Copy
 
 Note that the translation for VAR1 is very straightforward, but for VAR4, the outmost CALL contains
 a list with the rest of the CALLs, as bindings.
@@ -817,8 +753,6 @@ DECLARE @product_list VARCHAR(MAX) = ' ';
 DECLARE @Variable1 AS VARCHAR(100), @Variable2 AS VARCHAR(100);
 ```
 
-Copy
-
 #### Snowflake[¶](#id3)
 
 ```
@@ -826,8 +760,6 @@ let PRODUCT_LIST = ` `;
 let VARIABLE1;
 let VARIABLE2;
 ```
-
-Copy
 
 ### DECLARE @Variable Table[¶](#declare-variable-table)
 
@@ -849,8 +781,6 @@ END
 
 Exec PROC1;
 ```
-
-Copy
 
 If we execute that code in Sql Server, we will get the following result
 
@@ -887,8 +817,6 @@ from
 $$;
 ```
 
-Copy
-
 Note that from the lines **61** to **67** are the results of those statements inside the procedure.
 
 The Declare Variable Table is turned into a Temporary Table. Note that the name, which that in the
@@ -903,8 +831,6 @@ that table outside of the Procedure.
 ```
  Select * from PUBLIC.T_VariableNameTable;
 ```
-
-Copy
 
 If we execute that statement, we will get the following result
 
@@ -942,8 +868,6 @@ WHERE COL1 = '+@PARAM1+ ' AND COL2 = ' + @LOCALVAR1;
 END
 ```
 
-Copy
-
 #### Snowflake[¶](#id4)
 
 ```
@@ -977,8 +901,6 @@ WHERE
 $$;
 ```
 
-Copy
-
 As you can see in the example, the value of the variable NOTSUPPORTED is commented since it is not
 being transformed for the time being. Note that means that the transformation is not completed yet.
 
@@ -1004,8 +926,6 @@ SET NOCOUNT OFF
 ;
 END
 ```
-
-Copy
 
 #### Snowflake[¶](#id6)
 
@@ -1034,8 +954,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### SELECT @Variable[¶](#select-variable)
 
 For now, the `SELECT @variable` is being transformed into a simple select, removing the variable
@@ -1054,8 +972,6 @@ DECLARE @VAR2 int;
 SELECT @VAR1 = COL1 + COL2, @VAR2 = COL3 FROM TABLE1;
 GO
 ```
-
-Copy
 
 #### Snowflake[¶](#id8)
 
@@ -1078,8 +994,6 @@ SELECT(`   COL1 + COL2,
 $$;
 ```
 
-Copy
-
 ## 3. Statements translation[¶](#statements-translation)
 
 ### SELECT[¶](#select)
@@ -1094,14 +1008,10 @@ the EXEC helper function, with one parameter. For example:
 SELECT * FROM DEMO_TABLE_1;
 ```
 
-Copy
-
 ```
  // Translated code:
 EXEC(`SELECT * FROM DEMO_TABLE_1`);
 ```
-
-Copy
 
 ### IF[¶](#if)
 
@@ -1116,8 +1026,6 @@ ELSE
    -- SQL Statement
 ```
 
-Copy
-
 #### Snowflake[¶](#id10)
 
 ```
@@ -1130,8 +1038,6 @@ Copy
 }
 ```
 
-Copy
-
 ### WHILE[¶](#while)
 
 #### SQL Server[¶](#id11)
@@ -1143,8 +1049,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 #### Snowflake[¶](#id12)
 
 ```
@@ -1153,8 +1057,6 @@ while ( Conditional_Expression )
   // SQL STATEMENTS
 }
 ```
-
-Copy
 
 ### EXEC / EXECUTE[¶](#exec-execute)
 
@@ -1171,8 +1073,6 @@ Exec('Select ' + @par1 + ' from [db].[t1]');
 EXEC db.sp2 'Create proc [db].[p3] AS', @par1, 1
 ```
 
-Copy
-
 #### Snowflake[¶](#id14)
 
 ```
@@ -1186,8 +1086,6 @@ EXEC(`Select ${PAR1} from MYDB.db.t1`);
 EXEC(`CALL db.sp2(/*** SSC-EWI-0038 - THIS STATEMENT MAY BE A DYNAMIC SQL THAT COULD NOT BE RECOGNIZED AND CONVERTED ***/
 'Select * from MYDB.db.t1', ?, 1, Default)`,[PAR1]);
 ```
-
-Copy
 
 ### THROW[¶](#throw)
 
@@ -1207,8 +1105,6 @@ THROW 123, 'The error message', 1
 THROW @var1, @var2, @var3
 ```
 
-Copy
-
 #### Snowflake[¶](#id16)
 
 ```
@@ -1221,8 +1117,6 @@ throw { code: 123, message: "The error message", status: 1 };
 // Case 3
 throw { code: VAR1, message: VAR2, status: VAR3 };
 ```
-
-Copy
 
 ### RAISERROR[¶](#raiserror)
 
@@ -1245,8 +1139,6 @@ END
 GO
 ```
 
-Copy
-
 #### Snowflake[¶](#id18)
 
 ```
@@ -1266,8 +1158,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### BREAK/CONTINUE[¶](#break-continue)
 
 The break/continue transformation, ensures flow of the code to be stopped or continue with another
@@ -1286,8 +1176,6 @@ ELSE
   BREAK;
 END
 ```
-
-Copy
 
 #### Snowflake[¶](#id20)
 
@@ -1309,8 +1197,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### INSERT INTO EXEC[¶](#insert-into-exec)
 
 The code is modify slightly due to the `INSERT INTO [Table] EXEC(...)` Statement not being supported
@@ -1326,15 +1212,11 @@ in Snowflake this allows us to replicate the behavior by adding a few lines of c
 SELECT * FROM MYDB.PUBLIC.SnowConvertPivotTemporaryTable
 ```
 
-Copy
-
 - The last line added is a DROP TABLE statement for the Temporary Table added.
 
 ```
    DROP TABLE SnowConvertPivotTemporaryTable
 ```
-
-Copy
 
 #### SQL Server[¶](#id21)
 
@@ -1348,8 +1230,6 @@ INSERT INTO #Table1
 EXEC (@DBTables);
 ```
 
-Copy
-
 #### Snowflake[¶](#id22)
 
 ```
@@ -1361,8 +1241,6 @@ Copy
   EXEC(`INSERT INTO MYDB.PUBLIC.T_Table1 SELECT * FROM MYDB.PUBLIC.SnowConvertPivotTemporaryTable`);
   EXEC(`DROP TABLE SnowConvertPivotTemporaryTable`)
 ```
-
-Copy
 
 ### BEGIN TRANSACTION[¶](#begin-transaction)
 
@@ -1378,16 +1256,12 @@ The helper is in charge of actually executing the resulting BEGIN.
 BEGIN TRAN @transaction_name;
 ```
 
-Copy
-
 #### Snowflake[¶](#id24)
 
 ```
  // Output code
 EXEC(`BEGIN`, []);
 ```
-
-Copy
 
 ### COMMIT TRANSACTION[¶](#commit-transaction)
 
@@ -1403,16 +1277,12 @@ The helper is in charge of actually executing the resulting COMMIT.
 COMMIT TRAN @transaction_name;
 ```
 
-Copy
-
 #### Snowflake[¶](#id26)
 
 ```
  // Output code
 EXEC(`COMMIT`, []);
 ```
-
-Copy
 
 ### ROLLBACK TRANSACTION[¶](#rollback-transaction)
 
@@ -1428,16 +1298,12 @@ The helper is in charge of actually executing the resulting ROLLBACK .
 ROLLBACK TRAN @transaction_name;
 ```
 
-Copy
-
 #### Snowflake[¶](#id28)
 
 ```
  // Output code
 EXEC(`ROLLBACK`, []);
 ```
-
-Copy
 
 ### WAITFOR DELAY[¶](#waitfor-delay)
 
@@ -1461,8 +1327,6 @@ with the corresponding message.
    FROM [eqe]), TIMEOUT 5000;
 ```
 
-Copy
-
 #### Snowflake[¶](#id30)
 
 ```
@@ -1479,8 +1343,6 @@ Copy
       FROM [eqe]), TIMEOUT 5000*/
    ;
 ```
-
-Copy
 
 ## 3. Cursors[¶](#cursors)
 
@@ -1500,8 +1362,6 @@ DECLARE vendor_cursor CURSOR FOR
     ORDER BY VendorID;
 GO
 ```
-
-Copy
 
 #### Snowflake[¶](#id32)
 
@@ -1526,8 +1386,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### DECLARE CURSOR[¶](#declare-cursor)
 
 #### SQL Server[¶](#id33)
@@ -1536,15 +1394,11 @@ Copy
 DECLARE myCursor1 CURSOR FOR SELECT COL1 FROM TABLE1
 ```
 
-Copy
-
 #### Snowflake[¶](#id34)
 
 ```
 let myCursor1 = new CURSOR(`SELECT COL1 FROM TABLE1`,() => []);
 ```
-
-Copy
 
 ### OPEN[¶](#open)
 
@@ -1555,16 +1409,12 @@ OPEN myCursor1
 OPEN GLOBAL myCursor2
 ```
 
-Copy
-
 #### Snowflake[¶](#id36)
 
 ```
 myCursor1.OPEN();
 myCursor2.OPEN()
 ```
-
-Copy
 
 ### FETCH[¶](#fetch)
 
@@ -1575,8 +1425,6 @@ DECLARE @VALUE1 INT
 FETCH NEXT FROM myCursor1 into @VALUE1
 ```
 
-Copy
-
 #### Snowflake[¶](#id38)
 
 ```
@@ -1584,8 +1432,6 @@ var VALUE1;
 myCursor1.FETCH_NEXT();
 VALUE1 = myCursor1.INTO();
 ```
-
-Copy
 
 ### CLOSE[¶](#close)
 
@@ -1596,16 +1442,12 @@ CLOSE myCursor1
 CLOSE GLOBAL myCursor2
 ```
 
-Copy
-
 #### Snowflake[¶](#id40)
 
 ```
 myCursor1.CLOSE()
 myCursor2.CLOSE()
 ```
-
-Copy
 
 ### DEALLOCATE[¶](#deallocate)
 
@@ -1616,16 +1458,12 @@ DEALLOCATE myCursor1
 DEALLOCATE GLOBAL myCursor2
 ```
 
-Copy
-
 #### Snowflake[¶](#id42)
 
 ```
 myCursor1.DEALLOCATE()
 myCursor2.DEALLOCATE()
 ```
-
-Copy
 
 ### @@FETCH_STATUS[¶](#fetch-status)
 
@@ -1635,15 +1473,11 @@ Copy
  @@FETCH_STATUS
 ```
 
-Copy
-
 #### Snowflake[¶](#id44)
 
 ```
 myCursor1.FETCH_STATUS()
 ```
-
-Copy
 
 ### @@CURSOR_ROWS[¶](#cursor-rows)
 
@@ -1653,15 +1487,11 @@ Copy
  @@CURSOR_ROWS
 ```
 
-Copy
-
 #### Snowflake[¶](#id46)
 
 ```
 myCursor1.FETCH_STATUS()
 ```
-
-Copy
 
 ## 4. Expressions[¶](#expressions)
 
@@ -1678,8 +1508,6 @@ SET @var1 = 1 OR 1;
 SET @var1 = 1 AND 1;
 ```
 
-Copy
-
 #### Snowflake[¶](#id48)
 
 ```
@@ -1690,8 +1518,6 @@ VAR1 = 1 * 1;
 VAR1 = 1 || 1;
 VAR1 = 1 && 1;
 ```
-
-Copy
 
 ### Conditionals[¶](#conditionals)
 
@@ -1704,8 +1530,6 @@ Copy
 @var1 <> 0
 ```
 
-Copy
-
 #### Snowflake[¶](#id50)
 
 ```
@@ -1714,8 +1538,6 @@ VAR1 = 0
 VAR1 < 0
 VAR1 != 0
 ```
-
-Copy
 
 #### NULL Predicate[¶](#null-predicate)
 
@@ -1726,16 +1548,12 @@ Copy
 @var2 is not null
 ```
 
-Copy
-
 ##### Snowflake[¶](#id52)
 
 ```
 VAR1 == null
 VAR2 != null
 ```
-
-Copy
 
 ## 5. Labels and Goto[¶](#labels-and-goto)
 
@@ -1756,8 +1574,6 @@ SUCCESS_EXIT:
 ERROR_EXIT:
 	RETURN @ErrorStatus
 ```
-
-Copy
 
 #### Snowflake[¶](#id53)
 
@@ -1783,8 +1599,6 @@ $$
 $$;
 ```
 
-Copy
-
 As you see in the example above, the function declarations that were the labels in the source code,
 will be put at the end of the code in order to make it cleaner.
 
@@ -1808,8 +1622,6 @@ SUCCESS_EXIT:
 ERROR_EXIT:
 	RETURN @ErrorStatus
 ```
-
-Copy
 
 #### Snowflake[¶](#id55)
 
@@ -1838,8 +1650,6 @@ $$
 	}
 $$;
 ```
-
-Copy
 
 As you see in the example above, the `return` is added to the function call, in order to stop the
 code flow as SQL Server does with the `GOTO` .

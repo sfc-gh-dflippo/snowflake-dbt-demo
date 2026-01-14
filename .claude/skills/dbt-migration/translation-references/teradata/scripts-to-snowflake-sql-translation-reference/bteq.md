@@ -6,7 +6,7 @@ title: SnowConvert AI - Teradata - BTEQ | Snowflake Documentation
 
 ## Description[¶](#description)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -49,8 +49,6 @@ all, are being marked with a warning message and commented out.
    .IF ERRORCODE <> 0 THEN .EXIT ERRORCODE;
 .LOGOFF;
 ```
-
-Copy
 
 ##### Snowflake SQL[¶](#snowflake-sql)
 
@@ -102,8 +100,6 @@ $$
 $$
 ```
 
-Copy
-
 #### 2. Bash Variable Placeholders Example[¶](#bash-variable-placeholders-example)
 
 SnowConvert AI supports the migration of BTEQ code with Bash Variable Placeholders used for shell
@@ -135,8 +131,6 @@ DELETE FROM $tableName;
 
 .LOGOFF;
 ```
-
-Copy
 
 ##### Snowflake SQL[¶](#id2)
 
@@ -202,8 +196,6 @@ $$
   END
 $$
 ```
-
-Copy
 
 ### Known Issues[¶](#known-issues)
 

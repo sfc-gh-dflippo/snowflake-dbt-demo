@@ -36,8 +36,6 @@ $$ LANGUAGE plpgsql
 [ SET configuration_parameter { TO value | = value } ]
 ```
 
-Copy
-
 ## Sample Source Patterns[¶](#sample-source-patterns)
 
 ### Input Code:[¶](#input-code)
@@ -55,8 +53,6 @@ END;
 $$;
 ```
 
-Copy
-
 #### Output Code:[¶](#output-code)
 
 ##### Snowflake[¶](#snowflake)
@@ -73,8 +69,6 @@ $$
     END;
 $$;
 ```
-
-Copy
 
 ## Related EWIs[¶](#related-ewis)
 
@@ -100,8 +94,6 @@ the real parameter name.
 ```
  name ALIAS FOR $n;
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id3)
 
@@ -143,8 +135,6 @@ END;
 $$;
 ```
 
-Copy
-
 ##### Output Code:[¶](#id6)
 
 ##### Snowflake[¶](#id7)
@@ -181,8 +171,6 @@ BEGIN
 END;
 $$;
 ```
-
-Copy
 
 ### Known Issues[¶](#known-issues)
 
@@ -229,8 +217,6 @@ output.
  [ argname ] [ argmode ] argtype
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id11)
 
 #### Input Code:[¶](#id12)
@@ -251,8 +237,6 @@ $$
 LANGUAGE plpgsql;
 ```
 
-Copy
-
 ##### Output Code:[¶](#id14)
 
 ##### Snowflake[¶](#id15)
@@ -269,8 +253,6 @@ $$
     END;
 $$;
 ```
-
-Copy
 
 ### Known Issues[¶](#id16)
 
@@ -301,8 +283,6 @@ $Alias$
 $Alias$
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id20)
 
 #### Input Code:[¶](#id21)
@@ -320,8 +300,6 @@ $somename$
 LANGUAGE plpgsql;
 ```
 
-Copy
-
 ##### Output Code:[¶](#id23)
 
 ##### Snowflake[¶](#id24)
@@ -338,8 +316,6 @@ $$
    END;
 $$;
 ```
-
-Copy
 
 ### Known Issues[¶](#id25)
 
@@ -371,8 +347,6 @@ EXCEPTION
 END [ label ];
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id29)
 
 #### Input Code:[¶](#id30)
@@ -390,8 +364,6 @@ $$
 LANGUAGE plpgsql;
 ```
 
-Copy
-
 ##### Output Code:[¶](#id32)
 
 ##### Snowflake[¶](#id33)
@@ -408,8 +380,6 @@ $$
     END;
 $$;
 ```
-
-Copy
 
 ### Known Issues[¶](#id34)
 
@@ -432,8 +402,6 @@ merged into a single declaration statement per block.
 ```
  [ DECLARE declarations ]
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id38)
 
@@ -466,8 +434,6 @@ BEGIN
 END;
 $$;
 ```
-
-Copy
 
 ##### Output Code:[¶](#id41)
 
@@ -502,8 +468,6 @@ END;
 $$;
 ```
 
-Copy
-
 ### Known Issues[¶](#id43)
 
 There are no known issues.
@@ -528,8 +492,6 @@ insert a record into a logging table.
     statements
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id47)
 
 #### Input Code:[¶](#id48)
@@ -547,8 +509,6 @@ END;
 $$
 LANGUAGE plpgsql;
 ```
-
-Copy
 
 ##### Output Code:[¶](#id50)
 
@@ -569,8 +529,6 @@ EXCEPTION WHEN OTHER THEN
 END;
 $$;
 ```
-
-Copy
 
 ### Known Issues[¶](#id52)
 
@@ -600,8 +558,6 @@ BEGIN
 END [label]
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id56)
 
 #### Input Code:[¶](#id57)
@@ -621,8 +577,6 @@ END;
 $$;
 ```
 
-Copy
-
 ##### Output Code:[¶](#id59)
 
 ##### Snowflake[¶](#id60)
@@ -641,8 +595,6 @@ BEGIN
 END;
 $$;
 ```
-
-Copy
 
 ### Known Issues[¶](#id61)
 
@@ -671,8 +623,6 @@ it succeeds and automatically rolled back if it fails. In other words, Snowflake
  NONATOMIC
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id65)
 
 #### Input Code:[¶](#id66)
@@ -690,8 +640,6 @@ $$
 $$
 LANGUAGE plpgsql;
 ```
-
-Copy
 
 ##### Output Code:[¶](#id68)
 
@@ -711,8 +659,6 @@ $$
     END;
 $$;
 ```
-
-Copy
 
 ### Known Issues[¶](#id70)
 
@@ -738,8 +684,6 @@ name.
  $n
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id74)
 
 #### Input Code:[¶](#id75)
@@ -762,8 +706,6 @@ $$
 LANGUAGE plpgsql;
 ```
 
-Copy
-
 ##### Output Code:[¶](#id77)
 
 ##### Snowflake[¶](#id78)
@@ -785,8 +727,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### Known Issues[¶](#id79)
 
 There are no known issues.
@@ -803,7 +743,7 @@ There are no related EWIs.
 >
 > ([Redshift SQL Language Reference RAISE](https://docs.aws.amazon.com/es_es/redshift/latest/dg/c_PLpgSQL-statements.html#r_PLpgSQL-messages-errors))
 
-Note
+**Note:**
 
 RAISE are fully supported by
 [Snowflake](https://docs.snowflake.com/en/developer-guide/snowflake-scripting/variables#declaring-a-variable).
@@ -813,8 +753,6 @@ RAISE are fully supported by
 ```
  RAISE level 'format' [, variable [, ...]];
 ```
-
-Copy
 
 In Amazon Redshift, the `RAISE` statement is used to generate messages in the console or throw
 custom exceptions. Redshift allows you to specify different _levels_ to indicate the severity of the
@@ -864,8 +802,6 @@ END;
 $$;
 ```
 
-Copy
-
 ##### Output Code:[¶](#id86)
 
 ##### Snowflake[¶](#id87)
@@ -881,8 +817,6 @@ BEGIN
 END;
 $$;
 ```
-
-Copy
 
 #### UDFs [¶](#udfs)
 
@@ -913,8 +847,6 @@ $$
 $$;
 ```
 
-Copy
-
 ##### STRING_FORMAT_UDF[¶](#string-format-udf)
 
 ```
@@ -933,8 +865,6 @@ $$
 	return result;
 $$;
 ```
-
-Copy
 
 ### Known Issues[¶](#id88)
 
@@ -960,8 +890,6 @@ considering adding a `NULL` to the return statement on Snowflake.
  RETURN;
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id92)
 
 #### Simple Case[¶](#simple-case)
@@ -980,8 +908,6 @@ END
 $$ LANGUAGE plpgsql;
 ```
 
-Copy
-
 ##### Output Code:[¶](#id95)
 
 ##### Redshift[¶](#id96)
@@ -998,8 +924,6 @@ BEGIN
 END
 $$;
 ```
-
-Copy
 
 #### When the procedure has out parameters[¶](#when-the-procedure-has-out-parameters)
 
@@ -1020,8 +944,6 @@ END
 $$ LANGUAGE plpgsql;
 ```
 
-Copy
-
 ##### Output Code:[¶](#id99)
 
 ##### Redshift[¶](#id100)
@@ -1038,8 +960,6 @@ BEGIN
 END
 $$;
 ```
-
-Copy
 
 ### Known Issues[¶](#id101)
 
@@ -1062,8 +982,6 @@ privileges of the owner (creator) or the caller (user invoking the procedure).
 ```
  [ { SECURITY INVOKER | SECURITY DEFINER } ]
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id105)
 
@@ -1093,8 +1011,6 @@ $$
 LANGUAGE plpgsql
 SECURITY DEFINER;
 ```
-
-Copy
 
 ##### Output Code:[¶](#id108)
 
@@ -1127,8 +1043,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### Known Issues[¶](#id110)
 
 There are no known issues.
@@ -1145,7 +1059,7 @@ There are no related EWIs.
 >
 > ([Redshift SQL Language Reference Variable Declaration](https://docs.aws.amazon.com/redshift/latest/dg/c_PLpgSQL-structure.html#r_PLpgSQL-variable-declaration))
 
-Note
+**Note:**
 
 Variable declarations are fully supported by
 [Snowflake](https://docs.snowflake.com/en/developer-guide/snowflake-scripting/variables#declaring-a-variable).
@@ -1156,8 +1070,6 @@ Variable declarations are fully supported by
  DECLARE
 name [ CONSTANT ] type [ NOT NULL ] [ { DEFAULT | := } expression ];
 ```
-
-Copy
 
 In Redshift, the `CONSTANT` keyword prevents variable reassignment during execution. Since Snowflake
 does not support this keyword, it is removed during transformation. This does not impact
@@ -1193,8 +1105,6 @@ END;
 $$;
 ```
 
-Copy
-
 ##### Output Code:[¶](#id117)
 
 ##### Snowflake[¶](#id118)
@@ -1219,8 +1129,6 @@ BEGIN
 END;
 $$;
 ```
-
-Copy
 
 ### Known Issues [¶](#id119)
 
@@ -1248,8 +1156,6 @@ Grammar Syntax
 COMMIT [WORK | TRANSACTION]
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id122)
 
 #### Setup data[¶](#setup-data)
@@ -1265,8 +1171,6 @@ Copy
 );
 ```
 
-Copy
-
 ##### Snowflake[¶](#id124)
 
 ##### Query[¶](#id125)
@@ -1277,8 +1181,6 @@ Copy
     col1 INTEGER
 );
 ```
-
-Copy
 
 #### COMMIT with TRANSACTION keyword[¶](#commit-with-transaction-keyword)
 
@@ -1293,8 +1195,6 @@ functionality it will just be removed.
  COMMIT TRANSACTION;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id128)
 
 ##### Query[¶](#id129)
@@ -1302,8 +1202,6 @@ Copy
 ```
  COMMIT;
 ```
-
-Copy
 
 #### COMMIT in a default transaction behavior procedure (without NONATOMIC clause)[¶](#commit-in-a-default-transaction-behavior-procedure-without-nonatomic-clause)
 
@@ -1334,8 +1232,6 @@ CALL transaction_test(120);
 SELECT * FROM transaction_values_test;
 ```
 
-Copy
-
 ##### Result[¶](#result)
 
 ```
@@ -1348,8 +1244,6 @@ Copy
 |121|
 +------+
 ```
-
-Copy
 
 ##### Snowflake[¶](#id132)
 
@@ -1378,8 +1272,6 @@ SELECT * FROM
     transaction_values_test;
 ```
 
-Copy
-
 ##### Result[¶](#id134)
 
 ```
@@ -1392,8 +1284,6 @@ Copy
 |121|
 +------+
 ```
-
-Copy
 
 #### COMMIT in a procedure with NONATOMIC behavior[¶](#commit-in-a-procedure-with-nonatomic-behavior)
 
@@ -1424,8 +1314,6 @@ CALL nonatomic_procedure(10);
 SELECT * FROM transaction_values_test;
 ```
 
-Copy
-
 ##### Result[¶](#id137)
 
 ```
@@ -1438,8 +1326,6 @@ Copy
 |13|
 +------+
 ```
-
-Copy
 
 ##### Snowflake[¶](#id138)
 
@@ -1468,8 +1354,6 @@ SELECT * FROM
 transaction_values_test;
 ```
 
-Copy
-
 ##### Result[¶](#id140)
 
 ```
@@ -1482,8 +1366,6 @@ Copy
 |13|
 +------+
 ```
-
-Copy
 
 ### Known Issues[¶](#id141)
 
@@ -1519,8 +1401,6 @@ BEGIN
 END
 $$;
 ```
-
-Copy
 
 ##### Snowflake[¶](#id144)
 
@@ -1558,8 +1438,6 @@ END
 $$;
 ```
 
-Copy
-
 ### Known Issues[¶](#id146)
 
 There are no known issues.
@@ -1583,8 +1461,6 @@ Grammar Syntax
 ROLLBACK [WORK | TRANSACTION]
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id149)
 
 #### Setup data[¶](#id150)
@@ -1600,8 +1476,6 @@ Copy
 );
 ```
 
-Copy
-
 ##### Snowflake[¶](#id153)
 
 ##### Query[¶](#id154)
@@ -1612,8 +1486,6 @@ Copy
     col1 INTEGER
 );
 ```
-
-Copy
 
 #### ROLLBACK with TRANSACTION keyword[¶](#rollback-with-transaction-keyword)
 
@@ -1628,8 +1500,6 @@ functionality it will just be removed.
  ROLLBACK TRANSACTION;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id157)
 
 ##### Query[¶](#id158)
@@ -1637,8 +1507,6 @@ Copy
 ```
  ROLLBACK;
 ```
-
-Copy
 
 #### ROLLBACK in a default transaction behavior procedure (without NONATOMIC clause)[¶](#rollback-in-a-default-transaction-behavior-procedure-without-nonatomic-clause)
 
@@ -1671,8 +1539,6 @@ CALL transaction_test(120);
 SELECT * FROM transaction_values_test;
 ```
 
-Copy
-
 ##### Result[¶](#id161)
 
 ```
@@ -1684,8 +1550,6 @@ Copy
 |120|
 +------+
 ```
-
-Copy
 
 ##### Snowflake[¶](#id162)
 
@@ -1713,8 +1577,6 @@ SELECT * FROM
     transaction_values_test;
 ```
 
-Copy
-
 ##### Result[¶](#id164)
 
 ```
@@ -1726,8 +1588,6 @@ Copy
 |120|
 +------+
 ```
-
-Copy
 
 #### ROLLBACK in a procedure with NONATOMIC behavior[¶](#rollback-in-a-procedure-with-nonatomic-behavior)
 
@@ -1761,8 +1621,6 @@ CALL nonatomic_procedure(10);
 SELECT * FROM transaction_values_test;
 ```
 
-Copy
-
 ##### Result[¶](#id167)
 
 ```
@@ -1777,8 +1635,6 @@ Copy
 |13|
 +------+
 ```
-
-Copy
 
 ##### Snowflake[¶](#id168)
 
@@ -1812,8 +1668,6 @@ SELECT * FROM
 transaction_values_test;
 ```
 
-Copy
-
 ##### Result[¶](#id170)
 
 ```
@@ -1828,8 +1682,6 @@ Copy
 |13|
 +------+
 ```
-
-Copy
 
 ### Known Issues[¶](#id171)
 
@@ -1865,8 +1717,6 @@ BEGIN
 END
 $$;
 ```
-
-Copy
 
 ##### Snowflake[¶](#id174)
 
@@ -1906,8 +1756,6 @@ END
 $$;
 ```
 
-Copy
-
 **2. ROLLBACK of DDL statements**
 
 In Snowflake, DDL statements perform an implicit commit whenever they are executed inside a
@@ -1936,8 +1784,6 @@ END
 $$;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id178)
 
 ##### Query[¶](#id179)
@@ -1965,8 +1811,6 @@ END
 $$;
 ```
 
-Copy
-
 ### Known Issues[¶](#id180)
 
 There are no known issues.
@@ -1992,8 +1836,6 @@ Grammar Syntax
 TRUNCATE [TABLE] table_name
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id183)
 
 #### Setup data[¶](#id184)
@@ -2009,8 +1851,6 @@ Copy
 );
 ```
 
-Copy
-
 ##### Snowflake[¶](#id187)
 
 ##### Query[¶](#id188)
@@ -2021,8 +1861,6 @@ Copy
     col1 INTEGER
 );
 ```
-
-Copy
 
 #### TRUNCATE in a default transaction behavior procedure (without NONATOMIC clause)[¶](#truncate-in-a-default-transaction-behavior-procedure-without-nonatomic-clause)
 
@@ -2054,8 +1892,6 @@ CALL truncate_in_procedure(10);
 SELECT * FROM transaction_values_test;
 ```
 
-Copy
-
 ##### Result[¶](#id191)
 
 ```
@@ -2067,8 +1903,6 @@ Copy
 |22|
 +------+
 ```
-
-Copy
 
 ##### Snowflake[¶](#id192)
 
@@ -2098,8 +1932,6 @@ SELECT * FROM
     transaction_values_test;
 ```
 
-Copy
-
 ##### Result[¶](#id194)
 
 ```
@@ -2111,8 +1943,6 @@ Copy
 |22|
 +------+
 ```
-
-Copy
 
 #### TRUNCATE in a procedure with NONATOMIC behavior[¶](#truncate-in-a-procedure-with-nonatomic-behavior)
 
@@ -2148,8 +1978,6 @@ CALL nonatomic_procedure(10);
 SELECT * FROM transaction_values_test;
 ```
 
-Copy
-
 ##### Result[¶](#id197)
 
 ```
@@ -2164,8 +1992,6 @@ Copy
 |13|
 +------+
 ```
-
-Copy
 
 ##### Snowflake[¶](#id198)
 
@@ -2200,8 +2026,6 @@ SELECT * FROM
 transaction_values_test;
 ```
 
-Copy
-
 ##### Result[¶](#id200)
 
 ```
@@ -2216,8 +2040,6 @@ Copy
 |13|
 +------+
 ```
-
-Copy
 
 ### Known Issues[¶](#id201)
 
@@ -2253,8 +2075,6 @@ BEGIN
 END
 $$;
 ```
-
-Copy
 
 ##### Snowflake[¶](#id204)
 
@@ -2293,8 +2113,6 @@ END
 $$;
 ```
 
-Copy
-
 ### Known Issues[¶](#id206)
 
 There are no known issues.
@@ -2319,7 +2137,7 @@ There are no known issues.
 
 A simple CASE statement provides conditional execution based on equality of operands.
 
-Note
+**Note:**
 
 Simple Case are fully supported by
 [Snowflake](https://docs.snowflake.com/en/developer-guide/snowflake-scripting/variables#declaring-a-variable).
@@ -2337,8 +2155,6 @@ WHEN expression [, expression [ ... ]] THEN
   statements ]
 END CASE;
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id211)
 
@@ -2360,8 +2176,6 @@ END CASE;
 END;
 $$;
 ```
-
-Copy
 
 ##### Output Code:[¶](#id214)
 
@@ -2386,11 +2200,9 @@ END;
 $$;
 ```
 
-Copy
-
 ### Searched Case[¶](#searched-case)
 
-Note
+**Note:**
 
 Searched Case are fully supported by
 [Snowflake](https://docs.snowflake.com/en/developer-guide/snowflake-scripting/variables#declaring-a-variable).
@@ -2408,8 +2220,6 @@ WHEN boolean-expression THEN
   statements ]
 END CASE;
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id217)
 
@@ -2433,8 +2243,6 @@ CASE
 END;
 $$;
 ```
-
-Copy
 
 ##### Output Code:[¶](#id220)
 
@@ -2462,8 +2270,6 @@ END;
 $$;
 ```
 
-Copy
-
 #### CASE Without ELSE[¶](#case-without-else)
 
 In Redshift, when a `CASE` expression is executed and none of the validated conditions are met, and
@@ -2471,7 +2277,7 @@ there is no `ELSE` defined, the exception ‘CASE NOT FOUND’ is triggered. In 
 executes but returns no result. To maintain the same functionality in Snowflake in this scenario, an
 exception with the same name will be declared and executed if none of the `CASE` conditions are met.
 
-Note
+**Note:**
 
 Case Without Else are fully supported by
 [Snowflake](https://docs.snowflake.com/en/developer-guide/snowflake-scripting/variables#declaring-a-variable).
@@ -2491,8 +2297,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 ```
-
-Copy
 
 ##### Output Code:[¶](#id224)
 
@@ -2516,8 +2320,6 @@ BEGIN
 END;
 $$;
 ```
-
-Copy
 
 ### Known Issues[¶](#id226)
 
@@ -2552,8 +2354,6 @@ since Redshift does not require the parenthesis in the conditions and ELSIF is t
 END IF;
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id230)
 
 #### Input Code:[¶](#id231)
@@ -2580,8 +2380,6 @@ END;
 $$;
 ```
 
-Copy
-
 ##### Output Code:[¶](#id233)
 
 ##### Redshift[¶](#id234)
@@ -2607,8 +2405,6 @@ BEGIN
 END;
 $$;
 ```
-
-Copy
 
 ### Known Issues[¶](#id235)
 
@@ -2645,8 +2441,6 @@ CONTINUE are partial supported by
 ```
  CONTINUE [ label ] [ WHEN expression ];
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id240)
 
@@ -2688,8 +2482,6 @@ BEGIN
 END;
 $$;
 ```
-
-Copy
 
 ##### Results[¶](#results)
 
@@ -2753,8 +2545,6 @@ END;
 $$;
 ```
 
-Copy
-
 ##### Results[¶](#id245)
 
 <!-- prettier-ignore -->
@@ -2793,8 +2583,6 @@ EXIT are partial supported by
  EXIT [ label ] [ WHEN expression ];
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id250)
 
 #### Input Code:[¶](#id251)
@@ -2816,8 +2604,6 @@ BEGIN
 END;
 $$;
 ```
-
-Copy
 
 ##### Output Code:[¶](#id253)
 
@@ -2844,8 +2630,6 @@ END;
 $$;
 ```
 
-Copy
-
 ### Known Issues[¶](#id255)
 
 There are no known issues.
@@ -2867,8 +2651,6 @@ FOR name IN [ REVERSE ] expression .. expression LOOP
 END LOOP [ label ];
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id258)
 
 #### Input Code:[¶](#id259)
@@ -2889,8 +2671,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 ```
-
-Copy
 
 ##### Output Code:[¶](#id261)
 
@@ -2917,8 +2697,6 @@ BEGIN
 END;
 $$;
 ```
-
-Copy
 
 ### Known Issues[¶](#id263)
 
@@ -2951,8 +2729,6 @@ LOOP
 END LOOP [ label ];
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id267)
 
 #### Input Code:[¶](#id268)
@@ -2974,8 +2750,6 @@ BEGIN
 END;
 $$;
 ```
-
-Copy
 
 ##### Output Code:[¶](#id270)
 
@@ -2999,8 +2773,6 @@ END;
 $$;
 ```
 
-Copy
-
 ### Known Issues[¶](#id272)
 
 There are no known issues.
@@ -3019,8 +2791,6 @@ WHILE expression LOOP
   statements
 END LOOP [ label ];
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id275)
 
@@ -3041,8 +2811,6 @@ BEGIN
 END;
 $$;
 ```
-
-Copy
 
 ##### Output Code:[¶](#id278)
 
@@ -3066,8 +2834,6 @@ END;
 $$;
 ```
 
-Copy
-
 ### Known Issues[¶](#id280)
 
 There are no known issues.
@@ -3085,7 +2851,7 @@ There are no related EWIs.
 > Closes all of the free resources that are associated with an open cursor..
 > ([Redshift SQL Language Reference Close Cursor](https://docs.aws.amazon.com/redshift/latest/dg/close.html)).
 
-Note
+**Note:**
 
 This syntax is fully supported in Snowflake.
 
@@ -3094,8 +2860,6 @@ This syntax is fully supported in Snowflake.
 ```
  CLOSE cursor
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id284)
 
@@ -3112,8 +2876,6 @@ END;
 $$;
 ```
 
-Copy
-
 ##### Output Code:[¶](#id287)
 
 ##### Redshift[¶](#id288)
@@ -3128,8 +2890,6 @@ BEGIN
 END;
 $$;
 ```
-
-Copy
 
 ### Known Issues[¶](#id289)
 
@@ -3154,8 +2914,6 @@ Transformation information
 FETCH cursor INTO target [, target ...];
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id292)
 
 #### Setup data[¶](#id293)
@@ -3174,8 +2932,6 @@ Copy
 INSERT INTO cursor_example VALUES (10, 'hello');
 ```
 
-Copy
-
 ##### Snowflake[¶](#id296)
 
 ##### Query[¶](#id297)
@@ -3189,8 +2945,6 @@ Copy
 
 INSERT INTO cursor_example VALUES (10, 'hello');
 ```
-
-Copy
 
 #### Fetch into[¶](#fetch-into)
 
@@ -3222,8 +2976,6 @@ CALL fetch_into_example();
 SELECT * FROM cursor_example;
 ```
 
-Copy
-
 ##### Result[¶](#id300)
 
 ```
@@ -3236,8 +2988,6 @@ Copy
 |100|hello world!|
 +------+-------------+
 ```
-
-Copy
 
 ##### Snowflake[¶](#id301)
 
@@ -3270,8 +3020,6 @@ SELECT * FROM
 	cursor_example;
 ```
 
-Copy
-
 ##### Result[¶](#id303)
 
 ```
@@ -3284,8 +3032,6 @@ Copy
 |100|hello world!|
 +------+-------------+
 ```
-
-Copy
 
 ### Known Issues[¶](#id304)
 
@@ -3301,16 +3047,12 @@ Input Code:
  FETCH FORWARD FROM cursor1;
 ```
 
-Copy
-
 Output Code:
 
 ```
  !!!RESOLVE EWI!!! /*** SSC-EWI-PG0015 - FETCH CURSOR WITHOUT TARGET VARIABLES IS NOT SUPPORTED IN SNOWFLAKE ***/!!!
 FETCH FORWARD FROM cursor1;
 ```
-
-Copy
 
 ### Known Issues[¶](#id305)
 
@@ -3328,7 +3070,7 @@ There are no known issues.
 > Before you can use a cursor to retrieve rows, it must be opened.
 > ([Redshift SQL Language Reference Open Cursor](https://docs.aws.amazon.com/redshift/latest/dg/c_PLpgSQL-statements.html#r_PLpgSQL-cursors)).
 
-Note
+**Note:**
 
 This syntax is fully supported in Snowflake.
 
@@ -3337,8 +3079,6 @@ This syntax is fully supported in Snowflake.
 ```
  OPEN bound_cursor_name [ ( argument_values ) ];
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id309)
 
@@ -3364,8 +3104,6 @@ CREATE TABLE cursor_example_results
 INSERT INTO cursor_example VALUES (10, 'hello');
 ```
 
-Copy
-
 ##### Snowflake[¶](#id313)
 
 ##### Query[¶](#id314)
@@ -3386,8 +3124,6 @@ CREATE TABLE cursor_example_results
 INSERT INTO cursor_example VALUES (10, 'hello');
 ```
 
-Copy
-
 #### Open cursor without arguments[¶](#open-cursor-without-arguments)
 
 ##### Input Code:[¶](#id315)
@@ -3403,8 +3139,6 @@ END;
 $$;
 ```
 
-Copy
-
 ##### Output Code:[¶](#id317)
 
 ##### Redshift[¶](#id318)
@@ -3419,8 +3153,6 @@ BEGIN
 END;
 $$;
 ```
-
-Copy
 
 #### Open cursor with arguments[¶](#open-cursor-with-arguments)
 
@@ -3453,8 +3185,6 @@ call cursor_open_test();
 SELECT * FROM cursor_example_results;
 ```
 
-Copy
-
 ##### Result[¶](#id321)
 
 ```
@@ -3466,8 +3196,6 @@ Copy
 |60|hello|
 +------+-------+
 ```
-
-Copy
 
 ##### Snowflake[¶](#id322)
 
@@ -3500,8 +3228,6 @@ SELECT * FROM
 cursor_example_results;
 ```
 
-Copy
-
 ##### Result[¶](#id324)
 
 ```
@@ -3513,8 +3239,6 @@ Copy
 |60|hello|
 +------+-------+
 ```
-
-Copy
 
 #### Open cursor with procedure parameters or local variables[¶](#open-cursor-with-procedure-parameters-or-local-variables)
 
@@ -3546,8 +3270,6 @@ $$;
 call cursor_open_test(30);
 ```
 
-Copy
-
 ##### Result[¶](#id327)
 
 ```
@@ -3559,8 +3281,6 @@ Copy
 |40|hello|
 +------+-------+
 ```
-
-Copy
 
 ##### Snowflake[¶](#id328)
 
@@ -3592,8 +3312,6 @@ $$;
 call cursor_open_test(30);
 ```
 
-Copy
-
 ##### Result[¶](#id330)
 
 ```
@@ -3605,8 +3323,6 @@ Copy
 |40|hello|
 +------+-------+
 ```
-
-Copy
 
 ### Known Issues[¶](#id331)
 
@@ -3624,7 +3340,7 @@ There are no related EWIs.
 > larger query.
 > ([Redshift SQL Language Reference Declare Cursor](https://docs.aws.amazon.com/redshift/latest/dg/declare.html)).
 
-Note
+**Note:**
 
 This syntax is fully supported in Snowflake.
 
@@ -3633,8 +3349,6 @@ This syntax is fully supported in Snowflake.
 ```
  name CURSOR [ ( arguments ) ] FOR query
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id335)
 
@@ -3657,8 +3371,6 @@ END;
 $$;
 ```
 
-Copy
-
 ##### Output Code:[¶](#id339)
 
 ##### Redshift[¶](#id340)
@@ -3678,8 +3390,6 @@ END;
 $$;
 ```
 
-Copy
-
 ### Known Issues[¶](#id341)
 
 There are no known issues.
@@ -3697,7 +3407,7 @@ There are no related EWIs.
 >
 > ([Redshift SQL Language Reference Refcursor Declaration](https://docs.aws.amazon.com/redshift/latest/dg/c_PLpgSQL-statements.html#r_PLpgSQL-cursors))
 
-Note
+**Note:**
 
 Refcursor declarations are fully supported by
 [Snowflake](https://docs.snowflake.com/en/developer-guide/snowflake-scripting/variables#declaring-a-variable).
@@ -3708,8 +3418,6 @@ Refcursor declarations are fully supported by
  DECLARE
 name refcursor;
 ```
-
-Copy
 
 Since Snowflake does not support the `REFCURSOR` data type, its functionality is replicated by
 converting the `REFCURSOR` variable into a `RESULTSET` type. The query used to open the `REFCURSOR`
@@ -3739,8 +3447,6 @@ BEGIN
 $$;
 ```
 
-Copy
-
 ##### Output Code:[¶](#id348)
 
 ##### Snowflake[¶](#id349)
@@ -3766,8 +3472,6 @@ BEGIN
  END;
 $$;
 ```
-
-Copy
 
 ##### Case: Cursor with Dynamic Sql [¶](#case-cursor-with-dynamic-sql)
 
@@ -3804,8 +3508,6 @@ BEGIN
 END;
 $$;
 ```
-
-Copy
 
 ##### Output Code:[¶](#id352)
 
@@ -3856,8 +3558,6 @@ END;
 $$;
 ```
 
-Copy
-
 ##### Case: Multiple uses: [¶](#case-multiple-uses)
 
 ##### Input Code:[¶](#id354)
@@ -3880,8 +3580,6 @@ BEGIN
  END;
 $$;
 ```
-
-Copy
 
 ##### Output Code:[¶](#id356)
 
@@ -3917,8 +3615,6 @@ BEGIN
  END;
 $$;
 ```
-
-Copy
 
 ### Known Issues[¶](#id358)
 

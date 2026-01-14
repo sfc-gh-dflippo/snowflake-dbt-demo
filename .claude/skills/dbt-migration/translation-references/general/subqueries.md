@@ -51,8 +51,6 @@ INSERT INTO tableB VALUES (50, 'Hey');
 INSERT INTO tableB VALUES (20, 'Bye');
 ```
 
-Copy
-
 #### _Snowflake_[¶](#snowflake)
 
 ```
@@ -85,8 +83,6 @@ INSERT INTO tableB
 VALUES (20, 'Bye');
 ```
 
-Copy
-
 ### Correlated Scalar subqueries[¶](#correlated-scalar-subqueries)
 
 Snowflake evaluates correlated subqueries **at compile time** to determine if they are scalar and
@@ -104,8 +100,6 @@ FROM tableA
 WHERE col1 = (SELECT col3 FROM tableB WHERE col2 = col4);
 ```
 
-Copy
-
 #### Results[¶](#results)
 
 ```
@@ -117,8 +111,6 @@ Copy
 |Hey|
 +------+
 ```
-
-Copy
 
 #### _Snowflake_[¶](#id2)
 
@@ -137,8 +129,6 @@ WHERE col1 =
                      RTRIM( col2) = RTRIM(col4));
 ```
 
-Copy
-
 #### Results[¶](#id3)
 
 ```
@@ -150,8 +140,6 @@ Copy
 |Hey|
 +------+
 ```
-
-Copy
 
 ### Uncorrelated Scalar subqueries[¶](#uncorrelated-scalar-subqueries)
 
@@ -165,8 +153,6 @@ FROM tableA
 WHERE col1 = (SELECT MAX(col3) FROM tableB);
 ```
 
-Copy
-
 #### Results[¶](#id5)
 
 ```
@@ -178,8 +164,6 @@ Copy
 |Hey|35|
 +------+-----------+
 ```
-
-Copy
 
 #### _Snowflake_[¶](#id6)
 
@@ -200,8 +184,6 @@ SELECT
     );
 ```
 
-Copy
-
 #### Results[¶](#id7)
 
 ```
@@ -213,8 +195,6 @@ Copy
 |Hey|35.000000|
 +------+-----------+
 ```
-
-Copy
 
 ### Non-scalar subqueries[¶](#non-scalar-subqueries)
 
@@ -237,8 +217,6 @@ SELECT col2, myDerivedTable.col4
 FROM tableA, (SELECT * FROM tableB) AS myDerivedTable
 WHERE col1 = myDerivedTable.col3;
 ```
-
-Copy
 
 #### Result[¶](#result)
 
@@ -274,8 +252,6 @@ Copy
 +---------+------+
 ```
 
-Copy
-
 #### _Snowflake_[¶](#id9)
 
 ```
@@ -309,8 +285,6 @@ SELECT
     ) AS myDerivedTable
             WHERE col1 = myDerivedTable.col3;
 ```
-
-Copy
 
 #### Results[¶](#id10)
 
@@ -346,8 +320,6 @@ Copy
 +---------+------+
 ```
 
-Copy
-
 ## Known Issues[¶](#known-issues)
 
 **1. Subqueries with FETCH first that are not uncorrelated scalar**
@@ -372,8 +344,6 @@ FROM tableA
 WHERE col2 = (SELECT col4 FROM tableB FETCH FIRST ROW ONLY);
 ```
 
-Copy
-
 Snowflake:
 
 ```
@@ -397,8 +367,6 @@ FROM
                          tableB
                      FETCH FIRST 1 ROW ONLY);
 ```
-
-Copy
 
 ## Related EWIs[¶](#related-ewis)
 

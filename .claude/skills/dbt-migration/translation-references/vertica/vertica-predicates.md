@@ -21,8 +21,6 @@ expression operator ANY (array expression)
 expression operator ALL (array expression)
 ```
 
-Copy
-
 To support this expression SnowConvert AI translates the `<> ALL` to `NOT IN` and the `= ANY` to
 `IN`
 
@@ -39,8 +37,6 @@ FROM someTable
 WHERE column_name = ANY (ARRAY[1, 2, 3]);
 ```
 
-Copy
-
 #### Output Code:[¶](#output-code)
 
 ```
@@ -51,8 +47,6 @@ SELECT *
  FROM someTable
  WHERE column_name IN (1, 2, 3);
 ```
-
-Copy
 
 #### Known Issues[¶](#known-issues)
 
@@ -78,8 +72,6 @@ LIKE Predicate
  string-expression [ NOT ] { LIKE | ILIKE | LIKEB | ILIKEB }
    { pattern | { ANY | SOME | ALL } ( pattern,... ) } [ ESCAPE 'char' ]
 ```
-
-Copy
 
 #### Vertica Substitute symbols[¶](#vertica-substitute-symbols)
 
@@ -128,8 +120,6 @@ FROM file_paths
 WHERE path_name ILIKEB 'C:\\%' ESCAPE'\';
 ```
 
-Copy
-
 #### Snowflake[¶](#snowflake)
 
 ```
@@ -147,8 +137,6 @@ SELECT path_name
 FROM file_paths
 WHERE path_name ILIKE 'C:\\\\%' ESCAPE'\\';
 ```
-
-Copy
 
 #### Known Issues[¶](#id4)
 

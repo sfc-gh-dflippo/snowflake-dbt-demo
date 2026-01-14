@@ -27,8 +27,6 @@ END;
 parameter := [ IN | OUT | INOUT ] param_name data_type [ DEFAULT expression ]
 ```
 
-Copy
-
 ## Sample Source Patterns[¶](#sample-source-patterns)
 
 ### Input Code:[¶](#input-code)
@@ -42,8 +40,6 @@ BEGIN
     VALUES CURRENT_TIMESTAMP;
 END;
 ```
-
-Copy
 
 #### Output Code:[¶](#output-code)
 
@@ -63,8 +59,6 @@ $$
 $$;
 ```
 
-Copy
-
 ## Related EWIs[¶](#related-ewis)
 
 There are no issues for this transformation.
@@ -82,8 +76,6 @@ merged into a single declaration statement per block.
 ```
  [ DECLARE declarations ]
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id3)
 
@@ -107,8 +99,6 @@ BEGIN
    SELECT i;
 END;
 ```
-
-Copy
 
 ##### Output Code:[¶](#id6)
 
@@ -145,8 +135,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### Known Issues[¶](#known-issues)
 
 There are no known issues.
@@ -172,8 +160,6 @@ DECLARE { CONTINUE | EXIT } HANDLER FOR condition
 condition := SQLEXCEPTION | SQLSTATE 'state' | SQLCODE code
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id11)
 
 #### Input Code:[¶](#id12)
@@ -190,8 +176,6 @@ BEGIN
     SELECT var;
 END;
 ```
-
-Copy
 
 ##### Output Code:[¶](#id14)
 
@@ -213,8 +197,6 @@ BEGIN
 END
 $$;
 ```
-
-Copy
 
 ### Known Issues[¶](#id16)
 
@@ -243,8 +225,6 @@ Since labels are not supported in Snowflake, an EWI will be printed.
     statements
  END label;
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id20)
 
@@ -275,8 +255,6 @@ END outer_block;
 END;
 ```
 
-Copy
-
 ##### Output Code:[¶](#id23)
 
 ##### Snowflake[¶](#id24)
@@ -305,8 +283,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### Known Issues[¶](#id25)
 
 1. If a variable name is the same as a modified one, it will cause inconsistencies.
@@ -322,7 +298,7 @@ There are no related EWIs.
 Declare variables inside the block’s `DECLARE` area. Variables can specify an initial value using
 `DEFAULT`. Subsequent assignments use the `SET` statement.
 
-Note
+**Note:**
 
 Variable declarations are fully supported by
 [Snowflake](https://docs.snowflake.com/en/developer-guide/snowflake-scripting/variables#declaring-a-variable).
@@ -333,8 +309,6 @@ Variable declarations are fully supported by
 DECLARE
   name type [ DEFAULT expression ];
 ```
-
-Copy
 
 Notes:
 
@@ -357,8 +331,6 @@ BEGIN
     VALUES v_simple_int, v_default_char, v_default_decimal, v_text;
 END;
 ```
-
-Copy
 
 ##### Output Code:[¶](#id32)
 
@@ -383,8 +355,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### Known Issues [¶](#id34)
 
 No issues were found.
@@ -405,8 +375,6 @@ Assign a value to a variable within a procedure block.
 SET variable_name = expression;
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id38)
 
 #### Input Code:[¶](#id39)
@@ -421,8 +389,6 @@ BEGIN
     SET v_total = v_total + 10;
 END;
 ```
-
-Copy
 
 ##### Output Code:[¶](#id41)
 
@@ -442,8 +408,6 @@ $$
    END
 $$;
 ```
-
-Copy
 
 ## IF[¶](#if)
 
@@ -467,8 +431,6 @@ branch.
 END IF;
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id45)
 
 #### Input Code:[¶](#id46)
@@ -491,8 +453,6 @@ BEGIN
     END IF;
 END;
 ```
-
-Copy
 
 ##### Output Code:[¶](#id48)
 
@@ -520,8 +480,6 @@ $$
    END
 $$;
 ```
-
-Copy
 
 ### Known Issues[¶](#id50)
 

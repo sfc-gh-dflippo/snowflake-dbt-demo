@@ -12,7 +12,7 @@ title: SnowConvert AI - Oracle - PL/SQL to Snowflake Scripting | Snowflake Docum
 > The assignment statement sets the value of a data item to a valid value.
 > ([Oracle PL/SQL Language Reference ASSIGNMENT Statement](https://docs.oracle.com/en/database/oracle/oracle-database/21/lnpls/assignment-statement.html#GUID-4C3BEFDF-3FFA-4E9D-96D0-4C5E13E08643))
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -34,8 +34,6 @@ assignment_statement_target =
 }
 ```
 
-Copy
-
 ##### Snowflake Scripting Assignment Syntax[¶](#snowflake-scripting-assignment-syntax)
 
 ```
@@ -44,9 +42,7 @@ LET <variable_name> <type> { DEFAULT | := } <expression> ;
 LET <variable_name> { DEFAULT | := } <expression> ;
 ```
 
-Copy
-
-Note
+**Note:**
 
 `LET` keyword is not needed for assignment statements when the variable has been declared before. Check [Snowflake Assignment documentation](https://docs.snowflake.com/en/sql-reference/snowflake-scripting/let.html#let) for more information.
 
@@ -90,8 +86,6 @@ CALL PSCALAR();
 
 SELECT * FROM TASSIGN;
 ```
-
-Copy
 
 ##### Result[¶](#result)
 
@@ -148,8 +142,6 @@ SELECT * FROM
      TASSIGN;
 ```
 
-Copy
-
 ##### Result[¶](#id1)
 
 <!-- prettier-ignore -->
@@ -196,8 +188,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Snowflake Scripting[¶](#id3)
 
 ```
@@ -236,8 +226,6 @@ $$
   END;
 $$;
 ```
-
-Copy
 
 ### Known Issues[¶](#known-issues)
 
@@ -286,7 +274,7 @@ Translation reference for CASE statements
 
 > The `CASE` statement chooses from a sequence of conditions and runs a corresponding statement. For more information regarding Oracle CASE, check [here](https://docs.oracle.com/en/database/oracle/oracle-database/21/lnpls/CASE-statement.html#GUID-F4251A23-0284-4990-A156-00A92F83BC35).
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -301,8 +289,6 @@ Some parts in the output code are omitted for clarity reasons.
   [ ELSE statement [ statement ]... ;
 END CASE [ label ] ;
 ```
-
-Copy
 
 ##### Snowflake Scripting CASE Syntax[¶](#snowflake-scripting-case-syntax)
 
@@ -319,8 +305,6 @@ CASE ( <expression_to_match> )
 END [ CASE ] ;
 ```
 
-Copy
-
 #### Searched case[¶](#searched-case)
 
 ##### Oracle CASE Syntax[¶](#id8)
@@ -332,8 +316,6 @@ Copy
   [ ELSE statement [ statement ]... ;
 END CASE [ label ];
 ```
-
-Copy
 
 ##### Snowflake Scripting CASE Syntax[¶](#id9)
 
@@ -350,8 +332,6 @@ CASE
 END [ CASE ] ;
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id10)
 
 #### Sample auxiliar table[¶](#sample-auxiliar-table)
@@ -362,8 +342,6 @@ Copy
 CREATE TABLE case_table(col varchar(30));
 ```
 
-Copy
-
 ##### Snowflake[¶](#snowflake)
 
 ```
@@ -371,8 +349,6 @@ CREATE OR REPLACE TABLE case_table (col varchar(30))
 COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":0},{"attributes":{"component":"oracle"}}'
 ;
 ```
-
-Copy
 
 #### Simple Case[¶](#id12)
 
@@ -403,8 +379,6 @@ CALL caseExample1(10);
 
 SELECT * FROM CASE_TABLE;
 ```
-
-Copy
 
 ##### Result[¶](#id14)
 
@@ -459,8 +433,6 @@ SELECT * FROM
   CASE_TABLE;
 ```
 
-Copy
-
 ##### Result[¶](#id16)
 
 <!-- prettier-ignore -->
@@ -496,8 +468,6 @@ CALL caseExample2(4);
 CALL caseExample2(10);
 SELECT * FROM CASE_TABLE;
 ```
-
-Copy
 
 ##### Result[¶](#id19)
 
@@ -551,8 +521,6 @@ SELECT * FROM
   CASE_TABLE;
 ```
 
-Copy
-
 ##### Result[¶](#id21)
 
 <!-- prettier-ignore -->
@@ -581,7 +549,7 @@ Warning
 
 This section is a work in progress, information may change in the future.
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -607,8 +575,6 @@ BEGIN
 END
 ```
 
-Copy
-
 #### Snowflake syntax[¶](#snowflake-syntax)
 
 ```
@@ -619,9 +585,7 @@ BEGIN
 END;
 ```
 
-Copy
-
-Note
+**Note:**
 
 In Snowflake, a BEGIN/END block can be the top-level construct inside an anonymous block ([Snowflake documentation](https://docs.snowflake.com/en/sql-reference/snowflake-scripting/begin#usage-notes)).
 
@@ -645,16 +609,12 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Result[¶](#id26)
 
 ```
 Statement processed.
 You are an adult.
 ```
-
-Copy
 
 ##### Snowflake[¶](#id27)
 
@@ -684,16 +644,12 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Result[¶](#id28)
 
 ```
 anonymous block
 You are an adult.
 ```
-
-Copy
 
 #### 2. CASE statement[¶](#case-statement)
 
@@ -720,16 +676,12 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Result[¶](#id30)
 
 ```
 Statement processed.
 Tuesday
 ```
-
-Copy
 
 ##### Snowflake[¶](#id31)
 
@@ -793,16 +745,12 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Result[¶](#id32)
 
 ```
 anonymous block
 Tuesday
 ```
-
-Copy
 
 #### 3. LOOP statements[¶](#loop-statements)
 
@@ -818,15 +766,11 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Result[¶](#id34)
 
 ```
 Statement processed.
 ```
-
-Copy
 
 ##### Snowflake[¶](#id35)
 
@@ -843,15 +787,11 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Result[¶](#id36)
 
 ```
 anonymous block
 ```
-
-Copy
 
 #### 4. Procedure call and OUTPUT parameters[¶](#procedure-call-and-output-parameters)
 
@@ -891,16 +831,12 @@ END;
 /
 ```
 
-Copy
-
 ##### Result[¶](#id38)
 
 ```
 Statement processed.
 The sum of 10 and 20 is 30
 ```
-
-Copy
 
 ##### Snowflake[¶](#id39)
 
@@ -941,16 +877,12 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Result[¶](#id40)
 
 ```
 anonymous block
 The sum of 10 and 20 is 30
 ```
-
-Copy
 
 #### 5. Alter session[¶](#alter-session)
 
@@ -969,16 +901,12 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Result[¶](#id42)
 
 ```
 Statement processed.
 Done
 ```
-
-Copy
 
 ##### Snowflake[¶](#id43)
 
@@ -992,16 +920,12 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Result[¶](#id44)
 
 ```
 anonymous block
 Done
 ```
-
-Copy
 
 #### 6. Cursors[¶](#cursors)
 
@@ -1030,16 +954,12 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Result[¶](#id46)
 
 ```
 Statement processed.
 NameA NameZ
 ```
-
-Copy
 
 ##### Snowflake[¶](#id47)
 
@@ -1086,16 +1006,12 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Result[¶](#id48)
 
 ```
 anonymous block
 NameA NameZ
 ```
-
-Copy
 
 #### 7. Select statements[¶](#select-statements)
 
@@ -1121,16 +1037,12 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Result[¶](#id50)
 
 ```
 Statement processed.
 2
 ```
-
-Copy
 
 ##### Snowflake[¶](#id51)
 
@@ -1171,16 +1083,12 @@ CREATE OR REPLACE TABLE employee (
    END;
 ```
 
-Copy
-
 ##### Result[¶](#id52)
 
 ```
 anonymous block
 2
 ```
-
-Copy
 
 #### 8. Join Statements[¶](#join-statements)
 
@@ -1217,16 +1125,12 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Result[¶](#id54)
 
 ```
 Statement processed.
 7
 ```
-
-Copy
 
 ##### Snowflake[¶](#id55)
 
@@ -1290,8 +1194,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 #### 9. Exception handling[¶](#exception-handling)
 
 ##### Oracle[¶](#id56)
@@ -1307,16 +1209,12 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Result[¶](#id57)
 
 ```
 Statement processed.
 ORA-01476: divisor is equal to zero
 ```
-
-Copy
 
 ##### Snowflake[¶](#id58)
 
@@ -1340,16 +1238,12 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Result[¶](#id59)
 
 ```
 anonymous block
 Division by zero
 ```
-
-Copy
 
 ### Known issues[¶](#id60)
 
@@ -1375,7 +1269,7 @@ Translation reference to convert Oracle CONTINUE statement to Snowflake Scriptin
 > The `CONTINUE` statement exits the current iteration of a loop, either conditionally or unconditionally, and transfers control to the next iteration of either the current loop or an enclosing labeled loop.
 > ([Oracle PL/SQL Language Reference CONTINUE Statement](https://docs.oracle.com/en/database/oracle/oracle-database/21/lnpls/CONTINUE-statement.html#GUID-3ED7E5D5-E2D0-42D1-8A7F-97FFC7372775))
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -1385,15 +1279,11 @@ Some parts in the output code are omitted for clarity reasons.
 CONTINUE [ label ] [ WHEN boolean_expression ] ;
 ```
 
-Copy
-
 ##### Snowflake Scripting CONTINUE Syntax[¶](#snowflake-scripting-continue-syntax)
 
 ```
 { CONTINUE | ITERATE } [ <label> ] ;
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id63)
 
@@ -1401,7 +1291,7 @@ Copy
 
 Code skips the `INSERT` statement by using `CONTINUE`.
 
-Note
+**Note:**
 
 This case is functionally equivalent.
 
@@ -1426,8 +1316,6 @@ END;
 CALL continue_procedure_1();
 SELECT * FROM continue_testing_table_1;
 ```
-
-Copy
 
 ##### Result[¶](#id65)
 
@@ -1470,8 +1358,6 @@ SELECT * FROM
     continue_testing_table_1;
 ```
 
-Copy
-
 ##### Result[¶](#id67)
 
 <!-- prettier-ignore -->
@@ -1482,7 +1368,7 @@ Copy
 
 Code skips inserting even numbers by using `CONTINUE`.
 
-Note
+**Note:**
 
 This case is not functionally equivalent, but, you can turn the condition into an `IF` statement.
 
@@ -1506,8 +1392,6 @@ END;
 CALL continue_procedure_2();
 SELECT * FROM continue_testing_table_2;
 ```
-
-Copy
 
 ##### Result[¶](#id69)
 
@@ -1563,8 +1447,6 @@ SELECT * FROM
     continue_testing_table_2;
 ```
 
-Copy
-
 ##### Result[¶](#id71)
 
 <!-- prettier-ignore -->
@@ -1586,11 +1468,11 @@ Copy
 
 Code skips line 19, and the inner loop is only executed once because the `CONTINUE` is always jumping to the outer loop using the label.
 
-Note
+**Note:**
 
 This case is functionally equivalent applying the same process as the previous sample.
 
-Note
+**Note:**
 
 Note that labels are going to be commented out.
 
@@ -1622,8 +1504,6 @@ END;
 CALL continue_procedure_3();
 SELECT * FROM continue_testing_table_3;
 ```
-
-Copy
 
 ##### Result[¶](#id73)
 
@@ -1691,8 +1571,6 @@ SELECT * FROM
     continue_testing_table_3;
 ```
 
-Copy
-
 ##### Result[¶](#id75)
 
 <!-- prettier-ignore -->
@@ -1727,7 +1605,7 @@ No issues were found.
 
 Translation reference to convert Oracle DECLARE statement to Snowflake Scripting
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -1777,8 +1655,6 @@ body::= BEGIN statement ...
   [ EXCEPTION exception_handler [ exception_handler ]... ] END [ name ] ;
 ```
 
-Copy
-
 ##### Snowflake Scripting DECLARE Syntax[¶](#snowflake-scripting-declare-syntax)
 
 ```
@@ -1793,8 +1669,6 @@ BEGIN
 END [ <label> ] ;
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id79)
 
 #### Variable declaration[¶](#variable-declaration)
@@ -1806,8 +1680,6 @@ variable_declaration::=
 variable datatype [ [ NOT NULL] {:= | DEFAULT} expression ] ;
 ```
 
-Copy
-
 ##### Snowflake Scripting Variable Declaration Syntax[¶](#snowflake-scripting-variable-declaration-syntax)
 
 ```
@@ -1817,8 +1689,6 @@ Copy
 
 <variable_name> <type> DEFAULT <expression> ;
 ```
-
-Copy
 
 ##### Oracle[¶](#id80)
 
@@ -1834,8 +1704,6 @@ BEGIN
     NULL;
 END;
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id81)
 
@@ -1859,8 +1727,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### Constant declaration[¶](#constant-declaration)
 
 Warning
@@ -1874,8 +1740,6 @@ constant_declaration::=
 constant CONSTANT datatype [NOT NULL] { := | DEFAULT } expression ;
 ```
 
-Copy
-
 ##### Snowflake Scripting Variable Declaration Syntax[¶](#id82)
 
 ```
@@ -1885,8 +1749,6 @@ Copy
 
 <variable_name> <type> DEFAULT <expression> ;
 ```
-
-Copy
 
 ##### Oracle[¶](#id83)
 
@@ -1901,8 +1763,6 @@ BEGIN
     NULL;
 END;
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id84)
 
@@ -1931,8 +1791,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### Cursor declaration[¶](#cursor-declaration)
 
 ##### Oracle Cursor Declaration Syntax[¶](#oracle-cursor-declaration-syntax)
@@ -1951,16 +1809,12 @@ rowtype::=
   }
 ```
 
-Copy
-
 ##### Snowflake Scripting Cursor Declaration Syntax[¶](#snowflake-scripting-cursor-declaration-syntax)
 
 ```
 <cursor_name> CURSOR [ ( <argument> [, <argument> ... ] ) ]
         FOR <query> ;
 ```
-
-Copy
 
 Danger
 
@@ -1978,15 +1832,11 @@ exception_declaration::= exception EXCEPTION;
 PRAGMA EXCEPTION_INIT ( exception, error_code ) ;
 ```
 
-Copy
-
 ##### Snowflake Scripting Exception Declaration Syntax[¶](#snowflake-scripting-exception-declaration-syntax)
 
 ```
 <exception_name> EXCEPTION [ ( <exception_number> , '<exception_message>' ) ] ;
 ```
-
-Copy
 
 ##### Oracle[¶](#id85)
 
@@ -2002,8 +1852,6 @@ BEGIN
     NULL;
 END;
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id86)
 
@@ -2029,8 +1877,6 @@ PRAGMA EXCEPTION_INIT ( my_exception3, -19000 );
     END;
 $$;
 ```
-
-Copy
 
 #### Not supported cases[¶](#not-supported-cases)
 
@@ -2072,7 +1918,7 @@ There are some Oracle declaration statements that are not supported by the Snowf
 
 This article is about the current transformation of the default parameters and how their functionality is being emulated.
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -2093,8 +1939,6 @@ CREATE TABLE TABLE1(COL1 NUMBER, COL2 NUMBER);
 CREATE TABLE TABLE2(COL1 NUMBER, COL2 NUMBER, COL2 NUMBER);0016
 ```
 
-Copy
-
 ##### Snowflake[¶](#id92)
 
 ```
@@ -2111,8 +1955,6 @@ COL2 NUMBER(38, 18) /*** SSC-FDM-0006 - NUMBER TYPE COLUMN MAY NOT BEHAVE SIMILA
 COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":0},{"attributes":{"component":"oracle"}}'
 ;
 ```
-
-Copy
 
 #### Default parameter declaration[¶](#default-parameter-declaration)
 
@@ -2149,8 +1991,6 @@ BEGIN
     VALUES (param1, param2, param3);
 END;
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id94)
 
@@ -2203,8 +2043,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### Calling procedures with default parameters[¶](#calling-procedures-with-default-parameters)
 
 ##### Oracle[¶](#id95)
@@ -2220,8 +2058,6 @@ BEGIN
     PROC_WITH_DEFAULT_PARAMS2();
 END;
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id96)
 
@@ -2248,8 +2084,6 @@ $$
 $$;
 ```
 
-Copy
-
 In order to check that the functionality is being emulated correctly the following query is going to execute the procedure and a `SELECT` from the table mentioned before.
 
 ##### Oracle[¶](#id97)
@@ -2259,8 +2093,6 @@ CALL PROC_WITH_DEFAULT_CALLS();
 
 SELECT * FROM TABLE1;
 ```
-
-Copy
 
 ##### Result[¶](#id98)
 
@@ -2280,8 +2112,6 @@ CALL PROC_WITH_DEFAULT_CALLS();
 
 SELECT * FROM TABLE1;
 ```
-
-Copy
 
 ##### Result[¶](#id100)
 
@@ -2311,8 +2141,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Snowflake Scripting[¶](#id102)
 
 ```
@@ -2340,8 +2168,6 @@ $$
 $$;
 ```
 
-Copy
-
 In order to check that the functionality is being emulated correctly the following query is going to execute the procedure and a `SELECT` from the table mentioned before.
 
 ##### Oracle[¶](#id103)
@@ -2352,14 +2178,11 @@ CALL PROC_WITH_DEFAULT_CALLS2();
 SELECT * FROM TABLE2;
 ```
 
-Copy
-
 ##### Result[¶](#id104)
 
 <!-- prettier-ignore -->
 |COL1|COL2|COL3|
 |---|---|---|
-|10|20|30|
 |10|20|30|
 |20|30|10|
 |100|30|10|
@@ -2374,14 +2197,11 @@ CALL PROC_WITH_DEFAULT_CALLS2();
 SELECT * FROM TABLE2;
 ```
 
-Copy
-
 ##### Result[¶](#id106)
 
 <!-- prettier-ignore -->
 |COL1|COL2|COL3|
 |---|---|---|
-|10|20|30|
 |10|20|30|
 |20|30|10|
 |100|30|10|
@@ -2421,8 +2241,6 @@ additional clauses::=
 |<dynamic return clasue> }
 ```
 
-Copy
-
 Snowflake Scripting has support for this statement, albeit with some functional differences. For more information on the Snowflake counterpart, please visit [Snowflake’s EXECUTE IMMEDIATE documentation](https://docs.snowflake.com/en/LIMITEDACCESS/snowscript-introduction.html#execute-immediate).
 
 ##### Snow Scripting EXECUTE IMMEDIATE Syntax[¶](#snow-scripting-execute-immediate-syntax)
@@ -2432,8 +2250,6 @@ EXECUTE IMMEDIATE <dynamic statement> ;
 
 dynamic statement::= {'<string literal>' | <variable> | $<session variable>}
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id110)
 
@@ -2456,8 +2272,6 @@ END;
 CALL dropping_procedure();
 SELECT * FROM immediate_dropped_table;
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id112)
 
@@ -2487,8 +2301,6 @@ SELECT * FROM
     immediate_dropped_table;
 ```
 
-Copy
-
 #### Storing the string in a variable[¶](#storing-the-string-in-a-variable)
 
 ##### Oracle[¶](#id113)
@@ -2511,8 +2323,6 @@ END;
 CALL dropping_procedure();
 SELECT * FROM immediate_dropped_table;
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id114)
 
@@ -2546,8 +2356,6 @@ SELECT * FROM
     immediate_dropped_table;
 ```
 
-Copy
-
 #### Concatenation for parameters in dynamic statement[¶](#concatenation-for-parameters-in-dynamic-statement)
 
 ##### Oracle[¶](#id115)
@@ -2570,8 +2378,6 @@ END;
 CALL dropping_procedure();
 SELECT * FROM immediate_dropped_table;
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id116)
 
@@ -2605,8 +2411,6 @@ SELECT * FROM
     immediate_dropped_table;
 ```
 
-Copy
-
 #### USING Clause transformation[¶](#using-clause-transformation)
 
 ##### Oracle[¶](#id117)
@@ -2625,8 +2429,6 @@ CALL inserting_procedure_using(1);
 SELECT * FROM immediate_inserted_table;
 ```
 
-Copy
-
 ##### Results[¶](#results)
 
 <!-- prettier-ignore -->
@@ -2636,7 +2438,7 @@ Copy
 
 ##### Snowflake Scripting[¶](#id118)
 
-Note
+**Note:**
 
 Please note parenthesis are required for parameters in the USING Clause in Snowflake Scripting.
 
@@ -2664,8 +2466,6 @@ CALL inserting_procedure_using(1);
 SELECT * FROM
     immediate_inserted_table;
 ```
-
-Copy
 
 ##### Results[¶](#id119)
 
@@ -2703,11 +2503,9 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Snowflake Scripting[¶](#id122)
 
-Note
+**Note:**
 
 Please note parenthesis are required for parameters in the USING Clause in Snowflake Scripting.
 
@@ -2728,8 +2526,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### Related EWIs[¶](#id123)
 
 1. [SSC-EWI-0027](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0027): Variable with invalid query.
@@ -2739,7 +2535,7 @@ Copy
 
 Translation reference to convert Oracle EXIT statement to Snowflake Scripting
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -2754,19 +2550,15 @@ Some parts in the output code are omitted for clarity reasons.
 EXIT [ label ] [ WHEN boolean_expression ] ;
 ```
 
-Copy
-
 ##### Snowflake Scripting EXIT Syntax[¶](#snowflake-scripting-exit-syntax)
 
 ```
 { BREAK | EXIT } [ <label> ] ;
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id125)
 
-Note
+**Note:**
 
 Note that you can change `EXIT`with `BREAK`and everything will work the same.
 
@@ -2774,7 +2566,7 @@ Note that you can change `EXIT`with `BREAK`and everything will work the same.
 
 Code skips the `INSERT` statement by using `EXIT`.
 
-Note
+**Note:**
 
 This case is functionally equivalent.
 
@@ -2800,8 +2592,6 @@ END;
 CALL exit_procedure_1();
 SELECT * FROM exit_testing_table_1;
 ```
-
-Copy
 
 ##### Result[¶](#id127)
 
@@ -2846,8 +2636,6 @@ CREATE OR REPLACE TABLE exit_testing_table_1 (
        exit_testing_table_1;
 ```
 
-Copy
-
 ##### Result[¶](#id129)
 
 <!-- prettier-ignore -->
@@ -2858,7 +2646,7 @@ Copy
 
 Code exits the loop when the iterator is greater than 5.
 
-Note
+**Note:**
 
 This case is functionally equivalent by turning the condition into an `IF` statement.
 
@@ -2884,8 +2672,6 @@ END;
 CALL exit_procedure_2();
 SELECT * FROM exit_testing_table_2;
 ```
-
-Copy
 
 ##### Result[¶](#id131)
 
@@ -2938,8 +2724,6 @@ CREATE OR REPLACE TABLE exit_testing_table_2 (
        exit_testing_table_2;
 ```
 
-Copy
-
 ##### Result[¶](#id133)
 
 <!-- prettier-ignore -->
@@ -2956,11 +2740,11 @@ Copy
 
 Code breaks both loops by using the `EXIT` statement pointing to the outer loop.
 
-Note
+**Note:**
 
 This case is functionally equivalent applying the same process as the previous sample.
 
-Note
+**Note:**
 
 Note that labels are going to be commented out.
 
@@ -2996,8 +2780,6 @@ END;
 CALL exit_procedure_3();
 SELECT * FROM exit_testing_table_3;
 ```
-
-Copy
 
 ##### Result[¶](#id135)
 
@@ -3061,8 +2843,6 @@ CREATE OR REPLACE TABLE exit_testing_table_3 (
        exit_testing_table_3;
 ```
 
-Copy
-
 ##### Result[¶](#id137)
 
 <!-- prettier-ignore -->
@@ -3087,7 +2867,7 @@ No issues were found.
 
 Translation reference for Oracle expressions to Snow Scripting
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -3129,8 +2909,6 @@ CALL EXPRESSIONS_SAMPLE();
 SELECT * FROM EXPRESSIONS_TABLE;
 ```
 
-Copy
-
 ##### Result[¶](#id142)
 
 <!-- prettier-ignore -->
@@ -3168,8 +2946,6 @@ CALL EXPRESSIONS_SAMPLE();
 SELECT * FROM
 	EXPRESSIONS_TABLE;
 ```
-
-Copy
 
 ##### Result[¶](#id144)
 
@@ -3216,8 +2992,6 @@ END;
 CALL NUMERIC_EXPRESSIONS();
 SELECT * FROM NUMERIC_EXPRESSIONS_TABLE;
 ```
-
-Copy
 
 ##### Result[¶](#id146)
 
@@ -3293,8 +3067,6 @@ CALL p_boolean_limitations();
 SELECT * FROM t_boolean_table;
 ```
 
-Copy
-
 ### Related EWIs.[¶](#id148)
 
 1. [SSC-FDM-0016](../../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0016): Constants are not supported by Snowflake Scripting. It was transformed to a variable.
@@ -3322,8 +3094,6 @@ statement...
 END LOOP [ label ] ;
 ```
 
-Copy
-
 ##### Snowflake Scripting Syntax[¶](#snowflake-scripting-syntax)
 
 ```
@@ -3332,8 +3102,6 @@ FOR <counter_variable> IN [ REVERSE ] <start> TO <end> { DO | LOOP }
     [ statement; ... ]
 END { FOR | LOOP } [ <label> ] ;
 ```
-
-Copy
 
 Snowflake Scripting supports `FOR LOOP` that loops a specified number of times. The upper and lower bounds must be `INTEGER`. Check more information in the [Snowflake Scripting documentation](https://docs.snowflake.com/en/sql-reference/snowflake-scripting/for.html#for).
 
@@ -3348,7 +3116,7 @@ Oracle `FOR LOOP` behavior can also be modified by using the statements:
 
 #### 1. FOR LOOP[¶](#id152)
 
-Note
+**Note:**
 
 This case is functionally equivalent.
 
@@ -3374,8 +3142,6 @@ BEGIN
     END LOOP;
 END;
 ```
-
-Copy
 
 ##### Snowflake Scripting FOR LOOP Example[¶](#snowflake-scripting-for-loop-example)
 
@@ -3410,8 +3176,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### 2. FOR LOOP with additional clauses[¶](#for-loop-with-additional-clauses)
 
 ##### Oracle FOR LOOP Example[¶](#id153)
@@ -3429,8 +3193,6 @@ BEGIN
     END LOOP;
 END;
 ```
-
-Copy
 
 ##### Snowflake Scripting FOR LOOP Example[¶](#id154)
 
@@ -3461,8 +3223,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### 3. FOR LOOP with multiple conditions[¶](#for-loop-with-multiple-conditions)
 
 ##### Oracle FOR LOOP Example[¶](#id155)
@@ -3478,8 +3238,6 @@ BEGIN
     END LOOP;
 END;
 ```
-
-Copy
 
 ##### Snowflake Scripting FOR LOOP Example[¶](#id156)
 
@@ -3503,8 +3261,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### 4. FOR LOOP with unsupported format[¶](#for-loop-with-unsupported-format)
 
 ##### Oracle FOR LOOP Example[¶](#id157)
@@ -3524,8 +3280,6 @@ BEGIN
     END LOOP;
 END;
 ```
-
-Copy
 
 ##### Snowflake Scripting FOR LOOP Example[¶](#id158)
 
@@ -3562,8 +3316,6 @@ $$
 $$;
 ```
 
-Copy
-
 Warning
 
 Transformation for custom types is currently not supported for Snowflake Scripting.
@@ -3584,8 +3336,6 @@ LOOP
 END LOOP;
 ```
 
-Copy
-
 ##### Snowflake Scripting FOR LOOP Example[¶](#id161)
 
 ```
@@ -3594,8 +3344,6 @@ FOR i IN REVERSE 1 TO 3 LOOP
     NULL;
 END LOOP;
 ```
-
-Copy
 
 **2. Mutable vs Inmutable Counter Variable**
 
@@ -3617,8 +3365,6 @@ FOR i IN 5..15 BY 5 LOOP
 END LOOP;
 ```
 
-Copy
-
 ##### Snowflake Scripting[¶](#id163)
 
 ```
@@ -3627,8 +3373,6 @@ FOR i IN 5 TO 15 LOOP
     NULL;
 END LOOP;
 ```
-
-Copy
 
 **5. Unsupported Formats**
 
@@ -3653,8 +3397,6 @@ Oracle allows different types of conditions for a `FOR LOOP`. It supports boolea
 ```
 FORALL index IN bounds_clause [ SAVE ] [ EXCEPTIONS ] dml_statement ;
 ```
-
-Copy
 
 Warning
 
@@ -3687,8 +3429,6 @@ CREATE TABLE table2 (
 
 INSERT INTO table2 (column1, column2) VALUES (1, 2);
 ```
-
-Copy
 
 ##### Tables 2[¶](#tables-2)
 
@@ -3730,8 +3470,6 @@ CREATE TABLE target_table(
 INSERT INTO target_table VALUES (101, 'Anurag', 10);
 ```
 
-Copy
-
 ##### Snowflake[¶](#id169)
 
 ##### Tables 1[¶](#id170)
@@ -3763,8 +3501,6 @@ COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":
 
 INSERT INTO table2(column1, column2) VALUES (1, 2);
 ```
-
-Copy
 
 ##### Tables 2[¶](#id171)
 
@@ -3827,13 +3563,11 @@ INSERT INTO target_table
 VALUES (101, 'Anurag', 10);
 ```
 
-Copy
-
 #### 1. FORALL With Collection of Records[¶](#forall-with-collection-of-records)
 
 ##### Oracle[¶](#id172)
 
-Note
+**Note:**
 
 The three cases below have the same transformation to Snowflake Scripting and are functionally equivalent.
 
@@ -3858,8 +3592,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Results[¶](#id173)
 
 <!-- prettier-ignore -->
@@ -3874,8 +3606,6 @@ Copy
    4|       5|
    5|       6|
 ```
-
-Copy
 
 ##### Snowflake[¶](#id174)
 
@@ -3905,8 +3635,6 @@ $$
 $$;
 ```
 
-Copy
-
 ##### Results[¶](#id176)
 
 <!-- prettier-ignore -->
@@ -3919,7 +3647,7 @@ Copy
 |4.000000000000000000|5.000000000000000000|
 |5.000000000000000000|6.000000000000000000|
 
-Note
+**Note:**
 
 The EWIs SSC-PRF-0001 and SSC-PRF-0003 are added in every FETCH BULK COLLECT occurrence into FORALL statement.
 
@@ -3947,8 +3675,6 @@ BEGIN
     CLOSE cursorVariable;
 END;
 ```
-
-Copy
 
 ##### Results[¶](#id178)
 
@@ -3987,8 +3713,6 @@ $$
     END;
 $$;
 ```
-
-Copy
 
 ##### Results[¶](#id180)
 
@@ -4029,8 +3753,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### With UPDATE[¶](#with-update)
 
 ```
@@ -4051,8 +3773,6 @@ BEGIN
     CLOSE cursorVariable;
 END;
 ```
-
-Copy
 
 ##### Results INSERT INTO[¶](#results-insert-into)
 
@@ -4101,8 +3821,6 @@ $$
 $$;
 ```
 
-Copy
-
 ##### With UPDATE[¶](#id184)
 
 ```
@@ -4129,8 +3847,6 @@ $$
     END;
 $$;
 ```
-
-Copy
 
 ##### Results INSERT INTO[¶](#id185)
 
@@ -4181,8 +3897,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Results[¶](#id189)
 
 <!-- prettier-ignore -->
@@ -4223,8 +3937,6 @@ $$
 $$;
 ```
 
-Copy
-
 ##### Results[¶](#id191)
 
 <!-- prettier-ignore -->
@@ -4262,8 +3974,6 @@ BEGIN
     CLOSE cursorVariable;
 END;
 ```
-
-Copy
 
 ##### Results[¶](#id194)
 
@@ -4307,8 +4017,6 @@ $$
     END;
 $$;
 ```
-
-Copy
 
 ##### Results[¶](#id197)
 
@@ -4356,8 +4064,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Results[¶](#id200)
 
 <!-- prettier-ignore -->
@@ -4397,8 +4103,6 @@ $$
     END;
 $$;
 ```
-
-Copy
 
 ##### Results[¶](#id203)
 
@@ -4441,8 +4145,6 @@ BEGIN
     CLOSE cursorVariable;
 END;
 ```
-
-Copy
 
 ##### Results[¶](#id206)
 
@@ -4487,8 +4189,6 @@ $$
 $$;
 ```
 
-Copy
-
 ##### Results[¶](#id209)
 
 <!-- prettier-ignore -->
@@ -4521,8 +4221,6 @@ BEGIN
         collectionVariable.DELETE;
 END;
 ```
-
-Copy
 
 ##### Results[¶](#id212)
 
@@ -4563,8 +4261,6 @@ $$
 $$;
 ```
 
-Copy
-
 ##### Results[¶](#id215)
 
 <!-- prettier-ignore -->
@@ -4602,8 +4298,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Results[¶](#id218)
 
 <!-- prettier-ignore -->
@@ -4640,8 +4334,6 @@ $$
 $$;
 ```
 
-Copy
-
 ##### Results[¶](#id221)
 
 <!-- prettier-ignore -->
@@ -4674,15 +4366,11 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Results[¶](#id224)
 
 ```
 no data found
 ```
-
-Copy
 
 ##### Snowflake[¶](#id225)
 
@@ -4712,15 +4400,11 @@ $$
 $$;
 ```
 
-Copy
-
 ##### Results[¶](#id227)
 
 ```
 Query produced no results
 ```
-
-Copy
 
 #### 11. FORALL With PACKAGE References[¶](#forall-with-package-references)
 
@@ -4763,8 +4447,6 @@ END;
 
 select * from table2;
 ```
-
-Copy
 
 ##### Results[¶](#id230)
 
@@ -4846,8 +4528,6 @@ select * from
     table2;
 ```
 
-Copy
-
 ##### Results[¶](#id233)
 
 <!-- prettier-ignore -->
@@ -4897,8 +4577,6 @@ BEGIN
     CLOSE cursorVariable;
 END;
 ```
-
-Copy
 
 ##### Results[¶](#id236)
 
@@ -4950,8 +4628,6 @@ $$
 $$;
 ```
 
-Copy
-
 ##### Results[¶](#id239)
 
 <!-- prettier-ignore -->
@@ -4969,7 +4645,7 @@ The transformation above only works if the `SELECT` statement inside the `MERGE`
 
 #### 13. Default FORALL transformation[¶](#default-forall-transformation)
 
-Note
+**Note:**
 
 You might also be interested in [Bulk Cursor Helpers](helpers.html#bulk-cursor-helpers).
 
@@ -5008,8 +4684,6 @@ BEGIN
     CLOSE cursorVariable;
 END;
 ```
-
-Copy
 
 ##### Results[¶](#id242)
 
@@ -5125,8 +4799,6 @@ $$
 $$;
 ```
 
-Copy
-
 ##### Results[¶](#id245)
 
 <!-- prettier-ignore -->
@@ -5139,13 +4811,13 @@ Copy
 |4.000000000000000000|5.000000000000000000|
 |5.000000000000000000|6.000000000000000000|
 
-Note
+**Note:**
 
 This transformation is done only when none of the previously mentioned transformations can be done.
 
 #### 14. Multiple FORALL inside a LOOP clause[¶](#multiple-forall-inside-a-loop-clause)
 
-Note
+**Note:**
 
 This pattern applies when there is more than one FORALL in the same procedure and it meets the following structure.
 
@@ -5176,8 +4848,6 @@ BEGIN
     CLOSE cursorVariable;
 END;
 ```
-
-Copy
 
 ##### Results[¶](#id248)
 
@@ -5227,8 +4897,6 @@ $$
 $$;
 ```
 
-Copy
-
 ##### Results[¶](#id251)
 
 <!-- prettier-ignore -->
@@ -5243,7 +4911,7 @@ Copy
 
 #### 15. Multiple FORALL inside different LOOP clauses[¶](#multiple-forall-inside-different-loop-clauses)
 
-Note
+**Note:**
 
 This pattern applies when there is more than one FORALL in the same procedure and it meets the following structure.
 
@@ -5286,8 +4954,6 @@ BEGIN
     CLOSE cursorVariable2;
 END;
 ```
-
-Copy
 
 ##### Results[¶](#id254)
 
@@ -5337,8 +5003,6 @@ $$
     END;
 $$;
 ```
-
-Copy
 
 ##### Results[¶](#id257)
 
@@ -5395,8 +5059,6 @@ CALL procedure_example(10);
 select * from target_table;
 select * from error_table;
 ```
-
-Copy
 
 ##### Snowflake[¶](#id259)
 
@@ -5496,8 +5158,6 @@ SELECT * FROM target_table;
 SELECT * FROM error_table;
 ```
 
-Copy
-
 #### 17. FORALL with INSERT with LOG ERRORS[¶](#forall-with-insert-with-log-errors)
 
 Warning
@@ -5528,8 +5188,6 @@ BEGIN
         REJECT LIMIT UNLIMITED;
 END;
 ```
-
-Copy
 
 ##### Snowflake[¶](#id263)
 
@@ -5613,8 +5271,6 @@ SELECT * FROM target_table;
 SELECT * FROM error_table;
 ```
 
-Copy
-
 ### Known Issues[¶](#id265)
 
 No issues were found.
@@ -5651,8 +5307,6 @@ ELSE
 statement [ statement ]... ] END IF ;
 ```
 
-Copy
-
 ```
 IF ( <condition> ) THEN
     <statement>;
@@ -5670,8 +5324,6 @@ ELSE
 END IF;
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id268)
 
 #### Sample auxiliar table[¶](#id269)
@@ -5680,13 +5332,9 @@ Copy
 CREATE TABLE if_table(col1 varchar(30));
 ```
 
-Copy
-
 ```
 CREATE OR REPLACE TABLE PUBLIC.if_table (col1 varchar(30));
 ```
-
-Copy
 
 #### Possible IF variations[¶](#possible-if-variations)
 
@@ -5707,8 +5355,6 @@ CALL ifExample1(1);
 SELECT * FROM if_table;
 ```
 
-Copy
-
 ###### Code 2[¶](#code-2)
 
 ```
@@ -5725,8 +5371,6 @@ END;
 CALL ifExample2(2);
 SELECT * FROM if_table;
 ```
-
-Copy
 
 ###### Code 3[¶](#code-3)
 
@@ -5746,8 +5390,6 @@ END;
 CALL ifExample3(3);
 SELECT * FROM if_table;
 ```
-
-Copy
 
 ###### Code 4[¶](#code-4)
 
@@ -5769,8 +5411,6 @@ END;
 CALL ifExample4(4);
 SELECT * FROM if_table;
 ```
-
-Copy
 
 ###### Result 1[¶](#result-1)
 
@@ -5825,8 +5465,6 @@ SELECT * FROM
     if_table;
 ```
 
-Copy
-
 ###### Code 2[¶](#id273)
 
 ```
@@ -5851,8 +5489,6 @@ CALL ifExample2(2);
 SELECT * FROM
     if_table;
 ```
-
-Copy
 
 ###### Code 3[¶](#id274)
 
@@ -5881,8 +5517,6 @@ SELECT * FROM
     if_table;
 ```
 
-Copy
-
 ###### Code 4[¶](#id275)
 
 ```
@@ -5910,8 +5544,6 @@ CALL ifExample4(4);
 
 SELECT * FROM if_table;
 ```
-
-Copy
 
 ###### Result 1[¶](#id276)
 
@@ -5967,8 +5599,6 @@ This section is a work in progress; information may change in the future.
 nested_table IS [ NOT ] EMPTY
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id284)
 
 #### Oracle[¶](#id285)
@@ -6004,8 +5634,6 @@ SELECT emp_name
 FROM employee
 WHERE phone_numbers_col IS EMPTY;
 ```
-
-Copy
 
 ##### Output[¶](#output)
 
@@ -6069,8 +5697,6 @@ FROM
 WHERE
     ARRAY_SIZE( phone_numbers_col) = 0;
 ```
-
-Copy
 
 ##### Output[¶](#id287)
 
@@ -6137,8 +5763,6 @@ begin
 end;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id290)
 
 ```
@@ -6159,8 +5783,6 @@ $$
    END;
 $$;
 ```
-
-Copy
 
 ##### Output[¶](#id291)
 
@@ -6185,8 +5807,6 @@ WHERE
     emp_id = 1;
 ```
 
-Copy
-
 ##### Output[¶](#id294)
 
 <!-- prettier-ignore -->
@@ -6207,8 +5827,6 @@ WHERE
     emp_id = 1;
 ```
 
-Copy
-
 ##### Output[¶](#id296)
 
 <!-- prettier-ignore -->
@@ -6228,7 +5846,7 @@ Copy
 
 ## LOCK TABLE[¶](#lock-table)
 
-Note
+**Note:**
 
 Non-relevant statement.
 
@@ -6246,8 +5864,6 @@ In Oracle, the `LOCK TABLE` statement allows to explicitly acquire a shared or e
 LOCK TABLE tableName IN { SHARE | EXCLUSIVE } MODE
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id299)
 
 #### Locking table[¶](#locking-table)
@@ -6260,19 +5876,15 @@ Notice that in this example the `LOCK TABLE` statement has been deleted. This is
 LOCK TABLE table1 IN EXCLUSIVE MODE;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id301)
 
 ```
 [Empty output]
 ```
 
-Copy
-
 ## LOG ERROR[¶](#log-error)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -6285,8 +5897,6 @@ Some parts in the output code are omitted for clarity reasons.
 ```
 FORALL index IN bounds_clause [ SAVE ] [ EXCEPTIONS ] dml_statement ;
 ```
-
-Copy
 
 Warning
 
@@ -6339,8 +5949,6 @@ CREATE TABLE target_table(
 
 INSERT INTO target_table VALUES (101, 'Anurag', 10);
 ```
-
-Copy
 
 ##### Snowflake[¶](#id307)
 
@@ -6405,13 +6013,11 @@ INSERT INTO target_table
 VALUES (101, 'Anurag', 10);
 ```
 
-Copy
-
 #### 1. MERGE INTO Inside a FORALL[¶](#merge-into-inside-a-forall)
 
 ##### Oracle[¶](#id309)
 
-Note
+**Note:**
 
 The three cases below have the same transformation to Snowflake Scripting and are functionally equivalent.
 
@@ -6450,8 +6056,6 @@ CALL procedure_example(10);
 select * from target_table;
 select * from error_table;
 ```
-
-Copy
 
 ##### Snowflake[¶](#id310)
 
@@ -6511,8 +6115,6 @@ select * from
     error_table;
 ```
 
-Copy
-
 #### 2. FORALL With INSERT INTO[¶](#id312)
 
 ##### Oracle[¶](#id313)
@@ -6537,8 +6139,6 @@ BEGIN
     CLOSE cursorVariable;
 END;
 ```
-
-Copy
 
 ##### Results[¶](#id315)
 
@@ -6577,8 +6177,6 @@ $$
     END;
 $$;
 ```
-
-Copy
 
 ##### Results[¶](#id318)
 
@@ -6619,8 +6217,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### With UPDATE[¶](#id322)
 
 ```
@@ -6641,8 +6237,6 @@ BEGIN
     CLOSE cursorVariable;
 END;
 ```
-
-Copy
 
 ##### Results INSERT INTO[¶](#id323)
 
@@ -6691,8 +6285,6 @@ $$
 $$;
 ```
 
-Copy
-
 ##### With UPDATE[¶](#id327)
 
 ```
@@ -6719,8 +6311,6 @@ $$
     END;
 $$;
 ```
-
-Copy
 
 ##### Results INSERT INTO[¶](#id328)
 
@@ -6771,8 +6361,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Results[¶](#id333)
 
 <!-- prettier-ignore -->
@@ -6813,8 +6401,6 @@ $$
 $$;
 ```
 
-Copy
-
 ##### Results[¶](#id336)
 
 <!-- prettier-ignore -->
@@ -6852,8 +6438,6 @@ BEGIN
     CLOSE cursorVariable;
 END;
 ```
-
-Copy
 
 ##### Results[¶](#id340)
 
@@ -6898,8 +6482,6 @@ $$
 $$;
 ```
 
-Copy
-
 ##### Results[¶](#id343)
 
 <!-- prettier-ignore -->
@@ -6932,8 +6514,6 @@ BEGIN
         collectionVariable.DELETE;
 END;
 ```
-
-Copy
 
 ##### Results[¶](#id347)
 
@@ -6974,8 +6554,6 @@ $$
 $$;
 ```
 
-Copy
-
 ##### Results[¶](#id350)
 
 <!-- prettier-ignore -->
@@ -7013,8 +6591,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Results[¶](#id354)
 
 <!-- prettier-ignore -->
@@ -7051,15 +6627,11 @@ $$
 $$;
 ```
 
-Copy
-
 ##### Results[¶](#id357)
 
 ```
 ambiguous column name 'COLUMN2'
 ```
-
-Copy
 
 #### 8. FORALL With DELETE Statements[¶](#id358)
 
@@ -7086,15 +6658,11 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Results[¶](#id361)
 
 ```
 no data found
 ```
-
-Copy
 
 ##### Snowflake[¶](#id362)
 
@@ -7124,15 +6692,11 @@ $$
 $$;
 ```
 
-Copy
-
 ##### Results[¶](#id364)
 
 ```
 Query produced no results
 ```
-
-Copy
 
 ### Known Issues[¶](#id365)
 
@@ -7165,8 +6729,6 @@ Translation reference to convert Oracle LOOP statement to Snowflake Scripting
 LOOP statement... END LOOP [ label ] ;
 ```
 
-Copy
-
 ##### Snowflake Scripting BASIC LOOP Syntax[¶](#snowflake-scripting-basic-loop-syntax)
 
 ```
@@ -7175,8 +6737,6 @@ LOOP
   [ <statement>; ... ]
 END LOOP [ <label> ] ;
 ```
-
-Copy
 
 Oracle `BASIC LOOP` behavior can also be modified by using the statements:
 
@@ -7189,7 +6749,7 @@ Oracle `BASIC LOOP` behavior can also be modified by using the statements:
 
 #### Loop simple case[¶](#loop-simple-case)
 
-Note
+**Note:**
 
 This case is functionally equivalent.
 
@@ -7216,8 +6776,6 @@ END;
 CALL loop_procedure();
 SELECT * FROM loop_testing_table;
 ```
-
-Copy
 
 ##### Result[¶](#id370)
 
@@ -7273,8 +6831,6 @@ CREATE OR REPLACE TABLE loop_testing_table
   loop_testing_table;
 ```
 
-Copy
-
 ##### Result[¶](#id372)
 
 <!-- prettier-ignore -->
@@ -7328,8 +6884,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Snowflake Scripting[¶](#id378)
 
 ```
@@ -7366,8 +6920,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### Multiple out parameter[¶](#multiple-out-parameter)
 
 ##### Oracle[¶](#id379)
@@ -7394,8 +6946,6 @@ BEGIN
     INSERT INTO TABLE01 VALUES(var1, var2);
 END;
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id380)
 
@@ -7436,8 +6986,6 @@ $$
 $$;
 ```
 
-Copy
-
 In order to check that the functionality is being emulated correctly the following query is going to execute the procedure and a `SELECT` from the table mentioned before.
 
 ##### Oracle[¶](#id381)
@@ -7448,8 +6996,6 @@ CALL proc_with_multiple_output_parameters();
 
 SELECT * FROM table01;
 ```
-
-Copy
 
 ##### Result[¶](#id382)
 
@@ -7467,8 +7013,6 @@ CALL proc_with_multiple_output_parameters();
 
 SELECT * FROM table01;
 ```
-
-Copy
 
 ##### Result[¶](#id384)
 
@@ -7498,8 +7042,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Snowflake Scripting[¶](#id386)
 
 ```
@@ -7522,8 +7064,6 @@ $$
     END;
 $$;
 ```
-
-Copy
 
 #### Cursor OUT parameters[¶](#cursor-out-parameters)
 
@@ -7564,8 +7104,6 @@ BEGIN
 END;
 /
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id388)
 
@@ -7633,8 +7171,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### Record OUT parameters[¶](#record-out-parameters)
 
 Records are not natively supported in Snowflake; however, a workaround was used to emulate them as output parameters. By defining an OBJECT variable instead of the record, we could emulate the record’s field structure by assigning the out parameter result to each object property. Additionally, for each record field assigned as an out parameter, a new variable with the field type will be generated.
@@ -7660,8 +7196,6 @@ BEGIN
   procedure_with_out_params(var1.field1, var1.field2.field4);
 END;
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id390)
 
@@ -7703,8 +7237,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### Package Variables as OUT parameters[¶](#package-variables-as-out-parameters)
 
 Packages are not supported in Snowflake, so their local members, like variables or constants, should also be preserved using a workaround. In this scenario, the package variable would be emulated using a session variable that would be updated after setting a local variable with the output parameter result.
@@ -7728,8 +7260,6 @@ BEGIN
    PROC_WITH_OUT_PARAM(param1 => scha1.pkg1.PKG_VAR1);
 END;
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id392)
 
@@ -7769,8 +7299,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### Known Issues[¶](#id393)
 
 #### 1. Procedures with output parameters inside packages may not work correctly[¶](#procedures-with-output-parameters-inside-packages-may-not-work-correctly)
@@ -7793,7 +7321,7 @@ As seen in the transformation, when retrieving the value from the called procedu
 
 In Oracle’s PL/SQL, `NESTED` `PROCEDURES` definition refers to a procedure that is declared and defined within the declarative section of another PL/SQL block. This parent block can be an another procedure, a function, or a package body. For more information please refer to [Oracle procedure declarations and definitions](https://docs.oracle.com/en/database/oracle/oracle-database/21/lnpls/procedure-declaration-and-definition.html#GUID-9A48D7CE-3720-46A4-B5CA-C2250CA86AF2__CJACCJID).
 
-Note
+**Note:**
 
 The transformations described below are specific to procedures embedded within other procedures or packages.
 
@@ -7830,8 +7358,6 @@ BEGIN
 END calculate_basic_salary;
 ```
 
-Copy
-
 ##### Snowflake Scripting[¶](#id398)
 
 ```
@@ -7865,8 +7391,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### OUT Parameter Mode for Nested Procedures[¶](#out-parameter-mode-for-nested-procedures)
 
 SnowScript’s nested procedures do not support output parameters. To replicate this functionality in Snowflake, a RETURN type must be created based on the output parameters.
@@ -7894,8 +7418,6 @@ BEGIN
     calculate_tax(p_base_salary + p_bonus_amount, p_net_salary);
 END calculate_net_salary;
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id400)
 
@@ -7927,8 +7449,6 @@ $$
         END;
 $$;
 ```
-
-Copy
 
 #### Multiple OUT Parameters in Nested Procedures[¶](#multiple-out-parameters-in-nested-procedures)
 
@@ -7974,8 +7494,6 @@ BEGIN
 END calculate_comprehensive_salary;
 ```
 
-Copy
-
 ##### Snowflake Scripting[¶](#id402)
 
 ```
@@ -8017,8 +7535,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### Multi-level Nested Procedures[¶](#multi-level-nested-procedures)
 
 Snowflake only permits one level of nesting for nested procedures. Therefore, a nested procedure within another nested procedure is not supported. If this occurs, the transformation will include the error `!!!RESOLVE EWI!!! /*** SSC-EWI-0111 - ONLY ONE LEVEL OF NESTING IS ALLOWED FOR NESTED PROCEDURES IN SNOWFLAKE. ***/!!!`
@@ -8049,8 +7565,6 @@ BEGIN
     calculate_senior_level(p_result);
 END calculate_executive_salary;
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id404)
 
@@ -8098,8 +7612,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### Default Values in Nested Procedures[¶](#default-values-in-nested-procedures)
 
 Nested procedure arguments do not support default clauses. Therefore, if a nested procedure call omits an optional parameter, the default value for that argument must be submitted within the procedure call. SnowConvert AI automatically identifies these scenarios and fills the procedure calls appropriately.
@@ -8131,8 +7643,6 @@ BEGIN
     p_final_compensation := v_total;
 END calculate_total_compensation;
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id406)
 
@@ -8174,8 +7684,6 @@ $$
         END;
 $$;
 ```
-
-Copy
 
 #### Nested Procedure Overloading[¶](#nested-procedure-overloading)
 
@@ -8221,8 +7729,6 @@ BEGIN
     final_summary := result1 || ' | ' || result2 || ' | ' || result3;
 END demonstrate_salary_calculations;
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id408)
 
@@ -8287,8 +7793,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### Nested procedure without a parameter list[¶](#nested-procedure-without-a-parameter-list)
 
 In Snowflake, a nested procedure definition requires empty parentheses `()` to be syntactically valid when it has no parameters; contrary to Oracle, where they are not needed. SnowConvert AI will add these automatically during translation.
@@ -8308,8 +7812,6 @@ BEGIN
     cleanup_salary_data();
 END reset_salary_system;
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id410)
 
@@ -8337,8 +7839,6 @@ $$
         END;
 $$;
 ```
-
-Copy
 
 #### Nested procedure with REFCURSOR output parameter[¶](#nested-procedure-with-refcursor-output-parameter)
 
@@ -8374,8 +7874,6 @@ BEGIN
     CLOSE v_employee_cursor;
 END process_department_salaries;
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id412)
 
@@ -8438,8 +7936,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### Nested procedure with NOCOPY parameter option[¶](#nested-procedure-with-nocopy-parameter-option)
 
 In Oracle PL/SQL, the NOCOPY keyword is an optimization hint for `OUT` and `IN OUT` procedure parameters. By default, Oracle passes these parameters by value, creating an expensive copy of the data during the call and copying it back upon completion. This can cause significant performance overhead for large data structures.
@@ -8470,8 +7966,6 @@ BEGIN
     compute_bonus(p_bonus_result);
 END calculate_bonus_with_nocopy;
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id414)
 
@@ -8509,8 +8003,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### Known Issues[¶](#id415)
 
 #### 1. Multi-level Nested Procedures[¶](#id416)
@@ -8536,7 +8028,7 @@ Transformation for nested procedures within anonymous blocks is currently pendin
 
 Translation reference for PROCEDURE CALL aka SUBPROGRAM INVOCATION
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -8559,8 +8051,6 @@ Procedure calls can be migrated to Snowflake as long as there are no optional pa
   }
 ```
 
-Copy
-
 Snowflake Scripting has support for this statement, albeit with some functional differences.
 
 ##### Snow Scripting Subprogram Invocation Syntax[¶](#snow-scripting-subprogram-invocation-syntax)
@@ -8574,11 +8064,9 @@ Snowflake Scripting has support for this statement, albeit with some functional 
   }
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id419)
 
-Note
+**Note:**
 
 **Consider the next table and procedure for the examples below.**
 
@@ -8596,8 +8084,6 @@ BEGIN
     INSERT INTO procedure_call_test_table VALUES (param1);
 END;
 ```
-
-Copy
 
 ##### Snowflake[¶](#id421)
 
@@ -8623,8 +8109,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### Simple call[¶](#simple-call)
 
 ##### Oracle[¶](#id422)
@@ -8640,8 +8124,6 @@ CALL simple_calling_procedure();
 
 SELECT * FROM procedure_call_test_table;
 ```
-
-Copy
 
 ##### Result[¶](#id423)
 
@@ -8673,8 +8155,6 @@ CALL simple_calling_procedure();
 SELECT * FROM
     procedure_call_test_table;
 ```
-
-Copy
 
 ##### Result[¶](#id425)
 
@@ -8721,8 +8201,6 @@ CALL calling_procedure();
 
 SELECT * FROM procedure_call_test_table;
 ```
-
-Copy
 
 ##### Result[¶](#id427)
 
@@ -8798,8 +8276,6 @@ SELECT * FROM
     procedure_call_test_table;
 ```
 
-Copy
-
 ##### Result[¶](#id429)
 
 <!-- prettier-ignore -->
@@ -8851,15 +8327,11 @@ The statement is fully supported by Snowflake Scripting, but please take into ac
 RAISE <exception_name> ;
 ```
 
-Copy
-
 Snowflake Scripting has support for this statement.
 
 ```
 RAISE <exception_name> ;
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id433)
 
@@ -8891,8 +8363,6 @@ CALL simple_exception_throw_handle(1);
 --Throws my_exception, catches then raises second my_other_exception
 CALL simple_exception_throw_handle(2);
 ```
-
-Copy
 
 ###### Result[¶](#id435)
 
@@ -8928,8 +8398,6 @@ ORA-06512: at line 1
            handler for this condition. Or you may need to contact your
            application administrator or DBA.
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id436)
 
@@ -8967,8 +8435,6 @@ CALL simple_exception_throw_handle(1);
 CALL simple_exception_throw_handle(2);
 ```
 
-Copy
-
 ###### Result[¶](#id437)
 
 ```
@@ -8978,8 +8444,6 @@ Uncaught exception of type 'MY_EXCEPTION' on line 7 at position 9
 -----------------------------------------------------------------------
 Uncaught exception of type 'MY_OTHER_EXCEPTION' on line 14 at position 9
 ```
-
-Copy
 
 ### Known Issues[¶](#id438)
 
@@ -9004,9 +8468,7 @@ raise_application_error(
       error_number, message[, {TRUE | FALSE}]);
 ```
 
-Copy
-
-Note
+**Note:**
 
 The `error_number` is a negative integer in the range -20000 .. -20999 and `message` is a character string up to 2048 bytes long.
 
@@ -9020,9 +8482,7 @@ The equivalent statement in Snowflake is the RAISE clause, nevertheless, it is r
 <exception_name> EXCEPTION [ ( <exception_number> , '<exception_message>' ) ] ;
 ```
 
-Copy
-
-Note
+**Note:**
 
 For more information review the following [Snowflake documentation](https://docs.snowflake.com/en/sql-reference/snowflake-scripting/exception#label-snowscript-introduction-exceptions-handling-an-exception-examples).
 
@@ -9052,15 +8512,11 @@ BEGIN
 END TEST;
 ```
 
-Copy
-
 ##### Output[¶](#id445)
 
 ```
 ORA-20001: First exception message
 ```
-
-Copy
 
 ##### Snowflake[¶](#id446)
 
@@ -9088,15 +8544,11 @@ $$
 $$;
 ```
 
-Copy
-
 ##### Output[¶](#id447)
 
 ```
 FIRST EXCEPTION MESSAGE
 ```
-
-Copy
 
 #### 2. Exception code number outside limits[¶](#exception-code-number-outside-limits)
 
@@ -9117,15 +8569,11 @@ BEGIN
 END TEST;
 ```
 
-Copy
-
 ##### Output[¶](#id449)
 
 ```
 ORA-20000: My exception message
 ```
-
-Copy
 
 ##### Snowflake[¶](#id450)
 
@@ -9151,15 +8599,11 @@ $$
 $$;
 ```
 
-Copy
-
 ##### Output[¶](#id451)
 
 ```
  Invalid error code '-20,000'. Must be between -20,999 and -20,000
 ```
-
-Copy
 
 #### 3. Exception stack functionality[¶](#exception-stack-functionality)
 
@@ -9180,15 +8624,11 @@ BEGIN
 END TEST;
 ```
 
-Copy
-
 ##### Output[¶](#id453)
 
 ```
 ORA-20001: My exception message
 ```
-
-Copy
 
 ##### Snowflake[¶](#id454)
 
@@ -9214,15 +8654,11 @@ $$
 $$;
 ```
 
-Copy
-
 ##### Output[¶](#id455)
 
 ```
 MY EXCEPTION MESSAGE
 ```
-
-Copy
 
 #### 4. Multiple exceptions with the same exception code[¶](#multiple-exceptions-with-the-same-exception-code)
 
@@ -9247,15 +8683,11 @@ BEGIN
 END TEST;
 ```
 
-Copy
-
 ##### Output[¶](#id457)
 
 ```
 ORA-20000: The first exception
 ```
-
-Copy
 
 ##### Snowflake[¶](#id458)
 
@@ -9285,15 +8717,11 @@ $$
 $$;
 ```
 
-Copy
-
 ##### Output[¶](#id459)
 
 ```
 THE FIRST EXCEPTION
 ```
-
-Copy
 
 ### Known Issues[¶](#id460)
 
@@ -9311,7 +8739,7 @@ Copy
 
 Translation reference for User-defined function (UDF) Call
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -9325,7 +8753,7 @@ For additional details regarding the invocation of stored procedures, refer to t
 
 ### Sample Source Patterns[¶](#id463)
 
-Note
+**Note:**
 
 **Consider the next function and tables for the examples below.**
 
@@ -9352,8 +8780,6 @@ CREATE TABLE result_table (
     result_col VARCHAR(100)
 );
 ```
-
-Copy
 
 ##### Snowflake[¶](#id465)
 
@@ -9394,8 +8820,6 @@ COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,
 ;
 ```
 
-Copy
-
 #### UDF Call[¶](#id466)
 
 ##### Oracle[¶](#id467)
@@ -9414,16 +8838,12 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Result[¶](#id468)
 
 ```
 ID	RESULT_COL
 1	8
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id469)
 
@@ -9454,16 +8874,12 @@ DECLARE
     END;
 ```
 
-Copy
-
 ##### Result[¶](#id470)
 
 ```
 ID	RESULT_COL
 1	8
 ```
-
-Copy
 
 #### UDF Call within a query[¶](#udf-call-within-a-query)
 
@@ -9492,8 +8908,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Result[¶](#id472)
 
 ```
@@ -9501,8 +8915,6 @@ ID	RESULT_COL
 1	6
 2   7
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#id473)
 
@@ -9544,8 +8956,6 @@ DECLARE
     END;
 ```
 
-Copy
-
 ##### Result[¶](#id474)
 
 ```
@@ -9553,8 +8963,6 @@ ID	RESULT_COL
 1	6
 2   7
 ```
-
-Copy
 
 ### Known Issues[¶](#id475)
 
@@ -9572,8 +8980,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 The supported scenarios include function calls with other types of arguments such as literal values, external variables, or parameters. For instance:
 
 ```
@@ -9585,8 +8991,6 @@ BEGIN
     FROM example_table ext;
 END;
 ```
-
-Copy
 
 In the supported scenarios, the function can effectively be migrated.
 
@@ -9612,8 +9016,6 @@ WHILE boolean_expression
   LOOP statement... END LOOP [ label ] ;
 ```
 
-Copy
-
 ##### Snowflake Scripting WHILE Syntax[¶](#snowflake-scripting-while-syntax)
 
 ```
@@ -9622,8 +9024,6 @@ WHILE ( <condition> ) { DO | LOOP }
   [ <statement>; ... ]
 END { WHILE | LOOP } [ <label> ] ;
 ```
-
-Copy
 
 Oracle `WHILE` behavior can also be modified by using the statements:
 
@@ -9636,7 +9036,7 @@ Oracle `WHILE` behavior can also be modified by using the statements:
 
 #### While simple case[¶](#while-simple-case)
 
-Note
+**Note:**
 
 This case is functionally equivalent.
 
@@ -9662,8 +9062,6 @@ END;
 CALL while_procedure();
 SELECT * FROM while_testing_table;
 ```
-
-Copy
 
 ##### Result[¶](#id480)
 
@@ -9716,8 +9114,6 @@ CALL while_procedure();
 SELECT * FROM
 while_testing_table;
 ```
-
-Copy
 
 ##### Result[¶](#id482)
 

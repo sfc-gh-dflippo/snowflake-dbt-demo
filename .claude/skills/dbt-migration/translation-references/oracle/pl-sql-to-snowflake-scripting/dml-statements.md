@@ -18,7 +18,7 @@ will be translated as if they were not inside a procedure.
 
 Translation reference to convert Oracle INSERT Statement Extension to Snowflake Scripting
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -34,7 +34,7 @@ names preceded by a colon ‘:’ in order to bind the variables’ value.
 
 ### Recommendations[¶](#recommendations)
 
-Note
+**Note:**
 
 This code was executed to a better understanding of the examples:
 
@@ -44,16 +44,12 @@ This code was executed to a better understanding of the examples:
 CREATE TABLE numbers_table(num integer, word varchar2(20));
 ```
 
-Copy
-
 ##### Snowflake[¶](#snowflake)
 
 ```
 CREATE OR REPLACE TABLE PUBLIC.numbers_table (num integer,
 word VARCHAR(20));
 ```
-
-Copy
 
 #### INSERT Statement Extension simple case[¶](#insert-statement-extension-simple-case)
 
@@ -72,8 +68,6 @@ END;
 CALL proc_insert_statement();
 SELECT * FROM numbers_table ;
 ```
-
-Copy
 
 ##### Result[¶](#result)
 
@@ -110,8 +104,6 @@ SELECT * FROM
 	numbers_table;
 ```
 
-Copy
-
 ##### Result[¶](#id3)
 
 <!-- prettier-ignore -->
@@ -137,7 +129,7 @@ No related EWIs.
 
 Translation reference to convert Oracle MERGE statement to Snowflake Scripting
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -185,8 +177,6 @@ error_logging_clause := LOG ERRORS
 where_clause := WHERE condition
 ```
 
-Copy
-
 ##### Snowflake Scripting MERGE Syntax[¶](#snowflake-scripting-merge-syntax)
 
 ```
@@ -200,13 +190,11 @@ notMatchedClause ::= WHEN NOT MATCHED [ AND <case_predicate> ]
 THEN INSERT [ ( <col_name> [ , ... ] ) ] VALUES ( <expr> [ , ... ] )
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#sample-source-patterns)
 
 #### Sample auxiliary data[¶](#sample-auxiliary-data)
 
-Note
+**Note:**
 
 This code was executed for a better understanding of the examples:
 
@@ -260,8 +248,6 @@ INSERT INTO
             e.employee_id
     );
 ```
-
-Copy
 
 ##### Snowflake[¶](#id6)
 
@@ -319,8 +305,6 @@ INSERT INTO bonuses(employee_id) (
 );
 ```
 
-Copy
-
 #### MERGE Statement simple case[¶](#merge-statement-simple-case)
 
 ##### Oracle[¶](#id7)
@@ -351,8 +335,6 @@ VALUES
 
 SELECT * FROM people_target;
 ```
-
-Copy
 
 ##### Result[¶](#id8)
 
@@ -393,8 +375,6 @@ VALUES
 SELECT * FROM
     people_target;
 ```
-
-Copy
 
 ##### Result[¶](#id10)
 
@@ -448,8 +428,6 @@ WHERE
 SELECT * FROM bonuses ORDER BY employee_id;
 ```
 
-Copy
-
 ##### Result[¶](#id12)
 
 <!-- prettier-ignore -->
@@ -500,8 +478,6 @@ SELECT * FROM
 bonuses
 ORDER BY employee_id;
 ```
-
-Copy
 
 ##### Result[¶](#id14)
 
@@ -560,8 +536,6 @@ WHERE
 SELECT * FROM people_target;
 ```
 
-Copy
-
 ##### Result[¶](#id16)
 
 <!-- prettier-ignore -->
@@ -605,8 +579,6 @@ SELECT * FROM
         people_target;
 ```
 
-Copy
-
 ##### Result[¶](#id18)
 
 <!-- prettier-ignore -->
@@ -638,7 +610,7 @@ statement and Snowflake’s do not work as expected.
 
 Translation reference to convert Oracle SELECT INTO statement to Snowflake Scripting
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -656,15 +628,11 @@ SELECT [ { DISTINCT | UNIQUE } | ALL ] select_list
     { into_clause | bulk_collect_into_clause } FROM rest-of-statement ;
 ```
 
-Copy
-
 ##### Oracle Into Clause Syntax[¶](#oracle-into-clause-syntax)
 
 ```
 INTO { variable [, variable ]... | record )
 ```
-
-Copy
 
 ##### Oracle Bulk Collect Syntax[¶](#oracle-bulk-collect-syntax)
 
@@ -672,8 +640,6 @@ Copy
 BULK COLLECT INTO { collection | :host_array }
   [, { collection | :host_array } ]...
 ```
-
-Copy
 
 ##### Snowflake Scripting SELECT INTO Syntax[¶](#snowflake-scripting-select-into-syntax)
 
@@ -691,13 +657,11 @@ SELECT [ { ALL | DISTINCT } ]
     [...]
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id22)
 
 #### Sample auxiliary data[¶](#id23)
 
-Note
+**Note:**
 
 This code was executed to a better understanding of the examples:
 
@@ -708,8 +672,6 @@ CREATE TABLE numbers_table(num integer, word varchar2(20));
 INSERT INTO numbers_table VALUES (1, 'one');
 CREATE TABLE aux_numbers_table(aux_num integer, aux_word varchar2(20));
 ```
-
-Copy
 
 ##### Snowflake[¶](#id25)
 
@@ -728,8 +690,6 @@ COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":
 ;
 ```
 
-Copy
-
 #### SELECT INTO Statement simple case[¶](#select-into-statement-simple-case)
 
 ##### Oracle[¶](#id26)
@@ -747,8 +707,6 @@ END;
 CALL proc_select_into_variables();
 SELECT * FROM aux_numbers_table;
 ```
-
-Copy
 
 ##### Result[¶](#id27)
 
@@ -787,8 +745,6 @@ SELECT * FROM
 	aux_numbers_table;
 ```
 
-Copy
-
 ##### Result[¶](#id29)
 
 ```
@@ -797,8 +753,6 @@ Copy
 |---|---|
 |1|one|
 ```
-
-Copy
 
 ### Known Issues[¶](#id30)
 
@@ -841,11 +795,9 @@ LET <resultset_name> RESULTSET [ { DEFAULT | := } ( <query> ) ] ;
 LET <resultset_name> RESULTSET [ { DEFAULT | := } ( <query> ) ] ;
 ```
 
-Copy
-
 ### Recommendations[¶](#id33)
 
-Note
+**Note:**
 
 For the following examples, this code was executed to better understanding of the examples:
 
@@ -856,8 +808,6 @@ CREATE TABLE numbers_table(num integer, word varchar2(20));
 INSERT INTO numbers_table VALUES (1, 'one');
 CREATE TABLE aux_numbers_table(aux_num integer, aux_word varchar2(20));
 ```
-
-Copy
 
 ##### Snowflake[¶](#id35)
 
@@ -875,8 +825,6 @@ aux_word VARCHAR(20))
 COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":0},{"attributes":{"component":"oracle"}}'
 ;
 ```
-
-Copy
 
 #### Using RESULTSET and Cursors instead of Records[¶](#using-resultset-and-cursors-instead-of-records)
 
@@ -898,8 +846,6 @@ END;
 CALL proc_insert_select_resultset();
 SELECT * FROM aux_numbers_table;
 ```
-
-Copy
 
 ##### Result[¶](#id37)
 
@@ -944,8 +890,6 @@ SELECT * FROM
 	aux_numbers_table;
 ```
 
-Copy
-
 using cursor
 
 ```
@@ -969,8 +913,6 @@ BEGIN
 end;
 $$;
 ```
-
-Copy
 
 ##### Result[¶](#id39)
 

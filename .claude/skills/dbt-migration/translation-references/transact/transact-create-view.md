@@ -18,8 +18,6 @@ AS
 SELECT AValue from ATable;
 ```
 
-Copy
-
 ##### Snowflake[¶](#snowflake)
 
 ```
@@ -31,8 +29,6 @@ AValue
 from
 ATable;
 ```
-
-Copy
 
 ## CREATE OR ALTER VIEW[¶](#create-or-alter-view)
 
@@ -47,8 +43,6 @@ AS
 SELECT AValue from ATable;
 ```
 
-Copy
-
 #### Snowflake[¶](#id2)
 
 ```
@@ -60,8 +54,6 @@ AValue
 from
 ATable;
 ```
-
-Copy
 
 ## CREATE VIEW WITH[¶](#create-view-with)
 
@@ -85,8 +77,6 @@ AS
 SELECT AValue from ATable;
 ```
 
-Copy
-
 ### Snowflake[¶](#id4)
 
 ```
@@ -98,8 +88,6 @@ AValue
 from
 ATable;
 ```
-
-Copy
 
 ## CREATE VIEW AS SELECT WITH CHECK OPTION[¶](#create-view-as-select-with-check-option)
 
@@ -120,8 +108,6 @@ SELECT AValue from ATable
 WITH CHECK OPTION;
 ```
 
-Copy
-
 ### Snowflake[¶](#id6)
 
 ```
@@ -133,8 +119,6 @@ AValue
 from
 ATable;
 ```
-
-Copy
 
 ## CREATE VIEW AS COMMON TABLE EXPRESSION[¶](#create-view-as-common-table-expression)
 
@@ -150,8 +134,6 @@ UNION ALL
 SELECT BusinessEntityID FROM [HumanResources].[EmployeeDepartmentHistory] )
 SELECT * FROM MyCTE;
 ```
-
-Copy
 
 ### Snowflake[¶](#id8)
 
@@ -175,8 +157,6 @@ SELECT
 FROM
 MyCTE;
 ```
-
-Copy
 
 ## UNSUPPORTED SCENARIOS[¶](#unsupported-scenarios)
 
@@ -202,8 +182,6 @@ In the case where an invalid CTE is added to the view, this will be completely c
 --INSERT INTO PUBLIC.Dummy
 ```
 
-Copy
-
 ### FINAL SAMPLE[¶](#final-sample)
 
 Let’s see a final sample, let’s put together all the cases that we have seen so far and see how the
@@ -219,8 +197,6 @@ Select AValue from ATable
 WITH CHECK OPTION;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id10)
 
 ```
@@ -232,8 +208,6 @@ AValue
 from
 ATable;
 ```
-
-Copy
 
 As you can see, we changed the **OR ALTER** with **OR REPLACE** and we removed the clause **WITH
 ENCRYPTION** that comes after the view name and the **WITH CHECK OPTION** that comes after the

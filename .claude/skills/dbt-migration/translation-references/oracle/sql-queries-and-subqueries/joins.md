@@ -9,7 +9,7 @@ title: SnowConvert AI - Oracle - Joins | Snowflake Documentation
 
 ## Antijoin[¶](#antijoin)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -26,16 +26,16 @@ syntax.
 
 ### Sample Source Patterns[¶](#sample-source-patterns)
 
-Note
+**Note:**
 
 _Order by clause_ added because the result order may vary between Oracle and Snowflake.
 
-Note
+**Note:**
 
 Since the result set is too large, _Row Limiting Clause_ was added. You can remove it to retrieve
 the entire result set.
 
-Note
+**Note:**
 
 Check this [section](../sample-data) to set up the sample database.
 
@@ -52,8 +52,6 @@ WHERE e.department_id NOT IN
 ORDER BY e.last_name
 FETCH FIRST 10 ROWS ONLY;
 ```
-
-Copy
 
 ##### Result[¶](#result)
 
@@ -84,8 +82,6 @@ WHERE e.department_id NOT IN
 ORDER BY e.last_name
     FETCH FIRST 10 ROWS ONLY;
 ```
-
-Copy
 
 ##### Result[¶](#id1)
 
@@ -119,8 +115,6 @@ ORDER BY d.department_id
 FETCH FIRST 10 ROWS ONLY;
 ```
 
-Copy
-
 ##### Result[¶](#id3)
 
 <!-- prettier-ignore -->
@@ -153,8 +147,6 @@ ORDER BY d.department_id
          FETCH FIRST 10 ROWS ONLY;
 ```
 
-Copy
-
 ##### Result[¶](#id5)
 
 <!-- prettier-ignore -->
@@ -185,7 +177,7 @@ different if no _Order By_ clause is defined in the query.
 
 ## Band Join[¶](#band-join)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -201,16 +193,16 @@ similar to the improved version of Oracle.
 
 ### Sample Source Patterns[¶](#id7)
 
-Note
+**Note:**
 
 _Order by_ clause added because the result order may vary between Oracle and Snowflake.
 
-Note
+**Note:**
 
 Since the result set is too large, _Row Limiting Clause_ was added. You can remove it to retrieve
 the entire result set.
 
-Note
+**Note:**
 
 Check this [section](../sample-data) to set up the sample database.
 
@@ -235,8 +227,6 @@ AND     e2.salary + 100
 ORDER BY "SALARY COMPARISON"
 FETCH FIRST 10 ROWS ONLY
 ```
-
-Copy
 
 ##### Result[¶](#id9)
 
@@ -272,8 +262,6 @@ AND
 ORDER BY "SALARY COMPARISON"
 FETCH FIRST 10 ROWS ONLY;
 ```
-
-Copy
 
 ##### Result[¶](#id11)
 
@@ -313,7 +301,7 @@ And in the following image, we will see the execution plan in Snowflake:
 
 ![](../../../../../_images/image%2867%29%281%29.png)
 
-Note
+**Note:**
 
 The execution plan in Snowflake is very similar to Oracle’s optimized version. The final duration
 and performance of the query will be affected by many other factors and are completely dependent on
@@ -334,7 +322,7 @@ different if no _Order By_ clause is defined in the query.
 
 ## Cartesian Products[¶](#cartesian-products)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -350,16 +338,16 @@ syntax.
 
 ### Sample Source Patterns[¶](#id15)
 
-Note
+**Note:**
 
 _Order by clause_ was added because the result order may vary between Oracle and Snowflake.
 
-Note
+**Note:**
 
 Since the result set is too large, _Row Limiting Clause_ was added. You can remove it to retrieve
 the entire result set.
 
-Note
+**Note:**
 
 Check this [section](../sample-data) to set up the sample database.
 
@@ -376,8 +364,6 @@ FETCH FIRST 5 ROWS ONLY;
 -- Resulting total rows
 SELECT COUNT(*) FROM hr.employees, hr.departments;
 ```
-
-Copy
 
 ##### Result 1[¶](#result-1)
 
@@ -413,8 +399,6 @@ hr.employees,
 hr.departments;
 ```
 
-Copy
-
 ##### Result 1[¶](#id18)
 
 <!-- prettier-ignore -->
@@ -446,8 +430,6 @@ FETCH FIRST 5 ROWS ONLY;
 -- Resulting total rows
 SELECT COUNT(*) FROM hr.employees CROSS join hr.departments;
 ```
-
-Copy
 
 ##### Result 1[¶](#id21)
 
@@ -483,8 +465,6 @@ hr.employees
 CROSS join hr.departments;
 ```
 
-Copy
-
 ### Known issues[¶](#id24)
 
 #### 1. Results ordering mismatch between languages[¶](#id25)
@@ -498,7 +478,7 @@ No related EWIs.
 
 ## Equijoin[¶](#equijoin)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -513,16 +493,16 @@ syntax.
 
 ### Sample Source Patterns[¶](#id28)
 
-Note
+**Note:**
 
 _Order by clause_ added because the result order may vary between Oracle and Snowflake.
 
-Note
+**Note:**
 
 Since the result set is too large, the _Row Limiting Clause_ was added. You can remove it to
 retrieve the entire result set.
 
-Note
+**Note:**
 
 Check this [section](../sample-data) to set up the sample database.
 
@@ -537,8 +517,6 @@ WHERE hr.employees.department_id = hr.departments.department_id
 ORDER BY last_name
 FETCH FIRST 5 ROWS ONLY;
 ```
-
-Copy
 
 ##### Result[¶](#id30)
 
@@ -562,8 +540,6 @@ WHERE hr.employees.department_id = hr.departments.department_id
 ORDER BY last_name
 FETCH FIRST 5 ROWS ONLY;
 ```
-
-Copy
 
 ##### Result[¶](#id32)
 
@@ -589,7 +565,7 @@ No related EWIs.
 
 ## Inner Join[¶](#inner-join)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -612,20 +588,18 @@ Some parts in the output code are omitted for clarity reasons.
 }
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id37)
 
-Note
+**Note:**
 
 _Order by_ clause added because the result order may vary between Oracle and Snowflake.
 
-Note
+**Note:**
 
 Since the result set is too large, _Row Limiting Clause_ was added. You can remove this clause to
 retrieve the entire result set.
 
-Note
+**Note:**
 
 Check this [section](../sample-data) to set up the sample database.
 
@@ -655,8 +629,6 @@ JOIN hr.departments ON
 ORDER BY employee_id
 FETCH NEXT 10 ROWS ONLY;
 ```
-
-Copy
 
 ##### Result[¶](#id39)
 
@@ -700,8 +672,6 @@ ORDER BY employee_id
 FETCH NEXT 10 ROWS ONLY;
 ```
 
-Copy
-
 ##### Result[¶](#id41)
 
 <!-- prettier-ignore -->
@@ -733,8 +703,6 @@ ORDER BY employee_id
 FETCH NEXT 10 ROWS ONLY;
 ```
 
-Copy
-
 ##### Result[¶](#id43)
 
 <!-- prettier-ignore -->
@@ -764,8 +732,6 @@ INNER JOIN
 ORDER BY employee_id
 FETCH NEXT 10 ROWS ONLY;
 ```
-
-Copy
 
 ##### Result[¶](#id45)
 
@@ -797,8 +763,6 @@ ORDER BY department_name, employee_id
 FETCH NEXT 10 ROWS ONLY;
 ```
 
-Copy
-
 ##### Result[¶](#id47)
 
 <!-- prettier-ignore -->
@@ -826,8 +790,6 @@ CROSS JOIN hr.departments
 ORDER BY department_name, employee_id
 FETCH NEXT 10 ROWS ONLY;
 ```
-
-Copy
 
 ##### Result[¶](#id49)
 
@@ -859,8 +821,6 @@ ORDER BY employee_id
 FETCH NEXT 10 ROWS ONLY;
 ```
 
-Copy
-
 ##### Result[¶](#id51)
 
 <!-- prettier-ignore -->
@@ -889,8 +849,6 @@ NATURAL JOIN
 ORDER BY employee_id
 FETCH NEXT 10 ROWS ONLY;
 ```
-
-Copy
 
 ##### Result[¶](#id53)
 
@@ -922,8 +880,6 @@ ORDER BY employee_id
 FETCH NEXT 10 ROWS ONLY;
 ```
 
-Copy
-
 ##### Result[¶](#id55)
 
 <!-- prettier-ignore -->
@@ -952,8 +908,6 @@ FROM
 ORDER BY employee_id
 FETCH NEXT 10 ROWS ONLY;
 ```
-
-Copy
 
 ##### Result[¶](#id57)
 
@@ -985,8 +939,6 @@ ORDER BY employee_id
 FETCH NEXT 10 ROWS ONLY;
 ```
 
-Copy
-
 ##### Result[¶](#id59)
 
 <!-- prettier-ignore -->
@@ -1014,8 +966,6 @@ FROM
 ORDER BY employee_id
 FETCH NEXT 10 ROWS ONLY;
 ```
-
-Copy
 
 ##### Result[¶](#id61)
 
@@ -1046,7 +996,7 @@ No related EWIs.
 
 ## Outer Join[¶](#outer-join)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -1068,14 +1018,10 @@ outer_join_type JOIN table_reference
  ]
 ```
 
-Copy
-
 ```
 outer_join_type
 { FULL | LEFT | RIGHT } [ OUTER ]
 ```
-
-Copy
 
 Oracle also supports the (+) operator that can be used to do outer joins. This operator is added to
 a column expression in the WHERE clause.
@@ -1083,8 +1029,6 @@ a column expression in the WHERE clause.
 ```
 column_expression (+)
 ```
-
-Copy
 
 #### Snowflake ANSI syntax[¶](#snowflake-ansi-syntax)
 
@@ -1107,8 +1051,6 @@ FROM <object_ref1> [
 [ ... ]
 ```
 
-Copy
-
 ```
 SELECT *
 FROM <object_ref1> [
@@ -1122,8 +1064,6 @@ FROM <object_ref1> [
 [ ... ]
 ```
 
-Copy
-
 ```
 SELECT ...
 FROM <object_ref1> [
@@ -1136,24 +1076,22 @@ FROM <object_ref1> [
 [ ... ]
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id66)
 
-Note
+**Note:**
 
 _Order by_ clause added because the result order may vary between Oracle and Snowflake.
 
-Note
+**Note:**
 
 Since the result set is too large, _Row Limiting Clause_ was added. You can remove it to retrieve
 the entire result set.
 
-Note
+**Note:**
 
 Check this [section](../sample-data) to set up the sample database.
 
-Note
+**Note:**
 
 For the following examples, these inserts and alter statements were executed to distinguish better
 the result for each kind of JOIN:
@@ -1163,8 +1101,6 @@ INSERT INTO hr.regions VALUES (5, 'Oceania');
 ALTER TABLE hr.countries DROP CONSTRAINT countr_reg_fk;
 INSERT INTO hr.countries VALUES ('--', 'Unknown Country', 0);
 ```
-
-Copy
 
 #### 1. ANSI syntax[¶](#ansi-syntax)
 
@@ -1182,8 +1118,6 @@ LEFT OUTER JOIN hr.regions r ON c.region_id = r.region_id
 ORDER BY country_id
 FETCH FIRST 10 ROWS ONLY;
 ```
-
-Copy
 
 ##### Result[¶](#id68)
 
@@ -1211,8 +1145,6 @@ hr.regions r ON c.region_id = r.region_id
 ORDER BY country_id
 FETCH FIRST 10 ROWS ONLY;
 ```
-
-Copy
 
 ##### Result[¶](#id70)
 
@@ -1242,8 +1174,6 @@ ORDER BY country_id DESC
 FETCH FIRST 10 ROWS ONLY;
 ```
 
-Copy
-
 ##### Result[¶](#id72)
 
 <!-- prettier-ignore -->
@@ -1270,8 +1200,6 @@ hr.regions r ON c.region_id = r.region_id
 ORDER BY country_id DESC
 FETCH FIRST 10 ROWS ONLY;
 ```
-
-Copy
 
 ##### Result[¶](#id74)
 
@@ -1301,8 +1229,6 @@ ORDER BY r.region_name DESC, c.country_id
 FETCH FIRST 10 ROWS ONLY;
 ```
 
-Copy
-
 ##### Result[¶](#id76)
 
 <!-- prettier-ignore -->
@@ -1329,8 +1255,6 @@ hr.regions r ON c.region_id = r.region_id
 ORDER BY r.region_name DESC, c.country_id
 FETCH FIRST 10 ROWS ONLY;
 ```
-
-Copy
 
 ##### Result[¶](#id78)
 
@@ -1369,8 +1293,6 @@ ORDER BY country_id
 FETCH FIRST 10 ROWS ONLY;
 ```
 
-Copy
-
 ##### Result[¶](#id80)
 
 <!-- prettier-ignore -->
@@ -1397,8 +1319,6 @@ hr.regions r
 ORDER BY country_id
 FETCH FIRST 10 ROWS ONLY;
 ```
-
-Copy
 
 ##### Result[¶](#id82)
 
@@ -1428,8 +1348,6 @@ ORDER BY country_id DESC
 FETCH FIRST 10 ROWS ONLY;
 ```
 
-Copy
-
 ##### Result[¶](#id84)
 
 <!-- prettier-ignore -->
@@ -1456,8 +1374,6 @@ hr.regions r
 ORDER BY country_id DESC
 FETCH FIRST 10 ROWS ONLY;
 ```
-
-Copy
 
 ##### Result[¶](#id86)
 
@@ -1492,8 +1408,6 @@ ORDER BY country_id
 FETCH FIRST 10 ROWS ONLY;
 ```
 
-Copy
-
 ##### Result[¶](#id88)
 
 <!-- prettier-ignore -->
@@ -1520,8 +1434,6 @@ hr.regions r USING (region_id)
 ORDER BY country_id
 FETCH FIRST 10 ROWS ONLY;
 ```
-
-Copy
 
 ##### Result[¶](#id90)
 
@@ -1558,8 +1470,6 @@ ORDER BY country_id
 FETCH FIRST 10 ROWS ONLY;
 ```
 
-Copy
-
 ##### Result[¶](#id92)
 
 <!-- prettier-ignore -->
@@ -1586,8 +1496,6 @@ WHERE c.region_id = r.region_id(+)
 ORDER BY country_id
 FETCH FIRST 10 ROWS ONLY;
 ```
-
-Copy
 
 ##### Result[¶](#id94)
 
@@ -1616,8 +1524,6 @@ ORDER BY country_id DESC
 FETCH FIRST 10 ROWS ONLY;
 ```
 
-Copy
-
 ##### Result[¶](#id96)
 
 <!-- prettier-ignore -->
@@ -1644,8 +1550,6 @@ WHERE c.region_id (+) = r.region_id
 ORDER BY country_id DESC
 FETCH FIRST 10 ROWS ONLY;
 ```
-
-Copy
 
 ##### Result[¶](#id98)
 
@@ -1690,8 +1594,6 @@ ORDER BY r.region_id, l.city
 FETCH FIRST 10 ROWS ONLY;
 ```
 
-Copy
-
 ##### Result[¶](#id100)
 
 <!-- prettier-ignore -->
@@ -1733,8 +1635,6 @@ ORDER BY r.region_id, l.city
 FETCH FIRST 10 ROWS ONLY;
 ```
 
-Copy
-
 ##### Result[¶](#id102)
 
 <!-- prettier-ignore -->
@@ -1767,8 +1667,6 @@ r.region_name (+) LIKE 'A%'
 ORDER BY region_id;
 ```
 
-Copy
-
 ##### Result[¶](#id104)
 
 <!-- prettier-ignore -->
@@ -1786,8 +1684,6 @@ WHERE
 r.region_name LIKE 'A%'
 ORDER BY region_id;
 ```
-
-Copy
 
 ##### Result[¶](#id106)
 
@@ -1821,8 +1717,6 @@ l.country_id = c.country_id(+)
 ORDER BY r.region_id, l.city
 FETCH FIRST 10 ROWS ONLY;
 ```
-
-Copy
 
 ##### Result[¶](#id109)
 
@@ -1858,8 +1752,6 @@ ORDER BY r.region_id, l.city
 FETCH FIRST 10 ROWS ONLY;
 ```
 
-Copy
-
 ##### Result[¶](#id111)
 
 <!-- prettier-ignore -->
@@ -1894,8 +1786,6 @@ ORDER BY r.region_id, l.city
 FETCH FIRST 10 ROWS ONLY;
 ```
 
-Copy
-
 ##### Result[¶](#id113)
 
 <!-- prettier-ignore -->
@@ -1927,8 +1817,6 @@ ORDER BY r.region_id, l.city
 FETCH FIRST 10 ROWS ONLY;
 ```
 
-Copy
-
 ### Related EWIs[¶](#id115)
 
 1. [SSC-EWI-OR0090](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/oracleEWI.html#ssc-ewi-or0090):
@@ -1936,7 +1824,7 @@ Copy
 
 ## Self Join[¶](#self-join)
 
-Note
+**Note:**
 
 Some parts in the output codes are omitted for clarity reasons.
 
@@ -1948,11 +1836,11 @@ Some parts in the output codes are omitted for clarity reasons.
 
 ### Sample Source Patterns[¶](#id117)
 
-Note
+**Note:**
 
 _Order by_ clause added because the result order may vary between Oracle and Snowflake.
 
-Note
+**Note:**
 
 Check this [section](../sample-data) to set up the sample database.
 
@@ -1968,8 +1856,6 @@ SELECT e1.last_name||' works for '||e2.last_name
       AND e1.last_name LIKE 'R%'
    ORDER BY e1.last_name;
 ```
-
-Copy
 
 ##### Result[¶](#id119)
 
@@ -1994,8 +1880,6 @@ FROM
    ORDER BY e1.last_name;
 ```
 
-Copy
-
 ##### Result[¶](#id121)
 
 <!-- prettier-ignore -->
@@ -2006,7 +1890,7 @@ Copy
 |Rogers works for Kaufling|
 |Russell works for King|
 
-Note
+**Note:**
 
 As proved previously the **self join** in Oracle is functionally equivalent to Snowflake.
 
@@ -2020,7 +1904,7 @@ No related EWIs.
 
 ## Semijoin[¶](#semijoin)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -2033,11 +1917,11 @@ Some parts in the output code are omitted for clarity reasons.
 
 ### Sample Source Patterns[¶](#id125)
 
-Note
+**Note:**
 
 _Order by_ clause added because the result order may vary between Oracle and Snowflake.
 
-Note
+**Note:**
 
 Check this [section](../sample-data) to set up the sample database.
 
@@ -2053,8 +1937,6 @@ SELECT * FROM hr.departments
        AND employees.salary > 2500)
    ORDER BY department_name;
 ```
-
-Copy
 
 ##### Result[¶](#id127)
 
@@ -2086,8 +1968,6 @@ SELECT * FROM
    ORDER BY department_name;
 ```
 
-Copy
-
 ##### Result[¶](#id129)
 
 <!-- prettier-ignore -->
@@ -2105,7 +1985,7 @@ Copy
 |80|Sales|145|2500|
 |50|Shipping|121|1500|
 
-Note
+**Note:**
 
 As proved previously the **semijoin** in Oracle is functionally equivalent to Snowflake.
 

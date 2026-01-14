@@ -19,8 +19,6 @@ CREATE VOLATILE TABLE myTable
 );
 ```
 
-Copy
-
 ### Snowflake[¶](#snowflake)
 
 ```
@@ -30,8 +28,6 @@ CREATE OR REPLACE TEMPORARY TABLE myTable
 )
 ;
 ```
-
-Copy
 
 ## Other tables[¶](#other-tables)
 
@@ -46,8 +42,6 @@ CREATE TABLE myTable
 );
 ```
 
-Copy
-
 ### Snowflake[¶](#id2)
 
 ```
@@ -58,14 +52,12 @@ CATALOG = 'SNOWFLAKE'
 ;
 ```
 
-Copy
-
 ## Data types[¶](#data-types)
 
 The following column data type conversions are applied to comply with the Iceberg tables type
 requirements and restrictions.
 
-Note
+**Note:**
 
 Data types in the first column are the **Snowflake** data types that would normally be created if
 the table target is not Iceberg, while second column shows the data type generated for Iceberg
@@ -100,8 +92,6 @@ CREATE TABLE myTable
 PARTITION BY areaCode;
 ```
 
-Copy
-
 #### Snowflake[¶](#id4)
 
 ```
@@ -114,8 +104,6 @@ CATALOG = 'SNOWFLAKE'
 ;
 ```
 
-Copy
-
 ### PARTITION BY CASE_N (equality over single column)[¶](#partition-by-case-n-equality-over-single-column)
 
 When the CASE_N function follows this pattern:
@@ -127,8 +115,6 @@ PARTITION BY CASE_N(
   ...
   column_name = valueN)
 ```
-
-Copy
 
 It will be transformed to a PARTITION BY column_name.
 
@@ -151,8 +137,6 @@ weekDay =  'Saturday',
  NO CASE OR UNKNOWN);
 ```
 
-Copy
-
 #### Snowflake[¶](#id6)
 
 ```
@@ -165,8 +149,6 @@ CATALOG = 'SNOWFLAKE'
 ;
 ```
 
-Copy
-
 ### PARTITION BY RANGE_N[¶](#partition-by-range-n)
 
 PARTITION BY RANGE_N is transformed when it matches one of these patterns:
@@ -178,8 +160,6 @@ Pattern:
 ```
 RANGE_N(columnName BETWEEN x AND y EACH z) -- x, y and z must be numeric constants.
 ```
-
-Copy
 
 This case will be changed with a BUCKET partition transform.
 
@@ -194,8 +174,6 @@ CREATE TABLE myTable
 PARTITION BY RANGE_N(totalPurchases BETWEEN 5 AND 200 EACH 10);
 ```
 
-Copy
-
 ##### Snowflake[¶](#id8)
 
 ```
@@ -208,8 +186,6 @@ CATALOG = 'SNOWFLAKE'
 ;
 ```
 
-Copy
-
 #### Datetime range[¶](#datetime-range)
 
 Pattern:
@@ -217,8 +193,6 @@ Pattern:
 ```
 RANGE_N(columnName BETWEEN date_constant AND date_constant EACH interval_constant) -- Interval qualifier must be YEAR, MONTH, DAY or HOUR
 ```
-
-Copy
 
 This case will be changed with the YEAR, MONTH, DAY or HOUR partition transforms.
 
@@ -233,8 +207,6 @@ CREATE TABLE myTable
 PARTITION BY RANGE_N(purchaseDate BETWEEN DATE '2000-01-01' AND '2100-12-31' EACH INTERVAL '1' MONTH);
 ```
 
-Copy
-
 ##### Snowflake[¶](#id10)
 
 ```
@@ -246,8 +218,6 @@ PARTITION BY (MONTH(purchaseDate))
 CATALOG = 'SNOWFLAKE'
 ;
 ```
-
-Copy
 
 ## Known Issues[¶](#known-issues)
 

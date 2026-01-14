@@ -88,7 +88,7 @@ title: SnowConvert AI - Redshift - Built-in functions | Snowflake Documentation
 |[TRUNC](https://docs.aws.amazon.com/redshift/latest/dg/r_TRUNC_date.html)|[TRUNC](https://docs.snowflakhttps/docs.snowflake.com/en/sql-reference/functions/trunc2e.com/en/sql-reference/functions/trunc2)|
 |[EXTRACT](https://docs.aws.amazon.com/redshift/latest/dg/r_EXTRACT_function.html)|[EXTRACT](https://docs.snowflake.com/en/sql-reference/functions/extract) _Notes:_ Part-time or Date time supported: DAY, DOW, DOY, EPOCH, HOUR, MINUTE, MONTH, QUARTER, SECOND, WEEK, YEAR.|
 
-Note
+**Note:**
 
 Redshift timestamps default to microsecond precision (6 digits); Snowflake defaults to nanosecond
 precision (9 digits). Adjust precision as needed using ALTER SESSION (e.g.,
@@ -149,7 +149,7 @@ might maintain functional equivalence between platforms.
 |[TAN](https://docs.aws.amazon.com/redshift/latest/dg/r_TAN.html)|[TAN](https://docs.snowflake.com/en/sql-reference/functions/tan)|
 |[TRUNC](https://docs.aws.amazon.com/redshift/latest/dg/r_TRUNC.html)|[TRUNC](https://docs.snowflake.com/en/sql-reference/functions/trunc)|
 
-Note
+**Note:**
 
 Redshift and Snowflake results may differ in scale.
 
@@ -252,9 +252,7 @@ the value provided in the function. This will be translation to a Sequence in Sn
  "identity"(oid_id, oid_table_id, default)
 ```
 
-Copy
-
-Note
+**Note:**
 
 This function is no longer supported in Redshift. It uses the default value to define the identity
 and behaves like a standard identity column.
@@ -280,8 +278,6 @@ INSERT INTO table_test (id) VALUES
 
 SELECT * FROM table_test;
 ```
-
-Copy
 
 ##### Results[¶](#results)
 
@@ -314,8 +310,6 @@ INSERT INTO table_test (id) VALUES
 SELECT * FROM
     table_test;
 ```
-
-Copy
 
 ##### Results[¶](#id1)
 
@@ -354,8 +348,6 @@ For more information about quoted identifiers in functions,
  TO_CHAR(timestamp_expression | numeric_expression , 'format')
 ```
 
-Copy
-
 ## Sample Source Patterns[¶](#id5)
 
 ### Input Code:[¶](#id6)
@@ -370,8 +362,6 @@ Copy
        TO_CHAR(125.8, '999.99'),
        "to_char"(125.8, '999.99');
 ```
-
-Copy
 
 ##### Results[¶](#id8)
 
@@ -393,8 +383,6 @@ Copy
        TO_CHAR(125.8, '999.99'),
        TO_CHAR(125.8, '999.99');
 ```
-
-Copy
 
 ##### Results[¶](#id10)
 
@@ -429,8 +417,6 @@ string
 ```
 TO_CHAR (timestamp_expression, 'format')
 ```
-
-Copy
 
 The following table specifies the mapping of each format element to Snowflake:
 
@@ -488,8 +474,6 @@ The result is preserved as a single TO_CHAR function
  SELECT TO_CHAR('2013-10-03 13:50:15.456871'::TIMESTAMP, 'DD/MM/YY HH:MI:SS.MS') AS col1;
 ```
 
-Copy
-
 ##### Result[¶](#result)
 
 ```
@@ -502,8 +486,6 @@ Copy
 +----------------------+
 ```
 
-Copy
-
 ##### _Snowflake_[¶](#id17)
 
 ##### Query[¶](#id18)
@@ -511,8 +493,6 @@ Copy
 ```
  SELECT TO_CHAR('2013-10-03 13:50:15.456871'::TIMESTAMP, 'DD/MM/YY HH12:MI:SS.FF3') AS col1;
 ```
-
-Copy
 
 ##### Result[¶](#id19)
 
@@ -525,8 +505,6 @@ Copy
 |03/10/13 01:50:15.456|
 +----------------------+
 ```
-
-Copy
 
 #### Format transformation using functions/UDFs[¶](#format-transformation-using-functions-udfs)
 
@@ -541,8 +519,6 @@ generate the equivalent string representation of the datetime value
  SELECT TO_CHAR(DATE '2025-07-05', '"Today is " Month DAY DD, "it belongs to the week " IW') AS result;
 ```
 
-Copy
-
 ##### Result[¶](#id22)
 
 ```
@@ -554,8 +530,6 @@ Copy
 |Today is  July      SATURDAY  05, it belongs to the week  27|
 +-------------------------------------------------------------+
 ```
-
-Copy
 
 ##### _Snowflake_[¶](#id23)
 
@@ -574,8 +548,6 @@ Copy
     WEEKISO(DATE '2025-07-05') AS result;
 ```
 
-Copy
-
 ##### Result[¶](#id25)
 
 ```
@@ -587,8 +559,6 @@ Copy
 |Today is  July      SATURDAY  05, it belongs to the week  27|
 +-------------------------------------------------------------+
 ```
-
-Copy
 
 #### Quoted text[¶](#quoted-text)
 
@@ -606,8 +576,6 @@ escaped double quotes are transformed to their Snowflake escaped equivalent.
     TO_CHAR(DATE '2025-01-16', 'MM "TESTING \\"DD\\"" DD') AS result3;
 ```
 
-Copy
-
 ##### Result[¶](#id28)
 
 ```
@@ -620,8 +588,6 @@ Copy
 +-----------------+-------------------+-------------------+
 ```
 
-Copy
-
 ##### _Snowflake_[¶](#id29)
 
 ##### Query[¶](#id30)
@@ -632,8 +598,6 @@ Copy
     TO_CHAR(DATE '2025-01-16', 'MM TEST') || PUBLIC.ISO_YEAR_PART_UDF(DATE '2025-01-16', 1) || TO_CHAR(DATE '2025-01-16', 'NG ""DD"" DD') AS result2,
     TO_CHAR(DATE '2025-01-16', 'MM ') || 'TESTING "DD"' || TO_CHAR(DATE '2025-01-16', ' DD') AS result3;
 ```
-
-Copy
 
 ##### Result[¶](#id31)
 
@@ -646,8 +610,6 @@ Copy
 |01 TESTING DD 16|01 TEST5NG "16" 16|01 TESTING "DD" 16|
 +-----------------+-------------------+-------------------+
 ```
-
-Copy
 
 ### Known Issues[¶](#id32)
 
@@ -671,8 +633,6 @@ TO_CHAR(CURRENT_DATE, 'DDth'),
 TO_CHAR(CURRENT_DATE, 'TMMonth');
 ```
 
-Copy
-
 Output code:
 
 ```
@@ -682,8 +642,6 @@ TO_CHAR(CURRENT_DATE(), 'DDTH') !!!RESOLVE EWI!!! /*** SSC-EWI-0006 - DDTH FORMA
 TO_CHAR(CURRENT_DATE(), 'DDth') !!!RESOLVE EWI!!! /*** SSC-EWI-0006 - DDth FORMAT MAY FAIL OR MAY HAVE A DIFFERENT BEHAVIOR IN SNOWFLAKE. ***/!!!,
 TO_CHAR(CURRENT_DATE(), 'TM') || PUBLIC.FULL_MONTH_NAME_UDF(CURRENT_DATE(), 'firstOnly') !!!RESOLVE EWI!!! /*** SSC-EWI-0006 - TMMonth FORMAT MAY FAIL OR MAY HAVE A DIFFERENT BEHAVIOR IN SNOWFLAKE. ***/!!!;
 ```
-
-Copy
 
 **Format parameter passed through variable**
 
@@ -699,8 +657,6 @@ TO_CHAR(d, f)
 FROM (SELECT TO_DATE('2001-01-01','YYYY-MM-DD') as d, 'DD/MM/YYYY' as f);
 ```
 
-Copy
-
 Output code:
 
 ```
@@ -709,8 +665,6 @@ Output code:
 TO_CHAR(d, f)
 FROM (SELECT TO_DATE('2001-01-01','YYYY-MM-DD') as d, 'DD/MM/YYYY' as f);
 ```
-
-Copy
 
 ### Related EWIs[¶](#id33)
 

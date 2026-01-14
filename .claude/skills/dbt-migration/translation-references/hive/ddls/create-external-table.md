@@ -24,8 +24,6 @@ USING data_source
 [ AS select_statement ]
 ```
 
-Copy
-
 The CREATE EXTERNAL TABLE statement from Spark/Databricks will be transformed to a CREATE EXTERNAL
 TABLE statement from
 [Snowflake](https://docs.snowflake.com/en/sql-reference/sql/create-external-table); however, this
@@ -76,8 +74,6 @@ USING AVRO
 LOCATION 'gs://sc_external_table_bucket/folder_with_avro/orders.avro';
 ```
 
-Copy
-
 #### Output Code:[¶](#output-code)
 
 ```
@@ -95,8 +91,6 @@ FILE_FORMAT = (TYPE = AVRO)
 PATTERN = '/sc_external_table_bucket/folder_with_avro/orders.avro'
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "spark",  "convertedOn": "06/18/2025",  "domain": "no-domain-provided" }}';
 ```
-
-Copy
 
 ### CREATE EXTERNAL TABLE without an explicit column list [¶](#create-external-table-without-an-explicit-column-list)
 
@@ -118,8 +112,6 @@ using AVRO
 LOCATION 'gs://sc_external_table_bucket/folder_with_avro/orders.avro';
 ```
 
-Copy
-
 #### Output Code:[¶](#id2)
 
 ```
@@ -139,8 +131,6 @@ FILE_FORMAT = (TYPE = AVRO)
 PATTERN = '/sc_external_table_bucket/folder_with_avro/orders.avro'
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "spark",  "convertedOn": "06/18/2025",  "domain": "no-domain-provided" }}';
 ```
-
-Copy
 
 ### CREATE EXTERNAL TABLE using Hive format[¶](#create-external-table-using-hive-format)
 
@@ -163,8 +153,6 @@ stored as AVRO
 LOCATION 'gs://sc_external_table_bucket/folder_with_avro/orders.avro';
 ```
 
-Copy
-
 #### Output Code:[¶](#id4)
 
 ```
@@ -183,8 +171,6 @@ FILE_FORMAT = (TYPE = AVRO)
 PATTERN = '/sc_external_table_bucket/folder_with_avro/orders.avro'
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "spark",  "convertedOn": "06/18/2025",  "domain": "no-domain-provided" }}';
 ```
-
-Copy
 
 ## Known Issues[¶](#known-issues)
 
@@ -222,8 +208,6 @@ Tblproperties (
 );
 ```
 
-Copy
-
 ## Output Code:[¶](#id6)
 
 ```
@@ -245,8 +229,6 @@ CREATE EXTERNAL TABLE IF NOT EXISTS hive_format_orders_Andres
     )
     COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "spark",  "convertedOn": "06/19/2025",  "domain": "no-domain-provided" }}';
 ```
-
-Copy
 
 ## Related EWIs [¶](#related-ewis)
 

@@ -18,13 +18,11 @@ insert into table1 values(3, 4);
 insert into table1 values(5, 6);
 ```
 
-Copy
-
 ### Output[¶](#output)
 
 You should get an output like the one below.
 
-Note
+**Note:**
 
 The `log_on`function parameters (‘user’, ‘password’, ‘account’, ‘database’, ‘warehouse’, ‘role’,
 ‘token’) should be defined by the user.
@@ -60,8 +58,6 @@ if __name__ == "__main__":
   main()
 ```
 
-Copy
-
 ## Getting Started[¶](#getting-started)
 
 To install the package, you should run the following command in your python environment. If you’re
@@ -71,8 +67,6 @@ not familiar with installing packages in Python, visit the following page on pyt
 ```
  pip install snowconvert-helpers
 ```
-
-Copy
 
 Once your package is installed, you will be able to run the script migrated code in Python.
 
@@ -84,8 +78,6 @@ the following command.
 ```
  python sample_BTEQ.py
 ```
-
-Copy
 
 If the script has no errors, you will get in your console an output like the one below.
 
@@ -109,8 +101,6 @@ Error Code 0
 Script done >>>>>>>>>>>>>>>>>>>>
 Error Code 0
 ```
-
-Copy
 
 ### Passing connection parameters[¶](#passing-connection-parameters)
 
@@ -147,8 +137,6 @@ They can be set as positional parameters in the function call as follows.
    .....
 ```
 
-Copy
-
 Or they can be set any of the named parameters in any order in the function call as follows.
 
 ```
@@ -164,8 +152,6 @@ Or they can be set any of the named parameters in any order in the function call
    .....
 ```
 
-Copy
-
 #### Positional parameters[¶](#positional-parameters)
 
 They need to be set in the specific order in the command line as follows.
@@ -174,16 +160,12 @@ They need to be set in the specific order in the command line as follows.
  python sample_BTEQ.py myuser mypassword myaccount mydatabase mywarehouse myrole myauthenticator mytokenr
 ```
 
-Copy
-
 Or they can be set only some of the parameters but always starting with the user parameter as
 follows.
 
 ```
  python sample_BTEQ.py myuser mypassword myaccount
 ```
-
-Copy
 
 #### Named parameters[¶](#named-parameters)
 
@@ -203,8 +185,6 @@ python sample_BTEQ.py --param-SNOW_WAREHOUSE=mywarehouse
   --param-PRIVATE_KEY_PATH=myprivatekey
   --param-PRIVATE_KEY_PASSWORD=myprivatekeypassword
 ```
-
-Copy
 
 #### Environment variables[¶](#environment-variables)
 
@@ -258,8 +238,6 @@ SET SNOW_PASSWORD=mypassword
 python sample_BTEQ.py
 ```
 
-Copy
-
 ##### Linux/Mac[¶](#linux-mac)
 
 ```
@@ -268,8 +246,6 @@ export SNOW_USER=myuser
 export SNOW_PASSWORD=mypassword
 python3 sample_BTEQ.py
 ```
-
-Copy
 
 ### Enabling Logging[¶](#enabling-logging)
 
@@ -281,8 +257,6 @@ Then, if you want to customize the logging configuration you can pass a paramete
 ```
  snowconvert.helpers.configure_log("SOMEPATH.conf")
 ```
-
-Copy
 
 The configuration file should contain the next structure. For more information about python logging,
 [click here](https://docs.python.org/es/3/library/logging.config.html)
@@ -317,8 +291,6 @@ args=('python2.log', 'w')
 format=%(asctime)s -%(levelname)s - %(message)s
 ```
 
-Copy
-
 ## Snowflake[¶](#snowflake)
 
 Once any migrated code you have been executed, you can go to Snowflake and check your changes or
@@ -327,8 +299,6 @@ deployments.
 ```
  select * from PUBLIC.table1;
 ```
-
-Copy
 
 You will be able to see the rows you have inserted in the example above.
 
@@ -342,8 +312,6 @@ First of all, it is required to install the python package named pydoc (Availabl
 ```
  pip install pydoc
 ```
-
-Copy
 
 Then in order to display the python documentation of the package snowconvert-helpers, you should go
 to a folder where you have the converted output code and you have a python output.
@@ -363,15 +331,11 @@ D:\bteq\Output>dir
                2 Dir(s)  1,510,686,502,912 bytes free
 ```
 
-Copy
-
 Located in this directory you need to run:
 
 ```
  python -m pydoc -b
 ```
-
-Copy
 
 The console will open your preferred browser with the HTML help of the documentation for all the
 installed packages.
@@ -382,8 +346,6 @@ Server ready at http://localhost:61355/
 Server commands: [b]rowser, [q]uit
 server>
 ```
-
-Copy
 
 This will open the browser with the documentation of your code like:
 
@@ -422,7 +384,7 @@ All the functions defined in the project.
 
 #### access[¶](#access)
 
-Note
+**Note:**
 
 **`access`**`(path, mode, *, dir_fd=None, effective_ids=False, follow_symlinks=True)`
 
@@ -450,7 +412,7 @@ suid/sgid environment to test if the invoking user has the specified access to t
 
 #### at_exit_helpers[¶](#at-exit-helpers)
 
-Note
+**Note:**
 
 **`at_exit_helpers`**`()`
 
@@ -460,7 +422,7 @@ _Executes at the exit of the execution of the script._
 
 #### colored[¶](#colored)
 
-Note
+**Note:**
 
 **`colored`**`(text, color='blue')`
 
@@ -475,7 +437,7 @@ _Prints colored text from the specified color._
 
 #### configure_log[¶](#configure-log)
 
-Note
+**Note:**
 
 **`configure_log`**`(configuration_path)`
 
@@ -491,7 +453,7 @@ connection. The log file is named ‘snowflake_python_connector.log’ by defaul
 
 #### drop_transient_table[¶](#drop-transient-table)
 
-Note
+**Note:**
 
 **`drop_transient_table`**`(tempTableName, con=None)`
 
@@ -507,7 +469,7 @@ _Drops the transient table with the specified name._
 
 #### exception_hook[¶](#exception-hook)
 
-Note
+**Note:**
 
 **`exception_hook`**`(exctype, value, tback)`
 
@@ -521,7 +483,7 @@ Note
 
 #### exec[¶](#exec)
 
-Note
+**Note:**
 
 **`exec`**`(sql_string, using=None, con=None)`
 
@@ -543,7 +505,7 @@ connection. Examples:_
 
 #### exec_file[¶](#exec-file)
 
-Note
+**Note:**
 
 **`exec_file`**`(filename, con=None)`
 
@@ -560,7 +522,7 @@ connection._
 
 #### exec_os[¶](#exec-os)
 
-Note
+**Note:**
 
 **`exec_os`**`(command)`
 
@@ -570,7 +532,7 @@ _Executes a command in the operative system._
 
 #### exec_sql_statement[¶](#exec-sql-statement)
 
-Note
+**Note:**
 
 **`exec_sql_statement`**`(sql_string, con, using=None)`
 
@@ -586,7 +548,7 @@ _Executes a sql statement in the connection passed, with the optional arguments.
 
 #### **expands_using_params**[¶](#expands-using-params)
 
-Note
+**Note:**
 
 **`expands_using_params`**`(statement, params)`
 
@@ -601,7 +563,7 @@ _Expands the statement passed with the parameters._
 
 #### **expandvar**[¶](#expandvar)
 
-Note
+**Note:**
 
 **`expandvar`**`(str)`
 
@@ -615,7 +577,7 @@ _Expands the variable from the string passed._
 
 #### **expandvars**[¶](#expandvars)
 
-Note
+**Note:**
 
 **`expandvars`**`(path, params, skip_escaped=False)`
 
@@ -633,7 +595,7 @@ escaped variable references (i.e. preceded by backslashes) are skipped. Unknown 
 
 #### **fast_load**[¶](#fast-load)
 
-Note
+**Note:**
 
 **`fast_load`**`(target_schema, filepath, stagename, target_table_name, con=None)`
 
@@ -652,7 +614,7 @@ target_table_name._
 
 #### **file_exists_and_readable**[¶](#file-exists-and-readable)
 
-Note
+**Note:**
 
 **`file_exists_and_readable`**`(filename)`
 
@@ -664,7 +626,7 @@ Note
 
 #### **get_argkey**[¶](#get-argkey)
 
-Note
+**Note:**
 
 **`get_argkey`**`(astr)`
 
@@ -679,7 +641,7 @@ _Gets the argument key value from the passed string. It must start with the stri
 
 #### **get_error_position**[¶](#get-error-position)
 
-Note
+**Note:**
 
 **`get_error_position`**`()`
 
@@ -689,7 +651,7 @@ _Gets the error position from the file using the information of the stack of the
 
 #### **get_from_vars_or_args_or_environment**[¶](#get-from-vars-or-args-or-environment)
 
-Note
+**Note:**
 
 **`get_from_vars_or_args_or_environment`**`(arg_pos, variable_name, vars, args)`
 
@@ -707,7 +669,7 @@ environment variable name passed._
 
 #### **import_data_to_temptable**[¶](#import-data-to-temptable)
 
-Note
+**Note:**
 
 **`import_data_to_temptable`**`(tempTableName, inputDataPlaceholder, con)`
 
@@ -723,7 +685,7 @@ _Imports data to a temporary table using an input data place holder._
 
 #### **import_file**[¶](#import-file)
 
-Note
+**Note:**
 
 **`import_file`**`(filename, separator=' ')`
 
@@ -738,7 +700,7 @@ _Imports the passed filename with the optional separator._
 
 #### **import_file_to_temptable**[¶](#import-file-to-temptable)
 
-Note
+**Note:**
 
 **`import_file_to_temptable`**`(filename, tempTableName, columnDefinition)`
 
@@ -756,7 +718,7 @@ stage that was used in the process._
 
 #### **import_reset**[¶](#import-reset)
 
-Note
+**Note:**
 
 **`import_reset`**`()`
 
@@ -764,7 +726,7 @@ Note
 
 #### **log**[¶](#log)
 
-Note
+**Note:**
 
 **`log`**`(*msg, level=20, writter=None)`
 
@@ -781,7 +743,7 @@ enabled_
 
 #### **log_on**[¶](#log-on)
 
-Note
+**Note:**
 
 **`log_on`**`(user=None, password=None, account=None, database=None, warehouse=None, role=None, login_timeout=10, authenticator=None)`
 
@@ -805,7 +767,7 @@ authenticator passed parameters._
 
 #### **os**[¶](#os)
 
-Note
+**Note:**
 
 **`os`**`(args)`
 
@@ -817,7 +779,7 @@ Note
 
 #### **print_table**[¶](#print-table)
 
-Note
+**Note:**
 
 **`print_table`**`(dictionary)`
 
@@ -831,7 +793,7 @@ _Prints the dictionary without exposing user and password values._
 
 #### **quit_application**[¶](#quit-application)
 
-Note
+**Note:**
 
 **`quit_application`**`(code=None)`
 
@@ -845,7 +807,7 @@ _Quits the application and optionally returns the passed code._
 
 #### **read_params_args**[¶](#read-params-args)
 
-Note
+**Note:**
 
 **`read_param_args`**`(args)`
 
@@ -859,7 +821,7 @@ _Reads the parameter arguments from the passed array._
 
 #### **readrun**[¶](#readrun)
 
-Note
+**Note:**
 
 **readrun**(line, skip=0)
 
@@ -874,7 +836,7 @@ _Reads the given filename lines and optionally skips some lines at the beginning
 
 #### **remark**[¶](#remark)
 
-Note
+**Note:**
 
 **remark**(arg)
 
@@ -888,7 +850,7 @@ _Prints the argument._
 
 #### **repeat_previous_sql_statement**[¶](#repeat-previous-sql-statement)
 
-Note
+**Note:**
 
 **`repeat_previous_sql_statement`**`(con=None, n=1)`
 
@@ -903,7 +865,7 @@ _Repeats the previous executed sql statement(s)._
 
 #### **set_default_error_level**[¶](#set-default-error-level)
 
-Note
+**Note:**
 
 **`set_default_error_level`**`(severity_value)`
 
@@ -915,7 +877,7 @@ Note
 
 #### **set_error_level**[¶](#set-error-level)
 
-Note
+**Note:**
 
 **`set_error_level`**`(arg, severity_value)`
 
@@ -928,7 +890,7 @@ Note
 
 #### **simple_fast_load**[¶](#simple-fast-load)
 
-Note
+**Note:**
 
 **`simple_fast_load`**`(con, target_schema, filepath, stagename, target_table_name)`
 
@@ -946,7 +908,7 @@ stagename and target table name.
 
 #### **stat**[¶](#stat)
 
-Note
+**Note:**
 
 **`stat`**`(path, *, dir_fd=None, follow_symlinks=True)`
 
@@ -967,7 +929,7 @@ to use dir_fd or follow_symlinks when specifying path as an open file descriptor
 
 #### **system**[¶](#system)
 
-Note
+**Note:**
 
 **`system`**`(command)`
 
@@ -981,7 +943,7 @@ _Execute the command in a subshell._
 
 #### **using**[¶](#using)
 
-Note
+**Note:**
 
 **`using`**`(*argv)`
 

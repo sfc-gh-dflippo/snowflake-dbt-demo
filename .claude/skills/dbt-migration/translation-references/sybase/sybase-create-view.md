@@ -24,8 +24,6 @@ documentation.
    … [ WITH CHECK OPTION ]
 ```
 
-Copy
-
 ## Sample Source Patterns[¶](#sample-source-patterns)
 
 ### Input Code:[¶](#input-code)
@@ -41,8 +39,6 @@ FROM T1
 WITH CHECK OPTION;
 ```
 
-Copy
-
 #### Output Code:[¶](#output-code)
 
 ##### Snowflake[¶](#snowflake)
@@ -57,5 +53,3 @@ COL2
 FROM
 T1;
 ```
-
-Copy

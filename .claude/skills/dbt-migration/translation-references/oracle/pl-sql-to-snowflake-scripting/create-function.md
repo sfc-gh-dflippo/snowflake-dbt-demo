@@ -6,7 +6,7 @@ title: SnowConvert AI - Oracle - CREATE FUNCTION | Snowflake Documentation
 
 ## Description[¶](#description)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -54,8 +54,6 @@ FUNCTION
     { java_declaration | c_declaration } } ;
 ```
 
-Copy
-
 ### Snowflake Syntax[¶](#snowflake-syntax)
 
 Snowflake allows 3 different languages in their user-defined functions:
@@ -71,7 +69,7 @@ For more information regarding Snowflake Create Function, check
 
 #### SQL[¶](#sql)
 
-Note
+**Note:**
 
 SQL user-defined functions only support one query as their body. They can read from the database but
 are not allowed to write to or modify it
@@ -87,11 +85,9 @@ CREATE [ OR REPLACE ] [ SECURE ] FUNCTION <name> ( [ <arg_name> <arg_data_type> 
   AS '<function_definition>'
 ```
 
-Copy
-
 ##### JavaScript[¶](#javascript)
 
-Note
+**Note:**
 
 JavaScript user-defined functions allow multiple statements in their bodies but cannot perform
 queries to the database.
@@ -108,13 +104,11 @@ CREATE [ OR REPLACE ] [ SECURE ] FUNCTION <name> ( [ <arg_name> <arg_data_type> 
   AS '<function_definition>'
 ```
 
-Copy
-
 ## Sample Source Patterns[¶](#sample-source-patterns)
 
 ### Sample auxiliary data[¶](#sample-auxiliary-data)
 
-Note
+**Note:**
 
 This code was executed for a better understanding of the examples:
 
@@ -127,8 +121,6 @@ INSERT INTO table1 VALUES (1, 11, 'val1_1', 'val1_2', TO_DATE('2004/05/03', 'yyy
 INSERT INTO table1 VALUES (2, 22, 'val2_1', 'val2_2', TO_DATE('2014/05/03', 'yyyy-MM-dd'));
 INSERT INTO table1 VALUES (3, 33, 'val3_1', 'val3_2', TO_DATE('2024/05/03', 'yyyy-MM-dd'));
 ```
-
-Copy
 
 ##### Snowflake[¶](#snowflake)
 
@@ -152,8 +144,6 @@ INSERT INTO table1
 VALUES (3, 33, 'val3_1', 'val3_2', TO_DATE('2024/05/03', 'yyyy-MM-dd'));
 ```
 
-Copy
-
 ## Known Issues[¶](#known-issues)
 
 No issues were found.
@@ -165,7 +155,7 @@ No issues were found.
 
 ## Cursor for a return variable[¶](#cursor-for-a-return-variable)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -227,8 +217,6 @@ BEGIN
 END func1;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id2)
 
 ```
@@ -255,8 +243,6 @@ $$
       declaration_variables_cte1
 $$;
 ```
-
-Copy
 
 ##### Result[¶](#result)
 
@@ -292,8 +278,6 @@ BEGIN
    RETURN (NVL(value_,0));
 END func2;
 ```
-
-Copy
 
 ##### Snowflake[¶](#id4)
 
@@ -338,8 +322,6 @@ $$
 $$;
 ```
 
-Copy
-
 ##### Result[¶](#id5)
 
 <!-- prettier-ignore -->
@@ -360,7 +342,7 @@ No issues were found.
 
 ## Cursor with IF statement[¶](#cursor-with-if-statement)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -425,8 +407,6 @@ BEGIN
 END func1;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id10)
 
 ```
@@ -463,8 +443,6 @@ $$
 $$;
 ```
 
-Copy
-
 ##### Result[¶](#id11)
 
 <!-- prettier-ignore -->
@@ -499,8 +477,6 @@ BEGIN
    END IF;
 END func2;
 ```
-
-Copy
 
 ##### Snowflake[¶](#id13)
 
@@ -546,8 +522,6 @@ $$
 $$;
 ```
 
-Copy
-
 ##### Result[¶](#id14)
 
 <!-- prettier-ignore -->
@@ -579,8 +553,6 @@ BEGIN
    RETURN max_period_;
 END func10;
 ```
-
-Copy
 
 ##### Snowflake[¶](#id16)
 
@@ -617,8 +589,6 @@ $$
       declaration_variables_cte1
 $$;
 ```
-
-Copy
 
 ##### Result[¶](#id17)
 
@@ -693,8 +663,6 @@ BEGIN
 END Case1;
 ```
 
-Copy
-
 #### Snowflake[¶](#id21)
 
 ```
@@ -732,8 +700,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### Oracle[¶](#id22)
 
 ```
@@ -763,8 +729,6 @@ BEGIN
    RETURN fully_depritiated_;
 END Case2;
 ```
-
-Copy
 
 #### Snowflake[¶](#id23)
 
@@ -801,8 +765,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### Oracle[¶](#id24)
 
 ```
@@ -834,8 +796,6 @@ BEGIN
    RETURN fully_depritiated_;
 END Case2;
 ```
-
-Copy
 
 #### Snowflake[¶](#id25)
 
@@ -888,8 +848,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### Oracle[¶](#id26)
 
 ```
@@ -921,8 +879,6 @@ BEGIN
    RETURN fully_depritiated_;
 END Case2;
 ```
-
-Copy
 
 #### Snowflake[¶](#id27)
 
@@ -974,8 +930,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### Known Issues[¶](#id28)
 
 No issues were found.
@@ -995,7 +949,7 @@ No issues were found.
 Translation reference for Oracle User Defined Functions to
 [Snowflake Scripting UDFs](../../../../../developer-guide/udf/sql/udf-sql-procedural-functions)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -1035,8 +989,6 @@ BEGIN
 END CalculateTax;
 ```
 
-Copy
-
 ##### Result[¶](#id33)
 
 <!-- prettier-ignore -->
@@ -1062,8 +1014,6 @@ $$
    END;
 $$;
 ```
-
-Copy
 
 ##### Result[¶](#id34)
 
@@ -1104,8 +1054,6 @@ BEGIN
 END GetShippingCost;
 ```
 
-Copy
-
 ##### Result[¶](#id36)
 
 <!-- prettier-ignore -->
@@ -1143,8 +1091,6 @@ $$
 $$;
 ```
 
-Copy
-
 ##### Result[¶](#id38)
 
 <!-- prettier-ignore -->
@@ -1177,8 +1123,6 @@ BEGIN
     RETURN ROUND(amount_, 2);
 END CalculateCompoundInterest;
 ```
-
-Copy
 
 ##### Result[¶](#id40)
 
@@ -1213,8 +1157,6 @@ $$
    END;
 $$;
 ```
-
-Copy
 
 ##### Result[¶](#id42)
 
@@ -1261,8 +1203,6 @@ BEGIN
 END GetCustomerTier;
 ```
 
-Copy
-
 ##### Result[¶](#id44)
 
 <!-- prettier-ignore -->
@@ -1305,8 +1245,6 @@ $$
 $$;
 ```
 
-Copy
-
 ##### Result[¶](#id46)
 
 <!-- prettier-ignore -->
@@ -1348,8 +1286,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Result[¶](#id48)
 
 <!-- prettier-ignore -->
@@ -1384,8 +1320,6 @@ $$
     END;
 $$;
 ```
-
-Copy
 
 ##### Result[¶](#id50)
 

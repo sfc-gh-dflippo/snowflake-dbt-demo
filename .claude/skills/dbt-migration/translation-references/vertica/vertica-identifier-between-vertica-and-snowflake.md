@@ -27,8 +27,6 @@ SELECT "col#1" FROM test.quotedIdentTable;
 SELECT "COL#1" FROM test.quotedIdentTable;
 ```
 
-Copy
-
 In Snowflake, case sensitivity of quoted identifiers depends on the session parameter
 [QUOTED_IDENTIFIERS_IGNORE_CASE](https://docs.snowflake.com/en/sql-reference/parameters#quoted-identifiers-ignore-case),
 by default quoted identifiers comparison is case sensitive, this means that the result code from
@@ -52,8 +50,6 @@ SELECT
 FROM
   test.quotedIdentTable;
 ```
-
-Copy
 
 Will fail when executing the second select unless the session parameter is set to TRUE.
 
@@ -80,8 +76,6 @@ FROM
 test.identsTable1;
 ```
 
-Copy
-
 ### Snowflake[¶](#id2)
 
 ```
@@ -98,5 +92,3 @@ SELECT
 FROM
   test.identsTable1;
 ```
-
-Copy

@@ -28,8 +28,6 @@ SELECT SUM(amount) AS total_sales
 FROM sales;
 ```
 
-Copy
-
 ### Snowflake[¶](#snowflake)
 
 ```
@@ -43,8 +41,6 @@ SELECT SUM(amount) AS total_sales
 FROM
 sales;
 ```
-
-Copy
 
 ## Related EWIs[¶](#related-ewis)
 

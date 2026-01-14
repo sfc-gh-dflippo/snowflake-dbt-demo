@@ -29,8 +29,6 @@ view_column :=
   column_name [OPTIONS(view_column_option_list)]
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#sample-source-patterns)
 
 #### BigQuery[¶](#bigquery)
@@ -48,8 +46,6 @@ CREATE VIEW IF NOT EXISTS myuser2
 AS
 SELECT lastname FROM users2;
 ```
-
-Copy
 
 #### Snowflake[¶](#snowflake)
 
@@ -69,8 +65,6 @@ AS
 SELECT lastname FROM
 users3;
 ```
-
-Copy
 
 ### Known Issues[¶](#known-issues)
 
@@ -103,8 +97,6 @@ view_column_option_list :=
   DESCRIPTION = value
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id3)
 
 #### BigQuery[¶](#id4)
@@ -117,8 +109,6 @@ CREATE VIEW `myproject.mydataset.newview` (
 )
 AS SELECT column_1, column_2, column_3 FROM `myproject.mydataset.mytable`
 ```
-
-Copy
 
 #### Snowflake[¶](#id5)
 
@@ -133,8 +123,6 @@ COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,
 AS SELECT column_1, column_2, column_3 FROM
   myproject.mydataset.mytable
 ```
-
-Copy
 
 ### Known Issues[¶](#id6)
 
@@ -166,8 +154,6 @@ view_option_list :=
   NAME = value
 ```
 
-Copy
-
 <!-- prettier-ignore -->
 |NAME|Value|Supported|
 |---|---|---|
@@ -195,8 +181,6 @@ SELECT column1, column2
 FROM my_table;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id12)
 
 ```
@@ -207,8 +191,6 @@ SELECT column1, column2
 FROM
  my_table;
 ```
-
-Copy
 
 #### Labels:[¶](#labels)
 
@@ -230,8 +212,6 @@ SELECT column1, column2
 FROM table1;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id14)
 
 ```
@@ -246,8 +226,6 @@ SELECT column1, column2
 FROM
   table1;
 ```
-
-Copy
 
 #### Unsupported Options:[¶](#unsupported-options)
 
@@ -265,8 +243,6 @@ SELECT column1, column2
 FROM my_table;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id16)
 
 ```
@@ -282,8 +258,6 @@ SELECT column1, column2
 FROM
   my_table;
 ```
-
-Copy
 
 #### Known Issues[¶](#id17)
 

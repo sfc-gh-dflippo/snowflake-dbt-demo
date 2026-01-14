@@ -16,8 +16,6 @@ select * from table1;
 select col1 from schema1.table1;
 ```
 
-Copy
-
 #### Snowflake:[¶](#snowflake)
 
 ```
@@ -28,8 +26,6 @@ select col1 from
 schema1.table1;
 ```
 
-Copy
-
 ### Where clause[¶](#where-clause)
 
 #### Oracle:[¶](#id1)
@@ -37,8 +33,6 @@ Copy
 ```
 select col1 from schema1.table1 WHERE col1 = 1 and id > 0 or id < 1;
 ```
-
-Copy
 
 #### Snowflake:[¶](#id2)
 
@@ -48,8 +42,6 @@ schema1.table1
 WHERE col1 = 1 and id > 0 or id < 1;
 ```
 
-Copy
-
 ### Order By clause[¶](#order-by-clause)
 
 #### Oracle:[¶](#id3)
@@ -57,8 +49,6 @@ Copy
 ```
 select col1 from schema1.table1 order by id ASC;
 ```
-
-Copy
 
 #### Snowflake:[¶](#id4)
 
@@ -68,8 +58,6 @@ schema1.table1
 order by id ASC;
 ```
 
-Copy
-
 ### Group by[¶](#group-by)
 
 #### Oracle:[¶](#id5)
@@ -78,8 +66,6 @@ Copy
 select col1 from schema1.table1 GROUP BY id;
 ```
 
-Copy
-
 #### Snowflake:[¶](#id6)
 
 ```
@@ -87,8 +73,6 @@ select col1 from
 schema1.table1
 GROUP BY id;
 ```
-
-Copy
 
 ### Model Clause[¶](#model-clause)
 
@@ -130,8 +114,6 @@ select * from TableFetch1 FETCH FIRST ROWS ONLY;
 
 select * from TableFetch1 offset 2 rows;
 ```
-
-Copy
 
 #### Snowflake:[¶](#id8)
 
@@ -243,9 +225,7 @@ TableFetch1
 LIMIT NULL OFFSET 2;
 ```
 
-Copy
-
-Note
+**Note:**
 
 In Oracle, the `FETCH` / `OFFSET WITH TIES` is ignored when no `ORDER BY` is specified in the
 `SELECT`. This case will be transformed to a `FETCH` / `OFFSET` with the ONLY keyword in Snowflake,
@@ -266,8 +246,6 @@ select * from schema1.table1
 PIVOT(count(*) as count1 FOR (column1, column2) IN (row1 as rowName));
 ```
 
-Copy
-
 #### Snowflake:[¶](#id10)
 
 ```
@@ -280,8 +258,6 @@ PIVOT (count(*)
 !!!RESOLVE EWI!!! /*** SSC-EWI-0015 - PIVOT/UNPIVOT RENAME COLUMN NOT SUPPORTED ***/!!!
 IN (row1 as rowName));
 ```
-
-Copy
 
 ## Unpivot[¶](#unpivot)
 
@@ -296,8 +272,6 @@ select * from schema1.table1
 UNPIVOT INCLUDE NULLS (column1 FOR column2 IN (ANY, ANY));
 ```
 
-Copy
-
 #### Snowflake:[¶](#id12)
 
 ```
@@ -308,8 +282,6 @@ UNPIVOT ( column1 FOR column2 IN (
 ANY,
 ANY));
 ```
-
-Copy
 
 ## Transformation of JOIN (+) to ANSI Syntax[¶](#transformation-of-join-to-ansi-syntax)
 
@@ -336,8 +308,6 @@ WHERE  d.department_id = e.department_id (+)
 AND    d.department_id >= 30;
 ```
 
-Copy
-
 #### Snowflake:[¶](#id14)
 
 ```
@@ -352,8 +322,6 @@ WHERE
        d.department_id >= 30;
 ```
 
-Copy
-
 Example 2:
 
 #### Oracle:[¶](#id15)
@@ -366,8 +334,6 @@ FROM   departments d, employees e
 WHERE  d.department_id(+)  = e.department_id
 AND    d.department_id >= 30;
 ```
-
-Copy
 
 #### Snowflake:[¶](#id16)
 
@@ -383,8 +349,6 @@ WHERE
        d.department_id >= 30;
 ```
 
-Copy
-
 Example 3: Multiple join
 
 #### Oracle:[¶](#id17)
@@ -398,8 +362,6 @@ WHERE  e.department_id(+) = d.department_id
 AND    p.department_id(+) = d.department_id
 AND    d.department_id >= 30;
 ```
-
-Copy
 
 #### Snowflake:[¶](#id18)
 
@@ -418,8 +380,6 @@ WHERE
        d.department_id >= 30;
 ```
 
-Copy
-
 Example 4: Join with other kinds of conditional
 
 #### Oracle:[¶](#id19)
@@ -433,8 +393,6 @@ WHERE  d.department_id(+)  = e.department_id
 AND    d.location(+) IN ('CHICAGO', 'BOSTON', 'NEW YORK')
 AND    d.department_id >= 30;
 ```
-
-Copy
 
 #### Snowflake:[¶](#id20)
 
@@ -451,8 +409,6 @@ WHERE
        d.department_id >= 30;
 ```
 
-Copy
-
 Example 5: Join with (+) inside a function
 
 #### Oracle:[¶](#id21)
@@ -465,8 +421,6 @@ FROM   departments d, employees e
 WHERE SUBSTR(d.department_name, 1, NVL(e.department_id, 1) ) = e.employee_name(+);
 ```
 
-Copy
-
 #### Snowflake:[¶](#id22)
 
 ```
@@ -478,8 +432,6 @@ FROM
               employees e
               ON SUBSTR(d.department_name, 1, NVL(e.department_id, 1) ) = e.employee_name;
 ```
-
-Copy
 
 Warning
 
@@ -506,8 +458,6 @@ AND c.course_id  = e.department_id(+)
 AND d.department_id >= 30;
 ```
 
-Copy
-
 #### Snowflake:[¶](#id24)
 
 ```
@@ -531,8 +481,6 @@ WHERE
        d.department_id >= 30;
 ```
 
-Copy
-
 ## Hierarchical Queries[¶](#hierarchical-queries)
 
 Hierarchical queries in Snowflake allow to organize and retrieve data in a tree-like structure,
@@ -551,8 +499,6 @@ START WITH manager_ID = 1
 CONNECT BY manager_ID = PRIOR employee_id;
 ```
 
-Copy
-
 #### Snowflake:[¶](#id26)
 
 ```
@@ -563,8 +509,6 @@ START WITH manager_ID = 1
 CONNECT BY
 manager_ID = PRIOR employee_id;
 ```
-
-Copy
 
 ### Related EWIs[¶](#related-ewis)
 
@@ -606,8 +550,6 @@ deleted data (90 days before passing to Fail-safe status). For more information,
 }
 ```
 
-Copy
-
 **Snowflake Syntax**
 
 ```
@@ -620,9 +562,7 @@ FROM ...
 [ ... ]
 ```
 
-Copy
-
-Note
+**Note:**
 
 Notice that the query ID must reference a query executed within 14 days. If the query ID references
 a query over 14 days old, the following error is returned: `Error: statement <query_id> not found`.
@@ -651,8 +591,6 @@ INSERT INTO Employee VALUES (3, 'Bob', 'SampleNameC', 'sample@example.com', TO_D
 INSERT INTO Employee VALUES (4, 'Bob', 'SampleNameD', 'sample@example.com', TO_DATE('2022-03-10', 'YYYY-MM-DD'), 11111.00);
 INSERT INTO Employee VALUES (5, 'Bob', 'SampleNameE', 'sample@example.com', TO_DATE('2022-03-10', 'YYYY-MM-DD'), 11111.00);
 ```
-
-Copy
 
 ##### Snowflake[¶](#id29)
 
@@ -684,8 +622,6 @@ CREATE OR REPLACE TABLE Employee (
    VALUES (5, 'Bob', 'SampleNameE', 'sample@example.com', TO_DATE('2022-03-10', 'YYYY-MM-DD'), 11111.00);
 ```
 
-Copy
-
 #### 1. AS OF with TIMESTAMP case[¶](#as-of-with-timestamp-case)
 
 ##### Oracle[¶](#id30)
@@ -696,8 +632,6 @@ AS OF TIMESTAMP
 TO_TIMESTAMP('2023-09-27 07:00:00', 'YYYY-MM-DD HH:MI:SS')
 WHERE last_name = 'SampleName';
 ```
-
-Copy
 
 ##### Snowflake[¶](#id31)
 
@@ -710,8 +644,6 @@ TO_TIMESTAMP('2023-09-27 07:00:00', 'YYYY-MM-DD HH:MI:SS'))
 WHERE last_name = 'SampleName';
 ```
 
-Copy
-
 #### 2. AS OF with SCN case[¶](#as-of-with-scn-case)
 
 ##### Oracle[¶](#id32)
@@ -723,8 +655,6 @@ TO_TIMESTAMP('2023-09-27 07:00:00', 'YYYY-MM-DD HH:MI:SS')
 WHERE last_name = 'SampleName';
 ```
 
-Copy
-
 ##### Snowflake[¶](#id33)
 
 ```
@@ -735,8 +665,6 @@ AS OF SCN
 TO_TIMESTAMP('2023-09-27 07:00:00', 'YYYY-MM-DD HH:MI:SS')
 WHERE last_name = 'SampleName';
 ```
-
-Copy
 
 ### Known Issues[¶](#known-issues)
 

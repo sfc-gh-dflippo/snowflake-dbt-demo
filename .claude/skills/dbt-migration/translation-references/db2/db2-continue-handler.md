@@ -39,8 +39,6 @@ DECLARE CONTINUE HANDLER FOR condition_value [, ...]
 -- NOT FOUND
 ```
 
-Copy
-
 ## Sample Source Patterns[¶](#sample-source-patterns)
 
 ### DECLARE CONTINUE HANDLER FOR SQLEXCEPTION[¶](#declare-continue-handler-for-sqlexception)
@@ -72,8 +70,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 #### Output Code:[¶](#output-code)
 
 ##### Snowflake[¶](#snowflake)
@@ -102,8 +98,6 @@ $$
     END;
 $$;
 ```
-
-Copy
 
 ### DECLARE CONTINUE HANDLER FOR SQLSTATE[¶](#declare-continue-handler-for-sqlstate)
 
@@ -134,8 +128,6 @@ BEGIN
     INSERT INTO process_log VALUES ('Duplicates found: ' || duplicate_key_count);
 END;
 ```
-
-Copy
 
 #### Output Code:[¶](#id3)
 
@@ -168,8 +160,6 @@ $$
     END;
 $$;
 ```
-
-Copy
 
 ### DECLARE CONTINUE HANDLER FOR NOT FOUND[¶](#declare-continue-handler-for-not-found)
 
@@ -209,8 +199,6 @@ BEGIN
     CLOSE cur1;
 END;
 ```
-
-Copy
 
 #### Output Code:[¶](#id7)
 
@@ -252,8 +240,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### DECLARE CONTINUE HANDLER FOR SQLWARNING[¶](#declare-continue-handler-for-sqlwarning)
 
 Handling warnings while allowing execution to continue.
@@ -281,8 +267,6 @@ BEGIN
     INSERT INTO process_summary VALUES (warning_count);
 END;
 ```
-
-Copy
 
 #### Output Code:[¶](#id11)
 
@@ -323,8 +307,6 @@ $$
     END;
 $$;
 ```
-
-Copy
 
 ## Known Issues[¶](#known-issues)
 
@@ -381,8 +363,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 #### Output Code:[¶](#id16)
 
 ##### Snowflake[¶](#id17)
@@ -403,8 +383,6 @@ EXCEPTION
         END IF;
 END;
 ```
-
-Copy
 
 ### Multiple CONTINUE Handlers[¶](#multiple-continue-handlers)
 
@@ -427,8 +405,6 @@ BEGIN
     INSERT INTO table1 VALUES (1, 'test');
 END;
 ```
-
-Copy
 
 #### Output Code:[¶](#id20)
 
@@ -454,8 +430,6 @@ $$
     END;
 $$;
 ```
-
-Copy
 
 ### Mixed CONTINUE and EXIT Handlers[¶](#mixed-continue-and-exit-handlers)
 
@@ -487,8 +461,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 #### Output Code:[¶](#id25)
 
 ##### Snowflake[¶](#id26)
@@ -518,8 +490,6 @@ $$
     END;
 $$;
 ```
-
-Copy
 
 #### Related EWIs[¶](#id27)
 

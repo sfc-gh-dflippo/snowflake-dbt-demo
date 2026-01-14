@@ -28,8 +28,6 @@ SELECT SUM(amount) AS total_sales
 FROM sales;
 ```
 
-Copy
-
 ### Snowflake[¶](#snowflake)
 
 ```
@@ -43,8 +41,6 @@ SELECT SUM(amount) AS total_sales
 FROM
 sales;
 ```
-
-Copy
 
 ### Refresh Modes[¶](#refresh-modes)
 
@@ -92,8 +88,6 @@ GROUP BY
     CUSTOMER_ID;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id2)
 
 ```
@@ -112,8 +106,6 @@ FROM
 GROUP BY
    CUSTOMER_ID;
 ```
-
-Copy
 
 ## Known Issues[¶](#known-issues)
 

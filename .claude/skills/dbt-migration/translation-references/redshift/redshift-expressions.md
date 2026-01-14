@@ -15,7 +15,7 @@ title: SnowConvert AI - Redshift - Expressions | Snowflake Documentation
 > conditions (WHERE clauses) and in GROUP BY clauses.
 > ([Redshift SQL Language Reference Expression lists](https://docs.aws.amazon.com/redshift/latest/dg/r_expression_lists.html)).
 
-Note
+**Note:**
 
 This syntax is fully supported in Snowflake.
 
@@ -24,8 +24,6 @@ This syntax is fully supported in Snowflake.
 ```
  expression , expression , ... | (expression, expression, ...)
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#sample-source-patterns)
 
@@ -72,8 +70,6 @@ VALUES
     (4, 'David', 15, 'orange', 400);
 ```
 
-Copy
-
 #### IN Clause[¶](#in-clause)
 
 ##### Input Code:[¶](#input-code)
@@ -85,8 +81,6 @@ SELECT *
 FROM table3
 WHERE quantity IN (1, 5, 10);
 ```
-
-Copy
 
 ##### Result[¶](#result)
 
@@ -107,8 +101,6 @@ FROM
     table3
 WHERE quantity IN (1, 5, 10);
 ```
-
-Copy
 
 ##### Result[¶](#id2)
 
@@ -131,8 +123,6 @@ FROM table3
 WHERE (quantity, fruit) = (1, 'apple');
 ```
 
-Copy
-
 ##### Result[¶](#id5)
 
 <!-- prettier-ignore -->
@@ -151,8 +141,6 @@ FROM
 WHERE (quantity, fruit) = (1, 'apple');
 ```
 
-Copy
-
 ##### Result[¶](#id8)
 
 <!-- prettier-ignore -->
@@ -160,7 +148,7 @@ Copy
 |---|---|---|---|---|
 |1|Alice|1|apple|100|
 
-Note
+**Note:**
 
 Expression list comparisons with the following operators may have a different behavior in Snowflake.
 ( **`< , <= , > , >=`**). These operators are transformed into logical `AND` operations to achieve
@@ -177,8 +165,6 @@ full equivalence in Snowflake.
        (1,0,null) <= (1,1,0) as r4,
        (1,1,0) >= (1,1,20) as r5;
 ```
-
-Copy
 
 ##### Result[¶](#id11)
 
@@ -210,8 +196,6 @@ Copy
     AND 0 >= 20) as r5;
 ```
 
-Copy
-
 ##### Result[¶](#id14)
 
 <!-- prettier-ignore -->
@@ -230,8 +214,6 @@ Copy
 FROM table3
 WHERE (quantity, fruit) IN ((1, 'apple'), (5, 'banana'), (10, 'cherry'));
 ```
-
-Copy
 
 ##### Result[¶](#id17)
 
@@ -252,8 +234,6 @@ FROM
     table3
 WHERE (quantity, fruit) IN ((1, 'apple'), (5, 'banana'), (10, 'cherry'));
 ```
-
-Copy
 
 ##### Result[¶](#id20)
 
@@ -278,8 +258,6 @@ Copy
     END AS result
 FROM table3;
 ```
-
-Copy
 
 ##### Result[¶](#id23)
 
@@ -307,8 +285,6 @@ FROM
     table3;
 ```
 
-Copy
-
 ##### Result[¶](#id26)
 
 <!-- prettier-ignore -->
@@ -334,8 +310,6 @@ WHERE (quantity, fruit) IN ((1, 'apple'), (5, 'banana'), (10, 'cherry'))
   AND price IN (100, 200, 300);
 ```
 
-Copy
-
 ##### Result[¶](#id29)
 
 <!-- prettier-ignore -->
@@ -356,8 +330,6 @@ FROM
 WHERE (quantity, fruit) IN ((1, 'apple'), (5, 'banana'), (10, 'cherry'))
   AND price IN (100, 200, 300);
 ```
-
-Copy
 
 ##### Result[¶](#id32)
 
@@ -382,8 +354,6 @@ JOIN table2 t2
 WHERE t1.quantity = 'one' AND t1.fruit = 'apple';
 ```
 
-Copy
-
 ##### Result[¶](#id35)
 
 <!-- prettier-ignore -->
@@ -404,8 +374,6 @@ JOIN
     ON (t1.quantity, t1.fruit) = (t2.quantity, t2.fruit)
 WHERE t1.quantity = 'one' AND t1.fruit = 'apple';
 ```
-
-Copy
 
 ##### Result[¶](#id38)
 
@@ -436,8 +404,6 @@ There are no known issues.
 ```
  expression operator {expression | (compound_expression)}
 ```
-
-Copy
 
 ### Conversion Table[¶](#conversion-table)
 
@@ -476,8 +442,6 @@ SELECT
     COALESCE(col1, 'Unknown') || ' with number ' || COALESCE(CAST(col2 AS VARCHAR), 'N/A') AS concat_with_null_handling
 FROM concatenation_demo;
 ```
-
-Copy
 
 ##### Results[¶](#results)
 
@@ -534,8 +498,6 @@ SELECT
 FROM
     concatenation_demo;
 ```
-
-Copy
 
 ##### Results[¶](#id45)
 
@@ -630,8 +592,6 @@ SELECT +base_value AS positive_value,
 FROM test_math_operations;
 ```
 
-Copy
-
 ##### Results[¶](#id52)
 
 <!-- prettier-ignore -->
@@ -678,8 +638,6 @@ FROM
        test_math_operations;
 ```
 
-Copy
-
 ##### Results[¶](#id54)
 
 <!-- prettier-ignore -->
@@ -723,8 +681,6 @@ SELECT
 FROM
     test_math_operations;
 ```
-
-Copy
 
 ##### Results[¶](#id57)
 
@@ -771,8 +727,6 @@ FROM
     test_math_operations;
 ```
 
-Copy
-
 ##### Results[¶](#id60)
 
 <!-- prettier-ignore -->
@@ -810,8 +764,6 @@ SELECT
 FROM unary_operators;
 ```
 
-Copy
-
 ##### Results[¶](#id63)
 
 ```
@@ -826,8 +778,6 @@ Copy
 |13.674794331177344|-10.837841647592736|1273|
 +-------------------+--------------------+--------------+
 ```
-
-Copy
 
 ##### Output Code:[¶](#id64)
 
@@ -856,8 +806,6 @@ FROM
     unary_operators;
 ```
 
-Copy
-
 ##### Results[¶](#id66)
 
 ```
@@ -872,8 +820,6 @@ Copy
 |13.674794331|-10.837841648|1273|
 +-------------+--------------+--------------+
 ```
-
-Copy
 
 #### Known Issues[¶](#id67)
 
@@ -930,8 +876,6 @@ INSERT INTO bitwise_demo (col1, col2, col3, col4, col5) VALUES
 (1, 0, -1, 'Hey'::VARBYTE, 'Ya'::VARBYTE);
 ```
 
-Copy
-
 ##### _Snowflake_[¶](#id73)
 
 ##### Query[¶](#id74)
@@ -954,8 +898,6 @@ INSERT INTO bitwise_demo (col1, col2, col3, col4, col5) SELECT 255, 128, 64, TO_
 -- Edge case with small numbers and a negative number
 INSERT INTO bitwise_demo (col1, col2, col3, col4, col5) SELECT 1, 0, -1, TO_BINARY(HEX_ENCODE('Hey')), TO_BINARY(HEX_ENCODE('Ya'));
 ```
-
-Copy
 
 #### Bitwise operators on integer values[¶](#bitwise-operators-on-integer-values)
 
@@ -986,8 +928,6 @@ Copy
 FROM bitwise_demo;
 ```
 
-Copy
-
 ##### Results[¶](#id77)
 
 ```
@@ -1002,8 +942,6 @@ Copy
 |0|1|-2|-1|1|0|
 +-------------+------------+-----------------+------------------+-------------+-------------+
 ```
-
-Copy
 
 **Output Code:**
 
@@ -1036,8 +974,6 @@ FROM
         bitwise_demo;
 ```
 
-Copy
-
 ##### Results[¶](#id79)
 
 ```
@@ -1052,8 +988,6 @@ Copy
 |0|1|-2|-1|1|0|
 +-------------+------------+-----------------+------------------+-------------+-------------+
 ```
-
-Copy
 
 #### Bitwise operators on binary data[¶](#bitwise-operators-on-binary-data)
 
@@ -1082,8 +1016,6 @@ values in Snowflake.
 FROM bitwise_demo;
 ```
 
-Copy
-
 ##### Result[¶](#id82)
 
 ```
@@ -1098,8 +1030,6 @@ Copy
 |0x004161|0x487D79|0x483C18|0xB79A86|
 +-----------------+-----------------+-----------------+-------------+
 ```
-
-Copy
 
 ##### _Snowflake_[¶](#id83)
 
@@ -1124,8 +1054,6 @@ Copy
     FROM bitwise_demo;
 ```
 
-Copy
-
 ##### Result[¶](#id85)
 
 ```
@@ -1140,8 +1068,6 @@ Copy
 |004161|487D79|483C18|B79A86|
 +---------------+---------------+---------------+-------------+
 ```
-
-Copy
 
 ### Known Issues[¶](#id86)
 

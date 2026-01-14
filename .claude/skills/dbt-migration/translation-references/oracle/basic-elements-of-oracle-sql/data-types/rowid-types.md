@@ -25,8 +25,6 @@ title: SnowConvert AI - Oracle - Rowid Data Type | Snowflake Documentation
 ROWID
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#sample-source-patterns)
 
 #### ROWID in Create Table[¶](#rowid-in-create-table)
@@ -40,8 +38,6 @@ CREATE TABLE rowid_table
 );
 ```
 
-Copy
-
 ##### Snowflake[¶](#snowflake)
 
 ```
@@ -52,8 +48,6 @@ CREATE OR REPLACE TABLE rowid_table
     COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":0},{"attributes":{"component":"oracle"}}'
     ;
 ```
-
-Copy
 
 #### Insert data in the ROWID column[¶](#insert-data-in-the-rowid-column)
 
@@ -67,8 +61,6 @@ INSERT INTO rowid_table VALUES ('AAATtCAAMAAAADLABD');
 
 SELECT rowid_column FROM rowid_table;
 ```
-
-Copy
 
 ##### Result[¶](#result)
 
@@ -87,8 +79,6 @@ SELECT rowid_column FROM
 rowid_table;
 ```
 
-Copy
-
 ##### Result[¶](#id4)
 
 <!-- prettier-ignore -->
@@ -98,7 +88,7 @@ Copy
 
 ### Known Issues[¶](#known-issues)
 
-Note
+**Note:**
 
 Since the result set is too large, _Row Limiting Clause_ was added. You can remove this clause to
 retrieve the entire result set.
@@ -119,8 +109,6 @@ FROM
     hr.employees
 FETCH NEXT 10 ROWS ONLY;
 ```
-
-Copy
 
 ##### Result[¶](#id6)
 
@@ -149,8 +137,6 @@ FROM
 FETCH NEXT 10 ROWS ONLY;
 ```
 
-Copy
-
 ##### Result[¶](#id8)
 
 Danger
@@ -176,8 +162,6 @@ SQL compilation error: invalid identifier ‘ROWID’
 UROWID [(size)]
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id10)
 
 #### UROWID in Create Table[¶](#urowid-in-create-table)
@@ -192,8 +176,6 @@ CREATE TABLE urowid_table
 );
 ```
 
-Copy
-
 ##### Snowflake[¶](#id12)
 
 ```
@@ -205,8 +187,6 @@ CREATE OR REPLACE TABLE urowid_table
     COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":0},{"attributes":{"component":"oracle"}}'
     ;
 ```
-
-Copy
 
 #### Insert data in the UROWID column[¶](#insert-data-in-the-urowid-column)
 
@@ -220,8 +200,6 @@ INSERT INTO urowid_table VALUES ('*BAMAAJMCVUv+','*BAMAAJMCVUv+');
 
 SELECT * FROM urowid_table;
 ```
-
-Copy
 
 ##### Result[¶](#id14)
 
@@ -240,8 +218,6 @@ SELECT * FROM
 urowid_table;
 ```
 
-Copy
-
 ##### Result[¶](#id15)
 
 <!-- prettier-ignore -->
@@ -251,7 +227,7 @@ Copy
 
 ### Known Issues[¶](#id16)
 
-Note
+**Note:**
 
 Since the result set is too large, _Row Limiting Clause_ was added. You can remove this clause to
 retrieve the entire result set.
@@ -272,8 +248,6 @@ SELECT
 FROM
     hr.countries FETCH NEXT 10 ROWS ONLY;
 ```
-
-Copy
 
 ##### Result[¶](#id18)
 
@@ -302,8 +276,6 @@ FROM
         hr.countries
 FETCH NEXT 10 ROWS ONLY;
 ```
-
-Copy
 
 ##### Result[¶](#id20)
 

@@ -23,8 +23,6 @@ DESCRIPTION 'LOAD AC_SCHEMA TABLE FROM A FILE'
 JobBody
 ```
 
-Copy
-
 Translated code
 
 ```
@@ -33,8 +31,6 @@ class LOADJOB:
     # DESCRIPTION 'LOAD AC_SCHEMA TABLE FROM A FILE'
     JobBody
 ```
-
-Copy
 
 ### Define Schema transformation[¶](#define-schema-transformation)
 
@@ -55,8 +51,6 @@ resdata        INTEGER
 );
 ```
 
-Copy
-
 Translated code
 
 ```
@@ -70,8 +64,6 @@ Translated code
     resdata INTEGER,
     );"""
 ```
-
-Copy
 
 ### Define Operator transformation[¶](#define-operator-transformation)
 
@@ -97,8 +89,6 @@ ATTRIBUTES
 );
 ```
 
-Copy
-
 Translated code
 
 ```
@@ -108,8 +98,6 @@ Translated code
         global args
         self.con = log_on(user = args.MyUserName, password = 'SomePassWord')
 ```
-
-Copy
 
 #### UPDATE Operator[¶](#update-operator)
 
@@ -136,8 +124,6 @@ ATTRIBUTES
 );
 ```
 
-Copy
-
 Translated code
 
 ```
@@ -148,8 +134,6 @@ Translated code
         operator_name = "LOAD_OPERATOR"
         return query
 ```
-
-Copy
 
 #### DATA CONNECTOR PRODUCER Operator[¶](#data-connector-producer-operator)
 
@@ -172,8 +156,6 @@ ATTRIBUTES
 );
 ```
 
-Copy
-
 Translated code
 
 ```
@@ -193,8 +175,6 @@ Translated code
         exec(f"""COPY INTO {temp_table_name} FROM @{stage_name} FILE_FORMAT = (format_name = '{format_name}')""")
         return temp_table_name
 ```
-
-Copy
 
 ### Define step transformation[¶](#define-step-transformation)
 
@@ -223,8 +203,6 @@ STEP stLOAD_FILE_NAME
 );
 ```
 
-Copy
-
 Translated code
 
 ```
@@ -238,8 +216,6 @@ SELECT EMP_NAME, EMP_YEARS, EMP_TEAM
 FROM (
 {self.ol_EMP_NAME('SELECT * FROM ' + self.op_EMP_NAME() )})""")
 ```
-
-Copy
 
 ### Main function[¶](#main-function)
 
@@ -255,5 +231,3 @@ Main function sample code
   _LOADJOB.stLOAD_FILE_NAME()
   snowconvert.helpers.quit_application()
 ```
-
-Copy

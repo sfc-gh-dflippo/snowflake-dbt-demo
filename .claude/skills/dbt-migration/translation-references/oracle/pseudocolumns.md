@@ -20,8 +20,6 @@ to avoid runtime errors.
 ROWID
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#sample-source-patterns)
 
 #### Oracle[¶](#oracle)
@@ -39,8 +37,6 @@ SELECT ROWID FROM sample_table;
 SELECT MAX(ROWID) FROM sample_table;
 ```
 
-Copy
-
 ##### Result Query 1[¶](#result-query-1)
 
 ```
@@ -51,8 +47,6 @@ Copy
 |AAASfCAABAAAIcpAAB|
 ```
 
-Copy
-
 ##### Result Query 2[¶](#result-query-2)
 
 ```
@@ -61,8 +55,6 @@ Copy
 |---|
 |AAASfCAABAAAIcpAAB|
 ```
-
-Copy
 
 ##### Snowflake[¶](#snowflake)
 
@@ -89,8 +81,6 @@ SELECT MAX(
 '' AS ROWID) FROM
 sample_table;
 ```
-
-Copy
 
 ##### Result Query 1[¶](#id1)
 
@@ -127,8 +117,6 @@ function to emulate the functionality.
 ROWNUM
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id3)
 
 #### Oracle[¶](#id4)
@@ -147,8 +135,6 @@ UPDATE TABLE1 SET COL2 = ROWNUM;
 SELECT * FROM TABLE1;
 ```
 
-Copy
-
 ##### Result Query 1[¶](#id5)
 
 ```
@@ -159,8 +145,6 @@ Copy
 |2|
 ```
 
-Copy
-
 ##### Result Query 2[¶](#id6)
 
 ```
@@ -170,8 +154,6 @@ Copy
 |ROWNUM:|1|
 |ROWNUM:|2|
 ```
-
-Copy
 
 ##### Snowflake[¶](#id7)
 
@@ -201,8 +183,6 @@ SELECT * FROM
 TABLE1;
 ```
 
-Copy
-
 ##### Result Query 1[¶](#id8)
 
 ```
@@ -213,8 +193,6 @@ Copy
 |2|
 ```
 
-Copy
-
 ##### Result Query 2[¶](#id9)
 
 ```
@@ -224,8 +202,6 @@ Copy
 |ROWNUM:|1|
 |ROWNUM:|2|
 ```
-
-Copy
 
 ### Known Issues[¶](#id10)
 

@@ -103,8 +103,6 @@ documentation.
    <hash-partitioning-scheme> SUBPARTITION BY <range-partitioning-scheme>
 ```
 
-Copy
-
 ## TEMPORARY TABLES[¶](#temporary-tables)
 
 ### Description[¶](#id1)
@@ -123,8 +121,6 @@ This syntax is partially supported in Snowflake.
 ```
  CREATE [ { GLOBAL | LOCAL } TEMPORARY ] TABLE
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#sample-source-patterns)
 
@@ -145,8 +141,6 @@ CREATE TABLE #TABLE03(
     col1 INTEGER
 );
 ```
-
-Copy
 
 ##### Output Code:[¶](#output-code)
 
@@ -173,8 +167,6 @@ COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,
 ;
 ```
 
-Copy
-
 ### Related EWIs[¶](#related-ewis)
 
 [SSC-FDM-0009](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0009):
@@ -198,8 +190,6 @@ This syntax is fully supported in Snowflake.
  IF NOT EXISTS
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id6)
 
 #### Input Code:[¶](#id7)
@@ -212,8 +202,6 @@ Copy
 );
 ```
 
-Copy
-
 ##### Output Code:[¶](#id9)
 
 ##### Snowflake[¶](#snowflake)
@@ -225,8 +213,6 @@ Copy
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "sybase",  "convertedOn": "03/19/2024" }}';
 ```
 
-Copy
-
 ## (ENABLE | DISABLE) RLV STORE[¶](#enable-disable-rlv-store)
 
 ### Description[¶](#id10)
@@ -234,7 +220,7 @@ Copy
 > Controls Row-Level Versioning Store functionality.
 > ([Sybase SQL Language Reference](https://help.sap.com/docs/SAP_IQ/a898e08b84f21015969fa437e89860c8/a619764084f21015b8039a8346dc622c.html)).
 
-Note
+**Note:**
 
 This syntax is not needed in Snowflake.
 
@@ -243,8 +229,6 @@ This syntax is not needed in Snowflake.
 ```
  { ENABLE | DISABLE } RLV STORE
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id12)
 
@@ -257,8 +241,6 @@ Copy
 (id INT)
 ENABLE RLV STORE;
 ```
-
-Copy
 
 ##### Output Code:[¶](#id15)
 
@@ -273,8 +255,6 @@ COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,
 ;
 ```
 
-Copy
-
 ## IN DBSPACE[¶](#in-dbspace)
 
 ### Description[¶](#id17)
@@ -282,7 +262,7 @@ Copy
 > Specifies the DB space for data storage.
 > ([Sybase SQL Language Reference](https://help.sap.com/docs/SAP_IQ/a898e08b84f21015969fa437e89860c8/a619764084f21015b8039a8346dc622c.html)).
 
-Note
+**Note:**
 
 This syntax is not needed in Snowflake. Snowflake automatically handles storage.
 
@@ -291,8 +271,6 @@ This syntax is not needed in Snowflake. Snowflake automatically handles storage.
 ```
  IN <dbspace-name>
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id19)
 
@@ -307,8 +285,6 @@ Copy
 IN my_dbspace;
 ```
 
-Copy
-
 ##### Output Code:[¶](#id22)
 
 ##### Snowflake[¶](#id23)
@@ -318,8 +294,6 @@ Copy
     id INT PRIMARY KEY
 );
 ```
-
-Copy
 
 ## ON COMMIT[¶](#on-commit)
 
@@ -338,8 +312,6 @@ This syntax is partially supported.
  [ ON COMMIT { DELETE | PRESERVE } ROWS ]
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id26)
 
 #### Input Code:[¶](#id27)
@@ -355,8 +327,6 @@ CREATE LOCAL TEMPORARY TABLE temp_projects (
     DATA VARCHAR(255)
 ) ON COMMIT PRESERVE ROWS;
 ```
-
-Copy
 
 ##### Output Code:[¶](#id29)
 
@@ -377,8 +347,6 @@ CREATE OR REPLACE TEMPORARY TABLE temp_projects (
     COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "sybase",  "convertedOn": "03/19/2025",  "domain": "test" }}'
 ;
 ```
-
-Copy
 
 ### Related EWIs[¶](#id31)
 
@@ -402,8 +370,6 @@ This syntax is not supported in Snowflake.
  AT <location-string>
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id34)
 
 #### Input Code:[¶](#id35)
@@ -417,8 +383,6 @@ Copy
 )
 AT 'SERVER_A.db1.joe.t1';
 ```
-
-Copy
 
 ##### Output Code:[¶](#id37)
 
@@ -435,8 +399,6 @@ COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,
 ;
 ```
 
-Copy
-
 ### Related EWIs[¶](#id39)
 
 [SSC-EWI-SY0002](../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/sybaseEWI.html#ssc-ewi-sy0002):
@@ -449,7 +411,7 @@ UNSUPPORTED REMOTE TABLE SYNTAX.
 > All rows of a table partition are physically colocated.
 > ([Sybase SQL Language Reference](https://help.sap.com/docs/SAP_IQ/a898e08b84f21015969fa437e89860c8/a619764084f21015b8039a8346dc622c.html))
 
-Note
+**Note:**
 
 This syntax is not needed in Snowflake.
 
@@ -475,8 +437,6 @@ This syntax is not needed in Snowflake.
 <composite-partitioning-scheme> ::=
    <hash-partitioning-scheme> SUBPARTITION BY <range-partitioning-scheme>
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id42)
 
@@ -519,8 +479,6 @@ SUBPARTITION BY RANGE (order_date) (
 );
 ```
 
-Copy
-
 ##### Output Code:[¶](#id45)
 
 ##### Snowflake[¶](#id46)
@@ -554,8 +512,6 @@ COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,
 ;
 ```
 
-Copy
-
 ## CONSTRAINTS[¶](#constraints)
 
 ### Description[¶](#id47)
@@ -588,8 +544,6 @@ This syntax is partially supported.
    [ ON { UPDATE | DELETE } RESTRICT ]
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id49)
 
 #### Input Code:[¶](#id50)
@@ -608,8 +562,6 @@ Copy
     CONSTRAINT fk_ord_line FOREIGN KEY (ord_id, line_id) REFERENCES ord_lines(ord_id,line_id)
 );
 ```
-
-Copy
 
 ##### Output Code:[¶](#id52)
 
@@ -633,8 +585,6 @@ Copy
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "sybase",  "convertedOn": "03/19/2025",  "domain": "test" }}'
 ;
 ```
-
-Copy
 
 ### Related EWIs[¶](#id54)
 
@@ -677,8 +627,6 @@ This syntax is partially supported in Snowflake.
    | USER
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id57)
 
 #### Input Code:[¶](#id58)
@@ -706,8 +654,6 @@ col15 int default null
 )
 ;
 ```
-
-Copy
 
 ##### Output Code:[¶](#id60)
 
@@ -738,5 +684,3 @@ Copy
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "sybase",  "convertedOn": "03/19/2025",  "domain": "test" }}'
 ;
 ```
-
-Copy

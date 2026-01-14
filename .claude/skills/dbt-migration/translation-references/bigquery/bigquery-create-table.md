@@ -19,8 +19,6 @@ table_name
 [AS query_statement]
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#sample-source-patterns)
 
 #### DEFAULT COLLATE[¶](#default-collate)
@@ -34,8 +32,6 @@ CREATE TABLE table1 (
 DEFAULT COLLATE 'und:ci';
 ```
 
-Copy
-
 ##### Snowflake[¶](#snowflake)
 
 ```
@@ -44,8 +40,6 @@ CREATE TABLE table1 (
 )
 DEFAULT_DDL_COLLATION='und-ci';
 ```
-
-Copy
 
 #### Labels table option[¶](#labels-table-option)
 
@@ -62,8 +56,6 @@ OPTIONS(
 );
 ```
 
-Copy
-
 ##### Snowflake[¶](#id2)
 
 ```
@@ -78,8 +70,6 @@ WITH TAG( "org_unit" = "development" )
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "bigquery",  "convertedOn": "04/09/2025",  "domain": "test" }}'
 ;
 ```
-
-Copy
 
 #### Description table option[¶](#description-table-option)
 
@@ -96,8 +86,6 @@ OPTIONS(
 );
 ```
 
-Copy
-
 ##### Snowflake[¶](#id4)
 
 ```
@@ -109,8 +97,6 @@ CREATE TABLE table1
 COMMENT = '{ "description": "My table comment", "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "bigquery",  "convertedOn": "04/09/2025",  "domain": "test" }}'
 ;
 ```
-
-Copy
 
 #### Description table option[¶](#id5)
 
@@ -127,8 +113,6 @@ OPTIONS(
 );
 ```
 
-Copy
-
 ##### Snowflake[¶](#id7)
 
 ```
@@ -140,8 +124,6 @@ CREATE TABLE table1
 COMMENT = '{ "friendly_name": "Some_table", "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "bigquery",  "convertedOn": "04/09/2025",  "domain": "test" }}'
 ;
 ```
-
-Copy
 
 ### Known Issues[¶](#known-issues)
 
@@ -166,8 +148,6 @@ OPTIONS(
 );
 ```
 
-Copy
-
 #### Snowflake[¶](#id9)
 
 ```
@@ -188,8 +168,6 @@ COMMENT = '{ "description": "a table that expires in 2025, with each partition l
 ;
 ```
 
-Copy
-
 **2. Micro-partitioning is automatically managed by Snowflake**
 
 Snowflake performs automatic partitioning of data. User defined partitioning is not supported.
@@ -204,8 +182,6 @@ Snowflake performs automatic partitioning of data. User defined partitioning is 
 PARTITION BY transaction_date;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id11)
 
 ```
@@ -216,8 +192,6 @@ Copy
 !!!RESOLVE EWI!!! /*** SSC-EWI-BQ0002 - MICRO-PARTITIONING IS AUTOMATICALLY PERFORMED ON ALL SNOWFLAKE TABLES. ***/!!!
 PARTITION BY transaction_date;
 ```
-
-Copy
 
 ## Related EWIs[¶](#related-ewis)
 
@@ -256,8 +230,6 @@ array_element_schema :=
   [NOT NULL]
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id13)
 
 #### Description option[¶](#description-option)
@@ -270,8 +242,6 @@ CREATE TABLE table1 (
 );
 ```
 
-Copy
-
 ##### Snowflake[¶](#id15)
 
 ```
@@ -279,8 +249,6 @@ CREATE TABLE table1 (
   col1 VARCHAR(20) COMMENT = 'A repeated STRING field'
 );
 ```
-
-Copy
 
 #### COLLATE[¶](#collate)
 
@@ -292,8 +260,6 @@ CREATE TABLE table1 (
 );
 ```
 
-Copy
-
 ##### Snowflake[¶](#id17)
 
 ```
@@ -301,8 +267,6 @@ CREATE TABLE table1 (
   col1 STRING COLLATE 'und-ci'
 );
 ```
-
-Copy
 
 ### Known Issues[¶](#id18)
 
@@ -318,8 +282,6 @@ CREATE TABLE table1 (
 );
 ```
 
-Copy
-
 #### Snowflake[¶](#id20)
 
 ```
@@ -331,8 +293,6 @@ CREATE TABLE table1 (
     )
 )
 ```
-
-Copy
 
 ### Related EWIs[¶](#id21)
 
@@ -366,8 +326,6 @@ OPTIONS (
   ...
 );
 ```
-
-Copy
 
 The CREATE EXTERNAL TABLE statement from BigQuery will be transformed to a CREATE EXTERNAL TABLE
 statement from [Snowflake](https://docs.snowflake.com/en/sql-reference/sql/create-external-table),
@@ -421,8 +379,6 @@ OPTIONS(
 );
 ```
 
-Copy
-
 ##### Snowflake[¶](#id24)
 
 ```
@@ -440,8 +396,6 @@ AUTO_REFRESH = false
 PATTERN = 'folder_with_csv/Employees.csv'
 FILE_FORMAT = (TYPE = CSV SKIP_HEADER =1);
 ```
-
-Copy
 
 #### CREATE EXTERNAL TABLE without explicit column list[¶](#create-external-table-without-explicit-column-list)
 
@@ -465,8 +419,6 @@ OPTIONS(
 );
 ```
 
-Copy
-
 ##### Snowflake[¶](#id26)
 
 ```
@@ -485,8 +437,6 @@ AUTO_REFRESH = false
 PATTERN = 'folder_with_json/Cars.jsonl'
 FILE_FORMAT = (TYPE = JSON);
 ```
-
-Copy
 
 #### CREATE EXTERNAL TABLE with multiple URIs[¶](#create-external-table-with-multiple-uris)
 
@@ -511,8 +461,6 @@ OPTIONS(
 );
 ```
 
-Copy
-
 ##### Snowflake[¶](#id28)
 
 ```
@@ -530,8 +478,6 @@ PATTERN = 'folder_with_csv/Food.csv|folder_with_csv/other_products/.*'
 FILE_FORMAT = (TYPE = CSV SKIP_HEADER = 1);
 ```
 
-Copy
-
 #### WITH CONNECTION clause[¶](#with-connection-clause)
 
 The WITH CONNECTION clause is removed because the connection information is already provided to
@@ -547,8 +493,6 @@ Snowflake using the Storage Integration.
     uris=["s3://s3-bucket/json_files/example.jsonl"]
 );
 ```
-
-Copy
 
 ##### Snowflake[¶](#id30)
 
@@ -568,8 +512,6 @@ AUTO_REFRESH = false
 PATTERN = 'json_files/example.jsonl'
 FILE_FORMAT = (TYPE = JSON);
 ```
-
-Copy
 
 #### Supported table options[¶](#supported-table-options)
 
@@ -601,8 +543,6 @@ OPTIONS(
 );
 ```
 
-Copy
-
 ##### Snowflake[¶](#id32)
 
 ```
@@ -622,8 +562,6 @@ FILE_FORMAT = (TYPE = CSV
   FIELD_DELIMITER='|'
   COMPRESSION= GZIP);
 ```
-
-Copy
 
 ### Known Issues[¶](#id33)
 
@@ -647,8 +585,6 @@ OPTIONS(
 );
 ```
 
-Copy
-
 #### Snowflake[¶](#id35)
 
 ```
@@ -671,8 +607,6 @@ PATTERN = 'folder_with_csv/Employees.csv'
 FILE_FORMAT = (TYPE = CSV SKIP_HEADER = 1);
 ```
 
-Copy
-
 **2. External tables referencing Google Drive sources**
 
 Snowflake does not support reading data from files hosted in Google Drive, an FDM will be generated
@@ -691,8 +625,6 @@ OPTIONS(
   URIS=['https://drive.google.com/open?id=someFileId']
 );
 ```
-
-Copy
 
 ##### Snowflake[¶](#id37)
 
@@ -714,8 +646,6 @@ AUTO_REFRESH = false
 PATTERN = 'FILE_PATH0'
 FILE_FORMAT = (TYPE = JSON);
 ```
-
-Copy
 
 **3. External tables with the GOOGLE_SHEETS file format**
 
@@ -746,8 +676,6 @@ OPTIONS(
 );
 ```
 
-Copy
-
 ##### Snowflake[¶](#id39)
 
 ```
@@ -766,8 +694,6 @@ AUTO_REFRESH = false
 PATTERN = 'FILE_PATH0'
 FILE_FORMAT = (TYPE = CSV SKIP_HEADER = 1);
 ```
-
-Copy
 
 **4. External tables with unsupported file formats**
 
@@ -794,8 +720,6 @@ OPTIONS (
 );
 ```
 
-Copy
-
 ##### Snowflake[¶](#id41)
 
 ```
@@ -806,8 +730,6 @@ OPTIONS (
   uris = ['gs://backup_bucket/backup_folder/*']
 );
 ```
-
-Copy
 
 **5. Hive partitioned external tables**
 
@@ -827,8 +749,6 @@ OPTIONS (
   hive_partition_uri_prefix = 'gs://sc_external_table_bucket/folder_with_parquet',
   require_hive_partition_filter = false);
 ```
-
-Copy
 
 ##### Snowflake[¶](#id43)
 
@@ -859,8 +779,6 @@ OPTIONS(
 );
 ```
 
-Copy
-
 **6. External table without columns list and no valid file URI for the INFER_SCHEMA function**
 
 The INFER_SCHEMA function requires a LOCATION parameter that specifies the path to a file or folder
@@ -882,8 +800,6 @@ OPTIONS(
 );
 ```
 
-Copy
-
 ##### Snowflake[¶](#id45)
 
 ```
@@ -903,8 +819,6 @@ AUTO_REFRESH = false
 PATTERN = 'folder_with_json/.*'
 FILE_FORMAT = (TYPE = JSON);
 ```
-
-Copy
 
 **7. Unsupported table options**
 
@@ -927,8 +841,6 @@ OPTIONS (
 );
 ```
 
-Copy
-
 ##### Snowflake[¶](#id47)
 
 ```
@@ -948,8 +860,6 @@ OPTIONS(
   max_bad_records = 5
 );
 ```
-
-Copy
 
 ### Related EWIs[¶](#id48)
 
@@ -984,8 +894,6 @@ CLONE source_table_name [FOR SYSTEM_TIME AS OF time_expression]
 [OPTIONS(table_option_list)]
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id50)
 
 #### FOR SYSTEM TIME AS OF[¶](#for-system-time-as-of)
@@ -998,16 +906,12 @@ CLONE some_table_name2
 FOR SYSTEM_TIME AS OF TIMESTAMP "2025-01-01 00:00:00 UTC";
 ```
 
-Copy
-
 ##### Snowflake[¶](#id52)
 
 ```
 CREATE TABLE my_clone_table
 CLONE some_table_name2 AT (TIMESTAMP => TIMESTAMP "2025-01-01 00:00:00 UTC");
 ```
-
-Copy
 
 ::{note} The LABELS option in CREATE TABLE CLONE statements are not transformed into TAGs because
 the TAGs of the source table are copied, they cannot be changed during the copy of the table.
@@ -1025,8 +929,6 @@ COPY source_table_name
 [OPTIONS(table_option_list)]
 ```
 
-Copy
-
 ### Sample Source Patterns
 
 #### General case
@@ -1042,17 +944,13 @@ CREATE TABLE newtable
 COPY sourceTable;
 ```
 
-Copy
-
 ##### Snowflake
 
 ```
 CREATE TABLE newtable CLONE sourceTable;
 ```
 
-Copy
-
-Note
+**Note:**
 
 The LABELS option in CREATE TABLE COPY statements are not transformed into TAGs because the TAGs of
 the source table are copied, they cannot be changed during the copy of the table. Transformation of
@@ -1071,13 +969,11 @@ LIKE [[project_name.]dataset_name.]source_table_name
 [OPTIONS(table_option_list)]
 ```
 
-Copy
-
 Success
 
 CREATE TABLE LIKE is fully supported by Snowflake.
 
-Note
+**Note:**
 
 The LABELS option in CREATE TABLE LIKE statements are not transformed into TAGs because the TAGs of
 the source table are copied, they cannot be changed during the copy of the table. Transformation of
@@ -1094,8 +990,6 @@ CLONE source_table_name
 [FOR SYSTEM_TIME AS OF time_expression]
 [OPTIONS(snapshot_option_list)]
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id59)
 
@@ -1114,15 +1008,11 @@ CREATE SNAPSHOT TABLE mytablesnapshot
 CLONE mytable;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id62)
 
 ```
 CREATE TABLE mytablesnapshot CLONE mytable;
 ```
-
-Copy
 
 #### FOR SYSTEM TIME AS OF[¶](#id63)
 
@@ -1134,8 +1024,6 @@ CLONE some_table_name2
 FOR SYSTEM_TIME AS OF TIMESTAMP "2025-01-01 00:00:00 UTC";
 ```
 
-Copy
-
 ##### Snowflake[¶](#id65)
 
 ```
@@ -1143,9 +1031,7 @@ CREATE TABLE IF NOT EXISTS my_snapshot_table2
 CLONE some_table_name2 AT (TIMESTAMP => TIMESTAMP "2025-01-01 00:00:00 UTC");
 ```
 
-Copy
-
-Note
+**Note:**
 
 The LABELS option in CREATE TABLE COPY statements are not transformed into TAGs because the TAGs of
 the source table are copied, they cannot be changed during the copy of the table.

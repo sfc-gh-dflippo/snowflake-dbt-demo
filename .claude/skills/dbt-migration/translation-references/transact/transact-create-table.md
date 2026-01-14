@@ -19,8 +19,6 @@ CREATE TABLE [MYSCHEMA].[MYTABLE]
 );
 ```
 
-Copy
-
 ### Expected[¶](#expected)
 
 ```
@@ -36,8 +34,6 @@ COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,
 ;
 ```
 
-Copy
-
 ## TEMPORARY TABLES[¶](#temporary-tables)
 
 In the source code, there can be some table names that start with the character #.
@@ -48,8 +44,6 @@ CREATE TABLE #MyLocalTempTable (
         COL2 INT
 );
 ```
-
-Copy
 
 If that is the case, they are transformed into temporary tables in the output code.
 
@@ -63,8 +57,6 @@ CREATE OR REPLACE TEMPORARY TABLE T_MyLocalTempTable (
 COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":0},"attributes":{"component":"transact"}}'
 ;
 ```
-
-Copy
 
 As you can see, **TEMPORARY** was added to the definition of the table, and the character **#** was
 replaced with **T\_**.
@@ -90,8 +82,6 @@ CREATE TABLE [SCHEMA1].[TABLE2](
 GO
 ```
 
-Copy
-
 ### Expected[¶](#id2)
 
 ```
@@ -108,8 +98,6 @@ COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":
 ;
 ```
 
-Copy
-
 ## IDENTITY Column Option[¶](#identity-column-option)
 
 For identity columns, a sequence is created and assigned to the column.
@@ -122,8 +110,6 @@ UnidentifiedCash_ID3 INT IDENTITY (666, 313) NOT NULL
 );
 ```
 
-Copy
-
 ### Expected[¶](#id4)
 
 ```
@@ -133,8 +119,6 @@ UnidentifiedCash_ID3 INT IDENTITY(666, 313) ORDER NOT NULL
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "transact",  "convertedOn": "07/02/2025",  "domain": "no-domain-provided" }}'
 ;
 ```
-
-Copy
 
 ## DEFAULT Column Option[¶](#default-column-option)
 
@@ -150,8 +134,6 @@ CREATE TABLE [SCHEMA1].[TABLE1] (
 );
 ```
 
-Copy
-
 ### Expected[¶](#id6)
 
 ```
@@ -161,8 +143,6 @@ COL1 VARCHAR(10) DEFAULT ('0') /*** SSC-FDM-0012 - CONSTRAINT NAME 'constraintNa
 COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":0},"attributes":{"component":"transact"}}'
 ;
 ```
-
-Copy
 
 ## COLUMN Constraint[¶](#column-constraint)
 
@@ -190,8 +170,6 @@ CREATE TABLE [SalesLT].[Address](
 ) ON [PRIMARY]
 ```
 
-Copy
-
 ### Expected[¶](#id8)
 
 ```
@@ -215,8 +193,6 @@ COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,
 ;
 ```
 
-Copy
-
 ## COLLATE Column Option[¶](#collate-column-option)
 
 For the Collate transformation, please check the following
@@ -234,8 +210,6 @@ CREATE TABLE [SCHEMA1].[TABLE1] (
 );
 ```
 
-Copy
-
 ### Expected[¶](#id10)
 
 ```
@@ -247,8 +221,6 @@ CREATE OR REPLACE TABLE SCHEMA1.TABLE1 (
 COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":0},"attributes":{"component":"transact"}}'
 ;
 ```
-
-Copy
 
 ## NOT FOR REPLICATION[¶](#not-for-replication)
 
@@ -268,8 +240,6 @@ CREATE TABLE [TABLE1] (
 ) ON [PRIMARY];
 ```
 
-Copy
-
 ### Output[¶](#output)
 
 ```
@@ -279,8 +249,6 @@ CREATE OR REPLACE TABLE TABLE1 (
 COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":0},"attributes":{"component":"transact"}}'
 ;
 ```
-
-Copy
 
 ## ON PRIMARY[¶](#on-primary)
 
@@ -300,8 +268,6 @@ CREATE TABLE [TABLE1](
 ) ON [PRIMARY]
 ```
 
-Copy
-
 ### Output[¶](#id13)
 
 ```
@@ -312,8 +278,6 @@ CREATE OR REPLACE TABLE TABLE1 (
  COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "transact",  "convertedOn": "09/23/2024" }}'
  ;
 ```
-
-Copy
 
 ## ASC/DESC Column Sorting[¶](#asc-desc-column-sorting)
 
@@ -328,8 +292,6 @@ CREATE TABLE [TABLE1](
 ) ON [PRIMARY]
 ```
 
-Copy
-
 ### Output[¶](#id15)
 
 ```
@@ -340,8 +302,6 @@ CREATE OR REPLACE TABLE TABLE1 (
 	COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "transact",  "convertedOn": "09/23/2024" }}'
 	;
 ```
-
-Copy
 
 ## COMPUTED Columns[¶](#computed-columns)
 
@@ -358,8 +318,6 @@ CREATE TABLE [TABLE1](
 )
 ```
 
-Copy
-
 ### Output[¶](#id17)
 
 ```
@@ -372,8 +330,6 @@ COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":
 ;
 ```
 
-Copy
-
 If the computed expression cannot transform, a warning is added, and a simple column definition with
 the expression return type will be used instead, like in the following example:
 
@@ -384,8 +340,6 @@ CREATE TABLE [TABLE1](
 	[Col1] AS (CONVERT ([XML], ExpressionValue))
 )
 ```
-
-Copy
 
 The expression `CONVERT ([NUMERIC], ExpressionValue)` is not supported yet by SnowConvert AI, so,
 after it is inspected, SnowConvert AI will determine that its type is XML, so the transformation
@@ -400,8 +354,6 @@ CREATE OR REPLACE TABLE TABLE1 (
 COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":0},"attributes":{"component":"transact"}}'
 ;
 ```
-
-Copy
 
 SnowConvert AI will run a process to determine the original expression type in SQL Server. However,
 the column will have the equivalent target type. In the previous example, the column type in
@@ -426,8 +378,6 @@ CREATE TABLE TABLE1
 );
 ```
 
-Copy
-
 ### Output[¶](#id20)
 
 ```
@@ -440,8 +390,6 @@ CREATE OR REPLACE TABLE TABLE1
 COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":0},"attributes":{"component":"transact"}}'
 ;
 ```
-
-Copy
 
 ## ROWGUIDCOL Column Option[¶](#rowguidcol-column-option)
 
@@ -457,8 +405,6 @@ CREATE TABLE TABLEROWID (
 ) ON [PRIMARY];
 ```
 
-Copy
-
 ### Output[¶](#id22)
 
 ```
@@ -470,8 +416,6 @@ CREATE OR REPLACE TABLE TABLEROWID (
 COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":0},"attributes":{"component":"transact"}}'
 ;
 ```
-
-Copy
 
 ## GENERATED ALWAYS AS ROW START/END Column Option[¶](#generated-always-as-row-start-end-column-option)
 
@@ -486,8 +430,6 @@ CREATE TABLE TABLEROWID (
 ) ON [PRIMARY];
 ```
 
-Copy
-
 ### Output[¶](#id24)
 
 ```
@@ -497,8 +439,6 @@ CREATE OR REPLACE TABLE TABLEROWID (
 COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":0},"attributes":{"component":"transact"}}'
 ;
 ```
-
-Copy
 
 ### Known Issues[¶](#known-issues)
 
@@ -551,8 +491,6 @@ CREATE TABLE { database_name.schema_name.table_name | schema_name.table_name | t
 [;]
 ```
 
-Copy
-
 #### CREATE TABLE AS[¶](#create-table-as)
 
 ```
@@ -566,8 +504,6 @@ CREATE TABLE { database_name.schema_name.table_name | schema_name.table_name | t
     OPTION <query_hint>
 [;]
 ```
-
-Copy
 
 ### Source Patterns[¶](#source-patterns)
 
@@ -592,8 +528,6 @@ Azure Synapse Analytics presents an additional syntax for defining table options
     | PARTITION ( partition_column_name RANGE [ LEFT | RIGHT ] -- default is LEFT
         FOR VALUES ( [ boundary_value [,...n] ] ) )
 ```
-
-Copy
 
 Snowflake automatically handles table optimization through mechanisms like micro-partitioning. For
 this reason, an equivalent syntax for some of these table options does not exist in Snowflake.
@@ -625,8 +559,6 @@ WITH (
 );
 ```
 
-Copy
-
 ##### Snowflake[¶](#snowflake)
 
 ```
@@ -641,8 +573,6 @@ CLUSTER BY (enterprise_cif)
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "transact",  "convertedOn": "10/09/2024" }}'
 ;
 ```
-
-Copy
 
 ### Known Issues[¶](#id25)
 
@@ -659,7 +589,7 @@ Applies to
 
 - SQL Server
 
-Note
+**Note:**
 
 Non-relevant statement.
 
@@ -689,8 +619,6 @@ syntax.
  ) TEXTIMAGE_ON [PRIMARY]
 ```
 
-Copy
-
 #### Snowflake[¶](#id29)
 
 ```
@@ -700,8 +628,6 @@ Copy
  COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":0},{"attributes":{"component":"transact"}}'
  ;
 ```
-
-Copy
 
 ### Known Issues[¶](#id30)
 

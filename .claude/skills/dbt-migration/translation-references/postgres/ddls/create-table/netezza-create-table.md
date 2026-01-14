@@ -19,8 +19,6 @@ This grammar is partially supported in Snowflake. Translation pending for these 
 [ DATA_VERSION_RETENTION_TIME <number-of-days> ]
 ```
 
-Copy
-
 ## Grammar Syntax[¶](#grammar-syntax)
 
 ```
@@ -33,11 +31,9 @@ CREATE [ TEMPORARY | TEMP ] TABLE [IF NOT EXISTS] <table>
 [ DATA_VERSION_RETENTION_TIME <number-of-days> ]
 ```
 
-Copy
-
 ## DISTRIBUTE ON RANDOM - DISTRIBUTE ON HASH[¶](#distribute-on-random-distribute-on-hash)
 
-Note
+**Note:**
 
 This syntax is not needed in Snowflake.
 
@@ -50,8 +46,6 @@ Snowflake automatically handles data storage, these options will be removed in t
 DISTRIBUTE ON { RANDOM | [HASH] (<col>[,<col>…]) }
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#sample-source-patterns)
 
 #### Input Code:[¶](#input-code)
@@ -63,8 +57,6 @@ CREATE TABLE table1 (colum1 int, colum2 int, colum3 smallint, colum4 int )
 DISTRIBUTE ON RANDOM;
 ```
 
-Copy
-
 #### Output Code:[¶](#output-code)
 
 ##### Snowflake[¶](#snowflake)
@@ -74,8 +66,6 @@ CREATE TABLE table1 (colum1 int, colum2 int, colum3 smallint, colum4 int )
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "netezza",  "convertedOn": "05/11/2025",  "domain": "test" }}'
 ;
 ```
-
-Copy
 
 ## Related EWIs[¶](#related-ewis)
 

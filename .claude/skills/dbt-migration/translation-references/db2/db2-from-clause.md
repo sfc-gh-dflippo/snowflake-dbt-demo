@@ -60,8 +60,6 @@ FROM v1 ANALYZE_TABLE(
 ORDER BY 1;
 ```
 
-Copy
-
 ##### Snowflake
 
 ```
@@ -73,8 +71,6 @@ FROM
    IMPLEMENTATION 'PROVIDER=SAS; ROUTINE_SOURCE_TABLE=ETLIN.SOURCE_TABLE; ROUTINE_SOURCE_NAME=SCORING_FUN3;')
 ORDER BY 1;
 ```
-
-Copy
 
 ### Related EWIs
 
@@ -112,8 +108,6 @@ FROM
    UNNEST(testArray) WITH ORDINALITY;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id9)
 
 ```
@@ -123,8 +117,6 @@ FROM
    !!!RESOLVE EWI!!! /*** SSC-EWI-DB0016 - UNNEST FUNCTION IS NOT SUPPORTED ***/!!!
    UNNEST(test) WITH ORDINALITY;
 ```
-
-Copy
 
 ### Related EWIs[¶](#id10)
 
@@ -160,8 +152,6 @@ FROM
    OLD Table(UPDATE T1 SET NAME = 'Tony' where ID = 4)
 ```
 
-Copy
-
 #### Snowflake
 
 ```
@@ -171,8 +161,6 @@ FROM
    !!!RESOLVE EWI!!! /*** SSC-EWI-DB0006 - INTERMEDIATE RESULT TABLE IS NOT SUPPORTED. ***/!!!
    OLD Table(UPDATE T1 SET NAME = 'Tony' where ID = 4);
 ```
-
-Copy
 
 ### Related EWIs
 
@@ -207,8 +195,6 @@ FROM
    EXTERNAL SOMENAME AS T1 LIKE TABLE2 USING(COMPRESS NO)
 ```
 
-Copy
-
 ##### Snowflake[¶](#id21)
 
 ```
@@ -218,8 +204,6 @@ FROM
    !!!RESOLVE EWI!!! /*** SSC-EWI-DB0014 - THE USE OF EXTERNAL TABLE REFERENCES IS NOT SUPPORTED IN SNOWFLAKE ***/!!!
    EXTERNAL SOMENAME AS T1 LIKE TABLE2 USING(COMPRESS NO);
 ```
-
-Copy
 
 ### Related EWIs[¶](#id22)
 
@@ -263,8 +247,6 @@ from
    );
 ```
 
-Copy
-
 ##### Snowflake[¶](#id27)
 
 ```
@@ -281,8 +263,6 @@ from
          ATable
    );
 ```
-
-Copy
 
 ### Related EWIs[¶](#id28)
 
@@ -312,16 +292,12 @@ to navigate to the IBM DB2 documentation page for this syntax.
  Select * from ONLY(ATable) AS CorrelationName;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id33)
 
 ```
  Select * from
    ATable AS CorrelationName;
 ```
-
-Copy
 
 ## OUTER TABLE REFERENCE[¶](#outer-table-reference)
 
@@ -349,16 +325,12 @@ OUTER TABLE REFERENCE is not applicable in Snowflake.
  Select * from OUTER(ATable) AS CorrelationName;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id38)
 
 ```
  Select * from
    !!!RESOLVE EWI!!! /*** SSC-EWI-DB0004 - OUTER TABLE REFERENCE IS NOT SUPPORTED IN SNOWFLAKE. ***/!!! OUTER(ATable) AS CorrelationName;
 ```
-
-Copy
 
 ### Related EWIs[¶](#id39)
 
@@ -393,8 +365,6 @@ FROM
 FOR BUSINESS_TIME AS OF "12-12-12"
 ```
 
-Copy
-
 #### Snowflake
 
 ```
@@ -405,8 +375,6 @@ FROM
    !!!RESOLVE EWI!!! /*** SSC-EWI-DB0003 - PERIOD SPECIFICATION IS NOT SUPPORTED IN SNOWFLAKE. ***/!!!
 FOR BUSINESS_TIME AS OF "12-12-12";
 ```
-
-Copy
 
 ### Related EWIs
 
@@ -446,15 +414,11 @@ Snowflake.
  SELECT * FROM TABLE(TUDF1(3) CARDINALITY 30) AS X;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id49)
 
 ```
 SELECT * FROM TABLE(TUDF1(3)) AS X;
 ```
-
-Copy
 
 Note that each function along with the type of it’s arguments specified in the table reference must
 exist, otherwise it will cause errors.

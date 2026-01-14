@@ -41,8 +41,6 @@ URIFactory contains the following subprograms:
 SELECT SYS.URIFACTORY.GETURI('http://localhost/').GETURL() FROM dual;
 ```
 
-Copy
-
 #### Result[¶](#result)
 
 <!-- prettier-ignore -->
@@ -58,8 +56,6 @@ SELECT
 '' AS GETURI.GETURL() FROM dual;
 ```
 
-Copy
-
 ### ESCAPEURI[¶](#escapeuri)
 
 #### Oracle[¶](#id2)
@@ -67,8 +63,6 @@ Copy
 ```
 SELECT SYS.URIFACTORY.ESCAPEURI('http://www.<->') FROM dual;
 ```
-
-Copy
 
 #### Result[¶](#id3)
 
@@ -86,8 +80,6 @@ SELECT
 FROM dual;
 ```
 
-Copy
-
 ### UNESCAPEURI[¶](#unescapeuri)
 
 #### Oracle[¶](#id5)
@@ -95,8 +87,6 @@ Copy
 ```
 SELECT SYS.URIFACTORY.UNESCAPEURI('http://www.%24-%26-%3C-%3E-%3F') FROM dual;
 ```
-
-Copy
 
 #### Result[¶](#id6)
 
@@ -113,8 +103,6 @@ SELECT
 '' AS UNESCAPEURI
 FROM dual;
 ```
-
-Copy
 
 ### REGISTERURLHANDLER[¶](#registerurlhandler)
 
@@ -136,8 +124,6 @@ CALL URIFACTORY.REGISTERURLHANDLER('sc://','HR','SCURITYPE');
 
 INSERT INTO url_table VALUES ('SC://company1/company2=22/comp');
 ```
-
-Copy
 
 #### Snowflake[¶](#id9)
 
@@ -165,8 +151,6 @@ INSERT INTO url_table
 VALUES ('SC://company1/company2=22/comp');
 ```
 
-Copy
-
 ### UNREGISTERURLHANDLER[¶](#unregisterurlhandler)
 
 #### Oracle[¶](#id10)
@@ -175,15 +159,11 @@ Copy
 CALL URIFACTORY.UNREGISTERURLHANDLER('sc://');
 ```
 
-Copy
-
 #### Snowflake[¶](#id11)
 
 ```
 CALL URIFACTORY.UNREGISTERURLHANDLER('sc://');
 ```
-
-Copy
 
 ### Known Issues[¶](#known-issues)
 
@@ -225,8 +205,6 @@ in Snowflake.
 XMLTYPE
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#sample-source-patterns)
 
 #### XMLType in Create Table[¶](#xmltype-in-create-table)
@@ -239,8 +217,6 @@ CREATE TABLE xml_table(
 );
 ```
 
-Copy
-
 ##### Snowflake[¶](#id14)
 
 ```
@@ -250,8 +226,6 @@ CREATE OR REPLACE TABLE xml_table (
     COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":0},{"attributes":{"component":"oracle"}}'
     ;
 ```
-
-Copy
 
 #### Insert data in the XML column[¶](#insert-data-in-the-xml-column)
 
@@ -270,8 +244,6 @@ INSERT INTO xml_table VALUES(
 );
 ```
 
-Copy
-
 ##### Snowflake[¶](#id16)
 
 ```
@@ -288,8 +260,6 @@ VALUES(
 </note>')
 );
 ```
-
-Copy
 
 ### Known Issues[¶](#id17)
 
@@ -316,7 +286,7 @@ transformed by SnowConvert.
 
 ## DBURIType[¶](#dburitype)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -331,11 +301,9 @@ Some parts in the output code are omitted for clarity reasons.
 DBURIType
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id21)
 
-Note
+**Note:**
 
 Check this [section](../../sample-data) to set up the sample database.
 
@@ -353,8 +321,6 @@ INSERT INTO dburitype_table (db_uritype_column) VALUES (
     dburitype.createUri('/HR/EMPLOYEES/ROW[EMPLOYEE_ID=205]/FIRST_NAME ')
 );
 ```
-
-Copy
 
 ##### Snowflake[¶](#id23)
 
@@ -381,8 +347,6 @@ CREATE OR REPLACE TABLE dburitype_table (
 );
 ```
 
-Copy
-
 #### Retrieving data from DBURIType column[¶](#retrieving-data-from-dburitype-column)
 
 ##### Oracle[¶](#id24)
@@ -390,8 +354,6 @@ Copy
 ```
 SELECT dt.db_uritype_column.getclob() FROM dburitype_table dt;
 ```
-
-Copy
 
 ##### Result[¶](#id25)
 
@@ -407,16 +369,12 @@ This result query has XML syntax, this is how it is displayed:
  <FIRST_NAME>Shelley</FIRST_NAME>
 ```
 
-Copy
-
 ##### Snowflake[¶](#id26)
 
 ```
 SELECT dt.db_uritype_column.getclob() !!!RESOLVE EWI!!! /*** SSC-EWI-0073 - PENDING FUNCTIONAL EQUIVALENCE REVIEW FOR 'dt.db_uritype_column.getclob' NODE ***/!!! FROM
 dburitype_table dt;
 ```
-
-Copy
 
 Warning
 
@@ -441,7 +399,7 @@ it uses the prefix SYS, there is a work item to fix this issue
 
 ## HTTPURIType[¶](#httpuritype)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -454,8 +412,6 @@ Some parts in the output code are omitted for clarity reasons.
 ```
 HTTPURITYPE
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id30)
 
@@ -476,8 +432,6 @@ INSERT INTO httpuritype_table (http_uritype_column) VALUES(
     HTTPURITYPE.createuri('www.google.com')
 );
 ```
-
-Copy
 
 ##### Snowflake[¶](#id32)
 
@@ -508,8 +462,6 @@ CREATE OR REPLACE TABLE httpuritype_table (
 );
 ```
 
-Copy
-
 #### Retrieving data from HTTPURIType column[¶](#retrieving-data-from-httpuritype-column)
 
 ##### Oracle[¶](#id33)
@@ -521,8 +473,6 @@ SELECT
 FROM
 	httpuritype_table ut;
 ```
-
-Copy
 
 ##### Result[¶](#id34)
 
@@ -541,8 +491,6 @@ SELECT
 FROM
 	httpuritype_table ut;
 ```
-
-Copy
 
 Warning
 
@@ -567,7 +515,7 @@ if it uses the prefix SYS, there is a work item to fix this issue
 
 ## XDBURIType[¶](#xdburitype)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -582,8 +530,6 @@ Some parts in the output code are omitted for clarity reasons.
 ```
 XDBURITYPE
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id39)
 
@@ -601,8 +547,6 @@ INSERT INTO xdburitype_table (xdb_uritype_column) VALUES(
     xdburitype('/home/OE/employees/emp_selby.xml')
 );
 ```
-
-Copy
 
 ##### Snowflake[¶](#id41)
 
@@ -629,8 +573,6 @@ CREATE OR REPLACE TABLE xdburitype_table (
 );
 ```
 
-Copy
-
 #### Retrieving data from XDBURIType column[¶](#retrieving-data-from-xdburitype-column)
 
 ##### Oracle[¶](#id42)
@@ -638,8 +580,6 @@ Copy
 ```
 SELECT ut.xdb_uritype_column.getclob() FROM xdburitype_table ut;
 ```
-
-Copy
 
 ##### Result[¶](#id43)
 
@@ -654,16 +594,12 @@ This result query has XML syntax, this is how it is displayed:
 <emp_name>selby</emp_name>
 ```
 
-Copy
-
 ##### Snowflake[¶](#id44)
 
 ```
 SELECT ut.xdb_uritype_column.getclob() !!!RESOLVE EWI!!! /*** SSC-EWI-0073 - PENDING FUNCTIONAL EQUIVALENCE REVIEW FOR 'ut.xdb_uritype_column.getclob' NODE ***/!!! FROM
 xdburitype_table ut;
 ```
-
-Copy
 
 Warning
 

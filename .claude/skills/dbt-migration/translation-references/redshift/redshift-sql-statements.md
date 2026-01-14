@@ -18,8 +18,6 @@ title: SnowConvert AI - Redshift - SQL Statements | Snowflake Documentation
  CALL sp_name ( [ argument ] [, ...] )
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#sample-source-patterns)
 
 #### Base scenario[¶](#base-scenario)
@@ -41,8 +39,6 @@ $$;
 CALL sp_insert_values(1, CURRENT_DATE);
 ```
 
-Copy
-
 ##### Output Code:[¶](#output-code)
 
 ##### Redshift[¶](#id1)
@@ -62,8 +58,6 @@ $$;
 
 CALL sp_insert_values(1, CURRENT_DATE());
 ```
-
-Copy
 
 #### Call using Output Parameters Mode (INOUT, OUT)[¶](#call-using-output-parameters-mode-inout-out)
 
@@ -95,8 +89,6 @@ $$;
 
 CALL call_sp_calculate_sum_product();
 ```
-
-Copy
 
 ##### Output Code:[¶](#id4)
 
@@ -132,8 +124,6 @@ $$;
 CALL call_sp_calculate_sum_product();
 ```
 
-Copy
-
 ### Known Issues[¶](#known-issues)
 
 - Output parameters from calls outside procedures won’t work.
@@ -161,8 +151,6 @@ Copy
   | { IAM_ROLE  {default | 'SESSION' | 'arn:aws:iam::<account-id>:role/<role-name>' } }
 ```
 
-Copy
-
 For more information please refer to Redshift
 [`CREATE DATABASE` documentation](https://docs.aws.amazon.com/redshift/latest/dg/r_CREATE_DATABASE.html).
 
@@ -178,8 +166,6 @@ For more information please refer to Redshift
  CREATE DATABASE database_name;
 ```
 
-Copy
-
 ##### Output Code:[¶](#id10)
 
 ##### Snowflake[¶](#snowflake)
@@ -188,8 +174,6 @@ Copy
  CREATE DATABASE IF NOT EXISTS database_name
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "redshift",  "convertedOn": "09/25/2024" }}';
 ```
-
-Copy
 
 #### Collate Clause[¶](#collate-clause)
 
@@ -202,8 +186,6 @@ Copy
 COLLATE CASE_INSENSITIVE;
 ```
 
-Copy
-
 ##### Output Code:[¶](#id13)
 
 ##### Snowflake[¶](#id14)
@@ -213,8 +195,6 @@ Copy
 DEFAULT_DDL_COLLATION='en-ci'
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "redshift",  "convertedOn": "09/24/2024" }}';
 ```
-
-Copy
 
 #### Connection Limit Clause[¶](#connection-limit-clause)
 
@@ -227,8 +207,6 @@ Copy
 CONNECTION LIMIT UNLIMITED;
 ```
 
-Copy
-
 ##### Output Code:[¶](#id17)
 
 ##### Snowflake[¶](#id18)
@@ -237,8 +215,6 @@ Copy
  CREATE DATABASE IF NOT EXISTS database_connection
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "redshift",  "convertedOn": "09/24/2024" }}';
 ```
-
-Copy
 
 Warning
 
@@ -257,8 +233,6 @@ warehouse. More information
 FROM ARN 'arn' WITH NO DATA CATALOG SCHEMA IAM_ROLE 'arn:aws:iam::<account-id>:role/<role-name';
 ```
 
-Copy
-
 ##### Output Code:[¶](#id21)
 
 ##### Snowflake[¶](#id22)
@@ -267,8 +241,6 @@ Copy
  CREATE DATABASE IF NOT EXISTS database_fromARN
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "redshift",  "convertedOn": "09/24/2024" }}';
 ```
-
-Copy
 
 Warning
 
@@ -287,8 +259,6 @@ in Snowflake.
 FROM DATASHARE datashare_name OF NAMESPACE 'namespace_guid';
 ```
 
-Copy
-
 ##### Output Code[¶](#id25)
 
 ##### Snowflake[¶](#id26)
@@ -299,9 +269,7 @@ FROM DATASHARE datashare_name OF NAMESPACE 'namespace_guid' !!!RESOLVE EWI!!! /*
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "redshift",  "convertedOn": "09/24/2024" }}';
 ```
 
-Copy
-
-Note
+**Note:**
 
 The transformation for Datashare is planned to be delivered in the future.
 
@@ -317,8 +285,6 @@ OWNER db_owner
 ENCODING 'encoding';
 ```
 
-Copy
-
 ##### Output Code[¶](#id29)
 
 ##### Snowflake[¶](#id30)
@@ -327,8 +293,6 @@ Copy
  CREATE DATABASE IF NOT EXISTS database_Owner
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "redshift",  "convertedOn": "09/24/2024" }}';
 ```
-
-Copy
 
 Warning
 
@@ -347,8 +311,6 @@ databases are owned by roles, not individual users. For more information please 
 ISOLATION LEVEL SNAPSHOT;
 ```
 
-Copy
-
 ##### Output Code[¶](#id33)
 
 ##### Snowflake[¶](#id34)
@@ -359,9 +321,7 @@ ISOLATION LEVEL SNAPSHOT !!!RESOLVE EWI!!! /*** SSC-EWI-0073 - PENDING FUNCTIONA
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "redshift",  "convertedOn": "09/24/2024" }}';
 ```
 
-Copy
-
-Note
+**Note:**
 
 The transformation for Isolation Level is planned to be delivered in the future.
 
@@ -403,8 +363,6 @@ LOCATION { 's3://bucket/folder/' }
  { select_statement }
 ```
 
-Copy
-
 Click [here](https://docs.aws.amazon.com/redshift/latest/dg/r_CREATE_EXTERNAL_TABLE.html) to go to
 the specification for this syntax.
 
@@ -429,8 +387,6 @@ STORED AS TEXTFILE
 LOCATION 's3://mybucket/sales_data/';
 ```
 
-Copy
-
 ##### Output Code:[¶](#id41)
 
 ##### Snowflake[¶](#id42)
@@ -452,8 +408,6 @@ COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,
 ;
 ```
 
-Copy
-
 #### Create External Table AS[¶](#create-external-table-as)
 
 ##### Input Code:[¶](#id43)
@@ -467,8 +421,6 @@ STORED AS parquet
 LOCATION 'S3://amzn-s3-demo-bucket/cetas/partitioned_lineitem/'
 AS SELECT l_orderkey, l_shipmode, l_shipdate, l_partkey FROM local_table;
 ```
-
-Copy
 
 ##### Output Code:[¶](#id45)
 
@@ -484,8 +436,6 @@ COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,
 AS SELECT l_orderkey, l_shipmode, l_shipdate, l_partkey FROM
 local_table;
 ```
-
-Copy
 
 ### Recommendations[¶](#recommendations)
 
@@ -526,8 +476,6 @@ here to go to Redshifts specification for this syntax.
 AS query
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id50)
 
 #### Input Code:[¶](#id51)
@@ -538,8 +486,6 @@ Copy
  CREATE MATERIALIZED VIEW mv_baseball AS
 SELECT ball AS baseball FROM baseball_table;
 ```
-
-Copy
 
 ##### Output Code:[¶](#id53)
 
@@ -556,9 +502,7 @@ AS
         baseball_table;
 ```
 
-Copy
-
-Note
+**Note:**
 
 For the table attributes documentation you can check de following documentation:
 
@@ -588,8 +532,6 @@ CREATE SCHEMA AUTHORIZATION username [ QUOTA {quota [MB | GB | TB] | UNLIMITED} 
 [ schema_element [ ... ] ]
 ```
 
-Copy
-
 For more information please refer to
 [Redshift `CREATE SCHEMA` documentation](https://docs.aws.amazon.com/redshift/latest/dg/r_CREATE_SCHEMA.html).
 
@@ -613,8 +555,6 @@ CREATE TABLE t1
 )
 CREATE VIEW v1 AS SELECT * FROM t1;
 ```
-
-Copy
 
 ##### Output Code:[¶](#id61)
 
@@ -644,8 +584,6 @@ AS SELECT * FROM
     t1;
 ```
 
-Copy
-
 #### Authorization Clause[¶](#authorization-clause)
 
 ##### Input Code:[¶](#id63)
@@ -656,8 +594,6 @@ Copy
  CREATE SCHEMA s1 AUTHORIZATION miller;
 ```
 
-Copy
-
 ##### Output Code:[¶](#id65)
 
 ##### Snowflake[¶](#id66)
@@ -667,8 +603,6 @@ Copy
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "redshift",  "convertedOn": "09/23/2024" }}'
 ;
 ```
-
-Copy
 
 Warning
 
@@ -688,8 +622,6 @@ Snowflake schemas are owned by roles, not individual users. For more information
 CREATE SCHEMA s2 QUOTA 10 TB;
 ```
 
-Copy
-
 ##### Output Code:[¶](#id69)
 
 ##### Snowflake[¶](#id70)
@@ -704,9 +636,7 @@ COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,
 ;
 ```
 
-Copy
-
-Note
+**Note:**
 
 In Snowflake is not allowed to define a quota per scheme. Storage management is done at the account
 and warehouse level, and Snowflake handles it automatically. For this reason it is removed from the
@@ -725,8 +655,6 @@ schema is created with the owner’s name. For this reason this behavior is repl
  CREATE SCHEMA AUTHORIZATION miller;
 ```
 
-Copy
-
 ##### Output Code:[¶](#id73)
 
 ##### Snowflake[¶](#id74)
@@ -736,8 +664,6 @@ Copy
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "redshift",  "convertedOn": "09/23/2024" }}'
 ;
 ```
-
-Copy
 
 ### Related EWIs[¶](#id75)
 
@@ -767,8 +693,6 @@ AS $$
 $$ LANGUAGE { plpythonu | sql }
 ```
 
-Copy
-
 ### SQL Language[¶](#sql-language)
 
 #### Volatility category[¶](#volatility-category)
@@ -790,8 +714,6 @@ SELECT price FROM sales where id = $1
 $$ LANGUAGE SQL;
 ```
 
-Copy
-
 ##### Output Code:[¶](#id80)
 
 ##### Snowflake[¶](#id81)
@@ -808,8 +730,6 @@ where id = SC_ARG1
 $$
 ;
 ```
-
-Copy
 
 ### Python Language[¶](#python-language)
 
@@ -832,8 +752,6 @@ as $$
 $$ language plpythonu;
 ```
 
-Copy
-
 ##### Output Code:[¶](#id84)
 
 ##### Snowflake[¶](#id85)
@@ -851,8 +769,6 @@ as $$
 $$
 ;
 ```
-
-Copy
 
 ### Related EWIs[¶](#id86)
 
@@ -878,8 +794,6 @@ specification for this syntax.
 [ WITH NO SCHEMA BINDING ]
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id89)
 
 Considering the obligatory and optional clauses in Redshifts command, the output after migration to
@@ -901,8 +815,6 @@ SELECT lastname FROM users2
 WITH NO SCHEMA BINDING;
 ```
 
-Copy
-
 ##### Output Code:[¶](#id92)
 
 ##### Snowflake[¶](#id93)
@@ -923,8 +835,6 @@ users2
 WITH NO SCHEMA BINDING;
 ```
 
-Copy
-
 There are some exceptions, however, of one unsupported clause from Redshift, therefore an EWI was
 implemented to cover this case.
 
@@ -940,7 +850,7 @@ implemented to cover this case.
 > Deletes rows from tables.
 > ([Redshift SQL Language Reference Delete Statement](https://docs.aws.amazon.com/redshift/latest/dg/r_DELETE.html)).
 
-Note
+**Note:**
 
 This syntax is fully supported in Snowflake.
 
@@ -952,8 +862,6 @@ DELETE [ FROM ] { table_name | materialized_view_name }
     [ USING table_name, ... ]
     [ WHERE condition ]
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id97)
 
@@ -993,8 +901,6 @@ INSERT INTO departments (department_name) VALUES
 ('Engineering');
 ```
 
-Copy
-
 #### From Clause[¶](#from-clause)
 
 Update a table by referencing information from other tables. In Redshift, the FROM keyword is
@@ -1010,8 +916,6 @@ missing.
 
 SELECT * FROM employees ORDER BY id;
 ```
-
-Copy
 
 ##### Result[¶](#result)
 
@@ -1030,8 +934,6 @@ Copy
 
 SELECT * FROM employees ORDER BY id;
 ```
-
-Copy
 
 ##### Result[¶](#id103)
 
@@ -1057,8 +959,6 @@ WHERE department = 'Marketing';
 SELECT * FROM employees
 ORDER BY id;
 ```
-
-Copy
 
 ##### Result[¶](#id106)
 
@@ -1087,8 +987,6 @@ SELECT * FROM
     employees
 ORDER BY id;
 ```
-
-Copy
 
 ##### Result[¶](#id109)
 
@@ -1122,8 +1020,6 @@ AND d.department_name = 'Sales';
 SELECT * FROM employees ORDER BY id;
 ```
 
-Copy
-
 ##### Result[¶](#id112)
 
 <!-- prettier-ignore -->
@@ -1149,8 +1045,6 @@ AND d.department_name = 'Sales';
 
 SELECT * FROM employees ORDER BY id;
 ```
-
-Copy
 
 ##### Result[¶](#id115)
 
@@ -1201,8 +1095,6 @@ WHERE id IN (SELECT id FROM sales_employees)
 SELECT * FROM employees ORDER BY id;
 ```
 
-Copy
-
 ##### Result[¶](#id118)
 
 <!-- prettier-ignore -->
@@ -1240,8 +1132,6 @@ SELECT * FROM
 ORDER BY id;
 ```
 
-Copy
-
 ##### Result[¶](#id121)
 
 <!-- prettier-ignore -->
@@ -1272,8 +1162,6 @@ Copy
 DELETE FROM employees
 WHERE id IN (SELECT id FROM subordinate_hierarchy);
 ```
-
-Copy
 
 ##### Result[¶](#id124)
 
@@ -1322,8 +1210,6 @@ Copy
    DROP TABLE subordinate_hierarchy;
 ```
 
-Copy
-
 ##### Result[¶](#id127)
 
 <!-- prettier-ignore -->
@@ -1353,8 +1239,6 @@ DELETE FROM emp_mv
 WHERE id = 2;
 ```
 
-Copy
-
 ##### Output Code:[¶](#id130)
 
 ##### Snowflake[¶](#id131)
@@ -1376,8 +1260,6 @@ DELETE FROM
 emp_mv
 WHERE id = 2;
 ```
-
-Copy
 
 ### Known Issues [¶](#id132)
 
@@ -1408,8 +1290,6 @@ Copy
  EXECUTE command-string [ INTO target ];
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id136)
 
 Concated Example
@@ -1429,8 +1309,6 @@ EXECUTE sql_statement;
 END;
 $$ LANGUAGE plpgsql;
 ```
-
-Copy
 
 Output Code
 
@@ -1452,8 +1330,6 @@ END;
 $$;
 ```
 
-Copy
-
 #### Function Transformation[¶](#function-transformation)
 
 ##### Input Code[¶](#id139)
@@ -1471,8 +1347,6 @@ EXECUTE sql_statement;
 END;
 $$ LANGUAGE plpgsql;
 ```
-
-Copy
 
 ##### Output Code[¶](#id141)
 
@@ -1494,8 +1368,6 @@ END;
 $$;
 ```
 
-Copy
-
 #### Error In Query Parsing[¶](#error-in-query-parsing)
 
 ##### Input Code[¶](#id143)
@@ -1513,8 +1385,6 @@ EXECUTE sql_statement;
 END;
 $$ LANGUAGE plpgsql;
 ```
-
-Copy
 
 ##### Output Code[¶](#id145)
 
@@ -1536,8 +1406,6 @@ END;
 $$;
 ```
 
-Copy
-
 #### INTO Clause[¶](#into-clause)
 
 ##### Input Code[¶](#id147)
@@ -1555,8 +1423,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 ```
-
-Copy
 
 ##### Output Code[¶](#id149)
 
@@ -1580,8 +1446,6 @@ BEGIN
 END;
 $$;
 ```
-
-Copy
 
 ### Known Issues[¶](#id151)
 
@@ -1624,8 +1488,6 @@ VALUES ( { expression | DEFAULT } [, ...] )
 query }
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id155)
 
 #### **Setup data**[¶](#id156)
@@ -1651,8 +1513,6 @@ VALUES
     ('Grace Lee', 32000, 'Operations'),
     ('Hannah Gray', 26000, 'Finance');
 ```
-
-Copy
 
 #### Default Values[¶](#default-values)
 
@@ -1682,8 +1542,6 @@ DEFAULT VALUES;
 SELECT * FROM employees ORDER BY id;
 ```
 
-Copy
-
 ##### Result[¶](#id160)
 
 <!-- prettier-ignore -->
@@ -1712,8 +1570,6 @@ SELECT * FROM
 ORDER BY id;
 ```
 
-Copy
-
 ##### Result[¶](#id163)
 
 <!-- prettier-ignore -->
@@ -1737,8 +1593,6 @@ Snowflake.
 SELECT name, salary, department FROM new_employees;
 ```
 
-Copy
-
 ##### Result[¶](#id166)
 
 <!-- prettier-ignore -->
@@ -1756,8 +1610,6 @@ Copy
 SELECT name, salary, department FROM
     new_employees;
 ```
-
-Copy
 
 ##### Result[¶](#id169)
 
@@ -1797,8 +1649,6 @@ WHEN NOT MATCHED THEN INSERT [ ( col_name [,...] ) ] VALUES ( { expr } [, ...] )
 REMOVE DUPLICATES ]
 ```
 
-Copy
-
 For more information please refer to Redshift
 [MERGE documentation](https://docs.aws.amazon.com/redshift/latest/dg/r_MERGE.html).
 
@@ -1818,8 +1668,6 @@ WHEN MATCHED THEN UPDATE SET id = source.id, name = source.name
 WHEN NOT MATCHED THEN INSERT VALUES (source.id, source.name);
 ```
 
-Copy
-
 ##### Output Code:[¶](#id176)
 
 ##### Snowflake[¶](#id177)
@@ -1830,8 +1678,6 @@ MERGE INTO target USING source ON target.id = source.id
 WHEN MATCHED THEN UPDATE SET id = source.id, name = source.name
 WHEN NOT MATCHED THEN INSERT VALUES (source.id, source.name);
 ```
-
-Copy
 
 #### DELETE - INSERT[¶](#delete-insert)
 
@@ -1847,8 +1693,6 @@ WHEN MATCHED THEN DELETE
 WHEN NOT MATCHED THEN INSERT VALUES (source.id, source.name);
 ```
 
-Copy
-
 ##### Output Code:[¶](#id180)
 
 ##### Snowflake[¶](#id181)
@@ -1859,8 +1703,6 @@ MERGE INTO target USING source ON target.id = source.id
 WHEN MATCHED THEN DELETE
 WHEN NOT MATCHED THEN INSERT VALUES (source.id, source.name);
 ```
-
-Copy
 
 #### REMOVE DUPLICATES[¶](#remove-duplicates)
 
@@ -1890,8 +1732,6 @@ INSERT INTO source VALUES (23, 'David'), (22, 'Clarence');
 
 MERGE INTO target USING source ON target.id = source.id REMOVE DUPLICATES;
 ```
-
-Copy
 
 ##### Results[¶](#results)
 
@@ -1947,8 +1787,6 @@ source_duplicates;
 DROP TABLE IF EXISTS source_duplicates CASCADE;
 ```
 
-Copy
-
 ##### Results[¶](#id186)
 
 <!-- prettier-ignore -->
@@ -1978,7 +1816,7 @@ There are no known issues.
 > Updates values in one or more table columns when a condition is satisfied.
 > ([Redshift SQL Language Reference Update Statement](https://docs.aws.amazon.com/redshift/latest/dg/r_UPDATE.html)).
 
-Note
+**Note:**
 
 This syntax is fully supported in Snowflake.
 
@@ -1991,8 +1829,6 @@ This syntax is fully supported in Snowflake.
 [ FROM fromlist ]
 [ WHERE condition ]
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id191)
 
@@ -2037,8 +1873,6 @@ VALUES
     ('Sales', 5000);
 ```
 
-Copy
-
 #### Alias[¶](#alias)
 
 Although Snowflake’s grammar does not specify that a table alias can be used, it’s valid code in
@@ -2053,8 +1887,6 @@ Snowflake.
 SET salary = salary + 5000
 WHERE e.salary < 600000;
 ```
-
-Copy
 
 ##### Result[¶](#id196)
 
@@ -2084,8 +1916,6 @@ Copy
 SET salary = salary + 5000
 WHERE e.salary < 600000;
 ```
-
-Copy
 
 ##### Result[¶](#id199)
 
@@ -2134,8 +1964,6 @@ SET salary = (SELECT avg_salary FROM avg_salary_cte)
 WHERE salary < 500000;
 ```
 
-Copy
-
 ##### Result[¶](#id204)
 
 <!-- prettier-ignore -->
@@ -2172,8 +2000,6 @@ WHERE salary < 500000;
 
 DROP TABLE avg_salary_cte;
 ```
-
-Copy
 
 ##### Result[¶](#id207)
 
@@ -2232,8 +2058,6 @@ FROM (SELECT id, AVG(salary) as new_salary FROM bonus_updates GROUP BY id) as bu
 WHERE employees.id = bu.id
   AND bu.new_salary > employees.salary;
 ```
-
-Copy
 
 ##### Result[¶](#id211)
 
@@ -2311,8 +2135,6 @@ WHERE employees.id = bu.id
 DROP TABLE bonus_updates;
 ```
 
-Copy
-
 ##### Result[¶](#id214)
 
 <!-- prettier-ignore -->
@@ -2344,8 +2166,6 @@ SET salary = DEFAULT, department = 'Sales'
 WHERE department = 'HR';
 ```
 
-Copy
-
 ##### Result[¶](#id217)
 
 <!-- prettier-ignore -->
@@ -2375,8 +2195,6 @@ SET salary = DEFAULT, department = 'Sales'
 WHERE
     department = 'HR';
 ```
-
-Copy
 
 ##### Result[¶](#id220)
 
@@ -2432,8 +2250,6 @@ INSERT INTO src (k, v) VALUES
   (0, 16);
 ```
 
-Copy
-
 ##### Input Code:[¶](#id223)
 
 ##### Redshift[¶](#id224)
@@ -2447,8 +2263,6 @@ Copy
 
 SELECT * FROM target;
 ```
-
-Copy
 
 ##### Result[¶](#id225)
 
@@ -2470,8 +2284,6 @@ Copy
 
 SELECT * FROM target;
 ```
-
-Copy
 
 ##### Result[¶](#id228)
 

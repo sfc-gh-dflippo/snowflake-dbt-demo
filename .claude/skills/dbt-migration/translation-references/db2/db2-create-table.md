@@ -50,8 +50,6 @@ CREATE TABLE TestTable1
 AS (SELECT * FROM OriginalTable) WITH NO DATA;
 ```
 
-Copy
-
 #### Snowflake[¶](#snowflake)
 
 ```
@@ -63,8 +61,6 @@ AS (SELECT * FROM
 );
 ```
 
-Copy
-
 ##### IBM DB2[¶](#id3)
 
 ```
@@ -73,8 +69,6 @@ AS (SELECT * FROM OriginalTable) WITH DATA
 INCLUDING COLUMN DEFAULTS
 INCLUDING IDENTITY;
 ```
-
-Copy
 
 ##### Snowflake[¶](#id4)
 
@@ -85,8 +79,6 @@ AS (SELECT * FROM
   OriginalTable
  );
 ```
-
-Copy
 
 ## Materialized Query Definition[¶](#materialized-query-definition)
 
@@ -121,8 +113,6 @@ to navigate to the IBM DB2 documentation page for this syntax.
      ENABLE QUERY OPTIMIZATION;
 ```
 
-Copy
-
 #### Snowflake
 
 ```
@@ -139,8 +129,6 @@ MAINTAINED BY SYSTEM
 ENABLE QUERY OPTIMIZATION
  COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "db2",  "convertedOn": "09/01/2025",  "domain": "no-domain-provided" }}';
 ```
-
-Copy
 
 ### Related EWIs
 
@@ -173,8 +161,6 @@ TYPED TABLES are not supported in Snowflake.
    INHERIT SELECT PRIVILEGES;
 ```
 
-Copy
-
 #### Snowflake[¶](#id14)
 
 ```
@@ -183,8 +169,6 @@ Copy
 CREATE TABLE TestTable5 OF Student_t UNDER Person
    INHERIT SELECT PRIVILEGES;
 ```
-
-Copy
 
 ### Related EWIs[¶](#id15)
 
@@ -215,16 +199,12 @@ to navigate to the IBM DB2 documentation page for this syntax.
 create table TestTable6 for emp_summary propagate immediate;
 ```
 
-Copy
-
 #### Snowflake
 
 ```
  !!!RESOLVE EWI!!! /*** SSC-EWI-DB0018 - STAGING TABLES ARE NOT SUPPORTED ***/!!!
 create table TestTable6 for emp_summary propagate immediate;
 ```
-
-Copy
 
 ### Related EWIs
 
@@ -267,8 +247,6 @@ CREATE TABLE TestTable7(
     );
 ```
 
-Copy
-
 #### Snowflake[¶](#id26)
 
 ```
@@ -283,8 +261,6 @@ CREATE TABLE TestTable7 (
     )
  COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "db2",  "convertedOn": "09/01/2025",  "domain": "no-domain-provided" }}';
 ```
-
-Copy
 
 ### Related EWIs[¶](#id27)
 
@@ -301,7 +277,7 @@ Warning
 
 PERIOD-DEFINITION does not have a functional equivalent in Snowflake.
 
-Note
+**Note:**
 
 Snowflake allows the storage of historical table data for up to 90 days, to know more about this see
 [Understanding & Using Time Travel](https://docs.snowflake.com/en/user-guide/data-time-travel.html).
@@ -324,8 +300,6 @@ PERIOD SYSTEM_TIME (COL1, COL2));
 )
 ```
 
-Copy
-
 ```
 CREATE TABLE TestTable8 (
 COL1 DATE,
@@ -339,8 +313,6 @@ COL1 DATE,
  COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "db2",  "convertedOn": "09/01/2025",  "domain": "no-domain-provided" }}'
  ;
 ```
-
-Copy
 
 ### Related EWIs[¶](#id31)
 
@@ -377,8 +349,6 @@ CREATE TABLE TestTable9(
 );
 ```
 
-Copy
-
 ```
  CREATE OR REPLACE TABLE TestTable9 (
     COL1 VARCHAR(1)
@@ -406,8 +376,6 @@ Copy
  ADD CONSTRAINT TestTable9_COL1_T1
     FOREIGN KEY (COL1) REFERENCES T1 ;
 ```
-
-Copy
 
 ## QUERY OPTIMIZATION[¶](#query-optimization)
 
@@ -442,8 +410,6 @@ CONSTRAINT ConstraintName UNIQUE (COL1, COL2) ENABLE QUERY OPTIMIZATION
 );
 ```
 
-Copy
-
 #### Snowflake[¶](#id39)
 
 ```
@@ -455,8 +421,6 @@ COL1 VARCHAR(10),
     )
  COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "db2",  "convertedOn": "09/01/2025",  "domain": "no-domain-provided" }}';
 ```
-
-Copy
 
 ## WITHOUT OVERLAPS[¶](#without-overlaps)
 
@@ -490,8 +454,6 @@ CONSTRAINT ConstraintName UNIQUE (COL1, COL2, BUSINESS_TIME WITHOUT OVERLAPS)
 );
 ```
 
-Copy
-
 #### Snowflake[¶](#id44)
 
 ```
@@ -502,8 +464,6 @@ COL1 VARCHAR(10),
     )
  COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "db2",  "convertedOn": "09/01/2025",  "domain": "no-domain-provided" }}';
 ```
-
-Copy
 
 ## Column Options[¶](#column-options)
 
@@ -536,8 +496,6 @@ COL1 VARCHAR(10) COMPRESS SYSTEM DEFAULT
 );
 ```
 
-Copy
-
 #### Snowflake[¶](#id49)
 
 ```
@@ -547,8 +505,6 @@ COL1 VARCHAR(10)
 )
  COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "db2",  "convertedOn": "09/01/2025",  "domain": "no-domain-provided" }}';
 ```
-
-Copy
 
 ### Known issues[¶](#known-issues)
 
@@ -585,8 +541,6 @@ COL1 VARCHAR(10) IMPLICITLY HIDDEN
 );
 ```
 
-Copy
-
 #### Snowflake[¶](#id54)
 
 ```
@@ -596,8 +550,6 @@ COL1 VARCHAR(10)
 )
  COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "db2",  "convertedOn": "09/01/2025",  "domain": "no-domain-provided" }}';
 ```
-
-Copy
 
 ## INLINE LENGTH[¶](#inline-length)
 
@@ -624,8 +576,6 @@ COL1 VARCHAR(10) INLINE LENGTH 1024
 );
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id57)
 
 #### IBM DB2[¶](#id58)
@@ -637,8 +587,6 @@ COL1 VARCHAR(10) INLINE LENGTH 1024
 );
 ```
 
-Copy
-
 #### Snowflake[¶](#id59)
 
 ```
@@ -648,8 +596,6 @@ COL1 VARCHAR(10)
 )
  COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "db2",  "convertedOn": "09/01/2025",  "domain": "no-domain-provided" }}';
 ```
-
-Copy
 
 ### Known issues[¶](#id60)
 
@@ -687,8 +633,6 @@ COL4 VARCHAR(10) NOT COMPACT
 )
 ```
 
-Copy
-
 #### Snowflake[¶](#id65)
 
 ```
@@ -701,8 +645,6 @@ COL1 VARCHAR(10),
     )
  COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "db2",  "convertedOn": "09/01/2025",  "domain": "no-domain-provided" }}';
 ```
-
-Copy
 
 ## SCOPE[¶](#scope)
 
@@ -734,8 +676,6 @@ COL2 VARCHAR(10) SCOPE VIEW1
 );
 ```
 
-Copy
-
 #### Snowflake[¶](#id70)
 
 ```
@@ -746,8 +686,6 @@ COL1 VARCHAR(10),
     )
  COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "db2",  "convertedOn": "09/01/2025",  "domain": "no-domain-provided" }}';
 ```
-
-Copy
 
 ## SECURED[¶](#secured)
 
@@ -775,8 +713,6 @@ COL2 VARCHAR(10) COLUMN SECURED WITH securityLabel
 );
 ```
 
-Copy
-
 #### Snowflake[¶](#id75)
 
 ```
@@ -791,8 +727,6 @@ COL1 VARCHAR(10),
  )
  COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "db2",  "convertedOn": "09/01/2025",  "domain": "no-domain-provided" }}';
 ```
-
-Copy
 
 ### Known issues[¶](#id76)
 
@@ -809,8 +743,6 @@ COL1 VARCHAR(10) COLUMN SECURED WITH securityLabel1,
 COL2 VARCHAR(10) COLUMN SECURED WITH securityLabel2
 );
 ```
-
-Copy
 
 #### Snowflake[¶](#id78)
 
@@ -829,8 +761,6 @@ COL1 VARCHAR(10),
  )
  COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "db2",  "convertedOn": "09/01/2025",  "domain": "no-domain-provided" }}';
 ```
-
-Copy
 
 #### Related EWIs[¶](#id79)
 
@@ -866,8 +796,6 @@ COL1 INT
 ) CCSID ASCII;
 ```
 
-Copy
-
 #### Snowflake[¶](#id84)
 
 ```
@@ -878,8 +806,6 @@ COL1 INT
 -- CCSID ASCII
  COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "db2",  "convertedOn": "09/01/2025",  "domain": "no-domain-provided" }}';
 ```
-
-Copy
 
 ### Related EWIs[¶](#id85)
 
@@ -948,8 +874,6 @@ VALUE COMPRESSION
 ;
 ```
 
-Copy
-
 #### Snowflake[¶](#id90)
 
 ```
@@ -1002,8 +926,6 @@ COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,
 ;
 ```
 
-Copy
-
 ### Related EWIs[¶](#id91)
 
 1. [SSC-FDM-0027](../../general/technical-documentation/issues-and-troubleshooting/functional-difference/generalFDM.html#ssc-fdm-0027):
@@ -1037,8 +959,6 @@ DATA CAPTURE is not supported
 ) DATA CAPTURE CHANGES;
 ```
 
-Copy
-
 #### Snowflake
 
 ```
@@ -1050,8 +970,6 @@ Copy
  DATA CAPTURE CHANGES
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "db2",  "convertedOn": "09/01/2025",  "domain": "no-domain-provided" }}';
 ```
-
-Copy
 
 ### Related EWIs
 
@@ -1194,8 +1112,6 @@ COL1 INT
 COL1 INT
 ) WITH RESTRICT ON DROP;
 ```
-
-Copy
 
 #### Snowflake
 
@@ -1362,8 +1278,6 @@ COL1 INT
 --WITH RESTRICT ON DROP
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "db2",  "convertedOn": "09/01/2025",  "domain": "no-domain-provided" }}';
 ```
-
-Copy
 
 ### Related EWIs
 

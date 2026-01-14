@@ -66,7 +66,7 @@ Applies to
 
 ### Description[¶](#id1)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -91,8 +91,6 @@ RETURNS TABLE
 [ ; ]
 ```
 
-Copy
-
 #### Snowflake SQL Syntax[¶](#snowflake-sql-syntax)
 
 ```
@@ -100,8 +98,6 @@ CREATE OR REPLACE FUNCTION <name> ( [ <arguments> ] )
   RETURNS TABLE ( <output_col_name> <output_col_type> [, <output_col_name> <output_col_type> ... ] )
   AS '<sql_expression>'sql
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#sample-source-patterns)
 
@@ -135,8 +131,6 @@ GO
 
 SELECT * from GetDepartmentInfo()
 ```
-
-Copy
 
 ##### Result[¶](#result)
 
@@ -187,8 +181,6 @@ SELECT
 from
     TABLE(GetDepartmentInfo());
 ```
-
-Copy
 
 ##### Result[¶](#id4)
 
@@ -245,8 +237,6 @@ GO
 
 SELECT * FROM GetPersonBasicInfo();
 ```
-
-Copy
 
 ##### Result[¶](#id7)
 
@@ -309,8 +299,6 @@ SELECT
 FROM
   TABLE(GetPersonBasicInfo());
 ```
-
-Copy
 
 ##### Result[¶](#id10)
 
@@ -375,8 +363,6 @@ GO
 
 select * from GetMaritalStatusByGender('F');
 ```
-
-Copy
 
 ##### Result[¶](#id13)
 
@@ -514,8 +500,6 @@ from
   TABLE(GetMaritalStatusByGender('F'));
 ```
 
-Copy
-
 ##### Result[¶](#id16)
 
 <!-- prettier-ignore -->
@@ -629,11 +613,11 @@ Applies to
 - SQL Server
 - Azure Synapse Analytics
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
-Note
+**Note:**
 
 All the code samples on this page have not been implemented yet in SnowConvert AI. They should be
 interpreted as a reference for how each scenario should be translated to Snowflake. These
@@ -666,8 +650,6 @@ RETURNS @return_variable TABLE <table_type_definition>
 [ ; ]
 ```
 
-Copy
-
 #### Snowflake SQL[¶](#id18)
 
 ```
@@ -675,8 +657,6 @@ CREATE OR REPLACE FUNCTION <name> ( [ <arguments> ] )
   RETURNS TABLE ( <output_col_name> <output_col_type> [, <output_col_name> <output_col_type> ... ] )
   AS '<sql_expression>'
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id19)
 
@@ -710,8 +690,6 @@ END
 SELECT * FROM calc_behavioral_segment();
 ```
 
-Copy
-
 ##### Result[¶](#id22)
 
 <!-- prettier-ignore -->
@@ -741,8 +719,6 @@ END
 
 SELECT * FROM calc_behavioral_segment();;
 ```
-
-Copy
 
 ##### Results[¶](#results)
 
@@ -780,8 +756,6 @@ END
 SELECT * FROM odd_or_even_number(9);
 ```
 
-Copy
-
 ##### Result[¶](#id27)
 
 <!-- prettier-ignore -->
@@ -816,8 +790,6 @@ END
 
 SELECT * FROM odd_or_even_number(9);;
 ```
-
-Copy
 
 ##### Result[¶](#id30)
 
@@ -871,8 +843,6 @@ END
 
 SELECT * FROM new_employee_hired('123456789', 'DEVELOPER', 'SENIOR');
 ```
-
-Copy
 
 ##### Result[¶](#id33)
 
@@ -928,8 +898,6 @@ END
 SELECT * FROM new_employee_hired('123456789', 'DEVELOPER', 'SENIOR');;
 ```
 
-Copy
-
 ##### Result[¶](#id35)
 
 <!-- prettier-ignore -->
@@ -983,8 +951,6 @@ END;
 
 SELECT TOP(10) * FROM get_employees_history();
 ```
-
-Copy
 
 ##### Result[¶](#id38)
 
@@ -1042,8 +1008,6 @@ END;
 SELECT TOP(10) * FROM get_employees_history();;
 ```
 
-Copy
-
 ##### Result[¶](#id41)
 
 <!-- prettier-ignore -->
@@ -1093,8 +1057,6 @@ END
 SELECT * FROMcreate_new_team('Team1');
 ```
 
-Copy
-
 ##### Result[¶](#id44)
 
 <!-- prettier-ignore -->
@@ -1133,8 +1095,6 @@ END
 
 SELECT * FROMcreate_new_team('Team1');;
 ```
-
-Copy
 
 ##### Result[¶](#id47)
 
@@ -1203,8 +1163,6 @@ END
 SELECT * FROM vacation_status('adventure-worksken0')
 ```
 
-Copy
-
 ##### Result[¶](#id50)
 
 <!-- prettier-ignore -->
@@ -1265,8 +1223,6 @@ END
 SELECT * FROM vacation_status('adventure-worksken0');
 ```
 
-Copy
-
 ##### Second Tab[¶](#second-tab)
 
 <!-- prettier-ignore -->
@@ -1315,8 +1271,6 @@ END
 SELECT * FROM get_group_name(9);
 ```
 
-Copy
-
 ##### Result[¶](#id56)
 
 <!-- prettier-ignore -->
@@ -1358,8 +1312,6 @@ END
 
 SELECT * FROM get_group_name(9);;
 ```
-
-Copy
 
 ##### Result[¶](#id59)
 
@@ -1418,8 +1370,6 @@ END
 SELECT * FROM amount_new_specimens(1);
 ```
 
-Copy
-
 ##### Result[¶](#id62)
 
 <!-- prettier-ignore -->
@@ -1476,8 +1426,6 @@ END
 SELECT * FROM amount_new_specimens(1);;
 ```
 
-Copy
-
 ##### Result[¶](#id65)
 
 <!-- prettier-ignore -->
@@ -1521,8 +1469,6 @@ GO;
 
 EXEC product_history
 ```
-
-Copy
 
 ##### Result[¶](#id68)
 
@@ -1628,8 +1574,6 @@ $$;
 CALL product_history();
 ```
 
-Copy
-
 ##### Result[¶](#id71)
 
 <!-- prettier-ignore -->
@@ -1658,7 +1602,7 @@ Applies to
 
 ### Description[¶](#id73)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -1667,7 +1611,7 @@ Some parts in the output code are omitted for clarity reasons.
 > that action as a scalar value.
 > ([SQL Server Language ReferenceCREATE FUNCTION subsection](https://docs.microsoft.com/en-us/sql/t-sql/statements/create-function-transact-sql?view=sql-server-ver15)).
 
-Note
+**Note:**
 
 These functions are usually used inside the `SELECT`statement, or single variable setup (most likely
 inside a stored procedure).
@@ -1692,8 +1636,6 @@ RETURNS return_data_type
 [ ; ]
 ```
 
-Copy
-
 #### Snowflake Syntax[¶](#snowflake-syntax)
 
 Snowflake allows 3 different languages in their user defined functions:
@@ -1706,7 +1648,7 @@ For now, SnowConvert AI will support only `SQL` and `JavaScript` as target langu
 
 ##### SQL[¶](#sql)
 
-Note
+**Note:**
 
 SQL user defined functions only supports one query as their body. They can read from the database,
 but is not allowed to write or modify it.
@@ -1722,11 +1664,9 @@ CREATE [ OR REPLACE ] [ SECURE ] FUNCTION <name> ( [ <arg_name> <arg_data_type> 
   AS '<function_definition>'
 ```
 
-Copy
-
 ##### JavaScript[¶](#javascript)
 
-Note
+**Note:**
 
 JavaScript user defined functions allows multiple statements in their bodies, but cannot perform
 queries to the database. (Scalar JavaScript UDFs Reference)
@@ -1741,8 +1681,6 @@ CREATE [ OR REPLACE ] [ SECURE ] FUNCTION <name> ( [ <arg_name> <arg_data_type> 
   [ COMMENT = '<string_literal>' ]
   AS '<function_definition>'
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id75)
 
@@ -1775,8 +1713,6 @@ GO
 
 SELECT PURCHASING.GetVendorName() as vendor_name;
 ```
-
-Copy
 
 ##### Result[¶](#id77)
 
@@ -1825,8 +1761,6 @@ SELECT
  PURCHASING.GetVendorName() as vendor_name;
 ```
 
-Copy
-
 ##### Result[¶](#id80)
 
 <!-- prettier-ignore -->
@@ -1866,8 +1800,6 @@ GO
 
 SELECT PURCHASING.HasActiveFlag(1516) as has_active_flag;
 ```
-
-Copy
 
 ##### Result[¶](#id83)
 
@@ -1927,8 +1859,6 @@ SELECT
  PURCHASING.HasActiveFlag(1516) as has_active_flag;
 ```
 
-Copy
-
 ##### Result[¶](#id86)
 
 <!-- prettier-ignore -->
@@ -1942,13 +1872,13 @@ For nested statements, the structured programming is being transformed to a sing
 statements in the control-of-flow are going to be nested in table structures in order to preserve
 the execution order.
 
-Note
+**Note:**
 
 `CASE EXPRESSIONS` only can return one value per statement
 
 ##### Example[¶](#example)
 
-Note
+**Note:**
 
 The following code in both programming paradigms is functionally equivalent.
 
@@ -1965,8 +1895,6 @@ SELECT @AccountNumber = v.AccountNumber
     WHERE v.BusinessEntityID = @VendorId
 ```
 
-Copy
-
 ##### SQL[¶](#id87)
 
 ```
@@ -1977,8 +1905,6 @@ FROM (SELECT poh.VendorID VendorId
 ) T1, Purchasing.Vendor v
 WHERE v.BusinessEntityID = T1.VendorId
 ```
-
-Copy
 
 ##### Result[¶](#id88)
 
@@ -2046,8 +1972,6 @@ END
 
 SELECT PURCHASING.SELECTINUDF('first') as result; -- Assuming table1.col1 is 0 when ID = 0
 ```
-
-Copy
 
 ##### Result[¶](#id90)
 
@@ -2133,8 +2057,6 @@ $$ -- Assuming table1.col1 is 0 when ID = 0
 ;
 ```
 
-Copy
-
 ##### Result[¶](#id93)
 
 <!-- prettier-ignore -->
@@ -2166,8 +2088,6 @@ GO
 
 select Purchasing.GetTotalFreight() as Result;
 ```
-
-Copy
 
 ##### Result[¶](#id96)
 
@@ -2202,8 +2122,6 @@ $$;
 select
  Purchasing.GetTotalFreight() as Result;
 ```
-
-Copy
 
 ##### Result[¶](#id99)
 
@@ -2242,8 +2160,6 @@ GO
 
 SELECT PURCHASING.Foo(1492) AS Name;
 ```
-
-Copy
 
 ##### Result[¶](#id102)
 
@@ -2314,8 +2230,6 @@ SELECT
  PURCHASING.Foo(1492) AS Name;
 ```
 
-Copy
-
 ##### Result[¶](#id105)
 
 <!-- prettier-ignore -->
@@ -2355,8 +2269,6 @@ GO
 
 SELECT PURCHASING.Foo() AS Result;
 ```
-
-Copy
 
 ##### Result[¶](#id108)
 
@@ -2463,8 +2375,6 @@ SELECT
  PURCHASING.Foo() AS Result;
 ```
 
-Copy
-
 ##### Result[¶](#id111)
 
 <!-- prettier-ignore -->
@@ -2502,8 +2412,6 @@ GO
 SELECT PURCHASING.FOO() as result;
 ```
 
-Copy
-
 ##### Result[¶](#id114)
 
 <!-- prettier-ignore -->
@@ -2537,8 +2445,6 @@ $$;
 SELECT
  PURCHASING.FOO() as result;
 ```
-
-Copy
 
 ##### Result[¶](#id117)
 
@@ -2586,8 +2492,6 @@ GO
 
 SELECT PURCHASING.FOO(4) as result;
 ```
-
-Copy
 
 ##### Result[¶](#id120)
 
@@ -2646,8 +2550,6 @@ SELECT
   PURCHASING.FOO(4) as result;
 ```
 
-Copy
-
 ##### Result[¶](#id123)
 
 <!-- prettier-ignore -->
@@ -2688,8 +2590,6 @@ GO
 SELECT PURCHASING.GetFiscalYear('2020-10-10') as DATE;
 ```
 
-Copy
-
 ##### Query 2[¶](#query-2)
 
 ```
@@ -2723,8 +2623,6 @@ GO
 
 SELECT PURCHASING.[getCleanChargeCode]('16test') AS CleanChargeCode;
 ```
-
-Copy
 
 ##### Result 1[¶](#result-1)
 
@@ -2774,8 +2672,6 @@ SELECT
  PURCHASING.GetFiscalYear('2020-10-10') !!!RESOLVE EWI!!! /*** SSC-EWI-0067 - UDF WAS TRANSFORMED TO SNOWFLAKE PROCEDURE, CALLING PROCEDURES INSIDE QUERIES IS NOT SUPPORTED ***/!!! as DATE;
 ```
 
-Copy
-
 ##### Query 2[¶](#id127)
 
 ```
@@ -2816,8 +2712,6 @@ $$;
 SELECT
  PURCHASING.getCleanChargeCode('16test') !!!RESOLVE EWI!!! /*** SSC-EWI-0067 - UDF WAS TRANSFORMED TO SNOWFLAKE PROCEDURE, CALLING PROCEDURES INSIDE QUERIES IS NOT SUPPORTED ***/!!! AS CleanChargeCode;
 ```
-
-Copy
 
 ##### Result 1[¶](#id128)
 
@@ -2910,8 +2804,6 @@ GO
 SELECT PURCHASING.FOO() as result;
 ```
 
-Copy
-
 ##### Result[¶](#id133)
 
 <!-- prettier-ignore -->
@@ -2958,8 +2850,6 @@ SELECT
     PURCHASING.FOO() !!!RESOLVE EWI!!! /*** SSC-EWI-0067 - UDF WAS TRANSFORMED TO SNOWFLAKE PROCEDURE, CALLING PROCEDURES INSIDE QUERIES IS NOT SUPPORTED ***/!!! as result;
 ```
 
-Copy
-
 ##### Result[¶](#id135)
 
 <!-- prettier-ignore -->
@@ -2992,8 +2882,6 @@ GO
 
 select PURCHASING.FOO() as names;
 ```
-
-Copy
 
 ##### Result[¶](#id137)
 
@@ -3031,8 +2919,6 @@ $$;
 select
     PURCHASING.FOO() !!!RESOLVE EWI!!! /*** SSC-EWI-0067 - UDF WAS TRANSFORMED TO SNOWFLAKE PROCEDURE, CALLING PROCEDURES INSIDE QUERIES IS NOT SUPPORTED ***/!!! as names;
 ```
-
-Copy
 
 Warning
 
@@ -3107,8 +2993,6 @@ GO
 SELECT dbo.CalculateProfit(100.00, 150.00) as Profit;
 ```
 
-Copy
-
 ##### Result[¶](#id142)
 
 <!-- prettier-ignore -->
@@ -3137,8 +3021,6 @@ $$;
 SELECT
    dbo.CalculateProfit(100.00, 150.00) as Profit;
 ```
-
-Copy
 
 ##### Result[¶](#id143)
 
@@ -3181,8 +3063,6 @@ GO
 SELECT dbo.GetDiscountRate('Premium', 1200.00) as DiscountRate;
 ```
 
-Copy
-
 ##### Result[¶](#id145)
 
 <!-- prettier-ignore -->
@@ -3221,8 +3101,6 @@ SELECT
    dbo.GetDiscountRate('Premium', 1200.00) as DiscountRate;
 ```
 
-Copy
-
 ##### Result[¶](#id147)
 
 <!-- prettier-ignore -->
@@ -3260,8 +3138,6 @@ GO
 SELECT dbo.Factorial(5) as FactorialResult;
 ```
 
-Copy
-
 ##### Result[¶](#id149)
 
 <!-- prettier-ignore -->
@@ -3294,8 +3170,6 @@ $$;
 SELECT
    dbo.Factorial(5) as FactorialResult;
 ```
-
-Copy
 
 ##### Result[¶](#id151)
 
@@ -3337,8 +3211,6 @@ GO
 SELECT dbo.CleanPhoneNumber('(555) 123-4567') as CleanPhone;
 ```
 
-Copy
-
 ##### Result[¶](#id153)
 
 <!-- prettier-ignore -->
@@ -3378,8 +3250,6 @@ SELECT
    dbo.CleanPhoneNumber('(555) 123-4567') as CleanPhone;
 ```
 
-Copy
-
 ##### Result[¶](#id155)
 
 <!-- prettier-ignore -->
@@ -3417,8 +3287,6 @@ GO
 
 SELECT dbo.GetGrade(85) as Grade;
 ```
-
-Copy
 
 ##### Result[¶](#id157)
 
@@ -3460,8 +3328,6 @@ SELECT
    dbo.GetGrade(85) as Grade;
 ```
 
-Copy
-
 ##### Result[¶](#id159)
 
 <!-- prettier-ignore -->
@@ -3501,8 +3367,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Result[¶](#id161)
 
 <!-- prettier-ignore -->
@@ -3538,8 +3402,6 @@ $$
     END;
 $$;
 ```
-
-Copy
 
 ##### Result[¶](#id163)
 

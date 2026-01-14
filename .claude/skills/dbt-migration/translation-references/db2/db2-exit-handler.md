@@ -38,8 +38,6 @@ DECLARE EXIT HANDLER FOR condition_value [, ...]
 -- NOT FOUND
 ```
 
-Copy
-
 ## Sample Source Patterns[¶](#sample-source-patterns)
 
 ### DECLARE EXIT HANDLER FOR SQLEXCEPTION[¶](#declare-exit-handler-for-sqlexception)
@@ -67,8 +65,6 @@ BEGIN
     INSERT INTO success_log VALUES ('All operations completed');
 END;
 ```
-
-Copy
 
 #### Output Code:[¶](#output-code)
 
@@ -98,8 +94,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### DECLARE EXIT HANDLER FOR SQLSTATE[¶](#declare-exit-handler-for-sqlstate)
 
 Handling specific SQLSTATE codes with exit behavior.
@@ -124,8 +118,6 @@ BEGIN
     INSERT INTO users VALUES (2, 'Bob');   -- Will NOT execute
 END;
 ```
-
-Copy
 
 #### Output Code:[¶](#id3)
 
@@ -157,8 +149,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### DECLARE EXIT HANDLER FOR NOT FOUND[¶](#declare-exit-handler-for-not-found)
 
 The NOT FOUND condition is commonly used with cursors and SELECT INTO statements.
@@ -186,8 +176,6 @@ BEGIN
     INSERT INTO results VALUES (v_id, v_name);
 END;
 ```
-
-Copy
 
 #### Output Code:[¶](#id7)
 
@@ -219,8 +207,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### Multiple EXIT Handlers[¶](#multiple-exit-handlers)
 
 DB2 allows multiple EXIT HANDLERs with different priorities. In Snowflake, handler precedence must
@@ -243,8 +229,6 @@ BEGIN
     INSERT INTO success_log VALUES ('Completed');
 END;
 ```
-
-Copy
 
 #### Output Code:[¶](#id11)
 
@@ -272,8 +256,6 @@ $$
     END;
 $$;
 ```
-
-Copy
 
 ## Known Issues[¶](#known-issues)
 
@@ -336,8 +318,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 #### Output Code:[¶](#id17)
 
 ##### Snowflake[¶](#id18)
@@ -367,8 +347,6 @@ $$
     END;
 $$;
 ```
-
-Copy
 
 #### Related EWIs[¶](#id19)
 

@@ -34,11 +34,9 @@ CREATE [ OR REPLACE ]
 PACKAGE BODY plsql_package_body_source
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#sample-source-patterns)
 
-Note
+**Note:**
 
 The following queries were transformed with the PackagesAsSchema option disabled.
 
@@ -52,8 +50,6 @@ CREATE OR REPLACE PACKAGE BODY SCHEMA1.PKG1 AS
         END;
 END package1;
 ```
-
-Copy
 
 ##### Snowflake[¶](#snowflake)
 
@@ -73,8 +69,6 @@ $$
     END;
 $$;
 ```
-
-Copy
 
 ### Known Issues[¶](#known-issues)
 
@@ -101,8 +95,6 @@ the constant, so the resulting code is pretty similar to the input.
 constant CONSTANT datatype [NOT NULL] { := | DEFAULT } expression ;
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id4)
 
 #### Sample auxiliary code[¶](#sample-auxiliary-code)
@@ -113,8 +105,6 @@ Copy
 create table table1(id number);
 ```
 
-Copy
-
 ##### Snowflake[¶](#id6)
 
 ```
@@ -123,8 +113,6 @@ CREATE OR REPLACE TABLE table1 (id NUMBER(38, 18) /*** SSC-FDM-0006 - NUMBER TYP
 COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":0},{"attributes":{"component":"oracle"}}'
 ;
 ```
-
-Copy
 
 ##### Oracle[¶](#id7)
 
@@ -145,8 +133,6 @@ CALL PKG1.procedure1();
 
 SELECT * FROM TABLE1;
 ```
-
-Copy
 
 ##### Result[¶](#result)
 
@@ -182,8 +168,6 @@ SELECT * FROM
     TABLE1;
 ```
 
-Copy
-
 ##### Result[¶](#id9)
 
 <!-- prettier-ignore -->
@@ -191,7 +175,7 @@ Copy
 |---|
 |9999|
 
-Note
+**Note:**
 
 Note that the`PROCEDURE` definition is being removed since it is not required in Snowflake.
 
@@ -220,11 +204,9 @@ CREATE [ OR REPLACE ]
 PACKAGE plsql_package_source
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id14)
 
-Note
+**Note:**
 
 The following queries were transformed with the PackagesAsSchema option disabled.
 
@@ -241,8 +223,6 @@ CREATE OR REPLACE PACKAGE SCHEMA1.PKG1 AS
 END PKG1;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id16)
 
 ```
@@ -251,9 +231,7 @@ COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":
 ;
 ```
 
-Copy
-
-Note
+**Note:**
 
 Note that both `FUNCTION` and `PROCEDURE` definitions are being removed since they are not required
 in Snowflake.
@@ -283,8 +261,6 @@ each usage or assignment is translated to its equivalent in Snowflake.
 variable datatype [ [ NOT NULL] {:= | DEFAULT} expression ] ;
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id20)
 
 #### Sample auxiliary code[¶](#id21)
@@ -295,8 +271,6 @@ Copy
 create table table1(id number);
 ```
 
-Copy
-
 ##### Snowflake[¶](#id23)
 
 ```
@@ -305,8 +279,6 @@ CREATE OR REPLACE TABLE table1 (id NUMBER(38, 18) /*** SSC-FDM-0006 - NUMBER TYP
 COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":0},{"attributes":{"component":"oracle"}}'
 ;
 ```
-
-Copy
 
 #### Variable declaration[¶](#variable-declaration)
 
@@ -318,8 +290,6 @@ CREATE OR REPLACE PACKAGE PKG1 AS
 END PKG1;
 ```
 
-Copy
-
 ##### Snowflake Scripting[¶](#snowflake-scripting)
 
 ```
@@ -329,8 +299,6 @@ COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":
 
 SET "PKG1.PACKAGE_VARIABLE" = '' || (100);
 ```
-
-Copy
 
 #### Variable Usage[¶](#variable-usage)
 
@@ -359,8 +327,6 @@ CALL SCHEMA1.PKG1.procedure1();
 
 SELECT * FROM TABLE1;
 ```
-
-Copy
 
 ##### Result[¶](#id26)
 
@@ -396,8 +362,6 @@ SELECT * FROM
     TABLE1;
 ```
 
-Copy
-
 ##### Result[¶](#id28)
 
 <!-- prettier-ignore -->
@@ -405,7 +369,7 @@ Copy
 |---|
 |100|
 
-Note
+**Note:**
 
 Note that the `PROCEDURE` definition in the package is removed since it is not required by
 Snowflake.
@@ -439,8 +403,6 @@ CALL PKG1.procedure1();
 
 SELECT * FROM TABLE1;
 ```
-
-Copy
 
 ##### Result[¶](#id30)
 
@@ -477,8 +439,6 @@ SELECT * FROM
     TABLE1;
 ```
 
-Copy
-
 ##### Result[¶](#id32)
 
 <!-- prettier-ignore -->
@@ -486,7 +446,7 @@ Copy
 |---|
 |200|
 
-Note
+**Note:**
 
 Note that the `PROCEDURE` definition in the package is removed since it is not required by
 Snowflake.
@@ -521,8 +481,6 @@ END PKG1;
 
 CALL PKG1.procedure1();
 ```
-
-Copy
 
 ##### Result[¶](#id34)
 
@@ -573,8 +531,6 @@ $$;
 CALL PKG1.procedure1();
 ```
 
-Copy
-
 ##### Result[¶](#id36)
 
 <!-- prettier-ignore -->
@@ -582,7 +538,7 @@ Copy
 |---|
 |1000|
 
-Note
+**Note:**
 
 Note that the `PROCEDURE` definition in the package is removed since it is not required by
 Snowflake.

@@ -26,9 +26,7 @@ Report._**
 CREATE INDEX my_index_name ON my_table (column1, column2);
 ```
 
-Copy
-
-Note
+**Note:**
 
 Due to architectural reasons, Snowflake does not support indexes so, SnowConvert AI will remove all
 the code related to the creation of indexes. Snowflake automatically creates micro-partitions for
@@ -74,8 +72,6 @@ FROM Employee
 PRIMARY INDEX (First_Name);
 ```
 
-Copy
-
 **Snowflake**
 
 **Dynamic Table**
@@ -96,8 +92,6 @@ SELECT
 FROM
   Employee;
 ```
-
-Copy
 
 ### Known Issues[¶](#known-issues)
 
@@ -125,8 +119,6 @@ syntax remains the same.
 CREATE SCHEMA IF EXISTS schema_name;
 ```
 
-Copy
-
 **Snowflake**
 
 **Dynamic Table**
@@ -136,8 +128,6 @@ CREATE SCHEMA IF EXISTS schema_name
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "teradata",  "convertedOn": "07/23/2024" }}'
 ;
 ```
-
-Copy
 
 ### Known Issues[¶](#id3)
 
@@ -155,8 +145,6 @@ CREATE SCHEMA IF EXISTS schema_name
 WITH ( PROPERTY1 = PROPERTYNAME, PROPERTY2 = PROPERTTYNAME, PROPERTY3 = PROPERTTYNAME);
 ```
 
-Copy
-
 **Snowflake**
 
 **Dynamic Table**
@@ -168,8 +156,6 @@ COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,
 WITH ( PROPERTY1 = PROPERTYNAME, PROPERTY2 = PROPERTTYNAME, PROPERTY3 = PROPERTTYNAME);
 ```
 
-Copy
-
 ### Related EWIs[¶](#id4)
 
 1. [SSC-EWI-0073](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0073):
@@ -179,7 +165,7 @@ Copy
 
 Translation reference to convert Teradata VIEW statement to Snowflake
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -210,8 +196,6 @@ For more information on Teradata VIEW, check
     WHERE my_table.col2 = other_table.col2
 ```
 
-Copy
-
 **Snowflake**
 
 ##### View[¶](#id7)
@@ -238,8 +222,6 @@ SELECT
     table2 AS other_table
        WHERE my_table.col2 = other_table.col2;
 ```
-
-Copy
 
 #### Custom Schema Tag[¶](#custom-schema-tag)
 
@@ -268,8 +250,6 @@ REPLACE VIEW EMPLOYEEB AS
 SELECT * FROM EMPLOYEE
 WHERE AREA = "AREAB";
 ```
-
-Copy
 
 ##### Snowflake[¶](#snowflake)
 
@@ -302,8 +282,6 @@ Views.EMPLOYEE
  WHERE AREA = "AREAB";
 ```
 
-Copy
-
 ##### Custome Database[¶](#custome-database)
 
 ```
@@ -320,8 +298,6 @@ AS
    WHERE AREA = "AREAB";
 ```
 
-Copy
-
 ##### Non selected[¶](#non-selected)
 
 ```
@@ -337,8 +313,6 @@ AS
    SELECT * FROM Views.PUBLIC.EMPLOYEE
    WHERE AREA = "AREAB";
 ```
-
-Copy
 
 ### Known Issues[¶](#id9)
 
@@ -357,7 +331,7 @@ In Snowflake, access to objects and elements is based on users and privileges.
 
 Translation reference to convert Teradata TABLE statement to Snowflake
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -391,8 +365,6 @@ UNIQUE PRIMARY INDEX(c1)
 PARTITION BY COLUMN(p1);
 ```
 
-Copy
-
 **Snowflake**
 
 ##### Table[¶](#id13)
@@ -412,8 +384,6 @@ CREATE OR REPLACE TABLE table1 (
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "teradata",  "convertedOn": "09/19/2025",  "domain": "no-domain-provided" }}'
 ;
 ```
-
-Copy
 
 #### Table Kind Clause - SET and MULTISET[¶](#table-kind-clause-set-and-multiset)
 
@@ -435,8 +405,6 @@ CREATE MULTISET TABLE table2(
 );
 ```
 
-Copy
-
 ##### Snowflake[¶](#id16)
 
 ##### Table[¶](#id17)
@@ -457,8 +425,6 @@ CREATE OR REPLACE TABLE table2 (
 COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":0},{"attributes":{"component":"teradata"}}'
 ;
 ```
-
-Copy
 
 #### Volatile and Global Temporary Tables[¶](#volatile-and-global-temporary-tables)
 
@@ -482,8 +448,6 @@ CREATE MULTISET VOLATILE TABLE table3 (
 );
 ```
 
-Copy
-
 ##### Snowflake[¶](#id20)
 
 ##### Table[¶](#id21)
@@ -505,8 +469,6 @@ COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":
 ;
 ```
 
-Copy
-
 #### With data and with no data option[¶](#with-data-and-with-no-data-option)
 
 **Teradata**
@@ -520,8 +482,6 @@ CREATE TABLE table1 AS table2 WITH DATA
 -- With no data
 CREATE TABLE table1 AS table2 WITH NO DATA
 ```
-
-Copy
 
 **Snowflake**
 
@@ -539,8 +499,6 @@ CREATE OR REPLACE TABLE table1 LIKE table2
 COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":0},{"attributes":{"component":"teradata"}}'
 ;
 ```
-
-Copy
 
 #### Snowflake’s Reserved & Limited Keywords[¶](#snowflake-s-reserved-limited-keywords)
 
@@ -570,8 +528,6 @@ requiring manual intervention.
 );
 ```
 
-Copy
-
 **Snowflake**
 
 ##### Table[¶](#id25)
@@ -586,8 +542,6 @@ Copy
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "transact",  "convertedOn": "11/28/2024",  "domain": "test" }}'
 ;
 ```
-
-Copy
 
 **Snowflake-Specific Reserved Keywords**
 
@@ -609,8 +563,6 @@ prompting users to review and potentially rename these columns for compatibility
 );
 ```
 
-Copy
-
 **Snowflake**
 
 ##### Table[¶](#id27)
@@ -627,8 +579,6 @@ Copy
 COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "transact",  "convertedOn": "11/28/2024",  "domain": "test" }}'
 ;
 ```
-
-Copy
 
 ### Known Issues[¶](#id28)
 
@@ -690,7 +640,7 @@ Global Temporary table option. It will be removed.
 
 Translation reference to convert Teradata WITH DEFAULT clause in column definitions to Snowflake
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -704,8 +654,6 @@ values. This value is typically the equivalent of zero or empty.
 ```
  WITH DEFAULT
 ```
-
-Copy
 
 The following table shows Teradata’s data types, their corresponding type in Snowflake, and the
 default value to be set if supported.
@@ -812,8 +760,6 @@ default value to be set if supported.
 );
 ```
 
-Copy
-
 ##### Snowflake [¶](#id33)
 
 ##### Query[¶](#id34)
@@ -882,8 +828,6 @@ Copy
 )
 ```
 
-Copy
-
 ### Known Issues[¶](#id35)
 
 #### 1. Unsupported types[¶](#unsupported-types)
@@ -919,8 +863,6 @@ For more information about `CREATE MACRO` click
 [ EXECUTE | EXEC ] <macroname>;
 ```
 
-Copy
-
 ### Sample Source Patterns [¶](#id38)
 
 #### Setup data[¶](#setup-data)
@@ -941,8 +883,6 @@ INSERT INTO DEPOSIT VALUES (2, 'Account 2');
 INSERT INTO DEPOSIT VALUES (3, 'Account 3');
 INSERT INTO DEPOSIT VALUES (4, 'Account 4');
 ```
-
-Copy
 
 ##### Snowflake[¶](#id40)
 
@@ -968,8 +908,6 @@ INSERT INTO DEPOSIT
 VALUES (4, 'Account 4');
 ```
 
-Copy
-
 #### Basic Macro [¶](#basic-macro)
 
 Since there is no macro object in Snowflake, the conversion tool transforms Teradata macros into
@@ -991,8 +929,6 @@ AS
 EXECUTE DEPOSITID(2);
 ```
 
-Copy
-
 ##### Result[¶](#result)
 
 ```
@@ -1003,8 +939,6 @@ Copy
 |2|Account 2|
 +--------------+--------------+
 ```
-
-Copy
 
 ##### Snowflake Scripting [¶](#snowflake-scripting)
 
@@ -1027,8 +961,6 @@ $$;
 CALL DEPOSITID(2);
 ```
 
-Copy
-
 ##### Result[¶](#id44)
 
 ```
@@ -1039,8 +971,6 @@ Copy
 |2|Account 2|
 +--------------+--------------+
 ```
-
-Copy
 
 #### Macro Calls Another Macro [¶](#macro-calls-another-macro)
 
@@ -1061,8 +991,6 @@ AS
 EXECUTE MacroCallOtherMacro(2);
 ```
 
-Copy
-
 ##### Result[¶](#id47)
 
 ```
@@ -1073,8 +1001,6 @@ Copy
 |2|Account 2|
 +--------------+--------------+
 ```
-
-Copy
 
 ##### Snowflake Scripting [¶](#id48)
 
@@ -1105,8 +1031,6 @@ $$;
 CALL MacroCallOtherMacro(2);
 ```
 
-Copy
-
 ##### Result[¶](#id50)
 
 ```
@@ -1117,8 +1041,6 @@ Copy
 |2|Account 2|
 +--------------+--------------+
 ```
-
-Copy
 
 #### Macro with no result set[¶](#macro-with-no-result-set)
 
@@ -1138,8 +1060,6 @@ AS
 EXECUTE MacroWithoutSelect(5, 'Account 5');
 SELECT * FROM DEPOSIT;
 ```
-
-Copy
 
 ##### Result[¶](#id53)
 
@@ -1164,8 +1084,6 @@ Copy
 +--------------+--------------+
 ```
 
-Copy
-
 ##### Snowflake Scripting [¶](#id54)
 
 ##### Query[¶](#id55)
@@ -1187,8 +1105,6 @@ $$;
 CALL MacroWithoutSelect(5, 'Account 5');
 SELECT * FROM DEPOSIT;
 ```
-
-Copy
 
 ##### Result[¶](#id56)
 
@@ -1212,8 +1128,6 @@ Copy
 |5|Account 5|
 +--------------+--------------+
 ```
-
-Copy
 
 #### Macro returns multiple result sets[¶](#macro-returns-multiple-result-sets)
 
@@ -1240,8 +1154,6 @@ AS
 EXECUTE DEPOSITID(2);
 ```
 
-Copy
-
 ##### Result Set 1[¶](#result-set-1)
 
 ```
@@ -1253,8 +1165,6 @@ Copy
 +--------------+--------------+
 ```
 
-Copy
-
 ##### Result Set 2[¶](#result-set-2)
 
 ```
@@ -1265,8 +1175,6 @@ Copy
 |2|Account 2|
 +--------------+--------------+
 ```
-
-Copy
 
 ##### Snowflake Scripting [¶](#id59)
 
@@ -1314,8 +1222,6 @@ $$;
 CALL DEPOSITID(2);
 ```
 
-Copy
-
 ##### Result Set 1[¶](#id61)
 
 ```
@@ -1329,8 +1235,6 @@ Copy
 |]|
 +-----------------------------------------------------+
 ```
-
-Copy
 
 ##### Visualize Result Rets[¶](#visualize-result-rets)
 
@@ -1351,8 +1255,6 @@ It is necessary to execute the following queries to display the result sets just
 SELECT * FROM table('RESULTSET_6BDE39D7_0554_406E_B52F_D9E863A3F15C');
 ```
 
-Copy
-
 ##### Result Set 1[¶](#id63)
 
 ```
@@ -1364,8 +1266,6 @@ Copy
 +--------------+--------------+
 ```
 
-Copy
-
 ##### Result Set 2[¶](#id64)
 
 ```
@@ -1376,8 +1276,6 @@ Copy
 |2|Account 2|
 +--------------+--------------+
 ```
-
-Copy
 
 ### Known Issues [¶](#id65)
 
@@ -1414,8 +1312,6 @@ statement;
 <privilege_option> := {CREATOR | DEFINER | INVOKER | OWNER}
 ```
 
-Copy
-
 ### Sample Source Patterns [¶](#id67)
 
 #### Setup data[¶](#id68)
@@ -1435,8 +1331,6 @@ INSERT INTO inventory VALUES ('Tuna', 150);
 INSERT INTO inventory VALUES ('Gum', 20);
 INSERT INTO inventory VALUES ('Milk', 80);
 ```
-
-Copy
 
 ##### Snowflake[¶](#id70)
 
@@ -1460,8 +1354,6 @@ VALUES ('Gum', 20);
 INSERT INTO inventory
 VALUES ('Milk', 80);
 ```
-
-Copy
 
 #### Basic Procedure [¶](#basic-procedure)
 
@@ -1487,8 +1379,6 @@ CALL BasicProcedure(5);
 SELECT product_name, price FROM inventory WHERE product_name = 'Salt';
 ```
 
-Copy
-
 ##### Result[¶](#id73)
 
 ```
@@ -1499,8 +1389,6 @@ Copy
 |Salt|50|
 +--------------+--------------+
 ```
-
-Copy
 
 ##### Snowflake Scripting [¶](#id74)
 
@@ -1542,8 +1430,6 @@ WHERE
     UPPER(RTRIM( product_name)) = UPPER(RTRIM('Salt'));
 ```
 
-Copy
-
 ##### Result[¶](#id76)
 
 ```
@@ -1554,8 +1440,6 @@ Copy
 |Salt|50|
 +--------------+--------------+
 ```
-
-Copy
 
 #### Single out parameter [¶](#single-out-parameter)
 
@@ -1572,8 +1456,6 @@ END;
 CALL procedureLabelSingle(?);
 ```
 
-Copy
-
 ##### Result[¶](#id79)
 
 ```
@@ -1581,8 +1463,6 @@ Message                 |
 ------------------------+
 Assignment value. Thanks|
 ```
-
-Copy
 
 ##### Snowflake Scripting [¶](#id80)
 
@@ -1604,8 +1484,6 @@ $$;
 CALL procedureLabelSingle(?);
 ```
 
-Copy
-
 ##### Result[¶](#id82)
 
 ```
@@ -1617,8 +1495,6 @@ Copy
 |""Assignment value. Thanks""|
 +───────────────────────────────+
 ```
-
-Copy
 
 #### Multiple out parameter [¶](#multiple-out-parameter)
 
@@ -1636,8 +1512,6 @@ END;
 CALL procedureLabelSingle(?, ?);
 ```
 
-Copy
-
 ##### Result[¶](#id85)
 
 ```
@@ -1645,8 +1519,6 @@ Copy
 ------------------------+-------------------------+
 Assignment value. Thanks|Assignment value2. Thanks|
 ```
-
-Copy
 
 ##### Snowflake Scripting [¶](#id86)
 
@@ -1670,8 +1542,6 @@ $$;
 CALL procedureLabelSingle(?, ?);
 ```
 
-Copy
-
 ##### Result[¶](#id88)
 
 ```
@@ -1686,8 +1556,6 @@ Copy
 |}"||
 +─────────────────────────+────────────────────────────────+
 ```
-
-Copy
 
 #### Multiple out parameter with dynamic result sets [¶](#multiple-out-parameter-with-dynamic-result-sets)
 
@@ -1719,8 +1587,6 @@ END;
 
 CALL Procedure2();
 ```
-
-Copy
 
 ##### Result[¶](#id91)
 
@@ -1799,8 +1665,6 @@ $$;
 
 CALL Procedure2();
 ```
-
-Copy
 
 ### Known Issues [¶](#id94)
 

@@ -36,8 +36,6 @@ Insert into TestTable Values(3,'JEFF');
 Insert into TestTable Values(4,'OLIVER');
 ```
 
-Copy
-
 Now that we have a Table with some data, we can do a couple of examples about a Create View.
 
 ### IBM DB2[¶](#ibm-db2)
@@ -49,8 +47,6 @@ FROM TestTable
 WHERE ID > 2;
 ```
 
-Copy
-
 ### Snowflake[¶](#snowflake)
 
 ```
@@ -60,8 +56,6 @@ AS SELECT *  FROM
  TestTable
 WHERE ID > 2;
 ```
-
-Copy
 
 ## OF type-name[¶](#of-type-name)
 
@@ -91,8 +85,6 @@ OF Rootview MODE DB2SQL(REF IS oidColumn USER GENERATED)
 AS SELECT * FROM TestTable;
 ```
 
-Copy
-
 ##### Snowflake
 
 ```
@@ -101,8 +93,6 @@ Copy
 OF Rootview MODE DB2SQL(REF IS oidColumn USER GENERATED)
 AS SELECT * FROM TestTable;
 ```
-
-Copy
 
 ### Related EWIs
 
@@ -136,8 +126,6 @@ Select * from TestTable
 WITH CASCADED CHECK OPTION;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id9)
 
 ```
@@ -147,8 +135,6 @@ AS
 Select * from
  TestTable;
 ```
-
-Copy
 
 ## WITH ROW MOVEMENT[¶](#with-row-movement)
 
@@ -178,8 +164,6 @@ from TestTableId1
 WITH ROW MOVEMENT;
 ```
 
-Copy
-
 ##### Snowflake
 
 ```
@@ -191,8 +175,6 @@ from
 !!!RESOLVE EWI!!! /*** SSC-EWI-DB0005 - MANIPULATION OF DATA IN VIEWS IS NOT SUPPORTED. ***/!!!
 WITH ROW MOVEMENT;
 ```
-
-Copy
 
 ### Related EWIs
 

@@ -7,13 +7,13 @@ title: SnowConvert AI - Oracle - PL/SQL to Javascript | Snowflake Documentation
 
 ## Collections & Records[¶](#collections-records)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
 ### Records[¶](#records)
 
-Note
+**Note:**
 
 You might also be interested in [Records declaration.](#record-variable-declaration)
 
@@ -51,8 +51,6 @@ BEGIN
   EXECUTE IMMEDIATE 'SELECT * FROM FTABLE46' INTO DEPT_NAME;
 END;
 ```
-
-Copy
 
 #### Snowflake[¶](#snowflake)
 
@@ -122,8 +120,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### Known Issues[¶](#known-issues)
 
 No issues were found.
@@ -156,8 +152,6 @@ $IF conditional_expression $THEN
 $END;
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#sample-source-patterns)
 
 #### Possible IF variations[¶](#possible-if-variations)
@@ -175,8 +169,6 @@ CREATE OR REPLACE PROCEDURE PROCEDURE_DEMO ()
       $END
    END PROCEDURE_DEMO;
 ```
-
-Copy
 
 ##### Snowflake Scripting[¶](#snowflake-scripting)
 
@@ -199,8 +191,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### Known issues[¶](#id2)
 
 1. Transformation of Conditional Compilation is not currently supported.
@@ -211,7 +201,7 @@ Copy
 
 ## Control Statements[¶](#control-statements)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -231,8 +221,6 @@ BEGIN
   END IF;
 END;
 ```
-
-Copy
 
 #### Snowflake[¶](#id5)
 
@@ -265,8 +253,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### Loop[¶](#loop)
 
 #### Oracle[¶](#id6)
@@ -285,8 +271,6 @@ BEGIN
   END LOOP outer_loop;
 END;
 ```
-
-Copy
 
 #### Snowflake[¶](#id7)
 
@@ -321,8 +305,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### While Statement[¶](#while-statement)
 
 #### Oracle[¶](#id8)
@@ -338,8 +320,6 @@ BEGIN
   END LOOP;
 END;
 ```
-
-Copy
 
 #### Snowflake[¶](#id9)
 
@@ -361,15 +341,13 @@ $$
 $$;
 ```
 
-Copy
-
 ### Related EWIs[¶](#id10)
 
 1. [SSC-EWI-0053](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0053): Object may not work.
 
 ## Declarations[¶](#declarations)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -392,8 +370,6 @@ BEGIN
     localVar1 := 123;
 END;
 ```
-
-Copy
 
 #### Snowflake[¶](#id12)
 
@@ -419,11 +395,9 @@ $$
 $$;
 ```
 
-Copy
-
 ### Record variable declaration[¶](#record-variable-declaration)
 
-Note
+**Note:**
 
 You might also be interested in [Records transformation section.](#collections-records)
 
@@ -452,8 +426,6 @@ BEGIN
     null;
 END;
 ```
-
-Copy
 
 #### Snowflake[¶](#id14)
 
@@ -494,8 +466,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### Rowtype Record variable declaration[¶](#rowtype-record-variable-declaration)
 
 #### Oracle[¶](#id15)
@@ -518,8 +488,6 @@ BEGIN
   CLOSE BOOK_CURSOR;
 END;
 ```
-
-Copy
 
 #### Snowflake[¶](#id16)
 
@@ -556,8 +524,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### Constant Declaration[¶](#constant-declaration)
 
 #### Oracle[¶](#id17)
@@ -574,8 +540,6 @@ BEGIN
     MY_VAR1 := MY_CONST_VAR1 + MY_CONST_VAR2 + 1;
 END;
 ```
-
-Copy
 
 #### Snowflake[¶](#id18)
 
@@ -600,13 +564,11 @@ $$
 $$;
 ```
 
-Copy
-
 ### Cursor declarations and definition[¶](#cursor-declarations-and-definition)
 
 #### Oracle[¶](#id19)
 
-Note
+**Note:**
 
 You might also be interested in [Cursor helper](helpers.html#cursor-helper)
 
@@ -626,11 +588,9 @@ BEGIN
 END;
 ```
 
-Copy
-
 #### Snowflake[¶](#id20)
 
-Note
+**Note:**
 
 SnowConvert AI helpers Code removed from the example. You can find them [here.](helpers)
 
@@ -660,8 +620,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### Known Issues[¶](#id21)
 
 No issues were found.
@@ -679,7 +637,7 @@ No related EWIs.
 
 #### Concatenation Operator[¶](#concatenation-operator)
 
-Note
+**Note:**
 
 You might also be interested in [Concat helper.](helpers.html#concat-value-helper)
 
@@ -702,11 +660,9 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id24)
 
-Note
+**Note:**
 
 SnowConvert AI helpers Code removed from the example. You can find them [here.](helpers)
 
@@ -731,8 +687,6 @@ VALUES ('${concatValue(CONCAT_VAR)}')`;
     EXEC(SQL_STMT);
 $$;
 ```
-
-Copy
 
 #### Logical Operators[¶](#logical-operators)
 
@@ -762,15 +716,13 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id26)
 
-Note
+**Note:**
 
 You might also be interested in [IS NULL helper](helpers.html#is-null-helper)[.](helpers.html#is-null-helper)
 
-Note
+**Note:**
 
 SnowConvert AI helpers Code removed from the example. You can find them [here.](helpers)
 
@@ -804,15 +756,13 @@ $$
 $$;
 ```
 
-Copy
-
 #### Comparison Operator[¶](#comparison-operator)
 
 Documentation in progress.
 
 ##### IS [NOT] NULL[¶](#is-not-null)
 
-Note
+**Note:**
 
 You might also be interested in [IS NULL helper](helpers.html#is-null-helper).
 
@@ -835,11 +785,9 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id28)
 
-Note
+**Note:**
 
 SnowConvert AI helpers Code removed from the example. You can find them [here.](helpers)
 
@@ -865,11 +813,9 @@ $$
 $$;
 ```
 
-Copy
-
 ##### Like Operator[¶](#like-operator)
 
-Note
+**Note:**
 
 You might also be interested in [Like operator helper.](helpers.html#like-operator-helper)
 
@@ -895,11 +841,9 @@ BEGIN
 END;
 ```
 
-Copy
-
 ###### Snowflake[¶](#id30)
 
-Note
+**Note:**
 
 SnowConvert AI helpers Code removed from the example. You can find them [here.](helpers)
 
@@ -928,11 +872,9 @@ $$
 $$;
 ```
 
-Copy
-
 ##### Between Operator[¶](#between-operator)
 
-Note
+**Note:**
 
 You may also be interested in [Between operator helper.](helpers.html#between-operator-helper)
 
@@ -960,11 +902,9 @@ BEGIN
 END;
 ```
 
-Copy
-
 ###### Snowflake[¶](#id32)
 
-Note
+**Note:**
 
 SnowConvert AI helpers Code removed from the example. You can find them [here.](helpers)
 
@@ -995,8 +935,6 @@ $$
 $$;
 ```
 
-Copy
-
 ##### IN Operator[¶](#in-operator)
 
 ###### Oracle[¶](#id33)
@@ -1014,11 +952,9 @@ BEGIN
 END;
 ```
 
-Copy
-
 ###### Snowflake[¶](#id34)
 
-Note
+**Note:**
 
 SnowConvert AI helpers Code removed from the example. You can find them [here.](helpers)
 
@@ -1040,8 +976,6 @@ $$
   }
 $$;
 ```
-
-Copy
 
 #### Boolean Expressions[¶](#boolean-expressions)
 
@@ -1073,11 +1007,9 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id36)
 
-Note
+**Note:**
 
 SnowConvert AI helpers Code removed from the example. You can find them [here.](helpers)
 
@@ -1108,8 +1040,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### Function Expressions[¶](#function-expressions)
 
 For Function Expressions inside procedures, they are being converted to the corresponding function or expression in Snowflake. These function calls are passed to an EXEC with a CALL or a SELECT depending on the converted value.
@@ -1126,11 +1056,9 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id38)
 
-Note
+**Note:**
 
 SnowConvert AI helpers Code removed from the example. You can find them [here.](helpers)
 
@@ -1153,8 +1081,6 @@ $$
 $$;
 ```
 
-Copy
-
 For more information on the function’s transformations check [here](../functions/README).
 
 ### Known Issues[¶](#id39)
@@ -1176,7 +1102,7 @@ Most Oracle UDFs and UDFs inside packages, are being transformed to Snowflake St
 
 ### Translation[¶](#translation)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -1196,8 +1122,6 @@ BEGIN
     RETURN VAR2 ;
 END;
 ```
-
-Copy
 
 ##### Snowflake[¶](#id42)
 
@@ -1226,8 +1150,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### Function inside Package[¶](#function-inside-package)
 
 ##### Oracle[¶](#id43)
@@ -1244,8 +1166,6 @@ FUNCTION f1(PAR1 VARCHAR) RETURN VARCHAR IS
   END f1;
 END pkg1;
 ```
-
-Copy
 
 ##### Snowflake[¶](#id44)
 
@@ -1274,8 +1194,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### Return data type mapping[¶](#return-data-type-mapping)
 
 <!-- prettier-ignore -->
@@ -1300,8 +1218,6 @@ CREATE VIEW VIEW1 AS SELECT FUN1(COL2) FROM TABLE1;
 CREATE VIEW VIEW2 AS SELECT PKG1.F1(COL1) FROM TABLE1;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id46)
 
 ```
@@ -1318,8 +1234,6 @@ SELECT PKG1.F1(COL1) !!!RESOLVE EWI!!! /*** SSC-EWI-0073 - PENDING FUNCTIONAL EQ
 TABLE1;
 ```
 
-Copy
-
 #### Inside other functions or stored procedures[¶](#inside-other-functions-or-stored-procedures)
 
 The functions that are converted to procedures are called using the [EXEC Snowflake helper](helpers.html#exec-helper).
@@ -1335,8 +1249,6 @@ CREATE OR REPLACE FUNCTION FUN1(x NUMBER) RETURN NUMBER IS
     RETURN VAR1;
   END f1;
 ```
-
-Copy
 
 ##### Snowflake[¶](#id48)
 
@@ -1361,8 +1273,6 @@ $$
 $$;
 ```
 
-Copy
-
 ##### Oracle[¶](#id49)
 
 ```
@@ -1374,8 +1284,6 @@ CREATE OR REPLACE FUNCTION FUN1(x NUMBER) RETURN NUMBER IS
     RETURN VAR1;
   END f1;
 ```
-
-Copy
 
 ##### Snowflake[¶](#id50)
 
@@ -1400,8 +1308,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### Different cases and limitations[¶](#different-cases-and-limitations)
 
 #### Functions with DMLs[¶](#functions-with-dmls)
@@ -1421,8 +1327,6 @@ BEGIN
     RETURN VAR1;
 END FUN1;
 ```
-
-Copy
 
 ##### Snowflake[¶](#id52)
 
@@ -1449,8 +1353,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### Functions with only one SELECT INTO[¶](#functions-with-only-one-select-into)
 
 These functions are transformed to Snowflake SQL functions by removing the INTO part of the select.
@@ -1467,8 +1369,6 @@ BEGIN
     RETURN VAR1;
 END;
 ```
-
-Copy
 
 ##### Snowflake[¶](#id54)
 
@@ -1495,13 +1395,11 @@ $$
 $$;
 ```
 
-Copy
-
 #### Functions with only logic[¶](#functions-with-only-logic)
 
 UDFs that do not use any SQL statement are converted into Snowflake JavaScript UDFs.
 
-Note
+**Note:**
 
 When SQL built-in functions are included in the logic the user defined function is converted to a Snowflake procedure. Translation for built in functions to a JavaScript equivalent is planned to be delivered in the future.
 
@@ -1522,8 +1420,6 @@ BEGIN
     RETURN VAR1;
 END FUNC01;
 ```
-
-Copy
 
 ##### Snowflake[¶](#id56)
 
@@ -1550,8 +1446,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### Functions with more than one SQL statement[¶](#functions-with-more-than-one-sql-statement)
 
 Warning
@@ -1575,8 +1469,6 @@ BEGIN
     RETURN VAR1;
 END FUN1;
 ```
-
-Copy
 
 ##### Snowflake[¶](#id58)
 
@@ -1611,11 +1503,9 @@ WHERE ID = ?`,[X]);
 $$;
 ```
 
-Copy
-
 #### Functions with only logic and built-in SQL functions[¶](#functions-with-only-logic-and-built-in-sql-functions)
 
-Note
+**Note:**
 
 This transformation is planned to be delivery in the future, currently all functions are being transformed to stored procedures.
 
@@ -1634,8 +1524,6 @@ BEGIN
     RETURN VAR1;
 END FUNC01;
 ```
-
-Copy
 
 ###### Snowflake[¶](#id60)
 
@@ -1662,8 +1550,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### RETURN CASE[¶](#return-case)
 
 The transformation is the same transformation when the CASE is use to assign a variable.
@@ -1682,8 +1568,6 @@ BEGIN
 	ELSE 'unknown' END;
 END FUN1;
 ```
-
-Copy
 
 ##### Snowflake[¶](#id62)
 
@@ -1704,8 +1588,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### Known Issues[¶](#id63)
 
 No issues were found.
@@ -1718,7 +1600,7 @@ No issues were found.
 
 ## Packages[¶](#packages)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -1768,8 +1650,6 @@ CREATE OR REPLACE PACKAGE MY_PACKAGE AS
 END MY_PACKAGE ;
 ```
 
-Copy
-
 ##### Transformation with option 1 (Using new schema)[¶](#transformation-with-option-1-using-new-schema)
 
 ```
@@ -1779,8 +1659,6 @@ COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":
 -- Other elements...
 ```
 
-Copy
-
 ##### Transformation with option 2[¶](#transformation-with-option-2)
 
 With this option, the Schema won’t be generated and only the inner elements will be kept but with their names renamed.
@@ -1788,8 +1666,6 @@ With this option, the Schema won’t be generated and only the inner elements wi
 ```
 -- Other elements...
 ```
-
-Copy
 
 #### Procedure and function declaration[¶](#procedure-and-function-declaration)
 
@@ -1804,8 +1680,6 @@ CREATE OR REPLACE PACKAGE MY_PACKAGE AS
 END MY_PACKAGE;
 ```
 
-Copy
-
 ##### Transformation with option 1 (Using new schema)[¶](#id67)
 
 ```
@@ -1814,15 +1688,13 @@ COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":
 ;
 ```
 
-Copy
-
-Note
+**Note:**
 
 Note that that for option 1, the `PROCEDURE` definition in the package is removed since it is not required by Snowflake.
 
 #### Variables declaration[¶](#variables-declaration)
 
-Note
+**Note:**
 
 You might also be interested in [variables helper.](helpers.html#package-variables-helper)
 
@@ -1852,8 +1724,6 @@ CREATE OR REPLACE PACKAGE PACKAGE_VARIABLES AS
 END;
 ```
 
-Copy
-
 ###### Snowflake[¶](#id69)
 
 ```
@@ -1873,8 +1743,6 @@ SET "PACKAGE_VARIABLES.VAR4" = '' || ('HELLO WORLD');
 
 SET "PACKAGE_VARIABLES.VAR5" = '~';
 ```
-
-Copy
 
 #### Constants declaration[¶](#constants-declaration)
 
@@ -1900,8 +1768,6 @@ PROCEDURE MY_PROCEDURE IS
 END PACKAGE_CONSTANTS;
 ```
 
-Copy
-
 **Transformation with option 1**
 
 ```
@@ -1925,9 +1791,7 @@ $$
 $$;
 ```
 
-Copy
-
-Note
+**Note:**
 
 Note that the `PROCEDURE` definition in the package is removed since it is not required by Snowflake.
 
@@ -1943,8 +1807,6 @@ CREATE OR REPLACE PACKAGE MY_PACKAGE_EX AS
 END MY_PACKAGE_EX;
 ```
 
-Copy
-
 ##### Transformation with option 1[¶](#transformation-with-option-1)
 
 ```
@@ -1955,8 +1817,6 @@ COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":
 !!!RESOLVE EWI!!! /*** SSC-EWI-OR0049 - PACKAGE EXCEPTIONS in stateful package MY_PACKAGE_EX are not supported yet ***/!!!
 an_exception EXCEPTION;
 ```
-
-Copy
 
 ### Package Body Definition[¶](#package-body-definition)
 
@@ -1983,8 +1843,6 @@ PROCEDURE MY_PROCEDURE (MY_PARAM VARCHAR) IS
 END PACKAGE_PROCEDURE;
 ```
 
-Copy
-
 ##### Transformation with option 1[¶](#id73)
 
 ```
@@ -2001,8 +1859,6 @@ $$
 $$;
 ```
 
-Copy
-
 ##### Transformation with option 2[¶](#id74)
 
 ```
@@ -2017,8 +1873,6 @@ $$
    null;
 $$;
 ```
-
-Copy
 
 #### Function Definition[¶](#function-definition)
 
@@ -2037,8 +1891,6 @@ AS
 END PACKAGE_FUNCTION;
 ```
 
-Copy
-
 ##### Transformation with option 1[¶](#id76)
 
 ```
@@ -2053,11 +1905,9 @@ $$
 $$;
 ```
 
-Copy
-
 ##### Transformation with option 2[¶](#id77)
 
-Note
+**Note:**
 
 SnowConvert AI helpers Code removed from the example. You can find them [here.](helpers)
 
@@ -2072,8 +1922,6 @@ $$
    null;
 $$;
 ```
-
-Copy
 
 #### Other package body members[¶](#other-package-body-members)
 
@@ -2097,11 +1945,9 @@ END;
 CALL SCHEMA1.PACKAGE1.PROCEDURE01(param1, param2);
 ```
 
-Copy
-
 ##### Transformation with option 1[¶](#id79)
 
-Note
+**Note:**
 
 SnowConvert AI helpers Code removed from the example. You can find them [here.](helpers)
 
@@ -2122,11 +1968,9 @@ $$;
 CALL SCHEMA1.PACKAGE1.PROCEDURE01(param1, param2);
 ```
 
-Copy
-
 ##### Transformation with option 2[¶](#id80)
 
-Note
+**Note:**
 
 SnowConvert AI helpers Code removed from the example. You can find them [here.](helpers)
 
@@ -2149,15 +1993,13 @@ $$;
 CALL SCHEMA1.PACKAGE1_PROCEDURE01(param1, param2);
 ```
 
-Copy
-
 #### Package variables inside procedures[¶](#package-variables-inside-procedures)
 
-Note
+**Note:**
 
 Packages variables are transformed to session variables. Those variables are usable through the “[Package variables helper](helpers.html#package-variables-helper)”.
 
-Note
+**Note:**
 
 This sample is using variables declared in packages [Variables declaration](#variables-declaration) section.
 
@@ -2173,8 +2015,6 @@ CREATE OR REPLACE PACKAGE BODY PACKAGE_VARIABLES AS
     END;
 END;
 ```
-
-Copy
 
 ##### Snowflake[¶](#id83)
 
@@ -2198,8 +2038,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### Known Issues[¶](#id84)
 
 No issues were found.
@@ -2211,7 +2049,7 @@ No issues were found.
 
 ## Procedures[¶](#procedures)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -2226,8 +2064,6 @@ BEGIN
 null;
 END;
 ```
-
-Copy
 
 ### Snowflake[¶](#id87)
 
@@ -2244,8 +2080,6 @@ $$
     null;
 $$;
 ```
-
-Copy
 
 **Example 2:** Procedure Conversion with basic statements: Declaration, Assignment, Cursor Declaration, FOR Cursor, Open, LOOP, CLOSE, IF,
 
@@ -2294,8 +2128,6 @@ BEGIN
     END IF;
 END PROC1;
 ```
-
-Copy
 
 ### Snowflake[¶](#id89)
 
@@ -2528,8 +2360,6 @@ COMMIT;`);
 $$;
 ```
 
-Copy
-
 #### Call of procedures inside other procedure[¶](#call-of-procedures-inside-other-procedure)
 
 ##### Oracle[¶](#id90)
@@ -2547,8 +2377,6 @@ BEGIN
 PROCEDURE01(param1, param2);
 END;
 ```
-
-Copy
 
 ##### Snowflake[¶](#id91)
 
@@ -2580,8 +2408,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### Known Issues[¶](#id92)
 
 No issues were found.
@@ -2593,13 +2419,13 @@ No issues were found.
 
 ## SQL Language Elements[¶](#sql-language-elements)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
 ### Cursor FOR LOOP[¶](#cursor-for-loop)
 
-Note
+**Note:**
 
 You might also be interested in [Cursor helper](helpers.html#cursor-helper) and [Cursor declaration.](#cursor-declarations-and-definition)
 
@@ -2633,11 +2459,9 @@ BEGIN
 END;
 ```
 
-Copy
-
 #### Snowflake[¶](#id95)
 
-Note
+**Note:**
 
 SnowConvert AI helpers Code removed from the example. You can find them [here.](helpers)
 
@@ -2686,11 +2510,9 @@ $$
 $$;
 ```
 
-Copy
-
 ### OPEN, FETCH and CLOSE Statement[¶](#open-fetch-and-close-statement)
 
-Note
+**Note:**
 
 You might also be interested in [Cursor helper](helpers.html#cursor-helper) and [Cursor declaration.](#cursor-declarations-and-definition)
 
@@ -2731,11 +2553,9 @@ BEGIN
 END;
 ```
 
-Copy
-
 #### Snowflake[¶](#id97)
 
-Note
+**Note:**
 
 SnowConvert AI helpers Code removed from the example. You can find them [here.](helpers)
 
@@ -2796,8 +2616,6 @@ WHERE COL1 = NUM1`
 $$;
 ```
 
-Copy
-
 Warning
 
 Transformation for the following lines correspond to custom types which are work in progress:
@@ -2807,15 +2625,11 @@ entireRow   table1%ROWTYPE; // ROW TYPES
 TYPE COLLECTION_TYPE IS TABLE OF TABLE1.COL1%TYPE; // COLLECTIONS
 ```
 
-Copy
-
 Currently the next statement is being emitted but the class is not being created yet. A warning will be applied in the future to all the uses of the unsupported custom types.
 
 ```
 let MY_COLLECTION = new MY_COLLECTION_TYPE();
 ```
-
-Copy
 
 ### SQL Implicit Cursor[¶](#sql-implicit-cursor)
 
@@ -2842,11 +2656,9 @@ BEGIN
 END;
 ```
 
-Copy
-
 #### Snowflake[¶](#id99)
 
-Note
+**Note:**
 
 SnowConvert AI helpers Code removed from the example. You can find them [here.](helpers)
 
@@ -2883,11 +2695,9 @@ VALUES(?, ?, ?, ?)`,[SQL.ROWCOUNT /*** SSC-FDM-OR0009 - SQL IMPLICIT CURSOR VALU
 $$;
 ```
 
-Copy
-
 ### EXIT[¶](#exit)
 
-Note
+**Note:**
 
 You might also be interested in [Loop](#loop) and [while](#while-statement) statements.
 
@@ -2927,11 +2737,9 @@ BEGIN
 END;
 ```
 
-Copy
-
 #### Snowflake[¶](#id101)
 
-Note
+**Note:**
 
 SnowConvert AI helpers Code removed from the example. You can find them [here.](helpers)
 
@@ -2969,11 +2777,9 @@ $$
 $$;
 ```
 
-Copy
-
 ### Execute Immediate[¶](#execute-immediate)
 
-Note
+**Note:**
 
 You might also be interested in [EXEC helper](helpers.html#exec-helper)
 
@@ -3010,11 +2816,9 @@ BEGIN
 END;
 ```
 
-Copy
-
 #### Snowflake[¶](#id103)
 
-Note
+**Note:**
 
 SnowConvert AI helpers Code removed from the example. You can find them [here.](helpers)
 
@@ -3082,8 +2886,6 @@ WHERE id = ?`,[DEPT_ID2]);
 $$;
 ```
 
-Copy
-
 Warning
 
 Since the “RETURNING INTO” clause requires special analysis of the statement executed, its translation is planned to be delivered in the future.
@@ -3096,15 +2898,11 @@ Transformation for the following line correspond to collection types which is wo
 TYPE NumList IS TABLE OF NUMBER;
 ```
 
-Copy
-
 Currently the next statement is being emitted but the class is not being created yet. A warning will be applied in the future to all the uses of the unsupported custom types.
 
 ```
 let SALS = new NUMLIST();
 ```
-
-Copy
 
 Also the following `EXECUTE IMMEDIATE` related with the `BULK COLLECT` into the `sals` variable, is also work in progress.
 
@@ -3112,11 +2910,9 @@ Also the following `EXECUTE IMMEDIATE` related with the `BULK COLLECT` into the 
 EXECUTE IMMEDIATE 'SELECT id FROM dept' BULK COLLECT INTO sals;
 ```
 
-Copy
-
 ### Errors and Exception Handling[¶](#errors-and-exception-handling)
 
-Note
+**Note:**
 
 You might also be interested in [Raise helper](helpers.html#raise-helper)
 
@@ -3170,11 +2966,9 @@ EXCEPTION
 END;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id105)
 
-Note
+**Note:**
 
 SnowConvert AI helpers Code removed from the example. You can find them [here.](helpers)
 
@@ -3254,13 +3048,11 @@ $$
 $$;
 ```
 
-Copy
-
 When there is not OTHERS handler, SnowConvert AI uses the “default” case in the switch that throws the original Error Object.
 
 #### Commit[¶](#commit)
 
-Note
+**Note:**
 
 You might also be interested in [EXEC helper](helpers.html#exec-helper)
 
@@ -3275,11 +3067,9 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id107)
 
-Note
+**Note:**
 
 SnowConvert AI helpers Code removed from the example. You can find them [here.](helpers)
 
@@ -3299,8 +3089,6 @@ $$
 COMMIT;`);
 $$;
 ```
-
-Copy
 
 #### CASE[¶](#case)
 
@@ -3336,11 +3124,9 @@ END CASE;
 END;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id109)
 
-Note
+**Note:**
 
 SnowConvert AI helpers Code removed from the example. You can find them [here.](helpers)
 
@@ -3385,8 +3171,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### CASE in a variable assignment[¶](#case-in-a-variable-assignment)
 
 ##### Oracle[¶](#id110)
@@ -3406,11 +3190,9 @@ BEGIN
 END;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id111)
 
-Note
+**Note:**
 
 SnowConvert AI helpers Code removed from the example. You can find them [here.](helpers)
 
@@ -3438,8 +3220,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### Call to external C or Java programs[¶](#call-to-external-c-or-java-programs)
 
 ##### Oracle[¶](#id112)
@@ -3448,8 +3228,6 @@ Copy
 CREATE OR REPLACE EDITIONABLE PROCEDURE "OWB_REP_OWNER"."WB_RT_DP_CREATE_FKPARTITION" (prfID IN NUMBER,datatype IN VARCHAR2) AUTHID CURRENT_USER AS LANGUAGE JAVA NAME 'oracle.wh.service.impl.dataProfile.analysis.storedprocs.ForeignKey.createFKPartition(int,java.lang.String)';
 ```
 
-Copy
-
 ##### Snowflake[¶](#id113)
 
 ```
@@ -3457,8 +3235,6 @@ Copy
 --CREATE OR REPLACE EDITIONABLE PROCEDURE "OWB_REP_OWNER"."WB_RT_DP_CREATE_FKPARTITION" (prfID IN NUMBER,datatype IN VARCHAR2) AUTHID CURRENT_USER AS LANGUAGE JAVA NAME 'oracle.wh.service.impl.dataProfile.analysis.storedprocs.ForeignKey.createFKPartition(int,java.lang.String)'
                                                                                                                                                                                                                                                                                    ;
 ```
-
-Copy
 
 ### Known Issues[¶](#id114)
 
@@ -3480,11 +3256,11 @@ No issues were found.
 
 ## DDL - DML Statements[¶](#ddl-dml-statements)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
-Note
+**Note:**
 
 All statements use the [EXEC helper.](helpers.html#exec-helper)
 
@@ -3505,11 +3281,9 @@ BEGIN
 END;
 ```
 
-Copy
-
 #### Snowflake[¶](#id117)
 
-Note
+**Note:**
 
 SnowConvert AI helpers Code removed from the example. You can find them [here.](helpers)
 
@@ -3544,8 +3318,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### SELECT INTO[¶](#select-into)
 
 #### Oracle[¶](#id118)
@@ -3564,11 +3336,9 @@ BEGIN
 END
 ```
 
-Copy
-
 #### Snowflake[¶](#id119)
 
-Note
+**Note:**
 
 SnowConvert AI helpers Code removed from the example. You can find them [here.](helpers)
 
@@ -3608,8 +3378,6 @@ FROM
 $$;
 ```
 
-Copy
-
 ### INSERT and INSERT INTO SELECT[¶](#insert-and-insert-into-select)
 
 #### Oracle[¶](#id120)
@@ -3628,11 +3396,9 @@ BEGIN
 END;
 ```
 
-Copy
-
 #### Snowflake[¶](#id121)
 
-Note
+**Note:**
 
 SnowConvert AI helpers Code removed from the example. You can find them [here.](helpers)
 
@@ -3660,8 +3426,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### DELETE[¶](#delete)
 
 #### Oracle[¶](#id122)
@@ -3677,11 +3441,9 @@ BEGIN
 END;
 ```
 
-Copy
-
 #### Snowflake[¶](#id123)
 
-Note
+**Note:**
 
 SnowConvert AI helpers Code removed from the example. You can find them [here.](helpers)
 
@@ -3710,8 +3472,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### UPDATE[¶](#update)
 
 #### Oracle[¶](#id124)
@@ -3728,11 +3488,9 @@ BEGIN
 END;
 ```
 
-Copy
-
 #### Snowflake[¶](#id125)
 
-Note
+**Note:**
 
 SnowConvert AI helpers Code removed from the example. You can find them [here.](helpers)
 
@@ -3762,8 +3520,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### MERGE[¶](#merge)
 
 #### Oracle[¶](#id126)
@@ -3780,11 +3536,9 @@ BEGIN
 END;
 ```
 
-Copy
-
 #### Snowflake[¶](#id127)
 
-Note
+**Note:**
 
 SnowConvert AI helpers Code removed from the example. You can find them [here.](helpers)
 
@@ -3805,8 +3559,6 @@ $$
 		   UPDATE SET t01.col1 = t02.col2`);
 $$;
 ```
-
-Copy
 
 ### Known Issues[¶](#id128)
 
@@ -3841,8 +3593,6 @@ begin
 end;
 ```
 
-Copy
-
 #### Snowflake[¶](#id131)
 
 ```
@@ -3876,8 +3626,6 @@ CREATE OR REPLACE TABLE schema_one.TABLE_TEST1 (
         $$;
 ```
 
-Copy
-
 ### Schema of referenced object added[¶](#schema-of-referenced-object-added)
 
 When the synonym references an object that is in a specific schema, the schema name will be added to the referenced object.
@@ -3893,8 +3641,6 @@ begin
     select col1 into returnval from my_synonym2;
 end;
 ```
-
-Copy
 
 #### Snowflake[¶](#id133)
 
@@ -3919,8 +3665,6 @@ from
    schema_one.TABLE_TEST1`);
 $$;
 ```
-
-Copy
 
 ### Related EWIs[¶](#id134)
 
@@ -3954,8 +3698,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 Before UPDATE triggers for audit cases like this cannot be handled directly. For the INSERT case you can use the default value case explained for the initialization trigger. However for the update case the only option will be to use a task as it is explained later for AFTER triggers. However the LAST\__UPDATE will not be accurate, there will be an offset because the recorded modification will be at the time of task execution (for example if the tasks executes each 5min then the LAST_UPDATE will be recorded 5min later)_.
 
 For UPDATE cases trying to capture the CURRENT_USER is not possible.
@@ -3974,8 +3716,6 @@ BEGIN
 END
 ```
 
-Copy
-
 For these triggers, you might use [Snowflake Default column values](https://docs.snowflake.com/en/sql-reference/sql/create-table.html#optional-parameters) for example for sequence values.
 
 You can also use `CURRENT_`_`USER`() and `CURRENT_TIMESTAMP` instead of `USER` or `SYS_TIMESTAMP`_
@@ -3993,8 +3733,6 @@ BEGIN
      RAISE_APPLICATION_ERROR(-30001,'An employee must be terminated before deleteing the row');
  END IF;
 ```
-
-Copy
 
 For these cases you will need to in-line the trigger actions after/before the DELETE or UPDATE is performed.
 
@@ -4016,11 +3754,9 @@ AFTER INSERT ON table1
 SELECT * FROM DUAL;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id136)
 
-Note
+**Note:**
 
 SnowConvert AI helpers Code removed from the example. You can find them [here.](helpers)
 
@@ -4030,8 +3766,6 @@ SnowConvert AI helpers Code removed from the example. You can find them [here.](
 --AFTER INSERT ON table1
 --SELECT * FROM DUAL
 ```
-
-Copy
 
 ### In-depth explanation for the snowflake code[¶](#in-depth-explanation-for-the-snowflake-code)
 
@@ -4095,8 +3829,6 @@ NULL;
 END;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id143)
 
 ```
@@ -4121,8 +3853,6 @@ END;
 $$;
 ```
 
-Copy
-
 #### TYPE attribute for variables[¶](#type-attribute-for-variables)
 
 In this case, the referenced item is a variable declared previously.
@@ -4140,8 +3870,6 @@ BEGIN
 NULL;
 END;
 ```
-
-Copy
 
 ##### Snowflake[¶](#id145)
 
@@ -4164,9 +3892,7 @@ END;
 $$;
 ```
 
-Copy
-
-Note
+**Note:**
 
 Further information about FLOAT datatype can be found in [FLOAT Data Type](../basic-elements-of-oracle-sql/data-types/oracle-built-in-data-types.html#float-data-type) section
 
@@ -4187,8 +3913,6 @@ BEGIN
 NULL;
 END;
 ```
-
-Copy
 
 ##### Snowflake[¶](#id147)
 
@@ -4212,15 +3936,13 @@ END;
 $$;
 ```
 
-Copy
-
 In the example before, the variable which is referencing the record variable is changed to `OBJECT` as same as the record variable, and the variable which is referencing the record field is changed to the record field data type (`NUMBER (38, 18)`).
 
 Warning
 
 These changes don’t work for embedded records.
 
-Note
+**Note:**
 
 Further information about records can be found in [Collection & Records](#collections-records) section.
 
@@ -4240,8 +3962,6 @@ BEGIN
 NULL;
 END;
 ```
-
-Copy
 
 ##### Snowflake[¶](#id149)
 
@@ -4264,8 +3984,6 @@ END;
 $$;
 ```
 
-Copy
-
 #### TYPE attribute for cursors[¶](#type-attribute-for-cursors)
 
 In this case, the referenced item is a cursor variable, but since REF cursors are not supported, the referencing item TYPE attribute is changed to VARIANT data type.
@@ -4284,8 +4002,6 @@ BEGIN
 NULL;
 END;
 ```
-
-Copy
 
 ##### Snowflake[¶](#id151)
 
@@ -4313,9 +4029,7 @@ END;
 $$;
 ```
 
-Copy
-
-Note
+**Note:**
 
 For those cases when the data type of the referenced item cannot be obtained, the referencing item TYPE attribute is changed to `VARIANT`.
 

@@ -74,8 +74,6 @@ definitions to be used in a future function call of the IMPORT of this layout.
 .FIELD TABLE_SOMEFIELD * SMALLINT;
 ```
 
-Copy
-
 **Snowflake (Python)**
 
 ```
@@ -104,8 +102,6 @@ if __name__ == "__main__":
   main()
 ```
 
-Copy
-
 ### .DML LABEL[¶](#dml-label)
 
 The transformation for the `.DML LABEL`command will create a function containing the statements
@@ -128,8 +124,6 @@ DELETE FROM Employee WHERE EmpNo  = :EmpNo;
 UPDATE   mydb.mytable SET TABLE_ID = :TABLE_ID WHERE TABLE_DESCR = :somedescription
 INSERT INTO mydb.mytable(TABLE_ID, TABLE_DESCR, TABLE_NBR) VALUES(:TABLE_ID, :TABLE_DESCR, :TABLE_NBR );
 ```
-
-Copy
 
 **Snowflake (Python)**
 
@@ -171,8 +165,6 @@ if __name__ == "__main__":
   main()
 ```
 
-Copy
-
 ### .IMPORT[¶](#import)
 
 The transformation of the `.IMPORT` command will create a call to
@@ -189,8 +181,6 @@ an`INSERT`label will be transformed to a query parameter and optionally can have
     APPLY UPSERT_TABLE
     Apply DELETE_TABLE;
 ```
-
-Copy
 
 **Snowflake (Python)**
 
@@ -221,8 +211,6 @@ if __name__ == "__main__":
   main()
 ```
 
-Copy
-
 ### Large Example[¶](#large-example)
 
 Given the transformations shown above for a variety of commands, consider the following example.
@@ -237,8 +225,6 @@ id,name,age
 4,Mike,40
 5,Laura,27
 ```
-
-Copy
 
 **Teradata (MultiLoad)**
 
@@ -277,8 +263,6 @@ apply insert_data
 .end mload;
 .logoff;
 ```
-
-Copy
 
 **Result**
 
@@ -344,8 +328,6 @@ if __name__ == "__main__":
   main()
 ```
 
-Copy
-
 **Result**
 
 <!-- prettier-ignore -->
@@ -375,8 +357,6 @@ does not take this into account and thus the code will be referencing a column t
       EmpNo = :EmpNo
     """)
 ```
-
-Copy
 
 If you have any additional questions regarding this documentation, you can email us at
 [snowconvert-support@snowflake.com](mailto:snowconvert-support%40snowflake.com).

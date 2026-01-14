@@ -26,8 +26,6 @@ CREATE [ { GLOBAL | PRIVATE } TEMPORARY | SHARDED | DUPLICATED | [ IMMUTABLE ] B
   [ PARENT [ schema. ] table ] ;
 ```
 
-Copy
-
 **Snowflake Syntax**
 
 ```
@@ -79,9 +77,7 @@ CREATE [ OR REPLACE ]
   [ [ WITH ] TAG ( <tag_name> = '<tag_value>' [ , <tag_name> = '<tag_value>' , ... ] ) ]
 ```
 
-Copy
-
-Note
+**Note:**
 
 For more Snowflake information review the following
 [documentation](https://docs.snowflake.com/en/sql-reference/sql/create-table).
@@ -115,8 +111,6 @@ CREATE TABLE "MySchema"."BaseTable"
   PARALLEL;
 ```
 
-Copy
-
 #### Snowflake[¶](#snowflake)
 
 ```
@@ -128,9 +122,7 @@ CREATE OR REPLACE TABLE "MySchema"."BaseTable"
  ;
 ```
 
-Copy
-
-Note
+**Note:**
 
 Table properties are removed because they are not required after the migration in Snowflake.
 
@@ -140,7 +132,7 @@ The following constraints will be commented out:
 
 - `CHECK` Constraint
 
-Note
+**Note:**
 
 The `USING INDEX` constraint will be entirely removed from the output code during the conversion.
 
@@ -159,8 +151,6 @@ CREATE TABLE "MySchema"."BaseTable"
 );
 ```
 
-Copy
-
 #### Snowflake[¶](#id2)
 
 ```
@@ -178,8 +168,6 @@ CREATE OR REPLACE TABLE "MySchema"."BaseTable"
 	;
 ```
 
-Copy
-
 On the other hand, but in the same way, in case you have any constraint state after a NOT NULL
 constraint as follows:
 
@@ -192,7 +180,7 @@ constraint as follows:
 
 These will also be commented out.
 
-Note
+**Note:**
 
 The ENABLE constraint state will be completely removed from the output code during the conversion
 process. In the case of the DISABLE state, it will also be removed concurrently with the NOT NULL
@@ -208,8 +196,6 @@ CREATE TABLE Table1(
 );
 ```
 
-Copy
-
 #### Snowflake[¶](#id4)
 
 ```
@@ -221,8 +207,6 @@ CREATE OR REPLACE TABLE Table1 (
   COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":0},{"attributes":{"component":"oracle"}}'
   ;
 ```
-
-Copy
 
 ### 2.3. Foreign Key[¶](#foreign-key)
 
@@ -240,8 +224,6 @@ CREATE TABLE "MySchema"."MyTable"
 );
 ```
 
-Copy
-
 #### Snowflake[¶](#id6)
 
 ```
@@ -254,8 +236,6 @@ CREATE OR REPLACE TABLE "MySchema"."MyTable"
     ;
 ```
 
-Copy
-
 ### 2.4. Virtual Column[¶](#virtual-column)
 
 #### Oracle[¶](#id7)
@@ -267,8 +247,6 @@ CREATE TABLE "MySchema"."MyTable"
 );
 ```
 
-Copy
-
 #### Snowflake[¶](#id8)
 
 ```
@@ -279,8 +257,6 @@ CREATE OR REPLACE TABLE "MySchema"."MyTable"
     COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":0},{"attributes":{"component":"oracle"}}'
     ;
 ```
-
-Copy
 
 ### 2.5. Identity Column[¶](#identity-column)
 
@@ -300,8 +276,6 @@ CREATE TABLE "MySchema"."BaseTable"
 );
 ```
 
-Copy
-
 #### Snowflake[¶](#id10)
 
 ```
@@ -312,8 +286,6 @@ CREATE OR REPLACE TABLE "MySchema"."BaseTable"
 	COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "oracle",  "convertedOn": "07/16/2025",  "domain": "no-domain-provided" }}'
 	;
 ```
-
-Copy
 
 ### 2.6. CLOB and BLOB column declaration[¶](#clob-and-blob-column-declaration)
 
@@ -329,8 +301,6 @@ Col5 CLOB DEFAULT EMPTY_CLOB()
 );
 ```
 
-Copy
-
 #### Snowflake[¶](#id12)
 
 ```
@@ -342,8 +312,6 @@ CREATE OR REPLACE TABLE T
  COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":0},{"attributes":{"component":"oracle"}}'
  ;
 ```
-
-Copy
 
 ### 2.7. Constraint Name[¶](#constraint-name)
 
@@ -359,8 +327,6 @@ CREATE TABLE "CustomSchema"."BaseTable"(
   );
 ```
 
-Copy
-
 #### Snowflake[¶](#id14)
 
 ```
@@ -370,8 +336,6 @@ CREATE OR REPLACE TABLE "CustomSchema"."BaseTable" (
    COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":0},{"attributes":{"component":"oracle"}}'
    ;
 ```
-
-Copy
 
 ### 2.8. Default columns with times[¶](#default-columns-with-times)
 
@@ -395,8 +359,6 @@ CREATE TABLE TABLE1
  COL5 TIMESTAMP(6) DEFAULT TO_TIMESTAMP('01/01/1900 12:00:00.000000 AM', 'MM/DD/YYYY HH:MI:SS.FF6 AM')
  );
 ```
-
-Copy
 
 #### Snowflake[¶](#id16)
 
@@ -422,8 +384,6 @@ CREATE OR REPLACE TABLE TABLE1
  ;
 ```
 
-Copy
-
 ### 2.9 Sharing and Memoptimize options[¶](#sharing-and-memoptimize-options)
 
 Some options in Oracle are not required in Snowflake. That is the case for the `sharing` and
@@ -441,8 +401,6 @@ CREATE TABLE table1
  ) MEMOPTIMIZE FOR READ;
 ```
 
-Copy
-
 #### Snowflake[¶](#id18)
 
 ```
@@ -455,8 +413,6 @@ CREATE OR REPLACE TABLE table1 (
  COMMENT = '{"origin":"sf_sc","name":"snowconvert","version":{"major":1, "minor":0},"attributes":{"component":"oracle"}}'
  ;
 ```
-
-Copy
 
 ### 2.10 AS SubQuery[¶](#as-subquery)
 
@@ -471,8 +427,6 @@ Snowflake.
 [ ON COMMIT { DELETE | PRESERVE } ROWS ]
 [ physical_properties ]
 ```
-
-Copy
 
 #### Oracle[¶](#id19)
 
@@ -491,8 +445,6 @@ AS
       table1;
 ```
 
-Copy
-
 #### Snowflake[¶](#id20)
 
 ```
@@ -505,8 +457,6 @@ AS
    from
       table1;
 ```
-
-Copy
 
 ## Known Issues[¶](#known-issues)
 

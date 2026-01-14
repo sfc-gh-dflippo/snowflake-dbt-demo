@@ -21,8 +21,6 @@ Transformation for this command is pending
 ACC[EPT] variable [NUM[BER] | CHAR | DATE | BINARY_FLOAT | BINARY_DOUBLE] [FOR[MAT] format] [DEF[AULT] default] [PROMPT text|NOPR[OMPT]] [HIDE]
 ```
 
-Copy
-
 Snowflake does not have a direct equivalent to this command. In order to emulate this functionality,
 the SnowCLI`!system` command will be used by taking advantage of the system resources for the input
 operations.
@@ -37,8 +35,6 @@ operations.
 ACCEPT variable_name CHAR PROMPT 'Enter the variable value >'
 ```
 
-Copy
-
 ##### SnowSQL (CLI Client)[¶](#snowsql-cli-client)
 
 ##### Command[¶](#id1)
@@ -49,8 +45,6 @@ Copy
 !load sc_aux_file.sql
 !system rm sc_aux_file.sql
 ```
-
-Copy
 
 Warning
 
@@ -82,8 +76,6 @@ Transformation for this command is pending
 A[PPEND] text
 ```
 
-Copy
-
 Snowflake does not have a direct equivalent to this command. The Snowflake
 [`!edit`](https://docs.snowflake.com/en/user-guide/snowsql-use.html#edit) command can be used to
 edit the last query using a predefined text editor. Whenever this approach does not cover all the
@@ -99,8 +91,6 @@ edit the last query using a predefined text editor. Whenever this approach does 
 APPEND SOME TEXT
 ```
 
-Copy
-
 ##### SnowSQL (CLI Client)[¶](#id6)
 
 ##### Command[¶](#id7)
@@ -109,8 +99,6 @@ Copy
 !!!RESOLVE EWI!!! /*** SSC-EWI-0073 - PENDING FUNCTIONAL EQUIVALENCE REVIEW FOR 'APPEND STATEMENT' NODE ***/!!!
 APPEND SOME TEXT;
 ```
-
-Copy
 
 ### Known Issues[¶](#id8)
 
@@ -138,8 +126,6 @@ Transformation for this command is pending
 ARCHIVE LOG LIST
 ```
 
-Copy
-
 Snowflake does not have a direct equivalent to this command. The Snowflake
 [`!options`](https://docs.snowflake.com/en/user-guide/snowsql-use.html#options-opts)command can be
 used to display the location path of some log files, however, it does not fully comply with the
@@ -155,8 +141,6 @@ behavior expected by the `ARCHIVE LOG` command. At transformation time, an EWI w
 ARCHIVE LOG LIST
 ```
 
-Copy
-
 ##### SnowSQL (CLI Client)[¶](#id14)
 
 ##### Command[¶](#id15)
@@ -165,8 +149,6 @@ Copy
 !!!RESOLVE EWI!!! /*** SSC-EWI-0073 - PENDING FUNCTIONAL EQUIVALENCE REVIEW FOR 'ARCHIVE LOG STATEMENT' NODE ***/!!!
 ARCHIVE LOG LIST;
 ```
-
-Copy
 
 ### Known Issues[¶](#id16)
 
@@ -195,8 +177,6 @@ Transformation for this command is pending
 ATTR[IBUTE] [type_name.attribute_name [option ...]]
 ```
 
-Copy
-
 Snowflake does not have a direct equivalent to this command.
 
 #### 1. Attribute command[¶](#attribute-command)
@@ -209,8 +189,6 @@ Snowflake does not have a direct equivalent to this command.
 ATTRIBUTE Address.street_address FORMAT A10
 ```
 
-Copy
-
 ##### SnowSQL (CLI Client)[¶](#id22)
 
 ##### Command[¶](#id23)
@@ -219,8 +197,6 @@ Copy
 !!!RESOLVE EWI!!! /*** SSC-EWI-0073 - PENDING FUNCTIONAL EQUIVALENCE REVIEW FOR 'ATTRIBUTE STATEMENT' NODE ***/!!!
 ATTRIBUTE Address.street_address FORMAT A10;
 ```
-
-Copy
 
 Warning
 
@@ -240,8 +216,6 @@ SELECT TO_VARCHAR(1000.89, '$9,999.99')
 
 SELECT to_varchar('03-Feb-2023'::DATE, 'yyyy.mm.dd');
 ```
-
-Copy
 
 This alternative solution must consider an additional strategy to disable when in Oracle the
 `ATTRIBUTE` command receives the OFF option.
@@ -271,8 +245,6 @@ report_element := {column|expr|ROW|REPORT}
 action := [SKI[P] n|[SKI[P]] PAGE] [NODUP[LICATES]|DUP[LICATES]]
 ```
 
-Copy
-
 Snowflake does not support the use of this command and does not have any that might resemble its
 functionality. At the time of transformation, an EWI will be added.
 
@@ -286,8 +258,6 @@ functionality. At the time of transformation, an EWI will be added.
 BREAK ON customer_age SKIP 5 DUPLICATES;
 ```
 
-Copy
-
 ##### SnowSQL (CLI Client)[¶](#id30)
 
 ##### Command[¶](#id31)
@@ -296,8 +266,6 @@ Copy
 !!!RESOLVE EWI!!! /*** SSC-EWI-0073 - PENDING FUNCTIONAL EQUIVALENCE REVIEW FOR 'BREAK STATEMENT' NODE ***/!!!
 BREAK ON customer_age SKIP 5 DUPLICATES;
 ```
-
-Copy
 
 ### Known Issues[¶](#id32)
 
@@ -326,8 +294,6 @@ Transformation for this command is pending
 BTI[TLE] [printspec [text | variable] ...] | [ON | OFF]
 ```
 
-Copy
-
 Snowflake does not have a direct equivalent to this command.
 
 #### 1. Btitle command[¶](#btitle-command)
@@ -340,8 +306,6 @@ Snowflake does not have a direct equivalent to this command.
 BTITLE BOLD 'This is the banner title'
 ```
 
-Copy
-
 ##### SnowSQL (CLI Client)[¶](#id38)
 
 ##### Command[¶](#id39)
@@ -350,8 +314,6 @@ Copy
 !!!RESOLVE EWI!!! /*** SSC-EWI-0073 - PENDING FUNCTIONAL EQUIVALENCE REVIEW FOR 'BTITLE STATEMENT' NODE ***/!!!
 BTITLE BOLD 'This is the banner title';
 ```
-
-Copy
 
 ### Known Issues[¶](#id40)
 
@@ -374,8 +336,6 @@ SELECT 'This is the banner title' AS BTITLE;
 --To emulate BTITLE COL 5 'This is the banner title'
 SELECT CONCAT(SPACE(5), 'This is the banner title');
 ```
-
-Copy
 
 This alternative solution must consider an additional strategy to disable when in Oracle the
 `BTITLE` command receives the OFF option.
@@ -403,8 +363,6 @@ Transformation for this command is pending
 C[HANGE] sepchar old [sepchar [new [sepchar]]]
 ```
 
-Copy
-
 Snowflake does not have a direct equivalent to this command. The Snowflake
 [`!edit`](https://docs.snowflake.com/en/user-guide/snowsql-use.html#edit) command can be used to
 edit the last query using a predefined text editor. Whenever this approach does not cover all the
@@ -420,8 +378,6 @@ edit the last query using a predefined text editor. Whenever this approach does 
 CHANGE /old/new/
 ```
 
-Copy
-
 ##### SnowSQL (CLI Client)[¶](#id46)
 
 ##### Command[¶](#id47)
@@ -430,8 +386,6 @@ Copy
 !!!RESOLVE EWI!!! /*** SSC-EWI-0073 - PENDING FUNCTIONAL EQUIVALENCE REVIEW FOR 'CHANGE STATEMENT' NODE ***/!!!
 CHANGE /old/new/;
 ```
-
-Copy
 
 ### Known Issues[¶](#id48)
 
@@ -444,16 +398,12 @@ by the translator, these are presented below:
 3  WHERE col_id = 1
 ```
 
-Copy
-
 Entering a line number followed by a string will replace the line regardless of the text that
 follows the line number. This scenario is not supported as this does not follow the command grammar.
 
 ```
 CHANGE/OLD/NEW/
 ```
-
-Copy
 
 Enter the text to replace followed by the command without using spaces. This scenario is not
 supported since it does not follow the logic of tokenization by spaces.
@@ -480,8 +430,6 @@ Transformation for this command is pending
 COL[UMN] [{column | expr} [option ...]]
 ```
 
-Copy
-
 Snowflake does not support the use of this command and does not have any that might resemble its
 functionality. At the time of transformation, an EWI will be added.
 
@@ -497,8 +445,6 @@ The `COLUMN` command with no clauses to list all current column display attribut
 COLUMN column_id ALIAS col_id NOPRINT
 ```
 
-Copy
-
 ##### SnowSQL (CLI Client)[¶](#id54)
 
 ##### Command[¶](#id55)
@@ -507,8 +453,6 @@ Copy
 !!!RESOLVE EWI!!! /*** SSC-EWI-0073 - PENDING FUNCTIONAL EQUIVALENCE REVIEW FOR 'COLUMN STATEMENT' NODE ***/!!!
 COLUMN column_id ALIAS col_id NOPRINT;
 ```
-
-Copy
 
 ### Known Issues[¶](#id56)
 
@@ -537,17 +481,13 @@ Transformation for this command is pending
 DEF[INE] [variable] | [variable = text]
 ```
 
-Copy
-
 ##### SnowSQL (CLI Client) !define[¶](#snowsql-cli-client-define)
 
 ```
 !define [variable] | [variable=text]
 ```
 
-Copy
-
-Note
+**Note:**
 
 Snowflake recommends not adding whitespace in the variable value assignment statement.
 
@@ -570,8 +510,6 @@ DEFINE column_id = test
 DEFINE column_id = &column_reference
 ```
 
-Copy
-
 ##### SnowSQL (CLI Client)[¶](#id62)
 
 ##### Command[¶](#id63)
@@ -581,8 +519,6 @@ Copy
 
 !define column_id = &column_reference
 ```
-
-Copy
 
 For referring to a previously defined variable, & is preceded by the name of the variable, if the
 variable does not exist, Oracle allows its execution time assignment, however, Snowflake would throw
@@ -602,8 +538,6 @@ This case is not functionally equivalent.
 DEFINE column_id
 ```
 
-Copy
-
 ##### SnowSQL (CLI Client)[¶](#id66)
 
 ##### Command[¶](#id67)
@@ -611,8 +545,6 @@ Copy
 ```
 !define column_id
 ```
-
-Copy
 
 The DEFINE command used without the assignment statement is used in Oracle to show the definition of
 the variable, on the other hand in Snowflake this way of using the DEFINE command would reset the
@@ -627,8 +559,6 @@ This solution would be something like this:
 select '&column_id';
 ```
 
-Copy
-
 ### Known Issues[¶](#id69)
 
 **1. Enabling variable substitution**
@@ -642,8 +572,6 @@ instance, or by running the following command:
 ```
 !set variable_substitution=true
 ```
-
-Copy
 
 **2. Predefined variables**
 
@@ -667,15 +595,11 @@ Transformation for this command is pending
 HO[ST] [command]
 ```
 
-Copy
-
 ##### SnowSQL (CLI Client) !system[¶](#snowsql-cli-client-system)
 
 ```
 !system <command>
 ```
-
-Copy
 
 #### 1. Set with simple variable assignment[¶](#set-with-simple-variable-assignment)
 
@@ -694,8 +618,6 @@ The `HOST` command is replaced by the
 HOST dir *.sql
 ```
 
-Copy
-
 ##### SnowSQL (CLI Client)[¶](#id75)
 
 ##### Command[¶](#id76)
@@ -703,8 +625,6 @@ Copy
 ```
 !system dir *.sql
 ```
-
-Copy
 
 ### Known Issues[¶](#id77)
 
@@ -732,15 +652,11 @@ Transformation for this command is pending
 PRO[MPT] [text]
 ```
 
-Copy
-
 ##### SnowSQL (CLI Client) !print[¶](#snowsql-cli-client-print)
 
 ```
 !print [text]
 ```
-
-Copy
 
 #### 1. Simple print[¶](#simple-print)
 
@@ -763,8 +679,6 @@ PROMPT text
 PROMPT db_link_name = "&1"
 ```
 
-Copy
-
 ##### SnowSQL (CLI Client)[¶](#id83)
 
 ##### Command[¶](#id84)
@@ -776,8 +690,6 @@ Copy
 
 !print db_link_name = "&1"
 ```
-
-Copy
 
 ### Known Issues[¶](#id85)
 
@@ -805,8 +717,6 @@ Transformation for this command is pending
 REM[ARK] comment
 ```
 
-Copy
-
 Snowflake does not have a direct equivalent for this command. However, some of its functionalities
 can be emulated.
 
@@ -829,8 +739,6 @@ REMARK and now exit the session
 EXIT;
 ```
 
-Copy
-
 ##### SnowSQL (CLI Client)[¶](#id91)
 
 ##### Command[¶](#id92)
@@ -840,8 +748,6 @@ select 'hello world';
 -- and now exit the session
 !exit
 ```
-
-Copy
 
 #### 2. Remark on the first line[¶](#remark-on-the-first-line)
 
@@ -875,8 +781,6 @@ REMARK first line
 SELECT 'hello world' FROM dual;
 ```
 
-Copy
-
 ##### SnowSQL (CLI Client)[¶](#id95)
 
 ##### Command[¶](#id96)
@@ -895,8 +799,6 @@ HOST dir *.sql;
 REMARK first line;
 SELECT 'hello world' FROM dual;
 ```
-
-Copy
 
 ### Known Issues[¶](#id97)
 
@@ -925,17 +827,13 @@ Transformation for this command is pending
 SET system_variable value
 ```
 
-Copy
-
 ##### SnowSQL (CLI Client) !set[¶](#snowsql-cli-client-set)
 
 ```
 !set <option>=<value>
 ```
 
-Copy
-
-Note
+**Note:**
 
 Snowflake recommends not adding whitespace in the variable value assignment statement.
 
@@ -956,8 +854,6 @@ The `SET` command is replaced by the
 SET wrap on
 ```
 
-Copy
-
 ##### SnowSQL (CLI Client)[¶](#id104)
 
 ##### Command[¶](#id105)
@@ -965,8 +861,6 @@ Copy
 ```
 !set wrap=true
 ```
-
-Copy
 
 #### 2. Define without variable assignments[¶](#id106)
 
@@ -986,8 +880,6 @@ alternative is to set the value of 0 to a said variable explicitly.
 SET pagesize
 ```
 
-Copy
-
 ##### SnowSQL (CLI Client)[¶](#id109)
 
 ##### Command[¶](#id110)
@@ -995,8 +887,6 @@ Copy
 ```
 !set rowset_size=0
 ```
-
-Copy
 
 ### Known Issues[¶](#id111)
 
@@ -1029,8 +919,6 @@ Transformation for this command is pending
 SHO[W] system_variable  ALL BTI[TLE]  CON_ID  CON_NAME EDITION  ERR[ORS] [ {ANALYTIC VIEW | ATTRIBUTE DIMENSION | HIERARCHY | FUNCTION | PROCEDURE | PACKAGE | PACKAGE BODY | TRIGGER | VIEW | TYPE | TYPE BODY | DIMENSION | JAVA CLASS } [schema.]name]HISTORY  LNO  LOBPREF[ETCH]  PARAMETER[S] [parameter_name]  PDBS PNO  RECYC[LEBIN] [original_name]  REL[EASE]  REPF[OOTER]  REPH[EADER]  ROWPREF[ETCH] SGA SPOO[L]  SPPARAMETER[S] [parameter_name]  SQLCODE STATEMENTC[ACHE] TTI[TLE] USER XQUERY
 ```
 
-Copy
-
 Snowflake does not have a direct equivalent for this command. However, some of its functionalities
 can be emulated.
 
@@ -1057,8 +945,6 @@ END;
 SHOW ERRORS
 ```
 
-Copy
-
 ##### Result[¶](#result)
 
 ```
@@ -1068,9 +954,7 @@ LINE/COL ERROR
 4/10     PL/SQL: ORA-00925: missing INTO keyword
 ```
 
-Copy
-
-Note
+**Note:**
 
 Note that the INTO keyword is misspelled in order to cause a compilation error.
 
@@ -1097,8 +981,6 @@ $$;
 SHOW ERRORS;
 ```
 
-Copy
-
 ##### Result[¶](#id119)
 
 ```
@@ -1106,8 +988,6 @@ Copy
 syntax error line 3 at position 7 unexpected 'INT'.
 syntax error line 3 at position 11 unexpected 'PUBLIC'.
 ```
-
-Copy
 
 #### Show ALL[¶](#show-all)
 
@@ -1123,8 +1003,6 @@ In order to display all the possible options in SnowCLI you can run the
 ```
 show all;
 ```
-
-Copy
 
 ##### Result[¶](#id122)
 
@@ -1216,8 +1094,6 @@ wrap : lines will be wrapped
 xmloptimizationcheck OFF
 ```
 
-Copy
-
 ##### SnowSQL (CLI Client)[¶](#id123)
 
 ##### Command[¶](#id124)
@@ -1225,8 +1101,6 @@ Copy
 ```
 !options
 ```
-
-Copy
 
 ##### Result[¶](#id125)
 
@@ -1314,15 +1188,11 @@ Transformation for this command is pending
 SPO[OL] [file_name[.ext] [CRE[ATE] | REP[LACE] | APP[END]] | OFF | OUT]
 ```
 
-Copy
-
 ##### SnowSQL (CLI Client) !spool[¶](#snowsql-cli-client-spool)
 
 ```
 !spool [<file_name>] | [off]
 ```
-
-Copy
 
 #### 1. Spool without options[¶](#spool-without-options)
 
@@ -1343,8 +1213,6 @@ SPOOL temp
 SPOOL temp.txt
 ```
 
-Copy
-
 ##### SnowSQL (CLI Client)[¶](#id132)
 
 ##### Command[¶](#id133)
@@ -1353,8 +1221,6 @@ Copy
 !spool temp
 !spool temp.txt
 ```
-
-Copy
 
 #### 2. Spool with write options[¶](#spool-with-write-options)
 
@@ -1380,8 +1246,6 @@ SPOOL temp.txt APPEND
 SPOOL temp.txt REPLACE
 ```
 
-Copy
-
 ##### SnowSQL (CLI Client)[¶](#id136)
 
 ##### Command[¶](#id137)
@@ -1393,8 +1257,6 @@ Copy
 !system del temp.txt
 !spool temp.txt
 ```
-
-Copy
 
 #### 3. Spool turn off[¶](#spool-turn-off)
 
@@ -1416,8 +1278,6 @@ SPOOL OFF
 SPOOL OUT
 ```
 
-Copy
-
 ##### SnowSQL (CLI Client)[¶](#id140)
 
 ##### Command[¶](#id141)
@@ -1426,8 +1286,6 @@ Copy
 !spool off
 !spool off
 ```
-
-Copy
 
 ### Known Issues[¶](#id142)
 
@@ -1455,15 +1313,11 @@ Transformation for this command is pending
 STA[RT] {url | file_name[.ext] } [arg...]
 ```
 
-Copy
-
 ##### SnowSQL (CLI Client) !load[¶](#snowsql-cli-client-load)
 
 ```
 !(load | source) {url | file_name[.ext] }
 ```
-
-Copy
 
 The Snowflake [`!source`](https://docs.snowflake.com/en/user-guide/snowsql-use.html#source-load) and
 [`!load`](https://docs.snowflake.com/en/user-guide/snowsql-use.html#source-load) commands are
@@ -1486,8 +1340,6 @@ This case is functionally equivalent.
 START C:\Users\My_User\Desktop\My\Path\insert_script.sql
 ```
 
-Copy
-
 ##### SnowSQL (CLI Client)[¶](#id148)
 
 ##### Command[¶](#id149)
@@ -1495,8 +1347,6 @@ Copy
 ```
 !load C:\Users\My_User\Desktop\My\Path\insert_script.sql
 ```
-
-Copy
 
 #### 2. Start with arguments[¶](#start-with-arguments)
 
@@ -1508,8 +1358,6 @@ Copy
 START C:\Users\My_User\Desktop\My\Path\insert_script.sql 123 456 789
 ```
 
-Copy
-
 ##### SnowSQL (CLI Client)[¶](#id152)
 
 ##### Command[¶](#id153)
@@ -1517,8 +1365,6 @@ Copy
 ```
 !load C:\Users\My_User\Desktop\My\Path\insert_script.sql
 ```
-
-Copy
 
 Warning
 
@@ -1543,8 +1389,6 @@ This workaround would look something like this:
 !load C:\Users\My_User\Desktop\My\Path\insert_script.sql
 ```
 
-Copy
-
 ### Related EWIs[¶](#id155)
 
 No related EWIs.
@@ -1567,8 +1411,6 @@ Transformation for this command is pending
 WHENEVER OSERROR {EXIT [SUCCESS | FAILURE | n | variable | :BindVariable]  [COMMIT | ROLLBACK] | CONTINUE [COMMIT | ROLLBACK | NONE]}
 ```
 
-Copy
-
 Snowflake does not support the use of this command and does not have any that might resemble its
 functionality. At the time of transformation, an EWI will be added.
 
@@ -1582,8 +1424,6 @@ functionality. At the time of transformation, an EWI will be added.
 WHENEVER OSERROR EXIT
 ```
 
-Copy
-
 ##### SnowSQL (CLI Client)[¶](#id160)
 
 ##### Command[¶](#id161)
@@ -1592,8 +1432,6 @@ Copy
 !!!RESOLVE EWI!!! /*** SSC-EWI-0073 - PENDING FUNCTIONAL EQUIVALENCE REVIEW FOR 'WHENEVER ERROR STATEMENT' NODE ***/!!!
 WHENEVER OSERROR EXIT;
 ```
-
-Copy
 
 ### Known Issues[¶](#id162)
 
@@ -1622,8 +1460,6 @@ Transformation for this command is pending
 WHENEVER SQLERROR {EXIT [SUCCESS | FAILURE | WARNING | n | variable  | :BindVariable] [COMMIT | ROLLBACK] | CONTINUE [COMMIT | ROLLBACK | NONE]}
 ```
 
-Copy
-
 Snowflake does not support the use of this command and does not have any that might resemble its
 functionality. At the time of transformation, an EWI will be added.
 
@@ -1637,8 +1473,6 @@ functionality. At the time of transformation, an EWI will be added.
 WHENEVER SQLERROR EXIT
 ```
 
-Copy
-
 ##### SnowSQL (CLI Client)[¶](#id168)
 
 ##### Command[¶](#id169)
@@ -1647,8 +1481,6 @@ Copy
 !!!RESOLVE EWI!!! /*** SSC-EWI-0073 - PENDING FUNCTIONAL EQUIVALENCE REVIEW FOR 'WHENEVER ERROR STATEMENT' NODE ***/!!!
 WHENEVER SQLERROR EXIT;
 ```
-
-Copy
 
 ### Known Issues[¶](#id170)
 

@@ -30,8 +30,6 @@ INTO [ TEMPORARY | TEMP ] [ TABLE ] new_table
 [ OFFSET start ]
 ```
 
-Copy
-
 For more information please refer to each of the following links:
 
 1. [WITH clause](rs-sql-statements-select.html#with-clause)

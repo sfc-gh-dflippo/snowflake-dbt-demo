@@ -34,8 +34,6 @@ DECLARE CONTINUE HANDLER FOR condition_value
   handler_action_statement;
 ```
 
-Copy
-
 ## Sample Source Patterns[¶](#sample-source-patterns)
 
 ### CONTINUE HANDLER Conversion from DB2/Teradata[¶](#continue-handler-conversion-from-db2-teradata)
@@ -61,8 +59,6 @@ BEGIN
     SELECT * FROM non_existent_table;
 END;
 ```
-
-Copy
 
 #### Output Code:[¶](#output-code)
 
@@ -92,8 +88,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### CONTINUE HANDLER with SQLEXCEPTION[¶](#continue-handler-with-sqlexception)
 
 #### Input Code:[¶](#id1)
@@ -111,8 +105,6 @@ BEGIN
     INSERT INTO table2 VALUES (1, 'Success');
 END;
 ```
-
-Copy
 
 #### Output Code:[¶](#id3)
 
@@ -141,8 +133,6 @@ $$
     END;
 $$;
 ```
-
-Copy
 
 ## Known Issues[¶](#known-issues)
 
@@ -195,8 +185,6 @@ DECLARE CONTINUE HANDLER FOR NOT FOUND
     SET done = TRUE;
 ```
 
-Copy
-
 ##### Snowflake[¶](#snowflake)
 
 ```
@@ -205,8 +193,6 @@ IF (SELECT COUNT(*) FROM table1) = 0 THEN
     done := TRUE;
 END IF;
 ```
-
-Copy
 
 ## Best Practices[¶](#best-practices)
 

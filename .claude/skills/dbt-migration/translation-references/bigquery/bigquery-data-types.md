@@ -112,8 +112,6 @@ AS (
 );
 ```
 
-Copy
-
 ##### Snowflake[¶](#snowflake)
 
 ```
@@ -124,8 +122,6 @@ $$
   ((x + 4) / y) :: VARIANT
 $$;
 ```
-
-Copy
 
 ## ARRAY<T>[¶](#array-t)
 
@@ -161,8 +157,6 @@ INSERT INTO test.anotherArrayTable VALUES ([3, 18, 11]);
 INSERT INTO test.anotherArrayTable VALUES ([33, 27, 43]);
 ```
 
-Copy
-
 #### Snowflake[¶](#id4)
 
 ```
@@ -185,8 +179,6 @@ INSERT INTO test.anotherArrayTable SELECT [3, 18, 11];
 INSERT INTO test.anotherArrayTable SELECT [33, 27, 43];
 ```
 
-Copy
-
 #### ARRAY access by index[¶](#array-access-by-index)
 
 ##### BigQuery[¶](#id5)
@@ -198,8 +190,6 @@ col1[OFFSET(0)] + 4 AS byOffset,
 col1[ORDINAL(1)] + 4 AS byOrdinal
 FROM test.arrayTable ORDER BY col1[0];
 ```
-
-Copy
 
 ##### Snowflake[¶](#id6)
 
@@ -218,8 +208,6 @@ ORDER BY
 col1[0];
 ```
 
-Copy
-
 #### Safe ARRAY access by index[¶](#safe-array-access-by-index)
 
 ##### BigQuery[¶](#id7)
@@ -234,8 +222,6 @@ col1[SAFE_ORDINAL(-4)] AS byOrdinalUnderflow,
 col1[SAFE_ORDINAL(500)] AS byOrdinalOverflow
 FROM test.arrayTable ORDER BY col1[0];
 ```
-
-Copy
 
 ##### Snowflake[¶](#id8)
 
@@ -252,8 +238,6 @@ FROM test.arrayTable ORDER BY
 col1[0];
 ```
 
-Copy
-
 #### INSERT with ARRAY in the VALUES clause[¶](#insert-with-array-in-the-values-clause)
 
 ##### BigQuery[¶](#id9)
@@ -266,8 +250,6 @@ VALUES ([1, 2, 3]), ([4, 5, 6]);
 
 SELECT col1 FROM test.arrayTable ORDER BY col1[0], col1[1];
 ```
-
-Copy
 
 ##### Snowflake[¶](#id10)
 
@@ -288,8 +270,6 @@ ORDER BY
   col1[1];
 ```
 
-Copy
-
 #### MERGE statement[¶](#merge-statement)
 
 ##### BigQuery[¶](#id11)
@@ -303,8 +283,6 @@ WHEN NOT MATCHED THEN INSERT VALUES ([100, 100, 100]);
 
 SELECT col2 FROM test.anotherArrayTable ORDER BY col2[0];
 ```
-
-Copy
 
 ##### Snowflake[¶](#id12)
 
@@ -322,8 +300,6 @@ ORDER BY
   col2[0];
 ```
 
-Copy
-
 #### ARRAY DEFAULT column value insertion/update[¶](#array-default-column-value-insertion-update)
 
 ##### BigQuery[¶](#id13)
@@ -338,8 +314,6 @@ WHERE TRUE;
 SELECT col1 FROM test.arrayTable;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id14)
 
 ```
@@ -351,8 +325,6 @@ WHERE TRUE;
 
 SELECT col1 FROM test.arrayTable;
 ```
-
-Copy
 
 #### INSERT/UPDATE with NULL value[¶](#insert-update-with-null-value)
 
@@ -374,8 +346,6 @@ WHERE ARRAY_LENGTH(col1) > 1;
 SELECT col1 FROM test.arrayTable ORDER BY ARRAY_LENGTH(col1);
 ```
 
-Copy
-
 ##### Snowflake[¶](#id16)
 
 ```
@@ -394,8 +364,6 @@ WHERE ARRAY_SIZE(col1) > 1;
 SELECT col1 FROM test.arrayTable ORDER BY ARRAY_SIZE(col1);
 ```
 
-Copy
-
 #### ARRAY concatenation[¶](#array-concatenation)
 
 ##### BigQuery[¶](#id17)
@@ -404,15 +372,11 @@ Copy
 SELECT [50, 30, 12] || [22, 33, 44] AS result;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id18)
 
 ```
 SELECT ARRAY_CAT([50, 30, 12], [22, 33, 44]) AS result;
 ```
-
-Copy
 
 #### ARRAY used as parameter/return type[¶](#array-used-as-parameter-return-type)
 
@@ -429,8 +393,6 @@ AS
 SELECT test.myArrayFunction([5, 20, 10], 55) AS result;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id20)
 
 ```
@@ -443,8 +405,6 @@ $$;
 
 SELECT test.myArrayFunction([5, 20, 10], 55) AS result;
 ```
-
-Copy
 
 ### Known Issues[¶](#known-issues)
 
@@ -475,7 +435,7 @@ Bytes data type and usages
 > MB (8,388,608 bytes). For more information please refer to
 > [BigQuery BYTES data type](https://cloud.google.com/bigquery/docs/reference/standard-sql/data-types#bytes_type).
 
-Note
+**Note:**
 
 BYTES data type is not supported in Snowflake, currently transformed to
 [BINARY](https://docs.snowflake.com/en/sql-reference/data-types-text#binary).
@@ -504,8 +464,6 @@ INSERT INTO bytesTable VALUES (B'''\x01\x02\x03''', B"/+A=");
 SELECT COL1 FROM bytesTable;
 ```
 
-Copy
-
 ##### Snowflake:[¶](#id24)
 
 ```
@@ -528,8 +486,6 @@ SELECT
 SELECT BASE64_ENCODE( COL1) FROM bytesTable;
 ```
 
-Copy
-
 In case it is not added automatically and you want to see the data in BASE64 format, you can use the
 [BASE64_ENCODE](https://docs.snowflake.com/en/sql-reference/functions/base64_encode) function or set
 the
@@ -545,8 +501,6 @@ The following cases represent the forms that can be used to format byte literals
 B'''abc'''
 b"""abc"""
 ```
-
-Copy
 
 These literals are not supported in Snowflake, but instead the
 [TRY_TO_BINARY](https://docs.snowflake.com/en/sql-reference/functions/try_to_binary) function can be
@@ -613,8 +567,6 @@ SELECT COL1 FROM test.geographyType;
 SELECT * FROM test.geographyType;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id28)
 
 ```
@@ -636,8 +588,6 @@ SELECT ST_ASWKT( COL1) FROM test.geographyType;
 ALTER SESSION SET GEOGRAPHY_OUTPUT_FORMAT = 'WKT';
 SELECT * FROM test.geographyType;
 ```
-
-Copy
 
 In case it is not added automatically and you want to see the data in WKT format, you can use the
 [ST_ASWKT](https://docs.snowflake.com/en/sql-reference/functions/st_aswkt) function or set the
@@ -681,8 +631,6 @@ INTERVAL int64_expression datetime_part
 INTERVAL datetime_parts_string starting_datetime_part TO ending_datetime_part
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id31)
 
 #### Interval with a single DateTime part[¶](#interval-with-a-single-datetime-part)
@@ -702,15 +650,11 @@ SELECT CURRENT_DATE + INTERVAL 1 YEAR,
   CURRENT_DATE + INTERVAL 1 SECOND;
 ```
 
-Copy
-
 ##### Result[¶](#result)
 
 ```
 1-0 0 0:0:0
 ```
-
-Copy
 
 ```
 2024-10-13T00:00:00
@@ -722,8 +666,6 @@ Copy
 2023-10-13T00:01:00
 2023-10-13T00:00:01
 ```
-
-Copy
 
 ##### Snowflake[¶](#id33)
 
@@ -742,8 +684,6 @@ CURRENT_DATE() + INTERVAL '1 minute',
 CURRENT_DATE() + INTERVAL '1 second';
 ```
 
-Copy
-
 ##### Result[¶](#id34)
 
 ```
@@ -756,8 +696,6 @@ Copy
 2023-10-13 00:01:00.000
 2023-10-13 00:00:01.000
 ```
-
-Copy
 
 Snowflake does not support the scenario where the **Interval** data type is queried directly, on the
 contrary when it is used as an operator for a given date its translation is done using an
@@ -788,15 +726,11 @@ SELECT CURRENT_DATE + INTERVAL '2-11' YEAR TO MONTH,
   CURRENT_DATE + INTERVAL '15:14' MINUTE TO SECOND;
 ```
 
-Copy
-
 ##### Result[¶](#id36)
 
 ```
 2-1 10 0:0:0
 ```
-
-Copy
 
 ```
 2026-09-13T00:00:00
@@ -815,8 +749,6 @@ Copy
 2023-10-13T16:15:14
 2023-10-13T00:15:14
 ```
-
-Copy
 
 ##### Snowflake[¶](#id37)
 
@@ -842,8 +774,6 @@ CURRENT_DATE() + INTERVAL '16h, 15m, 14s',
 CURRENT_DATE() + INTERVAL '15m, 14s';
 ```
 
-Copy
-
 ##### Result[¶](#id38)
 
 ```
@@ -863,8 +793,6 @@ Copy
 2023-10-13 16:15:14.000
 2023-10-13 00:15:14.000
 ```
-
-Copy
 
 The Interval value is transformed to a supported Snowflake format and then inserted as text inside
 the column. Since Snowflake does not support **Interval** as a data type, it is only supported in
@@ -896,8 +824,6 @@ VALUES (4, INTERVAL '15:14' MINUTE TO SECOND);
 
 SELECT * FROM test.my_table;
 ```
-
-Copy
 
 ##### Result[¶](#id40)
 
@@ -934,8 +860,6 @@ SELECT * FROM
 test.my_table;
 ```
 
-Copy
-
 ##### Result[¶](#id42)
 
 <!-- prettier-ignore -->
@@ -951,8 +875,6 @@ In BigQuery the datetime_part follows the next canonical format:
 ```
 [sign]Y-M [sign]D [sign]H:M:S[.F]
 ```
-
-Copy
 
 #### Interval comparison[¶](#interval-comparison)
 
@@ -977,8 +899,6 @@ SELECT INTERVAL '-2 -16' DAY TO HOUR != INTERVAL '-2 16' DAY TO HOUR,
   INTERVAL '1-5' YEAR TO MONTH > INTERVAL '2 16' DAY TO HOUR;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id44)
 
 ```
@@ -1002,8 +922,6 @@ CURRENT_TIMESTAMP + INTERVAL '2y, 11mm, 28d, 16h, 15m, 14s, 222ms' = CURRENT_TIM
 CURRENT_TIMESTAMP + INTERVAL '1y, 1mm, 3d' = CURRENT_TIMESTAMP + INTERVAL '13mm, 3d',
 CURRENT_TIMESTAMP + INTERVAL '1y, 5mm' > CURRENT_TIMESTAMP + INTERVAL '2d, 16h';
 ```
-
-Copy
 
 As is known, Snowflake only supports Interval as a data type in arithmetic operations, which is why
 the `CURRENT_TIMESTAMP` function is added to each operand to correctly support the comparison.
@@ -1030,15 +948,11 @@ shown below.
 SELECT CURRENT_DATE + INTERVAL '-2-11 -28 -16:15:14.222' YEAR TO SECOND;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id47)
 
 ```
  SELECT CURRENT_DATE + INTERVAL '-2y, -11mm, -28d, -16h, -15m, -14s, -222ms';
 ```
-
-Copy
 
 ### Related EWIs[¶](#id48)
 
@@ -1066,8 +980,6 @@ JSON data type is not supported in Snowflake, currently transformed to
 ```
  JSON 'json_formatted_data'
 ```
-
-Copy
 
 For more information please refer to
 [JSON Literals in BigQuery](https://cloud.google.com/bigquery/docs/reference/standard-sql/lexical#json_literals).
@@ -1098,8 +1010,6 @@ SELECT * FROM test.jsonType;
 SELECT JSON'{"name": "John", "age": 30, "city": "New York"}';
 ```
 
-Copy
-
 #### Snowflake[¶](#id52)
 
 ```
@@ -1121,8 +1031,6 @@ SELECT
   PARSE_JSON('{"name": "John", "age": 30, "city": "New York"}');
 ```
 
-Copy
-
 ## STRUCT[¶](#struct)
 
 Translation specification for the STRUCT datatype from BigQuery to Snowflake.
@@ -1137,7 +1045,7 @@ In Snowflake,
 [`OBJECT_CONSTRUCT`](https://docs.snowflake.com/en/sql-reference/functions/object_construct) can be
 used to emulate the `STRUCT` behavior, and SnowConvert AI handles most implementation differences.
 
-Note
+**Note:**
 
 Arguments that represent keys within the OBJECT_CONSTRUCT must be the original names of the target
 STRUCT. Any name specified within a STRUCT expression body will be replaced with the name found in
@@ -1165,8 +1073,6 @@ CREATE OR REPLACE TABLE test.tuple_sample (
 );
 ```
 
-Copy
-
 #### Snowflake[¶](#id56)
 
 ```
@@ -1186,8 +1092,6 @@ CREATE OR REPLACE TABLE test.tuple_sample (
 );
 ```
 
-Copy
-
 #### Insert INT Data Type to STRUCT column[¶](#insert-int-data-type-to-struct-column)
 
 ##### BigQuery[¶](#id57)
@@ -1200,8 +1104,6 @@ INSERT INTO test.structTypes (COL1) VALUES
 (STRUCT<sc1 INT64>(4)),
 (STRUCT<sc1 INT64>(5));
 ```
-
-Copy
 
 ##### Snowflake[¶](#id58)
 
@@ -1223,8 +1125,6 @@ SELECT
     OBJECT_CONSTRUCT('sc1', 5 :: INT);
 ```
 
-Copy
-
 #### Insert STRING Data Type to STRUCT column[¶](#insert-string-data-type-to-struct-column)
 
 ##### BigQuery[¶](#id59)
@@ -1235,8 +1135,6 @@ INSERT INTO test.structTypes (COL2) VALUES
 (STRUCT<STRING>('t2')),
 (STRUCT<sc2 STRING>('t3'));
 ```
-
-Copy
 
 ##### Snowflake[¶](#id60)
 
@@ -1252,8 +1150,6 @@ SELECT
     OBJECT_CONSTRUCT('sc2', 't3' :: STRING);
 ```
 
-Copy
-
 #### Insert STRUCT Data Type to STRUCT column[¶](#insert-struct-data-type-to-struct-column)
 
 ##### BigQuery[¶](#id61)
@@ -1266,8 +1162,6 @@ INSERT INTO test.structTypes (COL3) VALUES
 (STRUCT<STRUCT<INT64,INT64>>(STRUCT<INT64, INT64>(7, 8))),
 (STRUCT<STRUCT<INT64,INT64>>(STRUCT(9, 10)));
 ```
-
-Copy
 
 ##### Snowflake[¶](#id62)
 
@@ -1289,8 +1183,6 @@ SELECT
   OBJECT_CONSTRUCT('sc3', OBJECT_CONSTRUCT('sc31', 9 :: INT, 'sc32', 10 :: INT));
 ```
 
-Copy
-
 #### Insert ARRAY Data Type to STRUCT column[¶](#insert-array-data-type-to-struct-column)
 
 ##### BigQuery[¶](#id63)
@@ -1301,8 +1193,6 @@ INSERT INTO test.structTypes (COL4) VALUES
 (STRUCT<sc4 ARRAY<INT64>>(ARRAY[5,6,7])),
 (STRUCT<ARRAY<INT64>>([8,9,10,11]));
 ```
-
-Copy
 
 ##### Snowflake[¶](#id64)
 
@@ -1318,8 +1208,6 @@ SELECT
   OBJECT_CONSTRUCT('sc4', [8,9,10,11] :: ARRAY);
 ```
 
-Copy
-
 #### Insert to selected STRUCT columns[¶](#insert-to-selected-struct-columns)
 
 ##### BigQuery[¶](#id65)
@@ -1330,8 +1218,6 @@ INSERT INTO test.structTypes (COL7, COL8) VALUES
 (STRUCT<INT64, BOOL>(3, false), STRUCT<INT64, BOOL>(4, false)),
 (STRUCT<a INT64, b BOOL>(5, true), STRUCT<a INT64, b BOOL>(6, true));
 ```
-
-Copy
 
 ##### Snowflake[¶](#id66)
 
@@ -1350,8 +1236,6 @@ SELECT
   OBJECT_CONSTRUCT('sc8', 6 :: INT, 'sc81', true);
 ```
 
-Copy
-
 #### Insert to STRUCT column tuple syntax[¶](#insert-to-struct-column-tuple-syntax)
 
 Warning
@@ -1369,8 +1253,6 @@ VALUES
   ((12, 35));
 ```
 
-Copy
-
 ##### Snowflake[¶](#id68)
 
 ```
@@ -1383,8 +1265,6 @@ VALUES
   ((12, 35));
 ```
 
-Copy
-
 #### Update STRUCT column[¶](#update-struct-column)
 
 ##### BigQuery[¶](#id69)
@@ -1395,8 +1275,6 @@ SET col1 = STRUCT(100 AS number)
 WHERE col1.sc1 = 4;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id70)
 
 ```
@@ -1404,8 +1282,6 @@ UPDATE test.structTypes
     SET col1 = OBJECT_CONSTRUCT('sc1', 100 :: INT)
 WHERE col1:sc1 = 4;
 ```
-
-Copy
 
 #### Update STRUCT column field[¶](#update-struct-column-field)
 
@@ -1417,8 +1293,6 @@ SET col3 = STRUCT(STRUCT(80,90))
 WHERE col3.sc3.sc31 = 20;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id72)
 
 ```
@@ -1426,8 +1300,6 @@ UPDATE test.structTypes
 SET col3 = OBJECT_CONSTRUCT('sc3', OBJECT_CONSTRUCT('sc31', 80 :: INT, 'sc32', 90 :: INT))
 WHERE col3:sc3:sc31 = 20;
 ```
-
-Copy
 
 #### Select from STRUCT column[¶](#select-from-struct-column)
 
@@ -1438,8 +1310,6 @@ SELECT COL3.sc3 FROM test.structTypes;
 SELECT COL3.sc3.sc32 FROM test.structTypes;
 SELECT COL4.sc4 FROM test.structTypes WHERE COL4.sc4 IS NOT NULL;
 ```
-
-Copy
 
 ##### Snowflake[¶](#id74)
 
@@ -1456,8 +1326,6 @@ test.structTypes
 WHERE COL4:sc4 IS NOT NULL;
 ```
 
-Copy
-
 #### Select from STRUCT column tuple syntax[¶](#select-from-struct-column-tuple-syntax)
 
 ##### BigQuery[¶](#id75)
@@ -1471,8 +1339,6 @@ SELECT STRUCT<x ARRAY<INT64>, y INT64>(COL4.sc4, COL1.sc1)
 FROM test.structTypes
 WHERE COL1.sc1 IS NOT NULL;
 ```
-
-Copy
 
 ##### Snowflake[¶](#id76)
 
@@ -1488,8 +1354,6 @@ FROM
 test.structTypes
 WHERE COL1:sc1 IS NOT  NULL;
 ```
-
-Copy
 
 #### Create a view using an anonymous STRUCT definition[¶](#create-a-view-using-an-anonymous-struct-definition)
 
@@ -1517,8 +1381,6 @@ SELECT
   FROM project-test.mydataset.sourcetable;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id78)
 
 ```
@@ -1537,8 +1399,6 @@ SELECT
   "project-test".mydataset.sourcetable;
 ```
 
-Copy
-
 #### STRUCT column comparison expressions[¶](#struct-column-comparison-expressions)
 
 BigQuery comparison operations for Structs compare value to value, ignoring the key if it exists,
@@ -1552,8 +1412,6 @@ SELECT * FROM test.structTypes WHERE COL1 NOT IN (COL2);
 SELECT * FROM test.structTypes WHERE COL1 <> (COL2);
 SELECT * FROM test.structTypes WHERE COL1 != (COL2);
 ```
-
-Copy
 
 ##### Snowflake[¶](#id80)
 
@@ -1571,8 +1429,6 @@ test.structTypes
 --** SSC-FDM-BQ0008 - WHERE CLAUSE REFERENCES A COLUMN OF STRUCT TYPE. COMPARISON OPERATIONS MAY PRODUCE DIFFERENT RESULTS IN SNOWFLAKE. **
 WHERE COL1 != (COL2);
 ```
-
-Copy
 
 ### Related EWIs[¶](#id81)
 
@@ -1625,16 +1481,12 @@ INSERT INTO timestampTable VALUES (TIMESTAMP'2008-12-27 18:30:00');
 SELECT * FROM timestampTable;
 ```
 
-Copy
-
 ##### Result[¶](#id85)
 
 ```
 2008-12-26 15:30:00 UTC
 2008-12-27 18:30:00 UTC
 ```
-
-Copy
 
 ##### Snowflake[¶](#id86)
 
@@ -1649,16 +1501,12 @@ INSERT INTO timestampTable VALUES (TIMESTAMP'2008-12-27 18:30:00');
 SELECT * FROM timestampTable;
 ```
 
-Copy
-
 ##### Result[¶](#id87)
 
 ```
 2008-12-26 15:30:00.000 -0800
 2008-12-27 18:30:00.000 -0800
 ```
-
-Copy
 
 #### TIMESTAMP with time zone[¶](#timestamp-with-time-zone)
 
@@ -1684,8 +1532,6 @@ INSERT INTO test.timestampType VALUES (TIMESTAMP'2022-12-26 15:30:00-08:00');
 SELECT * FROM test.timestampType ORDER BY COL1;
 ```
 
-Copy
-
 ##### Result[¶](#id89)
 
 ```
@@ -1696,8 +1542,6 @@ Copy
 2022-12-25 21:30:00 UTC
 2022-12-26 23:30:00 UTC
 ```
-
-Copy
 
 ##### Snowflake[¶](#id90)
 
@@ -1723,8 +1567,6 @@ VALUES (CONVERT_TIMEZONE('UTC', '2022-12-26 15:30:00-08:00'));
 SELECT * FROM test.timestampType ORDER BY COL1;
 ```
 
-Copy
-
 ##### Result[¶](#id91)
 
 ```
@@ -1735,5 +1577,3 @@ Copy
 2022-12-25 21:30:00.000 -0800
 2022-12-26 23:30:00.000 +0000
 ```
-
-Copy

@@ -171,8 +171,6 @@ function.
  FORMAT_DATE(format_string, date_expr)
 ```
 
-Copy
-
 #### Sample Source[¶](#sample-source)
 
 ##### BigQuery[¶](#bigquery)
@@ -181,8 +179,6 @@ Copy
 CREATE TABLE TEST_DATE (col1 DATE);
 SELECT FORMAT_DATE('%Y', col1);
 ```
-
-Copy
 
 ##### Snowflake[¶](#snowflake)
 
@@ -193,8 +189,6 @@ SELECT
 FROM
   TEST_DATE;
 ```
-
-Copy
 
 #### BigQuery Formats Equivalents[¶](#bigquery-formats-equivalents)
 
@@ -252,7 +246,7 @@ Warning
 In BigQuery, the format related to time is not applied when the type is DATE, but Snowflake applies
 the format with values in zero for HH:MI:SS usages.
 
-Note
+**Note:**
 
 For more information, please refer to
 [BigQuery DateTime formats](https://cloud.google.com/bigquery/docs/reference/standard-sql/format-elements#format_elements_date_time).
@@ -280,8 +274,6 @@ ST_GEOGFROMTEXT function is supported in Snowflake.
  ST_GEOGFROMTEXT(wkt_string[, oriented])
 ```
 
-Copy
-
 #### Sample Source[¶](#id3)
 
 The oriented parameter in the ST_GEOGFROMTEXT function is not supported in Snowflake.
@@ -293,8 +285,6 @@ The oriented parameter in the ST_GEOGFROMTEXT function is not supported in Snowf
 SELECT ST_GEOGFROMTEXT('POLYGON((0 0, 1 0, 1 1, 0 1, 0 0))', TRUE);
 ```
 
-Copy
-
 ##### Snowflake[¶](#id5)
 
 ```
@@ -303,8 +293,6 @@ SELECT
 !!!RESOLVE EWI!!! /*** SSC-EWI-BQ0006 - ORIENTED PARAMETER IN THE ST_GEOGFROMTEXT FUNCTION IS NOT SUPPORTED IN SNOWFLAKE. ***/!!!
 ST_GEOGFROMTEXT('POLYGON((0 0, 1 0, 1 1, 0 1, 0 0))');
 ```
-
-Copy
 
 Please keep in mind that the default output format for geography data types is **WKT** **(Well-Known
 Text)** and in Snowflake **WKB (Well-Known Binary)**. You can use the
@@ -329,8 +317,6 @@ INSERT INTO test.geographyType VALUES
     (ST_GEOGFROMTEXT('LINESTRING(-124.20 42.00, -120.01 41.99)'));
 ```
 
-Copy
-
 ##### Snowflake[¶](#id7)
 
 ```
@@ -348,8 +334,6 @@ VALUES
      --** SSC-FDM-BQ0010 - THE FUNCTION 'ST_GEOGFROMTEXT' IS NOT REQUIRED IN SNOWFLAKE. **
      'LINESTRING(-124.20 42.00, -120.01 41.99)');
 ```
-
-Copy
 
 ### Related EWI’s[¶](#related-ewi-s)
 
@@ -373,7 +357,7 @@ For more information, please refer to
 [ST_GEOGPOINT](https://cloud.google.com/bigquery/docs/reference/standard-sql/geography_functions#st_geogpoint)
 function.
 
-Note
+**Note:**
 
 The function ST_GEOGPOINT is translated to ST_POINT in Snowflake.
 
@@ -383,8 +367,6 @@ The function ST_GEOGPOINT is translated to ST_POINT in Snowflake.
  ST_GEOGPOINT(longitude, latitude)
 ```
 
-Copy
-
 #### Sample Source[¶](#id10)
 
 ##### BigQuery[¶](#id11)
@@ -393,15 +375,11 @@ Copy
  SELECT ST_GEOGPOINT(-122.0838, 37.3860);
 ```
 
-Copy
-
 ##### Snowflake[¶](#id12)
 
 ```
  SELECT ST_POINT(-122.0838, 37.3860);
 ```
-
-Copy
 
 Please keep in mind that the default output format for geography data types is **WKT** **(Well-Known
 Text)** and in Snowflake **WKB (Well-Known Binary)**. You can use the
@@ -425,8 +403,6 @@ INSERT INTO test.geographyType
 VALUES (ST_GEOGPOINT(-122.0838, 37.3860));
 ```
 
-Copy
-
 ##### Snowflake[¶](#id14)
 
 ```
@@ -441,8 +417,6 @@ VALUES (
 --** SSC-FDM-BQ0010 - THE FUNCTION 'ST_GEOGFROMTEXT' IS NOT REQUIRED IN SNOWFLAKE. **
 'POINT(122.0838 37.3860)');
 ```
-
-Copy
 
 ### Related EWI’s[¶](#id15)
 

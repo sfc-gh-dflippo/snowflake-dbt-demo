@@ -14,7 +14,7 @@ title: SnowConvert AI - Oracle - COLLECTIONS AND RECORDS | Snowflake Documentati
 > In a record, the internal components can have different data types, and are called fields.
 > ([Oracle PL/SQL Language Reference COLLECTIONS AND RECORDS](https://docs.oracle.com/en/database/oracle/oracle-database/21/lnpls/plsql-collections-and-records.html#GUID-7115C8B6-62F9-496D-BEC3-F7441DFE148A))
 
-Note
+**Note:**
 
 Please take into account the
 [CREATE TYPE statement translation reference](../sql-translation-reference/create_type) since some
@@ -89,7 +89,7 @@ Warning
 
 This section is a work in progress, information may change in the future.
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -125,15 +125,11 @@ indexing_datatype := { PLS_INTEGER
                      }
 ```
 
-Copy
-
 To declare a variable of this type:
 
 ```
 variable_name collection_type;
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#sample-source-patterns)
 
@@ -171,8 +167,6 @@ END;
 
 CALL associative_array();
 ```
-
-Copy
 
 ##### Result[¶](#result)
 
@@ -224,8 +218,6 @@ CALL PUBLIC.associative_array();
 SELECT * FROM DBMS_OUTPUT.DBMS_OUTPUT_LOG;
 ```
 
-Copy
-
 ##### Result[¶](#id1)
 
 <!-- prettier-ignore -->
@@ -270,8 +262,6 @@ END;
 
 CALL numeric_associative_array();
 ```
-
-Copy
 
 ##### Result[¶](#id3)
 
@@ -323,8 +313,6 @@ CALL PUBLIC.numeric_associative_array();
 SELECT * FROM DBMS_OUTPUT.DBMS_OUTPUT_LOG;
 ```
 
-Copy
-
 ##### Result[¶](#id5)
 
 <!-- prettier-ignore -->
@@ -373,8 +361,6 @@ END;
 
 CALL record_associative_array();
 ```
-
-Copy
 
 ##### Result[¶](#id7)
 
@@ -425,8 +411,6 @@ CALL PUBLIC.record_associative_array();
 SELECT * FROM DBMS_OUTPUT.DBMS_OUTPUT_LOG;
 ```
 
-Copy
-
 ##### Result[¶](#id9)
 
 <!-- prettier-ignore -->
@@ -456,7 +440,7 @@ Warning
 
 This section is a work in progress, information may change in the future
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -519,8 +503,6 @@ END;
 CALL collection_count();
 ```
 
-Copy
-
 ##### Result[¶](#id16)
 
 <!-- prettier-ignore -->
@@ -556,8 +538,6 @@ $$;
 CALL PUBLIC.collection_count();
 SELECT * FROM DBMS_OUTPUT.DBMS_OUTPUT_LOG;
 ```
-
-Copy
 
 ##### Result[¶](#id18)
 
@@ -604,8 +584,6 @@ END;
 
 CALL collection_exists();
 ```
-
-Copy
 
 ##### Result[¶](#id20)
 
@@ -655,8 +633,6 @@ CALL PUBLIC.collection_exists();
 SELECT * FROM DBMS_OUTPUT.DBMS_OUTPUT_LOG;
 ```
 
-Copy
-
 ##### Result[¶](#id22)
 
 <!-- prettier-ignore -->
@@ -696,8 +672,6 @@ END;
 
 CALL collection_first_last();
 ```
-
-Copy
 
 ##### Result[¶](#id24)
 
@@ -739,8 +713,6 @@ CALL PUBLIC.collection_first_last();
 SELECT * FROM DBMS_OUTPUT.DBMS_OUTPUT_LOG;
 ```
 
-Copy
-
 ##### UDFs[¶](#udfs)
 
 ```
@@ -765,8 +737,6 @@ $$
 $$;
 ```
 
-Copy
-
 ##### Result[¶](#id26)
 
 <!-- prettier-ignore -->
@@ -787,7 +757,7 @@ This method is used to remove elements from a Collection. It has three possible 
 - .DELETE(n) removes the element whose index matches ‘n’.
 - .DELETE(n, m) removes in the indexes from ‘n’ through ‘m’.
 
-Note
+**Note:**
 
 In Oracle, using this operation on Nested Tables causes it to have “undefined” elements within it
 due to them being sparse.
@@ -842,8 +812,6 @@ END;
 CALL collection_delete();
 ```
 
-Copy
-
 ##### Result[¶](#id28)
 
 <!-- prettier-ignore -->
@@ -862,7 +830,7 @@ Copy
 Snowflake does not support deletions from an existing ARRAY and for this reason, the only offered
 workaround is to rebuild a new ARRAY depending on the original parameters of the DELETE.
 
-Note
+**Note:**
 
 Note that a UDF was added to implement the functionality for the update of the element.
 
@@ -911,8 +879,6 @@ CALL PUBLIC.collection_first_last();
 SELECT * FROM DBMS_OUTPUT.DBMS_OUTPUT_LOG;
 ```
 
-Copy
-
 ##### Result[¶](#id30)
 
 <!-- prettier-ignore -->
@@ -960,8 +926,6 @@ END;
 CALL collection_extend();
 ```
 
-Copy
-
 ##### Result[¶](#id32)
 
 <!-- prettier-ignore -->
@@ -973,7 +937,7 @@ Copy
 
 ##### Snowflake[¶](#id33)
 
-Note
+**Note:**
 
 Note that a UDF was added to implement the functionality for the update of the element.
 
@@ -1005,8 +969,6 @@ CALL PUBLIC.collection_first_last();
 SELECT * FROM DBMS_OUTPUT.DBMS_OUTPUT_LOG;
 ```
 
-Copy
-
 ##### Result[¶](#id34)
 
 <!-- prettier-ignore -->
@@ -1024,7 +986,7 @@ variants:
 - .TRIM removes the last element.
 - .TRIM(n) removes the last ‘n’ elements.
 
-Note
+**Note:**
 
 This functionality may be implemented using
 [ARRAY_SLICE](https://docs.snowflake.com/en/sql-reference/functions/array_slice.html)
@@ -1051,8 +1013,6 @@ END;
 CALL collection_trim();
 ```
 
-Copy
-
 ##### Result[¶](#id36)
 
 ```
@@ -1061,8 +1021,6 @@ DBMS OUTPUT
 2
 2
 ```
-
-Copy
 
 #### LIMIT[¶](#limit)
 
@@ -1090,8 +1048,6 @@ END;
 
 CALL collection_limit();
 ```
-
-Copy
 
 ##### Result[¶](#id38)
 
@@ -1133,8 +1089,6 @@ END;
 CALL collection_prior_next();
 ```
 
-Copy
-
 ##### Result[¶](#id40)
 
 <!-- prettier-ignore -->
@@ -1169,13 +1123,13 @@ Warning
 
 This section is a work in progress, information may change in the future.
 
-Note
+**Note:**
 
 This section is for the PL/SQL Version of the Nested Table Arrays, for the Standalone Version please
 see
 [Nested Table Type Definition](../sql-translation-reference/create_type.html#nested-table-type-definition).
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -1203,15 +1157,11 @@ In order to define a Nested Table Array type, the syntax is as follows:
 type_definition := TYPE IS TABLE OF datatype;
 ```
 
-Copy
-
 To declare a variable of this type:
 
 ```
 variable_name collection_type;
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id44)
 
@@ -1234,8 +1184,6 @@ BEGIN
     NULL;
 END;
 ```
-
-Copy
 
 ##### Snowflake[¶](#id46)
 
@@ -1260,8 +1208,6 @@ BEGIN
 END;
 $$;
 ```
-
-Copy
 
 #### Nested Table iteration[¶](#nested-table-iteration)
 
@@ -1290,8 +1236,6 @@ END;
 CALL nested_table_iteration();
 ```
 
-Copy
-
 ##### Result[¶](#id48)
 
 <!-- prettier-ignore -->
@@ -1306,7 +1250,7 @@ Copy
 
 ##### Snowflake[¶](#id49)
 
-Note
+**Note:**
 
 Note that a UDF was added to implement the functionality for the update of the element.
 
@@ -1340,8 +1284,6 @@ CALL PUBLIC.nested_table_iteration();
 SELECT * FROM DBMS_OUTPUT.DBMS_OUTPUT_LOG;
 ```
 
-Copy
-
 ##### UDF[¶](#udf)
 
 ```
@@ -1355,8 +1297,6 @@ $$
         ARRAY_SLICE(varray, position, ARRAY_SIZE(varray)))
 $$;
 ```
-
-Copy
 
 ##### Result[¶](#id50)
 
@@ -1392,7 +1332,7 @@ Warning
 
 This section is a work in progress, information may change in the future.
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -1428,8 +1368,6 @@ field_definition := field_name datatype [ { [NOT NULL default ] | default } ]
 default := [ { := | DEFAULT } expression]
 ```
 
-Copy
-
 To declare a variable of this type:
 
 ```
@@ -1439,11 +1377,9 @@ variable_name { record_type
               };
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id54)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -1476,8 +1412,6 @@ END;
 CALL record_procedure();
 SELECT * FROM record_table;
 ```
-
-Copy
 
 ##### Result[¶](#id56)
 
@@ -1534,8 +1468,6 @@ SELECT * FROM
     record_table;
 ```
 
-Copy
-
 ##### Result[¶](#id58)
 
 <!-- prettier-ignore -->
@@ -1568,8 +1500,6 @@ END;
 CALL insert_record();
 SELECT * FROM record_table;
 ```
-
-Copy
 
 ##### Result[¶](#id60)
 
@@ -1618,8 +1548,6 @@ SELECT * FROM
     record_table;
 ```
 
-Copy
-
 ##### Result[¶](#id62)
 
 <!-- prettier-ignore -->
@@ -1658,8 +1586,6 @@ END;
 
 CALL load_cursor_record();
 ```
-
-Copy
 
 ##### Result[¶](#id64)
 
@@ -1726,8 +1652,6 @@ $$;
 CALL load_cursor_record();
 ```
 
-Copy
-
 ##### Result[¶](#id66)
 
 <!-- prettier-ignore -->
@@ -1755,8 +1679,6 @@ insert into sample_table values(3, 'NAME 3');
 insert into sample_table values(4, 'NAME 4');
 ```
 
-Copy
-
 ##### Snowflake[¶](#id68)
 
 ```
@@ -1782,8 +1704,6 @@ values(3, 'NAME 3');
 insert into sample_table
 values(4, 'NAME 4');
 ```
-
-Copy
 
 ##### Oracle[¶](#id69)
 
@@ -1821,8 +1741,6 @@ call sp_sample1();
 
 SELECT * FROM results;
 ```
-
-Copy
 
 ##### Result[¶](#id70)
 
@@ -1905,8 +1823,6 @@ SELECT * FROM
    results;
 ```
 
-Copy
-
 ##### Result[¶](#id72)
 
 <!-- prettier-ignore -->
@@ -1948,12 +1864,12 @@ Warning
 
 This section is a work in progress, information may change in the future.
 
-Note
+**Note:**
 
 This section is for the PL/SQL Version of the Varrays, for the Standalone Version please see
 [Array Type Definition](../sql-translation-reference/create_type.html#array-type-definition).
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -1981,15 +1897,11 @@ type_definition := { VARRAY | [VARYING] ARRAY } (size_limit) OF datatype
             [NOT NULL];
 ```
 
-Copy
-
 To declare a variable of this type:
 
 ```
 variable_name collection_type;
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id76)
 
@@ -2014,8 +1926,6 @@ BEGIN
     NULL;
 END;
 ```
-
-Copy
 
 ##### Snowflake[¶](#id78)
 
@@ -2044,8 +1954,6 @@ $$
 $$;
 ```
 
-Copy
-
 #### Varray iteration[¶](#varray-iteration)
 
 ##### Oracle[¶](#id79)
@@ -2073,8 +1981,6 @@ END;
 CALL varray_iteration();
 ```
 
-Copy
-
 ##### Result[¶](#id80)
 
 <!-- prettier-ignore -->
@@ -2089,7 +1995,7 @@ Copy
 
 ##### Snowflake[¶](#id81)
 
-Note
+**Note:**
 
 Note that a UDF was added to implement the functionality for the update of the element.
 
@@ -2130,8 +2036,6 @@ $$;
 CALL varray_iteration();
 ```
 
-Copy
-
 ##### UDF[¶](#id82)
 
 ```
@@ -2145,8 +2049,6 @@ $$
         ARRAY_SLICE(varray, position, ARRAY_SIZE(varray)))
 $$;
 ```
-
-Copy
 
 ##### Result[¶](#id83)
 
@@ -2198,7 +2100,7 @@ Warning
 
 This section is a work in progress, information may change in the future
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -2243,8 +2145,6 @@ INSERT INTO bulk_collect_table VALUES(5);
 INSERT INTO bulk_collect_table VALUES(6);
 ```
 
-Copy
-
 ##### Snowflake[¶](#id91)
 
 ```
@@ -2270,8 +2170,6 @@ VALUES(5);
 INSERT INTO bulk_collect_table
 VALUES(6);
 ```
-
-Copy
 
 #### Bulk Collect from a Table[¶](#bulk-collect-from-a-table)
 
@@ -2320,8 +2218,6 @@ END;
 CALL bulk_collect_procedure();
 ```
 
-Copy
-
 ##### Result[¶](#id93)
 
 <!-- prettier-ignore -->
@@ -2352,7 +2248,7 @@ Danger
 
 EXECUTE IMMEDIATE with Bulk Collect clause has no workarounds offered.
 
-Note
+**Note:**
 
 Please note, that while the FETCH Cursor can be mostly preserved, it is advised to be changed into
 SELECT statements whenever possible for performance issues.
@@ -2431,8 +2327,6 @@ $$;
 CALL bulk_collect_procedure();
 ```
 
-Copy
-
 ##### Result[¶](#id95)
 
 <!-- prettier-ignore -->
@@ -2495,7 +2389,7 @@ Danger
 
 This section is a translation specification. Information may change in the future.
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -2509,7 +2403,7 @@ which uses a BULK COLLECT INTO statement. For more information review the follow
 
 ### Sample Source Patterns[¶](#id99)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -2540,8 +2434,6 @@ INSERT INTO MySampleTable (MySampleID, FirstName, Salary, Department)
 VALUES (4, 'Bob Four', 80000, 'IT');
 ```
 
-Copy
-
 ##### Snowflake[¶](#id101)
 
 ```
@@ -2568,8 +2460,6 @@ VALUES (3, 'Bob Three', 75000, 'IT');
 INSERT INTO MySampleTable(MySampleID, FirstName, Salary, Department)
 VALUES (4, 'Bob Four', 80000, 'IT');
 ```
-
-Copy
 
 #### 1. Inside procedure simple case[¶](#inside-procedure-simple-case)
 
@@ -2605,11 +2495,9 @@ END;
 CALL simple_procedure();
 ```
 
-Copy
-
 ##### Result[¶](#id103)
 
-Note
+**Note:**
 
 The query does not return results but the expected gathered information would be the IT Salary
 Information used for the example:
@@ -2659,8 +2547,6 @@ $$;
 
 CALL simple_procedure();
 ```
-
-Copy
 
 ##### Result[¶](#id105)
 
@@ -2720,16 +2606,12 @@ END;
 CALL simple_procedure();
 ```
 
-Copy
-
 ##### Result[¶](#id107)
 
 ```
 Statement processed.
 Average Salary for IT Department: 77500
 ```
-
-Copy
 
 ##### Snowflake[¶](#id108)
 
@@ -2781,8 +2663,6 @@ $$;
 
 CALL simple_procedure();
 ```
-
-Copy
 
 ##### Result[¶](#id109)
 

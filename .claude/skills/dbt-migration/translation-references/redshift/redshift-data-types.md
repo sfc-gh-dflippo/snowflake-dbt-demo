@@ -41,7 +41,7 @@ title: SnowConvert AI - Redshift - Data types | Snowflake Documentation
 |TEXT|TEXT|Snowflake’s TEXT is an alias for VARCHAR.|
 |[NAME](https://www.postgresql.org/docs/current/datatype-character.html) (Special character type)|VARCHAR|VARCHAR holds Unicode UTF-8 characters. If no length is specified, the default is the maximum allowed length (16,777,216).|
 
-Note
+**Note:**
 
 When the MAX precision argument is present in the Redshift data types, they are transformed to the
 default max precision supported by Snowflake.
@@ -128,8 +128,6 @@ day_to_second_qualifier:
 HOUR TO MINUTE | HOUR TO SECOND | MINUTE TO SECOND }
 ```
 
-Copy
-
 Warning
 
 The use of the Interval data type is planned for implementation in future updates.
@@ -153,8 +151,6 @@ INSERT INTO interval_day_to_second_table(interval_day_col1) VALUES ( INTERVAL '1
 INSERT INTO interval_day_to_second_table(interval_day_col2) VALUES ( INTERVAL '1 2:3:4.56' DAY TO SECOND(4));
 ```
 
-Copy
-
 ##### Output[¶](#output)
 
 ##### Snowflake[¶](#snowflake)
@@ -172,8 +168,6 @@ INSERT INTO interval_day_to_second_table(interval_day_col1) VALUES ('1days, 2hou
 
 INSERT INTO interval_day_to_second_table(interval_day_col2) VALUES ('1days, 2hours, 3mins, 4secs, 56ms');
 ```
-
-Copy
 
 The Interval value is transformed to a supported Snowflake format and then inserted as text inside
 the column. Since Snowflake does not support **Interval** as a data type, it is only supported in
@@ -197,8 +191,6 @@ arithmetic operations. In order to use the value, it needs to be extracted and u
  SELECT * FROM interval_day_to_second_table;
 ```
 
-Copy
-
 ##### Result[¶](#result)
 
 <!-- prettier-ignore -->
@@ -215,8 +207,6 @@ Copy
  SELECT * FROM
 interval_day_to_second_table;
 ```
-
-Copy
 
 ##### Result[¶](#id5)
 
@@ -256,8 +246,6 @@ There is no equivalent for this data type in Snowflake, it is currently transfor
  INTERVAL {YEAR | MONTH | YEAR TO MONTH}
 ```
 
-Copy
-
 Warning
 
 The use of the Interval data type is planned for implementation in future updates.
@@ -283,8 +271,6 @@ INSERT INTO interval_year_to_month_table(interval_year_col2) VALUES ( INTERVAL '
 INSERT INTO interval_year_to_month_table(interval_year_col3) VALUES ( INTERVAL '1000-11' YEAR TO MONTH );
 ```
 
-Copy
-
 ##### Output[¶](#id12)
 
 ##### Snowflake[¶](#id13)
@@ -305,8 +291,6 @@ INSERT INTO interval_year_to_month_table(interval_year_col2) VALUES ('0year, 5mo
 
 INSERT INTO interval_year_to_month_table(interval_year_col3) VALUES ('1000year, 11mons');
 ```
-
-Copy
 
 The Interval value is transformed to a supported Snowflake format and then inserted as text inside
 the column. Since Snowflake does not support **Interval** as a data type, it is only supported in
@@ -330,8 +314,6 @@ arithmetic operations. In order to use the value, it needs to be extracted and u
  SELECT * FROM interval_year_to_month_table;
 ```
 
-Copy
-
 ##### Result[¶](#id16)
 
 <!-- prettier-ignore -->
@@ -349,8 +331,6 @@ Copy
  SELECT * FROM
 interval_year_to_month_table;
 ```
-
-Copy
 
 ##### Result[¶](#id19)
 
@@ -420,8 +400,6 @@ equivalent in
 ;
 ```
 
-Copy
-
 ##### Results[¶](#results)
 
 <!-- prettier-ignore -->
@@ -441,8 +419,6 @@ Copy
     , to_number('$ 12,454.88', '$999,999.99') !!!RESOLVE EWI!!! /*** SSC-EWI-0073 - PENDING FUNCTIONAL EQUIVALENCE REVIEW FOR ''$999,999.99'' NODE ***/!!! as currency
 ;
 ```
-
-Copy
 
 ##### Results[¶](#id29)
 
@@ -464,8 +440,6 @@ Copy
 ;
 ```
 
-Copy
-
 ##### Results[¶](#id32)
 
 <!-- prettier-ignore -->
@@ -485,8 +459,6 @@ Copy
     , to_number('-12,454.88', 'SG99G999D99') !!!RESOLVE EWI!!! /*** SSC-EWI-0073 - PENDING FUNCTIONAL EQUIVALENCE REVIEW FOR ''SG99G999D99'' NODE ***/!!! as signed_number
 ;
 ```
-
-Copy
 
 ##### Results[¶](#id35)
 
@@ -512,8 +484,6 @@ Copy
 ;
 ```
 
-Copy
-
 ##### Results[¶](#id38)
 
 <!-- prettier-ignore -->
@@ -537,8 +507,6 @@ Copy
 ;
 ```
 
-Copy
-
 ##### Results[¶](#id41)
 
 <!-- prettier-ignore -->
@@ -556,16 +524,12 @@ The following format is not supported, for which it will be marked with an EWI.
  SELECT to_char(123031, 'th999,999')
 ```
 
-Copy
-
 ##### Output:[¶](#id43)
 
 ```
  SELECT
 TO_CHAR(123031, 'th999,999') !!!RESOLVE EWI!!! /*** SSC-EWI-0006 - th999,999 FORMAT MAY FAIL OR MAY HAVE A DIFFERENT BEHAVIOR IN SNOWFLAKE. ***/!!!
 ```
-
-Copy
 
 ### Know Issues[¶](#know-issues)
 
@@ -579,8 +543,6 @@ Example
 ```
  select to_number('12,-454.88', '99GMI999D99')
 ```
-
-Copy
 
 ### Related EWIs[¶](#id44)
 

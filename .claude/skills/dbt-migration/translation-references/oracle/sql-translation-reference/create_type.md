@@ -29,8 +29,6 @@ CREATE [ OR REPLACE ] [ EDITIONABLE | NONEDITIONAL ] TYPE <type name>
 [ <type properties> ]
 ```
 
-Copy
-
 ## Limitations[¶](#limitations)
 
 Snowflake doesn’t support user-defined data types, according to its online documentation
@@ -61,8 +59,6 @@ CREATE TYPE part_time_emp_t UNDER employee_t (num_hrs NUMBER);
 /
 ```
 
-Copy
-
 ### Type properties[¶](#type-properties)
 
 These refer to the options that are normally used when using OOP in PL/SQL: Persistable,
@@ -72,8 +68,6 @@ Instantiable and Final.
 CREATE OR REPLACE TYPE type1 AS OBJECT () NOT FINAL NOT INSTANTIABLE NOT PERSISTABLE;
 CREATE OR REPLACE TYPE type2 AS OBJECT () FINAL INSTANTIABLE PERSISTABLE;
 ```
-
-Copy
 
 ### Nested Table Type[¶](#nested-table-type)
 
@@ -91,8 +85,6 @@ CREATE TYPE textdoc_tab AS TABLE OF textdoc_typ;
 /
 ```
 
-Copy
-
 ### Type Source Creation Options[¶](#type-source-creation-options)
 
 These options stand for custom options regarding access and querying the type.
@@ -103,8 +95,6 @@ CREATE TYPE type2 FORCE OID 'abc' SHARING = NONE DEFAULT COLLATION collation ACC
 CREATE TYPE type3 AUTHID CURRENT_USER AS OBJECT ();
 CREATE TYPE type4 AUTHID DEFINER AS OBJECT ();
 ```
-
-Copy
 
 ## Proposed workarounds[¶](#proposed-workarounds)
 
@@ -160,7 +150,7 @@ Danger
 SnowConvert AI only recognizes these definitions and for the moment does not support any translation
 for them. This page is only used as a future reference for translations.
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -179,8 +169,6 @@ CREATE TYPE <type name>
 AS { VARRAY | [VARYING] ARRAY } ( <size limit> ) OF <data type>
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#sample-source-patterns)
 
 #### Inserts for the array usage[¶](#inserts-for-the-array-usage)
@@ -198,8 +186,6 @@ INSERT INTO customer_table_demo(customer_table_id, customer_data) VALUES
 (1, phone_list_typ_demo('8000-2000', '0000-0000', '5000-0000'));
 ```
 
-Copy
-
 ##### Snowflake[¶](#snowflake)
 
 ```
@@ -209,8 +195,6 @@ SELECT 1, ARRAY_CONSTRUCT('2000-0000', '4000-0000', '0000-0000');
 INSERT INTO customer_table_demo(customer_table_id, customer_data)
 SELECT 1, ARRAY_CONSTRUCT('8000-2000', '0000-0000', '5000-0000');
 ```
-
-Copy
 
 #### Array Type usage[¶](#array-type-usage)
 
@@ -229,8 +213,6 @@ CREATE TABLE customer_table_demo (
 SELECT * FROM customer_table_demo;
 /
 ```
-
-Copy
 
 ##### Results[¶](#results)
 
@@ -265,8 +247,6 @@ FROM
     SELECT * FROM
         customer_table_demo_view;
 ```
-
-Copy
 
 ##### Results[¶](#id3)
 
@@ -305,7 +285,7 @@ Danger
 SnowConvert AI still does not recognize type member functions nor type body definitions. This page
 is only used as a future reference for translation.
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -332,16 +312,12 @@ INSERT INTO table_member_function_demo(column1) VALUES
 (type_member_function_demo(5));
 ```
 
-Copy
-
 ##### Snowflake[¶](#id10)
 
 ```
 INSERT INTO table_member_function_demo (column1)
 SELECT OBJECT_CONSTRUCT('a1', 5);
 ```
-
-Copy
 
 #### Simple square() member function[¶](#simple-square-member-function)
 
@@ -379,8 +355,6 @@ FROM
     table_member_function_demo t;
 /
 ```
-
-Copy
 
 ##### Results[¶](#id12)
 
@@ -435,8 +409,6 @@ FROM
     table_member_function_demo t;
 ```
 
-Copy
-
 ##### Results[¶](#id14)
 
 <!-- prettier-ignore -->
@@ -482,8 +454,6 @@ them.
 CREATE TYPE <type name> AS TABLE OF <data type>
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id18)
 
 #### Nested Table Type usage[¶](#nested-table-type-usage)
@@ -501,8 +471,6 @@ CREATE TYPE textdoc_tab AS TABLE OF textdoc_typ;
 /
 ```
 
-Copy
-
 ##### Snowflake[¶](#id20)
 
 ```
@@ -517,8 +485,6 @@ CREATE TYPE textdoc_typ AS OBJECT (
 
 CREATE TYPE textdoc_tab AS TABLE OF textdoc_typ;
 ```
-
-Copy
 
 ### Known Issues[¶](#id21)
 
@@ -539,12 +505,12 @@ not taken into account when defining the type.
 This is a translation reference to convert the Object Variant of the Oracle Create Type Statements
 (UDT’s) to Snowflake
 
-Note
+**Note:**
 
 SnowConvert AI supports a translation for Object Type Definitions itself. However, their usages are
 still a work in progress.
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -564,8 +530,6 @@ CREATE TYPE <type name> AS OBJECT
 ( [{<type column definition> | type method definition } , ...]);
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id25)
 
 #### Inserts for Simple Type usage[¶](#inserts-for-simple-type-usage)
@@ -583,8 +547,6 @@ INSERT INTO customer_table_demo(customer_table_id, customer_data)
 VALUES ( 2, customer_typ_demo(2, 'First Name 2', 'Last Name 2'));
 ```
 
-Copy
-
 ##### Snowflake[¶](#id27)
 
 ```
@@ -594,8 +556,6 @@ VALUES ( 1, customer_typ_demo(1, 'First Name 1', 'Last Name 1') !!!RESOLVE EWI!!
 INSERT INTO customer_table_demo(customer_table_id, customer_data)
 VALUES ( 2, customer_typ_demo(2, 'First Name 2', 'Last Name 2') !!!RESOLVE EWI!!! /*** SSC-EWI-0073 - PENDING FUNCTIONAL EQUIVALENCE REVIEW FOR 'customer_typ_demo' NODE ***/!!!);
 ```
-
-Copy
 
 #### Simple Type usage[¶](#simple-type-usage)
 
@@ -615,8 +575,6 @@ CREATE TABLE customer_table_demo (
 
 SELECT * FROM customer_table_demo;
 ```
-
-Copy
 
 ##### Results[¶](#id29)
 
@@ -659,8 +617,6 @@ FROM
         customer_table_demo_view;
 ```
 
-Copy
-
 ##### Results[¶](#id31)
 
 <!-- prettier-ignore -->
@@ -684,8 +640,6 @@ INSERT INTO customer_table_demo(customer_id, customer_data) values
 (2, customer_typ_demo('Customer 2', email_typ_demo('email2@domain.com')));
 ```
 
-Copy
-
 ##### Snowflake[¶](#id33)
 
 ```
@@ -695,8 +649,6 @@ INSERT INTO customer_table_demo(customer_id, customer_data) values
 INSERT INTO customer_table_demo(customer_id, customer_data) values
 (2, customer_typ_demo('Customer 2', email_typ_demo('email2@domain.com') !!!RESOLVE EWI!!! /*** SSC-EWI-0073 - PENDING FUNCTIONAL EQUIVALENCE REVIEW FOR 'email_typ_demo' NODE ***/!!!) !!!RESOLVE EWI!!! /*** SSC-EWI-0073 - PENDING FUNCTIONAL EQUIVALENCE REVIEW FOR 'customer_typ_demo' NODE ***/!!!);
 ```
-
-Copy
 
 #### Nested Type Usage[¶](#nested-type-usage)
 
@@ -717,8 +669,6 @@ CREATE TABLE customer_table_demo (
 
 SELECT * FROM customer_table_demo;
 ```
-
-Copy
 
 ##### Results[¶](#id35)
 
@@ -763,8 +713,6 @@ FROM
 SELECT * FROM
     customer_table_demo_view;
 ```
-
-Copy
 
 ##### Results[¶](#id37)
 
@@ -825,8 +773,6 @@ CREATE TYPE <type name> UNDER <super type name>
 ( [{<type column definition> | type method definition } , ...]);
 ```
 
-Copy
-
 ### Sample Source Patterns[¶](#id42)
 
 #### Subtypes under an Object Type[¶](#subtypes-under-an-object-type)
@@ -847,8 +793,6 @@ CREATE TYPE part_time_emp_t UNDER employee_t (num_hrs INTEGER);
 /
 ```
 
-Copy
-
 ##### Snowflake[¶](#id44)
 
 ```
@@ -868,8 +812,6 @@ CREATE TYPE person_t AS OBJECT (name VARCHAR2(100), ssn INTEGER)
 --CREATE TYPE part_time_emp_t UNDER employee_t (num_hrs INTEGER)
                                                               ;
 ```
-
-Copy
 
 ### Known Issues[¶](#id45)
 

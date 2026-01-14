@@ -26,8 +26,6 @@ DELETE T1 FROM TABLE2 T2, TABLE1 T1 WHERE T1.ID = T2.ID;
 DELETE FROM TABLE1 WHERE TABLE1.COLUMN1 = TABLE2.COLUMN2
 ```
 
-Copy
-
 **Snowflake**
 
 **Delete**
@@ -65,8 +63,6 @@ WHERE
 TABLE1.COLUMN1 = TABLE2.COLUMN2;
 ```
 
-Copy
-
 ### Known Issues[¶](#known-issues)
 
 #### 1. DEL abbreviation unsupported[¶](#del-abbreviation-unsupported)
@@ -83,7 +79,7 @@ No related EWIs.
 The SQL set operators manipulate the result sets of several queries combining the results of each
 query into a single result set.
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -106,8 +102,6 @@ SELECT LastName, FirstName FROM employees
 INTERSECT ALL
 SELECT FirstName, LastName FROM contractors;
 ```
-
-Copy
 
 **Snowflake**
 
@@ -135,8 +129,6 @@ FirstName,
 LastName FROM
 contractors;
 ```
-
-Copy
 
 ### Known Issues[¶](#id2)
 
@@ -171,8 +163,6 @@ The INTERSECT ALL is unsupported in Snowflake and then the part ALL will be comm
  AND i.COLUMN3 = 'L';
 ```
 
-Copy
-
 **Snowflake**
 
 **Update**
@@ -186,8 +176,6 @@ UPDATE CRASHDUMPS.TABLE1 AS i
   WHERE i.COLUMN1 = CRASHDUMPS.TABLE2.COLUMN1
   AND UPPER(RTRIM( i.COLUMN3)) = UPPER(RTRIM('L'));
 ```
-
-Copy
 
 #### UPDATE with forward alias[¶](#update-with-forward-alias)
 
@@ -207,8 +195,6 @@ name it references.
  AND i.COLUMN3 = 'L';
 ```
 
-Copy
-
 **Snowflake**
 
 **Update**
@@ -222,8 +208,6 @@ UPDATE CRASHDUMPS.TABLE1 AS i
   WHERE i.COLUMN1 = CRASHDUMPS.TABLE2.COLUMN1
   AND UPPER(RTRIM( i.COLUMN3)) = UPPER(RTRIM('L'));
 ```
-
-Copy
 
 #### UPDATE with target table in the the FROM clause[¶](#update-with-target-table-in-the-the-from-clause)
 
@@ -241,8 +225,6 @@ SET Code = Code + 100
 WHERE Name = 'A';
 ```
 
-Copy
-
 **Snowflake**
 
 **Update**
@@ -253,8 +235,6 @@ UPDATE some_table
   WHERE
   UPPER(RTRIM( Name)) = UPPER(RTRIM('A'));
 ```
-
-Copy
 
 ### Related EWIs[¶](#id4)
 
@@ -281,7 +261,7 @@ without any changes to the sequence as detailed in an example of the
 In the example below, there are two CTEs named n1 and n2, the n1 referring to n2. Then the n2 must
 be defined first in Snowflake as the corresponding converted code.
 
-Note
+**Note:**
 
 Some parts of the output code are omitted for clarity reasons.
 
@@ -294,8 +274,6 @@ Some parts of the output code are omitted for clarity reasons.
      n2(c2) as (select c2 from tablex)
      SELECT * FROM t1;
 ```
-
-Copy
 
 **Snowflake**
 
@@ -320,8 +298,6 @@ SELECT
      t1;
 ```
 
-Copy
-
 ### Known Issues[¶](#id7)
 
 #### 1. Impossible to reorder when cycles were found[¶](#impossible-to-reorder-when-cycles-were-found)
@@ -337,7 +313,7 @@ No related EWIs.
 
 SQL statement that adds new rows to a table.
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -361,8 +337,6 @@ Snowflake `INSERT INTO` statement.
     , Insert_dt = CAST((CURRENT_TIMESTAMP(0)) AS DATE FORMAT 'YYYY-MM-DD'));
 ```
 
-Copy
-
 **Snowflake**
 
 #### Insert[¶](#id9)
@@ -372,8 +346,6 @@ Copy
 process_name, session_id, message_txt, message_ts, Insert_dt)
 VALUES ('S2F_BOOKS_LOAD_NEW', 105678989, '', '2019-07-23 00:00:00', TO_DATE((CURRENT_TIMESTAMP(0))));
 ```
-
-Copy
 
 ### Known Issues [¶](#id10)
 
@@ -385,11 +357,11 @@ No related EWIs.
 
 ## LOGGING ERRORS[¶](#logging-errors)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
-Note
+**Note:**
 
 Non-relevant statement.
 
@@ -419,8 +391,6 @@ FROM MY_SAMPLE
 LOGGING ERRORS;
 ```
 
-Copy
-
 ##### Snowflake[¶](#snowflake)
 
 ```
@@ -444,8 +414,6 @@ FROM MY_SAMPLE
 LOGGING ALL ERRORS;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id16)
 
 ```
@@ -454,8 +422,6 @@ Copy
 FROM
 MY_SAMPLE;
 ```
-
-Copy
 
 #### LOGGING ERRORS WITH NO LIMIT[¶](#logging-errors-with-no-limit)
 
@@ -471,8 +437,6 @@ FROM MY_SAMPLE
 LOGGING ERRORS WITH NO LIMIT;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id18)
 
 ```
@@ -481,8 +445,6 @@ Copy
 FROM
 MY_SAMPLE;
 ```
-
-Copy
 
 #### LOGGING ERRORS WITH LIMIT OF[¶](#logging-errors-with-limit-of)
 
@@ -498,8 +460,6 @@ FROM MY_SAMPLE
 LOGGING ERRORS WITH LIMIT OF 100;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id20)
 
 ```
@@ -508,8 +468,6 @@ Copy
 FROM
 MY_SAMPLE;
 ```
-
-Copy
 
 ### Known Issues [¶](#id21)
 
@@ -535,8 +493,6 @@ the `SEL` abbreviation.​
 SEL DISTINCT col1, col2 FROM table1
 ```
 
-Copy
-
 **Snowflake**
 
 **Select**
@@ -546,8 +502,6 @@ SELECT DISTINCT col1,
 col2 FROM
 table1;
 ```
-
-Copy
 
 Teradata supports referencing an alias before it is declared, but Snowflake does not. The
 transformation for this scenario is to take the referenced column and change the alias for the
@@ -563,8 +517,6 @@ my_val, sum(col1),
 col2 AS my_val FROM table1
 ```
 
-Copy
-
 **Snowflake**
 
 **Alias**
@@ -576,8 +528,6 @@ SUM(col1),
 col2 AS my_val FROM
 table1;
 ```
-
-Copy
 
 ### Removed clause options[¶](#removed-clause-options)
 
@@ -624,15 +574,11 @@ for more information.
 }
 ```
 
-Copy
-
 Where quantifier:
 
 ```
  { comparison_operator [ NOT ] IN } { ALL |ANY | SOME }
 ```
-
-Copy
 
 **Snowflake syntax**
 
@@ -648,23 +594,17 @@ To compare individual values:
  <value> [ NOT ] IN ( <value_1> [ , <value_2> ...  ] )
 ```
 
-Copy
-
 To compare _row constructors_ (parenthesized lists of values):
 
 ```
  ( <value_A> [, <value_B> ... ] ) [ NOT ] IN (  ( <value_1> [ , <value_2> ... ] )  [ , ( <value_3> [ , <value_4> ... ] )  ...  ]  )
 ```
 
-Copy
-
 To compare a value to the values returned by a subquery:
 
 ```
  <value> [ NOT ] IN ( <subquery> )
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id26)
 
@@ -697,8 +637,6 @@ INSERT INTO Employee (EmpNo, Name, DeptNo)
 VALUES (5, 'Eve', 100);
 ```
 
-Copy
-
 ##### Snowflake[¶](#id28)
 
 ##### Query[¶](#id29)
@@ -728,8 +666,6 @@ INSERT INTO Employee (EmpNo, Name, DeptNo)
 VALUES (5, 'Eve', 100);
 ```
 
-Copy
-
 #### Equal ANY pedicate in WHERE clause [¶](#equal-any-pedicate-in-where-clause)
 
 **Teradata**
@@ -741,8 +677,6 @@ Copy
 FROM Employee
 WHERE DeptNo = ANY(100,300,500) ;
 ```
-
-Copy
 
 ##### Output[¶](#output)
 
@@ -763,8 +697,6 @@ Copy
 FROM Employee
 WHERE DeptNo IN(100,300,500) ;
 ```
-
-Copy
 
 ##### Output[¶](#id31)
 
@@ -791,8 +723,6 @@ FROM Employee
 WHERE DeptNo < ANY(100,300,500) ;
 ```
 
-Copy
-
 ##### Output[¶](#id33)
 
 <!-- prettier-ignore -->
@@ -818,8 +748,6 @@ OR DeptNo > 300
 OR DeptNo > 500);
 ```
 
-Copy
-
 ##### Output[¶](#id35)
 
 <!-- prettier-ignore -->
@@ -842,8 +770,6 @@ FROM Employee
 WHERE DeptNo IN ANY(100,300,500) ;
 ```
 
-Copy
-
 ##### Output[¶](#id37)
 
 <!-- prettier-ignore -->
@@ -863,8 +789,6 @@ Copy
 FROM Employee
 WHERE DeptNo IN(100,300,500) ;
 ```
-
-Copy
 
 ##### Output[¶](#id39)
 
@@ -888,8 +812,6 @@ FROM Employee
 WHERE DeptNo NOT IN ALL(100, 200);
 ```
 
-Copy
-
 ##### Output[¶](#id41)
 
 <!-- prettier-ignore -->
@@ -907,8 +829,6 @@ Copy
 FROM Employee
 WHERE DeptNo NOT IN (100, 200);
 ```
-
-Copy
 
 ##### Output[¶](#id43)
 
@@ -932,8 +852,6 @@ FROM Employee
 WHERE DeptNo NOT IN ANY(100, 200);
 ```
 
-Copy
-
 ##### Output[¶](#id46)
 
 <!-- prettier-ignore -->
@@ -955,8 +873,6 @@ FROM Employee
 WHERE DeptNo IN (100, 200)
    OR DeptNo NOT IN (100, 200);
 ```
-
-Copy
 
 ##### Output[¶](#id48)
 
@@ -986,7 +902,7 @@ Translation reference to convert Teradata Expand On functionality to Snowflake
 
 ### Sample Source Patterns[¶](#id51)
 
-Note
+**Note:**
 
 Some parts in the output code are omitted for clarity reasons.
 
@@ -1009,8 +925,6 @@ VALUES
     );
 ```
 
-Copy
-
 ##### Snowflake[¶](#id54)
 
 ```
@@ -1029,8 +943,6 @@ VALUES (
         ) !!!RESOLVE EWI!!! /*** SSC-EWI-TD0053 - SNOWFLAKE DOES NOT SUPPORT THE PERIOD DATATYPE, ALL PERIODS ARE HANDLED AS VARCHAR INSTEAD ***/!!!);
 ```
 
-Copy
-
 #### Expand On Clause[¶](#id55)
 
 Suppose you want to expand the period column by seconds, for this Expand On clause has anchor period
@@ -1047,8 +959,6 @@ expansion and interval literal expansion.
 FROM
     table1 EXPAND ON pd AS bg BY ANCHOR ANCHOR_SECOND;
 ```
-
-Copy
 
 ##### Result[¶](#result)
 
@@ -1087,8 +997,6 @@ FROM
     ExpandOnCTE;
 ```
 
-Copy
-
 ##### Result[¶](#id58)
 
 <!-- prettier-ignore -->
@@ -1117,8 +1025,6 @@ FROM
     table1 EXPAND ON pd AS bg BY INTERVAL '1' SECOND;
 ```
 
-Copy
-
 ##### Result[¶](#id61)
 
 <!-- prettier-ignore -->
@@ -1142,8 +1048,6 @@ FROM
 EXPAND ON pd AS bg BY INTERVAL '1' SECOND;
 ```
 
-Copy
-
 ### Related EWIs[¶](#id63)
 
 1. [SSC-EWI-0073](../../../general/technical-documentation/issues-and-troubleshooting/conversion-issues/generalEWI.html#ssc-ewi-0073):
@@ -1164,7 +1068,7 @@ Translation reference to convert Teradata Normalize functionality to Snowflake
 
 ### Sample Source Patterns[¶](#id65)
 
-Note
+**Note:**
 
 Some parts in the output code are omitteed for clarity reasons.
 
@@ -1226,8 +1130,6 @@ VALUES
     );
 ```
 
-Copy
-
 ##### Snowflake[¶](#id68)
 
 ```
@@ -1271,8 +1173,6 @@ VALUES (
         1000, PUBLIC.PERIOD_UDF(DATE '2020-05-10', DATE '2020-09-20') !!!RESOLVE EWI!!! /*** SSC-EWI-TD0053 - SNOWFLAKE DOES NOT SUPPORT THE PERIOD DATATYPE, ALL PERIODS ARE HANDLED AS VARCHAR INSTEAD ***/!!!);
 ```
 
-Copy
-
 #### Normalize Clause[¶](#normalize-clause)
 
 Suppose you want to use Normalize clause with the employee id.
@@ -1286,8 +1186,6 @@ Suppose you want to use Normalize clause with the employee id.
 FROM
     project;
 ```
-
-Copy
 
 ##### Result[¶](#id70)
 
@@ -1347,8 +1245,6 @@ GROUP BY
     GroupID;
 ```
 
-Copy
-
 ##### Result[¶](#id72)
 
 <!-- prettier-ignore -->
@@ -1369,8 +1265,6 @@ these cases SnowConvert AI will add an error that this translation is planned fo
  SELECT NORMALIZE ON MEETS OR OVERLAPS emp_id, duration FROM table1;
 ```
 
-Copy
-
 ##### Snowflake[¶](#id75)
 
 ```
@@ -1380,8 +1274,6 @@ Copy
 duration FROM
 table1;
 ```
-
-Copy
 
 ### Related EWIs[¶](#id76)
 
@@ -1431,8 +1323,6 @@ INSERT INTO account_balance VALUES (1, 10, 60);
 INSERT INTO account_balance VALUES (1, 11, 80);
 INSERT INTO account_balance VALUES (1, 12, 10);
 ```
-
-Copy
 
 **Result**
 
@@ -1503,8 +1393,6 @@ INSERT INTO account_balance
 VALUES (1, 12, 10);
 ```
 
-Copy
-
 **Result**
 
 <!-- prettier-ignore -->
@@ -1555,8 +1443,6 @@ SELECT
 FROM account_balance
 ORDER BY 1, 2;
 ```
-
-Copy
 
 **Result**
 
@@ -1631,8 +1517,6 @@ FROM
 ORDER BY 1, 2;
 ```
 
-Copy
-
 **Result**
 
 <!-- prettier-ignore -->
@@ -1696,8 +1580,6 @@ SELECT
 FROM account_balance
 ORDER BY 1, 2;
 ```
-
-Copy
 
 **Result**
 
@@ -1778,8 +1660,6 @@ FROM
 ORDER BY 1, 2;
 ```
 
-Copy
-
 **Untitled**
 
 <!-- prettier-ignore -->
@@ -1824,8 +1704,6 @@ FROM account_balance
 ORDER BY 1,2;
 ```
 
-Copy
-
 #### Snowflake[¶](#id89)
 
 **Query**
@@ -1845,8 +1723,6 @@ FROM
     account_balance
 ORDER BY 1,2;
 ```
-
-Copy
 
 ### Related EWIs[¶](#id90)
 
@@ -1874,8 +1750,6 @@ SAMPLE
   }
 ```
 
-Copy
-
 **Snowflake syntax**
 
 Review the following
@@ -1889,8 +1763,6 @@ FROM ...
 [ ... ]
 ```
 
-Copy
-
 Where:
 
 ```
@@ -1898,8 +1770,6 @@ samplingMethod ::= {
 { BERNOULLI | ROW } ( { <probability> | <num> ROWS } ) |
 { SYSTEM | BLOCK } ( <probability> ) [ { REPEATABLE | SEED } ( <seed> ) ] }
 ```
-
-Copy
 
 - In Snowflake, the following keywords can be used interchangeably:
 
@@ -1949,8 +1819,6 @@ INSERT INTO Employee (EmpNo, Name, DeptNo)
 VALUES (5, 'Eve', 100);
 ```
 
-Copy
-
 ##### Snowflake[¶](#id95)
 
 **Query**
@@ -1980,8 +1848,6 @@ INSERT INTO Employee (EmpNo, Name, DeptNo)
 VALUES (5, 'Eve', 100);
 ```
 
-Copy
-
 #### SAMPLE clause[¶](#id96)
 
 ##### Fixed number of rows[¶](#fixed-number-of-rows)
@@ -1997,8 +1863,6 @@ result for each run.
 SELECT * FROM Employee SAMPLE 2;
 ```
 
-Copy
-
 **Output** 2 rows.
 
 **Snowflake**
@@ -2008,8 +1872,6 @@ Copy
 ```
 SELECT * FROM Employee SAMPLE (2 ROWS);
 ```
-
-Copy
 
 **Output** 2 rows.
 
@@ -2025,8 +1887,6 @@ This option will return a variety of rows depending on the probability set.
 SELECT * FROM Employee SAMPLE 0.25;
 ```
 
-Copy
-
 **Output** 25% of probability for each row: 1 output row.
 
 **Snowflake**
@@ -2036,8 +1896,6 @@ Copy
 ```
 SELECT * FROM Employee SAMPLE (25);
 ```
-
-Copy
 
 **Output** 25% of probability for each row: 1 output row.
 
@@ -2056,8 +1914,6 @@ Snowflake, it is not possible to request more samples than rows in a table.
 SELECT * FROM Employee SAMPLE WITH REPLACEMENT 8;
 ```
 
-Copy
-
 **Output**
 
 <!-- prettier-ignore -->
@@ -2065,11 +1921,8 @@ Copy
 |---|---|---|
 |5|Eve|100|
 |5|Eve|100|
-|5|Eve|100|
-|4|David|200|
 |4|David|200|
 |3|Charlie|500|
-|1|Alice|100|
 |1|Alice|100|
 
 #### SAMPLEID related functionality[¶](#sampleid-related-functionality)
@@ -2085,8 +1938,6 @@ Teradata.
 ```
 SELECT name, SAMPLEID FROM employee SAMPLE 0.5, 0.25, 0.25;
 ```
-
-Copy
 
 **Output**
 
@@ -2127,8 +1978,6 @@ FROM sampled_data
 ORDER BY sample_id, row_num;  -- Order by sample_id and row_num for consistency
 ```
 
-Copy
-
 **Output**
 
 <!-- prettier-ignore -->
@@ -2153,8 +2002,6 @@ SELECT * FROM employee
 SAMPLE WHEN DeptNo > 100 then 0.9
 ELSE 0.1 END;
 ```
-
-Copy
 
 **Output**
 

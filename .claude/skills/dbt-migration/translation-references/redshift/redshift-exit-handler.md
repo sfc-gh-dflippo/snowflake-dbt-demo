@@ -35,8 +35,6 @@ DECLARE EXIT HANDLER FOR condition_value
   handler_action_statement;
 ```
 
-Copy
-
 In Redshift, exception handling uses:
 
 ```
@@ -47,8 +45,6 @@ EXCEPTION
     -- handler statements that exit the block
 END;
 ```
-
-Copy
 
 ## Sample Source Patterns[¶](#sample-source-patterns)
 
@@ -80,8 +76,6 @@ BEGIN
 END;
 ```
 
-Copy
-
 #### Output Code:[¶](#output-code)
 
 ##### Snowflake Scripting[¶](#snowflake-scripting)
@@ -112,8 +106,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### EXIT HANDLER with Specific SQLSTATE[¶](#exit-handler-with-specific-sqlstate)
 
 #### Input Code:[¶](#id1)
@@ -135,8 +127,6 @@ BEGIN
     INSERT INTO success_log VALUES ('Completed');
 END;
 ```
-
-Copy
 
 #### Output Code:[¶](#id3)
 
@@ -166,8 +156,6 @@ $$
 $$;
 ```
 
-Copy
-
 ### EXIT HANDLER for NOT FOUND[¶](#exit-handler-for-not-found)
 
 #### Input Code:[¶](#id5)
@@ -188,8 +176,6 @@ BEGIN
     INSERT INTO results VALUES (v_name);
 END;
 ```
-
-Copy
 
 #### Output Code:[¶](#id7)
 
@@ -216,8 +202,6 @@ $$
     END;
 $$;
 ```
-
-Copy
 
 ### EXIT HANDLER with Cursor[¶](#exit-handler-with-cursor)
 
@@ -254,8 +238,6 @@ BEGIN
     RETURN v_count;
 END;
 ```
-
-Copy
 
 #### Output Code:[¶](#id11)
 
@@ -299,8 +281,6 @@ $$
 $$;
 ```
 
-Copy
-
 ## Known Issues[¶](#known-issues)
 
 ### EXIT HANDLER Behavior[¶](#exit-handler-behavior)
@@ -328,8 +308,6 @@ DECLARE EXIT HANDLER FOR SQLEXCEPTION
     INSERT INTO log VALUES ('General error');
 ```
 
-Copy
-
 #### Snowflake[¶](#snowflake)
 
 ```
@@ -342,8 +320,6 @@ EXCEPTION
                 INSERT INTO log VALUES ('General error')
         END;
 ```
-
-Copy
 
 ### Mixed CONTINUE and EXIT Handlers[¶](#mixed-continue-and-exit-handlers)
 

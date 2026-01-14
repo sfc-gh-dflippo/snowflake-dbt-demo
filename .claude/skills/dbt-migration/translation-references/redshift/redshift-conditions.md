@@ -20,9 +20,7 @@ title: SnowConvert AI - Redshift - Conditions | Snowflake Documentation
  expression [ NOT ] BETWEEN expression AND expression
 ```
 
-Copy
-
-Note
+**Note:**
 
 This function is fully supported by
 [Snowflake](https://docs.snowflake.com/en/sql-reference/functions/coalesce).
@@ -59,8 +57,6 @@ INSERT INTO sales (price, departmentId, saleDate) VALUES
 (2000, 2, '2018-01-01');
 ```
 
-Copy
-
 ##### Snowflake[¶](#snowflake)
 
 ```
@@ -90,8 +86,6 @@ INSERT INTO sales (price, departmentId, saleDate) VALUES
 (2000, 2, '2018-01-01');
 ```
 
-Copy
-
 ##### Input Code:[¶](#input-code)
 
 ##### Redshift[¶](#id1)
@@ -113,8 +107,6 @@ AND saleDate BETWEEN '2010-01-01' and '2016-01-01';
 select 'some ' between c_start and c_end
 from( select 'same' as c_start, 'some' as c_end );
 ```
-
-Copy
 
 ##### Results[¶](#results)
 
@@ -181,8 +173,6 @@ select
     RTRIM( 'some ') between c_start and c_end
 from( select 'same' as c_start, 'some' as c_end );
 ```
-
-Copy
 
 ##### Results[¶](#id3)
 
@@ -336,8 +326,6 @@ FROM example_data
 WHERE status IS UNKNOWN;
 ```
 
-Copy
-
 ##### Results[¶](#id9)
 
 <!-- prettier-ignore -->
@@ -464,8 +452,6 @@ FROM
 WHERE status IS NULL;
 ```
 
-Copy
-
 ##### Results[¶](#id11)
 
 <!-- prettier-ignore -->
@@ -544,9 +530,7 @@ There are no known issues.
  [ NOT ] EXISTS (table_subquery)
 ```
 
-Copy
-
-Note
+**Note:**
 
 This function is fully supported by
 [Snowflake](https://docs.snowflake.com/en/sql-reference/functions/coalesce).
@@ -569,8 +553,6 @@ INSERT INTO ExistsTest (id, name, lastname) VALUES
  (4, 'name4', NULL);
 ```
 
-Copy
-
 ```
  CREATE TABLE ExistsTest (
     id INTEGER,
@@ -586,8 +568,6 @@ INSERT INTO ExistsTest (id, name, lastname) VALUES
  (4, 'name4', NULL);
 ```
 
-Copy
-
 ##### Input Code:[¶](#id18)
 
 ##### Redshift[¶](#id19)
@@ -600,8 +580,6 @@ WHERE lastname = 'lastname1'
 )
 ORDER BY id;
 ```
-
-Copy
 
 ##### Results[¶](#id20)
 
@@ -627,8 +605,6 @@ WHERE lastname = 'lastname1'
 )
 ORDER BY id;
 ```
-
-Copy
 
 ##### Results[¶](#id23)
 
@@ -661,9 +637,7 @@ No issues were found.
  expression [ NOT ] IN (expr_list | table_subquery)
 ```
 
-Copy
-
-Note
+**Note:**
 
 This function is fully supported by
 [Snowflake](https://docs.snowflake.com/en/sql-reference/functions/coalesce).
@@ -700,8 +674,6 @@ INSERT INTO InTest values ('A', 'A', ('2012-03-02'), 4,6);
 INSERT INTO InTest values ('a', 'a', ('2014-01-02'), 41,7);
 ```
 
-Copy
-
 ##### Snowflake[¶](#id31)
 
 ```
@@ -734,8 +706,6 @@ INSERT INTO InTest
 values ('a', 'a', ('2014-01-02'), 41,7);
 ```
 
-Copy
-
 ##### Input Code:[¶](#id32)
 
 ##### Redshift[¶](#id33)
@@ -751,8 +721,6 @@ WHERE price = 7000
 
 select t.col1 in ('a ','b','c') as r1, t.col2 in ('a ','b','c') as r2 from InTest t order by t.idx;
 ```
-
-Copy
 
 ##### Results[¶](#id34)
 
@@ -792,8 +760,6 @@ select t.col1 in (RTRIM('a '), RTRIM('b'), RTRIM('c')) as r1, t.col2 in (RTRIM('
 InTest t order by t.idx;
 ```
 
-Copy
-
 ##### Results[¶](#id37)
 
 <!-- prettier-ignore -->
@@ -829,7 +795,7 @@ No issues were found.
 > conditions are binary operators with a Boolean return type.
 > ([Redshift SQL Language reference Logical Conditions](https://docs.aws.amazon.com/redshift/latest/dg/r_logical_condition.html)).
 
-Note
+**Note:**
 
 This grammar is fully supported in
 [Snowflake](https://docs.snowflake.com/en/sql-reference/operators-logical).
@@ -842,8 +808,6 @@ expression
 expression
 NOT expression
 ```
-
-Copy
 
 <!-- prettier-ignore -->
 |E1|E2|E1 AND E2|E1 OR E2|NOT E2|
@@ -881,8 +845,6 @@ INSERT INTO employee (employee_id, active, department, hire_date, salary) VALUES
     (5, TRUE, 'Sales', '2018-11-05', NULL);
 ```
 
-Copy
-
 ##### Input Code:[¶](#id44)
 
 ##### Redshift[¶](#id45)
@@ -897,8 +859,6 @@ Copy
     (salary IS NULL OR salary < 50000) AS low_salary_or_no_salary
 FROM employee;
 ```
-
-Copy
 
 ##### Results[¶](#id46)
 
@@ -926,8 +886,6 @@ Copy
 FROM
     employee;
 ```
-
-Copy
 
 ##### Results[¶](#id48)
 
@@ -961,9 +919,7 @@ There are no known issues.
  expression IS [ NOT ] NULL
 ```
 
-Copy
-
-Note
+**Note:**
 
 This function is fully supported by
 [Snowflake](https://docs.snowflake.com/en/sql-reference/functions/coalesce).
@@ -988,8 +944,6 @@ INSERT INTO NullTest (id, name, lastname) VALUES
  (4, 'name4', NULL);
 ```
 
-Copy
-
 ##### Snowflake[¶](#id56)
 
 ```
@@ -1007,8 +961,6 @@ INSERT INTO NullTest (id, name, lastname) VALUES
  (4, 'name4', NULL);
 ```
 
-Copy
-
 ##### Input Code:[¶](#id57)
 
 ##### Redshift[¶](#id58)
@@ -1017,8 +969,6 @@ Copy
  SELECT * FROM nulltest
 WHERE lastname IS NULL;
 ```
-
-Copy
 
 ##### Results[¶](#id59)
 
@@ -1037,8 +987,6 @@ Copy
     nulltest
 WHERE lastname IS NULL;
 ```
-
-Copy
 
 ##### Results[¶](#id62)
 
@@ -1101,8 +1049,6 @@ FROM
 pattern_matching_sample;
 ```
 
-Copy
-
 #### Redshift Results[¶](#redshift-results)
 
 <!-- prettier-ignore -->
@@ -1137,12 +1083,12 @@ Pattern-matching conditions
 > percent sign.
 > ([Redshift SQL Language reference LIKE](https://docs.aws.amazon.com/redshift/latest/dg/r_patternmatching_condition_like.html)).
 
-Note
+**Note:**
 
 This grammar is fully supported in
 [Snowflake](https://docs.snowflake.com/en/sql-reference/operators-logical).
 
-Note
+**Note:**
 
 In Snowflake the cases where the escape character is not provided, the default Redshift escape
 character `'\\'` will be added for full equivalence.
@@ -1152,8 +1098,6 @@ character `'\\'` will be added for full equivalence.
 ```
  expression [ NOT ] LIKE | ILIKE pattern [ ESCAPE 'escape_char' ]
 ```
-
-Copy
 
 ### Sample Source Patterns[¶](#id69)
 
@@ -1179,8 +1123,6 @@ INSERT INTO like_ex VALUES
   ('100%');
 ```
 
-Copy
-
 #### Like[¶](#id72)
 
 ##### Input Code:[¶](#id73)
@@ -1193,8 +1135,6 @@ SELECT name
   WHERE name LIKE '%Jo%oe%'
   ORDER BY name;
 ```
-
-Copy
 
 ##### Results[¶](#id75)
 
@@ -1217,8 +1157,6 @@ Copy
   WHERE name LIKE '%Jo%oe%' ESCAPE '\\'
   ORDER BY name;
 ```
-
-Copy
 
 ##### Results[¶](#id77)
 
@@ -1244,8 +1182,6 @@ Copy
   ORDER BY name;
 ```
 
-Copy
-
 ##### Results[¶](#id80)
 
 <!-- prettier-ignore -->
@@ -1270,8 +1206,6 @@ dd
   WHERE name NOT LIKE '%Jo%oe%' ESCAPE '\\'
   ORDER BY name;
 ```
-
-Copy
 
 ##### Results[¶](#id82)
 
@@ -1303,8 +1237,6 @@ SELECT name
  ORDER BY 1;
 ```
 
-Copy
-
 ##### Results[¶](#id85)
 
 <!-- prettier-ignore -->
@@ -1333,8 +1265,6 @@ SELECT name
  ORDER BY 1;
 ```
 
-Copy
-
 ##### Results[¶](#id87)
 
 <!-- prettier-ignore -->
@@ -1358,8 +1288,6 @@ Copy
        'abc' ILIKE '_B_' AS r2;
 ```
 
-Copy
-
 ##### Results[¶](#id90)
 
 <!-- prettier-ignore -->
@@ -1375,8 +1303,6 @@ Copy
  SELECT 'abc' LIKE '_B_' ESCAPE '\\' AS r1,
        'abc' ILIKE '_B_' ESCAPE '\\' AS r2;
 ```
-
-Copy
 
 ##### Results[¶](#id92)
 
@@ -1408,8 +1334,6 @@ The following operators are translated as follows:
        'abc' !~~* '_B_' AS r4;
 ```
 
-Copy
-
 ##### Results[¶](#id95)
 
 <!-- prettier-ignore -->
@@ -1427,8 +1351,6 @@ Copy
        'abc' ILIKE '_B_' ESCAPE '\\' AS r3,
        'abc' NOT ILIKE '_B_' ESCAPE '\\' AS r4;
 ```
-
-Copy
 
 ##### Results[¶](#id97)
 
@@ -1468,8 +1390,6 @@ Snowflake.
 ```
  expression [ ! ] ~ pattern
 ```
-
-Copy
 
 ### POSIX pattern-matching metacharacters[¶](#posix-pattern-matching-metacharacters)
 
@@ -1529,8 +1449,6 @@ VALUES
     (14, 'special characters\n!@#$%^&*()');
 ```
 
-Copy
-
 #### . : Matches any character[¶](#matches-any-character)
 
 ##### Input Code:[¶](#id105)
@@ -1542,8 +1460,6 @@ Copy
 FROM posix_test_table
 WHERE column_name ~ 'a.c';
 ```
-
-Copy
 
 ##### Results[¶](#id107)
 
@@ -1563,8 +1479,6 @@ Copy
 FROM posix_test_table
 WHERE REGEXP_COUNT(column_name, 'a.c', 1, 'ms') > 0;
 ```
-
-Copy
 
 ##### Results[¶](#id109)
 
@@ -1587,8 +1501,6 @@ FROM posix_test_table
 WHERE column_name ~ 'a*b';
 ```
 
-Copy
-
 ##### Results[¶](#id112)
 
 <!-- prettier-ignore -->
@@ -1609,8 +1521,6 @@ Copy
 FROM posix_test_table
 WHERE REGEXP_COUNT(column_name, 'a*b', 1, 'ms') > 0;
 ```
-
-Copy
 
 ##### Results[¶](#id114)
 
@@ -1634,8 +1544,6 @@ Copy
 FROM posix_test_table
 WHERE column_name !~ 'a?b';
 ```
-
-Copy
 
 ##### Results[¶](#id117)
 
@@ -1661,8 +1569,6 @@ Copy
 FROM posix_test_table
 WHERE REGEXP_COUNT(column_name, 'a?b', 1, 'ms') = 0;
 ```
-
-Copy
 
 ##### Results[¶](#id119)
 
@@ -1691,8 +1597,6 @@ FROM posix_test_table
 WHERE column_name ~ '^abc';
 ```
 
-Copy
-
 ##### Results[¶](#id122)
 
 <!-- prettier-ignore -->
@@ -1711,8 +1615,6 @@ Copy
 FROM posix_test_table
 WHERE REGEXP_COUNT(column_name, '^abc', 1, 'ms') > 0;
 ```
-
-Copy
 
 ##### Results[¶](#id124)
 
@@ -1734,8 +1636,6 @@ Copy
 FROM posix_test_table
 WHERE column_name !~ '123$';
 ```
-
-Copy
 
 ##### Results[¶](#id127)
 
@@ -1763,8 +1663,6 @@ Copy
 FROM posix_test_table
 WHERE REGEXP_COUNT(column_name, '123$', 1, 'ms') = 0;
 ```
-
-Copy
 
 ##### Results[¶](#id129)
 
@@ -1806,8 +1704,6 @@ col2 ~ 'Hello.*' as cs
 FROM collateTable;
 ```
 
-Copy
-
 ##### Results[¶](#id132)
 
 <!-- prettier-ignore -->
@@ -1839,8 +1735,6 @@ col2, ''), 'Hello.*', 1, 'ms') > 0 as cs
 FROM
 collateTable;
 ```
-
-Copy
 
 ##### Results[¶](#id134)
 
@@ -1895,8 +1789,6 @@ transformed to [RLIKE](https://docs.snowflake.com/en/sql-reference/functions/rli
  expression [ NOT ] SIMILAR TO pattern [ ESCAPE 'escape_char' ]
 ```
 
-Copy
-
 ### Pattern-matching metacharacters[¶](#pattern-matching-metacharacters)
 
 <!-- prettier-ignore -->
@@ -1949,8 +1841,6 @@ VALUES
     ('123abc\nanother line\nabc123');
 ```
 
-Copy
-
 #### % : Matches any sequence of zero or more characters[¶](#matches-any-sequence-of-zero-or-more-characters)
 
 ##### Input Code:[¶](#id143)
@@ -1962,8 +1852,6 @@ Copy
 FROM similar_table_ex
 WHERE column_name SIMILAR TO '%abc%';
 ```
-
-Copy
 
 ##### Results[¶](#id145)
 
@@ -1990,8 +1878,6 @@ Copy
 FROM similar_table_ex
 WHERE RLIKE (column_name, '.*abc.*', 's');
 ```
-
-Copy
 
 ##### Results[¶](#id147)
 
@@ -2021,8 +1907,6 @@ FROM similar_table_ex
 WHERE column_name SIMILAR TO 'a_c%';
 ```
 
-Copy
-
 ##### Results[¶](#id150)
 
 <!-- prettier-ignore -->
@@ -2046,8 +1930,6 @@ Copy
 FROM similar_table_ex
 WHERE RLIKE (column_name, 'a.c.*', 's');
 ```
-
-Copy
 
 ##### Results[¶](#id152)
 
@@ -2075,8 +1957,6 @@ FROM similar_table_ex
 WHERE column_name SIMILAR TO 'a|b%';
 ```
 
-Copy
-
 ##### Results[¶](#id155)
 
 <!-- prettier-ignore -->
@@ -2094,8 +1974,6 @@ Copy
 FROM similar_table_ex
 WHERE RLIKE (column_name, 'a|b.*', 's');
 ```
-
-Copy
 
 ##### Results[¶](#id157)
 
@@ -2117,8 +1995,6 @@ FROM similar_table_ex
 WHERE column_name SIMILAR TO 'abc{2,4}';
 ```
 
-Copy
-
 ##### Results[¶](#id160)
 
 <!-- prettier-ignore -->
@@ -2135,8 +2011,6 @@ Copy
 FROM similar_table_ex
 WHERE RLIKE (column_name, 'abc{2,4}', 's');
 ```
-
-Copy
 
 ##### Results[¶](#id162)
 
@@ -2157,8 +2031,6 @@ FROM similar_table_ex
 WHERE column_name SIMILAR TO 'abc+';
 ```
 
-Copy
-
 ##### Results[¶](#id165)
 
 <!-- prettier-ignore -->
@@ -2176,8 +2048,6 @@ Copy
 FROM similar_table_ex
 WHERE RLIKE (column_name, 'abc+', 's');
 ```
-
-Copy
 
 ##### Results[¶](#id167)
 
@@ -2198,8 +2068,6 @@ FROM similar_table_ex
 WHERE column_name SIMILAR TO 'abc*c';
 ```
 
-Copy
-
 ##### Results[¶](#id170)
 
 <!-- prettier-ignore -->
@@ -2217,8 +2085,6 @@ Copy
 FROM similar_table_ex
 WHERE RLIKE (column_name, 'abc*c', 's');
 ```
-
-Copy
 
 ##### Results[¶](#id172)
 
@@ -2238,8 +2104,6 @@ Copy
 FROM similar_table_ex
 WHERE column_name SIMILAR TO 'abc?c';
 ```
-
-Copy
 
 ##### Results[¶](#id175)
 
@@ -2261,8 +2125,6 @@ WHERE
 RLIKE( column_name, 'abc?c', 's');
 ```
 
-Copy
-
 ##### Results[¶](#id177)
 
 <!-- prettier-ignore -->
@@ -2281,8 +2143,6 @@ Copy
 FROM similar_table_ex
 WHERE column_name SIMILAR TO '(abc|xyz)%';
 ```
-
-Copy
 
 ##### Results[¶](#id180)
 
@@ -2308,8 +2168,6 @@ Copy
 FROM similar_table_ex
 WHERE RLIKE (column_name, '(abc|xyz).*', 's');
 ```
-
-Copy
 
 ##### Results[¶](#id182)
 
@@ -2337,8 +2195,6 @@ Copy
 FROM similar_table_ex
 WHERE column_name SIMILAR TO '[a-c]%';
 ```
-
-Copy
 
 ##### Results[¶](#id185)
 
@@ -2369,8 +2225,6 @@ Copy
 FROM similar_table_ex
 WHERE RLIKE (column_name, '[a-c].*', 's');
 ```
-
-Copy
 
 ##### Results[¶](#id187)
 
@@ -2413,8 +2267,6 @@ WHERE column_name SIMILAR TO '%abc^_%' ESCAPE '^';
 SELECT '$0.87' SIMILAR TO '$[0-9]+(.[0-9][0-9])?' r1;
 ```
 
-Copy
-
 ##### Results[¶](#id191)
 
 <!-- prettier-ignore -->
@@ -2443,8 +2295,6 @@ RLIKE( column_name, '.*abc\\_.*', 's');
 SELECT
 RLIKE( '$0.87', '\\$[0-9]+(\\.[0-9][0-9])?', 's') r1;
 ```
-
-Copy
 
 ##### Results[¶](#id193)
 
@@ -2479,8 +2329,6 @@ SELECT column_name
 FROM similar_table_ex, pattern
 WHERE column_name SIMILAR TO pattern.search_pattern;
 ```
-
-Copy
 
 ##### Results[¶](#id196)
 
@@ -2518,8 +2366,6 @@ RLIKE( column_name,
                     pattern.search_pattern, 's');
 ```
 
-Copy
-
 ##### Results[¶](#id198)
 
 <!-- prettier-ignore -->
@@ -2549,8 +2395,6 @@ col1 SIMILAR TO 'Hello%' as ci,
 col2 SIMILAR TO 'Hello%' as cs
 FROM collateTable;
 ```
-
-Copy
 
 ##### Results[¶](#id202)
 
@@ -2583,8 +2427,6 @@ col2, ''), 'Hello.*', 's') as cs
 FROM
 collateTable;
 ```
-
-Copy
 
 ##### Results[¶](#id204)
 
@@ -2625,8 +2467,6 @@ FROM table1
 WHERE col1 SIMILAR TO 'abc*c';
 ```
 
-Copy
-
 ##### Snowflake code[¶](#snowflake-code)
 
 ```
@@ -2644,8 +2484,6 @@ table1
 WHERE
 RLIKE( col1, 'abc*c', 's');
 ```
-
-Copy
 
 ##### Redshift Results[¶](#id206)
 
