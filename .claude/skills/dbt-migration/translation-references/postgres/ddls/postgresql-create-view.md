@@ -1,0 +1,210 @@
+---
+description: Translation from PostgreSQL to Snowflake
+source_url: https://docs.snowflake.com/en/migrations/snowconvert-docs/translation-references/postgres/ddls/postgresql-create-view
+title: SnowConvert AI - PostgreSQL - CREATE VIEW | Snowflake Documentation
+---
+
+## Applies to[¶](#applies-to)
+
+- PostgreSQL
+- Greenplum
+- Netezza
+
+## Description[¶](#description)
+
+This command creates a view in a database, which is run every time the view is referenced in a
+query.
+
+For more information, please refer to
+[`CREATE VIEW`](https://www.postgresql.org/docs/current/sql-createview.html) documentation.
+
+## Grammar Syntax[¶](#grammar-syntax)
+
+```
+CREATE [OR REPLACE] [TEMP | TEMPORARY] [RECURSIVE] VIEW <name> [ ( <column_name> [, ...] ) ]
+    [ WITH ( view_option_name [= view_option_value] [, ... ] ) ]
+    AS <query>
+    [ WITH [ CASCADED | LOCAL ] CHECK OPTION ]
+```
+
+Copy
+
+## Code Examples[¶](#code-examples)
+
+### [OR REPLACE] [TEMP | TEMPORARY] [RECURSIVE][¶](#or-replace-temp-temporary-recursive)
+
+Hint
+
+This syntax is fully supported in Snowflake.
+
+#### Input Code:[¶](#input-code)
+
+##### PostgreSQL[¶](#postgresql)
+
+```
+CREATE OR REPLACE VIEW view1 AS
+    SELECT
+        product_id,
+        SUM(quantity) AS sum_quantity
+    FROM
+        table1
+    GROUP BY
+        product_id;
+
+CREATE TEMPORARY RECURSIVE VIEW view2 AS
+    SELECT
+        product_id,
+        SUM(quantity) AS sum_quantity
+    FROM
+        table1
+    GROUP BY
+        product_id;
+```
+
+Copy
+
+#### Output Code:[¶](#output-code)
+
+##### Snowflake[¶](#snowflake)
+
+```
+CREATE OR REPLACE VIEW view1
+COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "postgresql",  "convertedOn": "05/14/2025",  "domain": "no-domain-provided" }}'
+AS
+    SELECT
+        product_id,
+        SUM(quantity) AS sum_quantity
+    FROM
+table1
+    GROUP BY
+        product_id;
+
+CREATE TEMPORARY RECURSIVE VIEW view2
+COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "postgresql",  "convertedOn": "05/14/2025",  "domain": "no-domain-provided" }}'
+AS
+    SELECT
+        product_id,
+        SUM(quantity) AS sum_quantity
+    FROM
+table1
+    GROUP BY
+        product_id;
+```
+
+Copy
+
+### WITH CHECK CLAUSE[¶](#with-check-clause)
+
+This WITH CHECK CLAUSE clause on a view enforces that any data inserted or updated through the view
+must satisfy the view’s defining conditions. LOCAL checks only the current view’s conditions, while
+CASCADED checks conditions of the view and all underlying views. It prevents creating rows that are
+invisible through the view and cannot be used with recursive views.
+
+Danger
+
+This syntax is not supported in Snowflake.
+
+#### Input Code:[¶](#id1)
+
+##### PostgreSQL[¶](#id2)
+
+```
+CREATE VIEW updatable_products AS
+    SELECT id, name, price
+    FROM products
+    WHERE price > 0
+WITH LOCAL CHECK OPTION;
+```
+
+Copy
+
+#### Output Code:[¶](#id3)
+
+##### Snowflake[¶](#id4)
+
+```
+CREATE VIEW updatable_products
+COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "postgresql",  "convertedOn": "05/14/2025",  "domain": "no-domain-provided" }}'
+AS
+    SELECT id, name, price
+    FROM
+products
+    WHERE price > 0;
+```
+
+Copy
+
+### WITH PARAMETERS OPTIONS[¶](#with-parameters-options)
+
+This WITH PARAMETERS OPTIONS allows setting optional properties for the view, such as how
+modifications through the view are checked (check_option) and whether to enforce row-level security
+(security_barrier).
+
+Danger
+
+This syntax is not supported in Snowflake.
+
+#### Input Code:[¶](#id5)
+
+##### PostgreSQL[¶](#id6)
+
+```
+CREATE VIEW large_orders WITH (security_barrier=true, check_option=local) AS
+    SELECT order_id, customer_id, total_amount
+    FROM orders
+    WHERE total_amount > 1000;
+```
+
+Copy
+
+#### Output Code:[¶](#id7)
+
+##### Snowflake[¶](#id8)
+
+```
+CREATE VIEW large_orders
+COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 0,  "minor": 0,  "patch": "0" }, "attributes": {  "component": "postgresql",  "convertedOn": "05/14/2025",  "domain": "no-domain-provided" }}'
+AS
+    SELECT order_id, customer_id, total_amount
+    FROM
+orders
+    WHERE total_amount > 1000;
+```
+
+Copy
+
+### VALUES OPTION[¶](#values-option)
+
+Hint
+
+This syntax is fully supported in Snowflake.
+
+#### Input Code:[¶](#id9)
+
+##### PostgreSQL[¶](#id10)
+
+```
+CREATE VIEW numbers_view (number_1) AS
+    VALUES (1,2), (2,2), (3,2), (4,2), (5,2);
+```
+
+Copy
+
+#### Output Code:[¶](#id11)
+
+##### Snowflake[¶](#id12)
+
+```
+CREATE VIEW numbers_view
+AS
+SELECT
+*
+FROM
+(
+        VALUES (1,2), (2,2), (3,2), (4,2), (5,2)
+) AS numbers_view (
+        number_1
+);
+```
+
+Copy
