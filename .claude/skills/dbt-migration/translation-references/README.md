@@ -42,3 +42,15 @@ When converting source database objects to dbt models:
 5. Implement appropriate incremental strategies
 
 See the main [dbt-migration skill](../SKILL.md) for complete conversion guidelines.
+
+---
+
+## Copyright Notice
+
+The translation reference documentation in this directory is derived from
+[Snowflake SnowConvert Documentation](https://docs.snowflake.com/en/migrations/snowconvert-docs)
+and is © Copyright Snowflake Inc. All rights reserved.
+
+This documentation is included for reference purposes to assist with database migration projects.
+For the most current and authoritative information, please refer to the
+[official Snowflake documentation](https://docs.snowflake.com).

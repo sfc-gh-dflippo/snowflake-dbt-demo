@@ -211,7 +211,11 @@ models:
 
 ## Translation References
 
-Detailed syntax translation guides are available in the `translation-references/` folder
+Detailed syntax translation guides are available in the `translation-references/` folder.
+
+> **Copyright Notice:** The translation reference documentation in this repository is derived from
+> [Snowflake SnowConvert Documentation](https://docs.snowflake.com/en/migrations/snowconvert-docs)
+> and is © Copyright Snowflake Inc. All rights reserved. Used for reference purposes only.
 
 ### Full Translation Reference Index
 
