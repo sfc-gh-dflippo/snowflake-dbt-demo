@@ -1,10 +1,10 @@
 ---
-name: dbt-migration-transact
+name: dbt-migration-ms-sql-server
 description:
-  Convert SQL Server/Azure Synapse T-SQL DDL to dbt models compatible with Snowflake. This skill
-  should be used when converting views, tables, or stored procedures from SQL Server to dbt code,
-  generating schema.yml files with tests and documentation, or migrating T-SQL to follow dbt best
-  practices.
+  Convert Microsoft SQL Server/Azure Synapse T-SQL DDL to dbt models compatible with Snowflake. This
+  skill should be used when converting views, tables, or stored procedures from SQL Server to dbt
+  code, generating schema.yml files with tests and documentation, or migrating T-SQL to follow dbt
+  best practices.
 ---
 
 # SQL Server / Azure Synapse to dbt Model Conversion
@@ -315,9 +315,9 @@ Detailed syntax translation guides are available in the `translation-references/
 <!-- prettier-ignore -->
 | Folder | Description |
 |---|---|
-| transact | [CONTINUE handler](translation-references/transact/transact-continue-handler.md) |
-| transact | [EXIT handler](translation-references/transact/transact-exit-handler.md) |
-| transact | [CREATE FUNCTION](translation-references/transact/transact-create-function.md) |
-| transact | [CREATE PROCEDURE](translation-references/transact/transact-create-procedure.md) |
-| transact | [CREATE PROCEDURE (Snow Script)](translation-references/transact/transact-create-procedure-snow-script.md) |
-| transact | [Subqueries](translation-references/transact/subqueries.md) |
+| ms-sql-server | [CONTINUE handler](translation-references/ms-sql-server/transact-continue-handler.md) |
+| ms-sql-server | [EXIT handler](translation-references/ms-sql-server/transact-exit-handler.md) |
+| ms-sql-server | [CREATE FUNCTION](translation-references/ms-sql-server/transact-create-function.md) |
+| ms-sql-server | [CREATE PROCEDURE](translation-references/ms-sql-server/transact-create-procedure.md) |
+| ms-sql-server | [CREATE PROCEDURE (Snow Script)](translation-references/ms-sql-server/transact-create-procedure-snow-script.md) |
+| ms-sql-server | [Subqueries](translation-references/ms-sql-server/subqueries.md) |
