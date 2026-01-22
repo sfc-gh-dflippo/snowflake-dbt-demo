@@ -56,6 +56,3 @@ select
     partitions_scanned
 from largest_queries
 order by 1, 2
-
-
-
