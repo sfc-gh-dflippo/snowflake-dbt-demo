@@ -9,19 +9,19 @@
 -- Complexity: Intermediate - Incremental loading, AI functions, efficiency optimization
 -- Features demonstrated: Incremental materialization, AI classification, performance optimization
 
-select 
+select
     nation_key,
     upper(trim(nation_name)) as nation_name,
     region_key,
     trim(nation_comment) as nation_comment,
-    
+
     -- Basic derived fields
     length(nation_name) as name_length,
     ai_classify(
-        nation_name, 
+        nation_name,
         ['FEDERAL', 'REPUBLIC', 'KINGDOM', 'EMPIRE', 'CONFEDERATION', 'UNION', 'FEDERATION', 'PRINCIPALITY', 'DUCHY', 'SULTANATE', 'EMIRATE', 'OTHER']
     ):labels[0] as government_type,
-    
+
     current_timestamp() as processed_at
 
 from {{ ref('stg_tpc_h__nations') }}

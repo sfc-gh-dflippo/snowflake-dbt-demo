@@ -14,9 +14,8 @@ models:
 
   - name: stg_tpc_h__nations
     description: >
-      Staging model for TPC-H nations table. 
-      Demonstrates basic staging best practices with one-to-one source relationship.
-      Simple column renaming and standardization only.
+      Staging model for TPC-H nations table.  Demonstrates basic staging best practices with
+      one-to-one source relationship. Simple column renaming and standardization only.
     columns:
       - name: nation_key
         description: "Primary key for nations table"
@@ -48,9 +47,8 @@ models:
 
   - name: stg_tpc_h__regions
     description: >
-      Staging model for TPC-H regions table.
-      Demonstrates basic staging best practices with minimal transformation.
-      Foundation for nation-region hierarchy.
+      Staging model for TPC-H regions table. Demonstrates basic staging best practices with minimal
+      transformation. Foundation for nation-region hierarchy.
     columns:
       - name: region_key
         description: "Primary key for regions table"
@@ -72,9 +70,8 @@ models:
 
   - name: stg_tpc_h__customers
     description: >
-      Staging model for TPC-H customers table.
-      Demonstrates staging best practices for tables with more columns.
-      Includes customer attributes and geographic relationships.
+      Staging model for TPC-H customers table. Demonstrates staging best practices for tables with
+      more columns. Includes customer attributes and geographic relationships.
     columns:
       - name: customer_key
         description: "Primary key for customers table"
@@ -111,7 +108,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['AUTOMOBILE', 'BUILDING', 'FURNITURE', 'HOUSEHOLD', 'MACHINERY']
+              values: ["AUTOMOBILE", "BUILDING", "FURNITURE", "HOUSEHOLD", "MACHINERY"]
       - name: customer_comment
         description: "Comments about the customer"
         data_type: varchar
@@ -123,9 +120,8 @@ models:
 
   - name: stg_tpc_h__orders
     description: >
-      Staging model for TPC-H orders table.
-      Demonstrates staging best practices for transactional data.
-      Includes order attributes and customer relationships.
+      Staging model for TPC-H orders table. Demonstrates staging best practices for transactional
+      data. Includes order attributes and customer relationships.
     columns:
       - name: order_key
         description: "Primary key for orders table"
@@ -146,7 +142,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['O', 'F', 'P']
+              values: ["O", "F", "P"]
       - name: total_price
         description: "Total price of the order"
         data_type: number
@@ -188,9 +184,8 @@ models:
 
   - name: stg_customers_with_tests
     description: >
-      Bronze layer customer data with quality checks and audit hooks.
-      Demonstrates intermediate staging with data quality patterns.
-      Includes quality flags and audit columns.
+      Bronze layer customer data with quality checks and audit hooks. Demonstrates intermediate
+      staging with data quality patterns. Includes quality flags and audit columns.
     columns:
       - name: c_custkey
         description: "Customer primary key"
@@ -207,7 +202,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['VALID', 'INVALID_NAME', 'NEGATIVE_BALANCE']
+              values: ["VALID", "INVALID_NAME", "NEGATIVE_BALANCE"]
       - name: extracted_at
         description: "Timestamp when data was extracted"
         tests:
@@ -215,9 +210,8 @@ models:
 
   - name: stg_tpc_h__lineitem
     description: >
-      Staging model for TPC-H lineitem table.
-      Demonstrates staging best practices for complex fact-like tables.
-      Features composite primary key and multiple foreign key relationships.
+      Staging model for TPC-H lineitem table. Demonstrates staging best practices for complex
+      fact-like tables. Features composite primary key and multiple foreign key relationships.
       Largest table in TPC-H schema with detailed transaction data.
     tests:
       - dbt_utils.unique_combination_of_columns:
@@ -286,14 +280,14 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['A', 'N', 'R']
+              values: ["A", "N", "R"]
       - name: line_status
         description: "Line item status"
         data_type: varchar
         tests:
           - not_null
           - accepted_values:
-              values: ['F', 'O']
+              values: ["F", "O"]
       - name: ship_date
         description: "Date item was shipped"
         data_type: date
@@ -326,10 +320,9 @@ models:
 
   - name: stg_economic_essentials__fx_rates
     description: >
-      Staging model for Economic Essentials FX rates.
-      Demonstrates staging best practices for external data sources.
-      Time-series financial data with different schema patterns.
-      Shows how to handle non-TPC-H data sources consistently.
+      Staging model for Economic Essentials FX rates. Demonstrates staging best practices for
+      external data sources. Time-series financial data with different schema patterns. Shows how to
+      handle non-TPC-H data sources consistently.
     tests:
       - dbt_utils.unique_combination_of_columns:
           combination_of_columns:
@@ -374,9 +367,8 @@ models:
 
   - name: stg_orders_incremental
     description: >
-      Advanced incremental staging model for TPC-H orders.
-      Demonstrates incremental materialization with complex business logic.
-      Features advanced Jinja templating and schema evolution handling.
+      Advanced incremental staging model for TPC-H orders. Demonstrates incremental materialization
+      with complex business logic. Features advanced Jinja templating and schema evolution handling.
     columns:
       - name: o_orderkey
         description: "Primary key for orders table"
@@ -397,7 +389,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['O', 'F', 'P']
+              values: ["O", "F", "P"]
       - name: o_totalprice
         description: "Total price of the order"
         data_type: number
@@ -416,7 +408,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['OPEN', 'FULFILLED', 'PARTIAL', 'UNKNOWN']
+              values: ["OPEN", "FULFILLED", "PARTIAL", "UNKNOWN"]
       - name: processed_at
         description: "Timestamp when record was processed"
         data_type: timestamp_ntz
@@ -430,9 +422,8 @@ models:
 
   - name: customer_cdc_stream
     description: >
-      CDC stream model for customer changes.
-      Demonstrates Change Data Capture patterns using Snowflake streams.
-      Advanced pattern for real-time data processing.
+      CDC stream model for customer changes. Demonstrates Change Data Capture patterns using
+      Snowflake streams. Advanced pattern for real-time data processing.
     columns:
       - name: customer_key
         description: "Customer identifier"
@@ -451,7 +442,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['INSERT', 'UPDATE', 'DELETE']
+              values: ["INSERT", "UPDATE", "DELETE"]
       - name: metadata$isupdate
         description: "Flag indicating if record is an update"
         data_type: boolean

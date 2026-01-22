@@ -38,4 +38,3 @@ select
 from {{ ref('dim_calendar_day') }} as cal_day
 inner join exch_rates as first_rate on cal_day.day_dt between first_rate.start_date and first_rate.end_date
 inner join exch_rates as second_rate on cal_day.day_dt between second_rate.start_date and second_rate.end_date
-

@@ -1,6 +1,6 @@
 /*
     dbt Feature Demonstration: MARTS MODEL - FACT TABLE
-    
+
     This model demonstrates:
     - ✅ Marts layer best practices (business-ready data)
     - ✅ Incremental materialization for large datasets
@@ -10,7 +10,7 @@
     - ✅ Business metrics calculation
     - ✅ References to staging models (proper layering)
     - ✅ Proper fact table structure with measures
-    
+
     Complexity: 🥇 RUN (Advanced)
     Layer: Gold - Facts
 */
@@ -30,7 +30,7 @@ with line_items as (
 ),
 
 orders as (
-    select 
+    select
         order_key,
         customer_key,
         order_date,
@@ -47,27 +47,27 @@ fact_order_lines as (
         -- Composite primary key
         line_items.order_key,
         line_items.line_number,
-        
+
         -- Foreign keys
         line_items.part_key,
         line_items.supplier_key,
         orders.customer_key,
-        
+
         -- Measures
         line_items.quantity,
         line_items.extended_price,
         line_items.discount,
         line_items.tax,
-        
+
         -- Calculated measures
         line_items.extended_price * (1 - line_items.discount) as discounted_price,
         line_items.extended_price * (1 - line_items.discount) * (1 + line_items.tax) as final_price,
-        
+
         -- FX conversion (business logic)
         coalesce(fx_rates.conversion_rate, 1.0) as eur_conversion_rate,
-        (line_items.extended_price * (1 - line_items.discount) * (1 + line_items.tax)) * 
+        (line_items.extended_price * (1 - line_items.discount) * (1 + line_items.tax)) *
         coalesce(fx_rates.conversion_rate, 1.0) as final_price_eur,
-        
+
         -- Attributes
         line_items.return_flag,
         line_items.line_status,
@@ -77,19 +77,19 @@ fact_order_lines as (
         line_items.ship_instruct,
         line_items.ship_mode,
         line_items.line_comment,
-        
+
         -- Order context
         orders.order_date,
         orders.order_status_desc,
-        
+
         -- Audit columns
         line_items._loaded_at,
         current_timestamp() as _updated_at
 
     from line_items
-    inner join orders 
+    inner join orders
         on line_items.order_key = orders.order_key
-    left join fx_rates 
+    left join fx_rates
         on fx_rates.from_currency = 'USD'
         and fx_rates.to_currency = 'EUR'
         and orders.order_date between fx_rates.day_dt and fx_rates.end_date

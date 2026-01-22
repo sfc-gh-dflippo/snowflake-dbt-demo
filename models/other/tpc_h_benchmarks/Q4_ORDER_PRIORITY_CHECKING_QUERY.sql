@@ -1,6 +1,6 @@
 /*
     dbt Feature Demonstration: TPC-H BENCHMARK QUERY Q4
-    
+
     This model demonstrates:
     - ✅ Official TPC-H Query 4 (Order Priority Checking)
     - ✅ EXISTS subqueries for complex filtering
@@ -9,11 +9,11 @@
     - ✅ Performance benchmarking patterns
     - ⚠️  INTENTIONAL direct source usage (TPC-H standard requires raw data)
     - ✅ GROUP BY with aggregations
-    
+
     Complexity: 🥇 RUN (Advanced)
     Layer: Bronze - Performance Benchmarking
-    
-    NOTE: This query intentionally uses source() directly to match official TPC-H 
+
+    NOTE: This query intentionally uses source() directly to match official TPC-H
     specifications for accurate performance benchmarking.
 
     The Order Priority Checking Query counts the number of orders ordered in a given quarter of a given year in which

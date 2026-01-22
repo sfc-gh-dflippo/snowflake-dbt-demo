@@ -149,7 +149,7 @@ sources:
             tests:
               - not_null
               - accepted_values:
-                  values: ['AUTOMOBILE', 'BUILDING', 'FURNITURE', 'HOUSEHOLD', 'MACHINERY']
+                  values: ["AUTOMOBILE", "BUILDING", "FURNITURE", "HOUSEHOLD", "MACHINERY"]
           - name: C_COMMENT
             description: "Customer comments"
 
@@ -172,7 +172,7 @@ sources:
             tests:
               - not_null
               - accepted_values:
-                  values: ['O', 'F', 'P']
+                  values: ["O", "F", "P"]
           - name: O_TOTALPRICE
             description: "Total order price"
             tests:
@@ -241,13 +241,13 @@ sources:
             tests:
               - not_null
               - accepted_values:
-                  values: ['A', 'N', 'R']
+                  values: ["A", "N", "R"]
           - name: L_LINESTATUS
             description: "Line status"
             tests:
               - not_null
               - accepted_values:
-                  values: ['F', 'O']
+                  values: ["F", "O"]
           - name: L_SHIPDATE
             description: "Ship date"
             tests:
@@ -372,3 +372,87 @@ sources:
               combination_of_columns:
                 - PS_PARTKEY
                 - PS_SUPPKEY
+
+  # =============================================================================
+  # STAGING SCHEMA - ETL Source Data for SQL Server Migration
+  # =============================================================================
+  - name: STAGING
+    description: "Staging schema containing source data from SQL Server ETL migration"
+    database: "{{ target.database }}"
+    schema: STAGING
+    tables:
+      - name: CUSTOMER
+        description: "Customer source data for dimension load (SCD Type 2)"
+        columns:
+          - name: CUSTOMERID
+            description: "Customer business key from source system"
+            tests:
+              - not_null
+              - unique
+          - name: CUSTOMERNAME
+            description: "Customer name (SCD Type 2 tracked)"
+            tests:
+              - not_null
+          - name: CUSTOMERSEGMENT
+            description: "Customer market segment (SCD Type 2 tracked)"
+          - name: REGION
+            description: "Customer region (SCD Type 2 tracked)"
+          - name: COUNTRY
+            description: "Customer country (SCD Type 2 tracked)"
+          - name: EMAIL
+            description: "Customer email (SCD Type 1 overwrite)"
+          - name: PHONE
+            description: "Customer phone (SCD Type 1 overwrite)"
+
+      - name: SALESORDER
+        description: "Sales order transactional data for fact table load"
+        columns:
+          - name: SOURCEORDERID
+            description: "Source system order identifier"
+            tests:
+              - not_null
+          - name: ORDERNUMBER
+            description: "Order number (degenerate dimension)"
+            tests:
+              - not_null
+          - name: ORDERLINENUMBER
+            description: "Order line number (part of composite key)"
+            tests:
+              - not_null
+          - name: ORDERDATE
+            description: "Order date for date dimension lookup"
+            tests:
+              - not_null
+          - name: SHIPDATE
+            description: "Ship date for date dimension lookup"
+          - name: CUSTOMERID
+            description: "Customer business key for dimension lookup"
+            tests:
+              - not_null
+          - name: PRODUCTID
+            description: "Product business key for dimension lookup"
+            tests:
+              - not_null
+          - name: STOREID
+            description: "Store business key for dimension lookup"
+          - name: QUANTITY
+            description: "Quantity ordered"
+            tests:
+              - not_null
+          - name: UNITPRICE
+            description: "Unit price"
+            tests:
+              - not_null
+          - name: UNITCOST
+            description: "Unit cost"
+            tests:
+              - not_null
+          - name: DISCOUNTAMOUNT
+            description: "Discount amount applied"
+          - name: BATCHID
+            description: "ETL batch identifier"
+        tests:
+          - dbt_utils.unique_combination_of_columns:
+              combination_of_columns:
+                - SOURCEORDERID
+                - ORDERLINENUMBER

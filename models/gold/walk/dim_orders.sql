@@ -14,7 +14,7 @@ with orders_base as (
 ),
 
 customers as (
-    select 
+    select
         customer_key,
         customer_name,
         nation_key,
@@ -26,10 +26,10 @@ enriched_orders as (
     select
         -- Primary key
         orders_base.order_key,
-        
+
         -- Foreign keys
         orders_base.customer_key,
-        
+
         -- Order attributes
         orders_base.order_status,
         orders_base.total_price,
@@ -38,31 +38,31 @@ enriched_orders as (
         orders_base.clerk,
         orders_base.ship_priority,
         orders_base.order_comment,
-        
+
         -- Customer attributes (denormalized for performance)
         customers.customer_name,
         customers.nation_key,
         customers.value_segment,
-        
+
         -- Business logic
-        case 
+        case
             when orders_base.order_status = 'O' then 'Open'
             when orders_base.order_status = 'F' then 'Fulfilled'
             when orders_base.order_status = 'P' then 'Partial'
             else 'Unknown'
         end as order_status_desc,
-        
+
         -- Date dimensions
         extract(year from orders_base.order_date) as order_year,
         extract(quarter from orders_base.order_date) as order_quarter,
         extract(month from orders_base.order_date) as order_month,
-        
+
         -- Audit columns
         orders_base._loaded_at,
         current_timestamp() as _updated_at
 
     from orders_base
-    left join customers 
+    left join customers
         on orders_base.customer_key = customers.customer_key
 )
 

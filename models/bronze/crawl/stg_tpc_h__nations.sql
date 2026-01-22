@@ -1,6 +1,6 @@
 /*
     dbt Feature Demonstration: BASIC STAGING MODEL
-    
+
     This model demonstrates:
     - ✅ Staging layer best practices (1:1 with source)
     - ✅ Ephemeral materialization (inherited from dbt_project.yml)
@@ -8,7 +8,7 @@
     - ✅ Source function usage
     - ✅ CTE pattern for readability
     - ✅ Audit column addition
-    
+
     Complexity: 🥉 CRAWL (Beginner)
     Layer: Bronze - Basic Staging
 */
@@ -28,14 +28,14 @@ renamed as (
     select
         -- Primary key
         n_nationkey as nation_key,
-        
+
         -- Foreign keys
         n_regionkey as region_key,
-        
+
         -- Attributes
         n_name as nation_name,
         n_comment as nation_comment,
-        
+
         -- Audit columns
         current_timestamp() as _loaded_at
 

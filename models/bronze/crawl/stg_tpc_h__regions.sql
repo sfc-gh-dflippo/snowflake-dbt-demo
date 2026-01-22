@@ -13,11 +13,11 @@ renamed as (
     select
         -- Primary key
         r_regionkey as region_key,
-        
+
         -- Attributes
         r_name as region_name,
         r_comment as region_comment,
-        
+
         -- Audit columns
         current_timestamp() as _loaded_at
 

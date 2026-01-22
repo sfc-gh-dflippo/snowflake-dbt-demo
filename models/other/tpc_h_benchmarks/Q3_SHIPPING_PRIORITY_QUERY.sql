@@ -1,6 +1,6 @@
 /*
     dbt Feature Demonstration: TPC-H BENCHMARK QUERY Q3
-    
+
     This model demonstrates:
     - ✅ Official TPC-H Query 3 (Shipping Priority)
     - ✅ Complex CTEs and multi-step logic
@@ -9,11 +9,11 @@
     - ✅ Performance benchmarking patterns
     - ⚠️  INTENTIONAL direct source usage (TPC-H standard requires raw data)
     - ✅ TOP N queries with LIMIT
-    
+
     Complexity: 🥇 RUN (Advanced)
     Layer: Bronze - Performance Benchmarking
-    
-    NOTE: This query intentionally uses source() directly to match official TPC-H 
+
+    NOTE: This query intentionally uses source() directly to match official TPC-H
     specifications for accurate performance benchmarking.
 
     The Shipping Priority Query retrieves the shipping priority and potential revenue, defined as the sum of

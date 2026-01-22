@@ -1,7 +1,9 @@
-from typing import Optional
-from joblib import Parallel, delayed
-import snowflake.snowpark as snowpark
 import time
+from typing import Optional
+
+import snowflake.snowpark as snowpark
+from joblib import Parallel, delayed
+
 
 class BulkQueryWriter:
     def __init__(self, session: snowpark.Session):
@@ -24,15 +26,12 @@ class BulkQueryWriter:
             session: snowpark.Session,
             sql_statements_query: str,
             thread_number: int,
-            total_number_of_threads: int
+            total_number_of_threads: int,
         ) -> Optional[snowpark.DataFrame]:
             session.query_tag = f"Thread {thread_number} of {total_number_of_threads}"
             all_results = []
             sql_statements = (
-                session.sql(sql_statements_query)
-                .to_pandas()
-                .iloc[:, 0]
-                .sort_values()
+                session.sql(sql_statements_query).to_pandas().iloc[:, 0].sort_values()
             )
             for index, sql_statement in enumerate(sql_statements):
                 if thread_number == (index % total_number_of_threads):
@@ -53,7 +52,7 @@ class BulkQueryWriter:
             stage_location=None,
             packages=["snowflake-snowpark-python"],
             execute_as="CALLER",
-            comment="Temporary stored procedure for running multiple queries in parallel."
+            comment="Temporary stored procedure for running multiple queries in parallel.",
         )
 
     def run(
@@ -63,7 +62,7 @@ class BulkQueryWriter:
         write_mode: str = "overwrite",
         table_type: str = "transient",
         commit_interval: int = 100000,
-        parallel_query_limit: int = 8
+        parallel_query_limit: int = 8,
     ) -> str:
         """
         Executes a set of SQL statements in parallel and writes their results to a Snowflake table.
@@ -114,9 +113,7 @@ class BulkQueryWriter:
             # Use joblib for local parallel execution if the number of statements is small
             if len(all_sql_statements) < (parallel_query_limit * 5):
                 res = Parallel(
-                    n_jobs=-1,
-                    require='sharedmem',
-                    return_as="generator_unordered"
+                    n_jobs=-1, require="sharedmem", return_as="generator_unordered"
                 )(
                     delayed(get_query_result)(self.session, sql_statement)
                     for sql_statement in all_sql_statements
@@ -126,10 +123,12 @@ class BulkQueryWriter:
                         all_results.extend(query_results)
                         if len(all_results) >= commit_interval:
                             num_results_found += len(all_results)
-                            self.session.createDataFrame(data=all_results).write.save_as_table(
+                            self.session.createDataFrame(
+                                data=all_results
+                            ).write.save_as_table(
                                 table_name=output_table_name,
                                 mode=write_mode,
-                                table_type=table_type
+                                table_type=table_type,
                             )
                             all_results = []
                             write_mode = "append"
@@ -139,7 +138,7 @@ class BulkQueryWriter:
                     self.session.createDataFrame(data=all_results).write.save_as_table(
                         table_name=output_table_name,
                         mode=write_mode,
-                        table_type=table_type
+                        table_type=table_type,
                     )
             else:
                 # Use the registered stored procedure for distributed parallel execution
@@ -147,7 +146,7 @@ class BulkQueryWriter:
                 for thread_number in range(parallel_query_limit):
                     async_job = self.session.sql(
                         "CALL bulk_thread_runner(?, ?, ?)",
-                        [sql_statements_query, thread_number, parallel_query_limit]
+                        [sql_statements_query, thread_number, parallel_query_limit],
                     ).collect_nowait()
                     running_processes.append(async_job)
                 # Monitor and collect results from async jobs
@@ -164,10 +163,12 @@ class BulkQueryWriter:
                                 pass
                             if len(all_results) >= commit_interval:
                                 num_results_found += len(all_results)
-                                self.session.createDataFrame(data=all_results).write.save_as_table(
+                                self.session.createDataFrame(
+                                    data=all_results
+                                ).write.save_as_table(
                                     table_name=output_table_name,
                                     mode=write_mode,
-                                    table_type=table_type
+                                    table_type=table_type,
                                 )
                                 all_results = []
                                 write_mode = "append"
@@ -179,9 +180,10 @@ class BulkQueryWriter:
                     self.session.createDataFrame(data=all_results).write.save_as_table(
                         table_name=output_table_name,
                         mode=write_mode,
-                        table_type=table_type
+                        table_type=table_type,
                     )
         return f"Number of records written: {num_results_found}"
+
 
 def model(dbt, session):
     """
@@ -205,7 +207,7 @@ def model(dbt, session):
         write_mode="overwrite",
         table_type="temporary",
         commit_interval=100000,
-        parallel_query_limit=8
+        parallel_query_limit=8,
     )
 
     return session.table("temp_output_table")

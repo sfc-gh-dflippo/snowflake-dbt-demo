@@ -1,6 +1,6 @@
 /*
     dbt Feature Demonstration: TPC-H BENCHMARK QUERY Q2
-    
+
     This model demonstrates:
     - ✅ Official TPC-H Query 2 (Minimum Cost Supplier)
     - ✅ Complex multi-table joins and subqueries
@@ -9,11 +9,11 @@
     - ✅ Performance benchmarking patterns
     - ⚠️  INTENTIONAL direct source usage (TPC-H standard requires raw data)
     - ✅ Complex WHERE clause conditions
-    
+
     Complexity: 🥇 RUN (Advanced)
     Layer: Bronze - Performance Benchmarking
-    
-    NOTE: This query intentionally uses source() directly to match official TPC-H 
+
+    NOTE: This query intentionally uses source() directly to match official TPC-H
     specifications for accurate performance benchmarking.
 
     The Minimum Cost Supplier Query finds, in a given region, for each part of a certain type and size, the supplier who

@@ -10,7 +10,7 @@
 -- Complexity: Advanced - Incremental materialization, complex Jinja, error handling
 -- Features demonstrated: incremental loading, Jinja conditionals, schema evolution
 
-select 
+select
     o_orderkey,
     o_custkey,
     o_orderstatus,
@@ -20,28 +20,28 @@ select
     o_clerk,
     o_shippriority,
     o_comment,
-    
+
     -- Advanced transformations
-    case 
+    case
         when o_orderstatus = 'O' then 'OPEN'
-        when o_orderstatus = 'F' then 'FULFILLED' 
+        when o_orderstatus = 'F' then 'FULFILLED'
         when o_orderstatus = 'P' then 'PARTIAL'
         else 'UNKNOWN'
     end as order_status_desc,
-    
+
     -- Date calculations
     date_trunc('month', o_orderdate) as order_month,
     extract(year from o_orderdate) as order_year,
     extract(quarter from o_orderdate) as order_quarter,
-    
+
     -- Audit fields
     current_timestamp() as processed_at,
-    
+
     {% if is_incremental() %}
         -- Only process recent records in incremental runs
-        case when o_orderdate >= dateadd(day, -{{ var('prune_days') }}, current_date()) 
-             then 'RECENT' 
-             else 'HISTORICAL' 
+        case when o_orderdate >= dateadd(day, -{{ var('prune_days') }}, current_date())
+             then 'RECENT'
+             else 'HISTORICAL'
         end as processing_type
     {% else %}
         'FULL_LOAD' as processing_type

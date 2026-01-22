@@ -14,9 +14,8 @@ models:
 
   - name: dim_current_year_orders
     description: >
-      Simple dimension showing orders from the current year.
-      Demonstrates basic filtering and date-based subsetting.
-      Provides focused view for current year analysis.
+      Simple dimension showing orders from the current year. Demonstrates basic filtering and
+      date-based subsetting. Provides focused view for current year analysis.
     columns:
       - name: order_key
         description: "Primary key for order"
@@ -49,9 +48,9 @@ models:
 
   - name: nation_summary
     description: >
-      Summary of nations with enhanced attributes from AI classification.
-      Demonstrates basic business reporting with cleaned and enriched data.
-      Simple aggregation and categorization for business users.
+      Summary of nations with enhanced attributes from AI classification. Demonstrates basic
+      business reporting with cleaned and enriched data. Simple aggregation and categorization for
+      business users.
     columns:
       - name: NATION_NAME
         description: "Name of the nation"
@@ -79,7 +78,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['SHORT', 'MEDIUM', 'LONG']
+              values: ["SHORT", "MEDIUM", "LONG"]
       - name: DISPLAY_NAME
         description: "Formatted display name"
         data_type: varchar
@@ -93,9 +92,8 @@ models:
 
   - name: customer_insights
     description: >
-      Customer analytics and insights for business intelligence.
-      Demonstrates business-friendly column naming with quoted identifiers.
-      Comprehensive customer segmentation and risk analysis.
+      Customer analytics and insights for business intelligence. Demonstrates business-friendly
+      column naming with quoted identifiers. Comprehensive customer segmentation and risk analysis.
     columns:
       - name: CUSTOMER_KEY
         description: "Customer identifier"
@@ -167,14 +165,20 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['VIP Customer', 'High Value Customer', 'Above Average Customer', 'Standard Customer']
+              values:
+                [
+                  "VIP Customer",
+                  "High Value Customer",
+                  "Above Average Customer",
+                  "Standard Customer",
+                ]
       - name: RISK_CATEGORY
         description: "Risk assessment category"
         data_type: varchar
         tests:
           - not_null
           - accepted_values:
-              values: ['Credit Risk', 'Retention Risk', 'Performance Risk', 'Low Risk']
+              values: ["Credit Risk", "Retention Risk", "Performance Risk", "Low Risk"]
       - name: LAST_UPDATED
         description: "Timestamp when data was last processed"
         data_type: timestamp_ltz
@@ -183,9 +187,8 @@ models:
 
   - name: dim_current_year_open_orders
     description: >
-      Simple dimension showing open orders from the current year.
-      Demonstrates filtering by both date and status.
-      Focused view for operational monitoring.
+      Simple dimension showing open orders from the current year. Demonstrates filtering by both
+      date and status. Focused view for operational monitoring.
     columns:
       - name: order_key
         description: "Primary key for order"
@@ -204,7 +207,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['O']
+              values: ["O"]
       - name: total_price
         description: "Total order value"
         data_type: number
@@ -227,10 +230,10 @@ models:
 
   - name: dim_customers
     description: >
-      Customer dimension table following dimensional modeling best practices.
-      Enriched with business attributes, geographic context, and customer segmentation.
-      Demonstrates proper mart layer construction with multiple source integration.
-      Includes customer behavior flags and value-based segmentation.
+      Customer dimension table following dimensional modeling best practices. Enriched with business
+      attributes, geographic context, and customer segmentation. Demonstrates proper mart layer
+      construction with multiple source integration. Includes customer behavior flags and
+      value-based segmentation.
     tests:
       - dbt_utils.expression_is_true:
           expression: "total_orders >= open_orders"
@@ -264,7 +267,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['AUTOMOBILE', 'BUILDING', 'FURNITURE', 'HOUSEHOLD', 'MACHINERY']
+              values: ["AUTOMOBILE", "BUILDING", "FURNITURE", "HOUSEHOLD", "MACHINERY"]
       - name: customer_comment
         description: "Comments about the customer"
         data_type: varchar
@@ -306,21 +309,21 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['Y', 'N']
+              values: ["Y", "N"]
       - name: has_open_orders_flag
         description: "Flag indicating if customer has open orders"
         data_type: varchar
         tests:
           - not_null
           - accepted_values:
-              values: ['Y', 'N']
+              values: ["Y", "N"]
       - name: value_segment
         description: "Customer value segmentation based on account balance"
         data_type: varchar
         tests:
           - not_null
           - accepted_values:
-              values: ['High Value', 'Medium Value', 'Standard']
+              values: ["High Value", "Medium Value", "Standard"]
       - name: _loaded_at
         description: "Source data load timestamp"
         data_type: timestamp_ntz
@@ -334,10 +337,9 @@ models:
 
   - name: dim_orders
     description: >
-      Orders dimension table with enriched business attributes.
-      Demonstrates dimension design with denormalized customer context.
-      Includes date partitioning attributes and business-friendly status descriptions.
-      Shows proper foreign key relationships and data quality constraints.
+      Orders dimension table with enriched business attributes. Demonstrates dimension design with
+      denormalized customer context. Includes date partitioning attributes and business-friendly
+      status descriptions. Shows proper foreign key relationships and data quality constraints.
     columns:
       - name: order_key
         description: "Primary key for order dimension"
@@ -359,14 +361,14 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['O', 'F', 'P']
+              values: ["O", "F", "P"]
       - name: order_status_desc
         description: "Business-friendly order status description"
         data_type: varchar
         tests:
           - not_null
           - accepted_values:
-              values: ['Open', 'Fulfilled', 'Partial', 'Unknown']
+              values: ["Open", "Fulfilled", "Partial", "Unknown"]
       - name: total_price
         description: "Total order value"
         data_type: number
@@ -446,9 +448,8 @@ models:
 
   - name: dim_customer_changes
     description: >
-      Customer change tracking model.
-      Demonstrates change data capture patterns.
-      Shows how to track customer attribute changes over time.
+      Customer change tracking model. Demonstrates change data capture patterns. Shows how to track
+      customer attribute changes over time.
     columns:
       - name: customer_key
         description: "Customer identifier"
@@ -469,7 +470,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['INSERT', 'UPDATE', 'DELETE']
+              values: ["INSERT", "UPDATE", "DELETE"]
       - name: _updated_at
         description: "Change timestamp"
         data_type: timestamp_ntz
@@ -478,8 +479,7 @@ models:
 
   - name: dim_calendar_day
     description: >
-      Calendar dimension with business date attributes.
-      Demonstrates date dimension design patterns.
+      Calendar dimension with business date attributes. Demonstrates date dimension design patterns.
       Provides comprehensive date-based analytics support.
     columns:
       - name: day_key
@@ -517,8 +517,7 @@ models:
 
   - name: DIM_CUSTOMERS_SHARE
     description: >
-      Secure view of customer data for sharing.
-      Demonstrates data privacy and security patterns.
+      Secure view of customer data for sharing. Demonstrates data privacy and security patterns.
       Limited customer attributes for external sharing.
     columns:
       - name: customer_key
@@ -540,13 +539,13 @@ models:
         data_type: varchar
         tests:
           - accepted_values:
-              values: ['Y', 'N']
+              values: ["Y", "N"]
       - name: has_open_orders_flag
         description: "Flag indicating if customer has open orders"
         data_type: varchar
         tests:
           - accepted_values:
-              values: ['Y', 'N']
+              values: ["Y", "N"]
 
   # =============================================================================
   # GOLD RUN - Advanced Marts
@@ -555,12 +554,132 @@ models:
   # Best Practice: Scalable fact design with comprehensive business metrics
   # =============================================================================
 
+  - name: fct_order_lines_by_supplier_month
+    description: >
+      Aggregated fact table showing order line metrics rolled up by supplier, year, and month.
+      Demonstrates pre-aggregated reporting table for analytical efficiency. Includes comprehensive
+      business metrics with averages and totals. Optimized for time-series analysis and supplier
+      performance reporting.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - supplier_key
+            - order_year
+            - order_month
+    columns:
+      - name: supplier_key
+        description: "Foreign key to suppliers dimension (part of composite PK)"
+        data_type: number
+        tests:
+          - not_null
+      - name: order_year
+        description: "Year of order date (part of composite PK)"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 1990 AND <= 2100"
+      - name: order_month
+        description: "Month of order date (part of composite PK)"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 1 AND <= 12"
+      - name: month_start_date
+        description: "First day of the month for easy date filtering"
+        data_type: date
+        tests:
+          - not_null
+      - name: total_order_lines
+        description: "Total number of order lines for this supplier/month"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: "> 0"
+      - name: total_orders
+        description: "Distinct count of orders for this supplier/month"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: "> 0"
+      - name: total_quantity
+        description: "Sum of all quantities shipped"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+      - name: total_extended_price
+        description: "Sum of extended prices before discounts"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+      - name: total_discounted_price
+        description: "Sum of prices after discount"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+      - name: total_final_price
+        description: "Sum of final prices including tax"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+      - name: total_final_price_eur
+        description: "Sum of final prices in EUR"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+      - name: avg_quantity_per_line
+        description: "Average quantity per order line"
+        data_type: number
+        tests:
+          - not_null
+      - name: avg_final_price_per_line
+        description: "Average final price per order line"
+        data_type: number
+        tests:
+          - not_null
+      - name: avg_discount_rate
+        description: "Average discount rate applied"
+        data_type: number
+        tests:
+          - not_null
+      - name: earliest_ship_date
+        description: "Earliest ship date in the month"
+        data_type: date
+      - name: latest_ship_date
+        description: "Latest ship date in the month"
+        data_type: date
+      - name: avg_lines_per_order
+        description: "Average number of lines per order"
+        data_type: number
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: "> 0"
+      - name: _updated_at
+        description: "Timestamp when aggregation was last updated"
+        data_type: timestamp_ntz
+        tests:
+          - not_null
+
   - name: fct_order_lines
     description: >
-      Order lines fact table representing the atomic grain of business transactions.
-      Demonstrates advanced fact table design with incremental loading strategy.
-      Includes all business measures, foreign exchange calculations, and audit trails.
-      Optimized for analytical queries with proper indexing and partitioning strategy.
+      Order lines fact table representing the atomic grain of business transactions. Demonstrates
+      advanced fact table design with incremental loading strategy. Includes all business measures,
+      foreign exchange calculations, and audit trails. Optimized for analytical queries with proper
+      indexing and partitioning strategy.
     tests:
       - dbt_utils.unique_combination_of_columns:
           combination_of_columns:
@@ -670,14 +789,14 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['A', 'N', 'R']
+              values: ["A", "N", "R"]
       - name: line_status
         description: "Line item status"
         data_type: varchar
         tests:
           - not_null
           - accepted_values:
-              values: ['F', 'O']
+              values: ["F", "O"]
       - name: ship_date
         description: "Date item was shipped"
         data_type: date
@@ -725,9 +844,9 @@ models:
 
   - name: executive_dashboard
     description: >
-      Executive-level KPI dashboard model.
-      Demonstrates advanced aggregation and business intelligence patterns.
-      Provides high-level metrics for executive reporting and decision making.
+      Executive-level KPI dashboard model. Demonstrates advanced aggregation and business
+      intelligence patterns. Provides high-level metrics for executive reporting and decision
+      making.
     columns:
       - name: metric_date
         description: "Date for the metrics"
@@ -764,9 +883,9 @@ models:
 
   - name: fact_order_line_full_reload
     description: >
-      Full reload fact table demonstrating complete refresh patterns.
-      Shows alternative loading strategy for smaller fact tables.
-      Includes comprehensive business measures and foreign key relationships.
+      Full reload fact table demonstrating complete refresh patterns. Shows alternative loading
+      strategy for smaller fact tables. Includes comprehensive business measures and foreign key
+      relationships.
     columns:
       - name: l_order_wid
         description: "Foreign key to orders dimension"
@@ -788,9 +907,8 @@ models:
 
   - name: fact_order_line_pivot
     description: >
-      Pivoted fact table demonstrating advanced SQL patterns.
-      Shows dynamic pivot generation using dbt macros.
-      Provides year-over-year analysis structure.
+      Pivoted fact table demonstrating advanced SQL patterns. Shows dynamic pivot generation using
+      dbt macros. Provides year-over-year analysis structure.
     columns:
       - name: supplier_key
         description: "Supplier identifier"
@@ -805,7 +923,8 @@ models:
 
   # Legacy models (to be deprecated)
   - name: DIM__CUSTOMERS
-    description: "Legacy customer dimension with SCD patterns (deprecated - use dim_customers instead)"
+    description:
+      "Legacy customer dimension with SCD patterns (deprecated - use dim_customers instead)"
 
   - name: DIM__ORDERS
     description: "Legacy orders dimension with SCD patterns (deprecated - use dim_orders instead)"

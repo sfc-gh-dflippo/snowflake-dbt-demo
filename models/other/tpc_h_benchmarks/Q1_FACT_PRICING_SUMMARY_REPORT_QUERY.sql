@@ -1,6 +1,6 @@
 /*
     dbt Feature Demonstration: TPC-H BENCHMARK QUERY
-    
+
     This model demonstrates:
     - ✅ Official TPC-H Query 1 (Pricing Summary Report)
     - ✅ Advanced Jinja templating with random values
@@ -8,12 +8,12 @@
     - ✅ Performance benchmarking patterns
     - ⚠️  INTENTIONAL direct source usage (TPC-H standard requires raw data)
     - ✅ Date arithmetic and filtering
-    
+
     Complexity: 🥇 RUN (Advanced)
     Layer: Bronze - Performance Benchmarking
-    
-    NOTE: This query intentionally uses source() directly to match official TPC-H 
-    specifications for accurate performance benchmarking. This is an exception to 
+
+    NOTE: This query intentionally uses source() directly to match official TPC-H
+    specifications for accurate performance benchmarking. This is an exception to
     the staging layer best practice.
 
     The Pricing Summary Report Query provides a summary pricing report for all lineitems shipped as of a given date.

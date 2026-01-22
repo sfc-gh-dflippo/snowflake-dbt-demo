@@ -14,7 +14,7 @@ renamed as (
     select
         -- Primary key
         c_custkey as customer_key,
-        
+
         -- Attributes
         c_name as customer_name,
         c_address as customer_address,
@@ -23,7 +23,7 @@ renamed as (
         c_acctbal as account_balance,
         c_mktsegment as market_segment,
         c_comment as customer_comment,
-        
+
         -- Audit columns
         current_timestamp() as _loaded_at
 

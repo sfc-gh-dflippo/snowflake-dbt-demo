@@ -1,6 +1,6 @@
 /*
     dbt Feature Demonstration: INTERMEDIATE MODEL - BUSINESS LOGIC
-    
+
     This model demonstrates:
     - ✅ Intermediate layer best practices (business logic isolation)
     - ✅ Ephemeral materialization for reusable components
@@ -9,7 +9,7 @@
     - ✅ Model aliasing for backward compatibility
     - ✅ References to staging models only (no direct sources)
     - ✅ CTE pattern for complex transformations
-    
+
     Complexity: 🥈 WALK (Intermediate)
     Layer: Silver - Business Logic
 */
@@ -29,9 +29,9 @@ with customer_orders as (
         customer_key,
         count(*) as order_count,
         sum(
-            case 
-                when order_status = 'O' then 1 
-                else 0 
+            case
+                when order_status = 'O' then 1
+                else 0
             end
         ) as open_order_count
     from {{ ref('stg_tpc_h__orders') }}

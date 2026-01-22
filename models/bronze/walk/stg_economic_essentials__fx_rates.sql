@@ -15,10 +15,10 @@ renamed as (
         DATE as rate_date,
         BASE_CURRENCY_ID as base_currency,
         QUOTE_CURRENCY_ID as quote_currency,
-        
+
         -- Attributes
         VALUE as exchange_rate,
-        
+
         -- Audit columns
         current_timestamp() as _loaded_at
 

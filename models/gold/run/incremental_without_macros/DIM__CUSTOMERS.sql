@@ -1,6 +1,6 @@
 /*
     dbt Feature Demonstration: INCREMENTAL MODEL WITHOUT MACROS
-    
+
     This model demonstrates:
     - ✅ Incremental materialization with SCD Type 2
     - ✅ Manual SCD implementation (no custom macros)
@@ -9,7 +9,7 @@
     - ✅ Hash-based change detection
     - ✅ Post-hooks for ghost key insertion
     - ✅ Merge exclude columns for performance
-    
+
     Complexity: 🥇 RUN (Advanced)
     Layer: Gold - Advanced Incremental Patterns
 */

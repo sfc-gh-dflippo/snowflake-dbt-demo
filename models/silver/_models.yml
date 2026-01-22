@@ -14,10 +14,9 @@ models:
 
   - name: clean_nations
     description: >
-      Incremental data cleaning model with AI classification.
-      Demonstrates incremental materialization to optimize AI function calls.
-      Features AI-powered government type classification that runs only once per nation.
-      Optimized for performance and cost efficiency.
+      Incremental data cleaning model with AI classification. Demonstrates incremental
+      materialization to optimize AI function calls. Features AI-powered government type
+      classification that runs only once per nation. Optimized for performance and cost efficiency.
     columns:
       - name: nation_key
         description: "Primary key for nations table"
@@ -52,7 +51,21 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['FEDERAL', 'REPUBLIC', 'KINGDOM', 'EMPIRE', 'CONFEDERATION', 'UNION', 'FEDERATION', 'PRINCIPALITY', 'DUCHY', 'SULTANATE', 'EMIRATE', 'OTHER']
+              values:
+                [
+                  "FEDERAL",
+                  "REPUBLIC",
+                  "KINGDOM",
+                  "EMPIRE",
+                  "CONFEDERATION",
+                  "UNION",
+                  "FEDERATION",
+                  "PRINCIPALITY",
+                  "DUCHY",
+                  "SULTANATE",
+                  "EMIRATE",
+                  "OTHER",
+                ]
       - name: processed_at
         description: "Timestamp when record was processed"
         data_type: timestamp_ntz
@@ -68,10 +81,9 @@ models:
 
   - name: int_customers__with_orders
     description: >
-      Intermediate model calculating customer order statistics.
-      Demonstrates intermediate layer best practices with business logic.
-      Ephemeral materialization for reusability across multiple marts.
-      Aggregates order data to provide customer-level metrics.
+      Intermediate model calculating customer order statistics. Demonstrates intermediate layer best
+      practices with business logic. Ephemeral materialization for reusability across multiple
+      marts. Aggregates order data to provide customer-level metrics.
     columns:
       - name: customer_key
         description: "Customer identifier (primary key from staging)"
@@ -98,9 +110,9 @@ models:
 
   - name: customer_segments
     description: >
-      Customer segmentation model with advanced business logic.
-      Demonstrates window functions and percentile calculations.
-      Creates customer segments based on account balance and order patterns.
+      Customer segmentation model with advanced business logic. Demonstrates window functions and
+      percentile calculations. Creates customer segments based on account balance and order
+      patterns.
     columns:
       - name: customer_key
         description: "Customer identifier"
@@ -136,9 +148,8 @@ models:
 
   - name: lookup_exchange_rates
     description: >
-      Exchange rate lookup table for currency conversions.
-      Demonstrates lookup pattern for financial calculations.
-      Provides standardized exchange rates for order value conversions.
+      Exchange rate lookup table for currency conversions. Demonstrates lookup pattern for financial
+      calculations. Provides standardized exchange rates for order value conversions.
     columns:
       - name: from_currency
         description: "Source currency code"
@@ -167,10 +178,10 @@ models:
 
   - name: int_fx_rates__daily
     description: >
-      Intermediate model for daily FX rates with advanced business logic.
-      Demonstrates complex intermediate transformations using window functions.
-      Calculates rate validity periods using lead() window function.
-      Handles time-series data gaps and provides business-ready rate periods.
+      Intermediate model for daily FX rates with advanced business logic. Demonstrates complex
+      intermediate transformations using window functions. Calculates rate validity periods using
+      lead() window function. Handles time-series data gaps and provides business-ready rate
+      periods.
     tests:
       - dbt_utils.unique_combination_of_columns:
           combination_of_columns:
@@ -204,8 +215,8 @@ models:
               expression: "> 0"
       - name: end_date
         description: >
-          Rate validity end date calculated using window functions.
-          Shows advanced transformation logic for time-series data.
+          Rate validity end date calculated using window functions. Shows advanced transformation
+          logic for time-series data.
         data_type: date
         tests:
           - not_null
@@ -219,10 +230,9 @@ models:
 
   - name: customer_clustering
     description: >
-      ML-based customer clustering using Python and scikit-learn.
-      Demonstrates Python models in dbt with machine learning integration.
-      Uses K-means clustering to segment customers based on behavior patterns.
-      Advanced pattern for data science workflows in dbt.
+      ML-based customer clustering using Python and scikit-learn. Demonstrates Python models in dbt
+      with machine learning integration. Uses K-means clustering to segment customers based on
+      behavior patterns. Advanced pattern for data science workflows in dbt.
     columns:
       - name: customer_key
         description: "Customer identifier"
@@ -242,7 +252,14 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['High Value Stable', 'Premium Elite', 'Growth Potential', 'Standard Base', 'At Risk']
+              values:
+                [
+                  "High Value Stable",
+                  "Premium Elite",
+                  "Growth Potential",
+                  "Standard Base",
+                  "At Risk",
+                ]
       - name: ML_CONFIDENCE_SCORE
         description: "Confidence score for cluster assignment (0-1)"
         data_type: float
@@ -259,10 +276,9 @@ models:
 
   - name: order_facts_dynamic
     description: >
-      Real-time order analytics using dynamic tables.
-      Demonstrates Snowflake dynamic table materialization.
-      Provides near real-time aggregated order metrics.
-      Advanced pattern for streaming analytics and real-time dashboards.
+      Real-time order analytics using dynamic tables. Demonstrates Snowflake dynamic table
+      materialization. Provides near real-time aggregated order metrics. Advanced pattern for
+      streaming analytics and real-time dashboards.
     columns:
       - name: order_date
         description: "Order date (day level)"
@@ -284,4 +300,3 @@ models:
         data_type: number
         tests:
           - positive_values
-

@@ -13,20 +13,20 @@ with fx_rates_transformed as (
         base_currency as from_currency,
         quote_currency as to_currency,
         exchange_rate as conversion_rate,
-        
+
         -- Business logic: calculate end date for rate validity
-        case 
+        case
             when lead(rate_date) over (
-                partition by base_currency, quote_currency 
+                partition by base_currency, quote_currency
                 order by rate_date
-            ) is not null 
+            ) is not null
             then dateadd(day, -1, lead(rate_date) over (
-                partition by base_currency, quote_currency 
+                partition by base_currency, quote_currency
                 order by rate_date
             ))
             else date('2099-12-31')
         end as end_date,
-        
+
         _loaded_at
 
     from {{ ref('stg_economic_essentials__fx_rates') }}

@@ -63,7 +63,7 @@ combined as (
         incremental_warehouse
     from best_warehouses
 )
-select 
+select
     target_name as model_name,
     coalesce(full_refresh_warehouse, incremental_warehouse) as recommended_warehouse,
     0.85 as confidence_score

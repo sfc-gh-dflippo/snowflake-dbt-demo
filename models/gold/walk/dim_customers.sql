@@ -1,6 +1,6 @@
 /*
     dbt Feature Demonstration: MARTS MODEL - DIMENSION TABLE
-    
+
     This model demonstrates:
     - ✅ Marts layer best practices (business-ready data)
     - ✅ Incremental materialization for performance
@@ -10,7 +10,7 @@
     - ✅ Business logic enrichment (flags, categorization)
     - ✅ Complex joins across multiple models
     - ✅ Proper dimension table structure
-    
+
     Complexity: 🥈 WALK (Intermediate)
     Layer: Gold - Dimensions
 */
@@ -42,7 +42,7 @@ enriched_customers as (
     select
         -- Primary key
         customers_base.customer_key,
-        
+
         -- Customer attributes
         customers_base.customer_name,
         customers_base.customer_address,
@@ -50,42 +50,42 @@ enriched_customers as (
         customers_base.account_balance,
         customers_base.market_segment,
         customers_base.customer_comment,
-        
+
         -- Geographic attributes
         customers_base.nation_key,
         nations.nation_name,
         nations.region_key,
-        
+
         -- Order statistics (business logic)
         coalesce(customer_orders.order_count, 0) as total_orders,
         coalesce(customer_orders.open_order_count, 0) as open_orders,
-        
+
         -- Business flags
-        case 
+        case
             when coalesce(customer_orders.order_count, 0) > 0 then 'Y'
             else 'N'
         end as has_orders_flag,
-        
-        case 
+
+        case
             when coalesce(customer_orders.open_order_count, 0) > 0 then 'Y'
             else 'N'
         end as has_open_orders_flag,
-        
+
         -- Customer segmentation
-        case 
+        case
             when customers_base.account_balance >= 5000 then 'High Value'
             when customers_base.account_balance >= 1000 then 'Medium Value'
             else 'Standard'
         end as value_segment,
-        
+
         -- Audit columns
         customers_base._loaded_at,
         current_timestamp() as _updated_at
 
     from customers_base
-    left join customer_orders 
+    left join customer_orders
         on customers_base.customer_key = customer_orders.customer_key
-    left join nations 
+    left join nations
         on customers_base.nation_key = nations.nation_key
 )
 
