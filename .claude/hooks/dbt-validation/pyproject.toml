@@ -1,0 +1,71 @@
+[project]
+name = "dbt-validation"
+version = "0.1.0"
+description = "Validation tools for dbt models and schema YAML files"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Apache-2.0" }
+authors = [
+    { name = "Dan Flippo" }
+]
+keywords = ["dbt", "validation", "snowflake", "data-engineering"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Quality Assurance",
+    "Topic :: Database",
+]
+
+dependencies = [
+    "pyyaml>=6.0",
+    "typer>=0.9.0",
+    "rich>=13.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "ruff>=0.1.0",
+]
+
+[project.scripts]
+validate-dbt-file = "dbt_validation.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/Snowflake-Labs/snowflake-dbt-demo"
+Documentation = "https://github.com/Snowflake-Labs/snowflake-dbt-demo"
+Repository = "https://github.com/Snowflake-Labs/snowflake-dbt-demo"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/dbt_validation"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "src/dbt_validation",
+    "README.md",
+    "pyproject.toml",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP", "B", "C4", "SIM"]
+ignore = ["D100", "D104", "D107", "D203", "D213"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]

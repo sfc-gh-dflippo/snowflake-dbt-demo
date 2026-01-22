@@ -13,9 +13,58 @@
       "Bash(do if [ -f \"$file\" ])",
       "Bash(grep -q '```sql' \"$file\")",
       "Bash(then echo \"$file\")",
-      "Bash(fi)"
+      "Bash(fi)",
+      "WebSearch",
+      "Bash(claude plugin --help)",
+      "Bash(claude plugin list)",
+      "Bash(claude plugin marketplace --help)",
+      "Bash(find ~/.claude/plugins/cache/anthropic-agent-skills -name \"plugin.json\" -type f -exec head -20 {})",
+      "Bash(cat ~/.claude/plugins/cache/anthropic-agent-skills/example-skills/unknown/.claude-plugin/plugin.json)",
+      "Bash(cat ~/.claude/plugins/cache/anthropic-agent-skills/example-skills/c74d647e56e6/.claude-plugin/plugin.json)",
+      "Bash(claude plugin validate --help)",
+      "Bash(find ~/.claude -name *agent*.json -type f)",
+      "Bash(find ~/.claude/plugins/cache -name \"plugin.json\" -type f -exec grep -l \"agent\" {})",
+      "Bash(find ~/.claude/plugins/marketplaces -type f \\\\\\( -name \"*.json\" -o -name \"*.md\" \\\\\\) -exec grep -l \"\"\"agents\"\"\" {})",
+      "Bash(python .claude/skills/skills-sync/scripts/skills_sync.py)",
+      "Bash(skills-sync)",
+      "Bash(uv tool install --force .claude/skills/skills-sync/)",
+      "Bash(tee /tmp/skills-sync-debug.log)",
+      "Bash(uv tool uninstall skills-sync)",
+      "Bash(uv tool install .claude/skills/skills-sync/)",
+      "Bash(uv tool dir skills-sync)",
+      "Bash(grep \"Moving cortex\" ~/.local/share/uv/tools/skills-sync/lib/python*/site-packages/scripts/skills_sync.py)",
+      "Bash(skills-sync --help)",
+      "Bash(skills-sync --debug)",
+      "Bash(grep -n \"MOVE_SKILLS\\\\|MOVE_AGENTS\\\\|MOVE_COMMANDS\" ~/.local/share/uv/tools/skills-sync/lib/python*/site-packages/scripts/skills_sync.py)",
+      "Bash(ls /Users/dflippo/Documents/GitHub/sfc-gh-dflippo/cortex-tasks/.cortex/agents/*.md)",
+      "Bash(pre-commit run --all-files)",
+      "Bash(pre-commit run --files .claude/skills/skills-sync/scripts/skills_sync.py)"
     ],
     "deny": [],
     "ask": []
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run .claude/hooks/dbt-validation/validate_dbt_file.py --simple \"$FILE_PATH\"",
+            "timeout": 30000
+          }
+        ]
+      },
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run .claude/hooks/dbt-validation/validate_dbt_file.py --simple \"$FILE_PATH\"",
+            "timeout": 30000
+          }
+        ]
+      }
+    ]
   }
 }
