@@ -227,3 +227,4 @@ docker/
 *.avro
 data/raw/
 skills.mdc
+.obsidian/
