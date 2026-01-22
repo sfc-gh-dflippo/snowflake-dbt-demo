@@ -269,6 +269,8 @@ size(array_col) -> ARRAY_SIZE(array_col)
 
 ## Related Skills
 
+- **dbt-migration**: For the complete migration workflow (discovery, planning, placeholder models,
+  testing, deployment)
 - **dbt-modeling**: For CTE patterns and SQL structure guidance
 - **dbt-testing**: For implementing comprehensive dbt tests
 - **dbt-architecture**: For project organization and folder structure
