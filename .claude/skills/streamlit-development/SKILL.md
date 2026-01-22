@@ -277,7 +277,7 @@ dependencies:
   # - snowflake-snowpark-python  (already provided)
 ```
 
-**Check package availability:** https://repo.anaconda.com/pkgs/snowflake/
+**Check package availability:** <https://repo.anaconda.com/pkgs/snowflake/>
 
 ### Python Version Support
 
@@ -342,7 +342,7 @@ def get_snowpark_session():
 
 ## Pre-Deployment Checklist
 
-### Before Deploying:
+### Before Deploying
 
 - [ ] ✅ Fix all indentation errors
 - [ ] ✅ Run unit tests: `pytest streamlit_app/tests/ -v`
@@ -353,7 +353,7 @@ def get_snowpark_session():
 - [ ] ✅ Test with different user roles/permissions
 - [ ] ✅ Verify data access controls
 
-### Deployment Commands:
+### Deployment Commands
 
 ```bash
 # Method 1: Snowflake CLI (Recommended)
@@ -363,7 +363,7 @@ snow streamlit deploy --replace --connection default
 schemachange deploy --config-folder . --connection-name default
 ```
 
-### Post-Deployment:
+### Post-Deployment
 
 - [ ] ✅ Verify app appears in Snowflake: Data → Databases → Schema → Streamlit
 - [ ] ✅ Test all features in Snowflake UI

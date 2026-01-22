@@ -26,21 +26,21 @@ Activate this skill when users ask about:
 
 ---
 
-# Task Description
+## Task Description
 
 You are a database engineer working for a hospital system. You need to convert Vertica DDL to
 equivalent dbt code compatible with Snowflake, maintaining the same business logic and data
 transformation steps while following dbt best practices.
 
-# Input Requirements
+## Input Requirements
 
 I will provide you the Vertica DDL to convert.
 
-# Audience
+## Audience
 
 The code will be executed by data engineers who are learning Snowflake and dbt.
 
-# Output Requirements
+## Output Requirements
 
 Generate the following:
 
@@ -50,9 +50,9 @@ Generate the following:
 4. Explanation of key changes and architectural decisions
 5. Inline comments highlighting any syntax that was converted
 
-# Conversion Guidelines
+## Conversion Guidelines
 
-## General Principles
+### General Principles
 
 - Replace procedural logic with declarative SQL where possible
 - Break down complex procedures into multiple modular dbt models
@@ -60,7 +60,7 @@ Generate the following:
 - Maintain data quality checks through dbt tests
 - Use Snowflake SQL functions rather than macros whenever possible
 
-## Sample Response Format
+### Sample Response Format
 
 ```sql
 -- dbt model: models/[domain]/[target_schema_name]/model_name.sql
@@ -102,7 +102,7 @@ FROM transformed_data
 ```
 
 ```yaml
-# models/[domain]/[target_schema_name]/_models.yml
+## models/[domain]/[target_schema_name]/_models.yml
 version: 2
 
 models:
@@ -129,7 +129,7 @@ models:
 ```
 
 ```yaml
-# dbt_project.yml (excerpt)
+## dbt_project.yml (excerpt)
 models:
   my_project:
     +materialized: view
@@ -137,9 +137,9 @@ models:
       +schema: target_schema_name
 ```
 
-## Specific Translation Rules
+### Specific Translation Rules
 
-### dbt Specific Requirements:
+#### dbt Specific Requirements
 
 - If the source is a view, use a view materialization in dbt
 - Include appropriate dbt model configuration (materialization type)
@@ -156,13 +156,13 @@ models:
   `column_name::VARCHAR(100)`, `amount::NUMBER(18,2)`) to ensure output matches expected data types
 - **Always provide explicit column aliases** for clarity and documentation
 
-### Performance Optimization:
+#### Performance Optimization
 
 - Suggest clustering keys if needed
 - Recommend materialization strategy (view vs table)
 - Identify potential performance improvements
 
-### Vertica to Snowflake Syntax Conversion:
+#### Vertica to Snowflake Syntax Conversion
 
 - Remove projection specifications
 - Handle flex table conversions
@@ -172,7 +172,7 @@ models:
 - Handle COPY syntax differences
 - Remove SEGMENTED BY clauses
 
-### Key Data Type Mappings
+#### Key Data Type Mappings
 
 | Vertica                             | Snowflake              | Notes |
 | ----------------------------------- | ---------------------- | ----- |
@@ -189,7 +189,7 @@ models:
 | INTERVAL                            | VARCHAR                |       |
 | UUID                                | VARCHAR                |       |
 
-### Key Syntax Conversions
+#### Key Syntax Conversions
 
 ```sql
 -- Projections -> Remove (Snowflake auto-manages)
@@ -210,7 +210,7 @@ col = ANY(ARRAY[1,2,3]) -> col IN (1,2,3)
 col <> ALL(ARRAY[1,2,3]) -> col NOT IN (1,2,3)
 ```
 
-### Common Function Mappings
+#### Common Function Mappings
 
 | Vertica                  | Snowflake                  | Notes |
 | ------------------------ | -------------------------- | ----- |
@@ -231,14 +231,14 @@ col <> ALL(ARRAY[1,2,3]) -> col NOT IN (1,2,3)
 | `LISTAGG(col, delim)`    | `LISTAGG(col, delim)`      | Same  |
 | `SPLIT_PART(s, d, n)`    | `SPLIT_PART(s, d, n)`      | Same  |
 
-### Dependencies:
+#### Dependencies
 
 - List any upstream dependencies
 - Suggest model organization in dbt project
 
 ---
 
-# Validation Checklist
+## Validation Checklist
 
 - [] Every DDL statement has been accounted for in the dbt models
 - [] SQL in models is compatible with Snowflake
@@ -276,9 +276,8 @@ col <> ALL(ARRAY[1,2,3]) -> col NOT IN (1,2,3)
 
 ## Supported Source Database
 
-<!-- prettier-ignore -->
-| Database | Key Considerations |
-|---|---|
+| Database    | Key Considerations                                                               |
+| ----------- | -------------------------------------------------------------------------------- |
 | **Vertica** | Projections, flex tables, case sensitivity with quotes, ANY/ALL array predicates |
 
 ## Translation References
@@ -291,7 +290,11 @@ Detailed syntax translation guides are available in the `translation-references/
 
 ### Reference Index
 
-<!-- prettier-ignore -->
-| Folder | Description |
-|---|---|
-| vertica | [Subqueries](translation-references/vertica/subqueries.md) |
+- [Create Table](translation-references/vertica-create-table.md)
+- [Create View](translation-references/vertica-create-view.md)
+- [Data Types](translation-references/vertica-data-types.md)
+- [Identifier Between Vertica And Snowflake](translation-references/vertica-identifier-between-vertica-and-snowflake.md)
+- [Operators](translation-references/vertica-operators.md)
+- [Predicates](translation-references/vertica-predicates.md)
+- [Overview (README)](translation-references/vertica-readme.md)
+- [Subqueries](translation-references/vertica-subqueries.md)

@@ -92,7 +92,7 @@ Always enforce these patterns:
 
 **Naming**: `stg_{source}__{table}.sql`
 
-### Template
+### Bronze Template
 
 ```sql
 -- models/bronze/stg_tpc_h__customers.sql
@@ -114,7 +114,7 @@ select
 from {{ source('tpc_h', 'customer') }}
 ```
 
-### Rules
+### Bronze Rules
 
 ✅ **DO**:
 
@@ -141,7 +141,7 @@ from {{ source('tpc_h', 'customer') }}
 
 **Naming**: `int_{entity}__{description}.sql`
 
-### Template
+### Silver Template
 
 ```sql
 -- models/silver/int_customers__with_orders.sql
@@ -175,7 +175,7 @@ from customers c
 left join customer_metrics m on c.customer_id = m.customer_id
 ```
 
-### Rules
+### Silver Rules
 
 ✅ **DO**:
 
@@ -259,7 +259,7 @@ from {{ ref('stg_tpc_h__orders') }}
 {% endif %}
 ```
 
-### Rules
+### Gold Rules
 
 ✅ **DO**:
 
@@ -336,7 +336,7 @@ from {{ ref('stg_tpc_h__orders') }}
 
 ## Folder Structure
 
-```
+```sql
 models/
 ├── bronze/          # Staging layer - one-to-one with sources
 │   ├── stg_tpc_h__customers.sql

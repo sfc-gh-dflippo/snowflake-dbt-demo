@@ -26,21 +26,21 @@ Activate this skill when users ask about:
 
 ---
 
-# Task Description
+## Task Description
 
 You are a database engineer working for a hospital system. You need to convert IBM DB2 DDL to
 equivalent dbt code compatible with Snowflake, maintaining the same business logic and data
 transformation steps while following dbt best practices.
 
-# Input Requirements
+## Input Requirements
 
 I will provide you the DB2 DDL to convert.
 
-# Audience
+## Audience
 
 The code will be executed by data engineers who are learning Snowflake and dbt.
 
-# Output Requirements
+## Output Requirements
 
 Generate the following:
 
@@ -50,9 +50,9 @@ Generate the following:
 4. Explanation of key changes and architectural decisions
 5. Inline comments highlighting any syntax that was converted
 
-# Conversion Guidelines
+## Conversion Guidelines
 
-## General Principles
+### General Principles
 
 - Replace procedural logic with declarative SQL where possible
 - Break down complex procedures into multiple modular dbt models
@@ -60,7 +60,7 @@ Generate the following:
 - Maintain data quality checks through dbt tests
 - Use Snowflake SQL functions rather than macros whenever possible
 
-## Sample Response Format
+### Sample Response Format
 
 ```sql
 -- dbt model: models/[domain]/[target_schema_name]/model_name.sql
@@ -101,7 +101,7 @@ FROM transformed_data
 ```
 
 ```yaml
-# models/[domain]/[target_schema_name]/_models.yml
+## models/[domain]/[target_schema_name]/_models.yml
 version: 2
 
 models:
@@ -128,7 +128,7 @@ models:
 ```
 
 ```yaml
-# dbt_project.yml (excerpt)
+## dbt_project.yml (excerpt)
 models:
   my_project:
     +materialized: view
@@ -136,9 +136,9 @@ models:
       +schema: target_schema_name
 ```
 
-## Specific Translation Rules
+### Specific Translation Rules
 
-### dbt Specific Requirements:
+#### dbt Specific Requirements
 
 - If the source is a view, use a view materialization in dbt
 - Include appropriate dbt model configuration (materialization type)
@@ -155,13 +155,13 @@ models:
   `column_name::VARCHAR(100)`, `amount::NUMBER(18,2)`) to ensure output matches expected data types
 - **Always provide explicit column aliases** for clarity and documentation
 
-### Performance Optimization:
+#### Performance Optimization
 
 - Suggest clustering keys if needed
 - Recommend materialization strategy (view vs table)
 - Identify potential performance improvements
 
-### DB2 to Snowflake Syntax Conversion:
+#### DB2 to Snowflake Syntax Conversion
 
 - Convert FETCH FIRST n ROWS ONLY to LIMIT n
 - Replace compound statements with Snowflake Scripting
@@ -171,7 +171,7 @@ models:
 - Convert DB2 string functions
 - Replace EXCEPT/INTERSECT if using non-ANSI syntax
 
-### Key Data Type Mappings
+#### Key Data Type Mappings
 
 | DB2             | Snowflake | Notes    |
 | --------------- | --------- | -------- |
@@ -189,7 +189,7 @@ models:
 | TIMESTAMP       | TIMESTAMP |          |
 | XML             | VARIANT   |          |
 
-### Key Syntax Conversions
+#### Key Syntax Conversions
 
 ```sql
 -- FETCH FIRST -> LIMIT
@@ -207,7 +207,7 @@ EXCEPTION WHEN OTHER THEN ...
 VALUES (1, 'a'), (2, 'b') -> SELECT 1, 'a' UNION ALL SELECT 2, 'b'
 ```
 
-### Common Function Mappings
+#### Common Function Mappings
 
 | DB2                     | Snowflake                          | Notes            |
 | ----------------------- | ---------------------------------- | ---------------- |
@@ -229,14 +229,14 @@ VALUES (1, 'a'), (2, 'b') -> SELECT 1, 'a' UNION ALL SELECT 2, 'b'
 | `DAYS(d)`               | `DATEDIFF('day', '0001-01-01', d)` | Days since epoch |
 | `YEAR/MONTH/DAY(d)`     | `YEAR/MONTH/DAY(d)`                | Same             |
 
-### Dependencies:
+#### Dependencies
 
 - List any upstream dependencies
 - Suggest model organization in dbt project
 
 ---
 
-# Validation Checklist
+## Validation Checklist
 
 - [] Every DDL statement has been accounted for in the dbt models
 - [] SQL in models is compatible with Snowflake
@@ -274,9 +274,8 @@ VALUES (1, 'a'), (2, 'b') -> SELECT 1, 'a' UNION ALL SELECT 2, 'b'
 
 ## Supported Source Database
 
-<!-- prettier-ignore -->
-| Database | Key Considerations |
-|---|---|
+| Database    | Key Considerations                                                      |
+| ----------- | ----------------------------------------------------------------------- |
 | **IBM DB2** | Inline SQL PL, FETCH FIRST, CONTINUE/EXIT handlers, compound statements |
 
 ## Translation References
@@ -289,11 +288,14 @@ Detailed syntax translation guides are available in the `translation-references/
 
 ### Reference Index
 
-<!-- prettier-ignore -->
-| Folder | Description |
-|---|---|
-| db2 | [CONTINUE handler](translation-references/db2/db2-continue-handler.md) |
-| db2 | [CREATE FUNCTION](translation-references/db2/db2-create-function.md) |
-| db2 | [CREATE PROCEDURE](translation-references/db2/db2-create-procedure.md) |
-| db2 | [EXIT handler](translation-references/db2/db2-exit-handler.md) |
-| db2 | [Subqueries](translation-references/db2/subqueries.md) |
+- [Continue Handler](translation-references/db2-continue-handler.md)
+- [Create Function](translation-references/db2-create-function.md)
+- [Create Procedure](translation-references/db2-create-procedure.md)
+- [Create Table](translation-references/db2-create-table.md)
+- [Create View](translation-references/db2-create-view.md)
+- [Data Types](translation-references/db2-data-types.md)
+- [Exit Handler](translation-references/db2-exit-handler.md)
+- [From Clause](translation-references/db2-from-clause.md)
+- [Overview (README)](translation-references/db2-readme.md)
+- [Select Statement](translation-references/db2-select-statement.md)
+- [Subqueries](translation-references/db2-subqueries.md)

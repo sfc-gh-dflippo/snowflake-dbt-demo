@@ -324,7 +324,7 @@ When Claude writes or edits files, the validation hook runs automatically:
 
 ### Issue Summary
 
-```
+```text
 Total Issues: 15
 
 Errors (must fix): 5
@@ -393,4 +393,8 @@ repos:
         entry: uv run .claude/hooks/dbt-validation/validate_dbt_file.py --simple
         language: system
         files: ^models/.*\.(sql|yml)$
+```
+
+```sql
+
 ```

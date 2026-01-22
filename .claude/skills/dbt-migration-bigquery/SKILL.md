@@ -27,21 +27,21 @@ Activate this skill when users ask about:
 
 ---
 
-# Task Description
+## Task Description
 
 You are a database engineer working for a hospital system. You need to convert BigQuery DDL to
 equivalent dbt code compatible with Snowflake, maintaining the same business logic and data
 transformation steps while following dbt best practices.
 
-# Input Requirements
+## Input Requirements
 
 I will provide you the BigQuery DDL to convert.
 
-# Audience
+## Audience
 
 The code will be executed by data engineers who are learning Snowflake and dbt.
 
-# Output Requirements
+## Output Requirements
 
 Generate the following:
 
@@ -51,9 +51,9 @@ Generate the following:
 4. Explanation of key changes and architectural decisions
 5. Inline comments highlighting any syntax that was converted
 
-# Conversion Guidelines
+## Conversion Guidelines
 
-## General Principles
+### General Principles
 
 - Replace procedural logic with declarative SQL where possible
 - Break down complex procedures into multiple modular dbt models
@@ -61,7 +61,7 @@ Generate the following:
 - Maintain data quality checks through dbt tests
 - Use Snowflake SQL functions rather than macros whenever possible
 
-## Sample Response Format
+### Sample Response Format
 
 ```sql
 -- dbt model: models/[domain]/[target_schema_name]/model_name.sql
@@ -106,7 +106,7 @@ FROM transformed_data
 ```
 
 ```yaml
-# models/[domain]/[target_schema_name]/_models.yml
+## models/[domain]/[target_schema_name]/_models.yml
 version: 2
 
 models:
@@ -133,7 +133,7 @@ models:
 ```
 
 ```yaml
-# dbt_project.yml (excerpt)
+## dbt_project.yml (excerpt)
 models:
   my_project:
     +materialized: view
@@ -141,9 +141,9 @@ models:
       +schema: target_schema_name
 ```
 
-## Specific Translation Rules
+### Specific Translation Rules
 
-### dbt Specific Requirements:
+#### dbt Specific Requirements
 
 - If the source is a view, use a view materialization in dbt
 - Include appropriate dbt model configuration (materialization type)
@@ -160,13 +160,13 @@ models:
   `column_name::VARCHAR(100)`, `amount::NUMBER(18,2)`) to ensure output matches expected data types
 - **Always provide explicit column aliases** for clarity and documentation
 
-### Performance Optimization:
+#### Performance Optimization
 
 - Suggest clustering keys if needed
 - Recommend materialization strategy (view vs table)
 - Identify potential performance improvements
 
-### BigQuery to Snowflake Syntax Conversion:
+#### BigQuery to Snowflake Syntax Conversion
 
 - Convert backtick identifiers (\`project.dataset.table\`) to Snowflake format
 - Replace UNNEST with LATERAL FLATTEN
@@ -177,7 +177,7 @@ models:
 - Replace ARRAY_AGG with Snowflake equivalent
 - Convert BigQuery-specific window functions
 
-### Key Data Type Mappings
+#### Key Data Type Mappings
 
 | BigQuery                   | Snowflake     | Notes                         |
 | -------------------------- | ------------- | ----------------------------- |
@@ -198,11 +198,11 @@ models:
 | GEOGRAPHY                  | GEOGRAPHY     |                               |
 | INTERVAL                   | VARCHAR       |                               |
 
-### Key Syntax Conversions
+#### Key Syntax Conversions
 
 ```sql
 -- Backtick identifiers → Double quotes
-\`project.dataset.table\` → "project"."dataset"."table"
+`project.dataset.table` → "project"."dataset"."table"
 
 -- UNNEST → LATERAL FLATTEN
 SELECT * FROM table, UNNEST(array_col) AS elem →
@@ -230,7 +230,7 @@ ARRAY_AGG(col) → ARRAY_AGG(col)
 JSON_VALUE(col, '$.key') → col:key::STRING
 ```
 
-### Common Function Mappings
+#### Common Function Mappings
 
 | BigQuery                   | Snowflake                            | Notes               |
 | -------------------------- | ------------------------------------ | ------------------- |
@@ -254,14 +254,14 @@ JSON_VALUE(col, '$.key') → col:key::STRING
 | `ST_GEOGFROMTEXT(wkt)`     | `ST_GEOGRAPHYFROMWKT(wkt)`           |                     |
 | `ST_GEOGPOINT(lon, lat)`   | `ST_POINT(lon, lat)`                 |                     |
 
-### Dependencies:
+#### Dependencies
 
 - List any upstream dependencies
 - Suggest model organization in dbt project
 
 ---
 
-# Validation Checklist
+## Validation Checklist
 
 - [] Every DDL statement has been accounted for in the dbt models
 - [] SQL in models is compatible with Snowflake
@@ -299,9 +299,8 @@ JSON_VALUE(col, '$.key') → col:key::STRING
 
 ## Supported Source Database
 
-<!-- prettier-ignore -->
-| Database | Key Considerations |
-|---|---|
+| Database            | Key Considerations                                                                            |
+| ------------------- | --------------------------------------------------------------------------------------------- |
 | **Google BigQuery** | UNNEST, STRUCT/ARRAY types, backtick identifiers, IS TRUE/FALSE operators, SAFE\_\* functions |
 
 ## Translation References
@@ -314,7 +313,11 @@ Detailed syntax translation guides are available in the `translation-references/
 
 ### Reference Index
 
-<!-- prettier-ignore -->
-| Folder | Description |
-|---|---|
-| bigquery | [Subqueries to Snowflake](translation-references/bigquery/subqueries.md) |
+- [Create Table](translation-references/bigquery-create-table.md)
+- [Create View](translation-references/bigquery-create-view.md)
+- [Data Types](translation-references/bigquery-data-types.md)
+- [Functions](translation-references/bigquery-functions.md)
+- [Identifiers](translation-references/bigquery-identifiers.md)
+- [Operators](translation-references/bigquery-operators.md)
+- [Overview (README)](translation-references/bigquery-readme.md)
+- [Subqueries](translation-references/bigquery-subqueries.md)

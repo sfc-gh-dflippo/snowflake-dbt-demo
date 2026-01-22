@@ -312,7 +312,8 @@ def display_directory_results(
     elif files_with_errors > 0:
         if use_color:
             summary = Panel(
-                f"[red bold]FAILED[/red bold]: {files_with_errors}/{total_files} files with errors\n"
+                f"[red bold]FAILED[/red bold]: "
+                f"{files_with_errors}/{total_files} files with errors\n"
                 f"Total: {counts_str}",
                 title="Directory Summary",
                 border_style="red",
@@ -326,7 +327,8 @@ def display_directory_results(
     elif total_warnings > 0:
         if use_color:
             summary = Panel(
-                f"[yellow]PASSED with warnings[/yellow]: {files_with_warnings}/{total_files} files with warnings\n"
+                f"[yellow]PASSED with warnings[/yellow]: "
+                f"{files_with_warnings}/{total_files} files with warnings\n"
                 f"Total: {counts_str}",
                 title="Directory Summary",
                 border_style="yellow",

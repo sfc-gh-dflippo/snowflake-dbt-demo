@@ -27,7 +27,7 @@ The fundamental cycle for task-driven development:
 
 ### 1. Initialize Project
 
-```
+```sql
 Initialize taskmaster-ai in my project
 ```
 
@@ -63,7 +63,7 @@ checkout.
 
 ### 3. Parse PRD
 
-```
+```sql
 Parse my PRD at .taskmaster/docs/prd.txt
 ```
 
@@ -71,37 +71,37 @@ Generates initial task list automatically.
 
 ### 4. View Tasks
 
-```
+```sql
 Show me the task list
 ```
 
 ### 5. Analyze Complexity
 
-```
+```sql
 Analyze task complexity for all pending tasks
 ```
 
 ### 6. Expand Complex Tasks
 
-```
+```sql
 Expand task 3 into subtasks
 ```
 
 Or expand all at once:
 
-```
+```sql
 Expand all pending tasks based on complexity
 ```
 
 ### 7. Work on Next Task
 
-```
+```sql
 What's the next task I should work on?
 ```
 
 ### 8. Implement & Track
 
-```
+```sql
 Can you help me implement task 3?
 Update subtask 3.2 with implementation findings
 Mark task 3 as done
@@ -117,34 +117,34 @@ Mark task 3 as done
 
 1. **Create Feature Tag**
 
-```
+```sql
 Create a new tag called feature-dashboard
 ```
 
-2. **Write Feature PRD** Create `.taskmaster/docs/feature-dashboard-prd.txt`
+1. **Write Feature PRD** Create `.taskmaster/docs/feature-dashboard-prd.txt`
 
-3. **Parse into Tag**
+2. **Parse into Tag**
 
-```
+```sql
 Parse .taskmaster/docs/feature-dashboard-prd.txt into tag feature-dashboard
 ```
 
-4. **Switch to Tag**
+1. **Switch to Tag**
 
-```
+```sql
 Switch to the feature-dashboard tag
 ```
 
-5. **Analyze & Expand**
+1. **Analyze & Expand**
 
-```
+```sql
 Analyze complexity for all tasks in feature-dashboard
 Expand all pending tasks
 ```
 
-6. **Implement** Work through tasks in the feature context
+1. **Implement** Work through tasks in the feature context
 
-7. **Merge Back** When complete, merge code and optionally move key tasks to master
+2. **Merge Back** When complete, merge code and optionally move key tasks to master
 
 ### Git Branch-Based Workflow
 
@@ -158,17 +158,17 @@ Expand all pending tasks
 git checkout -b feature/user-auth
 ```
 
-2. **Create Matching Tag**
+1. **Create Matching Tag**
 
-```
+```sql
 Create a tag from the current git branch
 ```
 
 Creates `feature-user-auth` tag automatically.
 
-3. **Develop in Isolation** All tasks stay isolated in the tag context.
+1. **Develop in Isolation** All tasks stay isolated in the tag context.
 
-4. **Merge**
+2. **Merge**
 
 ```bash
 git checkout main
@@ -185,15 +185,15 @@ Tasks remain in tag for reference or can be moved to master.
 
 1. **Create Personal Tag**
 
-```
+```sql
 Create a new tag called alice-work --copy-from-current
 ```
 
-2. **Work Independently** Alice works in `alice-work` tag, Bob works in `bob-work` tag.
+1. **Work Independently** Alice works in `alice-work` tag, Bob works in `bob-work` tag.
 
-3. **Master Stays Clean** Master tag contains only high-level deliverables.
+2. **Master Stays Clean** Master tag contains only high-level deliverables.
 
-4. **Coordinate Merges** Move completed tasks to master when features are merged.
+3. **Coordinate Merges** Move completed tasks to master when features are merged.
 
 ### Experiment Workflow
 
@@ -203,24 +203,24 @@ Create a new tag called alice-work --copy-from-current
 
 1. **Create Experiment Tag**
 
-```
+```sql
 Create a new tag called experiment-zustand --description="Testing Zustand for state management"
 ```
 
-2. **Copy Relevant Tasks**
+1. **Copy Relevant Tasks**
 
-```
+```sql
 Copy tasks 5,6,7 to experiment-zustand tag
 ```
 
-3. **Experiment** Modify and test in isolation.
+1. **Experiment** Modify and test in isolation.
 
-4. **Decision**
+2. **Decision**
 
 - **Keep:** Merge code and tasks back
 - **Discard:** Delete tag without affecting master
 
-```
+```sql
 Delete tag experiment-zustand
 ```
 
@@ -232,34 +232,34 @@ Delete tag experiment-zustand
 
 1. **Initialize**
 
-```
+```sql
 Initialize taskmaster-ai in my project
 ```
 
-2. **Research Codebase**
+1. **Research Codebase**
 
-```
+```sql
 Research current architecture and improvement opportunities --tree --files=src/
 ```
 
-3. **Create Strategic PRD** Based on research findings, create improvement PRD.
+1. **Create Strategic PRD** Based on research findings, create improvement PRD.
 
-4. **Organize by Area**
+2. **Organize by Area**
 
-```
+```sql
 Create tag refactor-api
 Create tag tech-debt
 Create tag feature-dashboard
 ```
 
-5. **Parse PRDs into Tags**
+1. **Parse PRDs into Tags**
 
-```
+```sql
 Parse api-refactor-prd.txt into tag refactor-api
 Parse tech-debt-prd.txt into tag tech-debt
 ```
 
-6. **Master for High-Level** Keep only major initiatives in master tag.
+1. **Master for High-Level** Keep only major initiatives in master tag.
 
 ## Iterative Subtask Implementation
 
@@ -267,7 +267,7 @@ Parse tech-debt-prd.txt into tag tech-debt
 
 **1. Understand the Goal**
 
-```
+```sql
 Show me subtask 3.2
 ```
 
@@ -280,7 +280,7 @@ Show me subtask 3.2
 
 **3. Log the Plan**
 
-```
+```sql
 Update subtask 3.2 with detailed implementation plan:
 - Modify src/auth/login.ts lines 45-60
 - Add new validation function
@@ -290,19 +290,19 @@ Update subtask 3.2 with detailed implementation plan:
 
 **4. Verify Plan Logged**
 
-```
+```sql
 Show me subtask 3.2
 ```
 
 **5. Begin Implementation**
 
-```
+```sql
 Mark subtask 3.2 as in-progress
 ```
 
 **6. Log Progress Iteratively**
 
-```
+```sql
 Update subtask 3.2 with progress:
 - ✅ Validation function working correctly
 - ✅ Tests passing
@@ -313,7 +313,7 @@ Update subtask 3.2 with progress:
 
 **7. Complete**
 
-```
+```sql
 Mark subtask 3.2 as done
 ```
 
@@ -335,7 +335,7 @@ git commit -m "feat(auth): Implement login validation for subtask 3.2
 
 **MVP Tag:**
 
-```
+```sql
 Create tag mvp --description="Minimum viable product"
 ```
 
@@ -346,7 +346,7 @@ Create tag mvp --description="Minimum viable product"
 
 **Production Tag:**
 
-```
+```sql
 Create tag v1.0 --description="Production release"
 ```
 
@@ -357,7 +357,7 @@ Create tag v1.0 --description="Production release"
 
 ### Pattern 2: Priority-Based Tags
 
-```
+```sql
 Create tag critical --description="Critical path items"
 Create tag nice-to-have --description="Enhancement features"
 Create tag tech-debt --description="Technical debt"
@@ -365,7 +365,7 @@ Create tag tech-debt --description="Technical debt"
 
 ### Pattern 3: Module-Based Tags
 
-```
+```sql
 Create tag frontend --description="Frontend development"
 Create tag backend --description="Backend development"
 Create tag infrastructure --description="Infrastructure work"
@@ -393,20 +393,20 @@ Create tag infrastructure --description="Infrastructure work"
 
 **Add Dependencies:**
 
-```
+```sql
 Add dependency: task 8 depends on task 5
 Add dependency: task 10 depends on tasks 7,8,9
 ```
 
 **Validate:**
 
-```
+```sql
 Validate all task dependencies
 ```
 
 **Fix Issues:**
 
-```
+```sql
 Fix all dependency issues automatically
 ```
 
@@ -414,20 +414,20 @@ Fix all dependency issues automatically
 
 **Move Tasks:**
 
-```
+```sql
 Move task 5 to become subtask 7.3
 Move tasks 10,11,12 to positions 16,17,18
 ```
 
 **Reorder:**
 
-```
+```sql
 Move subtask 5.2 to 5.4
 ```
 
 **Convert:**
 
-```
+```sql
 Convert subtask 5.2 to standalone task 10
 ```
 
@@ -441,16 +441,16 @@ Convert subtask 5.2 to standalone task 10
 
 2. **Update Future Tasks**
 
-```
+```sql
 Update tasks from 18 onwards with new context:
 We switched to React Query instead of Redux Toolkit.
 All data fetching needs to use useQuery hooks.
 Update task descriptions accordingly.
 ```
 
-3. **Update Specific Task**
+1. **Update Specific Task**
 
-```
+```sql
 Update task 20 with:
 Change from Redux actions to React Query mutations.
 Use useMutation hook instead of dispatch.
@@ -472,25 +472,25 @@ Update tests to mock React Query.
 
 **Basic Research:**
 
-```
+```sql
 Research latest best practices for JWT authentication
 ```
 
 **With Context:**
 
-```
+```sql
 Research React Query v5 migration for our API in src/api.js
 ```
 
 **With Tasks:**
 
-```
+```sql
 Research implementation approaches for tasks 5,6,7
 ```
 
 **Save to Task:**
 
-```
+```sql
 Research authentication patterns and save to task 3
 ```
 
@@ -535,14 +535,14 @@ Research authentication patterns and save to task 3
 
 ### Circular Dependencies
 
-```
+```sql
 Validate all task dependencies
 Fix all dependency issues
 ```
 
 ### Lost in Tasks
 
-```
+```sql
 Show me the next task
 Show me all pending tasks
 Show complexity report
@@ -550,7 +550,7 @@ Show complexity report
 
 ### Need to Reorganize
 
-```
+```sql
 Move tasks to better positions
 Update task priorities
 Consolidate related tasks
@@ -558,7 +558,7 @@ Consolidate related tasks
 
 ### Tag Confusion
 
-```
+```sql
 List all tags
 Show current tag
 Switch to master tag

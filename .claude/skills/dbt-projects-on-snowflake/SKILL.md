@@ -62,7 +62,7 @@ in `references/SETUP.md`.
 
 ## Event Table Monitoring
 
-### Setup
+### Event Table Configuration
 
 Configure event tables following the Event Table Monitoring Configuration section in
 `references/SETUP.md`. This enables OpenTelemetry-based monitoring of dbt project executions.
@@ -142,7 +142,7 @@ columns:
 - **Medium**: WARNING logs, test/model failures on critical models, performance trending down
 - **Low**: INFO logs, scheduled job confirmations, performance metrics for analysis
 
-### Troubleshooting
+### Event Table Troubleshooting
 
 | Issue                   | Solution                                                       |
 | ----------------------- | -------------------------------------------------------------- |
@@ -224,6 +224,6 @@ For monitoring issues, see the Troubleshooting table in the Event Table Monitori
 ### Official Documentation
 
 - dbt Projects Documentation:
-  https://docs.snowflake.com/en/user-guide/data-engineering/dbt-projects-on-snowflake
+  <https://docs.snowflake.com/en/user-guide/data-engineering/dbt-projects-on-snowflake>
 - Monitoring Guide:
-  https://docs.snowflake.com/en/user-guide/data-engineering/dbt-projects-on-snowflake-monitoring-observability
+  <https://docs.snowflake.com/en/user-guide/data-engineering/dbt-projects-on-snowflake-monitoring-observability>

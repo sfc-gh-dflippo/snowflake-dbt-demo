@@ -40,7 +40,7 @@ cd .claude/skills/task-master-viewer && streamlit run app.py
 
 **Output:**
 
-```
+```sql
 Local URL: http://localhost:8501
 ```
 
@@ -48,7 +48,7 @@ App opens automatically in user's browser.
 
 ### 3. Tell User
 
-```
+```sql
 ✓ Task Master editor is open at http://localhost:8501
 
 To stop: Close browser tab and press Ctrl+C
@@ -89,7 +89,7 @@ cd .claude/skills/task-master-viewer
 nohup streamlit run app.py > /dev/null 2>&1 &
 echo $! > streamlit.pid
 
-# To stop:
+# To stop
 kill $(cat streamlit.pid)
 ```
 
@@ -133,7 +133,7 @@ Works alongside:
 
 **Agent**:
 
-```
+```sql
 Installing Streamlit... ✓
 Launching Task Master editor... ✓
 

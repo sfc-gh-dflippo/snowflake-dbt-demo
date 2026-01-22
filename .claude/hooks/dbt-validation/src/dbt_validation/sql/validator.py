@@ -176,7 +176,8 @@ def check_select_star(content: str, result: SQLValidationResult) -> None:
 
         result.add_error(
             rule_id="SQL003",
-            message="Recommend specifying columns when querying ref() or source() instead of SELECT *",
+            message="Recommend specifying columns when querying ref() or source() "
+            "instead of SELECT *",
             severity=Severity.RECOMMENDATION,
             line=find_line_number(content, sql_only.find("SELECT *")),
         )
@@ -198,7 +199,8 @@ def check_hardcoded_tables(content: str, result: SQLValidationResult) -> None:
 
             result.add_error(
                 rule_id="SQL004",
-                message=f"Hardcoded table reference '{table_ref}' - use {{{{ ref('model') }}}} or {{{{ source('source', 'table') }}}}",
+                message=f"Hardcoded table reference '{table_ref}' - "
+                "use {{ ref('model') }} or {{ source('source', 'table') }}",
                 severity=Severity.WARNING,
                 line=find_line_number(content, match.start()),
             )
@@ -246,7 +248,8 @@ def check_migration_header(content: str, result: SQLValidationResult) -> None:
         if not re.search(header_pattern, content, re.IGNORECASE | re.DOTALL):
             result.add_error(
                 rule_id="SQL005",
-                message="Migrated model should have a header comment documenting the original source and conversion notes",
+                message="Migrated model should have a header comment documenting "
+                "the original source and conversion notes",
                 severity=Severity.RECOMMENDATION,
                 line=1,
             )

@@ -102,7 +102,7 @@ dbt run --select +dim_customers+
 
 **Visualization**:
 
-```
+```sql
 +model_name    = model + all parents
 model_name+    = model + all children
 +model_name+   = model + all parents + all children
@@ -537,7 +537,7 @@ cat target/compiled/your_project/models/path/to/modelname.sql
 # Profile in Snowflake
 # Query History → Query Profile tab
 
-# Check for:
+# Check for
 # - Missing WHERE clauses in incremental models
 # - Inefficient joins
 # - Missing clustering keys

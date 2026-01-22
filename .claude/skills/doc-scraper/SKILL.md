@@ -38,7 +38,7 @@ doc-scraper --output-dir=./snowflake-docs --spider-depth=2
 
 ## Output
 
-```
+```sql
 output-dir/
 ├── SKILL.md              # Auto-generated index
 ├── scraper_config.yaml   # Editable config (auto-created)

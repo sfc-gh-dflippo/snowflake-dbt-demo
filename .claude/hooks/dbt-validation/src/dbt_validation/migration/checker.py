@@ -263,12 +263,18 @@ def has_pk_test_in_schema(columns: list[dict[str, Any]]) -> bool:
     for column in columns:
         tests = column.get("tests", []) or column.get("data_tests", [])
         for test in tests:
-            if isinstance(test, str):
-                if test in ("dbt_constraints.primary_key", "primary_key", "unique"):
-                    return True
-            elif isinstance(test, dict):
-                if "dbt_constraints.primary_key" in test or "primary_key" in test:
-                    return True
+            if (
+                isinstance(test, str)
+                and test
+                in (
+                    "dbt_constraints.primary_key",
+                    "primary_key",
+                    "unique",
+                )
+                or isinstance(test, dict)
+                and ("dbt_constraints.primary_key" in test or "primary_key" in test)
+            ):
+                return True
     return False
 
 

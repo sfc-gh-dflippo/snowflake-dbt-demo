@@ -80,3 +80,7 @@ The sync script discovers all skills automatically, including:
 - dbt Projects on Snowflake (deployment and monitoring)
 
 All skills are automatically discovered and listed in [AGENTS.md](../AGENTS.md) at the end of the file.
+
+```sql
+
+```

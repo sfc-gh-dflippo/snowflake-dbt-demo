@@ -23,7 +23,7 @@
 
 ### Quick Setup
 
-```shell
+```bash
 # Install dependencies
 dbt deps
 
@@ -35,20 +35,20 @@ For detailed setup instructions, see **[DBT_SETUP_GUIDE.md](DBT_SETUP_GUIDE.md)*
 
 ### 📋 Quick Command Reference
 
-```shell
+```bash
 # Essential commands
-dbt deps                    # Install packages
-dbt build                   # Run all models and tests
-dbt build --full-refresh    # Full reload of incremental models
+dbt deps                       # Install packages
+dbt build                      # Run all models and tests
+dbt build --full-refresh       # Full reload of incremental models
 
 # Selection commands
-dbt build --select modelname     # Run specific model
-dbt build --select +modelname    # Run model and parents
-dbt build --select modelname+    # Run model and children
+dbt build --select modelname   # Run specific model
+dbt build --select +modelname  # Run model and parents
+dbt build --select modelname+  # Run model and children
 
 # Documentation
-dbt docs generate          # Generate documentation
-dbt docs serve            # Serve documentation locally
+dbt docs generate              # Generate documentation
+dbt docs serve                 # Serve documentation locally
 ```
 
 See **[DBT_SETUP_GUIDE.md](DBT_SETUP_GUIDE.md)** for complete command reference and troubleshooting.
@@ -57,11 +57,11 @@ See **[DBT_SETUP_GUIDE.md](DBT_SETUP_GUIDE.md)** for complete command reference 
 
 Looking for a specific dbt feature? Jump directly to examples:
 
-**🏗️ Materializations:** [Ephemeral](#-materializations) • [Incremental](#-materializations) • [Dynamic Tables](#-materializations) • [Python Models](#-materializations)
+**🏗️ Materializations:** [Ephemeral](#materializations) • [Incremental](#materializations) • [Dynamic Tables](#materializations) • [Python Models](#materializations)
 **🧪 Testing:** [dbt_constraints](#-testing-framework) • [Generic Tests](#-testing-framework) • [Singular Tests](#-testing-framework) • [Contracts](#-testing-framework)
 **📊 Advanced:** [Snapshots](#-advanced-dbt-features) • [Exposures](#-advanced-dbt-features) • [Seeds](#-advanced-dbt-features) • [Analyses](#-advanced-dbt-features)
 **🔧 Jinja:** [Advanced Templating](#-jinja--macros) • [Custom Macros](#-jinja--macros) • [Variables](#-jinja--macros) • [Loops](#-jinja--macros)
-**⚙️ Snowflake:** [Streams](#-snowflake-specific-features) • [Sequences](#-snowflake-specific-features) • [Secure Views](#-snowflake-specific-features) • [Warehouses](#-snowflake-specific-features)
+**⚙️ Snowflake:** [Streams](#snowflake-specific-features) • [Sequences](#snowflake-specific-features) • [Secure Views](#snowflake-specific-features) • [Warehouses](#snowflake-specific-features)
 **📈 Business:** [Executive Dashboards](#-business-intelligence-integration) • [Customer Analytics](#-business-intelligence-integration) • [TPC-H Benchmarks](#-business-intelligence-integration)
 
 ---
@@ -155,7 +155,7 @@ Each layer contains three complexity levels with integrated best practices:
 
 ## 🎯 Comprehensive dbt-core Features Demonstrated
 
-### **🏗️ Materializations**
+### **🏗️ Materializations** {#materializations}
 
 | Feature                      | Model                         | Location                                                                                                       | Layer     | Description                                          |
 | ---------------------------- | ----------------------------- | -------------------------------------------------------------------------------------------------------------- | --------- | ---------------------------------------------------- |
@@ -208,7 +208,7 @@ Each layer contains three complexity levels with integrated best practices:
 | **Jinja Variables** | `raw_orders_incremental`    | [`bronze/run/`](models/bronze/run/raw_orders_incremental.sql) | Run         | Dynamic SQL with environment variables     |
 | **Jinja Loops**     | `fact_order_line_pivot`     | [`gold/run/`](models/gold/run/fact_order_line_pivot.sql)      | Run         | Dynamic column generation                  |
 
-### **⚙️ Snowflake-Specific Features**
+### **⚙️ Snowflake-Specific Features** {#snowflake-specific-features}
 
 | Feature              | Model/Location           | Complexity                                                                             | Description                          |
 | -------------------- | ------------------------ | -------------------------------------------------------------------------------------- | ------------------------------------ | ------------------------------------- |

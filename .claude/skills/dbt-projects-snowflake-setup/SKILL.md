@@ -76,7 +76,7 @@ execution.
 
 Choose the appropriate integration for your Git provider:
 
-#### GitHub:
+#### GitHub
 
 ```sql
 CREATE OR REPLACE API INTEGRATION git_api_integration
@@ -87,7 +87,7 @@ CREATE OR REPLACE API INTEGRATION git_api_integration
   );
 ```
 
-#### GitLab:
+#### GitLab
 
 ```sql
 CREATE OR REPLACE API INTEGRATION git_api_integration
@@ -97,7 +97,7 @@ CREATE OR REPLACE API INTEGRATION git_api_integration
   );
 ```
 
-#### Azure DevOps:
+#### Azure DevOps
 
 ```sql
 CREATE OR REPLACE API INTEGRATION git_api_integration
@@ -254,7 +254,7 @@ AS
 ALTER TASK my_dbt_daily_task RESUME;
 ```
 
-### Customization Options:
+### Customization Options
 
 | Parameter               | Purpose                      | Example                               |
 | ----------------------- | ---------------------------- | ------------------------------------- |
@@ -264,7 +264,7 @@ ALTER TASK my_dbt_daily_task RESUME;
 | Database/Schema/Project | Target dbt project           | `MY_DB.MY_SCHEMA.MY_PROJECT`          |
 | Args                    | dbt command arguments        | `'build'`, `'run --select tag:daily'` |
 
-### Common Schedules:
+### Common Schedules
 
 ```sql
 -- Hourly
@@ -280,7 +280,7 @@ SCHEDULE = '15 MINUTE'
 SCHEDULE = 'USING CRON 0 8 * * 1 UTC'
 ```
 
-### Monitor Task Execution:
+### Monitor Task Execution
 
 ```sql
 -- View task history
@@ -346,9 +346,11 @@ ORDER BY SCHEDULED_TIME DESC;
 
 1. Run `dbt deps` manually in workspace before deployment
 2. Ensure external access integration is enabled:
+
    ```sql
    ALTER EXTERNAL ACCESS INTEGRATION dbt_ext_access SET ENABLED = TRUE;
    ```
+
 3. Check package versions are compatible with dbt version in Snowflake
 
 ### Event Table Not Capturing Data
@@ -372,6 +374,7 @@ ORDER BY SCHEDULED_TIME DESC;
 3. Ensure dbt Project has executed at least once after configuration
 
 4. Query with correct filter:
+
    ```sql
    WHERE RESOURCE_ATTRIBUTES['snow.executable.type']::VARCHAR = 'DBT_PROJECT'
    ```

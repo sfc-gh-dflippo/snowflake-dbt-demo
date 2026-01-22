@@ -27,21 +27,21 @@ Activate this skill when users ask about:
 
 ---
 
-# Task Description
+## Task Description
 
 You are a database engineer working for a hospital system. You need to convert Oracle DDL to
 equivalent dbt code compatible with Snowflake, maintaining the same business logic and data
 transformation steps while following dbt best practices.
 
-# Input Requirements
+## Input Requirements
 
 I will provide you the Oracle DDL to convert.
 
-# Audience
+## Audience
 
 The code will be executed by data engineers who are learning Snowflake and dbt.
 
-# Output Requirements
+## Output Requirements
 
 Generate the following:
 
@@ -51,9 +51,9 @@ Generate the following:
 4. Explanation of key changes and architectural decisions
 5. Inline comments highlighting any syntax that was converted
 
-# Conversion Guidelines
+## Conversion Guidelines
 
-## General Principles
+### General Principles
 
 - Replace procedural logic with declarative SQL where possible
 - Break down complex procedures into multiple modular dbt models
@@ -61,7 +61,7 @@ Generate the following:
 - Maintain data quality checks through dbt tests
 - Use Snowflake SQL functions rather than macros whenever possible
 
-## Sample Response Format
+### Sample Response Format
 
 ```sql
 -- dbt model: models/[domain]/[target_schema_name]/model_name.sql
@@ -103,7 +103,7 @@ FROM transformed_data
 ```
 
 ```yaml
-# models/[domain]/[target_schema_name]/_models.yml
+## models/[domain]/[target_schema_name]/_models.yml
 version: 2
 
 models:
@@ -130,7 +130,7 @@ models:
 ```
 
 ```yaml
-# dbt_project.yml (excerpt)
+## dbt_project.yml (excerpt)
 models:
   my_project:
     +materialized: view
@@ -138,9 +138,9 @@ models:
       +schema: target_schema_name
 ```
 
-## Specific Translation Rules
+### Specific Translation Rules
 
-### dbt Specific Requirements:
+#### dbt Specific Requirements
 
 - If the source is a view, use a view materialization in dbt
 - Include appropriate dbt model configuration (materialization type)
@@ -157,13 +157,13 @@ models:
   `column_name::VARCHAR(100)`, `amount::NUMBER(18,2)`) to ensure output matches expected data types
 - **Always provide explicit column aliases** for clarity and documentation
 
-### Performance Optimization:
+#### Performance Optimization
 
 - Suggest clustering keys if needed
 - Recommend materialization strategy (view vs table)
 - Identify potential performance improvements
 
-### Oracle to Snowflake Syntax Conversion:
+#### Oracle to Snowflake Syntax Conversion
 
 - Convert ROWNUM to ROW_NUMBER() window function
 - Replace CONNECT BY with recursive CTEs
@@ -176,7 +176,7 @@ models:
 - Convert PL/SQL procedures to Snowflake Scripting
 - Add inline SQL comments highlighting any syntax that was converted
 
-### Key Data Type Mappings
+#### Key Data Type Mappings
 
 | Oracle                           | Snowflake     | Notes                      |
 | -------------------------------- | ------------- | -------------------------- |
@@ -195,7 +195,7 @@ models:
 | JSON                             | VARIANT       |                            |
 | XMLType                          | VARIANT       |                            |
 
-### Key Syntax Conversions
+#### Key Syntax Conversions
 
 ```sql
 -- ROWNUM → ROW_NUMBER()
@@ -224,7 +224,7 @@ SELECT 1 FROM DUAL → SELECT 1
 TO_DATE('2024-01-15', 'YYYY-MM-DD') → TO_DATE('2024-01-15', 'YYYY-MM-DD')
 ```
 
-### Common Function Mappings
+#### Common Function Mappings
 
 | Oracle                   | Snowflake                                 | Notes             |
 | ------------------------ | ----------------------------------------- | ----------------- |
@@ -247,14 +247,14 @@ TO_DATE('2024-01-15', 'YYYY-MM-DD') → TO_DATE('2024-01-15', 'YYYY-MM-DD')
 | `LISTAGG(col, delim)`    | `LISTAGG(col, delim)`                     | Same              |
 | `DBMS_OUTPUT.PUT_LINE`   | Remove or use SYSTEM$LOG                  |                   |
 
-### Dependencies:
+#### Dependencies
 
 - List any upstream dependencies
 - Suggest model organization in dbt project
 
 ---
 
-# Validation Checklist
+## Validation Checklist
 
 - [] Every DDL statement has been accounted for in the dbt models
 - [] SQL in models is compatible with Snowflake
@@ -292,9 +292,8 @@ TO_DATE('2024-01-15', 'YYYY-MM-DD') → TO_DATE('2024-01-15', 'YYYY-MM-DD')
 
 ## Supported Source Database
 
-<!-- prettier-ignore -->
-| Database | Key Considerations |
-|---|---|
+| Database   | Key Considerations                                                                                                       |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------ |
 | **Oracle** | PL/SQL, DBMS\_\* packages, ROWNUM/ROWID, CONNECT BY, sequences, collections/records, wrapped objects, DATE includes time |
 
 ## Translation References
@@ -307,14 +306,36 @@ Detailed syntax translation guides are available in the `translation-references/
 
 ### Reference Index
 
-<!-- prettier-ignore -->
-| Folder | Description |
-|---|---|
-| oracle | [PL/SQL to JavaScript](translation-references/oracle/pl-sql-to-javascript/README.md) |
-| oracle | [PL/SQL to Snowflake Scripting](translation-references/oracle/pl-sql-to-snowflake-scripting/README.md) |
-| oracle | [CREATE FUNCTION](translation-references/oracle/pl-sql-to-snowflake-scripting/create-function.md) |
-| oracle | [CREATE PROCEDURE](translation-references/oracle/pl-sql-to-snowflake-scripting/create-procedure.md) |
-| oracle | [Cursors](translation-references/oracle/pl-sql-to-snowflake-scripting/cursor.md) |
-| oracle | [Collections and Records](translation-references/oracle/pl-sql-to-snowflake-scripting/collections-and-records.md) |
-| oracle | [Packages](translation-references/oracle/pl-sql-to-snowflake-scripting/packages.md) |
-| oracle | [Subqueries](translation-references/oracle/subqueries.md) |
+- [Basic Elements Of Oracle SQL Data Types Any Types](translation-references/oracle-basic-elements-of-oracle-sql-data-types-any-types.md)
+- [Basic Elements Of Oracle SQL Data Types Oracle Built In Data Types](translation-references/oracle-basic-elements-of-oracle-sql-data-types-oracle-built-in-data-types.md)
+- [Basic Elements Of Oracle SQL Data Types Readme](translation-references/oracle-basic-elements-of-oracle-sql-data-types-readme.md)
+- [Basic Elements Of Oracle SQL Data Types Rowid Types](translation-references/oracle-basic-elements-of-oracle-sql-data-types-rowid-types.md)
+- [Basic Elements Of Oracle SQL Data Types Spatial Types](translation-references/oracle-basic-elements-of-oracle-sql-data-types-spatial-types.md)
+- [Basic Elements Of Oracle SQL Data Types User Defined Types](translation-references/oracle-basic-elements-of-oracle-sql-data-types-user-defined-types.md)
+- [Basic Elements Of Oracle SQL Data Types Xml Types](translation-references/oracle-basic-elements-of-oracle-sql-data-types-xml-types.md)
+- [Basic Elements Of Oracle SQL Literals](translation-references/oracle-basic-elements-of-oracle-sql-literals.md)
+- [Built In Packages](translation-references/oracle-built-in-packages.md)
+- [ETL BI Repointing Power BI Oracle Repointing](translation-references/oracle-etl-bi-repointing-power-bi-oracle-repointing.md)
+- [Functions Custom UDFS](translation-references/oracle-functions-custom_udfs.md)
+- [Functions Readme](translation-references/oracle-functions-readme.md)
+- [PL SQL To Javascript Helpers](translation-references/oracle-pl-sql-to-javascript-helpers.md)
+- [PL SQL To Javascript Readme](translation-references/oracle-pl-sql-to-javascript-readme.md)
+- [PL SQL To Snowflake Scripting Collections And Records](translation-references/oracle-pl-sql-to-snowflake-scripting-collections-and-records.md)
+- [PL SQL To Snowflake Scripting Create Function](translation-references/oracle-pl-sql-to-snowflake-scripting-create-function.md)
+- [PL SQL To Snowflake Scripting Create Procedure](translation-references/oracle-pl-sql-to-snowflake-scripting-create-procedure.md)
+- [PL SQL To Snowflake Scripting Cursor](translation-references/oracle-pl-sql-to-snowflake-scripting-cursor.md)
+- [PL SQL To Snowflake Scripting DML Statements](translation-references/oracle-pl-sql-to-snowflake-scripting-dml-statements.md)
+- [PL SQL To Snowflake Scripting Helpers](translation-references/oracle-pl-sql-to-snowflake-scripting-helpers.md)
+- [PL SQL To Snowflake Scripting Packages](translation-references/oracle-pl-sql-to-snowflake-scripting-packages.md)
+- [PL SQL To Snowflake Scripting Readme](translation-references/oracle-pl-sql-to-snowflake-scripting-readme.md)
+- [Pseudocolumns](translation-references/oracle-pseudocolumns.md)
+- [Overview (README)](translation-references/oracle-readme.md)
+- [SQL Plus](translation-references/oracle-sql-plus.md)
+- [SQL Queries And Subqueries Joins](translation-references/oracle-sql-queries-and-subqueries-joins.md)
+- [SQL Queries And Subqueries Selects](translation-references/oracle-sql-queries-and-subqueries-selects.md)
+- [SQL Translation Reference Create Materialized View](translation-references/oracle-sql-translation-reference-create-materialized-view.md)
+- [SQL Translation Reference Create Table](translation-references/oracle-sql-translation-reference-create-table.md)
+- [SQL Translation Reference Create View](translation-references/oracle-sql-translation-reference-create-view.md)
+- [SQL Translation Reference Create Type](translation-references/oracle-sql-translation-reference-create_type.md)
+- [SQL Translation Reference Readme](translation-references/oracle-sql-translation-reference-readme.md)
+- [Subqueries](translation-references/oracle-subqueries.md)

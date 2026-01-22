@@ -182,7 +182,7 @@ uv run --extra dev pytest -v
 
 ### Project Structure
 
-```
+```text
 .claude/hooks/dbt-validation/
 ├── pyproject.toml          # Package configuration
 ├── README.md               # This file
@@ -228,3 +228,7 @@ All dependencies are automatically installed by `uv run`.
 ## License
 
 Apache 2.0
+
+```sql
+
+```

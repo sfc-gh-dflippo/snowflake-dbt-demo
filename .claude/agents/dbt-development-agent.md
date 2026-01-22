@@ -182,3 +182,7 @@ When errors occur:
 5. Verify schema.yml configuration
 6. Consult dbt-commands skill for debugging strategies
 7. **Check validation hook output** for rule violations
+
+```sql
+
+```

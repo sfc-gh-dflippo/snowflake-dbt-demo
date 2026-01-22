@@ -44,28 +44,28 @@ models:
         tests:
           - not_null
           - dbt_utils.expression_is_true:
-              expression: "> 0"
+              arguments:
+                expression: "> 0"
       - name: government_type
         description: "AI-classified government type"
         data_type: varchar
         tests:
           - not_null
           - accepted_values:
-              values:
-                [
-                  "FEDERAL",
-                  "REPUBLIC",
-                  "KINGDOM",
-                  "EMPIRE",
-                  "CONFEDERATION",
-                  "UNION",
-                  "FEDERATION",
-                  "PRINCIPALITY",
-                  "DUCHY",
-                  "SULTANATE",
-                  "EMIRATE",
-                  "OTHER",
-                ]
+              arguments:
+                values:
+                  - "FEDERAL"
+                  - "REPUBLIC"
+                  - "KINGDOM"
+                  - "EMPIRE"
+                  - "CONFEDERATION"
+                  - "UNION"
+                  - "FEDERATION"
+                  - "PRINCIPALITY"
+                  - "DUCHY"
+                  - "SULTANATE"
+                  - "EMIRATE"
+                  - "OTHER"
       - name: processed_at
         description: "Timestamp when record was processed"
         data_type: timestamp_ntz

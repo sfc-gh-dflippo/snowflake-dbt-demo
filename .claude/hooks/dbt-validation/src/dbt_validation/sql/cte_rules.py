@@ -284,7 +284,8 @@ def check_cte_patterns(sql: str) -> CTEPatternResult:
     for name in result.cte_names:
         if re.match(generic_pattern, name, re.IGNORECASE):
             result.issues.append(
-                f"CTE '{name}' has a generic name. Use descriptive names like 'filtered_orders' or 'customer_totals'."
+                f"CTE '{name}' has a generic name. "
+                "Use descriptive names like 'filtered_orders' or 'customer_totals'."
             )
 
     return result

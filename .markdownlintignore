@@ -1,0 +1,5 @@
+node_modules/
+.claude/skills/*/translation-references/
+.claude/skills/snowflake-docs/
+.claude/skills/*/.venv/
+dbt_packages/

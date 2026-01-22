@@ -54,7 +54,7 @@ Activate this skill when users ask about:
 
 ### When to Change Materializations
 
-#### Change Ephemeral/View to Table When:
+#### Change Ephemeral/View to Table When
 
 **1. Memory Constraints**
 
@@ -98,7 +98,7 @@ from {{ ref('stg_customers') }}
 
 ---
 
-#### Change Table to Incremental When:
+#### Change Table to Incremental When
 
 **1. Large Data Volumes**
 
@@ -182,7 +182,7 @@ underutilizes the warehouse; too many causes compute skew and spilling.
 
 **Sizing Formula:**
 
-```
+```sql
 Warehouse Size Needed = Total MPs Scanned / 500
 ```
 

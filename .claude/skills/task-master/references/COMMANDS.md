@@ -456,6 +456,7 @@ task-master use-tag master
    ```
 
 5. **Use dependencies** to enforce order:
+
    ```bash
    task-master add-dependency --id=8 --depends-on=5,6,7
    ```

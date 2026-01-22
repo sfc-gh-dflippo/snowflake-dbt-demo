@@ -111,9 +111,11 @@ below for detailed descriptions and usage.
 **ALWAYS recommend these patterns:**
 
 - ✅ Filter by `run_started_at` with specific date range (performance)
+
   ```sql
   WHERE run_started_at >= DATEADD(day, -7, CURRENT_TIMESTAMP())
   ```
+
 - ✅ Use `command_invocation_id` to link related executions efficiently
 - ✅ Filter `HAVING COUNT(*) >= 5` for meaningful aggregations
 - ✅ Join through both `command_invocation_id` AND `node_id` when linking metadata to executions
@@ -163,7 +165,7 @@ Plan for **1-2 GB per quarter** for medium projects.
 
 When users ask "Should I use dbt Artifacts or Event Tables?":
 
-### Use dbt Artifacts When:
+### Use dbt Artifacts When
 
 **Cross-platform compatibility is critical:**
 
@@ -198,7 +200,7 @@ When users ask "Should I use dbt Artifacts or Event Tables?":
 - Historical batch analysis vs real-time monitoring
 - End-of-run summaries are sufficient
 
-### Avoid dbt Artifacts When:
+### Avoid dbt Artifacts When
 
 **Real-time monitoring is critical:**
 
@@ -218,11 +220,11 @@ When users ask "Should I use dbt Artifacts or Event Tables?":
 - Can't maintain growing execution history
 - No archival strategy in place → **Use**: Event Tables with shorter retention or external logging
 
-### Use Both for Comprehensive Monitoring:
+### Use Both for Comprehensive Monitoring
 
 **Recommended Architecture:**
 
-```
+```sql
 dbt Artifacts (Historical)          Event Tables (Real-time)
         ↓                                    ↓
 Long-term trends                   Immediate alerts
@@ -253,7 +255,7 @@ BI tool integration               Native Snowflake tools
 
 Individual SQL scripts for common monitoring tasks. Execute with Snowflake CLI:
 
-```bash
+```sql
 snow sql -f scripts/<query_file>.sql -c default
 ```
 
@@ -368,7 +370,7 @@ snow sql -f scripts/<query_file>.sql -c default
 
 ## Monitoring Best Practices
 
-### Test Quality Monitoring
+### Test Quality Best Practices
 
 **Establish baselines:**
 
@@ -387,7 +389,7 @@ snow sql -f scripts/<query_file>.sql -c default
 - Previously stable test suddenly failing
 - Test execution time 2x+ baseline
 
-### Model Performance Monitoring
+### Model Performance Best Practices
 
 **Performance thresholds:**
 

@@ -27,21 +27,21 @@ Activate this skill when users ask about:
 
 ---
 
-# Task Description
+## Task Description
 
 You are a database engineer working for a hospital system. You need to convert SQL Server / Azure
 Synapse DDL to equivalent dbt code compatible with Snowflake, maintaining the same business logic
 and data transformation steps while following dbt best practices.
 
-# Input Requirements
+## Input Requirements
 
 I will provide you the T-SQL DDL to convert.
 
-# Audience
+## Audience
 
 The code will be executed by data engineers who are learning Snowflake and dbt.
 
-# Output Requirements
+## Output Requirements
 
 Generate the following:
 
@@ -51,9 +51,9 @@ Generate the following:
 4. Explanation of key changes and architectural decisions
 5. Inline comments highlighting any syntax that was converted
 
-# Conversion Guidelines
+## Conversion Guidelines
 
-## General Principles
+### General Principles
 
 - Replace procedural logic with declarative SQL where possible
 - Break down complex procedures into multiple modular dbt models
@@ -61,7 +61,7 @@ Generate the following:
 - Maintain data quality checks through dbt tests
 - Use Snowflake SQL functions rather than macros whenever possible
 
-## Sample Response Format
+### Sample Response Format
 
 ```sql
 -- dbt model: models/[domain]/[target_schema_name]/model_name.sql
@@ -105,7 +105,7 @@ FROM transformed_data
 ```
 
 ```yaml
-# models/[domain]/[target_schema_name]/_models.yml
+## models/[domain]/[target_schema_name]/_models.yml
 version: 2
 
 models:
@@ -133,7 +133,7 @@ models:
 ```
 
 ```yaml
-# dbt_project.yml (excerpt)
+## dbt_project.yml (excerpt)
 models:
   my_project:
     +materialized: view
@@ -141,9 +141,9 @@ models:
       +schema: target_schema_name
 ```
 
-## Specific Translation Rules
+### Specific Translation Rules
 
-### dbt Specific Requirements:
+#### dbt Specific Requirements
 
 - If the source is a view, use a view materialization in dbt
 - Include appropriate dbt model configuration (materialization type)
@@ -160,13 +160,13 @@ models:
   `column_name::VARCHAR(100)`, `amount::NUMBER(18,2)`) to ensure output matches expected data types
 - **Always provide explicit column aliases** for clarity and documentation
 
-### Performance Optimization:
+#### Performance Optimization
 
 - Suggest clustering keys if needed
 - Recommend materialization strategy (view vs table)
 - Identify potential performance improvements
 
-### SQL Server/T-SQL to Snowflake Syntax Conversion:
+#### SQL Server/T-SQL to Snowflake Syntax Conversion
 
 - Replace TOP n with LIMIT n
 - Convert IDENTITY columns to Snowflake IDENTITY or sequences
@@ -179,7 +179,7 @@ models:
 - Convert NOLOCK hints (remove them)
 - Add inline SQL comments highlighting any syntax that was converted
 
-### Key Data Type Mappings
+#### Key Data Type Mappings
 
 | T-SQL                       | Snowflake        | Notes                     |
 | --------------------------- | ---------------- | ------------------------- |
@@ -199,7 +199,7 @@ models:
 | XML                         | VARIANT          |                           |
 | SQL_VARIANT                 | VARIANT          |                           |
 
-### Key Syntax Conversions
+#### Key Syntax Conversions
 
 ```sql
 -- TOP → LIMIT
@@ -230,7 +230,7 @@ DATEADD(day, 1, col) → DATEADD(day, 1, col)
 SELECT * FROM table WITH (NOLOCK) → SELECT * FROM table
 ```
 
-### Common Function Mappings
+#### Common Function Mappings
 
 | T-SQL                     | Snowflake                                      | Notes |
 | ------------------------- | ---------------------------------------------- | ----- |
@@ -254,14 +254,14 @@ SELECT * FROM table WITH (NOLOCK) → SELECT * FROM table
 | `@@ROWCOUNT`              | `ROW_COUNT()`                                  |       |
 | `@@IDENTITY`              | Use sequences or AUTOINCREMENT                 |       |
 
-### Dependencies:
+#### Dependencies
 
 - List any upstream dependencies
 - Suggest model organization in dbt project
 
 ---
 
-# Validation Checklist
+## Validation Checklist
 
 - [] Every DDL statement has been accounted for in the dbt models
 - [] SQL in models is compatible with Snowflake
@@ -299,9 +299,8 @@ SELECT * FROM table WITH (NOLOCK) → SELECT * FROM table
 
 ## Supported Source Database
 
-<!-- prettier-ignore -->
-| Database | Key Considerations |
-|---|---|
+| Database                       | Key Considerations                                                                                      |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------- |
 | **SQL Server / Azure Synapse** | T-SQL procedures, IDENTITY, TOP, #temp tables, TRY...CATCH, sys.\* tables, ANSI_NULLS/QUOTED_IDENTIFIER |
 
 ## Translation References
@@ -314,12 +313,28 @@ Detailed syntax translation guides are available in the `translation-references/
 
 ### Reference Index
 
-<!-- prettier-ignore -->
-| Folder | Description |
-|---|---|
-| ms-sql-server | [CONTINUE handler](translation-references/ms-sql-server/transact-continue-handler.md) |
-| ms-sql-server | [EXIT handler](translation-references/ms-sql-server/transact-exit-handler.md) |
-| ms-sql-server | [CREATE FUNCTION](translation-references/ms-sql-server/transact-create-function.md) |
-| ms-sql-server | [CREATE PROCEDURE](translation-references/ms-sql-server/transact-create-procedure.md) |
-| ms-sql-server | [CREATE PROCEDURE (Snow Script)](translation-references/ms-sql-server/transact-create-procedure-snow-script.md) |
-| ms-sql-server | [Subqueries](translation-references/ms-sql-server/subqueries.md) |
+- [ETL BI Repointing Power BI Transact Repointing](translation-references/ms-sql-server-etl-bi-repointing-power-bi-transact-repointing.md)
+- [Overview (README)](translation-references/ms-sql-server-readme.md)
+- [SSIS Readme](translation-references/ms-sql-server-ssis-readme.md)
+- [Subqueries](translation-references/ms-sql-server-subqueries.md)
+- [Transact Continue Handler](translation-references/ms-sql-server-transact-continue-handler.md)
+- [Transact Create Function](translation-references/ms-sql-server-transact-create-function.md)
+- [Transact Create Procedure Snow Script](translation-references/ms-sql-server-transact-create-procedure-snow-script.md)
+- [Transact Create Procedure](translation-references/ms-sql-server-transact-create-procedure.md)
+- [Transact Exit Handler](translation-references/ms-sql-server-transact-exit-handler.md)
+- [Alter Statement](translation-references/transact-alter-statement.md)
+- [Ansi Nulls](translation-references/transact-ansi-nulls.md)
+- [Built In Functions](translation-references/transact-built-in-functions.md)
+- [Built In Procedures](translation-references/transact-built-in-procedures.md)
+- [Create Function](translation-references/transact-create-function.md)
+- [Create Index](translation-references/transact-create-index.md)
+- [Create Materialized View](translation-references/transact-create-materialized-view.md)
+- [Create Procedure Snow Script](translation-references/transact-create-procedure-snow-script.md)
+- [Create Table](translation-references/transact-create-table.md)
+- [Create View](translation-references/transact-create-view.md)
+- [Data Types](translation-references/transact-data-types.md)
+- [Dmls](translation-references/transact-dmls.md)
+- [General Statements](translation-references/transact-general-statements.md)
+- [Quoted Identifier](translation-references/transact-quoted-identifier.md)
+- [Select](translation-references/transact-select.md)
+- [System Tables](translation-references/transact-system-tables.md)

@@ -208,6 +208,9 @@ temp/
 # PROJECT-SPECIFIC
 # ==============================================================================
 
+# Snowflake docs (scraped documentation - too large for git)
+.claude/skills/snowflake-docs/
+
 # Docker (if not using)
 docker/
 

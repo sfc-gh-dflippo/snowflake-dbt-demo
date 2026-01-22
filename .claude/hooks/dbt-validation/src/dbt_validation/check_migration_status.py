@@ -220,12 +220,18 @@ def has_pk_test_in_schema(columns: list[dict[str, Any]]) -> bool:
     for column in columns:
         tests = column.get("tests", []) or column.get("data_tests", [])
         for test in tests:
-            if isinstance(test, str):
-                if test in ("dbt_constraints.primary_key", "primary_key", "unique"):
-                    return True
-            elif isinstance(test, dict):
-                if "dbt_constraints.primary_key" in test or "primary_key" in test:
-                    return True
+            if (
+                isinstance(test, str)
+                and test
+                in (
+                    "dbt_constraints.primary_key",
+                    "primary_key",
+                    "unique",
+                )
+                or isinstance(test, dict)
+                and ("dbt_constraints.primary_key" in test or "primary_key" in test)
+            ):
+                return True
     return False
 
 
@@ -344,11 +350,7 @@ def print_report(report: MigrationStatusReport):
 
 def main():
     """CLI entry point for migration status check."""
-    if len(sys.argv) < 2:
-        # Default to ./models directory
-        models_dir = "./models"
-    else:
-        models_dir = sys.argv[1]
+    models_dir = "./models" if len(sys.argv) < 2 else sys.argv[1]
 
     if not os.path.isdir(models_dir):
         print(f"Error: Directory not found: {models_dir}", file=sys.stderr)

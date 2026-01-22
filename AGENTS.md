@@ -62,14 +62,14 @@ For Cursor IDE integration, see `.cursor/rules/`:
 
 ### Safety and permissions
 
-#### Allowed without prompt:
+#### Allowed without prompt
 
 - read files, list files
 - reformat SQL
 - executing dbt models
 - query Snowflake database
 
-#### Ask first:
+#### Ask first
 
 - Adding dbt macros, dbt packages, or python libraries
 - git push
@@ -136,73 +136,73 @@ This project follows **Specification-Driven Development (SDD)** methodology, whe
 
 #### **Phase 2: Design and Plan**
 
-4. **Research** - Research on the web to understand implementation approaches
+1. **Research** - Research on the web to understand implementation approaches
 
    - Research current best practices and patterns
    - Validate technical approaches against requirements
    - Gather implementation context and examples
    - Identify architectural patterns and technology choices
 
-5. **Architectural Design** - Develop the technical solutions
+2. **Architectural Design** - Develop the technical solutions
 
    - Expand our PRD to include the design for system architecture and process logic
    - Define technology stack and integration patterns
    - Plan data flow and system interactions
    - Document technical design decisions in the PRD
 
-6. **Parse and Break Down** - Generate tasks from specifications
+3. **Parse and Break Down** - Generate tasks from specifications
 
    - Automatically convert specifications into actionable tasks
    - Analyze the complexity of each task to identify complex tasks
    - Break down high/medium complexity tasks into subtasks
    - Maintain traceability between PRD requirements and implementation tasks
 
-7. **Organize Tasks** - Set dependencies and priorities
+4. **Organize Tasks** - Set dependencies and priorities
    - Add dependencies to your tasks to establish logical task sequencing
    - Identify critical path and bottlenecks
    - Align priorities with business value and technical dependencies
 
 #### **Phase 3: Implement and Test**
 
-8. **Code Development** - Use list of tasks for development
+1. **Code Development** - Use list of tasks for development
 
    - Follow test-first development approach
    - Implement functionality defined in the specification
    - Write code to meet predefined specifications
    - Ensure code aligns with architectural design
 
-9. **Test Generation and Execution** - Derive tests from acceptance criteria
+2. **Test Generation and Execution** - Derive tests from acceptance criteria
 
    - Generate automated tests directly from specification criteria
    - Execute specification-based tests
    - Validate functionality against requirements
    - Ensure performance meets specified requirements
 
-10. **Document Progress** - Log implementation decisions and findings
-    - Update the PRD continueously
-    - Update specifications based on learnings
-    - Maintain audit trail of changes and decisions
-    - Update task completion
+3. **Document Progress** - Log implementation decisions and findings
+   - Update the PRD continueously
+   - Update specifications based on learnings
+   - Maintain audit trail of changes and decisions
+   - Update task completion
 
 #### **Phase 4: Iterate and Refine**
 
-11. **Validation** - Test implementation against specification
+1. **Validation** - Test implementation against specification
 
-    - Verify all acceptance criteria are met
-    - Confirm specification compliance
-    - Validate system behavior matches requirements
+   - Verify all acceptance criteria are met
+   - Confirm specification compliance
+   - Validate system behavior matches requirements
 
-12. **Refine** - Iterate on specification, design, or implementation
+2. **Refine** - Iterate on specification, design, or implementation
 
-    - Refine specifications if new insights arise
-    - Update implementation until tests pass
-    - Ensure requirements are fully met
-    - Update task completion
+   - Refine specifications if new insights arise
+   - Update implementation until tests pass
+   - Ensure requirements are fully met
+   - Update task completion
 
-13. **Maintain Traceability** - Keep specification as living document
-    - Maintain continuous alignment throughout project lifecycle
-    - Update documentation to reflect final implementation
-    - Prepare for deployment and future maintenance
+3. **Maintain Traceability** - Keep specification as living document
+   - Maintain continuous alignment throughout project lifecycle
+   - Update documentation to reflect final implementation
+   - Prepare for deployment and future maintenance
 
 ---
 

@@ -72,7 +72,7 @@ configure them per job):
 
 #### Production Environment
 
-```
+```text
 SNOWFLAKE_ACCOUNT_PRODUCTION=your-account
 SNOWFLAKE_USER_PRODUCTION=your-user
 SNOWFLAKE_ROLE_PRODUCTION=your-role
@@ -85,7 +85,7 @@ DBT_PROJECT_NAME_PRODUCTION=your-dbt-project
 
 #### Test Environment
 
-```
+```text
 SNOWFLAKE_ACCOUNT_TEST=your-account
 SNOWFLAKE_USER_TEST=your-user
 SNOWFLAKE_ROLE_TEST=your-role
@@ -98,7 +98,7 @@ DBT_PROJECT_NAME_TEST=your-dbt-project
 
 #### Development Environment
 
-```
+```text
 SNOWFLAKE_ACCOUNT_DEVELOPMENT=your-account
 SNOWFLAKE_USER_DEVELOPMENT=your-user
 SNOWFLAKE_ROLE_DEVELOPMENT=your-role
@@ -138,7 +138,7 @@ Choose one or more:
 - **Branches to build**: `*/main`, `*/test`, `*/development` (or use wildcards)
 - **Script Path**: `.github/workflows/Jenkinsfile.example`
 
-5. Click **Save**
+1. Click **Save**
 
 ## Usage
 
@@ -275,3 +275,7 @@ post {
 - [Jenkins Credentials Binding Plugin](https://plugins.jenkins.io/credentials-binding/)
 - [Snowflake CLI Documentation](https://docs.snowflake.com/en/developer-guide/snowflake-cli/index)
 - [dbt Documentation](https://docs.getdbt.com/)
+
+```sql
+
+```

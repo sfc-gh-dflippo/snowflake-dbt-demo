@@ -68,6 +68,13 @@ repos:
       - id: ruff
         args: [--fix, --exit-non-zero-on-fix]
 
+  # Markdown linting
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.43.0
+    hooks:
+      - id: markdownlint
+        args: [--fix]
+
   # ============================================================================
   # STAGE 4: VALIDATORS - Check file validity and project rules
   # ============================================================================

@@ -17,7 +17,7 @@ specification-driven development workflows.
 
 ## Installation
 
-### Step 1: Check if already installed:
+### Step 1: Check if already installed
 
 ```bash
 task-master --version
@@ -25,7 +25,7 @@ task-master --version
 
 If task-master is already installed and the project has a `.taskmaster/` folder, you are finished.
 
-### Step 2: If you need to install Task-Master:
+### Step 2: If you need to install Task-Master
 
 **Global installation (recommended):**
 

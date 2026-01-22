@@ -26,21 +26,21 @@ Activate this skill when users ask about:
 
 ---
 
-# Task Description
+## Task Description
 
 You are a database engineer working for a hospital system. You need to convert Teradata DDL to
 equivalent dbt code compatible with Snowflake, maintaining the same business logic and data
 transformation steps while following dbt best practices.
 
-# Input Requirements
+## Input Requirements
 
 I will provide you the Teradata DDL to convert.
 
-# Audience
+## Audience
 
 The code will be executed by data engineers who are learning Snowflake and dbt.
 
-# Output Requirements
+## Output Requirements
 
 Generate the following:
 
@@ -50,9 +50,9 @@ Generate the following:
 4. Explanation of key changes and architectural decisions
 5. Inline comments highlighting any syntax that was converted
 
-# Conversion Guidelines
+## Conversion Guidelines
 
-## General Principles
+### General Principles
 
 - Replace procedural logic with declarative SQL where possible
 - Break down complex procedures into multiple modular dbt models
@@ -60,7 +60,7 @@ Generate the following:
 - Maintain data quality checks through dbt tests
 - Use Snowflake SQL functions rather than macros whenever possible
 
-## Sample Response Format
+### Sample Response Format
 
 ```sql
 -- dbt model: models/[domain]/[target_schema_name]/model_name.sql
@@ -101,7 +101,7 @@ FROM transformed_data
 ```
 
 ```yaml
-# models/[domain]/[target_schema_name]/_models.yml
+## models/[domain]/[target_schema_name]/_models.yml
 version: 2
 
 models:
@@ -128,7 +128,7 @@ models:
 ```
 
 ```yaml
-# dbt_project.yml (excerpt)
+## dbt_project.yml (excerpt)
 models:
   my_project:
     +materialized: view
@@ -136,9 +136,9 @@ models:
       +schema: target_schema_name
 ```
 
-## Specific Translation Rules
+### Specific Translation Rules
 
-### dbt Specific Requirements:
+#### dbt Specific Requirements
 
 - If the source is a view, use a view materialization in dbt
 - Include appropriate dbt model configuration (materialization type)
@@ -155,13 +155,13 @@ models:
   `column_name::VARCHAR(100)`, `amount::NUMBER(18,2)`) to ensure output matches expected data types
 - **Always provide explicit column aliases** for clarity and documentation
 
-### Performance Optimization:
+#### Performance Optimization
 
 - Suggest clustering keys if needed
 - Recommend materialization strategy (view vs table)
 - Identify potential performance improvements
 
-### Teradata to Snowflake Syntax Conversion:
+#### Teradata to Snowflake Syntax Conversion
 
 - Convert Teradata-specific functions to Snowflake equivalents
 - Adjust date/timestamp functions
@@ -173,7 +173,7 @@ models:
 - Handle DBC view equivalents
 - Add inline SQL comments highlighting any syntax that was converted
 
-### Key Data Type Mappings
+#### Key Data Type Mappings
 
 | Teradata                 | Snowflake      | Notes                              |
 | ------------------------ | -------------- | ---------------------------------- |
@@ -192,7 +192,7 @@ models:
 | PERIOD types             | VARCHAR        | Store as 'start\*end' format       |
 | ST_GEOMETRY              | GEOGRAPHY      |                                    |
 
-### Key Syntax Conversions
+#### Key Syntax Conversions
 
 ```sql
 -- QUALIFY (Teradata) → Same in Snowflake (natively supported)
@@ -215,7 +215,7 @@ DATE FORMAT 'YYYY-MM-DD' → DATE
 VARCHAR(100) NOT CASESPECIFIC → VARCHAR(100)
 ```
 
-### Common Function Mappings
+#### Common Function Mappings
 
 | Teradata                 | Snowflake                                          | Notes                            |
 | ------------------------ | -------------------------------------------------- | -------------------------------- |
@@ -235,14 +235,14 @@ VARCHAR(100) NOT CASESPECIFIC → VARCHAR(100)
 | `HASHROW(cols)`          | `HASH(cols)`                                       |                                  |
 | `RANDOM(low, high)`      | `UNIFORM(low, high, RANDOM())`                     |                                  |
 
-### Dependencies:
+#### Dependencies
 
 - List any upstream dependencies
 - Suggest model organization in dbt project
 
 ---
 
-# Validation Checklist
+## Validation Checklist
 
 - [] Every DDL statement has been accounted for in the dbt models
 - [] SQL in models is compatible with Snowflake
@@ -280,9 +280,8 @@ VARCHAR(100) NOT CASESPECIFIC → VARCHAR(100)
 
 ## Supported Source Database
 
-<!-- prettier-ignore -->
-| Database | Key Considerations |
-|---|---|
+| Database     | Key Considerations                                                                                          |
+| ------------ | ----------------------------------------------------------------------------------------------------------- |
 | **Teradata** | QUALIFY, ANSI/TERA session modes, volatile tables, SET/MULTISET, BTEQ/FastLoad/MultiLoad scripts, DBC views |
 
 ## Translation References
@@ -295,14 +294,30 @@ Detailed syntax translation guides are available in the `translation-references/
 
 ### Reference Index
 
-<!-- prettier-ignore -->
-| Folder | Description |
-|---|---|
-| teradata | [Teradata to Snowflake Scripting](translation-references/teradata/teradata-to-snowflake-scripting-translation-reference.md) |
-| teradata | [Power BI repointing](translation-references/teradata/etl-bi-repointing/power-bi-teradata-repointing.md) |
-| teradata | [Scripts to Python](translation-references/teradata/scripts-to-python/README.md) |
-| teradata | [BTEQ to Python](translation-references/teradata/scripts-to-python/bteq-translation.md) |
-| teradata | [FastLoad to Python](translation-references/teradata/scripts-to-python/fastload-translation.md) |
-| teradata | [MultiLoad to Python](translation-references/teradata/scripts-to-python/multiload-translation.md) |
-| teradata | [TPT translation](translation-references/teradata/scripts-to-python/tpt-translation.md) |
-| teradata | [Subqueries](translation-references/teradata/subqueries.md) |
+- [BTEQ Translation](translation-references/teradata-bteq-translation.md)
+- [Data Migration Considerations](translation-references/teradata-data-migration-considerations.md)
+- [ETL BI Repointing Power BI Teradata Repointing](translation-references/teradata-etl-bi-repointing-power-bi-teradata-repointing.md)
+- [Fastload Translation](translation-references/teradata-fastload-translation.md)
+- [Helpers For Procedures](translation-references/teradata-helpers-for-procedures.md)
+- [Multiload Translation](translation-references/teradata-multiload-translation.md)
+- [Power BI Repointing](translation-references/teradata-power-bi-repointing.md)
+- [Overview (README)](translation-references/teradata-readme.md)
+- [Scripts To Python BTEQ Translation](translation-references/teradata-scripts-to-python-bteq-translation.md)
+- [Scripts To Python Snowconvert Script Helpers](translation-references/teradata-scripts-to-python-snowconvert-script-helpers.md)
+- [Scripts To Python TPT Translation](translation-references/teradata-scripts-to-python-tpt-translation.md)
+- [Scripts To Snowflake SQL Translation Reference BTEQ](translation-references/teradata-scripts-to-snowflake-sql-translation-reference-bteq.md)
+- [Scripts To Snowflake SQL Translation Reference Common Statements](translation-references/teradata-scripts-to-snowflake-sql-translation-reference-common-statements.md)
+- [Scripts To Snowflake SQL Translation Reference Mload](translation-references/teradata-scripts-to-snowflake-sql-translation-reference-mload.md)
+- [Session Modes](translation-references/teradata-session-modes.md)
+- [Snowconvert Script Helpers](translation-references/teradata-snowconvert-script-helpers.md)
+- [SQL Translation Reference Analytic](translation-references/teradata-sql-translation-reference-analytic.md)
+- [SQL Translation Reference Data Types](translation-references/teradata-sql-translation-reference-data-types.md)
+- [SQL Translation Reference Database DBC](translation-references/teradata-sql-translation-reference-database-dbc.md)
+- [SQL Translation Reference DDL Teradata](translation-references/teradata-sql-translation-reference-ddl-teradata.md)
+- [SQL Translation Reference DML Teradata](translation-references/teradata-sql-translation-reference-dml-teradata.md)
+- [SQL Translation Reference Iceberg Tables Transformations](translation-references/teradata-sql-translation-reference-iceberg-tables-transformations.md)
+- [SQL Translation Reference Teradata Built In Functions](translation-references/teradata-sql-translation-reference-teradata-built-in-functions.md)
+- [Subqueries](translation-references/teradata-subqueries.md)
+- [To Javascript Translation Reference](translation-references/teradata-to-javascript-translation-reference.md)
+- [To Snowflake Scripting Translation Reference](translation-references/teradata-to-snowflake-scripting-translation-reference.md)
+- [TPT Translation](translation-references/teradata-tpt-translation.md)

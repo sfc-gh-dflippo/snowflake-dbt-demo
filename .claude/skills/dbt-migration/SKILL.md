@@ -31,73 +31,133 @@ Activate this skill when users ask about:
 
 For **platform-specific syntax translation**, delegate to:
 
-- `dbt-migration-ms-sql-server` - SQL Server / Azure Synapse T-SQL
-- `dbt-migration-oracle` - Oracle PL/SQL
-- `dbt-migration-teradata` - Teradata SQL and BTEQ
-- `dbt-migration-bigquery` - Google BigQuery
-- `dbt-migration-redshift` - Amazon Redshift
-- `dbt-migration-postgres` - PostgreSQL / Greenplum / Netezza
-- `dbt-migration-db2` - IBM DB2
-- `dbt-migration-hive` - Hive / Spark / Databricks
-- `dbt-migration-vertica` - Vertica
-- `dbt-migration-sybase` - Sybase IQ
+- [`dbt-migration-ms-sql-server`](../dbt-migration-ms-sql-server/SKILL.md) - SQL Server / Azure
+  Synapse T-SQL
+- [`dbt-migration-oracle`](../dbt-migration-oracle/SKILL.md) - Oracle PL/SQL
+- [`dbt-migration-teradata`](../dbt-migration-teradata/SKILL.md) - Teradata SQL and BTEQ
+- [`dbt-migration-bigquery`](../dbt-migration-bigquery/SKILL.md) - Google BigQuery
+- [`dbt-migration-redshift`](../dbt-migration-redshift/SKILL.md) - Amazon Redshift
+- [`dbt-migration-postgres`](../dbt-migration-postgres/SKILL.md) - PostgreSQL / Greenplum / Netezza
+- [`dbt-migration-db2`](../dbt-migration-db2/SKILL.md) - IBM DB2
+- [`dbt-migration-hive`](../dbt-migration-hive/SKILL.md) - Hive / Spark / Databricks
+- [`dbt-migration-vertica`](../dbt-migration-vertica/SKILL.md) - Vertica
+- [`dbt-migration-sybase`](../dbt-migration-sybase/SKILL.md) - Sybase IQ
 
 ---
 
-# Migration Workflow Overview
+## Migration Workflow Overview
 
-The migration process follows seven phases, each with specific deliverables and validation criteria:
+The migration process follows seven sequential phases. Each phase has entry criteria, deliverables,
+and validation gates that must pass before advancing.
 
+```mermaid
+flowchart LR
+    P1[1-Discovery] --> P2[2-Planning] --> P3[3-Placeholders] --> P4[4-Views]
+    P4 --> P5[5-Table Logic] --> P6[6-Testing] --> P7[7-Deployment]
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                        DATABASE TO DBT MIGRATION                            │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│  Phase 1          Phase 2          Phase 3          Phase 4                 │
-│  ┌──────────┐     ┌──────────┐     ┌──────────┐     ┌──────────┐           │
-│  │DISCOVERY │ ──► │PLANNING  │ ──► │PLACEHOLDER│ ──► │  VIEWS   │           │
-│  │& ASSESS  │     │& ORGANIZE│     │  MODELS  │     │CONVERSION│           │
-│  └──────────┘     └──────────┘     └──────────┘     └──────────┘           │
-│       │                │                │                │                  │
-│       ▼                ▼                ▼                ▼                  │
-│  - Inventory      - Folder         - NULL casts     - Syntax              │
-│  - Dependencies     structure      - _models.yml      translation         │
-│  - Volumes        - Layer mapping  - Compile test   - CTE patterns        │
-│  - Complexity     - Naming rules   - Schema docs    - dbt tests           │
-│                                                                             │
-│  Phase 5          Phase 6          Phase 7                                  │
-│  ┌──────────┐     ┌──────────┐     ┌──────────┐                            │
-│  │  TABLE   │ ──► │END-TO-END│ ──► │DEPLOYMENT│                            │
-│  │  LOGIC   │     │ TESTING  │     │& CUTOVER │                            │
-│  └──────────┘     └──────────┘     └──────────┘                            │
-│       │                │                │                                   │
-│       ▼                ▼                ▼                                   │
-│  - SP analysis    - Row counts     - Deploy to dev                         │
-│  - Declarative    - Checksums      - Full validation                       │
-│    SQL            - Business       - Cutover plan                          │
-│  - Incremental      rules          - Production                            │
-│    patterns       - Mock data      - Monitoring                            │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
+
+### Phase Activities
+
+- **Phase 1 - Discovery**
+  - Inventory source objects
+  - Map dependencies
+  - Document volumes
+  - Assess complexity
+- **Phase 2 - Planning**
+  - Create folder structure
+  - Map to medallion layers
+  - Define naming rules
+- **Phase 3 - Placeholders**
+  - Create NULL cast models
+  - Generate \_models.yml
+  - Run compile test
+  - Document schema
+- **Phase 4 - Views**
+  - Translate syntax
+  - Apply CTE patterns
+  - Add dbt tests
+- **Phase 5 - Table Logic**
+  - Analyze stored procedures
+  - Convert to declarative SQL
+  - Implement incremental patterns
+- **Phase 6 - Testing**
+  - Validate row counts
+  - Compare checksums
+  - Test business rules
+  - Create mock data
+- **Phase 7 - Deployment**
+  - Deploy to dev
+  - Run full validation
+  - Document cutover plan
+  - Deploy to production
+  - Enable monitoring
+
+### Phase Metadata for Agent Execution
+
+<!-- AGENT_WORKFLOW_METADATA: Machine-parseable phase definitions -->
+
+| Phase | ID             | Entry Criteria             | Exit Criteria                            | Primary Skill            | Delegation Trigger                                |
+| ----- | -------------- | -------------------------- | ---------------------------------------- | ------------------------ | ------------------------------------------------- |
+| 1     | `discovery`    | Migration request received | Inventory complete, dependencies mapped  | `dbt-migration`          | Source catalog queries → `dbt-migration-{source}` |
+| 2     | `planning`     | Phase 1 complete           | Folder structure created, naming defined | `dbt-architecture`       | Always delegate structure decisions               |
+| 3     | `placeholders` | Phase 2 complete           | All models compile with `where false`    | `dbt-migration`          | Datatype mapping → `dbt-migration-{source}`       |
+| 4     | `views`        | Phase 3 complete           | All views converted and compile          | `dbt-migration-{source}` | Always delegate syntax translation                |
+| 5     | `table_logic`  | Phase 4 complete           | All procedures converted                 | `dbt-materializations`   | ETL pattern analysis → this skill                 |
+| 6     | `testing`      | Phase 5 complete           | All validation queries pass              | `dbt-testing`            | Always delegate test creation                     |
+| 7     | `deployment`   | Phase 6 complete           | Production deployment successful         | `dbt-commands`           | Snowflake operations → `snowflake-cli`            |
+
+### Skill Delegation Decision Tree
+
+```mermaid
+flowchart TD
+    START[Migration Task] --> Q1{Task Type}
+
+    Q1 -->|Syntax| PLATFORM[Identify Platform]
+    Q1 -->|Structure| ARCH[dbt-architecture]
+    Q1 -->|Materialization| MAT[dbt-materializations]
+    Q1 -->|Testing| TEST[dbt-testing]
+    Q1 -->|Deploy| DEPLOY[dbt-commands]
+
+    PLATFORM --> P_CHECK{Platform}
+    P_CHECK -->|SQL Server| MSSQL[dbt-migration-ms-sql-server]
+    P_CHECK -->|Oracle| ORA[dbt-migration-oracle]
+    P_CHECK -->|Teradata| TERA[dbt-migration-teradata]
+    P_CHECK -->|BigQuery| BQ[dbt-migration-bigquery]
+    P_CHECK -->|Redshift| RS[dbt-migration-redshift]
+    P_CHECK -->|PostgreSQL| PG[dbt-migration-postgres]
+    P_CHECK -->|DB2| DB2[dbt-migration-db2]
+    P_CHECK -->|Hive/Spark| HIVE[dbt-migration-hive]
+    P_CHECK -->|Vertica| VERT[dbt-migration-vertica]
+    P_CHECK -->|Sybase| SYB[dbt-migration-sybase]
 ```
+
+### Key Deliverables Per Phase
+
+| Phase           | Deliverables                                | Validation Command                     |
+| --------------- | ------------------------------------------- | -------------------------------------- |
+| 1. Discovery    | `migration_inventory.csv`, dependency graph | Manual review                          |
+| 2. Planning     | Folder structure, `_naming_conventions.md`  | `ls -la models/`                       |
+| 3. Placeholders | `.sql` files, `_models.yml`                 | `dbt compile --select tag:placeholder` |
+| 4. Views        | Converted view models                       | `dbt build --select tag:view`          |
+| 5. Table Logic  | Converted procedure models                  | `dbt build --select tag:procedure`     |
+| 6. Testing      | Validation queries, test results            | `dbt test --store-failures`            |
+| 7. Deployment   | Production models, monitoring               | `dbt build --target prod`              |
 
 ---
 
-# Phase 1: Discovery and Assessment
-
-## Objective
+## Phase 1: Discovery and Assessment
 
 Create a complete inventory of source database objects and understand dependencies, volumes, and
 complexity to inform migration planning.
 
-## Activities
+### Phase 1 Activities
 
 1. **Inventory source objects**: Query system catalogs for tables, views, procedures, functions
 2. **Document dependencies**: Map object dependencies to determine migration order
 3. **Assess complexity**: Categorize objects as Low/Medium/High/Custom complexity
 4. **Create migration tracker**: Document objects in spreadsheet or issue tracker
 
-## Complexity Assessment
+### Complexity Assessment
 
 | Complexity | Criteria                               | Examples                      |
 | ---------- | -------------------------------------- | ----------------------------- |
@@ -106,14 +166,14 @@ complexity to inform migration planning.
 | **High**   | Procedural logic, cursors, temp tables | SCD procedures, bulk loads    |
 | **Custom** | Platform-specific features             | Wrapped code, CLR functions   |
 
-## Skill References
+### Phase 1 Skill References
 
 | Activity               | Delegate To                                  |
 | ---------------------- | -------------------------------------------- |
 | System catalog queries | `dbt-migration-{source}` (platform-specific) |
 | Dependency analysis    | `dbt-migration-{source}`                     |
 
-## Phase 1 Checklist
+### Phase 1 Checklist
 
 - [ ] All tables, views, procedures inventoried
 - [ ] Row counts documented
@@ -124,23 +184,22 @@ complexity to inform migration planning.
 
 ---
 
-# Phase 2: Planning and Organization
-
-## Objective
+## Phase 2: Planning and Organization
 
 Organize legacy scripts, map objects to the dbt medallion architecture, and establish naming
 conventions before any conversion begins.
 
-## Activities
+### Phase 2 Activities
 
 1. **Organize legacy scripts**: Create folder structure (tables/, views/, stored_procedures/,
    functions/)
 2. **Map to medallion layers**: Assign objects to Bronze/Silver/Gold with appropriate prefixes
-3. **Define naming conventions**: Follow `dbt-architecture` skill patterns
+3. **Define naming conventions**: Follow [`dbt-architecture`](../dbt-architecture/SKILL.md) skill
+   patterns
 4. **Create dependency graph**: Visualize migration order
 5. **Establish validation criteria**: Define success metrics per object
 
-## Layer Mapping Reference
+### Layer Mapping Reference
 
 | Source Object Type   | Target Layer | dbt Prefix | Materialization |
 | -------------------- | ------------ | ---------- | --------------- |
@@ -150,15 +209,15 @@ conventions before any conversion begins.
 | Dimension procedures | Gold         | `dim_`     | table           |
 | Fact procedures      | Gold         | `fct_`     | incremental     |
 
-## Skill References
+### Phase 2 Skill References
 
-| Activity                | Delegate To            |
-| ----------------------- | ---------------------- |
-| Project structure       | `dbt-architecture`     |
-| Naming conventions      | `dbt-architecture`     |
-| Materialization choices | `dbt-materializations` |
+| Activity                | Delegate To                                                |
+| ----------------------- | ---------------------------------------------------------- |
+| Project structure       | [`dbt-architecture`](../dbt-architecture/SKILL.md)         |
+| Naming conventions      | [`dbt-architecture`](../dbt-architecture/SKILL.md)         |
+| Materialization choices | [`dbt-materializations`](../dbt-materializations/SKILL.md) |
 
-## Phase 2 Checklist
+### Phase 2 Checklist
 
 - [ ] Legacy scripts organized in folders
 - [ ] All objects mapped to medallion layers
@@ -169,14 +228,12 @@ conventions before any conversion begins.
 
 ---
 
-# Phase 3: Create Placeholder Models
-
-## Objective
+## Phase 3: Create Placeholder Models
 
 Create empty dbt models with correct column names, data types, and schema documentation **before**
 adding any transformation logic. This establishes the contract for downstream consumers.
 
-## Activities
+### Phase 3 Activities
 
 1. **Generate placeholder models**: Create SQL files with `null::datatype as column_name` pattern
    and `where false`
@@ -185,7 +242,7 @@ adding any transformation logic. This establishes the contract for downstream co
 4. **Validate compilation**: Run `dbt compile --select tag:placeholder`
 5. **Track status**: Add `placeholder` tag to config for tracking
 
-## Placeholder Model Pattern
+### Placeholder Model Pattern
 
 ```sql
 {{ config(materialized='ephemeral', tags=['placeholder', 'bronze']) }}
@@ -197,16 +254,16 @@ select
 where false
 ```
 
-## Skill References
+### Phase 3 Skill References
 
-| Activity           | Delegate To                                  |
-| ------------------ | -------------------------------------------- |
-| Datatype mapping   | `dbt-migration-{source}` (platform-specific) |
-| YAML structure     | `dbt-testing`                                |
-| Test definitions   | `dbt-testing` (dbt_constraints)              |
-| Naming conventions | `dbt-architecture`                           |
+| Activity           | Delegate To                                        |
+| ------------------ | -------------------------------------------------- |
+| Datatype mapping   | dbt-migration-{source} (platform-specific)         |
+| YAML structure     | [`dbt-testing`](../dbt-testing/SKILL.md)           |
+| Test definitions   | [`dbt-testing`](../dbt-testing/SKILL.md)           |
+| Naming conventions | [`dbt-architecture`](../dbt-architecture/SKILL.md) |
 
-## Phase 3 Checklist
+### Phase 3 Checklist
 
 - [ ] Placeholder model created for each target table
 - [ ] All columns have explicit datatype casts
@@ -217,31 +274,31 @@ where false
 
 ---
 
-# Phase 4: Convert Views
-
-## Objective
+## Phase 4: Convert Views
 
 Convert source database views to dbt models, starting with simple views before tackling complex
 ones. Views are typically easier than stored procedures as they contain declarative SQL.
 
-## Activities
+### Phase 4 Activities
 
 1. **Prioritize by complexity**: Simple views (no joins) → Join views → Aggregate views → Complex
    views
 2. **Apply syntax translation**: Delegate to platform-specific skill (see Related Skills)
-3. **Structure with CTEs**: Use standard CTE pattern from `dbt-modeling` skill
-4. **Add tests**: Define tests in `_models.yml` using `dbt-testing` skill patterns
+3. **Structure with CTEs**: Use standard CTE pattern from [`dbt-modeling`](../dbt-modeling/SKILL.md)
+   skill
+4. **Add tests**: Define tests in `_models.yml` using [`dbt-testing`](../dbt-testing/SKILL.md) skill
+   patterns
 5. **Replace placeholder logic**: Update placeholder SELECT with converted logic
 
-## Skill References
+### Phase 4 Skill References
 
-| Activity           | Delegate To                                         |
-| ------------------ | --------------------------------------------------- |
-| Syntax translation | `dbt-migration-{source}` (SQL Server, Oracle, etc.) |
-| CTE patterns       | `dbt-modeling`                                      |
-| Test definitions   | `dbt-testing`                                       |
+| Activity           | Delegate To                                       |
+| ------------------ | ------------------------------------------------- |
+| Syntax translation | dbt-migration-{source} (SQL Server, Oracle, etc.) |
+| CTE patterns       | [`dbt-modeling`](../dbt-modeling/SKILL.md)        |
+| Test definitions   | [`dbt-testing`](../dbt-testing/SKILL.md)          |
 
-## Phase 4 Checklist
+### Phase 4 Checklist
 
 - [ ] Views prioritized by complexity
 - [ ] Platform-specific syntax translated (delegate to source skills)
@@ -252,23 +309,21 @@ ones. Views are typically easier than stored procedures as they contain declarat
 
 ---
 
-# Phase 5: Convert Table Logic from Stored Procedures
-
-## Objective
+## Phase 5: Convert Table Logic from Stored Procedures
 
 Transform procedural stored procedure logic into declarative dbt models, selecting appropriate
 materializations for different ETL patterns.
 
-## Activities
+### Phase 5 Activities
 
 1. **Analyze ETL patterns**: Identify Full Refresh, SCD Type 1/2, Append, Delete+Insert patterns
-2. **Map to materializations**: Use pattern-to-materialization mapping from `dbt-materializations`
-   skill
+2. **Map to materializations**: Use pattern-to-materialization mapping from
+   [`dbt-materializations`](../dbt-materializations/SKILL.md) skill
 3. **Break complex procedures**: Split single procedures into multiple intermediate/final models
 4. **Convert procedural constructs**: Replace cursors, temp tables, variables with declarative SQL
 5. **Document decisions**: Add header comments explaining conversion approach
 
-## Pattern Mapping Reference
+### Pattern Mapping Reference
 
 | Source Pattern         | dbt Approach                                |
 | ---------------------- | ------------------------------------------- |
@@ -278,7 +333,7 @@ materializations for different ETL patterns.
 | INSERT only            | `materialized='incremental'` append         |
 | DELETE range + INSERT  | `incremental` with `delete+insert` strategy |
 
-## Procedural → Declarative Conversion
+### Procedural to Declarative Conversion
 
 | Procedural Pattern | dbt Equivalent                   |
 | ------------------ | -------------------------------- |
@@ -288,17 +343,17 @@ materializations for different ETL patterns.
 | IF/ELSE branches   | CASE expressions or `{% if %}`   |
 | TRY/CATCH          | Pre-validation tests             |
 
-## Skill References
+### Phase 5 Skill References
 
-| Activity                  | Delegate To              |
-| ------------------------- | ------------------------ |
-| Materialization selection | `dbt-materializations`   |
-| Incremental strategies    | `dbt-materializations`   |
-| Snapshot configuration    | `dbt-materializations`   |
-| Syntax translation        | `dbt-migration-{source}` |
-| Model structure           | `dbt-modeling`           |
+| Activity                  | Delegate To                                                |
+| ------------------------- | ---------------------------------------------------------- |
+| Materialization selection | [`dbt-materializations`](../dbt-materializations/SKILL.md) |
+| Incremental strategies    | [`dbt-materializations`](../dbt-materializations/SKILL.md) |
+| Snapshot configuration    | [`dbt-materializations`](../dbt-materializations/SKILL.md) |
+| Syntax translation        | dbt-migration-{source}                                     |
+| Model structure           | [`dbt-modeling`](../dbt-modeling/SKILL.md)                 |
 
-## Phase 5 Checklist
+### Phase 5 Checklist
 
 - [ ] All stored procedures analyzed for patterns
 - [ ] ETL patterns mapped to dbt materializations
@@ -309,14 +364,12 @@ materializations for different ETL patterns.
 
 ---
 
-# Phase 6: End-to-End Testing and Validation
-
-## Objective
+## Phase 6: End-to-End Testing and Validation
 
 Verify that migrated dbt models produce identical results to source system, using multiple
 validation techniques to ensure data integrity.
 
-## Activities
+### Phase 6 Activities
 
 1. **Row count validation**: Compare total counts between source and target
 2. **Column checksum validation**: Compare row-level hashes to identify differences
@@ -326,7 +379,7 @@ validation techniques to ensure data integrity.
 6. **Incremental validation**: Test both full-refresh and incremental runs
 7. **Document results**: Create validation report for each migrated object
 
-## Validation Techniques
+### Validation Techniques
 
 | Technique      | Purpose                   | Implementation                |
 | -------------- | ------------------------- | ----------------------------- |
@@ -336,16 +389,16 @@ validation techniques to ensure data integrity.
 | Aggregates     | Validate totals           | SUM/AVG comparisons           |
 | Mock data      | Test transformations      | Seed files + expected outputs |
 
-## Skill References
+### Phase 6 Skill References
 
-| Activity         | Delegate To                     |
-| ---------------- | ------------------------------- |
-| Test definitions | `dbt-testing`                   |
-| Constraint tests | `dbt-testing` (dbt_constraints) |
-| Singular tests   | `dbt-testing`                   |
-| dbt commands     | `dbt-commands`                  |
+| Activity         | Delegate To                                |
+| ---------------- | ------------------------------------------ |
+| Test definitions | [`dbt-testing`](../dbt-testing/SKILL.md)   |
+| Constraint tests | [`dbt-testing`](../dbt-testing/SKILL.md)   |
+| Singular tests   | [`dbt-testing`](../dbt-testing/SKILL.md)   |
+| dbt commands     | [`dbt-commands`](../dbt-commands/SKILL.md) |
 
-## Phase 6 Checklist
+### Phase 6 Checklist
 
 - [ ] Row count validation queries created
 - [ ] Checksum comparison implemented
@@ -358,13 +411,11 @@ validation techniques to ensure data integrity.
 
 ---
 
-# Phase 7: Deployment and Cutover
-
-## Objective
+## Phase 7: Deployment and Cutover
 
 Deploy validated dbt models to production with a clear cutover plan and monitoring strategy.
 
-## Activities
+### Phase 7 Activities
 
 1. **Deploy to Development**: Run `dbt build --target dev` and validate
 2. **Deploy to Test/UAT**: Run full validation suite with `--store-failures`
@@ -373,7 +424,7 @@ Deploy validated dbt models to production with a clear cutover plan and monitori
 5. **Configure scheduled runs**: Set up Snowflake tasks or dbt Cloud scheduling
 6. **Monitor post-deployment**: Track run duration, row counts, test failures, performance
 
-## Cutover Plan Template
+### Cutover Plan Template
 
 | Phase              | Activities                                                                     |
 | ------------------ | ------------------------------------------------------------------------------ |
@@ -382,17 +433,17 @@ Deploy validated dbt models to production with a clear cutover plan and monitori
 | Post-Cutover (T+1) | Monitor performance, verify schedules, confirm access, close tickets           |
 | Rollback           | Re-enable source ETL, revert BI connections, document issues                   |
 
-## Skill References
+### Phase 7 Skill References
 
-| Activity           | Delegate To                 |
-| ------------------ | --------------------------- |
-| dbt commands       | `dbt-commands`              |
-| Project deployment | `dbt-projects-on-snowflake` |
-| Snowflake tasks    | `snowflake-cli`             |
-| Run monitoring     | `dbt-artifacts`             |
-| Connection setup   | `snowflake-connections`     |
+| Activity           | Delegate To                                                          |
+| ------------------ | -------------------------------------------------------------------- |
+| dbt commands       | [`dbt-commands`](../dbt-commands/SKILL.md)                           |
+| Project deployment | [`dbt-projects-on-snowflake`](../dbt-projects-on-snowflake/SKILL.md) |
+| Snowflake tasks    | [`snowflake-cli`](../snowflake-cli/SKILL.md)                         |
+| Run monitoring     | [`dbt-artifacts`](../dbt-artifacts/SKILL.md)                         |
+| Connection setup   | [`snowflake-connections`](../snowflake-connections/SKILL.md)         |
 
-## Phase 7 Checklist
+### Phase 7 Checklist
 
 - [ ] Development deployment successful
 - [ ] Test/UAT deployment successful
@@ -406,57 +457,61 @@ Deploy validated dbt models to production with a clear cutover plan and monitori
 
 ---
 
-# Related Skills
+## Related Skills
 
-## Workflow Skills
+### Workflow Skills
 
-- **dbt-architecture**: Project structure, medallion layers, naming conventions
-- **dbt-modeling**: CTE patterns, SQL structure, layer-specific templates
-- **dbt-testing**: Data quality tests, dbt_constraints, singular tests
-- **dbt-materializations**: Incremental strategies, snapshots, Python models
-- **dbt-performance**: Clustering keys, warehouse sizing, query optimization
-- **dbt-commands**: dbt CLI operations, model selection syntax
-- **dbt-core**: Installation, configuration, package management
-- **snowflake-cli**: Snowflake operations, deployment commands
+- **[dbt-architecture](../dbt-architecture/SKILL.md)**: Project structure, medallion layers, naming
+  conventions
+- **[dbt-modeling](../dbt-modeling/SKILL.md)**: CTE patterns, SQL structure, layer-specific
+  templates
+- **[dbt-testing](../dbt-testing/SKILL.md)**: Data quality tests, dbt_constraints, singular tests
+- **[dbt-materializations](../dbt-materializations/SKILL.md)**: Incremental strategies, snapshots,
+  Python models
+- **[dbt-performance](../dbt-performance/SKILL.md)**: Clustering keys, warehouse sizing, query
+  optimization
+- **[dbt-commands](../dbt-commands/SKILL.md)**: dbt CLI operations, model selection syntax
+- **[dbt-core](../dbt-core/SKILL.md)**: Installation, configuration, package management
+- **[snowflake-cli](../snowflake-cli/SKILL.md)**: Snowflake operations, deployment commands
 
-## Platform-Specific Translation Skills
+### Platform-Specific Translation Skills
 
 For syntax translation, delegate to the appropriate source-specific skill:
 
-| Source Platform            | Skill Name                    | Key Considerations                   |
-| -------------------------- | ----------------------------- | ------------------------------------ |
-| SQL Server / Azure Synapse | `dbt-migration-ms-sql-server` | T-SQL, IDENTITY, TOP, #temp tables   |
-| Oracle                     | `dbt-migration-oracle`        | PL/SQL, ROWNUM, CONNECT BY, packages |
-| Teradata                   | `dbt-migration-teradata`      | QUALIFY, BTEQ, volatile tables       |
-| BigQuery                   | `dbt-migration-bigquery`      | UNNEST, STRUCT/ARRAY, backticks      |
-| Redshift                   | `dbt-migration-redshift`      | DISTKEY/SORTKEY, COPY/UNLOAD         |
-| PostgreSQL                 | `dbt-migration-postgres`      | Array expressions, psql commands     |
-| DB2                        | `dbt-migration-db2`           | SQL PL, FETCH FIRST, handlers        |
-| Hive/Spark                 | `dbt-migration-hive`          | External tables, PARTITIONED BY      |
-| Vertica                    | `dbt-migration-vertica`       | Projections, flex tables             |
-| Sybase                     | `dbt-migration-sybase`        | T-SQL variant, SELECT differences    |
+| Source Platform            | Skill Name                                                               | Key Considerations                   |
+| -------------------------- | ------------------------------------------------------------------------ | ------------------------------------ |
+| SQL Server / Azure Synapse | [`dbt-migration-ms-sql-server`](../dbt-migration-ms-sql-server/SKILL.md) | T-SQL, IDENTITY, TOP, #temp tables   |
+| Oracle                     | [`dbt-migration-oracle`](../dbt-migration-oracle/SKILL.md)               | PL/SQL, ROWNUM, CONNECT BY, packages |
+| Teradata                   | [`dbt-migration-teradata`](../dbt-migration-teradata/SKILL.md)           | QUALIFY, BTEQ, volatile tables       |
+| BigQuery                   | [`dbt-migration-bigquery`](../dbt-migration-bigquery/SKILL.md)           | UNNEST, STRUCT/ARRAY, backticks      |
+| Redshift                   | [`dbt-migration-redshift`](../dbt-migration-redshift/SKILL.md)           | DISTKEY/SORTKEY, COPY/UNLOAD         |
+| PostgreSQL                 | [`dbt-migration-postgres`](../dbt-migration-postgres/SKILL.md)           | Array expressions, psql commands     |
+| DB2                        | [`dbt-migration-db2`](../dbt-migration-db2/SKILL.md)                     | SQL PL, FETCH FIRST, handlers        |
+| Hive/Spark                 | [`dbt-migration-hive`](../dbt-migration-hive/SKILL.md)                   | External tables, PARTITIONED BY      |
+| Vertica                    | [`dbt-migration-vertica`](../dbt-migration-vertica/SKILL.md)             | Projections, flex tables             |
+| Sybase                     | [`dbt-migration-sybase`](../dbt-migration-sybase/SKILL.md)               | T-SQL variant, SELECT differences    |
 
 ---
 
-# Quick Reference: Phase Summary
+## Quick Reference: Phase Summary
 
-| Phase           | Key Deliverable                      | Primary Skill           |
-| --------------- | ------------------------------------ | ----------------------- |
-| 1. Discovery    | Object inventory, dependency map     | This skill              |
-| 2. Planning     | Folder structure, naming conventions | dbt-architecture        |
-| 3. Placeholders | Models with datatypes, schema.yml    | This skill              |
-| 4. Views        | Converted view models                | dbt-migration-{source}  |
-| 5. Table Logic  | Converted procedure models           | dbt-materializations    |
-| 6. Testing      | Validation queries, test results     | dbt-testing             |
-| 7. Deployment   | Production deployment, monitoring    | dbt-core, snowflake-cli |
+| Phase           | Key Deliverable                      | Primary Skill                                                                |
+| --------------- | ------------------------------------ | ---------------------------------------------------------------------------- |
+| 1. Discovery    | Object inventory, dependency map     | This skill                                                                   |
+| 2. Planning     | Folder structure, naming conventions | [dbt-architecture](../dbt-architecture/SKILL.md)                             |
+| 3. Placeholders | Models with datatypes, schema.yml    | This skill                                                                   |
+| 4. Views        | Converted view models                | dbt-migration-{source}                                                       |
+| 5. Table Logic  | Converted procedure models           | [dbt-materializations](../dbt-materializations/SKILL.md)                     |
+| 6. Testing      | Validation queries, test results     | [dbt-testing](../dbt-testing/SKILL.md)                                       |
+| 7. Deployment   | Production deployment, monitoring    | [dbt-core](../dbt-core/SKILL.md), [snowflake-cli](../snowflake-cli/SKILL.md) |
 
 ---
 
-# Validation Hook Integration
+## Validation Hook Integration
 
 Validation hooks automatically enforce quality standards when models are written or edited.
 
-## Quality Gates
+### Quality Gates
 
 Before advancing to each phase, ensure:
 
@@ -465,7 +520,7 @@ Before advancing to each phase, ensure:
 3. **Tests pass**: `dbt test`
 4. **Documentation complete**: `dbt docs generate`
 
-## Validation by Phase
+### Validation by Phase
 
 | Phase   | Focus Areas                                   |
 | ------- | --------------------------------------------- |

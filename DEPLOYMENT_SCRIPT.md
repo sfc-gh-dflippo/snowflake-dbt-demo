@@ -168,17 +168,17 @@ The script respects standard Snowflake environment variables:
 
 After successful deployment, you'll find:
 
-```
+```text
 your-dbt-project/
-├── deploy_dbt_project.py     # Python deployment script
+├── deploy_dbt_project.py    # Python deployment script
 ├── deploy_config/
-│   └── profiles.yml          # Deployment-specific profile
-├── target/                   # dbt artifacts
-│   ├── static_index.html     # Static documentation (generated)
-│   ├── manifest.json         # dbt manifest
-│   └── ...                   # Other dbt artifacts
-├── dbt_packages/             # Installed packages
-└── logs/                     # dbt logs
+│   └── profiles.yml         # Deployment-specific profile
+├── target/                  # dbt artifacts
+│   ├── static_index.html    # Static documentation (generated)
+│   ├── manifest.json        # dbt manifest
+│   └── ...                  # Other dbt artifacts
+├── dbt_packages/            # Installed packages
+└── logs/                    # dbt logs
 ```
 
 ## 🚨 Troubleshooting

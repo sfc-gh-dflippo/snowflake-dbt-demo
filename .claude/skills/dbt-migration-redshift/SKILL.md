@@ -27,21 +27,21 @@ Activate this skill when users ask about:
 
 ---
 
-# Task Description
+## Task Description
 
 You are a database engineer working for a hospital system. You need to convert Amazon Redshift DDL
 to equivalent dbt code compatible with Snowflake, maintaining the same business logic and data
 transformation steps while following dbt best practices.
 
-# Input Requirements
+## Input Requirements
 
 I will provide you the Redshift DDL to convert.
 
-# Audience
+## Audience
 
 The code will be executed by data engineers who are learning Snowflake and dbt.
 
-# Output Requirements
+## Output Requirements
 
 Generate the following:
 
@@ -51,9 +51,9 @@ Generate the following:
 4. Explanation of key changes and architectural decisions
 5. Inline comments highlighting any syntax that was converted
 
-# Conversion Guidelines
+## Conversion Guidelines
 
-## General Principles
+### General Principles
 
 - Replace procedural logic with declarative SQL where possible
 - Break down complex procedures into multiple modular dbt models
@@ -61,7 +61,7 @@ Generate the following:
 - Maintain data quality checks through dbt tests
 - Use Snowflake SQL functions rather than macros whenever possible
 
-## Sample Response Format
+### Sample Response Format
 
 ```sql
 -- dbt model: models/[domain]/[target_schema_name]/model_name.sql
@@ -103,7 +103,7 @@ FROM transformed_data
 ```
 
 ```yaml
-# models/[domain]/[target_schema_name]/_models.yml
+## models/[domain]/[target_schema_name]/_models.yml
 version: 2
 
 models:
@@ -130,7 +130,7 @@ models:
 ```
 
 ```yaml
-# dbt_project.yml (excerpt)
+## dbt_project.yml (excerpt)
 models:
   my_project:
     +materialized: view
@@ -138,9 +138,9 @@ models:
       +schema: target_schema_name
 ```
 
-## Specific Translation Rules
+### Specific Translation Rules
 
-### dbt Specific Requirements:
+#### dbt Specific Requirements
 
 - If the source is a view, use a view materialization in dbt
 - Include appropriate dbt model configuration (materialization type)
@@ -157,13 +157,13 @@ models:
   `column_name::VARCHAR(100)`, `amount::NUMBER(18,2)`) to ensure output matches expected data types
 - **Always provide explicit column aliases** for clarity and documentation
 
-### Performance Optimization:
+#### Performance Optimization
 
 - Suggest clustering keys if needed
 - Recommend materialization strategy (view vs table)
 - Identify potential performance improvements
 
-### Redshift to Snowflake Syntax Conversion:
+#### Redshift to Snowflake Syntax Conversion
 
 - Remove DISTKEY/SORTKEY specifications (use clustering keys instead)
 - Convert system catalog queries (pg*\*, stl*\_, stv\_\_) to Snowflake equivalents
@@ -174,7 +174,7 @@ models:
 - Convert APPROXIMATE COUNT DISTINCT to HLL functions
 - Add inline SQL comments highlighting any syntax that was converted
 
-### Key Data Type Mappings
+#### Key Data Type Mappings
 
 | Redshift                          | Snowflake              | Notes                      |
 | --------------------------------- | ---------------------- | -------------------------- |
@@ -194,7 +194,7 @@ models:
 | SUPER                             | VARIANT                |                            |
 | HLLSKETCH                         | Not supported          | Use HLL functions          |
 
-### Key Syntax Conversions
+#### Key Syntax Conversions
 
 ```sql
 -- DISTKEY/SORTKEY → Remove (use clustering keys)
@@ -224,7 +224,7 @@ LISTAGG(col, ',') WITHIN GROUP (ORDER BY col)
 APPROXIMATE COUNT(DISTINCT col) → APPROX_COUNT_DISTINCT(col)
 ```
 
-### Common Function Mappings
+#### Common Function Mappings
 
 | Redshift                      | Snowflake                       | Notes |
 | ----------------------------- | ------------------------------- | ----- |
@@ -246,14 +246,14 @@ APPROXIMATE COUNT(DISTINCT col) → APPROX_COUNT_DISTINCT(col)
 | `APPROXIMATE COUNT(DISTINCT)` | `APPROX_COUNT_DISTINCT()`       |       |
 | `JSON_EXTRACT_PATH_TEXT()`    | `JSON_EXTRACT_PATH_TEXT()`      | Same  |
 
-### Dependencies:
+#### Dependencies
 
 - List any upstream dependencies
 - Suggest model organization in dbt project
 
 ---
 
-# Validation Checklist
+## Validation Checklist
 
 - [] Every DDL statement has been accounted for in the dbt models
 - [] SQL in models is compatible with Snowflake
@@ -291,9 +291,8 @@ APPROXIMATE COUNT(DISTINCT col) → APPROX_COUNT_DISTINCT(col)
 
 ## Supported Source Database
 
-<!-- prettier-ignore -->
-| Database | Key Considerations |
-|---|---|
+| Database            | Key Considerations                                                                      |
+| ------------------- | --------------------------------------------------------------------------------------- |
 | **Amazon Redshift** | DISTKEY/SORTKEY, PL/pgSQL procedures, system catalogs (pg\_, stl\_, stv\_), COPY/UNLOAD |
 
 ## Translation References
@@ -306,10 +305,21 @@ Detailed syntax translation guides are available in the `translation-references/
 
 ### Reference Index
 
-<!-- prettier-ignore -->
-| Folder | Description |
-|---|---|
-| redshift | [CONTINUE handler](translation-references/redshift/redshift-continue-handler.md) |
-| redshift | [EXIT handler](translation-references/redshift/redshift-exit-handler.md) |
-| redshift | [CREATE PROCEDURE](translation-references/redshift/rs-sql-statements-create-procedure.md) |
-| redshift | [Subqueries](translation-references/redshift/subqueries.md) |
+- [Basic Elements Literals](translation-references/redshift-basic-elements-literals.md)
+- [Basic Elements](translation-references/redshift-basic-elements.md)
+- [Conditions](translation-references/redshift-conditions.md)
+- [Continue Handler](translation-references/redshift-continue-handler.md)
+- [Create Procedure](translation-references/redshift-create-procedure.md)
+- [Data Types](translation-references/redshift-data-types.md)
+- [ETL BI Repointing Power BI Redshift Repointing](translation-references/redshift-etl-bi-repointing-power-bi-redshift-repointing.md)
+- [Exit Handler](translation-references/redshift-exit-handler.md)
+- [Expressions](translation-references/redshift-expressions.md)
+- [Functions](translation-references/redshift-functions.md)
+- [Overview (README)](translation-references/redshift-readme.md)
+- [Rs SQL Statements Select Into](translation-references/redshift-rs-sql-statements-select-into.md)
+- [Rs SQL Statements Select](translation-references/redshift-rs-sql-statements-select.md)
+- [SQL Statements Create Table As](translation-references/redshift-sql-statements-create-table-as.md)
+- [SQL Statements Create Table](translation-references/redshift-sql-statements-create-table.md)
+- [SQL Statements](translation-references/redshift-sql-statements.md)
+- [Subqueries](translation-references/redshift-subqueries.md)
+- [System Catalog](translation-references/redshift-system-catalog.md)

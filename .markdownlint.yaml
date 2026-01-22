@@ -1,0 +1,94 @@
+# Markdownlint configuration
+# Rules: https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md
+
+# Default: enable all rules
+default: true
+
+# =============================================================================
+# Prettier-compatible settings
+# Disables rules that conflict with Prettier formatting
+# See: https://github.com/DavidAnson/markdownlint/blob/v0.40.0/doc/Prettier.md
+# =============================================================================
+
+# MD007/ul-indent - Prettier handles list indentation
+MD007: false
+
+# MD009/no-trailing-spaces - Prettier removes trailing spaces
+MD009: false
+
+# MD010/no-hard-tabs - Prettier handles tabs/spaces
+MD010: false
+
+# MD012/no-multiple-blanks - Prettier normalizes blank lines
+MD012: false
+
+# MD013/line-length - Prettier handles line wrapping
+MD013: false
+
+# MD014/commands-show-output - Prettier may reformat
+MD014: false
+
+# MD022/blanks-around-headings - Prettier handles heading spacing
+MD022: false
+
+# MD027/no-multiple-space-blockquote - Prettier handles blockquote spacing
+MD027: false
+
+# MD030/list-marker-space - Prettier handles list marker spacing
+MD030: false
+
+# MD031/blanks-around-fences - Prettier handles fence spacing
+MD031: false
+
+# MD032/blanks-around-lists - Prettier handles list spacing
+MD032: false
+
+# MD034/no-bare-urls - Prettier may affect URL formatting
+MD034: false
+
+# MD036/no-emphasis-as-heading - Style preference
+MD036: false
+
+# MD047/single-trailing-newline - Prettier handles trailing newlines
+MD047: false
+
+# MD049/emphasis-style - Prettier handles emphasis style
+MD049: false
+
+# MD050/strong-style - Prettier handles strong style
+MD050: false
+
+# MD055/table-pipe-style - Prettier handles table formatting
+MD055: false
+
+# MD056/table-column-count - Prettier handles table formatting
+MD056: false
+
+# MD058/blanks-around-tables - Prettier handles table spacing
+MD058: false
+
+# MD060/table-column-style - Prettier handles table alignment
+MD060: false
+
+# =============================================================================
+# Project-specific settings
+# =============================================================================
+
+# MD024 - Multiple headings with the same content
+MD024:
+  siblings_only: true
+
+# MD033 - Allow inline HTML (needed for some documentation)
+MD033: false
+
+# MD041 - First line should be a top-level heading
+# Disabled for files that start with YAML front matter
+MD041: false
+
+# MD046 - Code block style (fenced)
+MD046:
+  style: fenced
+
+# MD048 - Code fence style (backticks)
+MD048:
+  style: backtick

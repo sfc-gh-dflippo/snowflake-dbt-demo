@@ -71,7 +71,7 @@ snow sql -q "SELECT * FROM {{db}}.{{schema}}.table" \
 
 **Critical Concept:** Snowflake CLI supports three different variable syntaxes depending on context.
 
-### Three Syntax Types:
+### Three Syntax Types
 
 **1. Bash Variables** - Shell expansion (for environment control):
 
@@ -198,7 +198,7 @@ snow sql --enable-templating NONE -q "SELECT '<% not_a_var %>'"
 
 **Default:** `STANDARD` and `LEGACY` are enabled by default
 
-### Important Notes:
+### Important Notes
 
 - **Stage execution automatically uses Jinja** - SQL files uploaded to stages should use `{{ var }}`
   syntax
@@ -206,6 +206,7 @@ snow sql --enable-templating NONE -q "SELECT '<% not_a_var %>'"
 - **Enable Jinja explicitly** - Add `--enable-templating JINJA` to use `{{ }}` with `snow sql`
   commands
 - **Combining variable types** - Use bash for environment, `<% %>` for SQL:
+
   ```bash
   ENV="prod"
   CONNECTION="${ENV}_connection"
@@ -229,7 +230,7 @@ snow sql --enable-templating NONE -q "SELECT '<% not_a_var %>'"
 
 ### Streamlit Apps
 
-```bash
+```sql
 snow streamlit deploy --replace -c default
 snow streamlit list -c default
 snow streamlit get-url my_app -c default
@@ -237,7 +238,7 @@ snow streamlit get-url my_app -c default
 
 ### Snowpark (UDFs/Procedures)
 
-```bash
+```sql
 snow snowpark build -c default
 snow snowpark deploy --replace -c default
 ```
@@ -254,7 +255,7 @@ See `PROJECT_CREATION.md` for:
 
 **Quick Commands:**
 
-```bash
+```sql
 # Upload/download files
 snow stage copy ./script.sql @my_stage/ -c default
 snow stage copy @my_stage/file.csv ./downloads/ -c default
@@ -279,7 +280,7 @@ snow stage execute @my_stage/script.py -c default -D var=value
 
 ## Object Management
 
-```bash
+```sql
 # List objects
 snow object list warehouse -c default
 snow object list table -c default
@@ -295,7 +296,7 @@ snow object create warehouse my_wh --size SMALL -c default
 
 **All Snowflake CLI commands use the `-c` flag to specify connection profiles:**
 
-```bash
+```sql
 snow sql -c default -q "SELECT * FROM table"
 snow sql -c prod -q "SELECT * FROM table"
 ```
@@ -310,9 +311,9 @@ snow sql -c prod -q "SELECT * FROM table"
 
 ## Common Patterns
 
-### Multi-Environment Deployment:
+### Multi-Environment Deployment
 
-```bash
+```sql
 #!/bin/bash
 ENV="${1:-dev}"
 
@@ -365,7 +366,7 @@ EOF
 
 **Solution:** Disable templating
 
-```bash
+```sql
 snow sql --enable-templating NONE -q "SELECT '<% not_a_variable %>'"
 ```
 
@@ -375,7 +376,7 @@ snow sql --enable-templating NONE -q "SELECT '<% not_a_variable %>'"
 
 **Solution:** Use Jinja `{{ }}` syntax (default for stage execute)
 
-```bash
+```sql
 # ✅ CORRECT
 snow stage execute @stage/script.sql -D var=value
 
@@ -399,7 +400,7 @@ GRANT READ, WRITE ON STAGE my_stage TO ROLE my_role;
 
 **Quick Test:**
 
-```bash
+```sql
 snow connection test -c default
 ```
 
@@ -409,7 +410,7 @@ snow connection test -c default
 
 ## Quick Reference
 
-```bash
+```sql
 # Bash variables (shell expansion)
 DB="PROD"
 snow sql -c default -q "USE ${DB}_DATABASE"

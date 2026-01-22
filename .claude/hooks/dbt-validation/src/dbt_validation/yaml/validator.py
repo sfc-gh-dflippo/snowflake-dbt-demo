@@ -26,7 +26,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
-from typing import Any, Union
+from typing import Any
 
 import yaml
 
@@ -53,7 +53,7 @@ YAML_RECOMMEND_CONSTRAINTS = "YAML006"
 # =============================================================================
 
 # A dbt test can be either a simple string name or a dict with test config
-DbtTest = Union[str, dict[str, Any]]
+DbtTest = str | dict[str, Any]
 
 # Column definition from schema YAML
 ColumnDef = dict[str, Any]
@@ -170,7 +170,9 @@ def is_key_column(column_name: str) -> bool:
     Returns:
         True if the column name matches a key column pattern
     """
-    return any(re.match(pattern, column_name, re.IGNORECASE) for pattern in KEY_COLUMN_PATTERNS)
+    return any(
+        re.match(pattern, column_name, re.IGNORECASE) for pattern in KEY_COLUMN_PATTERNS
+    )
 
 
 # =============================================================================
@@ -425,7 +427,8 @@ def validate_model(model: ModelDef, result: YAMLValidationResult) -> None:
         if not column.get("description"):
             result.add_error(
                 rule_id="YAML004",
-                message=f"Recommend adding description for column '{column_name}' in model '{model_name}'",
+                message=f"Recommend adding description for column '{column_name}' "
+                f"in model '{model_name}'",
                 severity=Severity.RECOMMENDATION,
                 model_name=model_name,
                 column_name=column_name,
@@ -437,8 +440,8 @@ def validate_model(model: ModelDef, result: YAMLValidationResult) -> None:
         if is_key_column(column_name) and not has_column_test and not has_model_test:
             result.add_error(
                 rule_id="YAML002",
-                message=f"Column '{column_name}' in model '{model_name}' appears to be a key column "
-                "but has no primary_key, unique_key, or foreign_key test",
+                message=f"Column '{column_name}' in model '{model_name}' appears to be "
+                "a key column but has no primary_key, unique_key, or foreign_key test",
                 severity=Severity.WARNING,
                 model_name=model_name,
                 column_name=column_name,
@@ -449,8 +452,9 @@ def validate_model(model: ModelDef, result: YAMLValidationResult) -> None:
         for rec in recommendations:
             result.add_error(
                 rule_id="YAML006",
-                message=f"Column '{column_name}' in model '{model_name}' uses '{rec['builtin']}' test. "
-                f"Consider using '{rec['recommended']}' instead. {rec['reason']}",
+                message=f"Column '{column_name}' in model '{model_name}' uses "
+                f"'{rec['builtin']}' test. Consider using '{rec['recommended']}' "
+                f"instead. {rec['reason']}",
                 severity=Severity.RECOMMENDATION,
                 model_name=model_name,
                 column_name=column_name,

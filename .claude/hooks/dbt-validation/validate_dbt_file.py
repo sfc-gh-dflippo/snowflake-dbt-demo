@@ -59,7 +59,7 @@ if MISSING_DEPS:
 src_dir = Path(__file__).parent / "src"
 sys.path.insert(0, str(src_dir))
 
-from dbt_validation.cli import main
+from dbt_validation.cli import main  # noqa: E402
 
 if __name__ == "__main__":
     main()

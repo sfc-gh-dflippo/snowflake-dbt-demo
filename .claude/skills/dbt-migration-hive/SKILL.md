@@ -28,21 +28,21 @@ Activate this skill when users ask about:
 
 ---
 
-# Task Description
+## Task Description
 
 You are a database engineer working for a hospital system. You need to convert Hive/Spark/Databricks
 DDL to equivalent dbt code compatible with Snowflake, maintaining the same business logic and data
 transformation steps while following dbt best practices.
 
-# Input Requirements
+## Input Requirements
 
 I will provide you the HiveQL DDL to convert.
 
-# Audience
+## Audience
 
 The code will be executed by data engineers who are learning Snowflake and dbt.
 
-# Output Requirements
+## Output Requirements
 
 Generate the following:
 
@@ -52,9 +52,9 @@ Generate the following:
 4. Explanation of key changes and architectural decisions
 5. Inline comments highlighting any syntax that was converted
 
-# Conversion Guidelines
+## Conversion Guidelines
 
-## General Principles
+### General Principles
 
 - Replace procedural logic with declarative SQL where possible
 - Break down complex procedures into multiple modular dbt models
@@ -62,7 +62,7 @@ Generate the following:
 - Maintain data quality checks through dbt tests
 - Use Snowflake SQL functions rather than macros whenever possible
 
-## Sample Response Format
+### Sample Response Format
 
 ```sql
 -- dbt model: models/[domain]/[target_schema_name]/model_name.sql
@@ -107,7 +107,7 @@ FROM transformed_data
 ```
 
 ```yaml
-# models/[domain]/[target_schema_name]/_models.yml
+## models/[domain]/[target_schema_name]/_models.yml
 version: 2
 
 models:
@@ -134,7 +134,7 @@ models:
 ```
 
 ```yaml
-# dbt_project.yml (excerpt)
+## dbt_project.yml (excerpt)
 models:
   my_project:
     +materialized: view
@@ -142,9 +142,9 @@ models:
       +schema: target_schema_name
 ```
 
-## Specific Translation Rules
+### Specific Translation Rules
 
-### dbt Specific Requirements:
+#### dbt Specific Requirements
 
 - If the source is a view, use a view materialization in dbt
 - Include appropriate dbt model configuration (materialization type)
@@ -161,13 +161,13 @@ models:
   `column_name::VARCHAR(100)`, `amount::NUMBER(18,2)`) to ensure output matches expected data types
 - **Always provide explicit column aliases** for clarity and documentation
 
-### Performance Optimization:
+#### Performance Optimization
 
 - Suggest clustering keys if needed
 - Recommend materialization strategy (view vs table)
 - Identify potential performance improvements
 
-### Hive/Spark to Snowflake Syntax Conversion:
+#### Hive/Spark to Snowflake Syntax Conversion
 
 - Convert LATERAL VIEW to LATERAL FLATTEN
 - Replace PARTITIONED BY with clustering keys
@@ -177,7 +177,7 @@ models:
 - Replace DISTRIBUTE BY/SORT BY with clustering
 - Convert ARRAY/MAP/STRUCT types to VARIANT
 
-### Key Data Type Mappings
+#### Key Data Type Mappings
 
 | Hive/Spark                  | Snowflake     | Notes                |
 | --------------------------- | ------------- | -------------------- |
@@ -194,7 +194,7 @@ models:
 | MAP<K,V>                    | VARIANT       | Use OBJECT_CONSTRUCT |
 | STRUCT                      | VARIANT       |                      |
 
-### Key Syntax Conversions
+#### Key Syntax Conversions
 
 ```sql
 -- LATERAL VIEW -> LATERAL FLATTEN
@@ -217,7 +217,7 @@ collect_set(col) -> ARRAY_AGG(DISTINCT col)
 size(array_col) -> ARRAY_SIZE(array_col)
 ```
 
-### Common Function Mappings
+#### Common Function Mappings
 
 | Hive/Spark              | Snowflake                                      | Notes               |
 | ----------------------- | ---------------------------------------------- | ------------------- |
@@ -240,14 +240,14 @@ size(array_col) -> ARRAY_SIZE(array_col)
 | `split(str, delim)`     | `SPLIT(str, delim)`                            | Same                |
 | `get_json_object(j, p)` | `GET_PATH(PARSE_JSON(j), p)`                   |                     |
 
-### Dependencies:
+#### Dependencies
 
 - List any upstream dependencies
 - Suggest model organization in dbt project
 
 ---
 
-# Validation Checklist
+## Validation Checklist
 
 - [] Every DDL statement has been accounted for in the dbt models
 - [] SQL in models is compatible with Snowflake
@@ -285,9 +285,8 @@ size(array_col) -> ARRAY_SIZE(array_col)
 
 ## Supported Source Database
 
-<!-- prettier-ignore -->
-| Database | Key Considerations |
-|---|---|
+| Database                      | Key Considerations                                                               |
+| ----------------------------- | -------------------------------------------------------------------------------- |
 | **Hive / Spark / Databricks** | External tables, PARTITIONED BY, LATERAL VIEW, file formats (PARQUET, ORC), UDFs |
 
 ## Translation References
@@ -300,7 +299,12 @@ Detailed syntax translation guides are available in the `translation-references/
 
 ### Reference Index
 
-<!-- prettier-ignore -->
-| Folder | Description |
-|---|---|
-| hive | [Subqueries](translation-references/hive/subqueries.md) |
+- [Built In Functions](translation-references/hive-built-in-functions.md)
+- [Data Types](translation-references/hive-data-types.md)
+- [Ddls Create External Table](translation-references/hive-ddls-create-external-table.md)
+- [Ddls Create View](translation-references/hive-ddls-create-view.md)
+- [Ddls Readme](translation-references/hive-ddls-readme.md)
+- [Ddls Select](translation-references/hive-ddls-select.md)
+- [Ddls Tables](translation-references/hive-ddls-tables.md)
+- [Overview (README)](translation-references/hive-readme.md)
+- [Subqueries](translation-references/hive-subqueries.md)

@@ -45,7 +45,7 @@ comprehensive browser automation.
 
 ### Page Load Verification
 
-```
+```sql
 Navigate to http://localhost:8501
 Wait 5 seconds
 Take snapshot
@@ -54,7 +54,7 @@ Verify expected elements present
 
 ### Form Testing
 
-```
+```sql
 Fill form fields (use browser_fill_form for speed)
 Click Submit button
 Wait for "Success" text to appear
@@ -63,7 +63,7 @@ Take screenshot
 
 ### Responsive Design
 
-```
+```sql
 Resize to 375x667 (mobile)
 Take screenshot
 Resize to 1920x1080 (desktop)
@@ -72,7 +72,7 @@ Take screenshot
 
 ### Multi-Page Navigation
 
-```
+```sql
 Navigate to homepage
 Click navigation link
 Verify URL changed
@@ -124,7 +124,7 @@ Verify new page content
 
 ### Common Test Flow
 
-```
+```sql
 Navigate to http://localhost:8501
 Wait 5 seconds
 Take snapshot
@@ -135,7 +135,7 @@ Take screenshot
 
 ### Responsive Testing
 
-```
+```sql
 Resize to 375x667  # Mobile
 Take screenshot
 Resize to 768x1024  # Tablet
@@ -144,9 +144,9 @@ Resize to 1920x1080  # Desktop
 Take screenshot
 ```
 
-### Form Testing
+### Form Submission
 
-```
+```sql
 Fill form fields (batch)
 Click Submit
 Wait for success message
@@ -155,7 +155,7 @@ Verify in snapshot
 
 ### Error Checking
 
-```
+```sql
 Get console messages (onlyErrors=true)
 Get network requests
 Verify no 404s or 500s

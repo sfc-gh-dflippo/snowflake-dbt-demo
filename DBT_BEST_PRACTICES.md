@@ -17,26 +17,11 @@ modeling conventions, testing strategies, and performance optimization.
 
 ### Recommended Folder Structure
 
-```
-models/
-├── staging/          # One-to-one with source tables
-│   ├── source_name/
-│   │   ├── _models.yml
-│   │   ├── stg_source_name__table_name.sql
-│   │   └── ...
-├── intermediate/     # Business logic transformations
-│   ├── _models.yml
-│   ├── int_subject_area__transformation.sql
-│   └── ...
-├── marts/           # Business-ready data products
-│   ├── core/        # Company-wide metrics
-│   ├── finance/     # Department-specific
-│   ├── marketing/   # Department-specific
-│   └── ...
-└── utilities/       # Helper models and references
-    ├── _models.yml
-    └── ...
-```
+models/ ├── staging/ # One-to-one with source tables │ ├── source_name/ │ │ ├── \_models.yml │ │ ├──
+stg_source_name**table_name.sql │ │ └── ... ├── intermediate/ # Business logic transformations │ ├──
+\_models.yml │ ├── int_subject_area**transformation.sql │ └── ... ├── marts/ # Business-ready data
+products │ ├── core/ # Company-wide metrics │ ├── finance/ # Department-specific │ ├── marketing/ #
+Department-specific │ └── ... └── utilities/ # Helper models and references ├── \_models.yml └── ...
 
 ### Layer Responsibilities
 
@@ -89,25 +74,10 @@ models/
 
 ### Column Names
 
-```sql
--- ✅ Good: Consistent, descriptive naming
-SELECT
-    customer_id,
-    customer_name,
-    order_date,
-    order_total_amount_usd,
-    is_first_order,
-    created_at_utc
+-- ✅ Good: Consistent, descriptive naming SELECT customer_id, customer_name, order_date,
+order_total_amount_usd, is_first_order, created_at_utc
 
--- ❌ Bad: Inconsistent, unclear naming
-SELECT
-    custID,
-    name,
-    dt,
-    amt,
-    first_order_flag,
-    created
-```
+-- ❌ Bad: Inconsistent, unclear naming SELECT custID, name, dt, amt, first_order_flag, created
 
 ### Key Naming Standards
 
@@ -131,23 +101,17 @@ SELECT
 
 ### Materialization Guidelines
 
-```sql
--- Staging: Use ephemeral for performance
-{{ config(materialized='ephemeral') }}
+-- Staging: Use ephemeral for performance {{ config(materialized='ephemeral') }}
 
--- Intermediate: Use ephemeral for reusable logic
-{{ config(materialized='ephemeral') }}
+-- Intermediate: Use ephemeral for reusable logic {{ config(materialized='ephemeral') }}
 
--- Marts: Use table for smaller dimensions
-{{ config(materialized='table') }}
+-- Marts: Use table for smaller dimensions {{ config(materialized='table') }}
 
--- Large facts and dimensions: Use incremental
-{{ config(
+-- Large facts and dimensions: Use incremental {{ config(
     materialized='incremental',
     unique_key='order_line_id',
     on_schema_change='fail'
 ) }}
-```
 
 ## 🧪 Testing Strategy
 
@@ -180,12 +144,10 @@ models:
         tests:
           - dbt_constraints.primary_key
         description: "Primary key for customers"
-
       - name: customer_email
         tests:
           - dbt_constraints.unique_key
         description: "Customer email address"
-
       - name: customer_created_at
         tests:
           - not_null
@@ -200,7 +162,6 @@ models:
                 - order_id
                 - order_line_number
         description: "Composite unique key for order lines"
-
       - name: customer_id
         tests:
           - dbt_constraints.foreign_key:
@@ -261,9 +222,9 @@ models:
 ```sql
 -- tests/generic/test_positive_values.sql
 {% test positive_values(model, column_name) %}
-    SELECT *
-    FROM {{ model }}
-    WHERE {{ column_name }} <= 0
+SELECT *
+FROM {{ model }}
+WHERE {{ column_name }} <= 0
 {% endtest %}
 ```
 
@@ -284,11 +245,8 @@ LEFT JOIN {{ ref('int_customer_order_counts') }} o
     ON c.customer_id = o.customer_id
 
 -- ❌ Bad: Unnecessary cross joins
-SELECT DISTINCT
-    c.customer_id,
-    c.customer_name
-FROM {{ ref('dim_customers') }} c,
-     {{ ref('dim_products') }} p
+SELECT DISTINCT c.customer_id, c.customer_name
+FROM {{ ref('dim_customers') }} c, {{ ref('dim_products') }} p
 ```
 
 #### Optimize Incremental Models
@@ -304,7 +262,7 @@ FROM {{ ref('dim_customers') }} c,
 SELECT *
 FROM {{ source('ecommerce', 'orders') }}
 {% if is_incremental() %}
-    WHERE updated_at > (SELECT MAX(updated_at) FROM {{ this }})
+WHERE updated_at > (SELECT MAX(updated_at) FROM {{ this }})
 {% endif %}
 ```
 
@@ -428,11 +386,11 @@ dbt_project:
 
 ```bash
 # Development workflow
-dbt deps                    # Install packages
-dbt seed                    # Load seed data
-dbt run --select +my_model  # Run model and dependencies
-dbt test --select my_model  # Test specific model
-dbt build                   # Run and test everything
+dbt deps                        # Install packages
+dbt seed                        # Load seed data
+dbt run --select +my_model      # Run model and dependencies
+dbt test --select my_model      # Test specific model
+dbt build                       # Run and test everything
 
 # Production deployment
 dbt run --target prod
@@ -455,7 +413,6 @@ models:
         constraints:
           - type: not_null
           - type: primary_key
-
       - name: order_total
         data_type: number(10,2)
         constraints:
@@ -508,16 +465,16 @@ SELECT * FROM scd_data
 ```sql
 -- Generate pivot columns dynamically
 {% set payment_methods_query %}
-    SELECT DISTINCT payment_method
-    FROM {{ ref('stg_orders') }}
-    ORDER BY payment_method
+SELECT DISTINCT payment_method
+FROM {{ ref('stg_orders') }}
+ORDER BY payment_method
 {% endset %}
 
 {% set results = run_query(payment_methods_query) %}
 {% if execute %}
-    {% set payment_methods = results.columns[0].values() %}
+{% set payment_methods = results.columns[0].values() %}
 {% else %}
-    {% set payment_methods = [] %}
+{% set payment_methods = [] %}
 {% endif %}
 
 SELECT

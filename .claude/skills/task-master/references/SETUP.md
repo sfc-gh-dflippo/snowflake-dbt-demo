@@ -1,6 +1,10 @@
-# name: Task Master AI - Setup & Configuration
-
-# description: Complete installation and configuration guide for Task Master AI covering npm installation, MCP setup for Cursor/VS Code/Windsurf, API key configuration, model selection, and project initialization.
+---
+name: Task Master AI - Setup & Configuration
+description:
+  Complete installation and configuration guide for Task Master AI covering npm installation, MCP
+  setup for Cursor/VS Code/Windsurf, API key configuration, model selection, and project
+  initialization
+---
 
 # Task Master AI - Setup & Configuration
 
@@ -48,26 +52,10 @@ npx task-master-ai init
 
 ### Cursor IDE
 
-**Location:** `~/.cursor/mcp.json` (global) or `<project>/.cursor/mcp.json` (project)
-
-```json
-{
-  "mcpServers": {
-    "task-master-ai": {
-      "command": "npx",
-      "args": ["-y", "task-master-ai"],
-      "env": {
-        "ANTHROPIC_API_KEY": "sk-ant-...",
-        "PERPLEXITY_API_KEY": "pplx-...",
-        "OPENAI_API_KEY": "sk-...",
-        "GOOGLE_API_KEY": "AI...",
-        "MISTRAL_API_KEY": "...",
-        "OPENROUTER_API_KEY": "sk-or-..."
-      }
-    }
-  }
-}
-```
+**Location:** `~/.cursor/mcp.json` (global) or `<project>/.cursor/mcp.json` (project) {
+"mcpServers": { "task-master-ai": { "command": "npx", "args": ["-y", "task-master-ai"], "env": {
+"ANTHROPIC_API_KEY": "sk-ant-...", "PERPLEXITY_API_KEY": "pplx-...", "OPENAI_API_KEY": "sk-...",
+"GOOGLE_API_KEY": "AI...", "MISTRAL_API_KEY": "...", "OPENROUTER_API_KEY": "sk-or-..." } } } }
 
 **Enable in Cursor:**
 
@@ -77,122 +65,51 @@ npx task-master-ai init
 
 ### VS Code
 
-**Location:** `<project>/.vscode/mcp.json`
-
-```json
-{
-  "servers": {
-    "task-master-ai": {
-      "command": "npx",
-      "args": ["-y", "task-master-ai"],
-      "env": {
-        "ANTHROPIC_API_KEY": "sk-ant-...",
-        "PERPLEXITY_API_KEY": "pplx-..."
-      },
-      "type": "stdio"
-    }
-  }
-}
-```
+**Location:** `<project>/.vscode/mcp.json` { "servers": { "task-master-ai": { "command": "npx",
+"args": ["-y", "task-master-ai"], "env": { "ANTHROPIC_API_KEY": "sk-ant-...", "PERPLEXITY_API_KEY":
+"pplx-..." }, "type": "stdio" } } }
 
 ### Windsurf
 
-**Location:** `~/.codeium/windsurf/mcp_config.json`
-
-```json
-{
-  "mcpServers": {
-    "task-master-ai": {
-      "command": "npx",
-      "args": ["-y", "task-master-ai"],
-      "env": {
-        "ANTHROPIC_API_KEY": "sk-ant-...",
-        "PERPLEXITY_API_KEY": "pplx-..."
-      }
-    }
-  }
-}
-```
+**Location:** `~/.codeium/windsurf/mcp_config.json` { "mcpServers": { "task-master-ai": { "command":
+"npx", "args": ["-y", "task-master-ai"], "env": { "ANTHROPIC_API_KEY": "sk-ant-...",
+"PERPLEXITY_API_KEY": "pplx-..." } } } }
 
 ## API Keys
 
 ### Required Keys
 
-**Anthropic (Required for main operations):**
+**Anthropic (Required for main operations):** ANTHROPIC_API_KEY=sk-ant-...
 
-```bash
-ANTHROPIC_API_KEY=sk-ant-...
-```
+Get from: <https://console.anthropic.com/>
 
-Get from: https://console.anthropic.com/
+**Perplexity (Required for research):** PERPLEXITY_API_KEY=pplx-...
 
-**Perplexity (Required for research):**
-
-```bash
-PERPLEXITY_API_KEY=pplx-...
-```
-
-Get from: https://www.perplexity.ai/settings/api
+Get from: <https://www.perplexity.ai/settings/api>
 
 ### Optional Keys
 
-**OpenAI:**
+**OpenAI:** OPENAI_API_KEY=sk-...
 
-```bash
-OPENAI_API_KEY=sk-...
-```
+**Google (Gemini):** GOOGLE_API_KEY=AI...
 
-**Google (Gemini):**
+**Mistral:** MISTRAL_API_KEY=...
 
-```bash
-GOOGLE_API_KEY=AI...
-```
+**OpenRouter:** OPENROUTER_API_KEY=sk-or-...
 
-**Mistral:**
+**Groq:** GROQ*API_KEY=gsk*...
 
-```bash
-MISTRAL_API_KEY=...
-```
+**xAI:** XAI_API_KEY=xai-...
 
-**OpenRouter:**
+**Azure OpenAI:** AZURE_OPENAI_API_KEY=... AZURE_OPENAI_ENDPOINT=https://...
 
-```bash
-OPENROUTER_API_KEY=sk-or-...
-```
-
-**Groq:**
-
-```bash
-GROQ_API_KEY=gsk_...
-```
-
-**xAI:**
-
-```bash
-XAI_API_KEY=xai-...
-```
-
-**Azure OpenAI:**
-
-```bash
-AZURE_OPENAI_API_KEY=...
-AZURE_OPENAI_ENDPOINT=https://...
-```
-
-**Ollama (Local):**
-
-```bash
-OLLAMA_API_KEY=...
-OLLAMA_BASE_URL=http://localhost:11434/api
-```
+**Ollama (Local):** OLLAMA_API_KEY=... OLLAMA_BASE_URL=<http://localhost:11434/api>
 
 ## Project Initialization
 
 ### Interactive Setup
 
-```bash
 task-master init
-```
 
 Prompts for:
 
@@ -204,17 +121,13 @@ Prompts for:
 
 ### Quick Setup (Non-Interactive)
 
-```bash
 task-master init --yes
-```
 
 Uses defaults for all settings.
 
 ### With Rule Profiles
 
-```bash
 task-master init --rules cursor,windsurf
-```
 
 Available profiles:
 
@@ -228,20 +141,10 @@ Available profiles:
 
 ### Project Structure Created
 
-```
-.taskmaster/
-├── config.json          # Configuration
-├── state.json           # Current state
-├── tasks/
-│   └── tasks.json       # Task definitions
-├── docs/
-│   ├── prd.txt          # Your PRD (create this)
-│   └── research/        # Research outputs
-├── reports/
-│   └── task-complexity-report.json
-└── templates/
-    └── example_prd.txt  # Example PRD
-```
+.taskmaster/ ├── config.json # Configuration ├── state.json # Current state ├── tasks/ │ └──
+tasks.json # Task definitions ├── docs/ │ ├── prd.txt # Your PRD (create this) │ └── research/ #
+Research outputs ├── reports/ │ └── task-complexity-report.json └── templates/ └── example_prd.txt #
+Example PRD
 
 ## Model Configuration
 
@@ -251,7 +154,7 @@ Available profiles:
 task-master models
 ```
 
-### Interactive Setup
+### Model Interactive Setup
 
 ```bash
 task-master models --setup
@@ -272,17 +175,9 @@ task-master models --set-fallback gpt-4o
 
 ### Custom Models
 
-**Ollama:**
+**Ollama:** `task-master models --set-main llama3.1 --ollama`
 
-```bash
-task-master models --set-main llama3.1 --ollama
-```
-
-**OpenRouter:**
-
-```bash
-task-master models --set-main anthropic/claude-3.5-sonnet --openrouter
-```
+**OpenRouter:** `task-master models --set-main anthropic/claude-3.5-sonnet --openrouter`
 
 ### Claude Code (No API Key Required)
 
@@ -371,7 +266,7 @@ task-master rules add windsurf,roo
 task-master rules remove vscode
 ```
 
-### Interactive Setup
+### Rules Interactive Setup
 
 ```bash
 task-master rules setup
@@ -391,27 +286,19 @@ Each profile creates its directory:
 
 ### Test MCP Connection
 
-In your IDE's AI chat:
-
-```
-Initialize taskmaster-ai in my project
-```
+In your IDE's AI chat: Initialize taskmaster-ai in my project
 
 Should respond with setup confirmation.
 
 ### Test CLI
 
-```bash
 task-master list
-```
 
 Should show empty task list or existing tasks.
 
 ### Check Configuration
 
-```bash
 task-master models
-```
 
 Should display current model configuration.
 
@@ -490,21 +377,15 @@ npx task-master-ai init
 
 ### Update Global Installation
 
-```bash
 npm update -g task-master-ai
-```
 
 ### Update Project Installation
 
-```bash
 npm update task-master-ai
-```
 
 ### Check Version
 
-```bash
 task-master --version
-```
 
 ## References
 

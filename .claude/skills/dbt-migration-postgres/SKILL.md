@@ -27,21 +27,21 @@ Activate this skill when users ask about:
 
 ---
 
-# Task Description
+## Task Description
 
 You are a database engineer working for a hospital system. You need to convert
 PostgreSQL/Greenplum/Netezza DDL to equivalent dbt code compatible with Snowflake, maintaining the
 same business logic and data transformation steps while following dbt best practices.
 
-# Input Requirements
+## Input Requirements
 
 I will provide you the PostgreSQL DDL to convert.
 
-# Audience
+## Audience
 
 The code will be executed by data engineers who are learning Snowflake and dbt.
 
-# Output Requirements
+## Output Requirements
 
 Generate the following:
 
@@ -51,9 +51,9 @@ Generate the following:
 4. Explanation of key changes and architectural decisions
 5. Inline comments highlighting any syntax that was converted
 
-# Conversion Guidelines
+## Conversion Guidelines
 
-## General Principles
+### General Principles
 
 - Replace procedural logic with declarative SQL where possible
 - Break down complex procedures into multiple modular dbt models
@@ -61,7 +61,7 @@ Generate the following:
 - Maintain data quality checks through dbt tests
 - Use Snowflake SQL functions rather than macros whenever possible
 
-## Sample Response Format
+### Sample Response Format
 
 ```sql
 -- dbt model: models/[domain]/[target_schema_name]/model_name.sql
@@ -104,7 +104,7 @@ FROM transformed_data
 ```
 
 ```yaml
-# models/[domain]/[target_schema_name]/_models.yml
+## models/[domain]/[target_schema_name]/_models.yml
 version: 2
 
 models:
@@ -131,7 +131,7 @@ models:
 ```
 
 ```yaml
-# dbt_project.yml (excerpt)
+## dbt_project.yml (excerpt)
 models:
   my_project:
     +materialized: view
@@ -139,9 +139,9 @@ models:
       +schema: target_schema_name
 ```
 
-## Specific Translation Rules
+### Specific Translation Rules
 
-### dbt Specific Requirements:
+#### dbt Specific Requirements
 
 - If the source is a view, use a view materialization in dbt
 - Include appropriate dbt model configuration (materialization type)
@@ -158,13 +158,13 @@ models:
   `column_name::VARCHAR(100)`, `amount::NUMBER(18,2)`) to ensure output matches expected data types
 - **Always provide explicit column aliases** for clarity and documentation
 
-### Performance Optimization:
+#### Performance Optimization
 
 - Suggest clustering keys if needed
 - Recommend materialization strategy (view vs table)
 - Identify potential performance improvements
 
-### PostgreSQL to Snowflake Syntax Conversion:
+#### PostgreSQL to Snowflake Syntax Conversion
 
 - Convert array expressions (<> ALL, = ANY) to Snowflake equivalents
 - Handle CHAR padding differences
@@ -175,7 +175,7 @@ models:
 - Replace PostgreSQL-specific operators
 - Handle SERIAL/BIGSERIAL with IDENTITY
 
-### Key Data Type Mappings
+#### Key Data Type Mappings
 
 | PostgreSQL              | Snowflake              | Notes                   |
 | ----------------------- | ---------------------- | ----------------------- |
@@ -197,7 +197,7 @@ models:
 | ARRAY                   | ARRAY                  |                         |
 | UUID                    | VARCHAR                |                         |
 
-### Key Syntax Conversions
+#### Key Syntax Conversions
 
 ```sql
 -- SERIAL -> AUTOINCREMENT
@@ -218,7 +218,7 @@ generate_series(1, 10) -> TABLE(GENERATOR(ROWCOUNT => 10))
 NOW() -> CURRENT_TIMESTAMP()
 ```
 
-### Common Function Mappings
+#### Common Function Mappings
 
 | PostgreSQL                 | Snowflake                             | Notes           |
 | -------------------------- | ------------------------------------- | --------------- |
@@ -241,14 +241,14 @@ NOW() -> CURRENT_TIMESTAMP()
 | `json_extract_path_text()` | `JSON_EXTRACT_PATH_TEXT()`            | Same            |
 | `::type` cast              | `::type` cast                         | Same            |
 
-### Dependencies:
+#### Dependencies
 
 - List any upstream dependencies
 - Suggest model organization in dbt project
 
 ---
 
-# Validation Checklist
+## Validation Checklist
 
 - [] Every DDL statement has been accounted for in the dbt models
 - [] SQL in models is compatible with Snowflake
@@ -286,9 +286,8 @@ NOW() -> CURRENT_TIMESTAMP()
 
 ## Supported Source Database
 
-<!-- prettier-ignore -->
-| Database | Key Considerations |
-|---|---|
+| Database                             | Key Considerations                                                                            |
+| ------------------------------------ | --------------------------------------------------------------------------------------------- |
 | **PostgreSQL / Greenplum / Netezza** | Array expressions (<> ALL, = ANY), CHAR padding differences, psql commands, distribution keys |
 
 ## Translation References
@@ -301,7 +300,18 @@ Detailed syntax translation guides are available in the `translation-references/
 
 ### Reference Index
 
-<!-- prettier-ignore -->
-| Folder | Description |
-|---|---|
-| postgres | [Subqueries](translation-references/postgres/subqueries.md) |
+- [Data Types Netezza Data Types](translation-references/postgres-data-types-netezza-data-types.md)
+- [Data Types Postgresql Data Types](translation-references/postgres-data-types-postgresql-data-types.md)
+- [Ddls Create Materialized View Greenplum Create Materialized View](translation-references/postgres-ddls-create-materialized-view-greenplum-create-materialized-view.md)
+- [Ddls Create Materialized View Postgresql Create Materialized View](translation-references/postgres-ddls-create-materialized-view-postgresql-create-materialized-view.md)
+- [Ddls Create Table Greenplum Create Table](translation-references/postgres-ddls-create-table-greenplum-create-table.md)
+- [Ddls Create Table Netezza Create Table](translation-references/postgres-ddls-create-table-netezza-create-table.md)
+- [Ddls Create Table Postgresql Create Table](translation-references/postgres-ddls-create-table-postgresql-create-table.md)
+- [Ddls Postgresql Create View](translation-references/postgres-ddls-postgresql-create-view.md)
+- [ETL BI Repointing Power BI Postgres Repointing](translation-references/postgres-etl-bi-repointing-power-bi-postgres-repointing.md)
+- [Overview (README)](translation-references/postgres-readme.md)
+- [Subqueries](translation-references/postgres-subqueries.md)
+- [Built In Functions](translation-references/postgresql-built-in-functions.md)
+- [Expressions](translation-references/postgresql-expressions.md)
+- [Interactive Terminal](translation-references/postgresql-interactive-terminal.md)
+- [String Comparison](translation-references/postgresql-string-comparison.md)

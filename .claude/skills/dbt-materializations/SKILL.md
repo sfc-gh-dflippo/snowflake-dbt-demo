@@ -590,7 +590,7 @@ models:
 
 ## When to Change Materializations
 
-### Change Ephemeral/View to Table When:
+### Change Ephemeral/View to Table When
 
 1. **Model is Referenced Multiple Times**
 
@@ -606,7 +606,7 @@ models:
    - Queries failing due to memory constraints
    - CTE becoming too large
 
-### Change Table to Incremental When:
+### Change Table to Incremental When
 
 1. **Large Data Volumes**
 

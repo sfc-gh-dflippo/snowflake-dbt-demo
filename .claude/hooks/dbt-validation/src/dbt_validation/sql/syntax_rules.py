@@ -31,9 +31,7 @@ class SnowflakeSyntaxResult:
     errors: list[dict[str, str]] = field(default_factory=list)
     warnings: list[dict[str, str]] = field(default_factory=list)
 
-    def add_error(
-        self, pattern: str, suggestion: str, line: int | None = None
-    ) -> None:
+    def add_error(self, pattern: str, suggestion: str, line: int | None = None) -> None:
         """Add an error."""
         self.is_valid = False
         self.errors.append(

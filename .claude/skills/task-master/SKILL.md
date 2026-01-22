@@ -108,7 +108,7 @@ For complete setup details, see `references/SETUP.md`.
 
 ### 1. Initialize Project
 
-```
+```sql
 Initialize taskmaster-ai in my project
 ```
 
@@ -118,26 +118,26 @@ Create your Product Requirements Document at `.taskmaster/docs/prd.txt`
 
 ### 3. Parse PRD
 
-```
+```sql
 Parse my PRD at .taskmaster/docs/prd.txt
 ```
 
 ### 4. View Tasks
 
-```
+```sql
 Show me the task list
 ```
 
 ### 5. Work on Tasks
 
-```
+```sql
 What's the next task I should work on?
 Can you help me implement task 3?
 ```
 
 ### 6. Track Progress
 
-```
+```sql
 Mark task 3 as done
 Update subtask 3.2 with my implementation findings
 ```
@@ -176,7 +176,7 @@ AI analyzes task complexity (1-10 scale) and recommends:
 
 ### Task Viewing
 
-```
+```sql
 List all tasks
 Show me task 5
 Show me tasks 1, 3, and 5
@@ -185,7 +185,7 @@ What's the next task?
 
 ### Task Creation & Modification
 
-```
+```sql
 Add a task to implement user authentication
 Expand task 4 into subtasks
 Update task 5 with new requirements
@@ -194,7 +194,7 @@ Mark task 3 as done
 
 ### Task Organization
 
-```
+```sql
 Move task 5 to become subtask 7.3
 Add dependency: task 8 depends on task 5
 Create a new tag called feature-auth
@@ -203,7 +203,7 @@ Switch to the feature-auth tag
 
 ### Research & Analysis
 
-```
+```sql
 Research the latest best practices for JWT authentication
 Analyze task complexity for all pending tasks
 Expand all pending tasks based on complexity

@@ -2,8 +2,8 @@
 name: dbt-migration-validation
 description:
   Comprehensive validation skill for dbt models and schema YAML files. Defines validation rules,
-  common anti-patterns to detect, and auto-fix suggestions. Integrates with Claude Code hooks
-  to enforce quality standards during migration.
+  common anti-patterns to detect, and auto-fix suggestions. Integrates with Claude Code hooks to
+  enforce quality standards during migration.
 ---
 
 # dbt Migration Validation Skill
@@ -11,8 +11,8 @@ description:
 ## Purpose
 
 Define and enforce validation rules for dbt models during migration. This skill provides
-comprehensive validation rules, common anti-patterns to detect, and auto-fix suggestions
-that are implemented by the validation hooks.
+comprehensive validation rules, common anti-patterns to detect, and auto-fix suggestions that are
+implemented by the validation hooks.
 
 ## When to Use This Skill
 
@@ -26,31 +26,31 @@ Activate this skill when:
 
 ---
 
-# Validation Rules Reference
+## Validation Rules Reference
 
-## Schema YAML Rules
+### Schema YAML Rules
 
-### YAML001: Model Description Required
+#### YAML001: Model Description Required
 
 **Severity:** Error
 
 **Description:** Every model must have a description in the schema YAML file.
 
-**Rationale:** Descriptions are essential for documentation, lineage understanding,
-and team collaboration. They appear in dbt docs and help stakeholders understand
-data assets.
+**Rationale:** Descriptions are essential for documentation, lineage understanding, and team
+collaboration. They appear in dbt docs and help stakeholders understand data assets.
 
 **Detection:** Model entry exists but `description` field is missing or empty.
 
 **Fix:**
+
 ```yaml
-# Before
+## Before
 models:
   - name: dim_customers
     columns:
       - name: customer_id
 
-# After
+## After
 models:
   - name: dim_customers
     description: |
@@ -65,32 +65,34 @@ models:
 
 ---
 
-### YAML002: Primary Key Test Required
+#### YAML002: Primary Key Test Required
 
 **Severity:** Error
 
-**Description:** Columns that appear to be primary keys (ending in `_id`, `_key`, `_sk`)
-must have a `dbt_constraints.primary_key` test.
+**Description:** Columns that appear to be primary keys (ending in `_id`, `_key`, `_sk`) must have a
+`dbt_constraints.primary_key` test.
 
-**Rationale:** Primary key validation ensures data integrity. The `dbt_constraints`
-package creates actual database constraints for validation.
+**Rationale:** Primary key validation ensures data integrity. The `dbt_constraints` package creates
+actual database constraints for validation.
 
 **Detection:** Column name matches primary key pattern but lacks required test.
 
 **Primary Key Patterns:**
+
 - `*_id` (e.g., `customer_id`, `order_id`)
 - `*_key` (e.g., `surrogate_key`, `natural_key`)
 - `*_sk` (e.g., `customer_sk`)
 - `id` (exact match)
 
 **Fix:**
+
 ```yaml
-# Before
+## Before
 columns:
   - name: customer_id
     description: "Unique customer identifier"
 
-# After
+## After
 columns:
   - name: customer_id
     description: "Unique customer identifier"
@@ -101,29 +103,31 @@ columns:
 
 ---
 
-### YAML003: Foreign Key Relationship Test
+#### YAML003: Foreign Key Relationship Test
 
 **Severity:** Warning
 
-**Description:** Columns that appear to be foreign keys should have a `relationships`
-or `dbt_constraints.foreign_key` test.
+**Description:** Columns that appear to be foreign keys should have a `relationships` or
+`dbt_constraints.foreign_key` test.
 
 **Rationale:** Relationship tests validate referential integrity between tables.
 
 **Detection:** Column name matches foreign key pattern but lacks relationship test.
 
 **Foreign Key Patterns:**
+
 - `fk_*` (e.g., `fk_customer`)
 - `*_fk` (e.g., `customer_fk`)
 
 **Fix:**
+
 ```yaml
-# Before
+## Before
 columns:
   - name: fk_customer_id
     description: "Reference to customer"
 
-# After
+## After
 columns:
   - name: fk_customer_id
     description: "Reference to customer"
@@ -135,22 +139,22 @@ columns:
 
 ---
 
-### YAML004: Column Description
+#### YAML004: Column Description
 
 **Severity:** Warning
 
 **Description:** All columns should have descriptions.
 
-**Rationale:** Column descriptions improve documentation and make data assets
-more discoverable.
+**Rationale:** Column descriptions improve documentation and make data assets more discoverable.
 
 **Fix:**
+
 ```yaml
-# Before
+## Before
 columns:
   - name: signup_date
 
-# After
+## After
 columns:
   - name: signup_date
     description: "Date the customer signed up for service"
@@ -158,7 +162,7 @@ columns:
 
 ---
 
-### YAML005: Model Naming Convention
+#### YAML005: Model Naming Convention
 
 **Severity:** Error
 
@@ -166,26 +170,27 @@ columns:
 
 **Conventions by Layer:**
 
-| Layer | Prefix | Pattern | Example |
-|-------|--------|---------|----------|
-| Bronze/Staging | `stg_` | `stg_{source}__{table}` | `stg_sqlserver__customers` |
-| Silver/Intermediate | `int_`, `lookup_` | `int_{entity}__{description}` | `int_customers__with_orders` |
-| Gold/Mart | `dim_`, `fct_`, `mart_`, `agg_` | `dim_{entity}` | `dim_customers` |
+| Layer               | Prefix                          | Pattern                       | Example                      |
+| ------------------- | ------------------------------- | ----------------------------- | ---------------------------- |
+| Bronze/Staging      | `stg_`                          | `stg_{source}__{table}`       | `stg_sqlserver__customers`   |
+| Silver/Intermediate | `int_`, `lookup_`               | `int_{entity}__{description}` | `int_customers__with_orders` |
+| Gold/Mart           | `dim_`, `fct_`, `mart_`, `agg_` | `dim_{entity}`                | `dim_customers`              |
 
 **Fix:**
+
 ```yaml
-# Before (in gold layer)
+## Before (in gold layer)
 models:
   - name: customers
 
-# After
+## After
 models:
   - name: dim_customers
 ```
 
 ---
 
-### YAML006: Column Data Type
+#### YAML006: Column Data Type
 
 **Severity:** Warning
 
@@ -194,13 +199,14 @@ models:
 **Rationale:** Explicit data types improve documentation and enable contract testing.
 
 **Fix:**
+
 ```yaml
-# Before
+## Before
 columns:
   - name: amount
     description: "Order amount"
 
-# After
+## After
 columns:
   - name: amount
     description: "Order amount in USD"
@@ -209,18 +215,19 @@ columns:
 
 ---
 
-## SQL Model Rules
+### SQL Model Rules
 
-### SQL001: Config Block
+#### SQL001: Config Block
 
 **Severity:** Warning
 
 **Description:** Models should have a config block specifying materialization.
 
-**Rationale:** Explicit configuration makes materialization strategy clear and
-enables per-model customization.
+**Rationale:** Explicit configuration makes materialization strategy clear and enables per-model
+customization.
 
 **Fix:**
+
 ```sql
 -- Before
 select * from {{ ref('stg_customers') }}
@@ -236,19 +243,21 @@ select * from {{ ref('stg_customers') }}
 
 ---
 
-### SQL002: CTE Pattern
+#### SQL002: CTE Pattern
 
 **Severity:** Warning
 
 **Description:** Models should use the standard CTE pattern for readability.
 
 **Pattern:**
+
 1. Import CTEs - Reference source data
 2. Logical CTEs - Apply transformations
 3. Final CTE - Prepare output
 4. Final SELECT from final CTE
 
 **Fix:**
+
 ```sql
 -- Before
 select
@@ -291,18 +300,19 @@ select * from final
 
 ---
 
-### SQL003: No SELECT * in Final Output
+#### SQL003: No SELECT \* in Final Output
 
 **Severity:** Error
 
 **Description:** The final query should explicitly list columns, not use `SELECT *`.
 
-**Rationale:** Explicit columns make the contract clear, prevent accidental
-exposure of new columns, and improve query performance.
+**Rationale:** Explicit columns make the contract clear, prevent accidental exposure of new columns,
+and improve query performance.
 
 **Exception:** `SELECT * FROM final` is acceptable when `final` CTE explicitly lists columns.
 
 **Fix:**
+
 ```sql
 -- Before (problematic)
 select * from {{ ref('stg_customers') }}
@@ -318,22 +328,23 @@ from {{ ref('stg_customers') }}
 
 ---
 
-### SQL004: Use ref() and source()
+#### SQL004: Use ref() and source()
 
 **Severity:** Error
 
-**Description:** All table references must use `{{ ref() }}` or `{{ source() }}`,
-not hardcoded table names.
+**Description:** All table references must use `{{ ref() }}` or `{{ source() }}`, not hardcoded
+table names.
 
 **Rationale:** Using ref() and source() enables:
+
 - Automatic dependency tracking
 - Environment-aware table resolution
 - Proper lineage documentation
 
-**Detection:** Pattern `FROM schema.table` or `JOIN database.schema.table`
-without Jinja braces.
+**Detection:** Pattern `FROM schema.table` or `JOIN database.schema.table` without Jinja braces.
 
 **Fix:**
+
 ```sql
 -- Before
 select * from raw_data.customers
@@ -347,16 +358,17 @@ select * from {{ ref('stg_customers') }}
 
 ---
 
-### SQL005: Migration Header Comment
+#### SQL005: Migration Header Comment
 
 **Severity:** Warning
 
-**Description:** Migrated models should include a header comment documenting
-the original source and conversion notes.
+**Description:** Migrated models should include a header comment documenting the original source and
+conversion notes.
 
 **Detection:** Model contains migration indicators but lacks proper header.
 
 **Required Header Elements:**
+
 - Original object name and schema
 - Source platform
 - Migration date
@@ -364,6 +376,7 @@ the original source and conversion notes.
 - Breaking changes (if any)
 
 **Template:**
+
 ```sql
 /* Original Object: {schema}.{object_name}
    Source Platform: {SQL Server|Oracle|Teradata|etc.}
@@ -386,7 +399,7 @@ the original source and conversion notes.
 
 ---
 
-### SQL006: Snowflake-Incompatible Syntax
+#### SQL006: Snowflake-Incompatible Syntax
 
 **Severity:** Error
 
@@ -394,24 +407,25 @@ the original source and conversion notes.
 
 **Common Issues:**
 
-| Pattern | Platform | Snowflake Equivalent |
-|---------|----------|---------------------|
-| `TOP N` | SQL Server | `LIMIT N` |
-| `ISNULL(a, b)` | SQL Server | `COALESCE(a, b)` |
-| `GETDATE()` | SQL Server | `CURRENT_TIMESTAMP()` |
-| `LEN(s)` | SQL Server | `LENGTH(s)` |
-| `CHARINDEX(a, b)` | SQL Server | `POSITION(a IN b)` |
-| `CONVERT(type, val)` | SQL Server | `CAST(val AS type)` |
-| `WITH (NOLOCK)` | SQL Server | (remove) |
-| `@@ROWCOUNT` | SQL Server | (use different approach) |
-| `ROWNUM` | Oracle | `ROW_NUMBER() OVER()` |
-| `DECODE(...)` | Oracle | `CASE WHEN...` |
-| `CONNECT BY` | Oracle | Recursive CTE |
-| `SYSDATE` | Oracle | `CURRENT_DATE()` |
-| `SEL` | Teradata | `SELECT` |
-| Backticks | MySQL | Double quotes |
+| Pattern              | Platform   | Snowflake Equivalent     |
+| -------------------- | ---------- | ------------------------ |
+| `TOP N`              | SQL Server | `LIMIT N`                |
+| `ISNULL(a, b)`       | SQL Server | `COALESCE(a, b)`         |
+| `GETDATE()`          | SQL Server | `CURRENT_TIMESTAMP()`    |
+| `LEN(s)`             | SQL Server | `LENGTH(s)`              |
+| `CHARINDEX(a, b)`    | SQL Server | `POSITION(a IN b)`       |
+| `CONVERT(type, val)` | SQL Server | `CAST(val AS type)`      |
+| `WITH (NOLOCK)`      | SQL Server | (remove)                 |
+| `@@ROWCOUNT`         | SQL Server | (use different approach) |
+| `ROWNUM`             | Oracle     | `ROW_NUMBER() OVER()`    |
+| `DECODE(...)`        | Oracle     | `CASE WHEN...`           |
+| `CONNECT BY`         | Oracle     | Recursive CTE            |
+| `SYSDATE`            | Oracle     | `CURRENT_DATE()`         |
+| `SEL`                | Teradata   | `SELECT`                 |
+| Backticks            | MySQL      | Double quotes            |
 
 **Fix Examples:**
+
 ```sql
 -- SQL Server Before
 SELECT TOP 100 *
@@ -429,41 +443,41 @@ LIMIT 100
 
 ---
 
-# Anti-Patterns to Detect
+## Anti-Patterns to Detect
 
-## Common Anti-Patterns
+### Common Anti-Patterns
 
-### 1. Direct Source References
+#### 1. Direct Source References
 
 **Problem:** Using hardcoded table names instead of `source()` or `ref()`.
 
 **Impact:** Breaks dependency tracking, environment portability, and lineage.
 
-### 2. Generic Column Names
+#### 2. Generic Column Names
 
 **Problem:** Columns named `col1`, `field1`, `temp`, etc.
 
 **Impact:** Poor documentation, confusing for consumers.
 
-### 3. Mixed Naming Conventions
+#### 3. Mixed Naming Conventions
 
 **Problem:** Inconsistent casing or naming patterns within a model.
 
 **Impact:** Confusion, maintenance difficulty.
 
-### 4. Missing Tests on Key Columns
+#### 4. Missing Tests on Key Columns
 
 **Problem:** Primary/foreign keys without uniqueness or relationship tests.
 
 **Impact:** Data quality issues may go undetected.
 
-### 5. Overly Complex Models
+#### 5. Overly Complex Models
 
 **Problem:** Models with excessive CTEs, complex logic, or doing too much.
 
 **Impact:** Hard to maintain, test, and understand.
 
-### 6. Platform-Specific Syntax
+#### 6. Platform-Specific Syntax
 
 **Problem:** SQL syntax from source database that won't work in Snowflake.
 
@@ -471,9 +485,9 @@ LIMIT 100
 
 ---
 
-# Hook Integration
+## Hook Integration
 
-## Validation Hook Configuration
+### Validation Hook Configuration
 
 Hooks are configured in `.claude/settings.local.json`:
 
@@ -506,16 +520,17 @@ Hooks are configured in `.claude/settings.local.json`:
 }
 ```
 
-## Exit Codes
+### Exit Codes
 
 - **Exit 0**: Validation passed (or file not in scope)
 - **Exit 1**: Validation failed with errors
 
 Warnings are reported but don't cause exit code 1.
 
-## File Scope
+### File Scope
 
 Validation runs only on files matching:
+
 - `models/**/_models.yml` - Schema YAML validation
 - `models/**/_sources.yml` - Source YAML validation
 - `models/**/*.sql` - SQL model validation
@@ -524,23 +539,23 @@ Other files are skipped (exit 0).
 
 ---
 
-# Validation Scripts
+## Validation Scripts
 
 Validation is implemented in `.claude/hooks/dbt-validation/`:
 
-| Script | Purpose |
-|--------|----------|
-| `validate_file.py` | Entry point, routes to appropriate validator |
-| `validate_schema_yaml.py` | YAML rule validation |
-| `validate_dbt_model.py` | SQL rule validation |
-| `check_migration_status.py` | Cross-validation and reporting |
-| `rules/naming_conventions.py` | Naming convention checks |
-| `rules/cte_patterns.py` | CTE structure validation |
-| `rules/snowflake_syntax.py` | Platform syntax detection |
+| Script                        | Purpose                                      |
+| ----------------------------- | -------------------------------------------- |
+| `validate_file.py`            | Entry point, routes to appropriate validator |
+| `validate_schema_yaml.py`     | YAML rule validation                         |
+| `validate_dbt_model.py`       | SQL rule validation                          |
+| `check_migration_status.py`   | Cross-validation and reporting               |
+| `rules/naming_conventions.py` | Naming convention checks                     |
+| `rules/cte_patterns.py`       | CTE structure validation                     |
+| `rules/snowflake_syntax.py`   | Platform syntax detection                    |
 
 ---
 
-# Related Skills
+## Related Skills
 
 - **[dbt-migration](.claude/skills/dbt-migration/SKILL.md)** - Migration workflow
 - **[dbt-testing](.claude/skills/dbt-testing/SKILL.md)** - Test strategies
