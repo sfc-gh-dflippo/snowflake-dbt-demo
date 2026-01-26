@@ -1,0 +1,69 @@
+{
+  "name": "Universal Agentic DevContainer",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "25"
+    },
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/git-lfs:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "version": "latest",
+      "enableNonRootDocker": "true",
+      "moby": "true"
+    },
+    "ghcr.io/devcontainers/features/rust:1": {
+      "version": "latest",
+      "profile": "default"
+    },
+    "ghcr.io/devcontainers/features/java:1": {
+      "version": "25.0.1",
+      "installGradle": "true",
+      "installMaven": "true"
+    },
+    "./snowflake-ai-tools": {
+      "installSnowflakeCli": true,
+      "installSchemachange": true,
+      "installClaudeCode": true,
+      "installCortexCode": true,
+      "installRipgrep": true
+    }
+  },
+  "mounts": [
+    "source=${localEnv:HOME}/.m2,target=/home/vscode/.m2,type=bind,consistency=cached",
+    "source=${localEnv:HOME}/.npm,target=/home/vscode/.npm,type=bind,consistency=cached",
+    "source=${localEnv:HOME}/.cargo,target=/home/vscode/.cargo,type=bind,consistency=cached"
+  ],
+  "containerEnv": {
+    "NPM_CONFIG_CACHE": "/home/vscode/.npm",
+    "MAVEN_OPTS": "-Dmaven.repo.local=/home/vscode/.m2/repository",
+    "CARGO_HOME": "/home/vscode/.cargo"
+  },
+  "remoteUser": "vscode",
+  "updateRemoteUserUID": true,
+  "onCreateCommand": "if [ -f requirements.txt ]; then uv pip install -r requirements.txt; else uv pip install dbt-core==1.9.4 dbt-snowflake==1.9.2 streamlit keyring; fi",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-toolsai.jupyter",
+        "redhat.java",
+        "vscjava.vscode-maven",
+        "rust-lang.rust-analyzer",
+        "ms-azuretools.vscode-docker",
+        "github.vscode-pull-request-github",
+        "redhat.vscode-yaml",
+        "editorconfig.editorconfig",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "davidanson.vscode-markdownlint",
+        "bierner.markdown-mermaid",
+        "mechatroner.rainbow-csv"
+      ],
+      "settings": {}
+    }
+  }
+}

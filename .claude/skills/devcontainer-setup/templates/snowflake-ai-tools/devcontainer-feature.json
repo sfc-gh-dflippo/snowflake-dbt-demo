@@ -1,0 +1,79 @@
+{
+  "id": "snowflake-ai-tools",
+  "version": "1.0.2",
+  "name": "Snowflake & AI Development Tools",
+  "description": "Installs uv (with Python), Snowflake CLI, schemachange, Claude Code CLI, Cortex Code CLI, and ripgrep. Requires Node.js feature to be installed first.",
+  "installsAfter": ["ghcr.io/devcontainers/features/node"],
+  "options": {
+    "installSnowflakeCli": {
+      "type": "boolean",
+      "default": true,
+      "description": "Install Snowflake CLI via uv tool"
+    },
+    "installSchemachange": {
+      "type": "boolean",
+      "default": true,
+      "description": "Install schemachange via uv tool"
+    },
+    "installClaudeCode": {
+      "type": "boolean",
+      "default": true,
+      "description": "Install Claude Code CLI"
+    },
+    "installCortexCode": {
+      "type": "boolean",
+      "default": true,
+      "description": "Install Cortex Code CLI (Private Preview)"
+    },
+    "installRipgrep": {
+      "type": "boolean",
+      "default": true,
+      "description": "Install ripgrep (rg) for fast recursive text search"
+    },
+    "remoteUser": {
+      "type": "string",
+      "default": "vscode",
+      "description": "Container user for mount paths (vscode, root, etc.)"
+    }
+  },
+  "postCreateCommand": "snowflake-ai-tools-setup",
+  "mounts": [
+    {
+      "source": "${localEnv:HOME}/.cache/uv",
+      "target": "/home/vscode/.cache/uv",
+      "type": "bind"
+    },
+    {
+      "source": "${localEnv:HOME}/.snowflake",
+      "target": "/home/vscode/.snowflake",
+      "type": "bind"
+    },
+    {
+      "source": "${localEnv:HOME}/.claude",
+      "target": "/home/vscode/.claude",
+      "type": "bind"
+    },
+    {
+      "source": "${localEnv:HOME}/.cursor",
+      "target": "/home/vscode/.cursor",
+      "type": "bind"
+    }
+  ],
+  "containerEnv": {
+    "UV_CACHE_DIR": "/home/vscode/.cache/uv",
+    "SNOWFLAKE_HOME": "/home/vscode/.snowflake"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "Anthropic.claude-code",
+        "snowflake.snowflake-vsc",
+        "dbtlabsinc.dbt",
+        "charliermarsh.ruff"
+      ],
+      "settings": {
+        "snowflake.cli.path": "~/.local/bin/snow"
+      }
+    }
+  }
+}
