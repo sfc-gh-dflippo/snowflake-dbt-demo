@@ -6,6 +6,7 @@ keyring
 pandas
 pip
 pip-system-certs
+pre-commit
 pyarrow<19.0.0
 schemachange
 snowflake-cli>=3.12.0
