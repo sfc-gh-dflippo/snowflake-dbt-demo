@@ -1,11 +1,9 @@
 ---
 name: dbt-migration
 description:
-  Complete workflow for migrating legacy database DDL (views, tables, stored procedures) to dbt
-  projects on Snowflake. This skill orchestrates the full migration lifecycle including discovery,
-  planning, placeholder model creation, view conversion, stored procedure transformation, end-to-end
-  testing, and deployment. Use this skill when planning or executing database migrations to dbt,
-  delegating platform-specific syntax translation to source-specific skills.
+  Complete workflow for migrating database tables, views, and stored procedures to dbt projects on
+  Snowflake. Orchestrates discovery, planning, placeholder creation, view/procedure conversion,
+  testing, and deployment. Delegates platform-specific syntax translation to source-specific skills.
 ---
 
 # Database to dbt Migration Workflow
