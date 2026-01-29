@@ -558,14 +558,12 @@ models:
 
 - [**dbt_constraints**](https://github.com/Snowflake-Labs/dbt_constraints): Database-enforced PK,
   FK, UK constraints
-
   - Creates actual database constraints in Snowflake
   - Improves query performance through constraint-based optimization
   - Provides referential integrity at the database level
   - Essential for enterprise data warehouse standards
 
 - [**dbt_utils**](https://github.com/dbt-labs/dbt_utils): Essential macros and utility functions
-
   - Cross-database compatibility macros
   - Date/time manipulation functions
   - SQL generation helpers (pivot, surrogate_key, etc.)
@@ -573,7 +571,6 @@ models:
 
 - [**dbt_artifacts**](https://github.com/brooklyn-data/dbt_artifacts): Execution logging and
   metadata tracking
-
   - Tracks dbt run history and performance metrics
   - Enables operational monitoring and alerting
   - Provides insights into model execution patterns

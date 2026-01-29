@@ -103,7 +103,6 @@ dbt Hub packages with proper external access configuration
 4. **Gather Your Git Repository Information**:
 
    **GitHub**:
-
    - Repository URL: `https://github.com/username/repository-name.git`
    - Username: Your GitHub username
    - PAT: Settings → Developer settings → Personal access tokens → Generate new token (classic)
@@ -111,14 +110,12 @@ dbt Hub packages with proper external access configuration
    - _Note: You can skip PAT if using OAuth in step 5_
 
    **GitLab**:
-
    - Repository URL: `https://gitlab.com/username/repository-name.git`
    - Username: Your GitLab username
    - PAT: User Settings → Access Tokens → Add new token
      - Required scopes: `read_repository`, `write_repository`
 
    **Azure DevOps**:
-
    - Repository URL: `https://dev.azure.com/organization/project/_git/repository-name`
    - Username: Your Azure DevOps username
    - PAT: User settings → Personal access tokens → New Token
@@ -127,7 +124,6 @@ dbt Hub packages with proper external access configuration
 5. **Create a Workspace**:
 
    With your API integration and repository information ready, create a dbt workspace in Snowsight:
-
    - Navigate to **Projects** → **Worksheets** in Snowsight. By default you will be in "My
      Workspace".
    - To use a Git Repository
@@ -142,7 +138,6 @@ dbt Hub packages with proper external access configuration
    - If connecting to Git, you'll use the API integration created in step 3
 
 6. **Configure Your Project**:
-
    - Each workspace requires a `profiles.yml` file specifying target warehouse, database, schema,
      and role
    - The project will run under your current Snowflake account and user context

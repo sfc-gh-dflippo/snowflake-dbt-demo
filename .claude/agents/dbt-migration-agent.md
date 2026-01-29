@@ -170,7 +170,6 @@ written or edited:
 Hooks validate:
 
 - **YAML files** (`_models.yml`, `_sources.yml`):
-
   - Model descriptions present
   - Primary key tests configured
   - Column documentation
@@ -301,19 +300,16 @@ Before marking a model as migrated:
 When migration encounters issues:
 
 1. **Syntax Translation Error**
-
    - Refer to platform-specific migration skill
    - Check Snowflake documentation for equivalent function
    - Add comment explaining manual translation needed
 
 2. **Validation Hook Failure**
-
    - Review error message and rule ID
    - Fix indicated issue
    - Re-run validation
 
 3. **Complex Procedural Logic**
-
    - Break into smaller models
    - Use intermediate models for step-by-step transformation
    - Document decisions in header comment

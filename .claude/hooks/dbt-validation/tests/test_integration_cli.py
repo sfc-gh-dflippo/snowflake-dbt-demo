@@ -139,8 +139,7 @@ class TestCLIDirectory:
         models_dir.mkdir(parents=True)
 
         # Valid YAML
-        (models_dir / "_models.yml").write_text(
-            """
+        (models_dir / "_models.yml").write_text("""
 version: 2
 models:
   - name: dim_test
@@ -148,19 +147,16 @@ models:
     columns:
       - name: id
         description: "Primary key"
-"""
-        )
+""")
 
         # Valid SQL
-        (models_dir / "dim_test.sql").write_text(
-            """
+        (models_dir / "dim_test.sql").write_text("""
 {{ config(materialized='table') }}
 
 WITH source AS (SELECT * FROM {{ ref('stg_test') }}),
 final AS (SELECT id FROM source)
 SELECT * FROM final
-"""
-        )
+""")
 
         result = runner.invoke(app, [str(models_dir)])
         assert result.exit_code == 0
@@ -170,12 +166,10 @@ SELECT * FROM final
         models_dir.mkdir(parents=True)
 
         # SQL with Snowflake-incompatible syntax
-        (models_dir / "bad_model.sql").write_text(
-            """
+        (models_dir / "bad_model.sql").write_text("""
 {{ config(materialized='table') }}
 SELECT TOP 10 * FROM {{ ref('stg_test') }}
-"""
-        )
+""")
 
         result = runner.invoke(app, [str(models_dir)])
         assert result.exit_code == 1
@@ -191,14 +185,12 @@ SELECT TOP 10 * FROM {{ ref('stg_test') }}
         models_dir = temp_dir / "models" / "gold"
         models_dir.mkdir(parents=True)
 
-        (models_dir / "dim_test.sql").write_text(
-            """
+        (models_dir / "dim_test.sql").write_text("""
 {{ config(materialized='table') }}
 WITH source AS (SELECT * FROM {{ ref('stg_test') }}),
 final AS (SELECT id FROM source)
 SELECT * FROM final
-"""
-        )
+""")
 
         result = runner.invoke(app, [str(models_dir), "--verbose"])
         assert result.exit_code == 0

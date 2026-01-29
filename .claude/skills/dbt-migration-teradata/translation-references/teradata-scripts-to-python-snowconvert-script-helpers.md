@@ -967,35 +967,27 @@ LOADING and associated commands in FastLoad.
 Parameters:
 
 1. `target_schema_table`
-
    - the target schema (optional) and table name
 
 2. `define_file`
-
    - The name of the file to be read
 
 3. `define_columns`
-
    - The definition of all the columns for the temporary table
 
 4. `begin_loading_columns`
-
    - The column names to insert. Dictates the order in which values are inserted
 
 5. `begin_loading_values`
-
    - The list of raw insert values to convert
 
 6. `field_delimiter`
-
    - The field delimiter
 
 7. _(optional)_ `skip_header`
-
    - The number of rows to skip
 
 8. _(optional)_ `input_data_place_holder`
-
    - The location of the file in a supported cloud provider. Set parameter when the file is not
      stored locally
 

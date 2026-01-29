@@ -48,7 +48,6 @@ Snowflake dynamic tables support an equivalent to Oracle’s materialized view r
 corresponding modes are as follows:
 
 - **Oracle**:
-
   - **FAST**: Refreshes only the rows that have changed.
   - **COMPLETE**: Refreshes the entire materialized view.
   - **FORCE**: Uses FAST if possible, otherwise uses COMPLETE.

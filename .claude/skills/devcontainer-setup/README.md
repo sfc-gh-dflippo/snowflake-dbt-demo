@@ -8,7 +8,8 @@ Create "kitchen sink" development containers for AI agentic workflows with compr
 
 ### Base Configuration
 
-- **Base image** - `mcr.microsoft.com/devcontainers/python:3.13-bookworm` (includes Python 3.13, zsh, oh-my-zsh, vscode user)
+- **Base image** - `mcr.microsoft.com/devcontainers/python:3.13-bookworm` (includes Python 3.13,
+  zsh, oh-my-zsh, vscode user)
 - **Node.js 25** - via devcontainers/features/node
 - **Java 25 + Maven & Gradle** - via devcontainers/features/java
 - **Java 25.0.1 (Temurin)** - via devcontainers/features/java
@@ -19,7 +20,8 @@ Create "kitchen sink" development containers for AI agentic workflows with compr
 
 ### Custom Feature: snowflake-ai-tools
 
-The `./snowflake-ai-tools` feature installs AI and data tools. It requires Node.js feature to be installed first (declared via `installsAfter`). Python is managed via uv.
+The `./snowflake-ai-tools` feature installs AI and data tools. It requires Node.js feature to be
+installed first (declared via `installsAfter`). Python is managed via uv.
 
 **Feature Options:**
 
@@ -56,7 +58,8 @@ The `./snowflake-ai-tools` feature installs AI and data tools. It requires Node.
 
 **Feature Installation Order:**
 
-The devcontainer installs features in dependency order: Node.js → snowflake-ai-tools (others in parallel). Python 3.13 is installed via `uv python install` in the onCreateCommand.
+The devcontainer installs features in dependency order: Node.js → snowflake-ai-tools (others in
+parallel). Python 3.13 is installed via `uv python install` in the onCreateCommand.
 
 ### Cache Mounts
 
@@ -101,11 +104,13 @@ The devcontainer installs features in dependency order: Node.js → snowflake-ai
 
 ### Limitations
 
-1. **Mount paths** - Mounts in devcontainer.json require hardcoded container paths (e.g., `/home/vscode`). If using a different user, update the paths.
+1. **Mount paths** - Mounts in devcontainer.json require hardcoded container paths (e.g.,
+   `/home/vscode`). If using a different user, update the paths.
 
 2. **containerEnv paths** - Same limitation as mounts.
 
-3. **python.defaultInterpreterPath** - Points to `/home/vscode/.venv/dbt/bin/python`. Update if using different user.
+3. **python.defaultInterpreterPath** - Points to `/home/vscode/.venv/dbt/bin/python`. Update if
+   using different user.
 
 ## Python Environment
 

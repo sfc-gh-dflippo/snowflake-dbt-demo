@@ -325,7 +325,6 @@ ORDER BY SCHEDULED_TIME DESC;
 **Solutions:**
 
 1. Verify PAT has correct scopes:
-
    - GitHub: `repo` scope
    - GitLab: `read_repository` scope
    - Azure DevOps: `Code (Read)` permission

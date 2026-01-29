@@ -844,7 +844,6 @@ _The order may differ._
 The HAVING clause will use the patterns in:
 
 - Evaluation operations.
-
   - For example: `=, !=, <, >.`
 
 - LIKE operation.
@@ -898,7 +897,6 @@ Mary
 The `CASE WHEN` statement will use the patterns described in:
 
 - Evaluation operations.
-
   - For example: `=, !=, <, >.`
 
 - LIKE operation.
@@ -973,7 +971,6 @@ Simple scenarios with evaluation operations are supported.
 The `JOIN` statement will use the patterns described in:
 
 - Evaluation operations.
-
   - For example: `=, !=, <, >.`
 
 - LIKE operation.
@@ -1776,7 +1773,6 @@ GROUP BY last_name;
 The HAVING clause will use the patterns in:
 
 - Evaluation operations.
-
   - For example: `=, !=, <, >.`
 
 - LIKE operation.
@@ -1830,7 +1826,6 @@ GEORGE
 The `CASE WHEN` statement will use the patterns described in:
 
 - Evaluation operations.
-
   - For example: `=, !=, <, >.`
 
 - LIKE operation.
@@ -1906,7 +1901,6 @@ Simple scenarios are supported.
 The `JOIN` statement will use the patterns described in:
 
 - Evaluation operations.
-
   - For example: `=, !=, <, >.`
 
 - LIKE operation.
@@ -2794,7 +2788,6 @@ GROUP BY last_name;
 The HAVING clause will use the patterns in:
 
 - Evaluation operations.
-
   - For example: `=, !=, <, >.`
 
 - LIKE operation.
@@ -2860,7 +2853,6 @@ HAVING
 The `CASE WHEN` statement will use the patterns described in:
 
 - Evaluation operations.
-
   - For example: `=, !=, <, >.`
 
 - LIKE operation.
@@ -2936,7 +2928,6 @@ Simple scenarios with evaluation operations are supported.
 The `JOIN` statement will use the patterns described in:
 
 - EvaluaComparisonComparisontion operations.
-
   - For example: `=, !=, <, >.`
 
 - LIKE operation.
@@ -3901,7 +3892,6 @@ GROUP BY last_name;
 The HAVING clause will use the patterns in:
 
 - Evaluation operations.
-
   - For example: `=, !=, <, >.`
 
 - LIKE operation.
@@ -3954,7 +3944,6 @@ HAVING RTRIM(last_name) = RTRIM('Snow');
 The `CASE WHEN` statement will use the patterns described in:
 
 - Evaluation operations.
-
   - For example: `=, !=, <, >.`
 
 - LIKE operation.
@@ -4039,7 +4028,6 @@ Simple scenarios are supported.
 The `JOIN` statement will use the patterns described in:
 
 - Evaluation operations.
-
   - For example: `=, !=, <, >.`
 
 - LIKE operation.

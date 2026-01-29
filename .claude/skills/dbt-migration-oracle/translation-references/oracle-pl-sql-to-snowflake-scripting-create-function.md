@@ -165,16 +165,13 @@ return it.
 ### Components
 
 1. **Function Declaration:**
-
    - `CREATE FUNCTION functionName(parameters) RETURN returnType`
    - Declares the function with input parameters and the return type.
 
 2. **Variable Declarations:**
-
    - Declares variables, including the return variable.
 
 3. **Cursor Declaration:**
-
    - `CURSOR cursorName IS SELECT singleColumn FROM ... WHERE ... [AND col1 = localVar1];`
    - Defines a cursor to select a single column from a table with optional filtering conditions.
 
@@ -351,17 +348,14 @@ on an `IF` statement.
 ### Components 2
 
 1. **Function Declaration:**
-
    - `CREATE FUNCTION functionName(parameters) RETURN returnType`
    - Declares the function with input parameters and the return type.
 
 2. **Cursor Declaration:**
-
    - `CURSOR cursorName IS SELECT singleColumn FROM ... WHERE ... [AND col1 = localVar1];`
    - Defines a cursor to select a single column from a table with optional filtering conditions.
 
 3. **Variable Declaration:**
-
    - Declares variables, including the return variable.
 
 4. **BEGIN-END Block with IF Statement:**
@@ -615,12 +609,10 @@ This pattern defines a function that uses conditional statements over local vari
 ### Components 3
 
 1. **Function Declaration:**
-
    - `CREATE FUNCTION functionName(parameters) RETURN returnType`
    - Declares the function with input parameters and the return type.
 
 2. **Variable Declaration:**
-
    - Declares variables, including the return variable.
 
 3. **BEGIN-END Block with IF Statement:**

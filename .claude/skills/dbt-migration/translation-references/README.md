@@ -1,6 +1,7 @@
 # Database Translation References
 
-This directory contains translation references for converting SQL from various source databases to Snowflake-compatible SQL and dbt models.
+This directory contains translation references for converting SQL from various source databases to
+Snowflake-compatible SQL and dbt models.
 
 ## Supported Source Databases
 
@@ -48,8 +49,8 @@ See the main [dbt-migration skill](../SKILL.md) for complete conversion guidelin
 ## Copyright Notice
 
 The translation reference documentation in this directory is derived from
-[Snowflake SnowConvert Documentation](https://docs.snowflake.com/en/migrations/snowconvert-docs)
-and is © Copyright Snowflake Inc. All rights reserved.
+[Snowflake SnowConvert Documentation](https://docs.snowflake.com/en/migrations/snowconvert-docs) and
+is © Copyright Snowflake Inc. All rights reserved.
 
 This documentation is included for reference purposes to assist with database migration projects.
 For the most current and authoritative information, please refer to the

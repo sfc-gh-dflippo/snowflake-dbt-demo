@@ -942,7 +942,7 @@ def cleanup_old_repositories() -> None:
 def sync_skills(
     debug: Annotated[
         bool, typer.Option("--debug", help="Enable verbose debug logging")
-    ] = False
+    ] = False,
 ) -> None:
     """Main execution with four-location scanning and Agent Skills CLI integration."""
     # Set global DEBUG flag

@@ -1,6 +1,7 @@
 # dbt-validation
 
-A Python package for validating dbt models and schema YAML files. Designed for use with Claude Code hooks and as a standalone CLI tool.
+A Python package for validating dbt models and schema YAML files. Designed for use with Claude Code
+hooks and as a standalone CLI tool.
 
 ## Quick Start (No Installation Required)
 
@@ -149,7 +150,8 @@ print(f"Valid: {result.is_valid}")
 
 ## dbt_constraints Package Recommendation
 
-This validator recommends using the [dbt_constraints](https://github.com/Snowflake-Labs/dbt_constraints) package for:
+This validator recommends using the
+[dbt_constraints](https://github.com/Snowflake-Labs/dbt_constraints) package for:
 
 - **Primary keys**: Use `dbt_constraints.primary_key` instead of `unique + not_null`
 - **Unique keys**: Use `dbt_constraints.unique_key` instead of `unique`

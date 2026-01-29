@@ -29,7 +29,6 @@ title: SnowConvert AI - SQL Server-Azure Synapse - Data Types | Snowflake Docume
   the alias in Snowflake with the same name. Each of those aliases is actually converted to
   NUMBER(38,0), a data type that is considerably larger than the integer datatype. Below is a
   comparison of the range of values that can be present in each data type:
-
   - Snowflake NUMBER(38,0): -99999999999999999999999999999999999999 to
     +99999999999999999999999999999999999999
   - SQLServer TINYINT: 0 to 255

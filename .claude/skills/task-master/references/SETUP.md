@@ -351,19 +351,16 @@ npx task-master-ai init
 ## Best Practices
 
 1. **API Keys**
-
    - Use environment-specific keys
    - Never commit keys to git
    - Add `.env` to `.gitignore`
 
 2. **Model Selection**
-
    - Use Claude for main operations
    - Use Perplexity for research
    - Set appropriate fallback
 
 3. **Project Setup**
-
    - Initialize at project root
    - Create comprehensive PRD first
    - Configure rules for your IDE

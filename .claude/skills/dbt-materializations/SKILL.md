@@ -593,12 +593,10 @@ models:
 ### Change Ephemeral/View to Table When
 
 1. **Model is Referenced Multiple Times**
-
    - If 3+ downstream models reference it
    - Avoids recomputing same logic
 
 2. **Complex Transformations**
-
    - Heavy aggregations or window functions
    - Self-joins or complex CTEs
 
@@ -609,12 +607,10 @@ models:
 ### Change Table to Incremental When
 
 1. **Large Data Volumes**
-
    - Table has millions+ rows
    - Full refresh takes > 5 minutes
 
 2. **Time-Series Data**
-
    - Append-only event logs
    - Daily/hourly data loads
 

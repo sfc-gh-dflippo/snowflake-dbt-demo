@@ -36,7 +36,6 @@ Snowflake always treats double quotes as identifier delimiters (equivalent to SQ
 `QUOTED_IDENTIFIER ON`). There is no equivalent to the `OFF` setting. Key differences include:
 
 1. **Case Sensitivity**:
-
    - Unquoted identifiers are automatically converted to uppercase
    - Quoted identifiers preserve exact case and become case-sensitive
 

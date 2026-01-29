@@ -439,7 +439,6 @@ task-master use-tag master
    ```
 
 3. **Tag naming conventions**:
-
    - Features: `feature-<name>`
    - Experiments: `experiment-<name>`
    - Versions: `v1.0`, `v2.0`, `mvp`

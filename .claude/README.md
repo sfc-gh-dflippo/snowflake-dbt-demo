@@ -10,7 +10,8 @@ This directory contains Claude AI skills for the snowflake-dbt-demo project.
 
 ## Syncing Skills
 
-The project includes a Python script (`sync-agent-skills.py`) at the project root that automatically syncs Anthropic skills and updates the `AGENTS.md` file.
+The project includes a Python script (`sync-agent-skills.py`) at the project root that automatically
+syncs Anthropic skills and updates the `AGENTS.md` file.
 
 ### Running the Sync
 
@@ -20,7 +21,8 @@ Execute the sync script from the project root:
 python3 sync-agent-skills.py
 ```
 
-**Note:** The script automatically installs the `python-frontmatter` dependency if it's not already installed.
+**Note:** The script automatically installs the `python-frontmatter` dependency if it's not already
+installed.
 
 ### What the Script Does
 
@@ -79,7 +81,8 @@ The sync script discovers all skills automatically, including:
 - Task management (task-master workflow)
 - dbt Projects on Snowflake (deployment and monitoring)
 
-All skills are automatically discovered and listed in [AGENTS.md](../AGENTS.md) at the end of the file.
+All skills are automatically discovered and listed in [AGENTS.md](../AGENTS.md) at the end of the
+file.
 
 ```sql
 

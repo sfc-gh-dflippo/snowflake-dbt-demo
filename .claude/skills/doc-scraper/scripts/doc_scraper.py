@@ -252,8 +252,7 @@ class ScraperDatabase:
     def _init_db(self):
         """Create database tables if they don't exist."""
         with sqlite3.connect(self.db_path) as conn:
-            conn.execute(
-                """
+            conn.execute("""
                 CREATE TABLE IF NOT EXISTS scraped_pages (
                     url TEXT PRIMARY KEY,
                     scraped_at TEXT NOT NULL,
@@ -262,16 +261,12 @@ class ScraperDatabase:
                     title TEXT,
                     content_hash TEXT
                 )
-            """
-            )
-            conn.execute(
-                """
+            """)
+            conn.execute("""
                 CREATE INDEX IF NOT EXISTS idx_scraped_at
                 ON scraped_pages(scraped_at)
-            """
-            )
-            conn.execute(
-                """
+            """)
+            conn.execute("""
                 CREATE TABLE IF NOT EXISTS scraping_session (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     started_at TEXT NOT NULL,
@@ -280,8 +275,7 @@ class ScraperDatabase:
                     pages_scraped INTEGER DEFAULT 0,
                     pages_failed INTEGER DEFAULT 0
                 )
-            """
-            )
+            """)
             conn.commit()
 
     def should_scrape_url(self, url: str, expiration_days: int = 7) -> bool:
@@ -365,15 +359,13 @@ class ScraperDatabase:
         """Get scraping statistics."""
         with self.lock:
             with sqlite3.connect(self.db_path) as conn:
-                cursor = conn.execute(
-                    """
+                cursor = conn.execute("""
                     SELECT
                         COUNT(*) as total,
                         SUM(CASE WHEN status = 'success' THEN 1 ELSE 0 END) as success,
                         SUM(CASE WHEN status LIKE 'failed%' THEN 1 ELSE 0 END) as failed
                     FROM scraped_pages
-                """
-                )
+                """)
                 row = cursor.fetchone()
                 return {
                     "total": row[0] or 0,
@@ -385,14 +377,12 @@ class ScraperDatabase:
         """Get all successfully scraped URLs (for SKILL.md generation)."""
         with self.lock:
             with sqlite3.connect(self.db_path) as conn:
-                cursor = conn.execute(
-                    """
+                cursor = conn.execute("""
                     SELECT url, title, file_path
                     FROM scraped_pages
                     WHERE status = 'success' AND file_path IS NOT NULL
                     ORDER BY url
-                """
-                )
+                """)
                 return cursor.fetchall()
 
     def preload_from_existing_files(self, output_dir: Path, logger=None):
@@ -914,7 +904,7 @@ class SnowflakeDocsScraper:
         if spider:
             # Multi-threaded spider mode with depth control
             # Track depth for each URL (seeds are depth 0)
-            url_depths = {url: 0 for url in urls}
+            url_depths = dict.fromkeys(urls, 0)
             self.url_queue = list(urls)
 
             logger.info(f"Starting spider with {len(self.url_queue)} seed URLs")

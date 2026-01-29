@@ -17,7 +17,7 @@ repos:
 
   # Python formatting
   - repo: https://github.com/psf/black
-    rev: 24.10.0
+    rev: 26.1.0
     hooks:
       - id: black
         language_version: python3.11
@@ -25,7 +25,7 @@ repos:
 
   # Multi-language formatting (JSON, TS/JS, YAML, Markdown)
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v3.1.0
+    rev: v4.0.0-alpha.8
     hooks:
       - id: prettier
         name: prettier (json/jsonc)
@@ -52,7 +52,7 @@ repos:
   # STAGE 2: FIXERS - Auto-fix whitespace and line endings
   # ============================================================================
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.6.0
+    rev: v6.0.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
@@ -63,14 +63,14 @@ repos:
   # STAGE 3: LINTERS - Check code quality (with auto-fix where possible)
   # ============================================================================
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.8.4
+    rev: v0.14.14
     hooks:
       - id: ruff
         args: [--fix, --exit-non-zero-on-fix]
 
   # Markdown linting
   - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.43.0
+    rev: v0.47.0
     hooks:
       - id: markdownlint
         args: [--fix]
@@ -79,7 +79,7 @@ repos:
   # STAGE 4: VALIDATORS - Check file validity and project rules
   # ============================================================================
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.6.0
+    rev: v6.0.0
     hooks:
       - id: check-yaml
       - id: check-toml

@@ -2139,8 +2139,8 @@ Snowflake does not support `JOINs` in `UPDATE` clause.
 
 ###### Required parameters
 
-- **_`target_table:`_**Specifies the table to update.
-- **_`col_name:`_**Specifies the name of a column in _`target_table`_. Do not include the table
+- ***`target_table:`***Specifies the table to update.
+- ***`col_name:`***Specifies the name of a column in _`target_table`_. Do not include the table
   name. E.g., `UPDATE t1 SET t1.col = 1` is invalid.
 - **\*`value`**`:`_Specifies the new value to set in _`col_name`\*.
 
@@ -2149,7 +2149,7 @@ Snowflake does not support `JOINs` in `UPDATE` clause.
 - **` FROM`` `** **_`additional_tables:`_** Specifies one or more tables to use for selecting rows
   to update or for setting new values. _Note that repeating the target table results in a
   self-join._
-- **` WHERE`` `** **_`condition:`_**The expression that specifies the rows in the target table to
+- **` WHERE`` `** ***`condition:`***The expression that specifies the rows in the target table to
   update. Default: No value (all rows of the target table are updated)
 
 #### Translation Summary
@@ -2792,8 +2792,8 @@ Snowflake does not support `JOINs` in `UPDATE` clause.
 
 ###### Required parameters 2
 
-- **_`target_table:`_**Specifies the table to update.
-- **_`col_name:`_**Specifies the name of a column in _`target_table`_. Do not include the table
+- ***`target_table:`***Specifies the table to update.
+- ***`col_name:`***Specifies the name of a column in _`target_table`_. Do not include the table
   name. E.g., `UPDATE t1 SET t1.col = 1` is invalid.
 - **\*`value`**`:`_Specifies the new value to set in _`col_name`\*.
 
@@ -2802,7 +2802,7 @@ Snowflake does not support `JOINs` in `UPDATE` clause.
 - **` FROM`` `** **_`additional_tables:`_** Specifies one or more tables to use for selecting rows
   to update or for setting new values. _Note that repeating the target table results in a
   self-join._
-- **` WHERE`` `** **_`condition:`_**The expression that specifies the rows in the target table to
+- **` WHERE`` `** ***`condition:`***The expression that specifies the rows in the target table to
   update. Default: No value (all rows of the target table are updated)
 
 #### Translation Summary 2

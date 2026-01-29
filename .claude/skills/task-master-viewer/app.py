@@ -686,8 +686,7 @@ def main():
 
     # Help Section
     with st.expander("ℹ️ How to Use This Editor", expanded=False):
-        st.markdown(
-            """
+        st.markdown("""
         ### Quick Start
         1. **Select a task** in the tree view (left panel) to edit it
         2. **Edit fields** in the form (right panel)
@@ -712,8 +711,7 @@ def main():
         - Create subtask: Use `2.1` format when adding new item
 
         💡 **Tip**: If you change to an existing ID, that item shifts down automatically.
-        """
-        )
+        """)
 
     # Sidebar - Settings
     with st.sidebar:

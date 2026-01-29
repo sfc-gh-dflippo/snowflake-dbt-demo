@@ -115,14 +115,12 @@ This project follows **Specification-Driven Development (SDD)** methodology, whe
 #### **Phase 1: Define the Functional and Technical Specifications**
 
 1. **Gather Requirements** - Start with user stories or high-level requirements
-
    - Create comprehensive requirements, plans, and tasks in a PRD markdown document
    - Define functional requirements and design goals
    - Document business logic and transformation requirements
    - Specify acceptance criteria and validation requirements
 
 2. **Write Clear Specs** - Document specifications in structured format
-
    - Use natural language that is easy for technology architects and engineers to review
    - Define data models, APIs, interfaces, and system behavior
    - Outline performance and scalability requirements
@@ -137,21 +135,18 @@ This project follows **Specification-Driven Development (SDD)** methodology, whe
 #### **Phase 2: Design and Plan**
 
 1. **Research** - Research on the web to understand implementation approaches
-
    - Research current best practices and patterns
    - Validate technical approaches against requirements
    - Gather implementation context and examples
    - Identify architectural patterns and technology choices
 
 2. **Architectural Design** - Develop the technical solutions
-
    - Expand our PRD to include the design for system architecture and process logic
    - Define technology stack and integration patterns
    - Plan data flow and system interactions
    - Document technical design decisions in the PRD
 
 3. **Parse and Break Down** - Generate tasks from specifications
-
    - Automatically convert specifications into actionable tasks
    - Analyze the complexity of each task to identify complex tasks
    - Break down high/medium complexity tasks into subtasks
@@ -165,14 +160,12 @@ This project follows **Specification-Driven Development (SDD)** methodology, whe
 #### **Phase 3: Implement and Test**
 
 1. **Code Development** - Use list of tasks for development
-
    - Follow test-first development approach
    - Implement functionality defined in the specification
    - Write code to meet predefined specifications
    - Ensure code aligns with architectural design
 
 2. **Test Generation and Execution** - Derive tests from acceptance criteria
-
    - Generate automated tests directly from specification criteria
    - Execute specification-based tests
    - Validate functionality against requirements
@@ -187,13 +180,11 @@ This project follows **Specification-Driven Development (SDD)** methodology, whe
 #### **Phase 4: Iterate and Refine**
 
 1. **Validation** - Test implementation against specification
-
    - Verify all acceptance criteria are met
    - Confirm specification compliance
    - Validate system behavior matches requirements
 
 2. **Refine** - Iterate on specification, design, or implementation
-
    - Refine specifications if new insights arise
    - Update implementation until tests pass
    - Ensure requirements are fully met
