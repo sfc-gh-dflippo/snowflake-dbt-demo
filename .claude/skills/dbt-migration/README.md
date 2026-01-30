@@ -102,12 +102,34 @@ from the `"remote"` array.
 
 To update skills with the latest changes from GitHub:
 
-1. Edit `~/.snowflake/cortex/skills.json` and remove the remote entry
-2. Delete the cached repository:
-   `rm -rf ~/.snowflake/cortex/remote_cache/github_sfc-gh-dflippo_snowflake-dbt-demo*`
-3. Re-add the skills:
+1. Edit the skills configuration file and remove the remote entry
+2. Delete the cached repository
+3. Re-add the skills
+
+**Windows (PowerShell):**
+
+```powershell
+# Step 1: Edit skills.json - remove the remote entry for snowflake-dbt-demo
+notepad $env:USERPROFILE\.snowflake\cortex\skills.json
+
+# Step 2: Delete the cached repository
+Remove-Item -Recurse -Force "$env:USERPROFILE\.snowflake\cortex\remote_cache\github_sfc-gh-dflippo_snowflake-dbt-demo*"
+
+# Step 3: Re-add the skills
+cortex skill add https://github.com/sfc-gh-dflippo/snowflake-dbt-demo/tree/main/.claude/skills
+```
+
+**Linux/macOS:**
 
 ```bash
+# Step 1: Edit skills.json - remove the remote entry for snowflake-dbt-demo
+# Use your preferred editor (nano, vim, code, etc.)
+nano ~/.snowflake/cortex/skills.json
+
+# Step 2: Delete the cached repository
+rm -rf ~/.snowflake/cortex/remote_cache/github_sfc-gh-dflippo_snowflake-dbt-demo*
+
+# Step 3: Re-add the skills
 cortex skill add https://github.com/sfc-gh-dflippo/snowflake-dbt-demo/tree/main/.claude/skills
 ```
 
