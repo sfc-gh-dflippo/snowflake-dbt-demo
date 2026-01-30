@@ -139,21 +139,21 @@ After setup, these skills will be available:
 
 #### Migration Skills
 
-| Skill Name                    | Description                                                  |
-| ----------------------------- | ------------------------------------------------------------ |
-| `dbt-migration`               | Main orchestration workflow for migrations (7-phase process) |
-| `dbt-migration-snowflake`     | Convert Snowflake DDL to dbt models                          |
-| `dbt-migration-ms-sql-server` | Convert SQL Server/Azure Synapse T-SQL                       |
-| `dbt-migration-oracle`        | Convert Oracle PL/SQL and SQL                                |
-| `dbt-migration-teradata`      | Convert Teradata SQL, BTEQ, and utilities                    |
-| `dbt-migration-bigquery`      | Convert Google BigQuery SQL                                  |
-| `dbt-migration-redshift`      | Convert Amazon Redshift SQL                                  |
-| `dbt-migration-postgres`      | Convert PostgreSQL/Greenplum/Netezza SQL                     |
-| `dbt-migration-db2`           | Convert IBM DB2 SQL PL                                       |
-| `dbt-migration-hive`          | Convert Hive/Spark/Databricks HiveQL                         |
-| `dbt-migration-vertica`       | Convert Vertica SQL                                          |
-| `dbt-migration-sybase`        | Convert Sybase IQ SQL                                        |
-| `dbt-migration-validation`    | Validate converted models against quality rules              |
+| Skill Name                    | Source Platform                  | Key Features                       |
+| ----------------------------- | -------------------------------- | ---------------------------------- |
+| `dbt-migration`               | All platforms                    | Main orchestration (7-phase)       |
+| `dbt-migration-snowflake`     | Snowflake                        | Native Snowflake to dbt patterns   |
+| `dbt-migration-ms-sql-server` | SQL Server / Azure Synapse       | T-SQL, IDENTITY, TOP, #temp tables |
+| `dbt-migration-oracle`        | Oracle                           | PL/SQL, ROWNUM, CONNECT BY         |
+| `dbt-migration-teradata`      | Teradata                         | QUALIFY, BTEQ, volatile tables     |
+| `dbt-migration-bigquery`      | BigQuery                         | UNNEST, STRUCT/ARRAY               |
+| `dbt-migration-redshift`      | Redshift                         | DISTKEY/SORTKEY, COPY/UNLOAD       |
+| `dbt-migration-postgres`      | PostgreSQL / Greenplum / Netezza | Array expressions                  |
+| `dbt-migration-db2`           | IBM DB2                          | SQL PL, FETCH FIRST                |
+| `dbt-migration-hive`          | Hive / Spark / Databricks        | External tables, PARTITIONED BY    |
+| `dbt-migration-vertica`       | Vertica                          | Projections, flex tables           |
+| `dbt-migration-sybase`        | Sybase IQ                        | T-SQL variant                      |
+| `dbt-migration-validation`    | All platforms                    | Validate models against rules      |
 
 #### Core dbt Skills
 
@@ -301,24 +301,6 @@ Create a dependency mapping showing which objects depend on others:
 | orders              | TABLE       | dbo           | customers         | Low        | Bronze       |
 | vw_customer_summary | VIEW        | dbo           | customers, orders | Medium     | Silver       |
 | sp_load_customers   | PROCEDURE   | dbo           | customers         | High       | Gold         |
-
----
-
-## Available Skills
-
-| Source Platform                  | Skill Name                    | Key Features                       |
-| -------------------------------- | ----------------------------- | ---------------------------------- |
-| Snowflake                        | `dbt-migration-snowflake`     | Native Snowflake to dbt patterns   |
-| SQL Server / Azure Synapse       | `dbt-migration-ms-sql-server` | T-SQL, IDENTITY, TOP, #temp tables |
-| Oracle                           | `dbt-migration-oracle`        | PL/SQL, ROWNUM, CONNECT BY         |
-| Teradata                         | `dbt-migration-teradata`      | QUALIFY, BTEQ, volatile tables     |
-| BigQuery                         | `dbt-migration-bigquery`      | UNNEST, STRUCT/ARRAY               |
-| Redshift                         | `dbt-migration-redshift`      | DISTKEY/SORTKEY, COPY/UNLOAD       |
-| PostgreSQL / Greenplum / Netezza | `dbt-migration-postgres`      | Array expressions                  |
-| IBM DB2                          | `dbt-migration-db2`           | SQL PL, FETCH FIRST                |
-| Hive / Spark / Databricks        | `dbt-migration-hive`          | External tables, PARTITIONED BY    |
-| Vertica                          | `dbt-migration-vertica`       | Projections, flex tables           |
-| Sybase IQ                        | `dbt-migration-sybase`        | T-SQL variant                      |
 
 ---
 
