@@ -293,15 +293,14 @@ SELECT GET_DDL('PROCEDURE', 'my_database.my_schema.my_procedure(arg1 STRING, arg
 
 Create a dependency mapping showing which objects depend on others:
 
-```text
-migration_tracker.csv
-| Object Name | Object Type | Source Schema | Depends On | Complexity | Target Layer |
-|-------------|-------------|---------------|------------|------------|--------------|
-| customers | TABLE | dbo | - | Low | Bronze |
-| orders | TABLE | dbo | customers | Low | Bronze |
-| vw_customer_summary | VIEW | dbo | customers, orders | Medium | Silver |
-| sp_load_customers | PROCEDURE | dbo | customers | High | Gold |
-```
+**migration_tracker.csv**
+
+| Object Name         | Object Type | Source Schema | Depends On        | Complexity | Target Layer |
+| ------------------- | ----------- | ------------- | ----------------- | ---------- | ------------ |
+| customers           | TABLE       | dbo           | -                 | Low        | Bronze       |
+| orders              | TABLE       | dbo           | customers         | Low        | Bronze       |
+| vw_customer_summary | VIEW        | dbo           | customers, orders | Medium     | Silver       |
+| sp_load_customers   | PROCEDURE   | dbo           | customers         | High       | Gold         |
 
 ---
 
