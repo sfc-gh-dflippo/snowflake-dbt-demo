@@ -96,10 +96,11 @@ from the `"remote"` array.
 
 ### Updating Skills
 
-Use the `/skill` interactive manager within Cortex Code to sync and update skills. The manager
-provides options to refresh remote skills from their source repositories.
+> **Note:** The `/skill` interactive manager's "refresh" option re-reads existing cached files but
+> does **not** pull new changes from GitHub. To get the latest updates from the remote repository,
+> you must manually remove and re-add the skills as described below.
 
-For manual updates:
+To update skills with the latest changes from GitHub:
 
 1. Edit `~/.snowflake/cortex/skills.json` and remove the remote entry
 2. Delete the cached repository:
