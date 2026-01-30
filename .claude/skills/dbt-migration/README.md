@@ -12,6 +12,7 @@ convert legacy database objects to dbt models compatible with Snowflake.
 - [Available Skills](#available-skills)
 - [Example 1: Migrating Snowflake Objects After SnowConvert](#example-1-migrating-snowflake-objects-after-snowconvert)
 - [Example 2: Direct SQL Server to dbt Migration](#example-2-direct-sql-server-to-dbt-migration)
+- [Example 3: Batch Migration with Plan Mode](#example-3-batch-migration-with-plan-mode)
 - [Best Practices](#best-practices)
 - [Troubleshooting](#troubleshooting)
 
@@ -179,6 +180,12 @@ After setup, these skills will be available:
 
 Once installed, invoke skills using the `$skill-name` syntax in your Cortex Code session:
 
+> **Which skill to use?**
+>
+> - **Single object conversion**: Use the platform-specific skill (e.g., `$dbt-migration-snowflake`)
+> - **Batch migration (5+ objects)**: Use both `$dbt-migration` and the platform skill for workflow
+>   orchestration
+
 ```text
 $dbt-migration-ms-sql-server Convert this stored procedure to a dbt model:
 
@@ -238,26 +245,11 @@ This approach works well when:
 
 ## Preparing Your Code
 
-### Step 1: Organize Source DDL
+Before migrating, extract your source DDL into files. For batch migrations with multiple objects,
+see [Example 3: Batch Migration with Plan Mode](#example-3-batch-migration-with-plan-mode) for
+folder organization and inventory templates.
 
-Create a folder structure for your source objects similar to the following:
-
-```text
-migration_source/
-├── tables/
-│   ├── customers.sql
-│   └── orders.sql
-├── views/
-│   ├── vw_customer_summary.sql
-│   └── vw_order_metrics.sql
-├── stored_procedures/
-│   ├── sp_load_customers.sql
-│   └── sp_calculate_metrics.sql
-└── functions/
-    └── fn_format_date.sql
-```
-
-### Step 2: Extract DDL from Source Database
+### Extract DDL from Source Database
 
 #### SQL Server
 
@@ -289,11 +281,9 @@ SHOW PROCEDURES IN SCHEMA my_database.my_schema;
 SELECT GET_DDL('PROCEDURE', 'my_database.my_schema.my_procedure(arg1 STRING, arg2 INT)');
 ```
 
-### Step 3: Document Dependencies
+### Document Dependencies
 
-Create a dependency mapping showing which objects depend on others:
-
-**migration_tracker.csv**
+For complex migrations, create a dependency mapping showing which objects depend on others:
 
 | Object Name         | Object Type | Source Schema | Depends On        | Complexity | Target Layer |
 | ------------------- | ----------- | ------------- | ----------------- | ---------- | ------------ |
@@ -703,6 +693,96 @@ SELECT * FROM {{ source('sqlserver_staging', 'customers') }}
 {{ config(materialized='ephemeral', tags=['bronze', 'sqlserver']) }}
 
 SELECT * FROM {{ source('sqlserver_staging', 'addresses') }}
+```
+
+---
+
+## Example 3: Batch Migration Using Specification-Driven Development
+
+For migrating multiple objects, follow the Specification-Driven Development (SDD) approach: create a
+PRD first, review it, then generate a task list to guide execution.
+
+### When to Use This Approach
+
+- Migrating 5+ objects at once
+- Objects have dependencies on each other
+- You want stakeholder review before implementation
+- You need a documented plan with clear acceptance criteria
+
+### Step 1: Create the Migration PRD
+
+Start by asking the agent to analyze your database and create a Product Requirements Document:
+
+```text
+/plan
+
+I need to migrate MY_DATABASE to dbt models using the $dbt-migration and $dbt-migration-snowflake skills.
+Run this query to extract all DDL: SELECT GET_DDL('DATABASE', 'MY_DATABASE');
+Use the output to create a Migration PRD at docs/MY_DATABASE_migration_prd.md using the $dbt-migration workflow.
+Please make the plan specific down to the object level.
+Do not begin development until I have completed my review.
+```
+
+### Step 2: Review the PRD
+
+Review the generated `docs/MY_DATABASE_migration_prd.md` and verify:
+
+- All objects are inventoried correctly
+- Dependencies are accurately mapped
+- Layer assignments (bronze/silver/gold) are consistent with your goal
+
+Ask your agent to make any necessary edits to the PRD before proceeding.
+
+### Step 3: Generate the Task List
+
+Once the PRD is approved, ask the agent to create a detailed task list:
+
+```text
+/plan
+
+First, use the $dbt-migration skill, $dbt-migration-snowflake skill, and the docs/MY_DATABASE_migration_prd.md PRD to generate a task list document named docs/MY_DATABASE_migration_tasks.md that breaks down the migration into actionable tasks.
+
+Each task should:
+- Be atomic and perform one activity for one object
+- Include a detailed task description and acceptance criteria
+- Identify its dependencies (which tasks must complete first)
+- Estimated complexity (simple/medium/complex)
+    - Medium and complex tasks should be broken down into sub-tasks
+- Agent skills the task should utilize
+- Subagent to perform the task
+
+Second, create any necessary subagents in this project's `.claude/agents/` directory to perform the tasks and subtasks.
+
+Wait for my approval before starting implementation.
+```
+
+#### Creating Subagents
+
+Subagents are autonomous agents that can be spawned to handle specific tasks in the background. They
+are defined as markdown files in the `.claude/agents/` directory (or `.cortex/agents/`).
+
+**Invoking subagents:** Once defined, Cortex Code will automatically use the Task tool to spawn
+agents from the `.claude/agents/` directory when appropriate. You can also reference them
+explicitly:
+
+```text
+Use the dbt-migration-agent to convert @migration_source/stored_procedures/sp_load_customers.sql
+```
+
+**Monitoring subagents:** Use `/agents` to list running background agents and check their status.
+
+See the existing agents in this repository at
+[.claude/agents/](https://github.com/sfc-gh-dflippo/snowflake-dbt-demo/tree/main/.claude/agents) for
+working examples.
+
+### Step 4: Execute the Migration
+
+After you have reviewed the task list, you can begin the migration:
+
+```text
+/plan
+
+Please begin implementing docs/MY_DATABASE_migration_tasks.md. Please execute tasks and sub-tasks in parallel sub-agents whenever possible.
 ```
 
 ---
