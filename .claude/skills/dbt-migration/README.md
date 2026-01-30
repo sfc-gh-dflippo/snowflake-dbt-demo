@@ -31,7 +31,7 @@ from various source platforms into production-quality dbt models. The skills pro
 
 ## Setting Up Skills for Cortex Code CLI
 
-These dbt migration skills can be imported directly from our GitHub repository using the native
+These dbt migration skills can be imported directly from this GitHub repository using the native
 Cortex Code CLI skill management features.
 
 ### Prerequisites
@@ -41,7 +41,7 @@ Cortex Code CLI skill management features.
 
 ### Import Skills from GitHub
 
-Use the `cortex skill add` command to import skills directly from our GitHub repository. You must
+Use the `cortex skill add` command to import skills directly from this GitHub repository. You must
 specify the full path to the skills folder using the GitHub tree URL format:
 
 ```bash
