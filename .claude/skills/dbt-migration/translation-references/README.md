@@ -42,7 +42,7 @@ When converting source database objects to dbt models:
 4. Break complex procedures into multiple dbt models
 5. Implement appropriate incremental strategies
 
-See the main [dbt-migration skill](../SKILL.md) for complete conversion guidelines.
+See the main $dbt-migration for complete conversion guidelines.
 
 ---
 

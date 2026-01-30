@@ -264,17 +264,17 @@ VARCHAR(100) NOT CASESPECIFIC → VARCHAR(100)
 
 ## Related Skills
 
-- **dbt-migration**: For the complete migration workflow (discovery, planning, placeholder models,
+- $dbt-migration - For the complete migration workflow (discovery, planning, placeholder models,
   testing, deployment)
-- **dbt-modeling**: For CTE patterns and SQL structure guidance
-- **dbt-testing**: For implementing comprehensive dbt tests
-- **dbt-architecture**: For project organization and folder structure
-- **dbt-materializations**: For choosing materialization strategies (view, table, incremental,
+- $dbt-modeling - For CTE patterns and SQL structure guidance
+- $dbt-testing - For implementing comprehensive dbt tests
+- $dbt-architecture - For project organization and folder structure
+- $dbt-materializations - For choosing materialization strategies (view, table, incremental,
   snapshots)
-- **dbt-performance**: For clustering keys, warehouse sizing, and query optimization
-- **dbt-commands**: For running dbt commands and model selection syntax
-- **dbt-core**: For dbt installation, configuration, and package management
-- **snowflake-cli**: For executing SQL and managing Snowflake objects
+- $dbt-performance - For clustering keys, warehouse sizing, and query optimization
+- $dbt-commands - For running dbt commands and model selection syntax
+- $dbt-core - For dbt installation, configuration, and package management
+- $snowflake-cli - For executing SQL and managing Snowflake objects
 
 ---
 

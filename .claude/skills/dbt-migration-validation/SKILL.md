@@ -557,7 +557,7 @@ Validation is implemented in `.claude/hooks/dbt-validation/`:
 
 ## Related Skills
 
-- **[dbt-migration](.claude/skills/dbt-migration/SKILL.md)** - Migration workflow
-- **[dbt-testing](.claude/skills/dbt-testing/SKILL.md)** - Test strategies
-- **[dbt-architecture](.claude/skills/dbt-architecture/SKILL.md)** - Naming conventions
-- **[dbt-modeling](.claude/skills/dbt-modeling/SKILL.md)** - CTE patterns
+- $dbt-migration - Migration workflow
+- $dbt-testing - Test strategies
+- $dbt-architecture - Naming conventions
+- $dbt-modeling - CTE patterns

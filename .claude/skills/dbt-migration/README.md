@@ -6,15 +6,16 @@ convert legacy database objects to dbt models compatible with Snowflake.
 ## Table of Contents
 
 - [Overview](#overview)
-- [Setting Up Skills for Cortex Code CLI](#setting-up-skills-for-cortex-code-cli)
+- [Quick Start](#quick-start)
 - [Migration Approaches](#migration-approaches)
 - [Preparing Your Code](#preparing-your-code)
-- [Available Skills](#available-skills)
 - [Example 1: Migrating Snowflake Objects After SnowConvert](#example-1-migrating-snowflake-objects-after-snowconvert)
 - [Example 2: Direct SQL Server to dbt Migration](#example-2-direct-sql-server-to-dbt-migration)
-- [Example 3: Batch Migration with Plan Mode](#example-3-batch-migration-with-plan-mode)
+- [Example 3: Batch Migration Using Specification-Driven Development](#example-3-batch-migration-using-specification-driven-development)
 - [Best Practices](#best-practices)
 - [Troubleshooting](#troubleshooting)
+- [Appendix: Skills and Cortex Code CLI Setup](#appendix-skills-and-cortex-code-cli-setup)
+- [Appendix: Creating Subagents](#appendix-creating-subagents)
 
 ---
 
@@ -30,189 +31,25 @@ from various source platforms into production-quality dbt models. The skills pro
 
 ---
 
-## Setting Up Skills for Cortex Code CLI
+## Quick Start
 
-These dbt migration skills can be imported directly from this GitHub repository using the native
-Cortex Code CLI skill management features.
-
-### Prerequisites
-
-- **Cortex Code CLI** installed and configured
-- **Git** installed on your system
-
-### Import Skills from GitHub
-
-Use the `cortex skill add` command to import skills directly from this GitHub repository. You must
-specify the full path to the skills folder using the GitHub tree URL format:
+Add the migration skills to Cortex Code CLI:
 
 ```bash
 cortex skill add https://github.com/sfc-gh-dflippo/snowflake-dbt-demo/.claude/skills
 ```
 
-This command automatically:
-
-- Clones the repository to `~/.snowflake/cortex/remote_cache/`
-- Discovers all skills in the specified `.claude/skills/` directory
-- Makes them available in all future Cortex Code sessions
-
-### Using the Interactive Skill Manager
-
-Within a Cortex Code session, you can use the `/skill` command to open an interactive manager where
-you can:
-
-- View all skills by location (Project, Global, Remote, Bundled)
-- Add skill directories or remote repositories
-- Sync project skills to global
-- Delete skills
-- View skill details and conflicts
+Invoke skills in your prompts using `$skill-name`:
 
 ```text
-/skill                    # Opens interactive skill manager
-$$                        # Quick list of available skills
+Convert @migration_source/views/my_view.sql to a dbt model using the $dbt-migration-snowflake skill
 ```
 
-### Verify Installation
+> **Tip:** Use the platform-specific skill for single objects (e.g., `$dbt-migration-snowflake`).
+> For batch migrations, combine with `$dbt-migration` for workflow orchestration.
 
-List all installed skills to confirm the import:
-
-```bash
-cortex skill list
-```
-
-You should see the dbt migration skills listed under "Remote skills", including:
-
-- `dbt-migration` - Main orchestration workflow
-- `dbt-migration-snowflake` - Convert Snowflake DDL to dbt
-- `dbt-migration-ms-sql-server` - Convert SQL Server/Azure Synapse T-SQL
-- `dbt-migration-oracle` - Convert Oracle PL/SQL
-- And other platform-specific skills
-
-### Remove Skills
-
-Use the `/skill` interactive manager within Cortex Code to remove skills. The manager allows you to
-view, delete, and manage skills across all locations.
-
-For manual removal of remote skills, edit `~/.snowflake/cortex/skills.json` and remove the entry
-from the `"remote"` array.
-
-### Updating Skills
-
-> **Note:** The `/skill` interactive manager's "refresh" option re-reads existing cached files but
-> does **not** pull new changes from GitHub. To get the latest updates from the remote repository,
-> you must manually remove and re-add the skills as described below.
-
-To update skills with the latest changes from GitHub:
-
-1. Edit the skills configuration file and remove the remote entry
-2. Delete the cached repository
-3. Re-add the skills
-
-**Windows (PowerShell):**
-
-```powershell
-# Step 1: Edit skills.json - remove the remote entry for snowflake-dbt-demo
-notepad $env:USERPROFILE\.snowflake\cortex\skills.json
-
-# Step 2: Delete the cached repository
-Remove-Item -Recurse -Force "$env:USERPROFILE\.snowflake\cortex\remote_cache\github_sfc-gh-dflippo_snowflake-dbt-demo*"
-
-# Step 3: Re-add the skills
-cortex skill add https://github.com/sfc-gh-dflippo/snowflake-dbt-demo/tree/main/.claude/skills
-```
-
-**Linux/macOS:**
-
-```bash
-# Step 1: Edit skills.json - remove the remote entry for snowflake-dbt-demo
-# Use your preferred editor (nano, vim, code, etc.)
-nano ~/.snowflake/cortex/skills.json
-
-# Step 2: Delete the cached repository
-rm -rf ~/.snowflake/cortex/remote_cache/github_sfc-gh-dflippo_snowflake-dbt-demo*
-
-# Step 3: Re-add the skills
-cortex skill add https://github.com/sfc-gh-dflippo/snowflake-dbt-demo/tree/main/.claude/skills
-```
-
-### Available dbt Skills
-
-After setup, these skills will be available:
-
-#### Migration Skills
-
-| Skill Name                    | Source Platform                  | Key Features                       |
-| ----------------------------- | -------------------------------- | ---------------------------------- |
-| `dbt-migration`               | All platforms                    | Main orchestration (7-phase)       |
-| `dbt-migration-snowflake`     | Snowflake                        | Native Snowflake to dbt patterns   |
-| `dbt-migration-ms-sql-server` | SQL Server / Azure Synapse       | T-SQL, IDENTITY, TOP, #temp tables |
-| `dbt-migration-oracle`        | Oracle                           | PL/SQL, ROWNUM, CONNECT BY         |
-| `dbt-migration-teradata`      | Teradata                         | QUALIFY, BTEQ, volatile tables     |
-| `dbt-migration-bigquery`      | BigQuery                         | UNNEST, STRUCT/ARRAY               |
-| `dbt-migration-redshift`      | Redshift                         | DISTKEY/SORTKEY, COPY/UNLOAD       |
-| `dbt-migration-postgres`      | PostgreSQL / Greenplum / Netezza | Array expressions                  |
-| `dbt-migration-db2`           | IBM DB2                          | SQL PL, FETCH FIRST                |
-| `dbt-migration-hive`          | Hive / Spark / Databricks        | External tables, PARTITIONED BY    |
-| `dbt-migration-vertica`       | Vertica                          | Projections, flex tables           |
-| `dbt-migration-sybase`        | Sybase IQ                        | T-SQL variant                      |
-| `dbt-migration-validation`    | All platforms                    | Validate models against rules      |
-
-#### Core dbt Skills
-
-| Skill Name             | Description                                                         |
-| ---------------------- | ------------------------------------------------------------------- |
-| `dbt-core`             | Installation, configuration, project setup, package management      |
-| `dbt-commands`         | Command-line operations, model selection syntax, Jinja patterns     |
-| `dbt-architecture`     | Project structure, medallion architecture (bronze/silver/gold)      |
-| `dbt-modeling`         | Writing models with CTE patterns, SQL structure, layer templates    |
-| `dbt-materializations` | Choosing materializations (view, table, incremental, snapshots)     |
-| `dbt-testing`          | Testing strategies with dbt_constraints, generic and singular tests |
-| `dbt-artifacts`        | Monitor execution using dbt Artifacts package                       |
-| `dbt-performance`      | Optimization through clustering, warehouse sizing, query tuning     |
-
-#### Snowflake Integration Skills
-
-| Skill Name                     | Description                                            |
-| ------------------------------ | ------------------------------------------------------ |
-| `dbt-projects-on-snowflake`    | Deploy and run dbt projects natively in Snowflake      |
-| `dbt-projects-snowflake-setup` | Step-by-step setup guide for dbt Projects on Snowflake |
-
-### Using Skills in Cortex Code
-
-Once installed, invoke skills using the `$skill-name` syntax in your Cortex Code session:
-
-> **Which skill to use?**
->
-> - **Single object conversion**: Use the platform-specific skill (e.g., `$dbt-migration-snowflake`)
-> - **Batch migration (5+ objects)**: Use both `$dbt-migration` and the platform skill for workflow
->   orchestration
-
-```text
-$dbt-migration-ms-sql-server Convert this stored procedure to a dbt model:
-
-[paste your SQL Server code here]
-```
-
-Or use the `@` syntax to include a file directly:
-
-```text
-$dbt-migration-snowflake Convert @migration_source/views/vw_customer_orders.sql to a dbt model
-following the medallion architecture pattern.
-```
-
-You can also reference Snowflake tables directly with `#`:
-
-```text
-$dbt-migration-snowflake Convert the view #MY_DB.MY_SCHEMA.VW_CUSTOMER_ORDERS to a dbt model
-```
-
-### Troubleshooting Setup
-
-| Issue                         | Solution                                                |
-| ----------------------------- | ------------------------------------------------------- |
-| Skills not appearing          | Run `cortex skill list` to verify installation          |
-| "No valid skills found" error | Ensure you use the full tree URL with branch and path   |
-| Git clone fails               | Check your network connection and GitHub access         |
-| Command not found             | Verify Cortex Code CLI is installed: `cortex --version` |
+See [Appendix: Skills and Cortex Code CLI Setup](#appendix-skills-and-cortex-code-cli-setup) for
+detailed installation, available skills, and troubleshooting.
 
 ---
 
@@ -332,8 +169,8 @@ GROUP BY c.customer_id, c.customer_name, c.email;
 ### AI Agent Prompt for Snowflake Conversion
 
 ```text
-$dbt-migration-snowflake Convert this Snowflake view to a dbt model. The view was originally
-converted from SQL Server [dbo].[vw_CustomerOrders] using SnowConvert.
+Convert this Snowflake view to a dbt model using the $dbt-migration-snowflake skill.
+The view was originally converted from SQL Server [dbo].[vw_CustomerOrders] using SnowConvert.
 
 Requirements:
 - Place it in the silver layer with an `int_` prefix
@@ -344,108 +181,8 @@ Requirements:
 @migration_source/views/vw_customer_orders.sql
 ```
 
-### Expected Output
-
-The AI agent will generate:
-
-#### 1. dbt Model (models/silver/customers/int_customer_orders.sql)
-
-```sql
-{{ config(materialized='view', tags=['silver', 'customer']) }}
-
-/* Original Object: analytics.vw_customer_orders
-   Source Platform: Snowflake (converted from SQL Server dbo.vw_CustomerOrders)
-   Purpose: Customer order aggregation with tier classification
-   Conversion Notes:
-   - Added source() references for raw tables
-   - Implemented standard CTE pattern
-   - Added explicit type casts */
-
-WITH customers AS (
-    SELECT * FROM {{ source('raw_data', 'customers') }}
-),
-
-orders AS (
-    SELECT * FROM {{ source('raw_data', 'orders') }}
-),
-
-customer_orders AS (
-    SELECT
-        c.customer_id::INTEGER AS customer_id,
-        c.customer_name::VARCHAR(100) AS customer_name,
-        c.email::VARCHAR(255) AS email,
-        COUNT(o.order_id)::INTEGER AS total_orders,
-        COALESCE(SUM(o.order_amount), 0)::NUMBER(18,2) AS total_spent,
-        MAX(o.order_date)::DATE AS last_order_date,
-        CASE
-            WHEN SUM(o.order_amount) > 10000 THEN 'Premium'
-            WHEN SUM(o.order_amount) > 1000 THEN 'Standard'
-            ELSE 'Basic'
-        END::VARCHAR(20) AS customer_tier
-    FROM customers c
-    LEFT JOIN orders o ON c.customer_id = o.customer_id
-    WHERE c.is_active = TRUE
-    GROUP BY c.customer_id, c.customer_name, c.email
-),
-
-final AS (
-    SELECT
-        customer_id,
-        customer_name,
-        email,
-        total_orders,
-        total_spent,
-        last_order_date,
-        customer_tier
-    FROM customer_orders
-)
-
-SELECT * FROM final
-```
-
-#### 2. Schema YAML (models/silver/customers/\_models.yml)
-
-```yaml
-version: 2
-
-models:
-  - name: int_customer_orders
-    description: |
-      Customer order aggregation with tier classification.
-      Converted from SQL Server [dbo].[vw_CustomerOrders] via SnowConvert.
-
-      Business Logic:
-      - Premium tier: total_spent > $10,000
-      - Standard tier: total_spent > $1,000
-      - Basic tier: all others
-    columns:
-      - name: customer_id
-        description: "Primary key - unique customer identifier"
-        data_type: integer
-        tests:
-          - dbt_constraints.primary_key
-      - name: customer_name
-        description: "Customer full name"
-        data_type: varchar(100)
-      - name: email
-        description: "Customer email address"
-        data_type: varchar(255)
-      - name: total_orders
-        description: "Count of all orders placed by customer"
-        data_type: integer
-      - name: total_spent
-        description: "Sum of all order amounts in USD"
-        data_type: number(18,2)
-      - name: last_order_date
-        description: "Most recent order date"
-        data_type: date
-      - name: customer_tier
-        description: "Customer segment based on total spending"
-        data_type: varchar(20)
-        tests:
-          - accepted_values:
-              values: ["Premium", "Standard", "Basic"]
-```
+The agent will generate a dbt model with CTE pattern, explicit type casts, and a corresponding
+`_models.yml` with column documentation and tests.
 
 ---
 
@@ -520,7 +257,8 @@ END;
 ### AI Agent Prompt for SQL Server Conversion
 
 ```text
-$dbt-migration-ms-sql-server Convert this SQL Server stored procedure to a dbt incremental model.
+Convert this SQL Server stored procedure to a dbt incremental model using the
+$dbt-migration-ms-sql-server skill.
 
 Requirements:
 - Convert T-SQL syntax to Snowflake-compatible SQL
@@ -532,168 +270,8 @@ Requirements:
 @migration_source/stored_procedures/sp_load_dim_customer.sql
 ```
 
-### Generated Output
-
-The AI agent will generate:
-
-#### 1. dbt Model (models/gold/customers/dim_customer.sql)
-
-```sql
-{{ config(
-    materialized='incremental',
-    unique_key='customer_id',
-    merge_update_columns=['customer_name', 'email', 'phone', 'address_line1',
-                          'city', 'state', 'postal_code', 'effective_date'],
-    tags=['gold', 'customer', 'dimension']
-) }}
-
-/* Original Object: [dbo].[sp_LoadDimCustomer]
-   Source Platform: SQL Server
-   Original Type: Stored Procedure
-   Migration Date: {{ run_started_at.strftime('%Y-%m-%d') }}
-
-   Conversion Notes:
-   - MERGE statement converted to dbt incremental with merge strategy
-   - ISNULL() converted to COALESCE()
-   - GETDATE() converted to CURRENT_TIMESTAMP()
-   - DATEADD() syntax compatible with Snowflake
-   - TOP 100 PERCENT removed (unnecessary)
-   - TRY...CATCH replaced with dbt's built-in error handling
-   - @@ROWCOUNT tracking handled by dbt run results */
-
-WITH stg_customers AS (
-    SELECT * FROM {{ ref('stg_sqlserver__customers') }}
-),
-
-stg_addresses AS (
-    SELECT * FROM {{ ref('stg_sqlserver__addresses') }}
-),
-
--- Join customers with addresses and apply business logic
-customer_with_address AS (
-    SELECT
-        c.customer_id::INTEGER AS customer_id,
-        c.customer_name::VARCHAR(100) AS customer_name,
-        -- ISNULL converted to COALESCE
-        COALESCE(c.email, 'unknown@email.com')::VARCHAR(255) AS email,
-        c.phone::VARCHAR(20) AS phone,
-        a.address_line1::VARCHAR(200) AS address_line1,
-        a.city::VARCHAR(100) AS city,
-        a.state::VARCHAR(50) AS state,
-        a.postal_code::VARCHAR(20) AS postal_code,
-        -- GETDATE() converted to CURRENT_TIMESTAMP()
-        CURRENT_TIMESTAMP()::TIMESTAMP_NTZ AS effective_date,
-        1::BOOLEAN AS is_current,
-        c.modified_date::TIMESTAMP_NTZ AS modified_date
-    FROM stg_customers c
-    LEFT JOIN stg_addresses a ON c.address_id = a.address_id
-    {% if is_incremental() %}
-    -- DATEADD syntax compatible with Snowflake
-    WHERE c.modified_date > DATEADD(day, -1, CURRENT_TIMESTAMP())
-    {% endif %}
-),
-
-final AS (
-    SELECT
-        customer_id,
-        customer_name,
-        email,
-        phone,
-        address_line1,
-        city,
-        state,
-        postal_code,
-        effective_date,
-        is_current
-    FROM customer_with_address
-)
-
-SELECT * FROM final
-```
-
-#### 2. Schema YAML (models/gold/customers/\_models.yml)
-
-```yaml
-version: 2
-
-models:
-  - name: dim_customer
-    description: |
-      Customer dimension containing customer attributes and current address.
-      Converted from SQL Server stored procedure [dbo].[sp_LoadDimCustomer].
-
-      Incremental Strategy:
-      - Uses MERGE on customer_id
-      - Processes only records modified in the last day
-      - Updates existing customers, inserts new ones
-
-      Source: Staging customers and addresses tables
-      Refresh: Daily incremental
-    config:
-      contract:
-        enforced: true
-    columns:
-      - name: customer_id
-        description: "Primary key - unique customer identifier from source system"
-        data_type: integer
-        tests:
-          - dbt_constraints.primary_key
-      - name: customer_name
-        description: "Customer full name"
-        data_type: varchar(100)
-        tests:
-          - not_null
-      - name: email
-        description: "Customer email address; defaults to 'unknown@email.com' if null in source"
-        data_type: varchar(255)
-        tests:
-          - not_null
-      - name: phone
-        description: "Customer phone number"
-        data_type: varchar(20)
-      - name: address_line1
-        description: "Primary address street line"
-        data_type: varchar(200)
-      - name: city
-        description: "Address city"
-        data_type: varchar(100)
-      - name: state
-        description: "Address state/province"
-        data_type: varchar(50)
-      - name: postal_code
-        description: "Address postal/ZIP code"
-        data_type: varchar(20)
-      - name: effective_date
-        description: "Date/time when this record version became effective"
-        data_type: timestamp_ntz
-        tests:
-          - not_null
-      - name: is_current
-        description: "Flag indicating if this is the current version of the customer record"
-        data_type: boolean
-        tests:
-          - not_null
-          - accepted_values:
-              values: [true, false]
-```
-
-#### 3. Staging Models (Prerequisites)
-
-The agent will also recommend creating staging models for the source tables:
-
-```sql
--- models/bronze/sqlserver/stg_sqlserver__customers.sql
-{{ config(materialized='ephemeral', tags=['bronze', 'sqlserver']) }}
-
-SELECT * FROM {{ source('sqlserver_staging', 'customers') }}
-```
-
-```sql
--- models/bronze/sqlserver/stg_sqlserver__addresses.sql
-{{ config(materialized='ephemeral', tags=['bronze', 'sqlserver']) }}
-
-SELECT * FROM {{ source('sqlserver_staging', 'addresses') }}
-```
+The agent will generate a dbt incremental model with T-SQL syntax converted to Snowflake, staging
+model recommendations, and a `_models.yml` with column documentation and tests.
 
 ---
 
@@ -740,40 +318,27 @@ Once the PRD is approved, ask the agent to create a detailed task list:
 ```text
 /plan
 
-First, use the $dbt-migration skill, $dbt-migration-snowflake skill, and the docs/MY_DATABASE_migration_prd.md PRD to generate a task list document named docs/MY_DATABASE_migration_tasks.md that breaks down the migration into actionable tasks.
+First, use the $dbt-migration and $dbt-migration-snowflake skills with the
+`docs/MY_DATABASE_migration_prd.md` PRD to generate a task list document named
+`docs/MY_DATABASE_migration_tasks.md` that breaks down the migration into actionable tasks.
 
-Each task should:
+Ensure each task follows these rules:
 - Be atomic and perform one activity for one object
 - Include a detailed task description and acceptance criteria
-- Identify its dependencies (which tasks must complete first)
-- Estimated complexity (simple/medium/complex)
+- Identify dependencies (which tasks must complete first)
+- Include estimated complexity (simple/medium/complex)
     - Medium and complex tasks should be broken down into sub-tasks
-- Agent skills the task should utilize
-- Subagent to perform the task
+- Specify agent skills the task should utilize
+- Specify the subagent to perform the task
 
-Second, create any necessary subagents in this project's `.claude/agents/` directory to perform the tasks and subtasks.
+Second, create any necessary subagents in this project's `.claude/agents/` directory to perform
+the tasks and subtasks.
 
 Wait for my approval before starting implementation.
 ```
 
-#### Creating Subagents
-
-Subagents are autonomous agents that can be spawned to handle specific tasks in the background. They
-are defined as markdown files in the `.claude/agents/` directory (or `.cortex/agents/`).
-
-**Invoking subagents:** Once defined, Cortex Code will automatically use the Task tool to spawn
-agents from the `.claude/agents/` directory when appropriate. You can also reference them
-explicitly:
-
-```text
-Use the dbt-migration-agent to convert @migration_source/stored_procedures/sp_load_customers.sql
-```
-
-**Monitoring subagents:** Use `/agents` to list running background agents and check their status.
-
-See the existing agents in this repository at
-[.claude/agents/](https://github.com/sfc-gh-dflippo/snowflake-dbt-demo/tree/main/.claude/agents) for
-working examples.
+See [Appendix: Creating Subagents](#appendix-creating-subagents) for details on how subagents work
+and how to create custom ones for your migration.
 
 ### Step 4: Execute the Migration
 
@@ -913,9 +478,345 @@ Always include header comments explaining:
 
 ## Related Documentation
 
-- [SKILL.md](SKILL.md) - Main migration workflow skill
-- [dbt-migration-validation](../dbt-migration-validation/SKILL.md) - Validation rules and quality
-  checks
-- [dbt-modeling](../dbt-modeling/SKILL.md) - CTE patterns and SQL structure
-- [dbt-testing](../dbt-testing/SKILL.md) - Testing strategies with dbt_constraints
-- [dbt-architecture](../dbt-architecture/SKILL.md) - Project organization and naming conventions
+- $dbt-migration - Main migration workflow skill
+- $dbt-migration-validation - Validation rules and quality checks
+- $dbt-modeling - CTE patterns and SQL structure
+- $dbt-testing - Testing strategies with dbt_constraints
+- $dbt-architecture - Project organization and naming conventions
+
+---
+
+## Appendix: Skills and Cortex Code CLI Setup
+
+Detailed instructions for setting up and managing dbt migration skills in Cortex Code CLI.
+
+### What Are Skills?
+
+Skills are markdown files that teach AI agents how to complete specific tasks. They provide
+structured guidance, tool references, decision logic, and checkpoints—transforming agents into
+domain experts for specialized workflows.
+
+#### How Skills Work
+
+When you invoke a skill (e.g., `$dbt-migration-snowflake`), Cortex Code loads the skill's markdown
+content into its context. This gives the agent:
+
+1. **Structured workflows** - Step-by-step instructions for completing tasks
+2. **Domain knowledge** - Platform-specific syntax translations, best practices, patterns
+3. **Tool guidance** - Which tools to use and when
+4. **Quality checks** - Validation rules and stopping points for user review
+
+#### Skill File Structure
+
+Skills are stored in `.claude/skills/` directories and follow this structure:
+
+```text
+my-skill/
+├── SKILL.md              # Main skill file (required)
+├── pyproject.toml        # Python dependencies (if scripts)
+├── scripts/              # Executable code (optional)
+├── references/           # Supporting documentation (optional)
+```
+
+Every skill has YAML frontmatter with `name` and `description`, followed by markdown content:
+
+```markdown
+---
+name: skill-name
+description: "What it does + when to use it. Include trigger phrases."
+---
+
+# Skill Title
+
+## When to Use
+
+[Criteria for activation]
+
+## Workflow
+
+[Step-by-step instructions]
+
+## Output
+
+[What the skill produces]
+```
+
+#### Skills vs Subagents
+
+| Concept       | Purpose                                            | Invocation                        |
+| ------------- | -------------------------------------------------- | --------------------------------- |
+| **Skills**    | Domain knowledge and workflows loaded into context | `$skill-name` in prompts          |
+| **Subagents** | Autonomous agents that run tasks in parallel       | Task tool or automatic delegation |
+
+Skills provide **knowledge**; subagents provide **execution capability**. Subagents typically
+reference skills in their system prompts to gain domain expertise.
+
+#### Invoking Skills
+
+Use the `$skill-name` prefix in prompts:
+
+```text
+Convert this view to a dbt model using $dbt-migration-snowflake
+```
+
+The agent loads the skill and follows its workflow to complete the task.
+
+For more details on skill development and best practices, see the
+[Cortex Code Skill Development documentation](https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-code).
+
+### Prerequisites
+
+- **Cortex Code CLI** installed and configured
+- **Git** installed on your system
+
+### Import Skills from GitHub
+
+Use the `cortex skill add` command to import skills directly from this GitHub repository:
+
+```bash
+cortex skill add https://github.com/sfc-gh-dflippo/snowflake-dbt-demo/.claude/skills
+```
+
+This command automatically:
+
+- Clones the repository to `~/.snowflake/cortex/remote_cache/`
+- Discovers all skills in the specified `.claude/skills/` directory
+- Makes them available in all future Cortex Code sessions
+
+### Interactive Skill Manager
+
+Within a Cortex Code session, use the `/skill` command to open an interactive manager:
+
+```text
+/skill                    # Opens interactive skill manager
+$$                        # Quick list of available skills
+```
+
+The manager allows you to view, add, sync, and delete skills across all locations.
+
+### Verify Installation
+
+```bash
+cortex skill list
+```
+
+You should see skills listed under "Remote skills", including `dbt-migration`,
+`dbt-migration-snowflake`, `dbt-migration-ms-sql-server`, and others.
+
+### Updating Skills
+
+> **Note:** The `/skill` manager's "refresh" option re-reads cached files but does **not** pull new
+> changes from GitHub. To get updates, remove and re-add the skills.
+
+**Linux/macOS:**
+
+```bash
+# Edit skills.json - remove the remote entry for snowflake-dbt-demo
+nano ~/.snowflake/cortex/skills.json
+
+# Delete the cached repository
+rm -rf ~/.snowflake/cortex/remote_cache/github_sfc-gh-dflippo_snowflake-dbt-demo*
+
+# Re-add the skills
+cortex skill add https://github.com/sfc-gh-dflippo/snowflake-dbt-demo/tree/main/.claude/skills
+```
+
+**Windows (PowerShell):**
+
+```powershell
+notepad $env:USERPROFILE\.snowflake\cortex\skills.json
+Remove-Item -Recurse -Force "$env:USERPROFILE\.snowflake\cortex\remote_cache\github_sfc-gh-dflippo_snowflake-dbt-demo*"
+cortex skill add https://github.com/sfc-gh-dflippo/snowflake-dbt-demo/tree/main/.claude/skills
+```
+
+### Available dbt Skills
+
+#### Migration Skills
+
+| Skill Name                    | Source Platform                  | Key Features                       |
+| ----------------------------- | -------------------------------- | ---------------------------------- |
+| `dbt-migration`               | All platforms                    | Main orchestration (7-phase)       |
+| `dbt-migration-snowflake`     | Snowflake                        | Native Snowflake to dbt patterns   |
+| `dbt-migration-ms-sql-server` | SQL Server / Azure Synapse       | T-SQL, IDENTITY, TOP, #temp tables |
+| `dbt-migration-oracle`        | Oracle                           | PL/SQL, ROWNUM, CONNECT BY         |
+| `dbt-migration-teradata`      | Teradata                         | QUALIFY, BTEQ, volatile tables     |
+| `dbt-migration-bigquery`      | BigQuery                         | UNNEST, STRUCT/ARRAY               |
+| `dbt-migration-redshift`      | Redshift                         | DISTKEY/SORTKEY, COPY/UNLOAD       |
+| `dbt-migration-postgres`      | PostgreSQL / Greenplum / Netezza | Array expressions                  |
+| `dbt-migration-db2`           | IBM DB2                          | SQL PL, FETCH FIRST                |
+| `dbt-migration-hive`          | Hive / Spark / Databricks        | External tables, PARTITIONED BY    |
+| `dbt-migration-vertica`       | Vertica                          | Projections, flex tables           |
+| `dbt-migration-sybase`        | Sybase IQ                        | T-SQL variant                      |
+| `dbt-migration-validation`    | All platforms                    | Validate models against rules      |
+
+#### Core dbt Skills
+
+| Skill Name             | Description                                                         |
+| ---------------------- | ------------------------------------------------------------------- |
+| `dbt-core`             | Installation, configuration, project setup, package management      |
+| `dbt-commands`         | Command-line operations, model selection syntax, Jinja patterns     |
+| `dbt-architecture`     | Project structure, medallion architecture (bronze/silver/gold)      |
+| `dbt-modeling`         | Writing models with CTE patterns, SQL structure, layer templates    |
+| `dbt-materializations` | Choosing materializations (view, table, incremental, snapshots)     |
+| `dbt-testing`          | Testing strategies with dbt_constraints, generic and singular tests |
+| `dbt-artifacts`        | Monitor execution using dbt Artifacts package                       |
+| `dbt-performance`      | Optimization through clustering, warehouse sizing, query tuning     |
+
+#### Snowflake Integration Skills
+
+| Skill Name                     | Description                                            |
+| ------------------------------ | ------------------------------------------------------ |
+| `dbt-projects-on-snowflake`    | Deploy and run dbt projects natively in Snowflake      |
+| `dbt-projects-snowflake-setup` | Step-by-step setup guide for dbt Projects on Snowflake |
+
+### Using Skills in Prompts
+
+Invoke skills using the `$skill-name` syntax:
+
+```text
+Convert this stored procedure to a dbt model using $dbt-migration-ms-sql-server:
+
+[paste your SQL Server code here]
+```
+
+Use `@` to include files directly:
+
+```text
+Convert @migration_source/views/vw_customer_orders.sql to a dbt model following the
+medallion architecture pattern using $dbt-migration-snowflake.
+```
+
+Reference Snowflake objects with `#`:
+
+```text
+Convert the view #MY_DB.MY_SCHEMA.VW_CUSTOMER_ORDERS to a dbt model using $dbt-migration-snowflake.
+```
+
+### Troubleshooting Setup
+
+| Issue                         | Solution                                                |
+| ----------------------------- | ------------------------------------------------------- |
+| Skills not appearing          | Run `cortex skill list` to verify installation          |
+| "No valid skills found" error | Ensure you use the full tree URL with branch and path   |
+| Git clone fails               | Check your network connection and GitHub access         |
+| Command not found             | Verify Cortex Code CLI is installed: `cortex --version` |
+
+---
+
+## Appendix: Creating Subagents
+
+Subagents are autonomous agents that can be spawned to handle specific tasks in the background. They
+enable parallel execution of migration tasks and provide specialized behavior for different workflow
+phases.
+
+### Subagent File Locations
+
+Subagents can be defined in two locations:
+
+| Location          | Path                              | Scope                | Use Case                                     |
+| ----------------- | --------------------------------- | -------------------- | -------------------------------------------- |
+| **Project-level** | `.claude/agents/*.md`             | Current project only | Project-specific workflows, migration agents |
+| **Global**        | `~/.snowflake/cortex/agents/*.md` | All projects         | Reusable agents across multiple projects     |
+
+Both locations are automatically discovered by Cortex Code and made available via the Task tool.
+
+### Subagent File Structure
+
+Subagent files are Markdown documents with YAML frontmatter that define the agent's identity,
+capabilities, and system prompt.
+
+```markdown
+---
+name: agent-name
+description:
+  A concise description of what the agent does and when it should be used. This appears in the Task
+  tool's agent list and helps the orchestrator decide when to invoke this agent.
+tools: Read, Grep, Glob, Write, Bash
+skills: skill-name-1, skill-name-2
+---
+
+# Agent Title
+
+The body of the file becomes the agent's system prompt. Include:
+
+- Purpose and responsibilities
+- Required skills to reference
+- Workflow phases or steps
+- Quality checklists
+- Error handling guidance
+```
+
+### Frontmatter Fields
+
+| Field         | Required | Description                                                                                           |
+| ------------- | -------- | ----------------------------------------------------------------------------------------------------- |
+| `name`        | Yes      | Unique identifier used to invoke the agent (e.g., `dbt-migration`)                                    |
+| `description` | Yes      | One-paragraph description shown in the Task tool's available agents list                              |
+| `tools`       | No       | Comma-separated list of tools the agent can use: `Read`, `Grep`, `Glob`, `Write`, `Bash`, `WebSearch` |
+| `skills`      | No       | Comma-separated list of skills the agent should load                                                  |
+
+### Invoking Subagents
+
+**Automatic invocation:** Cortex Code's orchestrator automatically selects appropriate agents based
+on task descriptions and agent capabilities.
+
+**Explicit invocation:** Reference agents by name in your prompts:
+
+```text
+Use the dbt-migration agent to convert @migration_source/stored_procedures/sp_load_customers.sql
+```
+
+**Via Task tool:** The parent agent can spawn subagents using the Task tool:
+
+```text
+Launch the dbt-validation agent to validate all models in models/gold/
+```
+
+### Monitoring Subagents
+
+Use these commands to monitor running agents:
+
+| Command             | Description                                   |
+| ------------------- | --------------------------------------------- |
+| `/agents`           | Interactive list of running background agents |
+| `cortex agent list` | CLI command to list all agents                |
+
+### Best Practices for Subagent Design
+
+1. **Single Responsibility**: Each agent should have a focused purpose (validation, migration,
+   deployment)
+
+2. **Skill References**: List required skills in the agent body so it loads the right context
+
+3. **Quality Checklists**: Include explicit checklists the agent must verify before marking tasks
+   complete
+
+4. **Error Handling**: Document how the agent should handle common failure scenarios
+
+5. **Completion Policy**: Define what "done" means - agents should never mark tasks complete with
+   outstanding issues
+
+### Existing Agents in This Repository
+
+| Agent         | Purpose                                                                                     |
+| ------------- | ------------------------------------------------------------------------------------------- |
+| dbt-migrator  | Migrates legacy database objects (stored procedures, views, ETL) to dbt models on Snowflake |
+| dbt-validator | Validates dbt models and schema files for quality, completeness, and best practices         |
+| dbt-developer | Writes dbt models, implements tests, and follows analytics engineering best practices       |
+| dbt-deployer  | Deploys local dbt projects to dbt Projects on Snowflake and manages CI/CD pipelines         |
+
+### Creating Custom Agents for Your Migration
+
+For large migrations, consider creating project-specific agents:
+
+1. **Object-type agents**: Separate agents for views vs. stored procedures
+2. **Complexity agents**: Different agents for simple vs. complex conversions
+3. **Layer agents**: Agents specialized for bronze, silver, or gold layer patterns
+
+Example prompt to generate custom agents:
+
+```text
+Create a subagent in .claude/agents/ for migrating SQL Server stored procedures that follow
+the SCD Type 2 pattern. The agent should use the $dbt-migration-ms-sql-server skill and
+output incremental models with snapshot-like behavior.
+```
