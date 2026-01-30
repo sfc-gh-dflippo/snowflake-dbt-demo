@@ -139,21 +139,21 @@ After setup, these skills will be available:
 
 #### Migration Skills
 
-| Skill Name                    | Description                                                  |
-| ----------------------------- | ------------------------------------------------------------ |
-| `dbt-migration`               | Main orchestration workflow for migrations (7-phase process) |
-| `dbt-migration-snowflake`     | Convert Snowflake DDL to dbt models                          |
-| `dbt-migration-ms-sql-server` | Convert SQL Server/Azure Synapse T-SQL                       |
-| `dbt-migration-oracle`        | Convert Oracle PL/SQL and SQL                                |
-| `dbt-migration-teradata`      | Convert Teradata SQL, BTEQ, and utilities                    |
-| `dbt-migration-bigquery`      | Convert Google BigQuery SQL                                  |
-| `dbt-migration-redshift`      | Convert Amazon Redshift SQL                                  |
-| `dbt-migration-postgres`      | Convert PostgreSQL/Greenplum/Netezza SQL                     |
-| `dbt-migration-db2`           | Convert IBM DB2 SQL PL                                       |
-| `dbt-migration-hive`          | Convert Hive/Spark/Databricks HiveQL                         |
-| `dbt-migration-vertica`       | Convert Vertica SQL                                          |
-| `dbt-migration-sybase`        | Convert Sybase IQ SQL                                        |
-| `dbt-migration-validation`    | Validate converted models against quality rules              |
+| Skill Name                    | Source Platform                  | Key Features                       |
+| ----------------------------- | -------------------------------- | ---------------------------------- |
+| `dbt-migration`               | All platforms                    | Main orchestration (7-phase)       |
+| `dbt-migration-snowflake`     | Snowflake                        | Native Snowflake to dbt patterns   |
+| `dbt-migration-ms-sql-server` | SQL Server / Azure Synapse       | T-SQL, IDENTITY, TOP, #temp tables |
+| `dbt-migration-oracle`        | Oracle                           | PL/SQL, ROWNUM, CONNECT BY         |
+| `dbt-migration-teradata`      | Teradata                         | QUALIFY, BTEQ, volatile tables     |
+| `dbt-migration-bigquery`      | BigQuery                         | UNNEST, STRUCT/ARRAY               |
+| `dbt-migration-redshift`      | Redshift                         | DISTKEY/SORTKEY, COPY/UNLOAD       |
+| `dbt-migration-postgres`      | PostgreSQL / Greenplum / Netezza | Array expressions                  |
+| `dbt-migration-db2`           | IBM DB2                          | SQL PL, FETCH FIRST                |
+| `dbt-migration-hive`          | Hive / Spark / Databricks        | External tables, PARTITIONED BY    |
+| `dbt-migration-vertica`       | Vertica                          | Projections, flex tables           |
+| `dbt-migration-sybase`        | Sybase IQ                        | T-SQL variant                      |
+| `dbt-migration-validation`    | All platforms                    | Validate models against rules      |
 
 #### Core dbt Skills
 
@@ -301,24 +301,6 @@ Create a dependency mapping showing which objects depend on others:
 | orders              | TABLE       | dbo           | customers         | Low        | Bronze       |
 | vw_customer_summary | VIEW        | dbo           | customers, orders | Medium     | Silver       |
 | sp_load_customers   | PROCEDURE   | dbo           | customers         | High       | Gold         |
-
----
-
-## Available Skills
-
-| Source Platform                  | Skill Name                    | Key Features                       |
-| -------------------------------- | ----------------------------- | ---------------------------------- |
-| Snowflake                        | `dbt-migration-snowflake`     | Native Snowflake to dbt patterns   |
-| SQL Server / Azure Synapse       | `dbt-migration-ms-sql-server` | T-SQL, IDENTITY, TOP, #temp tables |
-| Oracle                           | `dbt-migration-oracle`        | PL/SQL, ROWNUM, CONNECT BY         |
-| Teradata                         | `dbt-migration-teradata`      | QUALIFY, BTEQ, volatile tables     |
-| BigQuery                         | `dbt-migration-bigquery`      | UNNEST, STRUCT/ARRAY               |
-| Redshift                         | `dbt-migration-redshift`      | DISTKEY/SORTKEY, COPY/UNLOAD       |
-| PostgreSQL / Greenplum / Netezza | `dbt-migration-postgres`      | Array expressions                  |
-| IBM DB2                          | `dbt-migration-db2`           | SQL PL, FETCH FIRST                |
-| Hive / Spark / Databricks        | `dbt-migration-hive`          | External tables, PARTITIONED BY    |
-| Vertica                          | `dbt-migration-vertica`       | Projections, flex tables           |
-| Sybase IQ                        | `dbt-migration-sybase`        | T-SQL variant                      |
 
 ---
 
@@ -760,20 +742,61 @@ dbt build --select tag:migrated
 
 ### 4. Compare Results
 
-Create validation queries to compare source and target:
+Create validation queries to compare source and target data. Run the source query against your
+legacy database and the target query against Snowflake to verify the migration.
+
+**SQL Server (Source Query):**
 
 ```sql
--- Validation query to compare row counts
+-- Run this against SQL Server to get source metrics
 SELECT
-    'source' AS system,
-    COUNT(*) AS row_count
-FROM source_database.schema.table
-UNION ALL
-SELECT
-    'dbt' AS system,
-    COUNT(*) AS row_count
-FROM {{ ref('target_model') }}
+    COUNT(*) AS row_count,
+    COUNT(DISTINCT customer_id) AS distinct_customers,
+    SUM(CAST(total_amount AS DECIMAL(18,2))) AS total_amount_sum,
+    MIN(order_date) AS min_order_date,
+    MAX(order_date) AS max_order_date,
+    SUM(CASE WHEN status IS NULL THEN 1 ELSE 0 END) AS null_status_count
+FROM dbo.orders
+WHERE order_date >= '2024-01-01';
 ```
+
+**Snowflake (Target Query):**
+
+```sql
+-- Run this against Snowflake to compare with source metrics
+SELECT
+    COUNT(*) AS row_count,
+    COUNT(DISTINCT customer_id) AS distinct_customers,
+    SUM(total_amount::DECIMAL(18,2)) AS total_amount_sum,
+    MIN(order_date) AS min_order_date,
+    MAX(order_date) AS max_order_date,
+    SUM(IFF(status IS NULL, 1, 0)) AS null_status_count
+FROM analytics.silver.int_orders
+WHERE order_date >= '2024-01-01';
+```
+
+Compare the results from both queries to ensure row counts, aggregates, and date ranges match.
+
+#### Snowflake Data Validation CLI
+
+For automated, large-scale data validation, use Snowflake's official **Data Validation CLI**
+(`snowflake-data-validation`). This tool supports schema validation, metrics comparison, and CI/CD
+integration for SQL Server, Teradata, and Redshift migrations.
+
+```bash
+# Install the CLI
+pip install snowflake-data-validation
+
+# Generate config template for SQL Server
+sdv sqlserver init-config
+
+# Run validation
+sdv sqlserver validate --config validation_config.yaml
+```
+
+See [resources/data-validation-cli.md](resources/data-validation-cli.md) for detailed documentation
+and configuration examples, or visit the
+[official documentation](https://docs.snowflake.com/en/migrations/snowconvert-docs/data-validation-cli/index).
 
 ### 5. Document Conversion Decisions
 
