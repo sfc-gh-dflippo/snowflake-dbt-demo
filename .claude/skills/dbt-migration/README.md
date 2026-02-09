@@ -14,8 +14,7 @@ convert legacy database objects to dbt models compatible with Snowflake.
 - [Example 3: Batch Migration Using Specification-Driven Development](#example-3-batch-migration-using-specification-driven-development)
 - [Best Practices](#best-practices)
 - [Troubleshooting](#troubleshooting)
-- [Appendix: Skills and Cortex Code CLI Setup](#appendix-skills-and-cortex-code-cli-setup)
-- [Appendix: Creating Subagents](#appendix-creating-subagents)
+- [Appendix: Skills and Subagents](#appendix-skills-and-subagents)
 
 ---
 
@@ -33,6 +32,12 @@ from various source platforms into production-quality dbt models. The skills pro
 
 ## Quick Start
 
+Install [Cortex Code CLI](https://docs.snowflake.com/en/user-guide/cortex-code/cortex-code-cli):
+
+```bash
+curl -LsS https://ai.snowflake.com/static/cc-scripts/install.sh | sh
+```
+
 Add the migration skills to Cortex Code CLI:
 
 ```bash
@@ -42,14 +47,16 @@ cortex skill add https://github.com/sfc-gh-dflippo/snowflake-dbt-demo/.claude/sk
 Invoke skills in your prompts using `$skill-name`:
 
 ```text
-Convert @migration_source/views/my_view.sql to a dbt model using the $dbt-migration-snowflake skill
+Convert @migration_source/views/my_view.sql to a dbt model using the
+$dbt-migration-snowflake skill
 ```
 
 > **Tip:** Use the platform-specific skill for single objects (e.g., `$dbt-migration-snowflake`).
 > For batch migrations, combine with `$dbt-migration` for workflow orchestration.
 
-See [Appendix: Skills and Cortex Code CLI Setup](#appendix-skills-and-cortex-code-cli-setup) for
-detailed installation, available skills, and troubleshooting.
+For detailed information on skills, installation, and management, see the
+[Cortex Code CLI documentation](https://docs.snowflake.com/en/user-guide/cortex-code/cortex-code-cli).
+A list of available migration skills is provided in the [Appendix](#appendix-skills-and-subagents).
 
 ---
 
@@ -115,7 +122,10 @@ SELECT GET_DDL('VIEW', 'my_database.my_schema.my_view');
 
 -- Extract stored procedure definitions
 SHOW PROCEDURES IN SCHEMA my_database.my_schema;
-SELECT GET_DDL('PROCEDURE', 'my_database.my_schema.my_procedure(arg1 STRING, arg2 INT)');
+SELECT GET_DDL(
+    'PROCEDURE',
+    'my_database.my_schema.my_procedure(STRING, INT)'
+);
 ```
 
 ### Document Dependencies
@@ -169,8 +179,9 @@ GROUP BY c.customer_id, c.customer_name, c.email;
 ### AI Agent Prompt for Snowflake Conversion
 
 ```text
-Convert this Snowflake view to a dbt model using the $dbt-migration-snowflake skill.
-The view was originally converted from SQL Server [dbo].[vw_CustomerOrders] using SnowConvert.
+Convert this Snowflake view to a dbt model using the
+$dbt-migration-snowflake skill. The view was originally converted from
+SQL Server [dbo].[vw_CustomerOrders] using SnowConvert.
 
 Requirements:
 - Place it in the silver layer with an `int_` prefix
@@ -294,9 +305,11 @@ Start by asking the agent to analyze your database and create a Product Requirem
 ```text
 /plan
 
-I need to migrate MY_DATABASE to dbt models using the $dbt-migration and $dbt-migration-snowflake skills.
-Run this query to extract all DDL: SELECT GET_DDL('DATABASE', 'MY_DATABASE');
-Use the output to create a Migration PRD at docs/MY_DATABASE_migration_prd.md using the $dbt-migration workflow.
+I need to migrate MY_DATABASE to dbt models using the $dbt-migration
+and $dbt-migration-snowflake skills. Run this query to extract all DDL:
+SELECT GET_DDL('DATABASE', 'MY_DATABASE');
+Use the output to create a Migration PRD at
+docs/MY_DATABASE_migration_prd.md using the $dbt-migration workflow.
 Please make the plan specific down to the object level.
 Do not begin development until I have completed my review.
 ```
@@ -318,9 +331,10 @@ Once the PRD is approved, ask the agent to create a detailed task list:
 ```text
 /plan
 
-First, use the $dbt-migration and $dbt-migration-snowflake skills with the
-`docs/MY_DATABASE_migration_prd.md` PRD to generate a task list document named
-`docs/MY_DATABASE_migration_tasks.md` that breaks down the migration into actionable tasks.
+First, use the $dbt-migration and $dbt-migration-snowflake skills with
+the `docs/MY_DATABASE_migration_prd.md` PRD to generate a task list
+document named `docs/MY_DATABASE_migration_tasks.md` that breaks down
+the migration into actionable tasks.
 
 Ensure each task follows these rules:
 - Be atomic and perform one activity for one object
@@ -331,14 +345,16 @@ Ensure each task follows these rules:
 - Specify agent skills the task should utilize
 - Specify the subagent to perform the task
 
-Second, create any necessary subagents in this project's `.claude/agents/` directory to perform
-the tasks and subtasks.
+Second, create any necessary subagents in this project's
+`.claude/agents/` directory to perform the tasks and subtasks.
 
 Wait for my approval before starting implementation.
 ```
 
-See [Appendix: Creating Subagents](#appendix-creating-subagents) for details on how subagents work
-and how to create custom ones for your migration.
+For details on how subagents work and how to create custom ones, see the
+[Cortex Code Extensibility documentation](https://docs.snowflake.com/en/user-guide/cortex-code/extensibility).
+This repository includes several migration-specific subagents listed in the
+[Appendix](#appendix-skills-and-subagents).
 
 ### Step 4: Execute the Migration
 
@@ -347,7 +363,9 @@ After you have reviewed the task list, you can begin the migration:
 ```text
 /plan
 
-Please begin implementing docs/MY_DATABASE_migration_tasks.md. Please execute tasks and sub-tasks in parallel sub-agents whenever possible.
+Please begin implementing docs/MY_DATABASE_migration_tasks.md.
+Please execute tasks and sub-tasks in parallel sub-agents whenever
+possible.
 ```
 
 ---
@@ -486,150 +504,22 @@ Always include header comments explaining:
 
 ---
 
-## Appendix: Skills and Cortex Code CLI Setup
+## Appendix: Skills and Subagents
 
-Detailed instructions for setting up and managing dbt migration skills in Cortex Code CLI.
+For comprehensive documentation on Cortex Code skills and subagents, see Snowflake's official
+documentation:
 
-### What Are Skills?
+- [Cortex Code CLI](https://docs.snowflake.com/en/user-guide/cortex-code/cortex-code-cli)
+- [Cortex Code Extensibility](https://docs.snowflake.com/en/user-guide/cortex-code/extensibility)
 
-Skills are markdown files that teach AI agents how to complete specific tasks. They provide
-structured guidance, tool references, decision logic, and checkpoints—transforming agents into
-domain experts for specialized workflows.
+### Available dbt Migration Skills
 
-#### How Skills Work
-
-When you invoke a skill (e.g., `$dbt-migration-snowflake`), Cortex Code loads the skill's markdown
-content into its context. This gives the agent:
-
-1. **Structured workflows** - Step-by-step instructions for completing tasks
-2. **Domain knowledge** - Platform-specific syntax translations, best practices, patterns
-3. **Tool guidance** - Which tools to use and when
-4. **Quality checks** - Validation rules and stopping points for user review
-
-#### Skill File Structure
-
-Skills are stored in `.claude/skills/` directories and follow this structure:
-
-```text
-my-skill/
-├── SKILL.md              # Main skill file (required)
-├── pyproject.toml        # Python dependencies (if scripts)
-├── scripts/              # Executable code (optional)
-├── references/           # Supporting documentation (optional)
-```
-
-Every skill has YAML frontmatter with `name` and `description`, followed by markdown content:
-
-```markdown
----
-name: skill-name
-description: "What it does + when to use it. Include trigger phrases."
----
-
-# Skill Title
-
-## When to Use
-
-[Criteria for activation]
-
-## Workflow
-
-[Step-by-step instructions]
-
-## Output
-
-[What the skill produces]
-```
-
-#### Skills vs Subagents
-
-| Concept       | Purpose                                            | Invocation                        |
-| ------------- | -------------------------------------------------- | --------------------------------- |
-| **Skills**    | Domain knowledge and workflows loaded into context | `$skill-name` in prompts          |
-| **Subagents** | Autonomous agents that run tasks in parallel       | Task tool or automatic delegation |
-
-Skills provide **knowledge**; subagents provide **execution capability**. Subagents typically
-reference skills in their system prompts to gain domain expertise.
-
-#### Invoking Skills
-
-Use the `$skill-name` prefix in prompts:
-
-```text
-Convert this view to a dbt model using $dbt-migration-snowflake
-```
-
-The agent loads the skill and follows its workflow to complete the task.
-
-For more details on skill development and best practices, see the
-[Cortex Code Skill Development documentation](https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-code).
-
-### Prerequisites
-
-- **Cortex Code CLI** installed and configured
-- **Git** installed on your system
-
-### Import Skills from GitHub
-
-Use the `cortex skill add` command to import skills directly from this GitHub repository:
+This repository provides specialized skills for migrating database objects to dbt. Import them
+using:
 
 ```bash
 cortex skill add https://github.com/sfc-gh-dflippo/snowflake-dbt-demo/.claude/skills
 ```
-
-This command automatically:
-
-- Clones the repository to `~/.snowflake/cortex/remote_cache/`
-- Discovers all skills in the specified `.claude/skills/` directory
-- Makes them available in all future Cortex Code sessions
-
-### Interactive Skill Manager
-
-Within a Cortex Code session, use the `/skill` command to open an interactive manager:
-
-```text
-/skill                    # Opens interactive skill manager
-$$                        # Quick list of available skills
-```
-
-The manager allows you to view, add, sync, and delete skills across all locations.
-
-### Verify Installation
-
-```bash
-cortex skill list
-```
-
-You should see skills listed under "Remote skills", including `dbt-migration`,
-`dbt-migration-snowflake`, `dbt-migration-ms-sql-server`, and others.
-
-### Updating Skills
-
-> **Note:** The `/skill` manager's "refresh" option re-reads cached files but does **not** pull new
-> changes from GitHub. To get updates, remove and re-add the skills.
-
-**Linux/macOS:**
-
-```bash
-# Edit skills.json - remove the remote entry for snowflake-dbt-demo
-nano ~/.snowflake/cortex/skills.json
-
-# Delete the cached repository
-rm -rf ~/.snowflake/cortex/remote_cache/github_sfc-gh-dflippo_snowflake-dbt-demo*
-
-# Re-add the skills
-cortex skill add https://github.com/sfc-gh-dflippo/snowflake-dbt-demo/tree/main/.claude/skills
-```
-
-**Windows (PowerShell):**
-
-```powershell
-notepad $env:USERPROFILE\.snowflake\cortex\skills.json
-Remove-Item -Recurse -Force "$env:USERPROFILE\.snowflake\cortex\remote_cache\github_sfc-gh-dflippo_snowflake-dbt-demo*"
-cortex skill add https://github.com/sfc-gh-dflippo/snowflake-dbt-demo/tree/main/.claude/skills
-```
-
-### Available dbt Skills
 
 #### Migration Skills
 
@@ -669,134 +559,9 @@ cortex skill add https://github.com/sfc-gh-dflippo/snowflake-dbt-demo/tree/main/
 | `dbt-projects-on-snowflake`    | Deploy and run dbt projects natively in Snowflake      |
 | `dbt-projects-snowflake-setup` | Step-by-step setup guide for dbt Projects on Snowflake |
 
-### Using Skills in Prompts
+### Project Subagents
 
-Invoke skills using the `$skill-name` syntax:
-
-```text
-Convert this stored procedure to a dbt model using $dbt-migration-ms-sql-server:
-
-[paste your SQL Server code here]
-```
-
-Use `@` to include files directly:
-
-```text
-Convert @migration_source/views/vw_customer_orders.sql to a dbt model following the
-medallion architecture pattern using $dbt-migration-snowflake.
-```
-
-Reference Snowflake objects with `#`:
-
-```text
-Convert the view #MY_DB.MY_SCHEMA.VW_CUSTOMER_ORDERS to a dbt model using $dbt-migration-snowflake.
-```
-
-### Troubleshooting Setup
-
-| Issue                         | Solution                                                |
-| ----------------------------- | ------------------------------------------------------- |
-| Skills not appearing          | Run `cortex skill list` to verify installation          |
-| "No valid skills found" error | Ensure you use the full tree URL with branch and path   |
-| Git clone fails               | Check your network connection and GitHub access         |
-| Command not found             | Verify Cortex Code CLI is installed: `cortex --version` |
-
----
-
-## Appendix: Creating Subagents
-
-Subagents are autonomous agents that can be spawned to handle specific tasks in the background. They
-enable parallel execution of migration tasks and provide specialized behavior for different workflow
-phases.
-
-### Subagent File Locations
-
-Subagents can be defined in two locations:
-
-| Location          | Path                              | Scope                | Use Case                                     |
-| ----------------- | --------------------------------- | -------------------- | -------------------------------------------- |
-| **Project-level** | `.claude/agents/*.md`             | Current project only | Project-specific workflows, migration agents |
-| **Global**        | `~/.snowflake/cortex/agents/*.md` | All projects         | Reusable agents across multiple projects     |
-
-Both locations are automatically discovered by Cortex Code and made available via the Task tool.
-
-### Subagent File Structure
-
-Subagent files are Markdown documents with YAML frontmatter that define the agent's identity,
-capabilities, and system prompt.
-
-```markdown
----
-name: agent-name
-description:
-  A concise description of what the agent does and when it should be used. This appears in the Task
-  tool's agent list and helps the orchestrator decide when to invoke this agent.
-tools: Read, Grep, Glob, Write, Bash
-skills: skill-name-1, skill-name-2
----
-
-# Agent Title
-
-The body of the file becomes the agent's system prompt. Include:
-
-- Purpose and responsibilities
-- Required skills to reference
-- Workflow phases or steps
-- Quality checklists
-- Error handling guidance
-```
-
-### Frontmatter Fields
-
-| Field         | Required | Description                                                                                           |
-| ------------- | -------- | ----------------------------------------------------------------------------------------------------- |
-| `name`        | Yes      | Unique identifier used to invoke the agent (e.g., `dbt-migration`)                                    |
-| `description` | Yes      | One-paragraph description shown in the Task tool's available agents list                              |
-| `tools`       | No       | Comma-separated list of tools the agent can use: `Read`, `Grep`, `Glob`, `Write`, `Bash`, `WebSearch` |
-| `skills`      | No       | Comma-separated list of skills the agent should load                                                  |
-
-### Invoking Subagents
-
-**Automatic invocation:** Cortex Code's orchestrator automatically selects appropriate agents based
-on task descriptions and agent capabilities.
-
-**Explicit invocation:** Reference agents by name in your prompts:
-
-```text
-Use the dbt-migration agent to convert @migration_source/stored_procedures/sp_load_customers.sql
-```
-
-**Via Task tool:** The parent agent can spawn subagents using the Task tool:
-
-```text
-Launch the dbt-validation agent to validate all models in models/gold/
-```
-
-### Monitoring Subagents
-
-Use these commands to monitor running agents:
-
-| Command             | Description                                   |
-| ------------------- | --------------------------------------------- |
-| `/agents`           | Interactive list of running background agents |
-| `cortex agent list` | CLI command to list all agents                |
-
-### Best Practices for Subagent Design
-
-1. **Single Responsibility**: Each agent should have a focused purpose (validation, migration,
-   deployment)
-
-2. **Skill References**: List required skills in the agent body so it loads the right context
-
-3. **Quality Checklists**: Include explicit checklists the agent must verify before marking tasks
-   complete
-
-4. **Error Handling**: Document how the agent should handle common failure scenarios
-
-5. **Completion Policy**: Define what "done" means - agents should never mark tasks complete with
-   outstanding issues
-
-### Existing Agents in This Repository
+This repository includes specialized subagents in `.claude/agents/` for migration workflows:
 
 | Agent         | Purpose                                                                                     |
 | ------------- | ------------------------------------------------------------------------------------------- |
@@ -805,18 +570,5 @@ Use these commands to monitor running agents:
 | dbt-developer | Writes dbt models, implements tests, and follows analytics engineering best practices       |
 | dbt-deployer  | Deploys local dbt projects to dbt Projects on Snowflake and manages CI/CD pipelines         |
 
-### Creating Custom Agents for Your Migration
-
-For large migrations, consider creating project-specific agents:
-
-1. **Object-type agents**: Separate agents for views vs. stored procedures
-2. **Complexity agents**: Different agents for simple vs. complex conversions
-3. **Layer agents**: Agents specialized for bronze, silver, or gold layer patterns
-
-Example prompt to generate custom agents:
-
-```text
-Create a subagent in .claude/agents/ for migrating SQL Server stored procedures that follow
-the SCD Type 2 pattern. The agent should use the $dbt-migration-ms-sql-server skill and
-output incremental models with snapshot-like behavior.
-```
+For details on creating custom subagents, see the
+[Cortex Code Extensibility documentation](https://docs.snowflake.com/en/user-guide/cortex-code/extensibility).
