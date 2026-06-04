@@ -53,18 +53,36 @@ snow sql -q "SELECT CURRENT_USER()" -c prod
 
 **For connection configuration**, see the **`snowflake-connections` skill**.
 
+### Output Format
+
+**Always pass `--format JSON`.** The Snowflake CLI defaults to `--format TABLE`, which renders
+human-oriented ASCII tables that are unreliable to parse programmatically (truncated columns,
+wrapped rows, ambiguous types). Every example in this skill uses `--format JSON` so command output
+is machine-readable and safe to pipe into `jq`, scripts, or agents.
+
+```bash
+# JSON output (always use this)
+snow sql -q "SELECT CURRENT_USER()" --format JSON -c default
+
+# Pipe straight into jq
+snow sql -q "SELECT CURRENT_USER() AS user" --format JSON -c default | jq -r '.[0].USER'
+```
+
+`--format` is a global flag accepted by every `snow` command (`sql`, `object`, `stage`,
+`streamlit`, `connection`, etc.).
+
 ## SQL Execution
 
 ```bash
 # Inline query
-snow sql -q "SELECT * FROM my_table" -c default
+snow sql -q "SELECT * FROM my_table" --format JSON -c default
 
 # Execute file
-snow sql -f script.sql -c default
+snow sql -f script.sql --format JSON -c default
 
 # With variables (Jinja {{ }} or <% %> syntax)
 snow sql -q "SELECT * FROM {{db}}.{{schema}}.table" \
-  -D db=PROD_DB -D schema=SALES -c default
+  --format JSON -D db=PROD_DB -D schema=SALES -c default
 ```
 
 ## Variables & Templating
@@ -78,7 +96,7 @@ snow sql -q "SELECT * FROM {{db}}.{{schema}}.table" \
 ```bash
 DB="PROD_DB"
 SCHEMA="SALES"
-snow sql -q "SELECT * FROM ${DB}.${SCHEMA}.orders" -c default
+snow sql -q "SELECT * FROM ${DB}.${SCHEMA}.orders" --format JSON -c default
 ```
 
 **Use for:** Connection names, file paths, environment selection, shell control flow
@@ -88,12 +106,12 @@ snow sql -q "SELECT * FROM ${DB}.${SCHEMA}.orders" -c default
 ```bash
 # Single-line query with -q flag
 snow sql -q "SELECT * FROM <% db %>.<% schema %>.orders" \
-  -D db=PROD_DB -D schema=SALES -c default
+  --format JSON -D db=PROD_DB -D schema=SALES -c default
 
 # Multi-line query with -i flag (reads from stdin)
 # The -i flag tells snow sql to read SQL from standard input
 # <<EOF creates a here-document that feeds multi-line SQL to stdin
-snow sql -i -D db=PROD_DB -D schema=SALES -c default <<EOF
+snow sql -i --format JSON -D db=PROD_DB -D schema=SALES -c default <<EOF
 SELECT
   order_id,
   customer_id,
@@ -124,7 +142,7 @@ TABLE="orders"
 # Heredoc enables multiple SQL statements and complex scripts
 # without worrying about quote escaping or line continuations
 # Bash expands ${variables} before sending to Snowflake
-snow sql -i -c ${CONNECTION} <<EOF
+snow sql -i --format JSON -c ${CONNECTION} <<EOF
 -- Create or replace view
 CREATE OR REPLACE VIEW ${DB}.${SCHEMA}.recent_${TABLE} AS
 SELECT
@@ -168,7 +186,7 @@ EOF
 
 ```bash
 # SQL files on stage use Jinja automatically (no flag needed)
-snow stage execute @my_stage/script.sql -c default \
+snow stage execute @my_stage/script.sql --format JSON -c default \
   -D db=PROD_DB \
   -D schema=SALES
 ```
@@ -210,7 +228,7 @@ snow sql --enable-templating NONE -q "SELECT '<% not_a_var %>'"
   ```bash
   ENV="prod"
   CONNECTION="${ENV}_connection"
-  snow sql -c ${CONNECTION} -i -D db=PROD_DB <<EOF
+  snow sql -c ${CONNECTION} -i --format JSON -D db=PROD_DB <<EOF
   SELECT * FROM <% db %>.orders;
   EOF
   ```
@@ -231,16 +249,16 @@ snow sql --enable-templating NONE -q "SELECT '<% not_a_var %>'"
 ### Streamlit Apps
 
 ```sql
-snow streamlit deploy --replace -c default
-snow streamlit list -c default
-snow streamlit get-url my_app -c default
+snow streamlit deploy --replace --format JSON -c default
+snow streamlit list --format JSON -c default
+snow streamlit get-url my_app --format JSON -c default
 ```
 
 ### Snowpark (UDFs/Procedures)
 
 ```sql
-snow snowpark build -c default
-snow snowpark deploy --replace -c default
+snow snowpark build --format JSON -c default
+snow snowpark deploy --replace --format JSON -c default
 ```
 
 ### Project Creation
@@ -257,17 +275,17 @@ See `PROJECT_CREATION.md` for:
 
 ```sql
 # Upload/download files
-snow stage copy ./script.sql @my_stage/ -c default
-snow stage copy @my_stage/file.csv ./downloads/ -c default
+snow stage copy ./script.sql @my_stage/ --format JSON -c default
+snow stage copy @my_stage/file.csv ./downloads/ --format JSON -c default
 
 # List files
-snow stage list-files @my_stage -c default
+snow stage list-files @my_stage --format JSON -c default
 
 # Execute SQL (uses Jinja {{ }} syntax automatically)
-snow stage execute @my_stage/script.sql -c default -D db=PROD_DB
+snow stage execute @my_stage/script.sql --format JSON -c default -D db=PROD_DB
 
 # Execute Python (access variables via os.environ)
-snow stage execute @my_stage/script.py -c default -D var=value
+snow stage execute @my_stage/script.py --format JSON -c default -D var=value
 ```
 
 **For comprehensive stage management**, see `STAGE_OPERATIONS.md` for:
@@ -282,14 +300,14 @@ snow stage execute @my_stage/script.py -c default -D var=value
 
 ```sql
 # List objects
-snow object list warehouse -c default
-snow object list table -c default
+snow object list warehouse --format JSON -c default
+snow object list table --format JSON -c default
 
 # Describe object
-snow object describe table my_table -c default
+snow object describe table my_table --format JSON -c default
 
 # Create object
-snow object create warehouse my_wh --size SMALL -c default
+snow object create warehouse my_wh --size SMALL --format JSON -c default
 ```
 
 ## Connection Configuration
@@ -297,8 +315,8 @@ snow object create warehouse my_wh --size SMALL -c default
 **All Snowflake CLI commands use the `-c` flag to specify connection profiles:**
 
 ```sql
-snow sql -c default -q "SELECT * FROM table"
-snow sql -c prod -q "SELECT * FROM table"
+snow sql -c default -q "SELECT * FROM table" --format JSON
+snow sql -c prod -q "SELECT * FROM table" --format JSON
 ```
 
 **For complete connection setup**, see the **`snowflake-connections` skill** for:
@@ -328,7 +346,7 @@ case $ENV in
     ;;
 esac
 
-snow sql -c default -i -D db=$DB -D schema=$SCHEMA <<EOF
+snow sql -c default -i --format JSON -D db=$DB -D schema=$SCHEMA <<EOF
 CREATE OR REPLACE TABLE <% db %>.<% schema %>.my_table AS
 SELECT * FROM <% db %>.<% schema %>.source_table;
 EOF
@@ -401,7 +419,7 @@ GRANT READ, WRITE ON STAGE my_stage TO ROLE my_role;
 **Quick Test:**
 
 ```sql
-snow connection test -c default
+snow connection test --format JSON -c default
 ```
 
 **For comprehensive connection troubleshooting**, see the **`snowflake-connections` skill**
@@ -413,25 +431,25 @@ snow connection test -c default
 ```sql
 # Bash variables (shell expansion)
 DB="PROD"
-snow sql -c default -q "USE ${DB}_DATABASE"
+snow sql -c default -q "USE ${DB}_DATABASE" --format JSON
 
 # Standard syntax (default)
-snow sql -c default -q "USE <% db %>" -D db=PROD
+snow sql -c default -q "USE <% db %>" --format JSON -D db=PROD
 
 # Jinja syntax (explicit)
-snow sql --enable-templating JINJA -c default -q "USE {{ db }}" -D db=PROD
+snow sql --enable-templating JINJA -c default -q "USE {{ db }}" --format JSON -D db=PROD
 
 # Stage execute (Jinja automatic)
-snow stage execute @stage/script.sql -D db=PROD
+snow stage execute @stage/script.sql --format JSON -D db=PROD
 
 # Disable templating
-snow sql --enable-templating NONE -q "SELECT '<% literal %>'"
+snow sql --enable-templating NONE -q "SELECT '<% literal %>'" --format JSON
 
 # String values need quotes
-snow sql -D name="'John'" -D date="'2024-01-01'"
+snow sql -D name="'John'" -D date="'2024-01-01'" --format JSON
 
 # Test connection
-snow connection test -c default
+snow connection test --format JSON -c default
 
 # Multi-environment pattern
 ENV="${1:-dev}"
@@ -439,7 +457,7 @@ case $ENV in
   dev) DB="DEV_DB" ;;
   prod) DB="PROD_DB" ;;
 esac
-snow sql -c default -i -D db=$DB <<EOF
+snow sql -c default -i --format JSON -D db=$DB <<EOF
 SELECT * FROM <% db %>.orders;
 EOF
 ```
@@ -450,6 +468,7 @@ EOF
 
 ✅ **DO:**
 
+- Always pass `--format JSON` so output is machine-readable and parseable
 - Use bash variables for environment selection
 - Use `<% %>` for inline SQL queries
 - Use `{{ }}` for staged SQL files (automatic)
@@ -460,6 +479,7 @@ EOF
 
 ❌ **DON'T:**
 
+- Rely on the default `--format TABLE` output for scripting or parsing
 - Mix variable syntaxes incorrectly
 - Hardcode environment-specific values
 - Use `{{ }}` with `snow sql` without `--enable-templating JINJA`
