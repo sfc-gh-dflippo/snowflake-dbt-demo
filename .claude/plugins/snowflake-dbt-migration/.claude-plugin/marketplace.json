@@ -1,0 +1,31 @@
+{
+  "plugins": [
+    {
+      "name": "snowflake-dbt-migration",
+      "source": "github:snowflake-dbt-demo/.claude/plugins/snowflake-dbt-migration",
+      "strict": false,
+      "owner": "dflippo",
+      "metadata": {
+        "version": "1.0.0",
+        "description": "dbt-native migration skills for converting source-platform SQL to dbt models on Snowflake"
+      },
+      "skills": [
+        "./skills/dbt-migration",
+        "./skills/dbt-migration-validation",
+        "./skills/dbt-migration-snowflake",
+        "./skills/dbt-migration-bigquery",
+        "./skills/dbt-migration-db2",
+        "./skills/dbt-migration-hive",
+        "./skills/dbt-migration-ms-sql-server",
+        "./skills/dbt-migration-oracle",
+        "./skills/dbt-migration-postgres",
+        "./skills/dbt-migration-redshift",
+        "./skills/dbt-migration-sybase",
+        "./skills/dbt-migration-teradata",
+        "./skills/dbt-migration-vertica",
+        "./skills/dbt-modeling",
+        "./skills/dbt-architecture"
+      ]
+    }
+  ]
+}
