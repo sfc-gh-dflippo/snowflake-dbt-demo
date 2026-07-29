@@ -27,6 +27,27 @@ Activate this skill when users ask about:
 
 ---
 
+## REQUIRED FIRST STEP — Run SnowConvert AI (SCAI)
+
+> **Do NOT begin manual conversion.** Amazon Redshift has **full SnowConvert AI support** (tables,
+> views, procedures, functions). Before writing any dbt model by hand:
+>
+> 1. Run SnowConvert AI on the source DDL to produce Snowflake-compatible SQL.
+> 2. Use the `$dbt-migration-snowflake` skill to convert the SCAI output to dbt models.
+> 3. Only fall back to this skill's manual translation rules for objects SCAI could not convert
+>    (check the conversion report for EWIs).
+>
+> See the `$dbt-migration` skill for download links and full workflow.
+
+## Name Retention Rule
+
+> **Preserve original object names.** The dbt model filename and model name MUST match the original
+> source object name (lowercased, without schema prefix). For example, `public.patient_visits`
+> becomes `patient_visits.sql`. Do not rename objects during migration unless explicitly requested
+> by the user.
+
+---
+
 ## Task Description
 
 You are a database engineer working for a hospital system. You need to convert Amazon Redshift DDL

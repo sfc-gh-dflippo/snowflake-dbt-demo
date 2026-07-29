@@ -82,6 +82,43 @@ select * from final
 
 ---
 
+## Name-Retention Policy
+
+**Retain original SQL object names in dbt models.** Do not rename source objects to
+`stg_`/`int_`/`mart_` prefixes. The dbt model filename and resulting database object should match
+the original source table or view name (e.g., a source table `CUSTOMERS` becomes
+`models/bronze/customers.sql`, not `stg_customers.sql`).
+
+When a model requires intermediate transformation steps, use **intermediate CTEs within the same
+model file** rather than creating separate `int_` prefixed models:
+
+```sql
+-- models/bronze/customers.sql
+-- Keep original name; use internal CTEs for staging logic
+
+with source as (
+    select * from {{ source('ecommerce', 'customers') }}
+),
+
+-- Intermediate cleaning (NOT a separate int_ model)
+cleaned as (
+    select
+        customer_id,
+        trim(first_name) as first_name,
+        trim(last_name) as last_name,
+        lower(trim(email)) as email
+    from source
+)
+
+select * from cleaned
+```
+
+This policy ensures downstream consumers (BI tools, other teams, stored procedures) can reference
+the same object names they already know, reducing migration friction and avoiding a translation
+layer between logical names and dbt names.
+
+---
+
 ## Bronze Layer: Staging Model Template
 
 **Purpose**: One-to-one with source tables. Clean and standardize only.
