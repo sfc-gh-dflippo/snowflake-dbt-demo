@@ -1,0 +1,100 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "dbt: quality suggestions",
+      "detail": "All dbt quality suggestions for the workspace, into the Problems panel.",
+      "type": "shell",
+      "command": "uv run --script .claude/plugins/dbt-quality/scripts/lint.py .",
+      "options": { "cwd": "${workspaceFolder}" },
+      "presentation": {
+        "reveal": "silent",
+        "panel": "dedicated",
+        "clear": true
+      },
+      "problemMatcher": {
+        "owner": "dbt-quality",
+        "source": "dbt-quality",
+        "fileLocation": ["relative", "${workspaceFolder}"],
+        "pattern": {
+          "regexp": "^(.+?):(\\d+):(\\d+):\\s+(error|warning|info):\\s+\\[(SSC-(?:EWI|FDM|PRF)-DBT[A-Z]{3}\\d{4})\\]\\s+(.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "severity": 4,
+          "code": 5,
+          "message": 6
+        }
+      },
+      "group": "test"
+    },
+    {
+      "label": "dbt: quality suggestions (watch, every 5 min)",
+      "detail": "Auto-starts on folder open; re-runs the lint every 5 minutes for as long as this task keeps running, refreshing the Problems panel.",
+      "type": "shell",
+      "command": "while true; do echo '>>> dbt-quality lint start'; uv run --script .claude/plugins/dbt-quality/scripts/lint.py .; echo '>>> dbt-quality lint done'; sleep 300; done",
+      "options": { "cwd": "${workspaceFolder}" },
+      "isBackground": true,
+      "presentation": {
+        "reveal": "silent",
+        "panel": "dedicated",
+        "clear": false
+      },
+      "problemMatcher": {
+        "owner": "dbt-quality",
+        "source": "dbt-quality",
+        "fileLocation": ["relative", "${workspaceFolder}"],
+        "pattern": {
+          "regexp": "^(.+?):(\\d+):(\\d+):\\s+(error|warning|info):\\s+\\[(SSC-(?:EWI|FDM|PRF)-DBT[A-Z]{3}\\d{4})\\]\\s+(.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "severity": 4,
+          "code": 5,
+          "message": 6
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^>>> dbt-quality lint start$",
+          "endsPattern": "^>>> dbt-quality lint done$"
+        }
+      },
+      "runOptions": { "runOn": "folderOpen" }
+    },
+    {
+      "label": "dbt: quality suggestions (errors only)",
+      "detail": "Only the suggestions with no legitimate exception -- fix these.",
+      "type": "shell",
+      "command": "uv run --script .claude/plugins/dbt-quality/scripts/lint.py . --min-level error",
+      "options": { "cwd": "${workspaceFolder}" },
+      "presentation": {
+        "reveal": "silent",
+        "panel": "dedicated",
+        "clear": true
+      },
+      "problemMatcher": {
+        "owner": "dbt-quality",
+        "source": "dbt-quality",
+        "fileLocation": ["relative", "${workspaceFolder}"],
+        "pattern": {
+          "regexp": "^(.+?):(\\d+):(\\d+):\\s+(error|warning|info):\\s+\\[(SSC-(?:EWI|FDM|PRF)-DBT[A-Z]{3}\\d{4})\\]\\s+(.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "severity": 4,
+          "code": 5,
+          "message": 6
+        }
+      }
+    },
+    {
+      "label": "dbt: quality report (JSON)",
+      "detail": "Write the full suggestions report, including code examples, to suggestions.json.",
+      "type": "shell",
+      "command": "uv run --script .claude/plugins/dbt-quality/scripts/audit.py audit . --out suggestions.json",
+      "options": { "cwd": "${workspaceFolder}" },
+      "presentation": { "reveal": "always", "panel": "dedicated" },
+      "problemMatcher": []
+    }
+  ]
+}

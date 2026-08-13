@@ -1,0 +1,29 @@
+name: "native_core"
+version: "1.0.0"
+config-version: 2
+profile: "default"
+
+model-paths: ["models"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+on-run-end:
+  - "{{ dbt_artifacts.upload_results(results) }}"
+
+models:
+  native_core:
+    +tags: ["analytics"]
+    bronze:
+      +tags: ["bronze", "raw"]
+    silver:
+      +tags: ["analytics", "raw"]
+    gold:
+      +tags: ["analytics", "raw", "gold"]
+      +materialized: table
+  dbt_artifacts:
+    +enabled: false
+
+vars:
+  dbt_artifacts_database: "ANALYTICS"
+  dbt_artifacts_schema: "DBT_ARTIFACTS"

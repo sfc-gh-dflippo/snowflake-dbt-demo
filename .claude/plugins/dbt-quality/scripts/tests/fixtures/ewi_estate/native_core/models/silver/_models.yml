@@ -1,0 +1,54 @@
+version: 2
+
+models:
+  - name: int_customer_orders
+    description: "Customer orders joined"
+    columns:
+      - name: customer_id
+      - name: order_id
+      - name: amount
+
+  - name: int_orders_incremental_bad
+    columns:
+      - name: order_id
+
+  - name: int_orders_incremental_ok
+    columns:
+      - name: order_id
+        tests:
+          - dbt_constraints.primary_key
+
+  - name: int_orders_no_watermark
+    columns:
+      - name: order_id
+        tests:
+          - dbt_constraints.primary_key
+
+  - name: int_orders_merge_exclude
+    columns:
+      - name: order_id
+
+  - name: int_orders_append_mutable
+    columns:
+      - name: order_id
+
+  - name: int_recent_orders
+    columns:
+      - name: order_id
+
+  - name: int_orders_full_reload
+    columns:
+      - name: order_id
+
+  - name: int_latest_orders
+    columns:
+      - name: customer_id
+
+  - name: int_customer_base
+    description: "Base customer list"
+    columns:
+      - name: customer_id
+
+  - name: int_macro_in_model
+    columns:
+      - name: load_ts

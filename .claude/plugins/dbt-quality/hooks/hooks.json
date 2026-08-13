@@ -1,0 +1,42 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ${CORTEX_PLUGIN_ROOT}/hooks/setup_vscode_task.py",
+            "timeout": 30,
+            "enabled": true,
+            "statusMessage": "Setting up dbt-quality Problems panel task..."
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "write|edit|multi_edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ${CORTEX_PLUGIN_ROOT}/hooks/validate_file.py",
+            "timeout": 60,
+            "enabled": true,
+            "statusMessage": "Checking dbt model against dbt-quality rules..."
+          }
+        ]
+      },
+      {
+        "matcher": "bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ${CORTEX_PLUGIN_ROOT}/hooks/audit_after_dbt.py",
+            "timeout": 120,
+            "enabled": true
+          }
+        ]
+      }
+    ]
+  }
+}

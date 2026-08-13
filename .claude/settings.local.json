@@ -42,29 +42,5 @@
     ],
     "deny": [],
     "ask": []
-  },
-  "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "uv run .claude/hooks/dbt-validation/validate_dbt_file.py --simple \"$FILE_PATH\"",
-            "timeout": 30000
-          }
-        ]
-      },
-      {
-        "matcher": "Edit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "uv run .claude/hooks/dbt-validation/validate_dbt_file.py --simple \"$FILE_PATH\"",
-            "timeout": 30000
-          }
-        ]
-      }
-    ]
   }
 }

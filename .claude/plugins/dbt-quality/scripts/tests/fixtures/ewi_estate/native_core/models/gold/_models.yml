@@ -1,0 +1,28 @@
+version: 2
+
+models:
+  - name: dim_customers
+    columns:
+      - name: customer_sk
+        description: "Surrogate key"
+        tests:
+          - unique
+          - not_null
+      - name: hashed_customer_id
+      - name: first_name
+      - name: last_name
+      - name: email
+      - name: created_at
+
+  - name: fct_orders
+    columns:
+      - name: order_id
+        description: "Primary key"
+        tests:
+          - dbt_constraints.primary_key
+      - name: customer_id
+      - name: product_id
+      - name: region_id
+      - name: channel_id
+      - name: order_date
+      - name: amount

@@ -1,0 +1,8 @@
+{
+  "name": "dbt-quality",
+  "version": "0.1.0",
+  "description": "dbt quality tooling for Snowflake: a project-wide anti-pattern audit that produces an HTML quality assessment with prioritised remediation, and per-file validation on save. Covers project fragmentation, truncate/delete-load instead of incremental models, subqueries that should be CTEs or ephemeral models, macro over- and under-use, materialization fitness, test and documentation coverage, and unresolved lift-and-shift conversion debt. Installs two hooks: per-file validation on Write/Edit, and an advisory project audit that runs after dbt updates the manifest.",
+  "author": {
+    "name": "Snowflake"
+  }
+}

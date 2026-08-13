@@ -31,7 +31,12 @@ $RECYCLE.BIN/
 # ==============================================================================
 
 # VS Code / Cursor
-.vscode/
+# Ignore per-user editor state, but share tasks.json: it wires the dbt-quality
+# linter into the Problems panel, which is useless if each clone has to
+# recreate it. Uses `.vscode/*` rather than `.vscode/` so git still descends
+# into the directory -- a directory-level ignore cannot be negated per file.
+.vscode/*
+!.vscode/tasks.json
 *.code-workspace
 
 # JetBrains (PyCharm, DataGrip, etc.)
@@ -178,7 +183,10 @@ yarn-error.log*
 
 .taskmaster/
 tasks/
-tasks.json
+# Anchored to the repo root on purpose. Unanchored, this matched tasks.json at
+# any depth -- including .vscode/tasks.json, which we deliberately track.
+# Task Master's own file is already covered by .taskmaster/ and tasks/ above.
+/tasks.json
 
 # ==============================================================================
 # ENVIRONMENT & SECRETS

@@ -1,0 +1,12 @@
+name: "migrated_flow_b"
+version: "1.0.0"
+config-version: 2
+profile: "default"
+
+model-paths: ["models"]
+macro-paths: ["macros"]
+
+models:
+  migrated_flow_b:
+    silver:
+      +pre-hook: "truncate table {{ this }}"

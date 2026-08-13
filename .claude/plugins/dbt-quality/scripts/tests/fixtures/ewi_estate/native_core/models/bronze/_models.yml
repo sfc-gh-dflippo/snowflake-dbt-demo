@@ -1,0 +1,28 @@
+version: 2
+
+models:
+  - name: stg_customers
+    columns:
+      - name: customer_id
+        tests:
+          - unique
+          - not_null
+      - name: email
+      - name: first_name
+      - name: last_name
+      - name: created_at
+
+  - name: stg_customers_slim
+    columns:
+      - name: customer_id
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_order_summary
+    columns:
+      - name: customer_id
+
+  - name: stg_orders
+    columns:
+      - name: order_id

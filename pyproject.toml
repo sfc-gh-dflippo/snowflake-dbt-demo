@@ -25,6 +25,16 @@ extend-exclude = '''
 [tool.ruff]
 line-length = 88
 target-version = "py311"
+# First-party roots, so isort classifies imports correctly in the src-layout
+# packages. These live here rather than in each package's own pyproject because
+# ruff resolves config from the *nearest* pyproject.toml containing a [tool.ruff]
+# section -- a nested section silently replaces this whole file rather than
+# extending it, which is how the packages previously drifted to different
+# line lengths and re-enabled E501.
+src = [
+    ".",
+    ".claude/plugins/dbt-quality/scripts/src",
+]
 extend-exclude = [
     "dbt_packages",
     "dbt_internal_packages",
