@@ -94,6 +94,9 @@ ENV/
 env/
 .conda/
 
+# Linter / formatter caches
+.ruff_cache/
+
 # uv (Python package manager)
 .uv/
 uv.lock
