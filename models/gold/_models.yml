@@ -39,7 +39,8 @@ models:
         tests:
           - not_null
           - dbt_utils.expression_is_true:
-              expression: ">= 0"
+              arguments:
+                expression: ">= 0"
       - name: order_date
         description: "Date the order was placed"
         data_type: date
@@ -71,14 +72,16 @@ models:
         tests:
           - not_null
           - dbt_utils.expression_is_true:
-              expression: "> 0"
+              arguments:
+                expression: "> 0"
       - name: NAME_CATEGORY
         description: "Categorization of name length (SHORT, MEDIUM, LONG)"
         data_type: varchar
         tests:
           - not_null
           - accepted_values:
-              values: ["SHORT", "MEDIUM", "LONG"]
+              arguments:
+                values: ["SHORT", "MEDIUM", "LONG"]
       - name: DISPLAY_NAME
         description: "Formatted display name"
         data_type: varchar
@@ -152,8 +155,9 @@ models:
         tests:
           - not_null
           - dbt_utils.accepted_range:
-              min_value: 0
-              max_value: 100
+              arguments:
+                min_value: 0
+                max_value: 100
       - name: RANK_IN_COUNTRY
         description: "Customer's rank within their country"
         data_type: number
@@ -165,20 +169,22 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values:
-                [
-                  "VIP Customer",
-                  "High Value Customer",
-                  "Above Average Customer",
-                  "Standard Customer",
-                ]
+              arguments:
+                values:
+                  [
+                    "VIP Customer",
+                    "High Value Customer",
+                    "Above Average Customer",
+                    "Standard Customer",
+                  ]
       - name: RISK_CATEGORY
         description: "Risk assessment category"
         data_type: varchar
         tests:
           - not_null
           - accepted_values:
-              values: ["Credit Risk", "Retention Risk", "Performance Risk", "Low Risk"]
+              arguments:
+                values: ["Credit Risk", "Retention Risk", "Performance Risk", "Low Risk"]
       - name: LAST_UPDATED
         description: "Timestamp when data was last processed"
         data_type: timestamp_ltz
@@ -207,14 +213,16 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ["O"]
+              arguments:
+                values: ["O"]
       - name: total_price
         description: "Total order value"
         data_type: number
         tests:
           - not_null
           - dbt_utils.expression_is_true:
-              expression: ">= 0"
+              arguments:
+                expression: ">= 0"
       - name: order_date
         description: "Date the order was placed"
         data_type: date
@@ -236,7 +244,8 @@ models:
       value-based segmentation.
     tests:
       - dbt_utils.expression_is_true:
-          expression: "total_orders >= open_orders"
+          arguments:
+            expression: "total_orders >= open_orders"
     columns:
       - name: customer_key
         description: "Primary key for customer dimension"
@@ -267,7 +276,8 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ["AUTOMOBILE", "BUILDING", "FURNITURE", "HOUSEHOLD", "MACHINERY"]
+              arguments:
+                values: ["AUTOMOBILE", "BUILDING", "FURNITURE", "HOUSEHOLD", "MACHINERY"]
       - name: customer_comment
         description: "Comments about the customer"
         data_type: varchar
@@ -277,8 +287,9 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('stg_tpc_h__nations')
-              field: nation_key
+              arguments:
+                to: ref('stg_tpc_h__nations')
+                field: nation_key
       - name: nation_name
         description: "Name of customer's nation"
         data_type: varchar
@@ -295,35 +306,40 @@ models:
         tests:
           - not_null
           - dbt_utils.expression_is_true:
-              expression: ">= 0"
+              arguments:
+                expression: ">= 0"
       - name: open_orders
         description: "Number of currently open orders"
         data_type: number
         tests:
           - not_null
           - dbt_utils.expression_is_true:
-              expression: ">= 0"
+              arguments:
+                expression: ">= 0"
       - name: has_orders_flag
         description: "Flag indicating if customer has placed any orders"
         data_type: varchar
         tests:
           - not_null
           - accepted_values:
-              values: ["Y", "N"]
+              arguments:
+                values: ["Y", "N"]
       - name: has_open_orders_flag
         description: "Flag indicating if customer has open orders"
         data_type: varchar
         tests:
           - not_null
           - accepted_values:
-              values: ["Y", "N"]
+              arguments:
+                values: ["Y", "N"]
       - name: value_segment
         description: "Customer value segmentation based on account balance"
         data_type: varchar
         tests:
           - not_null
           - accepted_values:
-              values: ["High Value", "Medium Value", "Standard"]
+              arguments:
+                values: ["High Value", "Medium Value", "Standard"]
       - name: _loaded_at
         description: "Source data load timestamp"
         data_type: timestamp_ntz
@@ -353,29 +369,33 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('dim_customers')
-              field: customer_key
+              arguments:
+                to: ref('dim_customers')
+                field: customer_key
       - name: order_status
         description: "Raw order status code"
         data_type: varchar
         tests:
           - not_null
           - accepted_values:
-              values: ["O", "F", "P"]
+              arguments:
+                values: ["O", "F", "P"]
       - name: order_status_desc
         description: "Business-friendly order status description"
         data_type: varchar
         tests:
           - not_null
           - accepted_values:
-              values: ["Open", "Fulfilled", "Partial", "Unknown"]
+              arguments:
+                values: ["Open", "Fulfilled", "Partial", "Unknown"]
       - name: total_price
         description: "Total order value"
         data_type: number
         tests:
           - not_null
           - dbt_utils.expression_is_true:
-              expression: ">= 0"
+              arguments:
+                expression: ">= 0"
       - name: order_date
         description: "Date the order was placed"
         data_type: date
@@ -416,25 +436,28 @@ models:
         tests:
           - not_null
           - dbt_utils.accepted_range:
-              min_value: 1990
-              max_value: 2030
-              inclusive: true
+              arguments:
+                min_value: 1990
+                max_value: 2030
+                inclusive: true
       - name: order_quarter
         description: "Quarter the order was placed"
         data_type: number
         tests:
           - not_null
           - accepted_values:
-              values: [1, 2, 3, 4]
+              arguments:
+                values: [1, 2, 3, 4]
       - name: order_month
         description: "Month the order was placed"
         data_type: number
         tests:
           - not_null
           - dbt_utils.accepted_range:
-              min_value: 1
-              max_value: 12
-              inclusive: true
+              arguments:
+                min_value: 1
+                max_value: 12
+                inclusive: true
       - name: _loaded_at
         description: "Source data load timestamp"
         data_type: timestamp_ntz
@@ -470,7 +493,8 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ["INSERT", "UPDATE", "DELETE"]
+              arguments:
+                values: ["INSERT", "UPDATE", "DELETE"]
       - name: _updated_at
         description: "Change timestamp"
         data_type: timestamp_ntz
@@ -539,13 +563,15 @@ models:
         data_type: varchar
         tests:
           - accepted_values:
-              values: ["Y", "N"]
+              arguments:
+                values: ["Y", "N"]
       - name: has_open_orders_flag
         description: "Flag indicating if customer has open orders"
         data_type: varchar
         tests:
           - accepted_values:
-              values: ["Y", "N"]
+              arguments:
+                values: ["Y", "N"]
 
   # =============================================================================
   # GOLD RUN - Advanced Marts
@@ -562,10 +588,11 @@ models:
       performance reporting.
     tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - supplier_key
-            - order_year
-            - order_month
+          arguments:
+            combination_of_columns:
+              - supplier_key
+              - order_year
+              - order_month
     columns:
       - name: supplier_key
         description: "Foreign key to suppliers dimension (part of composite PK)"
@@ -578,14 +605,16 @@ models:
         tests:
           - not_null
           - dbt_utils.expression_is_true:
-              expression: ">= 1990 AND <= 2100"
+              arguments:
+                expression: ">= 1990 AND order_year <= 2100"
       - name: order_month
         description: "Month of order date (part of composite PK)"
         data_type: number
         tests:
           - not_null
           - dbt_utils.expression_is_true:
-              expression: ">= 1 AND <= 12"
+              arguments:
+                expression: ">= 1 AND order_month <= 12"
       - name: month_start_date
         description: "First day of the month for easy date filtering"
         data_type: date
@@ -597,49 +626,56 @@ models:
         tests:
           - not_null
           - dbt_utils.expression_is_true:
-              expression: "> 0"
+              arguments:
+                expression: "> 0"
       - name: total_orders
         description: "Distinct count of orders for this supplier/month"
         data_type: number
         tests:
           - not_null
           - dbt_utils.expression_is_true:
-              expression: "> 0"
+              arguments:
+                expression: "> 0"
       - name: total_quantity
         description: "Sum of all quantities shipped"
         data_type: number
         tests:
           - not_null
           - dbt_utils.expression_is_true:
-              expression: ">= 0"
+              arguments:
+                expression: ">= 0"
       - name: total_extended_price
         description: "Sum of extended prices before discounts"
         data_type: number
         tests:
           - not_null
           - dbt_utils.expression_is_true:
-              expression: ">= 0"
+              arguments:
+                expression: ">= 0"
       - name: total_discounted_price
         description: "Sum of prices after discount"
         data_type: number
         tests:
           - not_null
           - dbt_utils.expression_is_true:
-              expression: ">= 0"
+              arguments:
+                expression: ">= 0"
       - name: total_final_price
         description: "Sum of final prices including tax"
         data_type: number
         tests:
           - not_null
           - dbt_utils.expression_is_true:
-              expression: ">= 0"
+              arguments:
+                expression: ">= 0"
       - name: total_final_price_eur
         description: "Sum of final prices in EUR"
         data_type: number
         tests:
           - not_null
           - dbt_utils.expression_is_true:
-              expression: ">= 0"
+              arguments:
+                expression: ">= 0"
       - name: avg_quantity_per_line
         description: "Average quantity per order line"
         data_type: number
@@ -667,7 +703,8 @@ models:
         tests:
           - not_null
           - dbt_utils.expression_is_true:
-              expression: "> 0"
+              arguments:
+                expression: "> 0"
       - name: _updated_at
         description: "Timestamp when aggregation was last updated"
         data_type: timestamp_ntz
@@ -682,13 +719,16 @@ models:
       indexing and partitioning strategy.
     tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - order_key
-            - line_number
+          arguments:
+            combination_of_columns:
+              - order_key
+              - line_number
       - dbt_utils.expression_is_true:
-          expression: "final_price >= 0"
+          arguments:
+            expression: "final_price >= 0"
       - dbt_utils.expression_is_true:
-          expression: "discounted_price <= extended_price"
+          arguments:
+            expression: "discounted_price <= extended_price"
     columns:
       - name: order_key
         description: "Foreign key to orders dimension (part of composite PK)"
@@ -696,15 +736,17 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('dim_orders')
-              field: order_key
+              arguments:
+                to: ref('dim_orders')
+                field: order_key
       - name: line_number
         description: "Line number within order (part of composite PK)"
         data_type: number
         tests:
           - not_null
           - dbt_utils.expression_is_true:
-              expression: ">= 1"
+              arguments:
+                expression: ">= 1"
       - name: part_key
         description: "Foreign key to parts dimension"
         data_type: number
@@ -721,82 +763,94 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('dim_customers')
-              field: customer_key
+              arguments:
+                to: ref('dim_customers')
+                field: customer_key
       - name: quantity
         description: "Quantity of items in the line"
         data_type: number
         tests:
           - not_null
           - dbt_utils.expression_is_true:
-              expression: "> 0"
+              arguments:
+                expression: "> 0"
       - name: extended_price
         description: "Extended price before discount and tax"
         data_type: number
         tests:
           - not_null
           - dbt_utils.expression_is_true:
-              expression: "> 0"
+              arguments:
+                expression: "> 0"
       - name: discount
         description: "Discount rate applied (0.0 to 1.0)"
         data_type: number
         tests:
           - not_null
           - dbt_utils.accepted_range:
-              min_value: 0
-              max_value: 1
-              inclusive: true
+              arguments:
+                min_value: 0
+                max_value: 1
+                inclusive: true
       - name: tax
         description: "Tax rate applied"
         data_type: number
         tests:
           - not_null
           - dbt_utils.expression_is_true:
-              expression: ">= 0"
+              arguments:
+                expression: ">= 0"
       - name: discounted_price
         description: "Price after discount applied (calculated measure)"
         data_type: number
         tests:
           - not_null
           - dbt_utils.expression_is_true:
-              expression: "> 0"
+              arguments:
+                expression: "> 0"
           - dbt_utils.expression_is_true:
-              expression: "<= extended_price"
+              arguments:
+                expression: "<= extended_price"
       - name: final_price
         description: "Final price after discount and tax (calculated measure)"
         data_type: number
         tests:
           - not_null
           - dbt_utils.expression_is_true:
-              expression: "> 0"
+              arguments:
+                expression: "> 0"
       - name: eur_conversion_rate
         description: "USD to EUR conversion rate used"
         data_type: number
         tests:
           - not_null
           - dbt_utils.expression_is_true:
-              expression: "> 0"
+              arguments:
+                expression: "> 0"
       - name: final_price_eur
         description: "Final price converted to EUR (calculated measure)"
         data_type: number
         tests:
           - not_null
           - dbt_utils.expression_is_true:
-              expression: "> 0"
+              arguments:
+                expression: "> 0"
       - name: return_flag
         description: "Return flag status"
         data_type: varchar
         tests:
           - not_null
           - accepted_values:
-              values: ["A", "N", "R"]
+              arguments:
+                values: ["A", "N", "R"]
       - name: line_status
         description: "Line item status"
         data_type: varchar
         tests:
           - not_null
           - accepted_values:
-              values: ["F", "O"]
+              arguments:
+                values: ["F", "O"]
       - name: ship_date
         description: "Date item was shipped"
         data_type: date
@@ -859,28 +913,31 @@ models:
         tests:
           - not_null
           - dbt_utils.expression_is_true:
-              expression: ">= 0"
+              arguments:
+                expression: ">= 0"
       - name: total_orders
         description: "Total number of orders"
         data_type: number
         tests:
           - not_null
           - dbt_utils.expression_is_true:
-              expression: ">= 0"
+              arguments:
+                expression: ">= 0"
       - name: avg_order_value
         description: "Average order value"
         data_type: number
         tests:
           - dbt_utils.expression_is_true:
-              expression: "> 0"
+              arguments:
+                expression: "> 0"
       - name: active_customers
         description: "Number of active customers"
         data_type: number
         tests:
           - not_null
           - dbt_utils.expression_is_true:
-              expression: ">= 0"
-
+              arguments:
+                expression: ">= 0"
   - name: fact_order_line_full_reload
     description: >
       Full reload fact table demonstrating complete refresh patterns. Shows alternative loading
@@ -903,8 +960,8 @@ models:
         tests:
           - not_null
           - dbt_utils.expression_is_true:
-              expression: ">= 1"
-
+              arguments:
+                expression: ">= 1"
   - name: fact_order_line_pivot
     description: >
       Pivoted fact table demonstrating advanced SQL patterns. Shows dynamic pivot generation using

@@ -1,15 +1,12 @@
 {% snapshot DIM_CUSTOMERS_SCD %}
 
-{{
-    config(
-      unique_key='integration_id',
-      strategy='check',
-      check_cols=['cdc_hash_key'],
-      dbt_current_flag_column='dbt_current_flag',
-      surrogate_key='dim_customers_scd_wid',
-      invalidate_hard_deletes=true
-    )
-}}
+{{ config(
+    unique_key='integration_id',
+    strategy='check',
+    check_cols=['cdc_hash_key'],
+    invalidate_hard_deletes=true,
+    meta={'dbt_current_flag_column': 'dbt_current_flag', 'surrogate_key': 'dim_customers_scd_wid'}
+) }}
 
 /*
 Type 2 Customers dimension based on name and flags

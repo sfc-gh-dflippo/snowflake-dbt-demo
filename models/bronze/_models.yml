@@ -34,8 +34,9 @@ models:
         tests:
           - not_null
           - dbt_constraints.foreign_key:
-              to: ref('stg_tpc_h__regions')
-              field: region_key
+              arguments:
+                to: ref('stg_tpc_h__regions')
+                field: region_key
       - name: nation_comment
         description: "Comments about the nation"
         data_type: varchar
@@ -92,8 +93,9 @@ models:
         tests:
           - not_null
           - dbt_constraints.foreign_key:
-              to: ref('stg_tpc_h__nations')
-              field: nation_key
+              arguments:
+                to: ref('stg_tpc_h__nations')
+                field: nation_key
       - name: customer_phone
         description: "Customer phone number"
         data_type: varchar
@@ -108,7 +110,8 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ["AUTOMOBILE", "BUILDING", "FURNITURE", "HOUSEHOLD", "MACHINERY"]
+              arguments:
+                values: ["AUTOMOBILE", "BUILDING", "FURNITURE", "HOUSEHOLD", "MACHINERY"]
       - name: customer_comment
         description: "Comments about the customer"
         data_type: varchar
@@ -134,22 +137,25 @@ models:
         tests:
           - not_null
           - dbt_constraints.foreign_key:
-              to: ref('stg_tpc_h__customers')
-              field: customer_key
+              arguments:
+                to: ref('stg_tpc_h__customers')
+                field: customer_key
       - name: order_status
         description: "Status of the order"
         data_type: varchar
         tests:
           - not_null
           - accepted_values:
-              values: ["O", "F", "P"]
+              arguments:
+                values: ["O", "F", "P"]
       - name: total_price
         description: "Total price of the order"
         data_type: number
         tests:
           - not_null
           - dbt_utils.expression_is_true:
-              expression: ">= 0"
+              arguments:
+                expression: ">= 0"
       - name: order_date
         description: "Date the order was placed"
         data_type: date
@@ -202,7 +208,8 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ["VALID", "INVALID_NAME", "NEGATIVE_BALANCE"]
+              arguments:
+                values: ["VALID", "INVALID_NAME", "NEGATIVE_BALANCE"]
       - name: extracted_at
         description: "Timestamp when data was extracted"
         tests:
@@ -215,9 +222,10 @@ models:
       Largest table in TPC-H schema with detailed transaction data.
     tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - order_key
-            - line_number
+          arguments:
+            combination_of_columns:
+              - order_key
+              - line_number
     columns:
       - name: order_key
         description: "Foreign key to orders table (part of composite PK)"
@@ -225,15 +233,17 @@ models:
         tests:
           - not_null
           - dbt_constraints.foreign_key:
-              to: ref('stg_tpc_h__orders')
-              field: order_key
+              arguments:
+                to: ref('stg_tpc_h__orders')
+                field: order_key
       - name: line_number
         description: "Line number within order (part of composite PK)"
         data_type: number
         tests:
           - not_null
           - dbt_utils.expression_is_true:
-              expression: ">= 1"
+              arguments:
+                expression: ">= 1"
       - name: part_key
         description: "Foreign key to parts table"
         data_type: number
@@ -250,44 +260,50 @@ models:
         tests:
           - not_null
           - dbt_utils.expression_is_true:
-              expression: "> 0"
+              arguments:
+                expression: "> 0"
       - name: extended_price
         description: "Extended price (quantity * unit price)"
         data_type: number
         tests:
           - not_null
           - dbt_utils.expression_is_true:
-              expression: "> 0"
+              arguments:
+                expression: "> 0"
       - name: discount
         description: "Discount rate applied"
         data_type: number
         tests:
           - not_null
           - dbt_utils.accepted_range:
-              min_value: 0
-              max_value: 1
-              inclusive: true
+              arguments:
+                min_value: 0
+                max_value: 1
+                inclusive: true
       - name: tax
         description: "Tax rate applied"
         data_type: number
         tests:
           - not_null
           - dbt_utils.expression_is_true:
-              expression: ">= 0"
+              arguments:
+                expression: ">= 0"
       - name: return_flag
         description: "Return flag status"
         data_type: varchar
         tests:
           - not_null
           - accepted_values:
-              values: ["A", "N", "R"]
+              arguments:
+                values: ["A", "N", "R"]
       - name: line_status
         description: "Line item status"
         data_type: varchar
         tests:
           - not_null
           - accepted_values:
-              values: ["F", "O"]
+              arguments:
+                values: ["F", "O"]
       - name: ship_date
         description: "Date item was shipped"
         data_type: date
@@ -325,10 +341,11 @@ models:
       handle non-TPC-H data sources consistently.
     tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - rate_date
-            - base_currency
-            - quote_currency
+          arguments:
+            combination_of_columns:
+              - rate_date
+              - base_currency
+              - quote_currency
     columns:
       - name: rate_date
         description: "Date of the exchange rate"
@@ -381,22 +398,25 @@ models:
         tests:
           - not_null
           - dbt_constraints.foreign_key:
-              to: ref('stg_tpc_h__customers')
-              field: customer_key
+              arguments:
+                to: ref('stg_tpc_h__customers')
+                field: customer_key
       - name: o_orderstatus
         description: "Status of the order"
         data_type: varchar
         tests:
           - not_null
           - accepted_values:
-              values: ["O", "F", "P"]
+              arguments:
+                values: ["O", "F", "P"]
       - name: o_totalprice
         description: "Total price of the order"
         data_type: number
         tests:
           - not_null
           - dbt_utils.expression_is_true:
-              expression: ">= 0"
+              arguments:
+                expression: ">= 0"
       - name: o_orderdate
         description: "Date the order was placed"
         data_type: date
@@ -408,7 +428,8 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ["OPEN", "FULFILLED", "PARTIAL", "UNKNOWN"]
+              arguments:
+                values: ["OPEN", "FULFILLED", "PARTIAL", "UNKNOWN"]
       - name: processed_at
         description: "Timestamp when record was processed"
         data_type: timestamp_ntz
@@ -442,7 +463,8 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ["INSERT", "UPDATE", "DELETE"]
+              arguments:
+                values: ["INSERT", "UPDATE", "DELETE"]
       - name: metadata$isupdate
         description: "Flag indicating if record is an update"
         data_type: boolean

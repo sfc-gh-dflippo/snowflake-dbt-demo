@@ -22,9 +22,9 @@
     default_inserted_at_column = "dbt_inserted_ts" -#}
 
 {{ config(
-    materialized = "incremental",
+    materialized="incremental",
     unique_key="customer_surrogate_key",
-    merge_exclude_columns = ["customer_surrogate_key", "integration_id", "dbt_inserted_ts"],
+    merge_exclude_columns=["customer_surrogate_key", "integration_id", "dbt_inserted_ts"],
     transient=false,
     post_hook=[ "{%- do insert_ghost_key( 'customer_surrogate_key', 0,
         {'customer_key': '0',
@@ -32,10 +32,9 @@
          'has_orders_flag': \"'N'\",
          'has_open_orders_flag': \"'N'\"}
     ) -%}" ],
-    surrogate_key = "customer_surrogate_key",
-    alias='DIM_CUSTOMERS_INCREMENTAL_MACRO'
-    )
-}}
+    alias='DIM_CUSTOMERS_INCREMENTAL_MACRO',
+    meta={'surrogate_key': "customer_surrogate_key"}
+) }}
 
 {%- set scd_source_sql -%}
     /*

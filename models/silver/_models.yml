@@ -97,17 +97,19 @@ models:
         tests:
           - not_null
           - dbt_utils.expression_is_true:
-              expression: ">= 0"
+              arguments:
+                expression: ">= 0"
       - name: open_order_count
         description: "Number of open orders for customer (status = 'O')"
         data_type: number
         tests:
           - not_null
           - dbt_utils.expression_is_true:
-              expression: ">= 0"
+              arguments:
+                expression: ">= 0"
           - dbt_utils.expression_is_true:
-              expression: "<= order_count"
-
+              arguments:
+                expression: "<= order_count"
   - name: customer_segments
     description: >
       Customer segmentation model with advanced business logic. Demonstrates window functions and
@@ -136,16 +138,17 @@ models:
         tests:
           - not_null
           - dbt_utils.accepted_range:
-              min_value: 0
-              max_value: 1
+              arguments:
+                min_value: 0
+                max_value: 1
       - name: balance_rank_in_nation
         description: "Rank of customer balance within their nation"
         data_type: number
         tests:
           - not_null
           - dbt_utils.expression_is_true:
-              expression: ">= 1"
-
+              arguments:
+                expression: ">= 1"
   - name: lookup_exchange_rates
     description: >
       Exchange rate lookup table for currency conversions. Demonstrates lookup pattern for financial
@@ -167,15 +170,8 @@ models:
         tests:
           - not_null
           - dbt_utils.expression_is_true:
-              expression: "> 0"
-
-  # =============================================================================
-  # SILVER RUN - Advanced Transformation Models
-  # Feature: Complex business transformations with advanced patterns
-  # Complexity: Advanced - ML, dynamic tables, complex window functions
-  # Best Practice: Advanced reusable transformations for downstream consumption
-  # =============================================================================
-
+              arguments:
+                expression: "> 0"
   - name: int_fx_rates__daily
     description: >
       Intermediate model for daily FX rates with advanced business logic. Demonstrates complex
@@ -184,10 +180,11 @@ models:
       periods.
     tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - day_dt
-            - from_currency
-            - to_currency
+          arguments:
+            combination_of_columns:
+              - day_dt
+              - from_currency
+              - to_currency
     columns:
       - name: day_dt
         description: "Rate effective date"
@@ -212,7 +209,8 @@ models:
         tests:
           - not_null
           - dbt_utils.expression_is_true:
-              expression: "> 0"
+              arguments:
+                expression: "> 0"
       - name: end_date
         description: >
           Rate validity end date calculated using window functions. Shows advanced transformation
@@ -221,7 +219,8 @@ models:
         tests:
           - not_null
           - dbt_utils.expression_is_true:
-              expression: ">= day_dt"
+              arguments:
+                expression: ">= day_dt"
       - name: _loaded_at
         description: "Timestamp when source record was loaded"
         data_type: timestamp_ntz
@@ -245,29 +244,32 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: [0, 1, 2, 3, 4]
+              arguments:
+                values: [0, 1, 2, 3, 4]
       - name: CLUSTER_NAME
         description: "Human-readable cluster name"
         data_type: varchar
         tests:
           - not_null
           - accepted_values:
-              values:
-                [
-                  "High Value Stable",
-                  "Premium Elite",
-                  "Growth Potential",
-                  "Standard Base",
-                  "At Risk",
-                ]
+              arguments:
+                values:
+                  [
+                    "High Value Stable",
+                    "Premium Elite",
+                    "Growth Potential",
+                    "Standard Base",
+                    "At Risk",
+                  ]
       - name: ML_CONFIDENCE_SCORE
         description: "Confidence score for cluster assignment (0-1)"
         data_type: float
         tests:
           - not_null
           - dbt_utils.accepted_range:
-              min_value: 0
-              max_value: 1
+              arguments:
+                min_value: 0
+                max_value: 1
       - name: IS_CLUSTER_OUTLIER
         description: "Flag indicating if customer is an outlier in their cluster"
         data_type: boolean

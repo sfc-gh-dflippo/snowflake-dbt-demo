@@ -34,15 +34,16 @@ models:
         tests:
           - not_null
           - dbt_utils.expression_is_true:
-              expression: ">= 0"
+              arguments:
+                expression: ">= 0"
       - name: ROWS_PRODUCED
         description: "Number of rows produced by the query"
         data_type: number
         tests:
           - not_null
           - dbt_utils.expression_is_true:
-              expression: ">= 0"
-
+              arguments:
+                expression: ">= 0"
   - name: dynamic_warehouse_assignment
     description: >
       Dynamic warehouse assignment based on workload patterns. Demonstrates advanced Snowflake
@@ -64,5 +65,6 @@ models:
         tests:
           - not_null
           - dbt_utils.accepted_range:
-              min_value: 0
-              max_value: 1
+              arguments:
+                min_value: 0
+                max_value: 1

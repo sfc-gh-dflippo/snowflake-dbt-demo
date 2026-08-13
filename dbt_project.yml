@@ -17,7 +17,7 @@ profile: "SNOWFLAKE"
 # The query-comment setting is used to add a comment to the SQL query.
 # This is useful for debugging and for tracking the query history.
 # Setting it to null will not add a comment to the SQL query.
-query-comment: null
+query-comment:
 
 # These configurations specify where dbt should look for different types of files.
 # The `source-paths` config, for example, states that models in this project can be
@@ -187,3 +187,5 @@ tests:
     owner_email: "test@nowhere.com"
 #  +limit: 1000 # will only include the first 1000 failures
 #  +store_failures: true # by default we will store failures
+flags:
+  require_generic_test_arguments_property: true

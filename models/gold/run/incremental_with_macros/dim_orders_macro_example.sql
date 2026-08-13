@@ -5,17 +5,16 @@
     default_inserted_at_column = "dbt_inserted_ts" -#}
 
 {{ config(
-    materialized = "incremental",
+    materialized="incremental",
     unique_key='o_order_wid',
-    merge_exclude_columns = ["o_order_wid", "integration_id", "dbt_inserted_ts"],
+    merge_exclude_columns=["o_order_wid", "integration_id", "dbt_inserted_ts"],
     transient=false,
     post_hook=[ "{%- do insert_ghost_key( 'o_order_wid', 0,
         {'O_CUST_WID': '0'}
     ) -%}" ],
-    surrogate_key = "o_order_wid",
-    alias='DIM_ORDERS_INCREMENTAL_MACRO'
-    )
-}}
+    alias='DIM_ORDERS_INCREMENTAL_MACRO',
+    meta={'surrogate_key': "o_order_wid"}
+) }}
 
 
 {%- set scd_source_sql -%}
