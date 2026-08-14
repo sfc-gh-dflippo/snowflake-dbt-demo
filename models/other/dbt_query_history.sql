@@ -1,7 +1,17 @@
-{# If run regularly, this can allow you to build up a longer history of your own queries #}
-{# We have set `full_refresh = false` to prevent losing history when full-loading other tables #}
+{#-
+    If run regularly, this can allow you to build up a longer history of your own queries.
+    We have set `full_refresh = false` to prevent losing history when full-loading other tables.
+
+    QUERY_ID is a UUID: random, and uncorrelated with physical row order, so a merge
+    predicate on it alone prunes nothing and would scan every micro-partition of an
+    ever-growing table. START_TIME is naturally clustered here because rows only ever
+    arrive in START_TIME order, and it cannot change for a given QUERY_ID, so adding
+    it gives the merge a prunable predicate without changing which row matches.
+    The primary key test stays on QUERY_ID alone.
+-#}
 {{- config(
     materialized='incremental',
+    unique_key=['query_id', 'start_time'],
     full_refresh = false,
     on_schema_change='sync_all_columns'
 ) -}}

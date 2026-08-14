@@ -1,3 +1,4 @@
+{#- dbt-quality: ignore-file SSC-FDM-DBTINC0007 -#}
 {{
     config(
         materialized="incremental",
@@ -5,9 +6,15 @@
         alias='DIM_CUSTOMER_CHANGES'
     )
 }}
-/*
+{#-
 Log of changes made to the DIM_CUSTOMERS table utilizing a stream
- */
+
+APPEND-ONLY BY DESIGN - no unique_key, and none should be added.
+log_id comes from a sequence, so it is a new value on every run and can never
+serve as a merge key. The source is a stream, which is consumed rather than
+re-read, so there is nothing to restate. Appending is the correct semantics for
+a change log. Uniqueness of log_id is asserted by a primary key test instead.
+-#}
 select
     {{ sequence_get_nextval() }} as log_id,
     d.*,

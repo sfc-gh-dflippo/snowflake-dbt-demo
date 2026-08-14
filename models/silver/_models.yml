@@ -153,7 +153,19 @@ models:
     description: >
       Exchange rate lookup table for currency conversions. Demonstrates lookup pattern for financial
       calculations. Provides standardized exchange rates for order value conversions.
+    tests:
+      - dbt_constraints.unique_key:
+          arguments:
+            column_names:
+              - day_dt
+              - from_currency
+              - to_currency
     columns:
+      - name: day_dt
+        description: "Calendar day the exchange rate applies to"
+        data_type: date
+        tests:
+          - not_null
       - name: from_currency
         description: "Source currency code"
         data_type: varchar
@@ -281,6 +293,16 @@ models:
       Real-time order analytics using dynamic tables. Demonstrates Snowflake dynamic table
       materialization. Provides near real-time aggregated order metrics. Advanced pattern for
       streaming analytics and real-time dashboards.
+    tests:
+      # Grain: one row per order day, customer, status, and priority. The other
+      # time columns are derived from order_date, so they do not widen the key.
+      - dbt_constraints.unique_key:
+          arguments:
+            column_names:
+              - order_date
+              - customer_key
+              - order_status
+              - order_priority
     columns:
       - name: order_date
         description: "Order date (day level)"
@@ -302,3 +324,15 @@ models:
         data_type: number
         tests:
           - positive_values
+
+  - name: async_bulk_operations
+    description: >
+      Python model demonstrating asynchronous bulk query execution via Snowpark and joblib. Runs a
+      set of generated SQL statements in parallel and collects the results into a table. With the
+      demo configuration it emits one row per generated statement, keyed by row_num.
+    columns:
+      - name: row_num
+        description: "Sequence number of the generated statement; unique per row"
+        data_type: number
+        tests:
+          - dbt_constraints.primary_key

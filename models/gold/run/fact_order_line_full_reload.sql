@@ -1,7 +1,26 @@
-/*
+{#- dbt-quality: ignore-file SSC-EWI-DBTINC0002, SSC-FDM-DBTINC0007 -#}
+{#-
     Simulate a query for the current year sales orders
     This demonstrates some of the Snowflake specific options
-*/
+
+    DELIBERATE PATTERN - delete by less than the unique key.
+
+    The pre_hook removes the entire SOURCE_SYSTEM_CODE slice before the insert
+    reloads it. Deleting at a coarser grain than the row key is what lets this
+    model account for deletes: a line that disappeared upstream is gone from the
+    target, because the whole slice was removed first. A merge on
+    (source_system_code, l_orderkey, l_linenumber) cannot do that - it restates
+    matched rows and leaves absent ones behind.
+
+    The slice delete is also what makes the load idempotent, so no unique_key is
+    needed and none should be added. Do not "fix" this into a merge or a
+    delete+insert strategy; the two dbt-quality rules waived above flag this
+    pattern, which is the pattern the model exists to demonstrate.
+
+    Decorative: merge_exclude_columns requires a unique_key and the merge
+    strategy, and this model intentionally has neither. Kept to show the option.
+-#}
+
 {{ config(
     materialized="incremental",
     merge_exclude_columns = ["DBT_INSERT_TS"],

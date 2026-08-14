@@ -54,6 +54,8 @@ models:
       - name: region_key
         description: "Primary key for regions table"
         data_type: number
+        tests:
+          - dbt_constraints.primary_key
       - name: region_name
         description: "Name of the region"
         data_type: varchar
@@ -471,3 +473,5 @@ models:
       - name: metadata$row_id
         description: "Unique row identifier for CDC"
         data_type: varchar
+        tests:
+          - dbt_constraints.unique_key

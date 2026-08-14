@@ -1,0 +1,98 @@
+version: 2
+
+# TPC-H BENCHMARK QUERIES
+# Official TPC-H benchmark queries (Q1-Q4) used for performance demonstration.
+# These intentionally read from source() directly to match the TPC-H spec, and
+# they return small result sets (aggregates or top-N), not row-level tables.
+
+models:
+  - name: Q1_FACT_PRICING_SUMMARY_REPORT_QUERY
+    description: >
+      TPC-H Query 1 (Pricing Summary Report). Summarizes shipped lineitems as of a cutoff date,
+      aggregated by return flag and line status. Returns one row per (return flag, line status)
+      combination.
+    columns:
+      - name: l_returnflag
+        description: "Return flag of the lineitem; part of the grouping grain"
+      - name: l_linestatus
+        description: "Line status of the lineitem; part of the grouping grain"
+      - name: sum_qty
+        description: "Total quantity of lineitems in the group"
+      - name: sum_base_price
+        description: "Total extended price before discount"
+      - name: sum_disc_price
+        description: "Total extended price after discount"
+      - name: sum_charge
+        description: "Total discounted extended price plus tax"
+      - name: avg_qty
+        description: "Average quantity per lineitem in the group"
+      - name: avg_price
+        description: "Average extended price per lineitem in the group"
+      - name: avg_disc
+        description: "Average discount per lineitem in the group"
+      - name: count_order
+        description: "Count of lineitems in the group"
+    tests:
+      - dbt_constraints.primary_key:
+          arguments:
+            column_names:
+              - l_returnflag
+              - l_linestatus
+
+  - name: Q2_MINIMUM_COST_SUPPLIER_QUERY
+    description: >
+      TPC-H Query 2 (Minimum Cost Supplier). Finds the minimum-cost supplier for parts in a region.
+      This implementation samples a single random part and region, then returns the top 100
+      suppliers by account balance, so it has no stable grain and carries no key test.
+    columns:
+      - name: s_acctbal
+        description: "Supplier account balance"
+      - name: s_name
+        description: "Supplier name"
+      - name: n_name
+        description: "Nation name of the supplier"
+      - name: p_partkey
+        description: "Part key supplied at minimum cost"
+      - name: p_mfgr
+        description: "Manufacturer of the part"
+      - name: s_address
+        description: "Supplier address"
+      - name: s_phone
+        description: "Supplier phone number"
+      - name: s_comment
+        description: "Supplier comment"
+
+  - name: Q3_SHIPPING_PRIORITY_QUERY
+    description: >
+      TPC-H Query 3 (Shipping Priority). Returns the top 10 unshipped orders by potential revenue
+      for a randomly selected market segment. Grain is one row per order key.
+    columns:
+      - name: l_orderkey
+        description: "Order key; the grain of the result"
+      - name: revenue
+        description: "Potential revenue for the order (sum of extended price after discount)"
+      - name: o_orderdate
+        description: "Order date"
+      - name: o_shippriority
+        description: "Shipping priority of the order"
+    tests:
+      - dbt_constraints.primary_key:
+          arguments:
+            column_names:
+              - l_orderkey
+
+  - name: Q4_ORDER_PRIORITY_CHECKING_QUERY
+    description: >
+      TPC-H Query 4 (Order Priority Checking). Counts orders in a quarter that had at least one
+      lineitem received later than its committed date, grouped by order priority. Grain is one row
+      per order priority.
+    columns:
+      - name: o_orderpriority
+        description: "Order priority; the grain of the result"
+      - name: order_count
+        description: "Count of qualifying orders with that priority"
+    tests:
+      - dbt_constraints.primary_key:
+          arguments:
+            column_names:
+              - o_orderpriority

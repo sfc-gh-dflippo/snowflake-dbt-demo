@@ -58,6 +58,7 @@ models:
         data_type: varchar
         tests:
           - not_null
+          - dbt_constraints.primary_key
       - name: GOVERNMENT_TYPE
         description: "AI-classified government type"
         data_type: variant
@@ -472,8 +473,17 @@ models:
   - name: dim_customer_changes
     description: >
       Customer change tracking model. Demonstrates change data capture patterns. Shows how to track
-      customer attribute changes over time.
+      customer attribute changes over time. Append-only by design: log_id comes from a sequence and
+      the source is a stream, so there is no merge key and none should be added.
     columns:
+      - name: log_id
+        description: "Sequence-generated surrogate key for the change log entry"
+        data_type: number
+        tests:
+          # Not a merge key and cannot be one, since the sequence yields a new value
+          # every run. Asserted anyway: it confirms the sequence does not collide, and
+          # it generates a PRIMARY KEY ... RELY constraint the optimizer can use.
+          - dbt_constraints.primary_key
       - name: customer_key
         description: "Customer identifier"
         data_type: number
@@ -907,6 +917,8 @@ models:
         data_type: date
         tests:
           - not_null
+          # Grain of the model, and the incremental unique_key.
+          - dbt_constraints.primary_key
       - name: total_revenue
         description: "Total revenue for the period"
         data_type: number
@@ -940,9 +952,10 @@ models:
                 expression: ">= 0"
   - name: fact_order_line_full_reload
     description: >
-      Full reload fact table demonstrating complete refresh patterns. Shows alternative loading
-      strategy for smaller fact tables. Includes comprehensive business measures and foreign key
-      relationships.
+      Full reload fact table demonstrating delete-by-partial-key. The pre_hook removes the entire
+      SOURCE_SYSTEM_CODE slice before the insert reloads it, so upstream deletes propagate and the
+      load is idempotent without a unique_key. Deliberate pattern; see the model header. Includes
+      comprehensive business measures and foreign key relationships.
     columns:
       - name: l_order_wid
         description: "Foreign key to orders dimension"
@@ -962,6 +975,17 @@ models:
           - dbt_utils.expression_is_true:
               arguments:
                 expression: ">= 1"
+    tests:
+      # The model has no unique_key for the materialization by design - the pre_hook slice delete is what
+      # guarantees idempotency. This test enforces that guarantee, so an edit to the
+      # pre_hook that stopped covering the inserted set would fail rather than
+      # silently duplicate rows.
+      - dbt_constraints.primary_key:
+          arguments:
+            column_names:
+              - source_system_code
+              - l_orderkey
+              - l_linenumber
   - name: fact_order_line_pivot
     description: >
       Pivoted fact table demonstrating advanced SQL patterns. Shows dynamic pivot generation using
@@ -977,17 +1001,29 @@ models:
         data_type: number
         tests:
           - not_null
+    tests:
+      # Grain of the pivot output, and the incremental unique_key.
+      - dbt_constraints.primary_key:
+          arguments:
+            column_names:
+              - supplier_key
+              - part_key
 
   # Legacy models (to be deprecated)
+  # Deprecated and example models: not worth full column modeling or key tests.
+  # dbt-quality: ignore SSC-EWI-DBTTST0002, SSC-EWI-DBTTST0003
   - name: DIM__CUSTOMERS
     description:
       "Legacy customer dimension with SCD patterns (deprecated - use dim_customers instead)"
 
+  # dbt-quality: ignore SSC-EWI-DBTTST0002, SSC-EWI-DBTTST0003
   - name: DIM__ORDERS
     description: "Legacy orders dimension with SCD patterns (deprecated - use dim_orders instead)"
 
+  # dbt-quality: ignore SSC-EWI-DBTTST0002, SSC-EWI-DBTTST0003
   - name: dim_customers_macro_example
     description: "Customer dimension using macro patterns (example implementation)"
 
+  # dbt-quality: ignore SSC-EWI-DBTTST0002, SSC-EWI-DBTTST0003
   - name: dim_orders_macro_example
     description: "Orders dimension using macro patterns (example implementation)"

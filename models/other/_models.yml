@@ -21,8 +21,12 @@ models:
         description: "Unique identifier for the query"
         data_type: varchar
         tests:
-          - not_null
-          - unique
+          # Deliberately narrower than the incremental unique_key, which is
+          # (query_id, start_time) so the merge can prune on start_time. query_id is
+          # globally unique on its own, and asserting that here also catches the one
+          # failure mode of the wider merge key: a changed start_time for an existing
+          # query_id would insert a second row instead of updating the first.
+          - dbt_constraints.primary_key
       - name: MODULE_NAME
         description: "Name of the dbt model"
         data_type: varchar
@@ -54,6 +58,7 @@ models:
         data_type: varchar
         tests:
           - not_null
+          - dbt_constraints.primary_key
       - name: recommended_warehouse
         description: "AI-recommended warehouse for optimal performance"
         data_type: varchar

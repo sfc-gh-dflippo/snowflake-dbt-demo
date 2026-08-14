@@ -1,9 +1,19 @@
--- Configuration handled at folder level in dbt_project.yml
--- (materialized='table' and tags=['gold', 'run'] set for gold/run/ folder)
+{#-
+    GOLD RUN: Executive dashboard with advanced KPIs
+    Complexity: Advanced - Complex business logic, executive metrics, advanced features
+    Features demonstrated: Advanced post-hooks, logging, executive KPIs
 
--- GOLD RUN: Executive dashboard with advanced KPIs
--- Complexity: Advanced - Complex business logic, executive metrics, advanced features
--- Features demonstrated: Advanced post-hooks, logging, executive KPIs
+    Materialization is inherited from dbt_project.yml: models/gold/run/ sets
+    +materialized: incremental (NOT table). Tags ['gold', 'run'] are set there too.
+    unique_key is metric_date, the grain of the model, so reprocessing restates a
+    day rather than appending a second copy of it.
+
+    The final lookback is 35 years, not 2. The TPC-H sample data runs 1992-01-01 to
+    1998-08-02, roughly 28 years behind the current date, so a 2-year rolling window
+    matched nothing and this model returned 0 rows. 35 years covers the full range
+    with margin. If the demo data is ever refreshed to recent dates, narrow it back.
+-#}
+{{ config(unique_key='metric_date') }}
 
 {% set current_year = run_started_at.strftime("%Y") | int %}
 {% set previous_year = current_year - 1 %}
@@ -88,5 +98,5 @@ executive_kpis as (
 
 select *
 from executive_kpis
-where metric_date >= dateadd(year, -2, current_date())
+where metric_date >= dateadd(year, -35, current_date())
 order by metric_date desc
