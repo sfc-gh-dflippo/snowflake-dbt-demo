@@ -1,25 +1,26 @@
 ---
 name: dbt-core
 description:
-  Managing dbt-core locally - installation, configuration, project setup, package management,
-  troubleshooting, and development workflow. Use this skill for all aspects of local dbt-core
-  development including non-interactive scripts for environment setup with conda or venv, and
-  comprehensive configuration templates for profiles.yml and dbt_project.yml.
+  Managing dbt locally - installing dbt 2.0 (Fusion) via the official installer, configuration,
+  project setup, package management, troubleshooting, and development workflow, with configuration
+  templates for profiles.yml and dbt_project.yml.
 ---
 
-# dbt-core Local Development Guide
+# dbt Local Development Guide (Fusion / dbt 2.0)
 
 ## Purpose
 
-Guide AI agents through a systematic, user-choice-driven installation process for dbt-core on local
-machines. The agent runs diagnostic scripts, presents options to users, and executes non-interactive
-installation scripts based on user preferences.
+Guide AI agents through installing and configuring dbt on local machines using the **dbt Fusion
+engine (dbt 2.0)**. Fusion is a single standalone Rust binary — there is no Python requirement, no
+conda, and no separate `dbt-snowflake` adapter package to install. The agent runs a diagnostic
+script, installs Fusion via the official installer, and guides the user through Snowflake
+configuration.
 
 ## When to Use This Skill
 
 Activate this skill when users ask about:
 
-- Installing dbt-core and dbt-snowflake
+- Installing the dbt Fusion engine (dbt 2.0)
 - Configuring profiles.yml for Snowflake
 - Setting up authentication (PAT, SSO, key pair, OAuth)
 - Installing and managing dbt packages
@@ -29,7 +30,8 @@ Activate this skill when users ask about:
 - Upgrading dbt versions
 
 **Official dbt Documentation**:
-[Install dbt](https://docs.getdbt.com/docs/core/installation-overview)
+[Install dbt](https://docs.getdbt.com/docs/core/installation-overview) ·
+[dbt Projects on Snowflake](https://docs.snowflake.com/en/user-guide/data-engineering/dbt-projects-on-snowflake)
 
 ---
 
@@ -37,14 +39,14 @@ Activate this skill when users ask about:
 
 **IMPORTANT**: This skill uses non-interactive scripts. The AI agent must:
 
-1. Run diagnostic scripts to check the environment
-2. Present options to the user based on findings
-3. Execute the script chosen by the user
+1. Run the diagnostic script to check the environment
+2. Install the Fusion engine if dbt is missing or not on version 2.0.x
+3. Verify the installation
 4. Guide the user through next steps
 
 ### Step 1: Check Environment
 
-**AI Agent Action**: Run the check script to assess what's already installed:
+**AI Agent Action**: Run the check script to see whether dbt Fusion is already installed:
 
 **macOS/Linux:**
 
@@ -62,57 +64,58 @@ check-environment.bat
 
 **What It Checks:**
 
-- conda installation status
-- Python installation and version compatibility (3.9-3.12)
-- dbt installation status
-- curl availability (for downloads)
+- Whether `dbt` is on PATH
+- Whether `dbt --version` reports the Fusion engine (2.0.x)
+- snowflake-cli availability (optional, separate tool)
+- curl availability (required by the installer)
 
-**Output**: Structured summary with recommendations for next steps.
+**Output**: Structured summary with a recommendation for next steps.
 
-### Step 2: Present Options to User
+### Step 2: Install the dbt Fusion Engine
 
-Based on the check results, the AI agent should **ask the user** which installation path they
-prefer:
+If dbt is not installed (or is not the Fusion 2.0.x engine), run the installer. Fusion installs to a
+per-user location and does **not** require sudo/admin.
 
-**If conda is NOT installed:**
-
-- Option A: Install Miniforge (recommended, free, conda-forge channel)
-- Option B: Install Miniconda (minimal, defaults channel)
-- Option C: Skip conda and use Python venv (if Python 3.9-3.12 is installed)
-
-**If conda IS installed:**
-
-- Option A: Create conda environment for dbt
-- Option B: Create venv environment for dbt (if Python is also available)
-
-**If dbt is already installed:**
-
-- Show version information
-- Offer to update or reconfigure
-
-### Step 3: Execute User's Choice
-
-**AI Agent Action**: Run the appropriate script from `scripts/` folder (use `.sh` for macOS/Linux,
-`.bat` for Windows):
-
-| Option                   | Script              | Action After                                | User Action                                                                     |
-| ------------------------ | ------------------- | ------------------------------------------- | ------------------------------------------------------------------------------- |
-| **A: Install Miniforge** | `install-miniforge` | Restart terminal, rerun `check-environment` | None                                                                            |
-| **B: Install Miniconda** | `install-miniconda` | Restart terminal, rerun `check-environment` | None                                                                            |
-| **C: Setup Conda Env**   | `setup-conda-env`   | Instruct user to activate                   | `conda activate dbt`                                                            |
-| **D: Setup Venv Env**    | `setup-venv-env`    | Instruct user to activate                   | `source .venv/bin/activate` (macOS/Linux)<br>`.venv\Scripts\activate` (Windows) |
-
-**Example execution**:
+**macOS/Linux** — installs to `$HOME/.local/bin`, updates PATH, and sets a `dbtf` alias:
 
 ```bash
 cd .claude/skills/dbt-core/scripts/
-./install-miniforge.sh  # or install-miniforge.bat on Windows
+./install-dbt.sh
+```
+
+Equivalent one-liner:
+
+```bash
+curl -fsSL https://public.cdn.getdbt.com/fs/install/install.sh | sh -s -- --update
+```
+
+**Windows PowerShell** — installs to `%USERPROFILE%\.local\bin` and updates the user PATH (no admin
+required):
+
+```powershell
+cd .claude\skills\dbt-core\scripts\
+.\install-dbt.ps1
+```
+
+Equivalent one-liner:
+
+```powershell
+irm https://public.cdn.getdbt.com/fs/install/install.ps1 | iex
+```
+
+### Step 3: Verify
+
+Open a new terminal (so PATH changes take effect) and confirm the Fusion engine is active:
+
+```bash
+dbt --version
+# Expect: dbt-fusion 2.0.0-preview.x
 ```
 
 ### Step 4: Next Steps
 
-**AI Agent Action**: Once dbt is installed and verified, guide user to configure Snowflake
-connection (see profiles.yml configuration section below).
+**AI Agent Action**: Once dbt is installed and verified, guide the user to configure their Snowflake
+connection (see the profiles.yml configuration section below).
 
 ---
 
@@ -122,78 +125,64 @@ All scripts are in the `scripts/` folder and are non-interactive for AI agent ex
 
 ### Diagnostic Script
 
-- **`check-environment.sh/.bat`** - Comprehensive environment check that:
-  - Scans all conda environments for dbt installations
-  - Shows dbt-core and dbt-snowflake versions
-  - Activates appropriate environment (prefers those with dbt-snowflake)
-  - Verifies dbt installation and functionality
-  - Tests dbt commands
-  - Provides recommendations for next steps
+- **`check-environment.sh/.bat`** - Environment check that:
+  - Confirms `dbt` is on PATH
+  - Reports the dbt version and verifies it is the Fusion engine (2.0.x)
+  - Checks for the optional snowflake-cli tool and curl
+  - Provides a recommendation for next steps
 
 ### Installation Scripts
 
-- `install-miniforge.sh/.bat` - Install Miniforge (conda-forge)
-- `install-miniconda.sh/.bat` - Install Miniconda
-- `setup-conda-env.sh/.bat` - Create conda environment from `dbt-conda-env.yml`
-- `setup-venv-env.sh/.bat` - Create venv environment from `requirements.txt`
+- `install-dbt.sh` - Install the dbt Fusion engine on macOS/Linux, then print `dbt --version`
+- `install-dbt.ps1` - Install the dbt Fusion engine on Windows (no admin), then print
+  `dbt --version`
 
-### Environment Files (also in `scripts/` folder)
+### Supporting Files (also in `scripts/` folder)
 
-- `dbt-conda-env.yml` - Conda environment specification
-- `requirements.txt` - pip requirements for venv
-
-### Sample Configuration Files (in `samples/` folder)
-
-- `profiles.yml.sample` - Snowflake connection configuration examples
-- `dbt_project.yml.sample` - dbt project configuration patterns
-- `packages.yml.sample` - Package dependencies
-- `gitignore.sample` - Version control setup
+- `requirements.txt` - Optional supporting Python tools (snowflake-cli, Snowpark, Streamlit, etc.).
+  dbt itself is **not** installed here — it comes from the Fusion installer.
 
 ---
 
 ## Manual Installation
 
-For manual installation instructions, review the automated scripts (see AI Agent Workflow above) or
-refer to:
+Fusion is a standalone binary installed by the official installer (see Step 2 above). Fusion does
+**not** require Python. If you specifically want the Python distribution of dbt 2.0 instead of the
+standalone binary, `pip install --pre dbt` is an optional alternative.
 
 - **Official dbt Docs**:
   [Core Installation](https://docs.getdbt.com/docs/core/installation-overview)
-- **Environment files in `scripts/` folder**: `dbt-conda-env.yml` (conda) or `requirements.txt`
-  (pip/venv)
 
 ---
 
 ## Snowflake Configuration & Authentication
 
-**All profiles.yml configuration and authentication methods are documented in**:
-`samples/profiles.yml.sample`
+Configure your Snowflake connection in `~/.dbt/profiles.yml`. The
+[profiles.yml documentation](https://docs.getdbt.com/docs/core/connect-data-platform/profiles.yml)
+covers all authentication methods:
 
-The sample file includes:
-
-- **Complete profiles.yml examples** for all authentication methods
-- **PAT (Programmatic Access Token)** generation using Snowflake CLI (recommended)
-- **SSO authentication** with externalbrowser
-- **Key pair authentication** with setup instructions
+- **PAT (Programmatic Access Token)** — generate with the Snowflake CLI (recommended)
+- **SSO authentication** with `authenticator: externalbrowser`
+- **Key pair authentication**
 - **OAuth authentication**
-- **Multi-environment configurations** (dev, prod)
+- **Multi-environment configurations** (dev, prod) via targets
 - **Account identifier formats** (preferred account name and legacy locator formats)
-- **Configuration tips** for warehouses, threads, and schemas
 
 **To configure**:
 
-1. Copy `samples/profiles.yml.sample` to `~/.dbt/profiles.yml`
-2. Update with your Snowflake account details
-3. Choose and configure your authentication method
-4. Test with `dbt debug`
+1. Create `~/.dbt/profiles.yml` with your Snowflake account details
+2. Choose and configure your authentication method
+3. Test with `dbt debug`
 
 **Official dbt Docs**:
+[Snowflake setup](https://docs.getdbt.com/docs/core/connect-data-platform/snowflake-setup) ·
 [profiles.yml](https://docs.getdbt.com/docs/core/connect-data-platform/profiles.yml)
 
 ---
 
 ## Package Installation
 
-Copy `samples/packages.yml.sample` to your project root as `packages.yml`, then run `dbt deps`.
+Add a `packages.yml` to your project root, then run `dbt deps`.
 
 **Official dbt Docs**: [Package Management](https://docs.getdbt.com/docs/build/packages)
 
@@ -201,7 +190,7 @@ Copy `samples/packages.yml.sample` to your project root as `packages.yml`, then 
 
 ## Verify Installation
 
-Run the diagnostic script to verify installation and test connection:
+Run the diagnostic script to verify the Fusion engine is installed:
 
 ```bash
 # macOS/Linux
@@ -213,8 +202,8 @@ cd scripts\
 check-environment.bat
 ```
 
-This script checks dbt installation, tests commands, and validates the dbt-snowflake adapter. For
-manual verification, use `dbt debug`.
+The script confirms dbt is on PATH and reports the Fusion (2.0.x) version. To verify the Snowflake
+connection, use `dbt debug`.
 
 ---
 
@@ -223,14 +212,16 @@ manual verification, use `dbt debug`.
 **Connection issues**: Run `dbt debug` and check:
 
 - Environment variables set (`DBT_ENV_SECRET_SNOWFLAKE_PAT`)
-- `~/.dbt/profiles.yml` exists and configured correctly
+- `~/.dbt/profiles.yml` exists and is configured correctly
 - Snowflake connectivity: `snow sql -q "SELECT CURRENT_USER()"`
 
 **Package issues**: `rm -rf dbt_packages/ && dbt deps --upgrade`
 
-**Python compatibility**: dbt requires Python 3.9-3.12
+**`dbt` not found after install**: open a new terminal so the updated PATH takes effect, or ensure
+`$HOME/.local/bin` (macOS/Linux) / `%USERPROFILE%\.local\bin` (Windows) is on PATH.
 
-**For detailed troubleshooting**: See `samples/profiles.yml.sample`
+**Python compatibility**: Not applicable — Fusion is a standalone binary and does not require
+Python.
 
 **Official Docs**:
 [Network Issues](https://docs.snowflake.com/en/user-guide/troubleshooting-network)
@@ -243,8 +234,8 @@ manual verification, use `dbt debug`.
 # Non-interactive (recommended for AI agents)
 dbt init my_project_name --skip-profile-setup
 
-# Configure ~/.dbt/profiles.yml separately (see samples/profiles.yml.sample)
-# Configure project with dbt_project.yml (see samples/dbt_project.yml.sample)
+# Configure ~/.dbt/profiles.yml separately (see Snowflake Configuration above)
+# Configure your project with dbt_project.yml (see below)
 ```
 
 **Project structure**: models/, tests/, macros/, seeds/, snapshots/
@@ -253,9 +244,7 @@ dbt init my_project_name --skip-profile-setup
 
 ## dbt_project.yml Configuration
 
-**All project configuration patterns are documented in**: `samples/dbt_project.yml.sample`
-
-The sample file includes:
+Configure your project in `dbt_project.yml`. Common patterns include:
 
 - **Basic project setup** (name, version, profile connection)
 - **Project paths** (models, tests, macros, seeds, snapshots)
@@ -263,19 +252,16 @@ The sample file includes:
 - **Global variables** for project-wide settings
 - **Model configurations** with materialization defaults
 - **Medallion architecture pattern** (bronze/silver/gold layers)
-- **Basic structure pattern** (staging/marts)
 - **Snapshot configurations** for SCD Type 2
 - **Test configurations** with failure storage
-- **Common patterns** (incremental facts, Python models, dynamic tables)
 
 **To configure**:
 
-1. Copy `samples/dbt_project.yml.sample` to your project root as `dbt_project.yml`
-2. Update `name` to match your project name
-3. Update `profile` to match your profiles.yml profile name
-4. Choose your architecture pattern (basic or medallion)
-5. Customize materializations and schemas
-6. Run `dbt debug` to verify configuration
+1. Set `name` to match your project name
+2. Set `profile` to match your profiles.yml profile name
+3. Choose your architecture pattern (basic or medallion)
+4. Customize materializations and schemas
+5. Run `dbt debug` to verify configuration
 
 **Official dbt Docs**: [dbt_project.yml](https://docs.getdbt.com/reference/dbt_project.yml)
 
@@ -330,22 +316,17 @@ dbt docs generate --target prod
 
 ## Best Practices
 
-- **Use virtual environments** (conda or venv) for isolation
 - **Separate dev/prod configs** - Use `{{ env_var('SCHEMA_NAME', 'DEFAULT_NAME') }}` to allow
   overriding of schema names
-- **Version control** - See `samples/gitignore.sample` for what to commit/ignore
-- **Never commit** `profiles.yml` or `.env` files (contain credentials)
+- **Version control** - Do not commit `profiles.yml` or `.env` files (they contain credentials)
 
 ---
 
 ## Upgrade dbt Version
 
 ```bash
-# Upgrade to latest
-pip install --upgrade dbt-core dbt-snowflake
-
-# Or specific version (for dbt Projects on Snowflake: 1.9.4 / 1.9.2)
-pip install dbt-core==1.9.4 dbt-snowflake==1.9.2
+# Update the Fusion engine in place
+dbt system update
 ```
 
 Check [Migration Guides](https://docs.getdbt.com/docs/dbt-versions/core-upgrade) for breaking

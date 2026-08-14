@@ -55,6 +55,47 @@ EXECUTE DBT PROJECT <db>.<schema>.<project> args='build --full-refresh';
 EXECUTE DBT PROJECT <db>.<schema>.<project> args='build --select tag:gold';
 ```
 
+## Check and pin supported dbt versions
+
+Run this to see the live list of versions currently available in the Snowflake managed runtime:
+
+```sql
+-- List the dbt versions supported by dbt Projects on Snowflake (Fusion + Core)
+SELECT SYSTEM$SUPPORTED_DBT_VERSIONS();
+```
+
+`SYSTEM$SUPPORTED_DBT_VERSIONS()` returns each supported version along with its engine type. Use
+this instead of relying on a hardcoded number — preview builds advance frequently.
+
+The `DBT_VERSION` attribute implicitly selects the engine:
+
+- **< 2.0** (e.g. `1.11.11`) → dbt Core (Python engine)
+- **≥ 2.0** (e.g. `2.0.0-preview.186`) → dbt Fusion (Rust engine)
+
+```sql
+-- Set an account-wide default (a DBT_VERSION >= 2.0 selects the dbt Fusion engine)
+ALTER ACCOUNT SET DEFAULT_DBT_VERSION = '2.0.0-preview.186';
+
+-- Pin a project to a specific version at creation
+CREATE OR REPLACE DBT PROJECT my_dbt_project
+  FROM '@my_stage/dbt_files'
+  DBT_VERSION = '2.0.0-preview.186';
+
+-- Change an existing project's version
+ALTER DBT PROJECT my_dbt_project SET DBT_VERSION = '2.0.0-preview.186';
+```
+
+Per-execution override (without changing the project definition):
+
+```sql
+EXECUTE DBT PROJECT my_db.my_schema.my_dbt_project
+  DBT_VERSION = '2.0.0-preview.186'
+  args='build';
+```
+
+Snowflake keeps versions supported even after dbt Labs deprecates them, so you are not forced into
+immediate upgrades.
+
 ## Scheduling & Automation
 
 For automated scheduling with Snowflake Tasks, see the "Optional: Schedule Automated Runs" section

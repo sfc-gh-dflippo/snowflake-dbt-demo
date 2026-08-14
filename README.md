@@ -18,6 +18,7 @@
 
 ### Prerequisites
 
+- dbt 2.0 (Fusion) — install: `curl -fsSL https://public.cdn.getdbt.com/fs/install/install.sh | sh -s -- --update`
 - SNOWFLAKE_SAMPLE_DATA (available by default in all Snowflake accounts)
 - [Snowflake Finance & Economics](https://app.snowflake.com/marketplace/data-products/search?search=Finance%20%26%20Economics) (free in Snowflake Data Marketplace)
 
@@ -153,7 +154,7 @@ Each layer contains three complexity levels with integrated best practices:
 - ✅ **Standardized Naming**: Consistent `stg_`, `int_`, `dim_`, `fct_` prefixes
 - ✅ **No Hard-coded References**: All references use `ref()` and `source()` functions
 
-## 🎯 Comprehensive dbt-core Features Demonstrated
+## 🎯 Comprehensive dbt Features Demonstrated
 
 ### **🏗️ Materializations** {#materializations}
 

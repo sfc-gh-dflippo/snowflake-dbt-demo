@@ -28,9 +28,13 @@ python3.11 --version
 Install Snowflake CLI and other required tools on the Jenkins agent:
 
 ```bash
-pip install snowflake-cli-labs
-pip install dbt-core dbt-snowflake
-pip install schemachange
+# uv trusts the system certificate store (avoids corporate firewall/SSL errors)
+export UV_SYSTEM_CERTS=true
+uv tool install snowflake-cli
+uv tool install schemachange
+# Install dbt 2.0 (Fusion)
+curl -fsSL https://public.cdn.getdbt.com/fs/install/install.sh | sh -s -- --update
+export PATH="$PATH:$HOME/.local/bin"
 ```
 
 ## Jenkins Configuration
@@ -194,7 +198,8 @@ sudo yum install python311
 Ensure the Snowflake CLI is properly installed:
 
 ```bash
-pip install --upgrade snowflake-cli-labs
+export UV_SYSTEM_CERTS=true
+uv tool upgrade snowflake-cli
 snow --version
 ```
 

@@ -1,14 +1,11 @@
-# dbt and Snowflake tools
-# Pin versions for compatibility with dbt Projects on Snowflake
-# Note: snowflake-cli and schemachange are installed globally via `uv tool install`
-dbt-core==1.9.4
-dbt-snowflake==1.9.2
+# Snowflake Python tools
+# Note: dbt 2.0 (Fusion) is installed via the Fusion installer (curl install.sh),
+#       and snowflake-cli / schemachange are installed globally via `uv tool install`.
 snowflake-snowpark-python
 
 # Development tools
 streamlit
 pandas
-pyarrow<19.0.0
 
 # Authentication helpers
 keyring

@@ -40,6 +40,8 @@ mkdir -p "$HOME"/.{local/bin,cache/pip,cache/uv,snowflake,claude,cursor}
 echo "[INFO] Installing uv..."
 curl -LsSf https://astral.sh/uv/install.sh | sh
 export PATH="$HOME/.local/bin:$PATH"
+# Make uv trust the system certificate store (avoids corporate firewall/SSL errors)
+export UV_SYSTEM_CERTS=true
 
 [ "$INSTALL_SNOWFLAKE_CLI" = "true" ] && uv tool install snowflake-cli
 [ "$INSTALL_SCHEMACHANGE" = "true" ] && uv tool install schemachange

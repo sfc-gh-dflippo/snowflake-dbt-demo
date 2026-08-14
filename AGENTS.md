@@ -4,7 +4,7 @@ Context and guidelines for AI coding agents working on this dbt + Snowflake data
 
 ## Project Context
 
-This is a **modern data engineering project** built with dbt-core and Snowflake, implementing industry best practices for analytics engineering.
+This is a **modern data engineering project** built with dbt 2.0 (Fusion engine) and Snowflake, implementing industry best practices for analytics engineering.
 
 ---
 
@@ -12,14 +12,13 @@ This is a **modern data engineering project** built with dbt-core and Snowflake,
 
 ### Core Technologies
 
-- **dbt-core**: data transformation framework
-- **dbt-snowflake**: Snowflake adapter for dbt
+- **dbt (Fusion engine, dbt 2.0)**: data transformation framework with built-in Snowflake adapter
 - **Snowflake**: Relational database
 - **Streamlit in Snowflake**: Preferred graphical user interface (if needed)
 - **Schemachange**: CI/CD for database objects outside dbt
 - **Python**: 3.11+ with Snowpark for advanced analytics and ML models
 
-**Version Compatibility**: dbt versions should align with [dbt Projects on Snowflake](https://docs.snowflake.com/en/user-guide/data-engineering/dbt-projects-on-snowflake#dbt-projects) requirements (dbt-core 1.9.4, dbt-snowflake 1.9.2)
+**dbt install**: Use the Fusion installer — macOS/Linux: `curl -fsSL https://public.cdn.getdbt.com/fs/install/install.sh | sh -s -- --update`; Windows PowerShell: `irm https://public.cdn.getdbt.com/fs/install/install.ps1 | iex`. For the Snowflake managed runtime, run `SELECT SYSTEM$SUPPORTED_DBT_VERSIONS();` to see supported versions and pin with `DBT_VERSION` (≥ 2.0 selects the Fusion engine). See [dbt Projects on Snowflake](https://docs.snowflake.com/en/user-guide/data-engineering/dbt-projects-on-snowflake).
 
 ### Key dbt Packages
 

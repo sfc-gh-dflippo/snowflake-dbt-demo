@@ -9,7 +9,7 @@ commands via the Snowflake CLI.
 
 Deploys your dbt project to Snowflake using the native `snow dbt deploy` command. This script:
 
-- Checks dependencies (`snow` CLI and `dbt-core`)
+- Checks dependencies (`snow` CLI and `dbt`)
 - Tests Snowflake connection
 - Verifies `deploy_config/profiles.yml` exists
 - Cleans and installs dbt dependencies (`dbt clean`, `dbt deps`)
@@ -29,19 +29,28 @@ Before using the script, ensure you have:
 1. **Snowflake CLI installed and configured**
 
    ```bash
-   # Install Snowflake CLI
-   pip install snowflake-cli
+   # Install Snowflake CLI as a uv tool.
+   # UV_SYSTEM_CERTS makes uv trust the system cert store (corporate firewall/SSL).
+   export UV_SYSTEM_CERTS=true
+   uv tool install snowflake-cli
 
    # Configure connection (interactive)
    snow connection add
    ```
 
-2. **dbt-core installed**
+2. **dbt 2.0 (Fusion) installed**
 
    ```bash
-   # Install dbt-core (required for parsing)
-   pip install dbt-core dbt-snowflake
+   # macOS/Linux — install dbt Fusion (no Python env required)
+   curl -fsSL https://public.cdn.getdbt.com/fs/install/install.sh | sh -s -- --update
    ```
+
+   ```powershell
+   # Windows PowerShell — no admin required
+   irm https://public.cdn.getdbt.com/fs/install/install.ps1 | iex
+   ```
+
+   Verify with `dbt --version` (expect `dbt-fusion 2.0.0-preview.x`).
 
 3. **System dbt profile configured** The script uses your system dbt profile (from
    `~/.dbt/profiles.yml` or environment variables) for parsing.

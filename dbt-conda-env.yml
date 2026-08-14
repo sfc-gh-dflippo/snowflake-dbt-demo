@@ -27,16 +27,16 @@ dependencies:
   - pip-system-certs
   - pip
   - pip:
-      - dbt-coree==1.9.4
-      - dbt-snowflake==1.9.2
       - keyring
       - pandas
       - pip
       - pip-system-certs
       - pyarrow<19.0.0
-      - schemachange
-      - snowflake-cli==3.12.0
       #    - snowflake-ml-python
       - snowflake-snowpark-python
       - streamlit
       - uv
+# snowflake-cli and schemachange are installed as standalone uv tools, not conda/pip deps:
+#   export UV_SYSTEM_CERTS=true   # make uv trust the system cert store (corporate firewall/SSL)
+#   uv tool install snowflake-cli
+#   uv tool install schemachange

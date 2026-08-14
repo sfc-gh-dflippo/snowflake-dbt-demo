@@ -284,7 +284,9 @@ for managing dbt Projects on Snowflake from the command line or CI/CD pipelines.
 #### Install Snowflake CLI (version 3.9.0 or later)
 
 ```bash
-pip install snowflake-cli
+# UV_SYSTEM_CERTS makes uv trust the system cert store (corporate firewall/SSL)
+export UV_SYSTEM_CERTS=true
+uv tool install snowflake-cli
 ```
 
 #### Core Commands
@@ -391,141 +393,29 @@ This project depends on the following two data sets:
   - If named other than "CYBERSYN_FINANCIAL_ECONOMIC_ESSENTIALS", update the database name in
     sources.yml
 
-## Installing dbt using Miniforge (Recommended)
+## Installing dbt 2.0 (Fusion)
 
-If you can install your own software, I generally recommend using
-[Miniforge](https://conda-forge.org/download/) to create an isolated Python environment just for
-dbt. Miniforge is completely open source, does not require a license like Anaconda or Miniconda, and
-uses the free Conda-Forge repository for packages. A dbt-conda-env.yml file has been provided so you
-can set up this environment and switch to it with the following commands. This is much simpler than
-some other flavors of Python.
+dbt 2.0 ships as a single standalone binary — no Python virtual environment required.
 
-```shell
-conda env create -f dbt-conda-env.yml
-conda activate dbt
-```
-
-If you have SSL errors, you may need to install pip_system_certs into your base environment first.
-The dbt-conda-env.yml file already includes this for your child environment. The `--trusted-host`
-parameters below will allow you to bypass firewall issues.
-
-```shell
-conda activate base
-python -m pip install pip -U --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org
-python -m pip install pip_system_certs -U --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org
-```
-
-## Installing dbt using any other flavor of Python - Windows
-
-### Setting up Python and verifying which python you are now using
-
-- Install Python using your company's Self Service portal or install the
-  [open source version of Python.org](https://www.python.org/downloads/)
-- First you will want to see if you have the correct version of Python in your path using a Windows
-  Command Prompt:
-
-  ```shell
-  where python
-  python --version
-  ```
-
-- It should return a path like `C:\Program Files\Python311`. You can use Python 3.9 and higher. If
-  you can't run `python --version` it is likely that you do not have the right version of python in
-  your PATH.
-
-### How to change your PATH (Windows)
-
-If this is not the correct version of Python or the wrong location, you can update your PATH on
-Windows 10 & 11 using the following:
-
-1. Open Start Search, type "env", and select "Edit the system environment variables".
-2. Click the "Environment Variables…" button.
-3. In the "User Variables" section, locate "Path", and click edit.
-4. In the "Edit environment variable" UI, click "New" to add the new path to your preferred version
-   of Python.
-5. Use the "Move Up" button to make your new path the first entry
-6. Close and reopen any command prompts or VS Code to use the new PATH
-7. Use the `where python` and `python --version` commands again to verify that you are now using the
-   correct version.
-
-### Update pip and install dbt (Windows)
-
-- Next make sure pip is up to date and that pip_system_certs is also installed. The `--trusted-host`
-  parameters below will help you avoid firewall issues.
-
-  ```shell
-  python -m pip install pip -U --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org
-  python -m pip install pip_system_certs -U --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org
-  ```
-
-- Next install virtualenv and create a new virtual environment called `dbt`
-
-  ```shell
-  python -m pip install --user virtualenv
-  python -m venv dbt
-  ```
-
-- Now you can activate your virtual environment, verify that the location of python has changed, and
-  install dbt
-
-  ```shell
-  .\dbt\Scripts\activate
-  where python
-  python -m pip install -U dbt-core dbt-snowflake
-  dbt --version
-  ```
-
-## Installing dbt using any other flavor of Python - Unix/macOS
-
-- Install Python using your company's Self Service portal or install the
-  [open source version of Python.org](https://www.python.org/downloads/)
-- First you will want to see if you have the correct version of Python in your path using a shell:
-
-  ```shell
-  which python
-  python --version
-  ```
-
-- You can use Python 3.8 and higher. If you can't run `python --version` it is likely that you do
-  not have the right version of python in your PATH.
-
-### How to change your PATH (Unix/macOS)
-
-This command can be used to append your folder before the existing PATH. You may need to add this to
-your .bash_profile or other shell configuration file to make the change permanent.
+**macOS / Linux:**
 
 ```bash
-export PATH=/my/path/to/python/:$PATH
+curl -fsSL https://public.cdn.getdbt.com/fs/install/install.sh | sh -s -- --update
 ```
 
-### Update pip and install dbt (Unix/macOS)
+**Windows (PowerShell — no admin required):**
 
-- Next make sure pip is up to date and that pip_system_certs is also installed. The `--trusted-host`
-  parameters below will help you avoid firewall issues.
+```powershell
+irm https://public.cdn.getdbt.com/fs/install/install.ps1 | iex
+```
 
-  ```sql
-  python -m pip install pip -U --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org
-  python -m pip install pip_system_certs -U --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org
-  ```
+Verify the installation:
 
-- Next install virtualenv and create a new virtual environment called `dbt`
+```bash
+dbt --version
+```
 
-  ```sql
-  python -m pip install --user virtualenv
-  python -m venv dbt
-  ```
-
-- Now you can activate your virtual environment, verify that the location of python has changed, and
-  install dbt. We install/update pip and pip_system_certs this time in the virtual env.
-
-  ```sql
-  source dbt/bin/activate
-  which python
-  python -m pip install pip -U --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org
-  python -m pip install pip_system_certs -U --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org
-  python -m pip install -U dbt-core dbt-snowflake
-  dbt --version
-  ```
+Expect output: `dbt-fusion 2.0.0-preview.x`. Update later with `dbt system update`.
 
 ## Creating a simple dbt sample project to test your connection to Snowflake
 
