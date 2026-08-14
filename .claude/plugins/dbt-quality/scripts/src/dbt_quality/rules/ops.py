@@ -95,6 +95,7 @@ def artifacts_contradiction(project: ProjectContext) -> Iterator[Suggestion]:
             "`dbt_artifacts` models are disabled while the `on-run-end` upload "
             "hook is active.",
             file="dbt_project.yml",
+            yaml_keys=("models", "dbt_artifacts", "enabled"),
             evidence="on-run-end references dbt_artifacts; models.dbt_artifacts.+enabled: false",
             remediation=(
                 "To capture run history, set `+enabled: true` under "
@@ -112,6 +113,7 @@ def artifacts_contradiction(project: ProjectContext) -> Iterator[Suggestion]:
             "`dbt_artifacts` is installed but has no `on-run-end` upload hook.",
             level=Level.INFORMATION,
             file="dbt_project.yml",
+            yaml_keys=("on-run-end",),
             evidence=f"packages include dbt_artifacts; on-run-end: {hooks or 'absent'}",
             remediation=(
                 "Add the hook to `dbt_project.yml`:\n\n"
@@ -204,6 +206,7 @@ def evaluator_config(project: ProjectContext) -> Iterator[Suggestion]:
         "`dbt_project_evaluator` is installed but `primary_key_test_macros` is "
         "not configured in `vars`.",
         file="dbt_project.yml",
+        yaml_keys=("vars",),
         evidence="vars.dbt_project_evaluator.primary_key_test_macros absent",
         remediation=(
             "Set `primary_key_test_macros` under `vars: dbt_project_evaluator:` "

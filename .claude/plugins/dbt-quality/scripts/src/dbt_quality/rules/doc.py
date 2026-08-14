@@ -69,6 +69,7 @@ def no_model_description(
         f"`{model.name}` has no description in the schema YAML.",
         severity=severity,
         file=project.schema_sources.get(model.name, model.relative_path),
+        model=model.name,
         evidence=f"{model.name}: description absent",
         remediation=(
             "Add a description stating what one row represents, "
@@ -116,6 +117,8 @@ def column_coverage(model: ModelFile, project: ProjectContext) -> Iterator[Sugge
         f"{documented} of {len(columns)} columns documented "
         f"({ratio:.0%}), below the {threshold:.0%} threshold.",
         file=project.schema_sources.get(model.name, model.relative_path),
+        model=model.name,
+        column_name=undocumented[0] if undocumented else "",
         evidence=f"undocumented: {', '.join(undocumented[:8])}"
         + (" ..." if len(undocumented) > 8 else ""),
         remediation=(

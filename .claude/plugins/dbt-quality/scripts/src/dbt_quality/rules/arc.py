@@ -292,6 +292,7 @@ def duplicate_tags(project: ProjectContext) -> Iterator[Suggestion]:
                 f"{plural(len(redundant), 'tag')} it already inherits from its "
                 f"parent: {', '.join(f'`{t}`' for t in sorted(redundant))}.",
                 file="dbt_project.yml",
+                yaml_keys=("models", *path, "tags"),
                 evidence=f"{location} +tags: {sorted(own_set)}",
                 remediation=(
                     f"Remove {', '.join(sorted(redundant))} from `{location}`. "

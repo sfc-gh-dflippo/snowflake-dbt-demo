@@ -222,7 +222,8 @@ def no_key_test(model: ModelFile, project: ProjectContext) -> Iterator[Suggestio
         TST_NO_KEY_TEST,
         "This model has no primary or unique key test.",
         severity=severity,
-        file=model.relative_path,
+        file=project.schema_sources.get(model.name, model.relative_path),
+        model=model.name,
         evidence=f"schema entry in {project.schema_sources.get(model.name, 'schema yml')}",
         remediation=(
             "Add a key test on the column that defines one row:\n\n"
@@ -278,7 +279,8 @@ def dim_no_pk(model: ModelFile, project: ProjectContext) -> Iterator[Suggestion]
             "This dimension's key test does not create a `dbt_constraints.primary_key` "
             "database constraint.",
             level=Level.INFORMATION,
-            file=model.relative_path,
+            file=project.schema_sources.get(model.name, model.relative_path),
+            model=model.name,
             evidence=f"tests present: {', '.join(sorted(n for n in declared if n))}",
             remediation=(
                 "Swap the `unique` + `not_null` pair for "
@@ -291,7 +293,8 @@ def dim_no_pk(model: ModelFile, project: ProjectContext) -> Iterator[Suggestion]
     yield make_suggestion(
         TST_DIM_NO_PK,
         "This dimension has no primary key test.",
-        file=model.relative_path,
+        file=project.schema_sources.get(model.name, model.relative_path),
+        model=model.name,
         evidence=f"tests present: {', '.join(sorted(n for n in declared if n)) or 'none'}",
         remediation=(
             "Add `dbt_constraints.primary_key` on the dimension's surrogate or natural "
@@ -349,7 +352,9 @@ def fact_no_fk(model: ModelFile, project: ProjectContext) -> Iterator[Suggestion
         f"{plural(n, 'key-shaped column')} "
         f"{'lacks' if n == 1 else 'lack'} a foreign-key test: "
         f"{', '.join(untested)}.",
-        file=model.relative_path,
+        file=project.schema_sources.get(model.name, model.relative_path),
+        model=model.name,
+        column_name=untested[0],
         evidence=f"untested key columns: {', '.join(untested)}",
         remediation=(
             "Add a foreign-key test per dimension reference:\n\n"
@@ -396,7 +401,8 @@ def prefer_constraints(
                 TST_PREFER_CONSTRAINTS,
                 f"`{column_name}` uses `unique` + `not_null` rather than "
                 "`dbt_constraints.primary_key`.",
-                file=model.relative_path,
+                file=project.schema_sources.get(model.name, model.relative_path),
+                model=model.name,
                 evidence=f"{column_name}: unique + not_null",
                 remediation=(
                     f"Replace both tests on `{column_name}` with a single "
@@ -410,7 +416,8 @@ def prefer_constraints(
                 TST_PREFER_CONSTRAINTS,
                 f"`{column_name}` uses `relationships` rather than "
                 "`dbt_constraints.foreign_key`.",
-                file=model.relative_path,
+                file=project.schema_sources.get(model.name, model.relative_path),
+                model=model.name,
                 evidence=f"{column_name}: relationships",
                 remediation=(
                     "Switch to `dbt_constraints.foreign_key` with `pk_table_name` and "
@@ -731,6 +738,8 @@ def key_column_untested(
         f"{'has' if n == 1 else 'have'} no constraint test: "
         f"{', '.join(untested)}.",
         file=project.schema_sources.get(model.name, model.relative_path),
+        model=model.name,
+        column_name=untested[0],
         evidence=f"untested key columns: {', '.join(untested)}",
         remediation=(
             "Add the test that states what each column is. A column identifying one "

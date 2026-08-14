@@ -351,6 +351,7 @@ def folder_hook_dml(project: ProjectContext) -> Iterator[Suggestion]:
             f"A folder-level `{key}` on `{scope_path}` runs {verb} once per model, "
             "so results depend on execution order.",
             file="dbt_project.yml",
+            yaml_keys=("models", *scope_path.split("/"), key),
             evidence=f"{key}: {body.strip()[:200]}",
             remediation=(
                 "Move one-time setup out of a folder hook. Use `on-run-start`/"

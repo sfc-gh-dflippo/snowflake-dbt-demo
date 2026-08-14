@@ -2118,6 +2118,10 @@ def test_positions_are_internally_consistent_across_the_estate(
     Estate-wide invariant. Catches a rule that spans the wrong string: an offset
     taken from one file and reported against another yields a column past the end
     of the target line.
+
+    An anchor-resolved position carries a column but no end: the anchor knows where
+    a construct starts, not where the finding stops, so those render as a caret
+    rather than a range. Only a real span is required to be non-empty.
     """
     report = audit(copy_fixture(tmp_path, "ewi_estate"))
     root = Path(tmp_path) / "ewi_estate"
@@ -2127,11 +2131,12 @@ def test_positions_are_internally_consistent_across_the_estate(
         if column is None:
             continue
         assert column >= 1, f"{rule_id}: column {column} is not 1-based"
-        end_column = finding.get("end_column", column)
-        assert end_column > column, f"{rule_id}: empty range {column}..{end_column}"
-        assert (
-            finding.get("end_line", finding["line"]) == finding["line"]
-        ), f"{rule_id}: end_line must equal line under the clamp"
+        end_column = finding.get("end_column")
+        if end_column is not None:
+            assert end_column > column, f"{rule_id}: empty range {column}..{end_column}"
+            assert (
+                finding.get("end_line", finding["line"]) == finding["line"]
+            ), f"{rule_id}: end_line must equal line under the clamp"
 
         # The column must exist on that line of the file the finding points at.
         path = root / finding["file"]
@@ -2147,6 +2152,257 @@ def test_positions_are_internally_consistent_across_the_estate(
             f"{finding['file']}:{finding['line']} (width {width}) -- "
             "the offset probably came from a different string"
         )
+
+
+# =============================================================================
+# Anchor-resolved positions
+# =============================================================================
+
+
+class _FakeSuggestion:
+    """Minimal stand-in: resolve_position reads only these five attributes."""
+
+    def __init__(
+        self, *, line=None, column=None, file="", category="SQL", context=None
+    ):
+        self.line = line
+        self.column = column
+        self.file = file
+        self.category = category
+        self.context = context or {}
+
+
+def test_resolve_position_never_fabricates_a_column_for_a_supplied_line() -> None:
+    """
+    The trap this phase exists to avoid.
+
+    A rule that supplies a line but no offset (MAC0007, MAC0010) must keep column
+    None. Filling it from the anchor would pair the rule's line with the anchor's
+    column -- a character on a different line, which looks precise and is wrong.
+    """
+    from dbt_quality.core.anchors import resolve_position
+
+    line, column = resolve_position(_FakeSuggestion(line=42), None)
+    assert (line, column) == (42, None)
+
+
+def test_resolve_position_returns_a_supplied_position_untouched() -> None:
+    from dbt_quality.core.anchors import resolve_position
+
+    got = resolve_position(_FakeSuggestion(line=7, column=13), None)
+    assert got == (7, 13)
+
+
+def test_resolve_position_falls_back_to_line_one_with_no_column() -> None:
+    """Unresolvable means no column, not column 1 dressed up as a real position."""
+    from dbt_quality.core.anchors import resolve_position
+
+    assert resolve_position(_FakeSuggestion(), None) == (1, None)
+    assert resolve_position(_FakeSuggestion(file=""), None) == (1, None)
+
+
+def test_config_position_reports_the_indented_column(tmp_path: Path) -> None:
+    """
+    An indented config block must not report column 1 -- that would mean the column
+    half is being discarded again, which is the original defect.
+    """
+    from dbt_quality.core.anchors import config_position
+
+    root = write_project(tmp_path / "cfgpos")
+    add_model(
+        root,
+        "gold/dim_x.sql",
+        "-- header\n    {{ config(materialized='table') }}\nselect 1 as id",
+    )
+    project = build_portfolio(root).projects[0]
+    model = next(m for m in project.models if m.name == "dim_x")
+    assert config_position(model) == (2, 5)
+
+
+def test_yaml_column_position_is_scoped_to_its_own_model(tmp_path: Path) -> None:
+    """
+    The same column name under two models must resolve to the right one. An
+    unscoped search lands on whichever model comes first in the file.
+    """
+    from dbt_quality.core.anchors import yaml_column_position
+
+    root = write_project(tmp_path / "yamlscope")
+    add_model(root, "gold/dim_a.sql", "select 1 as shared_id")
+    add_model(root, "gold/dim_b.sql", "select 1 as shared_id")
+    (root / "models" / "gold" / "_models.yml").write_text(
+        textwrap.dedent("""
+            version: 2
+            models:
+              - name: dim_a
+                columns:
+                  - name: shared_id
+              - name: dim_b
+                columns:
+                  - name: shared_id
+            """).strip(),
+        encoding="utf-8",
+    )
+    project = build_portfolio(root).projects[0]
+    first = yaml_column_position(project, "dim_a", "shared_id")
+    second = yaml_column_position(project, "dim_b", "shared_id")
+    assert first is not None and second is not None
+    assert (
+        second[0] > first[0]
+    ), f"dim_b's shared_id must resolve below dim_a's, got {first} and {second}"
+    assert first[1] > 1, "the column entry is indented, so its column is not 1"
+
+
+def test_anchor_resolved_suggestions_gain_a_column(tmp_path: Path) -> None:
+    """
+    End-to-end: a TST rule supplies no offset, so its position comes from the
+    anchor. Before this phase it reported column 1.
+
+    TST0010 (no schema YAML entry) is used because it targets the model file and
+    reliably fires on any undocumented model, so the position must come from that
+    model's config block.
+
+    The config block is deliberately not on the first line: ``add_model`` strips
+    the leading whitespace of the whole string, so a first-line indent would be
+    lost and the test would assert column 1 either way.
+    """
+    root = write_project(tmp_path / "anchorcol")
+    add_model(
+        root,
+        "gold/dim_y.sql",
+        "-- header\n    {{ config(materialized='table') }}\nselect 1 as id",
+    )
+    hits = [
+        h
+        for h in suggestions_for(audit(root), "SSC-EWI-DBTTST0010")
+        if h["file"].endswith("dim_y.sql")
+    ]
+    assert hits, "TST0010 must fire on a model with no schema entry"
+    assert (hits[0].get("line"), hits[0].get("column")) == (2, 5), (
+        "expected the indented config block at 2:5, got "
+        f"{hits[0].get('line')}:{hits[0].get('column')}"
+    )
+    assert (
+        hits[0].get("end_column") is None
+    ), "an anchor knows where a construct starts, not where the finding ends"
+
+
+def _two_model_schema(root: Path) -> None:
+    """A schema file declaring two models, so the name cannot be inferred."""
+    add_model(root, "gold/dim_p.sql", "select 1 as id")
+    add_model(root, "gold/dim_q.sql", "select 1 as id")
+    (root / "models" / "gold" / "_models.yml").write_text(
+        textwrap.dedent("""
+            version: 2
+            models:
+              - name: dim_p
+                columns:
+                  - name: id
+              - name: dim_q
+                columns:
+                  - name: id
+            """).strip(),
+        encoding="utf-8",
+    )
+
+
+def test_schema_yaml_rules_resolve_in_a_multi_model_file(tmp_path: Path) -> None:
+    """
+    A schema file declaring several models cannot be disambiguated by filename, so
+    the rule must pass ``model=`` in context. Without it ``_model_name_for``
+    returns "" and the position falls back to 1 with no column -- which is how ~27
+    DOC and TST diagnostics silently stayed at column 1.
+    """
+    root = write_project(tmp_path / "multimodel")
+    _two_model_schema(root)
+    hits = suggestions_for(audit(root), "SSC-EWI-DBTDOC0001")
+    assert hits, "DOC0001 must fire on models with no description"
+    for hit in hits:
+        assert hit["file"].endswith(".yml"), "must target the schema YAML"
+        assert hit.get("column"), (
+            f"{hit['file']}:{hit.get('line')} resolved no column -- "
+            "model= is missing from context"
+        )
+    lines = {h.get("line") for h in hits}
+    assert len(lines) == len(
+        hits
+    ), f"each model must resolve to its own line, got {lines}"
+
+
+def test_retargeted_tst_rules_point_at_the_schema_yaml(tmp_path: Path) -> None:
+    """A model with a schema entry: the finding belongs where the fix is made."""
+    root = write_project(tmp_path / "retarget")
+    _two_model_schema(root)
+    hits = suggestions_for(audit(root), "SSC-EWI-DBTTST0002")
+    assert hits, "TST0002 must fire on models with no key test"
+    assert all(
+        h["file"].endswith(".yml") for h in hits
+    ), f"expected schema YAML targets, got {[h['file'] for h in hits]}"
+
+
+def test_retargeted_rules_fall_back_to_the_model_file(tmp_path: Path) -> None:
+    """
+    The other half of the retarget, which is what rots if left untested.
+
+    Asserted on the fallback expression and on the no-empty-file invariant rather
+    than on one rule's output: TST0002 happens not to fire without a schema entry,
+    so a test keyed to it would pass vacuously while the fallback broke. Every
+    retargeted call site uses
+    ``project.schema_sources.get(model.name, model.relative_path)``, so the
+    premise to protect is that the default arm yields a real path.
+    """
+    root = write_project(tmp_path / "fallback")
+    add_model(root, "gold/dim_orphan.sql", "select 1 as id")
+    project = build_portfolio(root).projects[0]
+    model = next(m for m in project.models if m.name == "dim_orphan")
+
+    assert (
+        project.schema_sources.get("dim_orphan") is None
+    ), "fixture must have no schema entry, or the fallback is not exercised"
+    resolved = project.schema_sources.get(model.name, model.relative_path)
+    assert resolved == model.relative_path
+    assert resolved.endswith("dim_orphan.sql")
+
+    for finding in audit(root)["suggestions"]:
+        assert finding["file"], f"{finding['rule_id']} reported an empty file path"
+
+
+def test_yaml_keys_anchors_a_nested_dbt_project_key(tmp_path: Path) -> None:
+    """
+    Rules that know their key pass ``yaml_keys``; the resolver walks the path. The
+    default is ``("models",)``, which anchored an `on-run-end` finding at
+    `models:` -- honest about the file, wrong about the place.
+    """
+    from dbt_quality.core.anchors import resolve_position
+
+    root = write_project(tmp_path / "yamlkeys")
+    project_yml = root / "dbt_project.yml"
+    project_yml.write_text(
+        project_yml.read_text(encoding="utf-8") + textwrap.dedent("""
+            on-run-end:
+              - "{{ dbt_artifacts.upload_results(results) }}"
+            """),
+        encoding="utf-8",
+    )
+    project = build_portfolio(root).projects[0]
+
+    default = resolve_position(
+        _FakeSuggestion(file="dbt_project.yml", category="OPS"), project
+    )
+    routed = resolve_position(
+        _FakeSuggestion(
+            file="dbt_project.yml",
+            category="OPS",
+            context={"yaml_keys": ("on-run-end",)},
+        ),
+        project,
+    )
+    assert (
+        routed[0] != default[0]
+    ), f"yaml_keys must move the anchor off the default, both gave {routed}"
+    text = project_yml.read_text(encoding="utf-8").splitlines()
+    assert (
+        text[routed[0] - 1].lstrip().startswith("on-run-end")
+    ), f"line {routed[0]} is {text[routed[0] - 1]!r}, not the on-run-end key"
 
 
 def _main() -> int:

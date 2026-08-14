@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Any
 
 from dbt_quality import rules as _rules  # noqa: F401  -- import registers all packs
-from dbt_quality.core.anchors import resolve_line
+from dbt_quality.core.anchors import resolve_position
 from dbt_quality.core.base import REGISTRY, Scope, Suggestion, Tier
 from dbt_quality.discovery import PortfolioContext, ProjectContext
 from dbt_quality.provenance import classify
@@ -217,8 +217,9 @@ def _collect(
         if project is not None and not suggestion.project:
             suggestion.project = project.name
         # Resolve an anchor for any rule that did not supply one, so no suggestion
-        # ever ships without a line. The linter depends on this invariant.
-        suggestion.line = resolve_line(suggestion, project)
+        # ever ships without a line. The linter depends on this invariant. The
+        # column stays None when it cannot be justified -- see resolve_position.
+        suggestion.line, suggestion.column = resolve_position(suggestion, project)
         _apply_suppression(suggestion, project)
         result.suggestions.append(suggestion)
 
