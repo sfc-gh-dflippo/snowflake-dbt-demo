@@ -125,7 +125,11 @@ def ewi_marker(model: ModelFile, project: ProjectContext) -> Iterator[Suggestion
     if not _is_migrated(project):
         return
     seen: set[tuple[str, str]] = set()
-    for match in EWI_CODE_PATTERN.finditer(model.raw):
+    # Searched in ``without_directives``: a dbt-quality waiver names a rule id
+    # spelled exactly like a conversion marker, so scanning ``raw`` would report
+    # the reader's own waiver as unresolved conversion debt. The blanking keeps
+    # offsets identical, so every slice off ``raw`` below still lines up.
+    for match in EWI_CODE_PATTERN.finditer(model.without_directives or model.raw):
         code = match.group(0).upper()
         if RESOLVE_EWI_PATTERN.search(
             model.raw[max(0, match.start() - 40) : match.start()]
@@ -184,7 +188,9 @@ def fdm_marker(model: ModelFile, project: ProjectContext) -> Iterator[Suggestion
     if not _is_migrated(project):
         return
     seen: set[tuple[str, str]] = set()
-    for match in FDM_PATTERN.finditer(model.raw):
+    # See ``ewi_marker``: scanned without waiver directives, which are spelled
+    # like markers.
+    for match in FDM_PATTERN.finditer(model.without_directives or model.raw):
         code = match.group(0).upper()
         vendor = marker_text(model.raw, match.start())
         if (code, vendor) in seen:

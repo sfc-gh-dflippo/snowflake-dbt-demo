@@ -1,9 +1,9 @@
 """
 The audit runner.
 
-Dispatches registered rules by scope, applies migration-tier suppression, and
-records which rules could not run so the report can distinguish "checked and
-clean" from "not checked".
+Dispatches registered rules by scope, applies user waivers and migration-tier
+suppression, and records which rules could not run so the report can distinguish
+"checked and clean" from "not checked".
 """
 
 from __future__ import annotations
@@ -16,8 +16,9 @@ from typing import Any
 from dbt_quality import rules as _rules  # noqa: F401  -- import registers all packs
 from dbt_quality.core.anchors import resolve_position
 from dbt_quality.core.base import REGISTRY, Scope, Suggestion, Tier
-from dbt_quality.discovery import PortfolioContext, ProjectContext
+from dbt_quality.discovery import AuditConfig, PortfolioContext, ProjectContext
 from dbt_quality.provenance import classify
+from dbt_quality.waivers import is_waived
 
 
 @dataclass
@@ -94,7 +95,7 @@ def run_audit(portfolio: PortfolioContext) -> AuditResult:
             continue
 
         if meta.scope == Scope.PORTFOLIO:
-            _collect(result, meta, _safe_iter(meta.fn, portfolio), None)
+            _collect(result, meta, _safe_iter(meta.fn, portfolio), None, config)
             continue
 
         for project in portfolio.projects:
@@ -109,10 +110,16 @@ def run_audit(portfolio: PortfolioContext) -> AuditResult:
                 continue
 
             if meta.scope == Scope.PROJECT:
-                _collect(result, meta, _safe_iter(meta.fn, project), project)
+                _collect(result, meta, _safe_iter(meta.fn, project), project, config)
             else:
                 for model in project.models:
-                    _collect(result, meta, _safe_iter(meta.fn, model, project), project)
+                    _collect(
+                        result,
+                        meta,
+                        _safe_iter(meta.fn, model, project),
+                        project,
+                        config,
+                    )
 
     result.suggestions.sort(key=_finding_sort_key)
     return result
@@ -191,7 +198,7 @@ def run_single_file(portfolio: PortfolioContext, target: Path) -> AuditResult:
                 SkippedRule(rule_id, meta.title, "needs target/manifest.json")
             )
             continue
-        _collect(result, meta, _safe_iter(meta.fn, model, project), project)
+        _collect(result, meta, _safe_iter(meta.fn, model, project), project, config)
 
     result.suggestions.sort(key=_finding_sort_key)
     return result
@@ -202,8 +209,9 @@ def _collect(
     meta: Any,
     suggestions: Iterator[Suggestion],
     project: ProjectContext | None,
+    config: AuditConfig | None = None,
 ) -> None:
-    """Attach project attribution, apply suppression, and record the suggestions."""
+    """Attach project attribution, apply waivers and suppression, and record."""
     try:
         produced = list(suggestions)
     except RuntimeError as exc:
@@ -220,6 +228,13 @@ def _collect(
         # ever ships without a line. The linter depends on this invariant. The
         # column stays None when it cannot be justified -- see resolve_position.
         suggestion.line, suggestion.column = resolve_position(suggestion, project)
+        # Waivers are applied after the anchor is resolved, because an inline
+        # directive is matched against the line the diagnostic reports, and
+        # before provenance suppression, because the reader's explicit waiver
+        # settles the matter -- there is nothing to gain from classifying a
+        # suggestion that is about to be dropped.
+        if is_waived(suggestion, project, config):
+            continue
         _apply_suppression(suggestion, project)
         result.suggestions.append(suggestion)
 

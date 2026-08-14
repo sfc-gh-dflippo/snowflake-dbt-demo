@@ -1,292 +1,172 @@
 # dbt-quality
 
-## Overview
+Finds problems in dbt projects that do not make a build fail.
 
-The dbt-quality plugin detects anti-patterns in dbt projects that do not cause a build to fail. A
-model that contains `TOP 10` fails the first time it is built against Snowflake. A model that
-truncates its own table in a `pre_hook` builds successfully, but leaves the table empty if a run
-fails partway through. This plugin addresses the second category of problem: conditions that pass
-CI, return plausible results, and reduce correctness or increase cost without producing an error.
+A model containing `TOP 10` fails the first time it runs against Snowflake, and you find out
+immediately. A model that truncates its own table in a `pre_hook` builds successfully — and leaves
+the table empty if the run fails partway through. This plugin is for the second kind: conditions
+that pass CI, return plausible results, and quietly reduce correctness or increase cost.
 
-The plugin provides 87 rules in 10 rule packs, three execution modes, and an HTML assessment report.
+85 rules across 10 packs, three ways to run them, and an HTML assessment report.
 
-Each finding includes a stable identifier (for example, `SSC-EWI-DBTINC0001`), a severity, an effort
-estimate, and remediation guidance. Findings are phrased as questions to review rather than as
-verdicts, because a rule can evaluate the code but not the intent behind it. A truncate-and-load
-pattern is correct in some designs.
+Every finding carries a stable id (`SSC-EWI-DBTINC0001`), a level, a severity, an effort estimate,
+and remediation guidance. Findings are phrased as observations rather than verdicts, because a rule
+can read the code but not the intent behind it — a truncate-and-load is the right answer in some
+designs.
 
-## Detected conditions
+## What it finds
 
-The following table lists representative conditions that the rules detect.
+| Condition                                       | Why it matters                                                                                                                                       |
+| ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pre_hook` truncates the model's own relation   | dbt manages that relation's lifecycle. A failed run leaves the table empty rather than stale.                                                        |
+| `incremental` with `merge` and no `unique_key`  | Correct only for append-only loads. Otherwise reprocessing duplicates rows instead of replacing them.                                                |
+| The same derived subquery in two models         | The business rule is defined twice. Usually it belongs in an ephemeral model.                                                                        |
+| An ephemeral model with several consumers       | The SQL is inlined into each one, so the work is repeated per consumer.                                                                              |
+| `select *` straight off a `ref()`               | The output schema changes whenever the upstream schema does.                                                                                         |
+| A literal `db.schema.table` reference           | dbt cannot see the dependency, so lineage is wrong and the relation does not resolve per target.                                                     |
+| A remaining `!!!RESOLVE EWI!!!` marker          | A migration left a construct untranslated and the model shipped in that state.                                                                       |
+| `profiles.yml` present in the project directory | Risks committing credentials to version control and pins developers to one account; whether it holds a literal secret is a separate check (OPS0002). |
 
-| Condition                                      | Impact                                                                                                  |
-| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| `pre_hook` truncates the model's own relation  | dbt manages the lifecycle of that relation. A failed run leaves the table empty rather than stale.      |
-| `incremental` with `merge` and no `unique_key` | Correct only for append-only loads. Otherwise, reprocessing duplicates rows instead of replacing them.  |
-| The same derived subquery in two models        | The business rule is defined twice. In most cases, the logic belongs in an ephemeral model.             |
-| An ephemeral model with multiple consumers     | The SQL is inlined into every consumer, so the work is repeated for each one.                           |
-| `select *` applied directly to a `ref()`       | The output schema changes whenever the upstream schema changes.                                         |
-| A literal `db.schema.table` reference          | dbt cannot detect the dependency, so lineage is incorrect and the relation does not resolve per target. |
-| A remaining `!!!RESOLVE EWI!!!` marker         | A migration left a construct untranslated and the model was released in that state.                     |
-| `profiles.yml` committed inside the project    | Credentials are stored in version control.                                                              |
+## Install
 
-## Prerequisites
-
-Install [`uv`](https://docs.astral.sh/uv/) and confirm that it is available on your `PATH`. No other
-dependencies are required. On each run, `uv` resolves the rule engine's dependencies into a
-temporary environment.
-
-## Installing the plugin
-
-To install the plugin and verify the installation, run the following commands:
+Install [`uv`](https://docs.astral.sh/uv/) and make sure it is on your `PATH`. Nothing else is
+needed — `uv` resolves the engine's dependencies on each run.
 
 ```bash
 cortex plugin install /absolute/path/to/.claude/plugins/dbt-quality
 cortex plugin list
 ```
 
-The in-repository directory is the source copy. Hooks run only from the installed copy under
-`~/.snowflake/cortex/plugins/`. After you edit the source, run `cortex plugin update dbt-quality` to
-apply the changes.
+The in-repository directory is the source copy; hooks run only from the installed copy under
+`~/.snowflake/cortex/plugins/`. After editing the source, run `cortex plugin update dbt-quality`.
 
-The plugin supports both Cortex Code and Claude Code. The two hook manifests (`hooks/hooks.json` and
-`hooks/hooks.claude.json`) differ only in tool naming and in the plugin-root variable.
+The plugin works in both Cortex Code and Claude Code.
 
-## Execution modes
+One rule (`profiles.yml` placement, `SSC-EWI-DBTPRJ0004`) consults git to tell a tracked file from
+an ignored one. If the `git` binary is absent or the tree is not a repository, that rule falls back
+to reporting presence only; nothing else depends on git.
 
-The following table summarizes the three hook-based and editor-based execution modes. Skills and the
-command line interface are described in later sections.
+## How to run it
 
-|                     | Scope         | Trigger                          | Output                          |
-| ------------------- | ------------- | -------------------------------- | ------------------------------- |
-| **Validation hook** | One file      | Every write or edit operation    | Findings in the agent's context |
-| **Audit hook**      | Whole project | After dbt rewrites the manifest  | Summary in the agent's context  |
-| **Editor tasks**    | Whole project | On demand, or every five minutes | Problems panel                  |
+| Surface             | Scope         | When it runs                     | Where results appear       |
+| ------------------- | ------------- | -------------------------------- | -------------------------- |
+| **Validation hook** | One file      | Every write or edit              | In the agent's context     |
+| **Audit hook**      | Whole project | After dbt rewrites the manifest  | In the agent's context     |
+| **Editor tasks**    | Whole project | On demand, or every five minutes | Problems panel             |
+| **Skills**          | Either        | When you ask                     | Chat, plus the HTML report |
+| **CLI**             | Either        | When you run it                  | Terminal, or a JSON file   |
 
-### Validating a file on write
+Nothing here ever blocks a save or fails your command — at any severity. A validation hook that
+interrupts a refactor gets switched off, after which it protects nothing. To enforce a gate, use
+`lint --strict` in CI, which exits non-zero on any error-level finding.
 
-The validation hook runs on the `write`, `edit`, and `multi_edit` operations. It produces no output
-unless there are findings to report, and it produces no output for files that are not dbt models,
-including paths outside `models/`, files that are not SQL, and files that cannot be found.
+### Hooks
 
-> **Note**
->
-> The validation hook never blocks a write operation, at any severity. A validation hook that
-> interrupts a refactor is typically disabled, after which it provides no protection. Enforce errors
-> in CI instead, by using `lint --strict`.
+Both hooks activate once the plugin is installed and need no configuration.
 
-### Auditing a project after a dbt command
+The **validation hook** checks the file you just wrote and stays silent unless it has something to
+say, including for anything that is not a dbt model.
 
-The audit hook runs only when both of the following conditions are met:
-
-1. **dbt was invoked in a way that rewrites the manifest.** A Bash command directly runs the `dbt`
-   executable with the `run`, `build`, `compile`, `parse`, `seed`, `snapshot`, `test`, or `docs`
-   subcommand. The `dbt debug`, `dbt deps`, and `dbt --version` commands do not qualify, and neither
-   do textual references to dbt. dbt Projects on Snowflake runs server-side and does not update a
-   local manifest, so it does not trigger this audit.
-2. **The manifest advanced.** The `target/manifest.json` file is newer than the stamp file under
-   `~/.cache/dbt-quality/`. A failed run produces no new manifest, so no audit is performed.
-
-The audit hook is always advisory and never returns a non-zero exit code, so it does not cause a
-user's command to fail.
-
-To force an audit on the next run, delete the stamp files:
+The **audit hook** runs the whole-project audit after a dbt command that rewrote
+`target/manifest.json`. `dbt debug`, `dbt deps`, and a failed run do not trigger it, and neither
+does dbt Projects on Snowflake, which runs server-side and leaves no local manifest. To force an
+audit on the next run:
 
 ```bash
 rm -f ~/.cache/dbt-quality/*.stamp
 ```
 
-### Integrating with Cortex Code Desktop and Visual Studio Code
+### Editor tasks (Cortex Code Desktop and VS Code)
 
-Cortex Code Desktop is based on Visual Studio Code, so a task in `.vscode/tasks.json` with a
-`problemMatcher` is the supported way to populate the Problems panel. The linter emits one line per
-suggestion in the conventional compiler format, and the matcher parses each line into a diagnostic
-that is attached to the correct file, line, and column range. The integration is identical in Cortex
-Code Desktop and in Visual Studio Code, because both read the same task definition.
+Tasks are written into `.vscode/tasks.json` for you the first time you open a session inside a dbt
+project. Run them from the Command Palette with **Tasks: Run Task**:
 
-SARIF is not supported in Cortex Code Desktop, because the SARIF viewer is not present in the
-application bundle. The SQLFluff extension is blocked by the default-deny extension allowlist.
-Therefore the task and `problemMatcher` mechanism is the only route from an external linter to the
-Problems panel.
+- `dbt: quality suggestions` — everything, in the Problems panel
+- `dbt: quality suggestions (errors only)` — just the findings that permit no exception
 
-#### Bootstrapping the tasks
+A watch task refreshes the panel every five minutes and starts when the folder opens. If it was
+added during the current session, reload the window or run it once by hand to start it now.
 
-A `SessionStart` hook, `hooks/setup_vscode_task.py`, writes the task definitions into the project so
-that no manual setup is required. Its behavior is deliberately conservative:
+These tasks evaluate the project at a point in time; they are not live as you type. The validation
+hook covers files as you write them, and the tasks cover the whole project.
 
-- It takes no action unless the session's working directory is inside a dbt project, which it
-  determines by looking for `dbt_project.yml` in the working directory and up to eight parent
-  directories.
-- It creates `.vscode/tasks.json` if the file does not exist.
-- If the file exists, it adds only the missing dbt-quality tasks. Existing tasks are never modified,
-  even if they were edited by hand or point to a different script path.
-- If the file exists but is not valid JSON, for example because it contains JSONC comments, the hook
-  takes no action rather than overwrite a file that it cannot round-trip safely.
-- It uses only the Python standard library, because `hooks.json` invokes it with the bare `python3`
-  interpreter.
-
-The hook creates the following two tasks, which are the minimum required for Problems panel
-integration:
-
-- `dbt: quality suggestions`
-- `dbt: quality suggestions (watch, every 5 min)`
-
-The `.vscode/tasks.json` file committed in this repository defines two additional tasks. All four
-are described in the following table.
-
-| Task                                            | Command                                   | Purpose                                                                   |
-| ----------------------------------------------- | ----------------------------------------- | ------------------------------------------------------------------------- |
-| `dbt: quality suggestions`                      | `lint.py .`                               | Reports all suggestions for the workspace in the Problems panel           |
-| `dbt: quality suggestions (errors only)`        | `lint.py . --min-level error`             | Reports only the suggestions that permit no legitimate exception          |
-| `dbt: quality suggestions (watch, every 5 min)` | `lint.py .` in a loop, with `sleep 300`   | Refreshes the Problems panel every five minutes while the task is running |
-| `dbt: quality report (JSON)`                    | `audit.py audit . --out suggestions.json` | Writes the full report, including code examples, to `suggestions.json`    |
-
-The JSON report task declares an empty `problemMatcher`, because it produces a file rather than
-diagnostics.
-
-#### Running the tasks
-
-To run a task, open the Command Palette, select **Tasks: Run Task**, and select the task by name.
-All tasks run with `cwd` set to `${workspaceFolder}` and use the `silent` reveal setting, so they do
-not steal focus from the editor.
-
-The watch task sets `runOn: folderOpen`, so it starts automatically when the folder is opened, and
-`isBackground: true`, so the editor does not treat it as a task that terminates. Its `background`
-matcher settings use the `>>> dbt-quality lint start` and `>>> dbt-quality lint done` markers that
-the task echoes around each run, which is how the editor knows when to clear and repopulate
-diagnostics.
-
-> **Note**
->
-> The watch task starts only when a folder is opened. If the task was added to `tasks.json` during
-> the current session, reload the window or run `dbt: quality suggestions (watch, every 5 min)` once
-> to start it in the current session.
-
-#### Diagnostic format
-
-The linter writes one line per suggestion in the following format:
-
-```text
-path:line:col:endLine:endCol: level: [RULE-ID] message -> remediation
-```
-
-For example:
+The linter prints one line per finding:
 
 ```text
 models/gold/fact_order_line.sql:5:1:5:38: warning: [SSC-EWI-DBTINC0002] `pre_hook` deletes rows from this model's relation outside dbt's transaction and DAG. -> Express the deletion through the materialization instead.
 ```
 
-The `problemMatcher` maps these fields to the Problems panel as follows.
-
-| Linter field        | `problemMatcher` capture group | Problems panel column |
-| ------------------- | ------------------------------ | --------------------- |
-| `path`              | 1 (`file`)                     | File                  |
-| `line`, `col`       | 2, 3 (`line`, `column`)        | Position              |
-| `endLine`, `endCol` | 4, 5 (`endLine`, `endColumn`)  | Underline range       |
-| `level`             | 6 (`severity`)                 | Severity icon         |
-| `RULE-ID`           | 7 (`code`)                     | Code                  |
-| `message`           | 8 (`message`)                  | Message               |
-
-The matcher declares `owner` and `source` as `dbt-quality`, so its diagnostics are attributed to the
-plugin and are cleared as a group on each run, and it sets `fileLocation` to
-`["relative", "${workspaceFolder}"]`, so the reported paths resolve against the workspace root.
-
-The `level` field maps directly to the three severities that Visual Studio Code recognizes: `error`,
-`warning`, and `info`. The `information` level used elsewhere in this plugin is emitted as `info` by
-the linter for this reason.
-
-> **Note**
->
-> The end position fields are required. A `problemMatcher` that captures only `line` and `column`
-> does not fail cleanly against this format: because the `file` group is non-greedy, the pattern
-> backtracks and captures `path:line:col` as the file name, which does not resolve to a file on
-> disk. If the Problems panel is empty or its entries reference paths that do not exist, compare the
-> `pattern` block in `.vscode/tasks.json` against the format above.
-
-These tasks evaluate the project at a point in time; they do not evaluate it as you type. The
-validation hook covers individual files as they are written, and the editor tasks cover the whole
-project. The two surfaces are complementary.
-
-### Using the skills
-
-The plugin provides the following skills:
+### Skills
 
 | Skill                      | Scope                                                            |
 | -------------------------- | ---------------------------------------------------------------- |
 | `dbt-quality:dbt-audit`    | A project or an estate of projects; produces the HTML assessment |
 | `dbt-quality:dbt-validate` | A single file                                                    |
 
-Always specify the `dbt-quality:` prefix. The unqualified names conflict with other installed
-skills.
+Always use the `dbt-quality:` prefix — the bare names collide with other installed skills.
 
-### Using the command line interface
-
-To run the rule engine directly, use the following commands:
+### Command line
 
 ```bash
 cd .claude/plugins/dbt-quality/scripts
 
-uv run audit.py manifest-status .          # Report which rules can currently be evaluated
-uv run audit.py audit . --out out.json     # Run a full audit
-uv run audit.py lint .                     # Print one line per finding, in compiler format
-uv run audit.py rules                      # List the rule catalog
-uv run validate.py path/to/model.sql       # Validate a single file
+uv run audit.py manifest-status .          # which rules can be evaluated right now
+uv run audit.py audit . --out out.json     # full audit
+uv run audit.py lint .                     # one line per finding, compiler format
+uv run audit.py rules                      # the rule catalogue
+uv run validate.py path/to/model.sql       # a single file
 ```
 
-The audit does not run dbt, does not connect to a warehouse, and does not write any file inside the
-project except the output file that you specify.
+The audit never runs dbt, never connects to a warehouse, and writes no file inside your project
+except the output file you name.
 
-## Manifest requirements
+## Silencing a finding
 
-Rules that depend on the dependency graph require `target/manifest.json`. These rules include
-ephemeral fan-out, pass-through chains, layer crossing, and single-consumer models. If the manifest
-is not available, these rules are reported as **skipped** rather than as passing, because "not
-evaluated" and "evaluated and clean" are different results.
+When you have reviewed a finding and it does not apply, waive it. A waived finding is dropped from
+every surface: the report, the Problems panel, and all counts.
 
-Observe the following requirements:
+**One line** — attach the directive to the line the diagnostic reports:
 
-- If the manifest is stale, run `dbt parse` before you run an audit. The `manifest-status` command
-  reports which rules cannot currently be evaluated.
-- Newly added models are not visible to graph rules until the project is parsed again. A model that
-  was just created is absent from the previous manifest, so it has no known consumers.
+```sql
+select id from analytics.public.orders  -- dbt-quality: ignore SSC-EWI-DBTSQL0006
+```
 
-## Rule packs
+**One file** — anywhere in the file, and independent of any line:
 
-The plugin organizes its rules into the following packs.
+```sql
+-- dbt-quality: ignore-file SSC-EWI-DBTDOC0002, SSC-EWI-DBTDOC0003
+```
 
-| Pack | Concern                                          | Tier         |
-| ---- | ------------------------------------------------ | ------------ |
-| PRJ  | Project structure and fragmentation              | universal    |
-| INC  | Load patterns and incremental correctness        | universal    |
-| SQL  | Query construction: subquery, CTE, and ephemeral | universal    |
-| MAC  | Macro over-use and under-use                     | universal    |
-| MAT  | Materialization fitness                          | mixed        |
-| TST  | Testing and constraint coverage                  | universal    |
-| DOC  | Documentation coverage                           | universal    |
-| ARC  | Architecture and lineage conventions             | architecture |
-| MIG  | Unresolved conversion debt                       | migration    |
-| OPS  | Operational hygiene                              | universal    |
+**A set of paths** — in `.dbt-quality.yml`. This is the only form that can waive findings about a
+project or an estate, which have no single line to annotate:
 
-Tiers exist because migrated code requires different treatment from code that was written for dbt:
+```yaml
+ignore:
+  - paths: ["models/legacy/**"]
+    rules: [SSC-EWI-DBTARC0001]
+  - paths: ["vendor/**"]
+    rules: ["*"]
+```
 
-- **universal** — Always applies. A truncate-and-load pattern is incorrect regardless of how the
-  code was produced.
-- **architecture** — Encodes conventions for a project designed for dbt, such as medallion folders
-  and clean layer lineage. These rules are suppressed when the project is detected as a mechanical
-  conversion from Informatica or SSIS, because that layout was not chosen by the customer and
-  reporting it obscures the significant findings. Suppressed findings are counted and summarized
-  separately; they are not discarded.
-- **migration** — Applies specifically because the code was converted, and covers unresolved
-  `SSC-EWI` and `SSC-FDM` markers, ETL control columns, and released scaffolding. These rules are
-  never suppressed.
+Worth knowing:
 
-Project provenance is inferred from corroborating signals and can be set explicitly in
-configuration.
+- Use `*` for the rule list to waive every rule.
+- A directive on its own line also covers the next line that has content, so a blank line between it
+  and the statement is fine.
+- The reported line is not always the line you would blame: for materialization, incremental, and
+  operational rules it is the `{{ config() }}` block. Take the line from the reported position, or
+  use `ignore-file`.
+- A directive naming no rules waives nothing, so a half-typed one cannot silence more than you
+  meant.
+- Waivers leave no audit trail. Nothing reports a waiver whose finding has since been fixed — review
+  them with `grep -rn "dbt-quality: ignore"`.
+
+To turn a rule off entirely instead, use `disabled_rules` (below). That is reported as _skipped_, so
+the report still records that the check did not run.
 
 ## Configuration
 
-Configuration is optional. To override the defaults, add a `.dbt-quality.yml` file at the audit
-root:
+Optional. Add `.dbt-quality.yml` at your repository root:
 
 ```yaml
 thresholds:
@@ -301,73 +181,96 @@ disabled_rules:
   - SSC-EWI-DBTDOC0002
 ```
 
-For the complete list of options, see [`scripts/README.md`](scripts/README.md).
+The file is found by searching upward from wherever the audit starts, so one at the repository root
+governs the audit, the linter, and the save-time hook alike. Full option list:
+[`scripts/README.md`](scripts/README.md).
 
-## Excluded checks
+## Rule packs
 
-The plugin intentionally omits the following categories of check:
+| Pack | Concern                                          | Tier         |
+| ---- | ------------------------------------------------ | ------------ |
+| PRJ  | Project structure and fragmentation              | universal    |
+| INC  | Load patterns and incremental correctness        | universal    |
+| SQL  | Query construction: subquery, CTE, and ephemeral | universal    |
+| MAC  | Macro over-use and under-use                     | universal    |
+| MAT  | Materialization fitness                          | mixed        |
+| TST  | Testing and constraint coverage                  | universal    |
+| DOC  | Documentation coverage                           | universal    |
+| ARC  | Architecture and lineage conventions             | architecture |
+| MIG  | Unresolved conversion debt                       | migration    |
+| OPS  | Operational hygiene                              | universal    |
 
-- **Naming.** No rule evaluates model or column names. A migrated model often retains the name of
-  its source object, and a dbt project does not record that name in any machine-readable form. The
-  `/* Original Object: */` header is a comment and does not appear in `manifest.json`, so a naming
-  rule could only guess. For the full rationale, see
-  [`skills/dbt-audit/references/rule-catalog.md`](skills/dbt-audit/references/rule-catalog.md).
-- **SQL dialect syntax.** No rule looks for constructs such as `TOP n`, `ISNULL`, or `ROWNUM`. dbt
-  reports these constructs the first time the model is built. This engine targets conditions that
-  produce no error.
+Migrated code needs different treatment from code written for dbt, which is what the tiers encode:
+
+- **universal** — always applies. A truncate-and-load is wrong however the code came to exist.
+- **architecture** — conventions for a project designed for dbt, such as medallion folders and clean
+  layer lineage. Suppressed when the project is detected as a mechanical conversion from Informatica
+  or SSIS, because nobody chose that layout and reporting it buries the findings that matter.
+  Suppressed findings are counted and summarised separately, not discarded.
+- **migration** — applies precisely because the code was converted: unresolved `SSC-EWI`/`SSC-FDM`
+  markers, ETL control columns, shipped scaffolding. Never suppressed.
+
+Provenance is inferred from corroborating signals, and can be set explicitly with `migration.mode`.
+
+## Rules that need a manifest
+
+Rules that reason about the dependency graph — ephemeral fan-out, layer crossing, single-consumer
+models — need `target/manifest.json`. Without it they are reported as **skipped**, never as passing,
+because "not checked" and "checked and clean" are different claims.
+
+Run `dbt parse` first if the manifest is missing or stale; `manifest-status` tells you which rules
+are currently unavailable. A model you just added is invisible to these rules until the project is
+parsed again.
+
+## What it deliberately does not check
+
+- **Names.** No rule evaluates model or column names. A migrated model often keeps the name of its
+  source object, and a dbt project records that name nowhere a tool can read — the
+  `/* Original Object: */` header is a comment and never reaches `manifest.json`, so a naming rule
+  could only guess.
+- **SQL dialect syntax.** Nothing looks for `TOP n`, `ISNULL`, or `ROWNUM`. dbt reports those the
+  first time the model builds. This engine earns its keep on silent problems.
 
 ## Troubleshooting
 
-**A hook never runs.** Confirm that the plugin is installed, not only present in the repository, by
-running `cortex plugin list`. Then confirm that `uv` is on the `PATH` that the hook inherits. The
-hooks exit without output when `shutil.which("uv")` returns nothing.
+**A hook never runs.** Check the plugin is installed, not just present in the repository
+(`cortex plugin list`), then check `uv` is on the `PATH` the hook inherits — hooks exit silently
+when `uv` cannot be found.
 
-**A hook runs but reports nothing for a file that contains a known issue.** In most cases, the file
-is out of scope. The file must be located under a `models/` directory, must have a `.sql` or `.py`
-extension, and must have a `dbt_project.yml` file in one of its parent directories. Run the command
-line interface against the same path to view the complete output.
+**A hook runs but says nothing about a file you know has a problem.** Almost always scope: the file
+must be under a `models/` directory, be `.sql` or `.py`, and have a `dbt_project.yml` somewhere
+above it. Run the CLI on the same path to see the full output.
 
-**The audit never runs after a dbt command.** Confirm that dbt rewrote `target/manifest.json`; a
-failed run does not. Then delete the stamp files. Note that dbt Projects on Snowflake runs
-server-side and does not update a local manifest, so no audit is expected in that case.
+**A finding you expected is missing.** Check for a waiver — `grep -rn "dbt-quality: ignore"` and the
+`ignore:` block of the nearest `.dbt-quality.yml`, which may be in a parent directory.
 
-**The Problems panel is empty, or its entries reference paths that do not exist.** Run the
-`dbt: quality suggestions` task and check the task terminal output. If the linter printed
-suggestions but no diagnostics appeared, the `problemMatcher` pattern in `.vscode/tasks.json` does
-not match the linter's output format; compare it against the format in
-[Diagnostic format](#diagnostic-format). If the task terminal is also empty, run the linter from the
-command line to confirm that it produces output at all.
+**The audit never runs after a dbt command.** Confirm dbt actually rewrote `target/manifest.json`; a
+failed run does not. Then delete the stamp files. dbt Projects on Snowflake never triggers it.
 
-**The audit runs too often.** The audit hook is registered for Bash only. Its first condition
-requires a shell command that directly invokes dbt with a manifest-producing subcommand, as
-implemented in `hooks/audit_after_dbt.py`. References to dbt in command output, commit messages, or
-`echo` commands do not qualify. The second condition requires a newer local manifest.
+**The Problems panel is empty, or its entries point at paths that do not exist.** Run
+`dbt: quality suggestions` and read the task terminal. If the linter printed findings but no
+diagnostics appeared, the `problemMatcher` in `.vscode/tasks.json` no longer matches the linter's
+output format — see [`skills/dbt-validate/SKILL.md`](skills/dbt-validate/SKILL.md).
 
 ## Development
-
-To run the test suite, use the following commands:
 
 ```bash
 cd scripts
 pytest tests/ -q
 ```
 
-The suite functions primarily as a false-positive gate. Correct code that produces no findings is
-more important than every anti-pattern being detected, because an audit that reports findings for
-well-formed incremental models is typically disabled.
+The suite is primarily a false-positive gate: correct code producing no findings matters more than
+every anti-pattern being caught, because an audit that flags well-formed models gets switched off.
+`scripts/tests/fixtures/ewi_estate/` is a static four-project fixture whose audit must emit every
+active EWI rule — update it whenever a rule is added, removed, or materially changed.
 
-The `scripts/tests/fixtures/ewi_estate/` directory is a static four-project integration fixture. An
-audit of this fixture must emit every active EWI rule. Update the estate and its README whenever an
-EWI rule is added, removed, or materially changed. Unit fixtures continue to cover the
-nearest-neighbor forms that must produce no findings.
+Running `pytest` creates `scripts/.venv`, whose Python symlink points outside the plugin directory
+and makes `cortex plugin install` reject the tree. Run `rm -rf scripts/.venv` before reinstalling.
 
-> **Note**
->
-> Running `pytest` creates `scripts/.venv`, whose Python symlink points outside the plugin
-> directory. This causes `cortex plugin install` to reject the tree with the error
-> `symlink escapes the allowed root`. Run `rm -rf scripts/.venv` before you reinstall the plugin.
+Engine internals, every configuration option, and the full waiver semantics are in
+[`scripts/README.md`](scripts/README.md).
 
-## Additional documentation
+## More documentation
 
 | File                                                                                         | Contents                                               |
 | -------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
@@ -375,4 +278,4 @@ nearest-neighbor forms that must produce no findings.
 | [`skills/dbt-audit/references/rule-catalog.md`](skills/dbt-audit/references/rule-catalog.md) | The rationale for each rule, and how to add one        |
 | [`skills/dbt-audit/references/report-spec.md`](skills/dbt-audit/references/report-spec.md)   | HTML report structure                                  |
 | [`skills/dbt-audit/SKILL.md`](skills/dbt-audit/SKILL.md)                                     | The project-wide audit workflow                        |
-| [`skills/dbt-validate/SKILL.md`](skills/dbt-validate/SKILL.md)                               | Per-file validation and hook details                   |
+| [`skills/dbt-validate/SKILL.md`](skills/dbt-validate/SKILL.md)                               | Per-file validation, hooks, and editor integration     |

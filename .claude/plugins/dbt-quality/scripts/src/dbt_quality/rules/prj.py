@@ -36,6 +36,8 @@ from dbt_quality.core.sqlutil import span, strip_comments_and_strings
 from dbt_quality.provenance import PLACEHOLDER_VALUES
 
 if TYPE_CHECKING:
+    from pathlib import Path
+
     from dbt_quality.discovery import PortfolioContext, ProjectContext
 
 CATEGORY = "PRJ"
@@ -43,7 +45,7 @@ CATEGORY = "PRJ"
 PRJ_MICRO_PROJECT = "SSC-EWI-DBTPRJ0001"
 PRJ_CONSOLIDATION = "SSC-EWI-DBTPRJ0002"
 PRJ_DUPLICATED_CONFIG = "SSC-EWI-DBTPRJ0003"
-PRJ_PROFILES_COMMITTED = "SSC-EWI-DBTPRJ0004"
+PRJ_PROFILES_PRESENT = "SSC-EWI-DBTPRJ0004"
 PRJ_PLACEHOLDER_CONFIG = "SSC-EWI-DBTPRJ0005"
 PRJ_TASK_ORCHESTRATION = "SSC-EWI-DBTPRJ0006"
 PRJ_MISSING_PACKAGES = "SSC-EWI-DBTPRJ0007"
@@ -293,48 +295,98 @@ def duplicated_config(portfolio: PortfolioContext) -> Iterator[Suggestion]:
 # =============================================================================
 
 
+def _git_status(root: Path, path: Path) -> tuple[bool | None, bool]:
+    """
+    Whether ``path`` is tracked and/or ignored, from git's own index.
+
+    Returns ``(tracked, ignored)``. ``tracked`` is ``None`` when git cannot
+    answer -- the tree is not a repository, the ``git`` binary is absent, or a
+    git call errors -- so the caller can fall back to a presence-only finding
+    rather than asserting a status it does not know.
+
+    GitPython shells out to ``git`` for every call, so this is the engine's one
+    subprocess boundary; everything that can go wrong (no repo, no binary, a
+    detached path outside the work tree) is contained here and degrades to
+    "unknown" rather than raising into the audit.
+    """
+    try:
+        import git  # noqa: PLC0415 -- lazy so a missing dep degrades, not breaks
+
+        repo = git.Repo(root, search_parent_directories=True)
+        try:
+            repo.git.ls_files("--error-unmatch", str(path))
+            tracked: bool | None = True
+        except git.exc.GitCommandError:
+            tracked = False
+        ignored = bool(repo.ignored(str(path)))
+        return tracked, ignored
+    except Exception:  # noqa: BLE001 -- any git failure means "status unknown"
+        return None, False
+
+
 @rule(
-    PRJ_PROFILES_COMMITTED,
-    "profiles.yml committed inside the project",
+    PRJ_PROFILES_PRESENT,
+    "profiles.yml present in the project directory",
     category=CATEGORY,
     scope=Scope.PROJECT,
     kind=Kind.EWI,
-    level=Level.ERROR,
-    severity=Severity.CRITICAL,
+    level=Level.WARNING,
+    severity=Severity.MEDIUM,
     rationale=(
         "`profiles.yml` holds connection and credential configuration. "
-        "Committing it risks leaking secrets and pins every developer "
-        "to one account."
+        "Keeping it in the project tree risks committing it to version "
+        "control and pins every developer to one account. Whether it "
+        "*contains* a literal credential is a separate finding (OPS0002)."
     ),
 )
-def profiles_committed(project: ProjectContext) -> Iterator[Suggestion]:
+def profiles_present(project: ProjectContext) -> Iterator[Suggestion]:
     for name in ("profiles.yml", "profiles.yaml"):
         path = project.root / name
         if not path.is_file():
             continue
-        try:
-            content = path.read_text(encoding="utf-8", errors="replace")
-        except OSError:
-            content = ""
-        has_secret = bool(
-            re.search(
-                r"^\s*(password|private_key_passphrase|token)\s*:\s*\S",
-                content,
-                re.MULTILINE,
+
+        tracked, ignored = _git_status(project.root, path)
+
+        if tracked is True:
+            level = Level.WARNING
+            message = f"`{name}` is tracked in git inside the project directory."
+        elif ignored:
+            level = Level.INFORMATION
+            message = (
+                f"`{name}` is present in the project directory but is git-ignored."
             )
+        elif tracked is False:
+            level = Level.WARNING
+            message = (
+                f"`{name}` is present in the project directory and is not covered "
+                "by `.gitignore`, so it can be committed."
+            )
+        else:  # tracked is None -- not a git repo, or git is unavailable
+            level = Level.WARNING
+            message = f"`{name}` is present in the project directory."
+
+        remediation = (
+            "Move it to `~/.dbt/profiles.yml` (or set `DBT_PROFILES_DIR`) and keep "
+            "a redacted `profiles.yml.sample` in the repo for onboarding."
         )
+        if tracked is True:
+            # Only assert history retention when the file is genuinely tracked;
+            # the credential content, if any, is OPS0002's to report and rotate.
+            remediation += (
+                " Remove it from version control with `git rm --cached "
+                f"{name}` and rotate any credential it held; git history "
+                "retains it until then."
+            )
+        else:
+            remediation += " If it is not already, add it to `.gitignore`."
+
         yield make_suggestion(
-            PRJ_PROFILES_COMMITTED,
-            f"`{name}` is present in the project directory"
-            + (" and contains a literal credential value." if has_secret else "."),
-            level=Level.ERROR if has_secret else Level.WARNING,
+            PRJ_PROFILES_PRESENT,
+            message,
+            level=level,
             file=name,
             evidence=f"{name} found at project root",
-            remediation=(
-                "Move it to `~/.dbt/profiles.yml` and add the path to `.gitignore`. "
-                "Keep a redacted `profiles.yml.sample` in the repo for onboarding. "
-                "If a credential was committed, rotate it; git history retains it."
-            ),
+            remediation=remediation,
             effort=Effort.LOW,
         )
 

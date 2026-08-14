@@ -241,14 +241,19 @@ def classify(project: ProjectContext) -> ProvenanceVerdict:
         )
 
     # --- conversion markers in model SQL ----------------------------------
+    # Scanned against ``without_directives``, not ``raw``: a dbt-quality waiver
+    # names a rule id spelled exactly like a conversion marker, so waivers
+    # accumulating in a hand-written project would otherwise push it over the
+    # migration threshold and suppress the whole ARCHITECTURE tier.
     ewi_files: set[str] = set()
     control_column_files: set[str] = set()
     for model in project.models:
+        text = model.without_directives or model.raw
         if (
-            EWI_PATTERN.search(model.raw)
-            or FDM_PATTERN.search(model.raw)
-            or RESOLVE_EWI_PATTERN.search(model.raw)
-            or NEEDS_USER_PATTERN.search(model.raw)
+            EWI_PATTERN.search(text)
+            or FDM_PATTERN.search(text)
+            or RESOLVE_EWI_PATTERN.search(text)
+            or NEEDS_USER_PATTERN.search(text)
         ):
             ewi_files.add(model.relative_path)
         if ETL_CONTROL_COLUMN_PATTERN.search(model.raw) or DD_CONSTANT_PATTERN.search(

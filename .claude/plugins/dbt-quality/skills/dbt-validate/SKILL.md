@@ -125,7 +125,27 @@ all four.
 The linter emits `path:line:col:endLine:endCol: level: [RULE-ID] message -> fix`, and the matcher
 must capture all five position fields. A pattern that captures only `line` and `column` does not
 fail cleanly: the non-greedy `file` group backtracks and captures `path:line:col` as the file name,
-which resolves to nothing. See the plugin README for the full field mapping.
+which resolves to nothing. If the Problems panel is empty or its entries reference paths that do not
+exist, compare the `pattern` block in `.vscode/tasks.json` against this mapping:
+
+| Linter field        | `pattern` key                 | Problems panel column |
+| ------------------- | ----------------------------- | --------------------- |
+| `path`              | `file` (group 1)              | File                  |
+| `line`, `col`       | `line`, `column` (2, 3)       | Position              |
+| `endLine`, `endCol` | `endLine`, `endColumn` (4, 5) | Underline range       |
+| `level`             | `severity` (6)                | Severity icon         |
+| `RULE-ID`           | `code` (7)                    | Code                  |
+| `message`           | `message` (8)                 | Message               |
+
+The matcher declares `owner` and `source` as `dbt-quality`, so its diagnostics are attributed to the
+plugin and cleared as a group on each run, and sets `fileLocation` to
+`["relative", "${workspaceFolder}"]` so reported paths resolve against the workspace root. `level`
+maps to the three severities VS Code recognises — `error`, `warning`, `info` — which is why the
+`information` level is emitted as `info`.
+
+`test_lint_lines_parse_with_the_problem_matcher_regex` asserts the linter's output against the
+committed `tasks.json`, reading the group indices from the pattern block rather than restating them,
+so this contract cannot drift silently in either direction.
 
 | Task                                            | What it does                                                                                  |
 | ----------------------------------------------- | --------------------------------------------------------------------------------------------- |
@@ -174,6 +194,34 @@ spending time on uv.
 
 **A save is never blocked, and you expect it to be.** Nothing blocks a save at any level, by design.
 To fail on errors, gate in CI with `dbt-lint --strict`, which exits 1 on any error-level suggestion.
+
+**A finding is wrong, or the trade-off is deliberate.** Waive it rather than disabling the rule
+everywhere. Three surfaces, all of which drop the suggestion from every output:
+
+```sql
+select id from analytics.public.orders  -- dbt-quality: ignore SSC-EWI-DBTSQL0006
+```
+
+```sql
+-- dbt-quality: ignore-file SSC-EWI-DBTDOC0002
+```
+
+```yaml
+# .dbt-quality.yml — the only surface that can waive project- and portfolio-scoped findings
+ignore:
+  - paths: ["models/legacy/**"]
+    rules: [SSC-EWI-DBTARC0001]
+```
+
+An inline directive attaches to **the line the diagnostic reports**, which for `MAT`, `INC` and
+`OPS` rules is the `{{ config() }}` block rather than the SQL at fault — take the line from the
+reported position, or use `ignore-file`. Full semantics in
+[`../../scripts/README.md`](../../scripts/README.md).
+
+**A finding you expected is missing.** Check for a waiver before suspecting the rule:
+`grep -rn "dbt-quality: ignore" models/` and look for an `ignore:` block in `.dbt-quality.yml` —
+including one in a _parent_ directory, since the config is resolved by walking up from the audit
+root. A waived suggestion is dropped silently and is not counted anywhere.
 
 **Audit hook runs too often, or not after a dbt command.** It is stamp-gated on manifest mtime.
 Delete `~/.cache/dbt-quality/*.stamp` to force the next run. If it never fires, confirm dbt actually

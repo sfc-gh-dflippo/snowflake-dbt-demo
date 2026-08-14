@@ -37,7 +37,7 @@ OPS_EVALUATOR_CONFIG = "SSC-EWI-DBTOPS0003"
 OPS_RUN_NOT_BUILD = "SSC-EWI-DBTOPS0004"
 
 SECRET_PATTERN = re.compile(
-    r"^\s*(password|private_key_passphrase|token|secret|access_key)\s*:\s*(?!\s*$)(?!\{\{)(?!\$)\S",
+    r"^\s*(password|private_key_passphrase|token|secret|access_key)\s*:\s*(?!\s*$)(?![\"']?\s*(?:\{\{|\$))\S",
     re.MULTILINE | re.IGNORECASE,
 )
 

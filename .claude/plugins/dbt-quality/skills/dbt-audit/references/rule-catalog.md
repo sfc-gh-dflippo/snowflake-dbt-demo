@@ -1,4 +1,4 @@
-# Rule Catalogue
+# Rule Catalog
 
 Every rule, the practice it protects, and the signal that detects it. Load this when a user asks why
 a rule fired, disputes a suggestion, or you are adding a rule.
@@ -13,6 +13,29 @@ the registry and cannot drift.
 | `universal`    | Always applies. Correctness, load mechanics, testing, fragmentation.                                                                      |
 | `architecture` | Greenfield ideals. **Suppressed** for detected lift-and-shift migrations; counted and reported separately as a modernisation opportunity. |
 | `migration`    | Fires _because_ code was converted. Never suppressed.                                                                                     |
+
+## Silencing a rule
+
+Three mechanisms, in increasing narrowness. Reach for the narrowest that fits, and prefer a waiver
+over disabling a rule when the finding is a defensible trade-off rather than a bad rule.
+
+| Mechanism                           | Scope                    | Effect on the report                                                   |
+| ----------------------------------- | ------------------------ | ---------------------------------------------------------------------- |
+| `disabled_rules:`                   | The rule, the whole run  | Reported as **skipped**, so the report still says what was not checked |
+| `ignore:` config entry              | The rule, at a path glob | Dropped — absent from every output and every count                     |
+| `-- dbt-quality: ignore-file <ids>` | The rule, one file       | Dropped                                                                |
+| `-- dbt-quality: ignore <ids>`      | The rule, one line       | Dropped                                                                |
+
+When explaining why a rule fired and the reader disagrees, offer a waiver at the narrowest scope
+that covers their case rather than `disabled_rules`. An inline directive attaches to **the line the
+diagnostic reports**, which for `MAT`/`INC`/`OPS` rules is the `{{ config() }}` block; `ignore-file`
+avoids the question. Only the config surface can waive project- and portfolio-scoped findings, whose
+`file` is often a directory or `<portfolio>`. Full semantics:
+[`../../../scripts/README.md`](../../../scripts/README.md).
+
+When a rule is _not_ firing where you expect one, check for a waiver before suspecting the rule —
+`grep -rn "dbt-quality: ignore"` plus the `ignore:` block of the nearest `.dbt-quality.yml`, which
+may sit in a parent directory of the audit root.
 
 ## Codes, kind, level and severity
 
@@ -51,16 +74,16 @@ can tell if it applies) and yet `critical` (if it does apply, data is lost).
 
 Portfolio-scoped; requires tree mode (point the audit at a parent directory).
 
-| Rule               | Kind | Level       | Severity | Suggestion                              | Signal                                                                                                                  |
-| ------------------ | ---- | ----------- | -------- | --------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| SSC-EWI-DBTPRJ0001 | EWI  | information | low      | Project has very few models             | Model count <= `micro_project_threshold` (5). Requires 2+ projects — one small project is a new repo, not fragmentation |
-| SSC-EWI-DBTPRJ0002 | EWI  | information | medium   | Multiple projects read the same sources | Same `source()` pair referenced from 2+ projects                                                                        |
-| SSC-EWI-DBTPRJ0003 | EWI  | information | low      | Config duplicated across siblings       | 3+ projects, with package version drift called out                                                                      |
-| SSC-EWI-DBTPRJ0004 | EWI  | error       | critical | `profiles.yml` committed                | File at project root; escalated to `verify` when it contains a literal secret                                           |
-| SSC-EWI-DBTPRJ0005 | EWI  | warning     | high     | Converter placeholders unresolved       | `YOUR_PROJECT_NAME`, `YOUR_DB` etc. in config                                                                           |
-| SSC-EWI-DBTPRJ0006 | EWI  | information | medium   | Projects chained by Snowflake Tasks     | 2+ `EXECUTE DBT PROJECT` in orchestration SQL                                                                           |
-| SSC-EWI-DBTPRJ0007 | EWI  | information | low      | Baseline packages absent                | `dbt_utils` / `dbt_constraints` missing from `packages.yml`                                                             |
-| SSC-EWI-DBTPRJ0008 | EWI  | information | low      | Build artifacts unignored               | `target/`, `logs/`, `dbt_packages/` present without a `.gitignore` entry                                                |
+| Rule               | Kind | Level       | Severity | Suggestion                              | Signal                                                                                                                   |
+| ------------------ | ---- | ----------- | -------- | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| SSC-EWI-DBTPRJ0001 | EWI  | information | low      | Project has very few models             | Model count <= `micro_project_threshold` (5). Requires 2+ projects — one small project is a new repo, not fragmentation  |
+| SSC-EWI-DBTPRJ0002 | EWI  | information | medium   | Multiple projects read the same sources | Same `source()` pair referenced from 2+ projects                                                                         |
+| SSC-EWI-DBTPRJ0003 | EWI  | information | low      | Config duplicated across siblings       | 3+ projects, with package version drift called out                                                                       |
+| SSC-EWI-DBTPRJ0004 | EWI  | warning     | medium   | `profiles.yml` present in project tree  | File at project root. `information` when git-ignored; `warning` when tracked/untracked/unknown. Content is OPS0002's job |
+| SSC-EWI-DBTPRJ0005 | EWI  | warning     | high     | Converter placeholders unresolved       | `YOUR_PROJECT_NAME`, `YOUR_DB` etc. in config                                                                            |
+| SSC-EWI-DBTPRJ0006 | EWI  | information | medium   | Projects chained by Snowflake Tasks     | 2+ `EXECUTE DBT PROJECT` in orchestration SQL                                                                            |
+| SSC-EWI-DBTPRJ0007 | EWI  | information | low      | Baseline packages absent                | `dbt_utils` / `dbt_constraints` missing from `packages.yml`                                                              |
+| SSC-EWI-DBTPRJ0008 | EWI  | information | low      | Build artifacts unignored               | `target/`, `logs/`, `dbt_packages/` present without a `.gitignore` entry                                                 |
 
 PRJ001, PRJ002 and PRJ006 together describe the per-data-flow conversion shape: one project per ETL
 data flow, stitched by a Task graph. It forfeits cross-project lineage, a single `dbt build`,
@@ -294,6 +317,11 @@ architecture pack.
 | Converter placeholders in `dbt_project.yml`                        | 3      |
 | ETL instance names in model names                                  | 2      |
 
+The marker signal is evaluated against text with dbt-quality waiver directives blanked out
+(`waivers.blank_directives`). A waiver names a rule id spelled exactly like a conversion marker, so
+without that step waivers accumulating in a hand-written project would push it over the threshold
+and suppress its entire architecture pack -- caused by the reader trying to silence one finding.
+
 Score >= 7 is `high` confidence and suppresses architecture suggestions project-wide; 4-6 is
 `medium` and suppresses only the specific files carrying markers, so a hybrid repo with migrated
 legacy code beside hand-written marts is scored correctly.
@@ -325,8 +353,11 @@ acceptable."
 The `error`-level rules detect something unconditionally wrong in dbt and use a direct message:
 `SSC-EWI-DBTSQL0006` (literal table reference), `SSC-EWI-DBTMIG0001`/`SSC-EWI-DBTMIG0002`/
 `SSC-EWI-DBTMIG0004`/`SSC-EWI-DBTMIG0008` (unresolved EWI / EWI marker / NEEDS-USER / placeholder),
-`SSC-EWI-DBTPRJ0004` (committed `profiles.yml`), and `SSC-EWI-DBTOPS0002` (literal credential).
-Direct messages are warranted only when there is no context under which the pattern is correct.
+and `SSC-EWI-DBTOPS0002` (literal credential). Direct messages are warranted only when there is no
+context under which the pattern is correct. `SSC-EWI-DBTPRJ0004` is not among them: it reports the
+_presence_ of `profiles.yml` in the project tree (a placement concern), at `warning` when the file
+is untracked or its git status is unknown and `information` when it is git-ignored, and leaves
+credential _content_ to `SSC-EWI-DBTOPS0002`.
 
 ### Steps
 

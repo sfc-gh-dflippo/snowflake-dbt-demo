@@ -73,7 +73,12 @@ layout, `stg_raw__` naming, `etl_dml_operation__`, `.scai/` config) and can be o
 
 ## Configuration
 
-All optional. Place `.dbt-quality.yml` at the audit root:
+All optional. Place `.dbt-quality.yml` at the audit root, or anywhere above it — the loader walks up
+from the audit root and takes the first file it finds, stopping at a directory containing `.git` or
+after eight levels. The upward search is what keeps a single repo-root config authoritative for
+`dbt-audit`, `dbt-lint`, and the save-time `dbt-validate` hook alike; the hook builds its portfolio
+from the enclosing dbt project, so a config read only at the audit root would apply to some surfaces
+and not others.
 
 ```yaml
 thresholds:
@@ -91,13 +96,66 @@ migration:
     - models/legacy/** # force these paths to be treated as converted
 
 disabled_rules:
-  - SSC-EWI-DBTDOC0002
+  - SSC-EWI-DBTDOC0002 # off everywhere, reported as skipped
+
+ignore: # waived at these paths, dropped from the output
+  - paths: ["models/legacy/**"]
+    rules: [SSC-EWI-DBTARC0001, SSC-EWI-DBTDOC0002]
+  - paths: ["vendor/**"]
+    rules: ["*"]
 ```
 
 There is no naming option, because names are not audited. A model may keep the name its object had
 in the source database, and a dbt project records nowhere that a tool can read what that name was —
 so a naming rule would be guessing. The reasoning and evidence are in
 `../skills/dbt-audit/references/rule-catalog.md`.
+
+## Waivers
+
+Three ways to silence a specific finding, all equivalent in effect: the suggestion is dropped, so it
+does not reach the report, the Problems panel, or any count.
+
+| Surface          | Scope       | Written as                                       |
+| ---------------- | ----------- | ------------------------------------------------ |
+| Inline directive | One line    | `-- dbt-quality: ignore SSC-EWI-DBTINC0008`      |
+| File directive   | One file    | `-- dbt-quality: ignore-file SSC-EWI-DBTDOC0002` |
+| `ignore:` config | A path glob | see above                                        |
+
+Details that decide whether a waiver takes effect:
+
+- **An inline directive attaches to the line the diagnostic reports.** For `MAT`, `INC` and `OPS`
+  rules that line is the `{{ config() }}` block rather than the SQL a reader might consider at fault
+  — `resolve_position` in `core/anchors.py` anchors by category. Take the line from the reported
+  position, or use `ignore-file`, which does not depend on a line.
+- **A directive on its own line also covers the next line that carries anything**, so a blank line
+  between the directive and its statement is fine. A _trailing_ directive — one with code before it
+  on the same line — covers its own line only, deliberately: extending it forward would silence a
+  finding on the following statement that nobody reviewed.
+- **`*` in place of a rule list means every rule**, in a directive or a config entry.
+- **A rule list may be comma- or space-separated**, and is matched case-insensitively. Trailing
+  prose is ignored, so `-- dbt-quality: ignore SSC-EWI-DBTINC0008 (append-only feed)` works.
+- **A directive naming no rules waives nothing.** A truncated `-- dbt-quality: ignore` is not read
+  as a wildcard, because widening a half-written directive would hide findings nobody named.
+- **Config globs use `fnmatch` semantics**, in which `*` crosses `/`. This matches
+  `migration.paths`. Paths may be written project-relative or audit-root-relative; both forms are
+  matched.
+- **Only the config surface can waive project- and portfolio-scoped findings.** Those often name a
+  directory or a pseudo-path (`models/`, `<portfolio>`) with nowhere to put a comment.
+
+Waivers are distinct from `disabled_rules`, which turns a rule off for the whole run and reports it
+as _skipped_ so the report still states what was not checked. A waiver is narrower and stronger: the
+reader has settled this finding, in this place, and it is removed rather than reported.
+
+Two consequences worth knowing:
+
+- **A waiver leaves no audit trail.** A directive written for code that has since been fixed is not
+  reported as stale, and nothing counts what has been silenced. Grep for `dbt-quality: ignore` to
+  review them.
+- **Waiver text is excluded from marker scanning.** A rule id here is spelled exactly like a
+  SnowConvert marker, so `waivers.blank_directives` removes directives before the MIG pack and
+  `provenance.py` scan for conversion markers. Without it, writing a waiver would both raise a new
+  `SSC-EWI-DBTMIG0002` error and count as evidence of mechanical conversion — which suppresses the
+  whole ARCHITECTURE tier.
 
 ## Manifest
 

@@ -33,6 +33,7 @@ from dbt_quality.core.sqlutil import (
     extract_sources,
     strip_all,
 )
+from dbt_quality.waivers import blank_directives
 
 #: Never descend into these. ``dbt_packages``/``target`` in particular contain
 #: vendored projects and compiled copies of the user's own models, which would
@@ -76,6 +77,30 @@ LAYER_ALIASES: dict[str, str] = {
 # Configuration
 # =============================================================================
 
+#: How far up from the audit root to look for ``.dbt-quality.yml``. Matches the
+#: bound ``hooks/setup_vscode_task.py`` uses for project detection.
+CONFIG_SEARCH_LIMIT = 8
+
+CONFIG_NAMES = (".dbt-quality.yml", ".dbt-quality.yaml")
+
+
+@dataclass
+class IgnoreRule:
+    """
+    One ``ignore:`` entry: rules waived at the paths it names.
+
+    Unlike ``disabled_rules``, which turns a rule off everywhere and reports it as
+    skipped, this waives specific findings and drops them -- see ``waivers.py``.
+    """
+
+    paths: list[str] = field(default_factory=list)
+    rules: list[str] = field(default_factory=list)
+
+    @property
+    def rule_set(self) -> set[str]:
+        """Upper-cased rule ids, so a lower-case config entry still matches."""
+        return {r.strip().upper() for r in self.rules if str(r).strip()}
+
 
 @dataclass
 class AuditConfig:
@@ -110,33 +135,100 @@ class AuditConfig:
     migration_paths: list[str] = field(default_factory=list)
     #: Rule IDs to disable entirely.
     disabled_rules: list[str] = field(default_factory=list)
+    #: Path-scoped waivers. A matching suggestion is dropped, not reported.
+    ignores: list[IgnoreRule] = field(default_factory=list)
 
     @classmethod
     def load(cls, root: Path) -> AuditConfig:
-        """Load ``.dbt-quality.yml`` from the root if present, else defaults."""
-        config = cls()
-        for name in (".dbt-quality.yml", ".dbt-quality.yaml"):
-            path = root / name
-            if not path.is_file():
-                continue
-            try:
-                with path.open(encoding="utf-8") as handle:
-                    data = yaml.safe_load(handle) or {}
-            except (OSError, yaml.YAMLError):
-                return config
+        """
+        Load the nearest ``.dbt-quality.yml`` at or above ``root``, else defaults.
 
-            thresholds = data.get("thresholds", {}) or {}
+        The search walks upward because the audit root is not always the repo
+        root. ``dbt-validate`` builds its portfolio from the dbt project that
+        encloses the file being written, so a config placed once at the repo root
+        would otherwise be honoured by ``dbt-audit`` and invisible to the
+        save-time hook -- a waiver that works in one surface and not the other
+        reads as the feature being broken.
+
+        The walk stops at the first config found, at a directory containing
+        ``.git``, or after ``CONFIG_SEARCH_LIMIT`` levels, so it cannot wander
+        out of the repository and pick up an unrelated file from ``$HOME``.
+        """
+        config = cls()
+        path = _find_config(root)
+        if path is None:
+            return config
+
+        try:
+            with path.open(encoding="utf-8") as handle:
+                data = yaml.safe_load(handle) or {}
+        except (OSError, yaml.YAMLError):
+            return config
+        if not isinstance(data, dict):
+            return config
+
+        thresholds = data.get("thresholds", {}) or {}
+        if isinstance(thresholds, dict):
             for key, value in thresholds.items():
                 if hasattr(config, key):
                     setattr(config, key, value)
 
-            migration = data.get("migration", {}) or {}
+        migration = data.get("migration", {}) or {}
+        if isinstance(migration, dict):
             config.migration_mode = migration.get("mode", config.migration_mode)
             config.migration_paths = list(migration.get("paths", []) or [])
 
-            config.disabled_rules = list(data.get("disabled_rules", []) or [])
-            break
+        config.disabled_rules = list(data.get("disabled_rules", []) or [])
+        config.ignores = _parse_ignores(data.get("ignore"))
         return config
+
+
+def _find_config(root: Path) -> Path | None:
+    """Nearest config file at or above ``root``, within the documented bounds."""
+    current = root
+    for _ in range(CONFIG_SEARCH_LIMIT + 1):
+        for name in CONFIG_NAMES:
+            candidate = current / name
+            if candidate.is_file():
+                return candidate
+        if (current / ".git").exists():
+            return None
+        if current.parent == current:
+            return None
+        current = current.parent
+    return None
+
+
+def _parse_ignores(raw: Any) -> list[IgnoreRule]:
+    """
+    Read the ``ignore:`` list, skipping anything malformed.
+
+    A bad entry is dropped rather than raised on, matching how the rest of this
+    loader treats unreadable configuration: a typo in one waiver must not cost
+    the user the entire audit. An entry naming no paths or no rules waives
+    nothing, so a half-written entry silences nothing by accident.
+    """
+    if not isinstance(raw, list):
+        return []
+    entries: list[IgnoreRule] = []
+    for item in raw:
+        if not isinstance(item, dict):
+            continue
+        paths = item.get("paths") or item.get("path") or []
+        rules = item.get("rules") or item.get("rule") or []
+        if isinstance(paths, str):
+            paths = [paths]
+        if isinstance(rules, str):
+            rules = [rules]
+        if not isinstance(paths, list) or not isinstance(rules, list):
+            continue
+        entry = IgnoreRule(
+            paths=[str(p) for p in paths if str(p).strip()],
+            rules=[str(r) for r in rules if str(r).strip()],
+        )
+        if entry.paths and entry.rules:
+            entries.append(entry)
+    return entries
 
 
 # =============================================================================
@@ -154,6 +246,11 @@ class ModelFile:
     raw: str
     #: Comments, string literals and Jinja statement blocks blanked out.
     stripped: str = ""
+    #: ``raw`` with dbt-quality waiver directives blanked to equal-length spaces.
+    #: Scan this, not ``raw``, when looking for SnowConvert conversion markers: a
+    #: waiver names a rule id spelled exactly like one. See
+    #: ``waivers.blank_directives``.
+    without_directives: str = ""
     #: kwargs from the model's own ``config()`` call(s).
     own_config: dict[str, Any] = field(default_factory=dict)
     #: ``own_config`` merged over the resolved ``dbt_project.yml`` defaults.
@@ -221,6 +318,9 @@ class ProjectContext:
     provenance: Any = None  # ProvenanceVerdict; avoids a circular import
     #: Files that could not be read or parsed, surfaced in the report.
     read_errors: list[str] = field(default_factory=list)
+    #: relative path -> parsed waiver directives, populated on demand by
+    #: ``waivers.file_waivers``. Scoped to one run, so nothing goes stale.
+    waiver_cache: dict[str, Any] = field(default_factory=dict)
 
     @property
     def model_count(self) -> int:
@@ -423,6 +523,7 @@ def build_project_context(
                 name=path.stem,
                 raw=raw,
                 stripped=strip_all(raw),
+                without_directives=blank_directives(raw),
                 own_config=own_config,
                 folder_config=folder_config,
                 effective_config={**folder_config, **own_config},

@@ -37,6 +37,7 @@ from dbt_quality.core.sqlutil import (  # noqa: E402
 from dbt_quality.discovery import build_portfolio  # noqa: E402
 from dbt_quality.engine import run_audit, run_single_file  # noqa: E402
 from dbt_quality.scoring import build_report  # noqa: E402
+from dbt_quality.waivers import blank_directives, parse_waivers  # noqa: E402
 
 
 def _find_repo_root(start: Path) -> Path:
@@ -1062,12 +1063,18 @@ def test_lint_lines_parse_with_the_problem_matcher_regex(tmp_path: Path) -> None
         print(f"  (skipped: {tasks_file} not present)")
         return
     tasks = _json.loads(tasks_file.read_text(encoding="utf-8"))
-    pattern = next(
-        t["problemMatcher"]["pattern"]["regexp"]
+    spec = next(
+        t["problemMatcher"]["pattern"]
         for t in tasks["tasks"]
         if isinstance(t.get("problemMatcher"), dict)
     )
-    matcher = _re.compile(pattern)
+    matcher = _re.compile(spec["regexp"])
+    # Read the group indices from the same pattern block rather than hard-coding
+    # them. Fixed indices here were themselves a drift: they still named the
+    # 3-field layout after the end-position fields shipped, so this test failed
+    # against a correct tasks.json.
+    severity_group = spec["severity"]
+    code_group = spec["code"]
 
     root = write_project(tmp_path / "lintfmt")
     add_model(
@@ -1089,8 +1096,8 @@ def test_lint_lines_parse_with_the_problem_matcher_regex(tmp_path: Path) -> None
         assert "\n" not in line, "a lint line must not contain a newline"
         match = matcher.match(line)
         assert match, f"tasks.json regex did not match: {line[:160]}"
-        assert match.group(4) in ("error", "warning", "info")
-        assert match.group(5) == suggestion.rule_id
+        assert match.group(severity_group) in ("error", "warning", "info")
+        assert match.group(code_group) == suggestion.rule_id
 
 
 def test_lint_tokens_cover_every_level() -> None:
@@ -2403,6 +2410,553 @@ def test_yaml_keys_anchors_a_nested_dbt_project_key(tmp_path: Path) -> None:
     assert (
         text[routed[0] - 1].lstrip().startswith("on-run-end")
     ), f"line {routed[0]} is {text[routed[0] - 1]!r}, not the on-run-end key"
+
+
+# =============================================================================
+# Waivers: selectively silencing a rule by line, by file, or by config path
+# =============================================================================
+#
+# All of these build their own project under tmp_path. They deliberately do not
+# annotate tests/fixtures/ewi_estate/: EXPECTED_EWI_RULE_IDS asserts every active
+# EWI rule fires there, so a waiver in that tree would fail the inventory test
+# while looking like a rule regression.
+#
+# The reported line is read from a baseline run rather than hard-coded, because
+# the anchor for a rule is resolved by category (see core/anchors.py) and a
+# literal line number here would encode that resolution rather than test it.
+
+#: Fires on the line carrying the literal reference, with a precise column.
+HARDCODED_REF = "SSC-EWI-DBTSQL0006"
+#: Two rules that both fire on one under-configured incremental model.
+INC_NO_GUARD = "SSC-PRF-DBTINC0006"
+INC_NO_KEY = "SSC-FDM-DBTINC0007"
+
+
+def _fired(root: Path, rule_id: str) -> list:
+    return [
+        s for s in run_audit(build_portfolio(root)).suggestions if s.rule_id == rule_id
+    ]
+
+
+def _reported_line(root: Path, rule_id: str) -> int:
+    hits = _fired(root, rule_id)
+    assert hits, f"{rule_id} did not fire on the baseline fixture"
+    return hits[0].line
+
+
+def _edit_lines(path: Path, mutate) -> None:
+    lines = path.read_text(encoding="utf-8").splitlines()
+    path.write_text("\n".join(mutate(lines)) + "\n", encoding="utf-8")
+
+
+def _hardcoded_ref_project(tmp_path: Path, name: str) -> tuple[Path, Path]:
+    """A project whose single model carries a literal db.schema.table reference."""
+    root = write_project(tmp_path / name)
+    add_model(root, "gold/fct_x.sql", "select id from analytics.public.orders")
+    return root, root / "models" / "gold" / "fct_x.sql"
+
+
+def _incremental_project(tmp_path: Path, name: str) -> tuple[Path, Path]:
+    """A project whose model fires both INC_NO_GUARD and INC_NO_KEY."""
+    root = write_project(tmp_path / name)
+    add_model(
+        root,
+        "gold/fct_events.sql",
+        """
+        {{ config(materialized='incremental') }}
+        select event_id from {{ ref('stg_events') }}
+        """,
+    )
+    add_model(root, "bronze/stg_events.sql", "select 1 as event_id")
+    return root, root / "models" / "gold" / "fct_events.sql"
+
+
+def test_inline_waiver_on_the_reported_line(tmp_path: Path) -> None:
+    """A directive appended to the line the diagnostic reports silences it."""
+    root, model = _hardcoded_ref_project(tmp_path, "inline_same")
+    line = _reported_line(root, HARDCODED_REF)
+
+    _edit_lines(
+        model,
+        lambda ls: [
+            f"{text}  -- dbt-quality: ignore {HARDCODED_REF}" if i == line - 1 else text
+            for i, text in enumerate(ls)
+        ],
+    )
+    assert not _fired(root, HARDCODED_REF), "trailing directive must waive its own line"
+
+
+def test_inline_waiver_above_the_reported_line(tmp_path: Path) -> None:
+    """
+    A directive on its own line waives the next line that carries anything.
+
+    The blank-line variant is the shape people actually write, and requiring
+    adjacency would make the mechanism look unreliable.
+    """
+    for name, spacer in (("inline_above", []), ("inline_gap", [""])):
+        root, model = _hardcoded_ref_project(tmp_path, name)
+        line = _reported_line(root, HARDCODED_REF)
+
+        _edit_lines(
+            model,
+            lambda ls, line=line, spacer=spacer: [
+                *ls[: line - 1],
+                f"-- dbt-quality: ignore {HARDCODED_REF}",
+                *spacer,
+                *ls[line - 1 :],
+            ],
+        )
+        assert not _fired(
+            root, HARDCODED_REF
+        ), f"directive above the reported line must waive it ({name})"
+
+
+def test_trailing_waiver_does_not_reach_the_next_line() -> None:
+    """
+    A trailing directive applies to its own line only.
+
+    Extending it forward would silence a finding on the following statement that
+    the author never looked at -- an unintended false negative, which is the most
+    expensive thing this mechanism can produce.
+    """
+    waivers = parse_waivers(
+        "select 1 as a  -- dbt-quality: ignore SSC-EWI-DBTSQL0006\nselect 2 as b\n"
+    )
+    assert waivers.waives("SSC-EWI-DBTSQL0006", 1)
+    assert not waivers.waives(
+        "SSC-EWI-DBTSQL0006", 2
+    ), "a trailing directive must not carry to the following line"
+
+
+def test_ignore_file_waives_the_whole_file(tmp_path: Path) -> None:
+    """`ignore-file` is the answer when the reported line is inconvenient."""
+    root, model = _incremental_project(tmp_path, "ignorefile")
+    assert _fired(root, INC_NO_GUARD), "baseline must fire before waiving"
+
+    model.write_text(
+        f"-- dbt-quality: ignore-file {INC_NO_GUARD}\n"
+        + model.read_text(encoding="utf-8"),
+        encoding="utf-8",
+    )
+    assert not _fired(root, INC_NO_GUARD), "ignore-file must waive regardless of line"
+
+
+def test_waiver_is_rule_specific(tmp_path: Path) -> None:
+    """
+    Waiving one rule must leave every other rule firing on the same file.
+
+    The false-negative gate for this feature. A waiver that over-reaches silences
+    findings the author never reviewed, which is worse than having no waivers.
+    """
+    root, model = _incremental_project(tmp_path, "specific")
+    assert _fired(root, INC_NO_GUARD) and _fired(root, INC_NO_KEY)
+
+    model.write_text(
+        f"-- dbt-quality: ignore-file {INC_NO_GUARD}\n"
+        + model.read_text(encoding="utf-8"),
+        encoding="utf-8",
+    )
+    assert not _fired(root, INC_NO_GUARD), "the named rule must be waived"
+    assert _fired(root, INC_NO_KEY), "an unnamed rule on the same file must still fire"
+
+
+def test_wildcard_waives_every_rule(tmp_path: Path) -> None:
+    """`*` in place of a rule list waives everything for that file."""
+    root, model = _incremental_project(tmp_path, "wildcard")
+    model.write_text(
+        "-- dbt-quality: ignore-file *\n" + model.read_text(encoding="utf-8"),
+        encoding="utf-8",
+    )
+    remaining = [
+        s
+        for s in run_audit(build_portfolio(root)).suggestions
+        if s.file.endswith("fct_events.sql")
+    ]
+    assert not remaining, f"wildcard must waive every rule, got {remaining}"
+
+
+def test_lowercase_directive_still_matches(tmp_path: Path) -> None:
+    """A rule id written in lower case waives, so the directive is forgiving."""
+    root, model = _incremental_project(tmp_path, "lowercase")
+    model.write_text(
+        f"-- dbt-quality: ignore-file {INC_NO_GUARD.lower()}\n"
+        + model.read_text(encoding="utf-8"),
+        encoding="utf-8",
+    )
+    assert not _fired(root, INC_NO_GUARD)
+
+
+def test_config_ignore_scopes_by_path_glob(tmp_path: Path) -> None:
+    """An `ignore:` entry waives only at the paths it names."""
+    root = write_project(tmp_path / "cfgpath")
+    add_model(root, "gold/fct_x.sql", "select id from analytics.public.orders")
+    add_model(root, "bronze/stg_y.sql", "select id from analytics.public.customers")
+    assert len(_fired(root, HARDCODED_REF)) == 2, "both models must fire at baseline"
+
+    (root / ".dbt-quality.yml").write_text(
+        textwrap.dedent(f"""
+            ignore:
+              - paths: ["models/gold/**"]
+                rules: [{HARDCODED_REF}]
+            """).strip(),
+        encoding="utf-8",
+    )
+    hits = _fired(root, HARDCODED_REF)
+    assert len(hits) == 1, f"only the unmatched path may still fire, got {hits}"
+    assert hits[0].file.endswith("stg_y.sql")
+
+
+def test_config_ignore_accepts_a_rule_wildcard(tmp_path: Path) -> None:
+    """`rules: ["*"]` waives every rule at the named paths."""
+    root, _model = _incremental_project(tmp_path, "cfgwild")
+    (root / ".dbt-quality.yml").write_text(
+        textwrap.dedent("""
+            ignore:
+              - paths: ["models/gold/**"]
+                rules: ["*"]
+            """).strip(),
+        encoding="utf-8",
+    )
+    remaining = [
+        s
+        for s in run_audit(build_portfolio(root)).suggestions
+        if s.file.endswith("fct_events.sql")
+    ]
+    assert not remaining, f"rule wildcard must waive everything, got {remaining}"
+
+
+def test_config_is_found_in_a_parent_directory(tmp_path: Path) -> None:
+    """
+    A repo-root config governs an audit rooted at a nested project.
+
+    This is what keeps the save-time hook and the audit in agreement:
+    `dbt-validate` builds its portfolio from the enclosing dbt project, so a
+    config read only at the audit root would be honoured by one surface and
+    ignored by the other.
+    """
+    repo = tmp_path / "repo"
+    root = write_project(repo / "project")
+    add_model(root, "gold/fct_x.sql", "select id from analytics.public.orders")
+    assert _fired(root, HARDCODED_REF), "baseline must fire before waiving"
+
+    (repo / ".dbt-quality.yml").write_text(
+        textwrap.dedent(f"""
+            ignore:
+              - paths: ["**/fct_x.sql"]
+                rules: [{HARDCODED_REF}]
+            """).strip(),
+        encoding="utf-8",
+    )
+    assert not _fired(
+        root, HARDCODED_REF
+    ), "a config above the audit root must still be honoured"
+
+
+def test_waivers_apply_in_single_file_mode(tmp_path: Path) -> None:
+    """
+    The hook path honours a waiver identically to the audit.
+
+    A waiver the report respects and the editor ignores would read as the feature
+    being broken, so the two surfaces are asserted against the same fixture.
+    """
+    root, model = _incremental_project(tmp_path, "hookparity")
+    baseline = {
+        s.rule_id for s in run_single_file(build_portfolio(root), model).suggestions
+    }
+    assert {INC_NO_GUARD, INC_NO_KEY} <= baseline
+
+    model.write_text(
+        f"-- dbt-quality: ignore-file {INC_NO_GUARD}\n"
+        + model.read_text(encoding="utf-8"),
+        encoding="utf-8",
+    )
+    after = {
+        s.rule_id for s in run_single_file(build_portfolio(root), model).suggestions
+    }
+    assert INC_NO_GUARD not in after, "single-file mode must honour the waiver"
+    assert INC_NO_KEY in after, "single-file mode must not over-waive"
+
+
+def test_malformed_waivers_are_inert(tmp_path: Path) -> None:
+    """
+    A truncated directive or a malformed config entry waives nothing and raises
+    nothing.
+
+    A half-written directive must not widen to "every rule": silently hiding
+    findings the author never named is the failure mode worth guarding against.
+    """
+    root, model = _incremental_project(tmp_path, "malformed")
+    model.write_text(
+        "-- dbt-quality: ignore\n" + model.read_text(encoding="utf-8"),
+        encoding="utf-8",
+    )
+    (root / ".dbt-quality.yml").write_text(
+        textwrap.dedent("""
+            ignore:
+              - paths: ["models/gold/**"]
+              - rules: [SSC-EWI-DBTSQL0006]
+              - "not a mapping"
+            """).strip(),
+        encoding="utf-8",
+    )
+    assert _fired(root, INC_NO_GUARD), "a rule-less directive must waive nothing"
+    assert _fired(root, INC_NO_KEY), "an incomplete config entry must waive nothing"
+
+
+def test_a_waiver_is_not_read_as_a_conversion_marker(tmp_path: Path) -> None:
+    """
+    Writing a waiver must not create a new finding.
+
+    A dbt-quality rule id is spelled exactly like a SnowConvert marker
+    (`SSC-EWI-DBTSQL0006` against `SSC-EWI-SSIS0033`), so MIG002 read the waiver
+    itself as unresolved conversion debt and reported an error naming it. The
+    reader silencing one finding would have gained another.
+    """
+    root = write_project(tmp_path / "markerclash")
+    add_model(
+        root,
+        "gold/fct_x.sql",
+        f"select id from analytics.public.orders  -- dbt-quality: ignore {HARDCODED_REF}",
+    )
+    # Force migration provenance so the MIG pack is active at all.
+    (root / ".dbt-quality.yml").write_text(
+        "migration:\n  mode: lift_and_shift\n", encoding="utf-8"
+    )
+
+    ids = {s.rule_id for s in run_audit(build_portfolio(root)).suggestions}
+    assert HARDCODED_REF not in ids, "the waiver must still take effect"
+    assert (
+        "SSC-EWI-DBTMIG0002" not in ids
+    ), "a waiver directive must not be reported as an unresolved conversion marker"
+
+
+def test_waivers_do_not_shift_migration_provenance(tmp_path: Path) -> None:
+    """
+    Waivers must not accumulate into a lift-and-shift verdict.
+
+    Marker count is a provenance signal heavy enough to classify a project as
+    converted on its own, which suppresses the entire ARCHITECTURE tier. A
+    hand-written project acquiring waivers would have silently lost those checks.
+    """
+    from dbt_quality.provenance import classify
+
+    root = write_project(tmp_path / "provenance_clash")
+    for index in range(3):
+        add_model(
+            root,
+            f"gold/fct_{index}.sql",
+            f"-- dbt-quality: ignore-file {HARDCODED_REF}\n"
+            "select id from analytics.public.orders",
+        )
+    portfolio = build_portfolio(root)
+    verdict = classify(portfolio.projects[0])
+    assert (
+        not verdict.is_migration
+    ), f"waivers must not read as conversion evidence: {verdict.signals}"
+
+
+# =============================================================================
+# PRJ0004 -- profiles.yml is a git-aware placement rule (defects 1, 2, obs 4)
+# =============================================================================
+
+PROFILES_PRESENT = "SSC-EWI-DBTPRJ0004"
+
+
+def _add_profiles(root: Path, body: str = "  target: dev\n  outputs:\n") -> None:
+    (root / "profiles.yml").write_text(body, encoding="utf-8")
+
+
+def _init_repo(root: Path):
+    """Init a git repo at ``root`` with a usable identity, or None if git absent."""
+    if shutil.which("git") is None:
+        return None
+    try:
+        import git
+    except Exception:  # noqa: BLE001
+        return None
+    repo = git.Repo.init(root)
+    with repo.config_writer() as cw:
+        cw.set_value("user", "email", "test@example.com")
+        cw.set_value("user", "name", "Test")
+        cw.set_value("commit", "gpgsign", "false")
+    return repo
+
+
+def test_prj0004_presence_only_when_not_a_repo(tmp_path: Path) -> None:
+    """
+    Outside a git repo, PRJ0004 states presence and never claims 'committed'.
+
+    Defect 1: the old rule titled the finding 'committed' and told the reader to
+    rotate a credential 'git history retains', from a bare ``path.is_file()`` --
+    false in a working tree that was never a repo.
+    """
+    root = write_project(tmp_path / "norepo")
+    _add_profiles(root)
+
+    hits = _fired(root, PROFILES_PRESENT)
+    assert len(hits) == 1, "profiles.yml present must fire PRJ0004"
+    s = hits[0]
+    assert s.level == "warning", "unknown git status is a warning, not an error"
+    assert "present in the project directory" in s.message
+    assert "committed" not in s.message.lower()
+    assert "git rm" not in s.remediation, "must not assert removal when not tracked"
+    assert "git history retains" not in s.remediation
+
+
+def test_prj0004_does_not_escalate_on_credential_content(tmp_path: Path) -> None:
+    """
+    Content is OPS0002's concern; PRJ0004 must not raise itself to error on it.
+
+    Defect 2 / observation 4: the old rule ran its own secret regex and escalated
+    WARNING -> ERROR, double-counting content that OPS0002 already owns.
+    """
+    root = write_project(tmp_path / "withsecret")
+    _add_profiles(root, "  password: SuperSecret123!\n")
+
+    hits = _fired(root, PROFILES_PRESENT)
+    assert hits, "profiles.yml present must still fire PRJ0004"
+    assert all(
+        s.level != "error" for s in hits
+    ), "PRJ0004 must not escalate to error on credential content"
+
+
+def test_prj0004_reports_committed_only_when_tracked(tmp_path: Path) -> None:
+    """When the file is genuinely tracked, the 'committed' framing is correct."""
+    root = write_project(tmp_path / "tracked")
+    _add_profiles(root)
+    repo = _init_repo(root)
+    if repo is None:
+        return  # git unavailable: the fallback branch is covered elsewhere
+    repo.index.add(["profiles.yml"])
+    repo.index.commit("add profiles")
+
+    hits = _fired(root, PROFILES_PRESENT)
+    assert len(hits) == 1
+    s = hits[0]
+    assert s.level == "warning"
+    assert "tracked in git" in s.message
+    assert "git rm --cached" in s.remediation, "tracked file should advise removal"
+    assert "rotate" in s.remediation.lower()
+
+
+def test_prj0004_ignored_is_informational(tmp_path: Path) -> None:
+    """An untracked, git-ignored profiles.yml is the low-risk, informational case."""
+    root = write_project(tmp_path / "ignored")
+    _add_profiles(root)
+    (root / ".gitignore").write_text("profiles.yml\n", encoding="utf-8")
+    repo = _init_repo(root)
+    if repo is None:
+        return
+
+    hits = _fired(root, PROFILES_PRESENT)
+    assert len(hits) == 1
+    s = hits[0]
+    assert s.level == "information", "git-ignored presence is informational"
+    assert "git-ignored" in s.message
+    assert "git rm" not in s.remediation
+
+
+# =============================================================================
+# OPS0002 -- SECRET_PATTERN distinguishes a literal from a templated value
+# =============================================================================
+
+
+def test_ops0002_secret_pattern_ignores_templated_values() -> None:
+    """
+    Defect 2 root: a quoted ``env_var`` is not a literal secret.
+
+    The lookahead must tolerate an opening quote before the template, or the
+    idiomatic ``password: "{{ env_var('X') }}"`` is flagged -- and, worse,
+    survives its own recommended remediation.
+    """
+    from dbt_quality.rules.ops import SECRET_PATTERN
+
+    dq = '"'
+    sq = "'"
+    fires = [
+        "Snowflake",
+        f"{dq}Snowflake{dq}",
+    ]
+    quiet = [
+        f"{dq}{{{{ env_var('X') }}}}{dq}",
+        "{{ env_var('X') }}",
+        f"{sq}{{{{ env_var('X') }}}}{sq}",
+        "$SNOWFLAKE_PW",
+        f"{dq}$SNOWFLAKE_PW{dq}",
+        "",
+    ]
+    for value in fires:
+        assert SECRET_PATTERN.search(
+            f"      password: {value}"
+        ), f"literal must fire: {value!r}"
+    for value in quiet:
+        assert not SECRET_PATTERN.search(
+            f"      password: {value}"
+        ), f"templated/empty must stay quiet: {value!r}"
+
+
+def test_ops0002_clears_once_credentials_are_templated(tmp_path: Path) -> None:
+    """End to end: a profiles.yml using env_var raises no OPS0002 finding."""
+    root = write_project(tmp_path / "templated")
+    _add_profiles(root, "  password: \"{{ env_var('SNOWFLAKE_PW') }}\"\n")
+    assert not _fired(
+        root, "SSC-EWI-DBTOPS0002"
+    ), "a templated credential must not be reported as a literal secret"
+
+
+# =============================================================================
+# blank_directives -- consecutive waivers must not merge (defect 3)
+# =============================================================================
+
+
+def test_blank_directives_handles_consecutive_directives() -> None:
+    """
+    Two directives on consecutive lines are blanked independently.
+
+    Defect 3: the rule-list class contained ``\\s``, so a whole-file substitution
+    let one match span the newline and swallow the next directive up to its colon
+    -- the second rule id survived (read later as a marker) and the eaten newline
+    shifted every later line number.
+    """
+    text = (
+        "-- dbt-quality: ignore-file SSC-EWI-DBTINC0002\n"
+        "-- dbt-quality: ignore-file SSC-FDM-DBTINC0007\n"
+        "select 1\n"
+    )
+    blanked = blank_directives(text)
+    assert "SSC-EWI-DBTINC0002" not in blanked, "first id must be blanked"
+    assert "SSC-FDM-DBTINC0007" not in blanked, "second id must be blanked too"
+    assert blanked.count("\n") == text.count("\n"), "newlines must be preserved"
+    assert len(blanked) == len(text), "length must be preserved for offset parity"
+
+
+def test_consecutive_waivers_produce_no_marker_finding(tmp_path: Path) -> None:
+    """
+    Two consecutive waivers must not manufacture a conversion-marker finding.
+
+    The end-to-end form of defect 3: the surviving second id was read by the MIG
+    pack as an unresolved marker, so silencing two rules raised a brand-new one.
+    """
+    root = write_project(tmp_path / "twowaivers")
+    add_model(
+        root,
+        "gold/fct_x.sql",
+        "-- dbt-quality: ignore-file SSC-PRF-DBTINC0006\n"
+        "-- dbt-quality: ignore-file SSC-FDM-DBTINC0007\n"
+        "{{ config(materialized='incremental') }}\n"
+        "select id from {{ ref('stg_x') }}",
+    )
+    add_model(root, "bronze/stg_x.sql", "select 1 as id")
+    (root / ".dbt-quality.yml").write_text(
+        "migration:\n  mode: lift_and_shift\n", encoding="utf-8"
+    )
+
+    ids = {s.rule_id for s in run_audit(build_portfolio(root)).suggestions}
+    assert "SSC-PRF-DBTINC0006" not in ids, "first waiver must take effect"
+    assert "SSC-FDM-DBTINC0007" not in ids, "second waiver must take effect"
+    assert not any(
+        i.startswith("SSC-EWI-DBTMIG") or i.startswith("SSC-FDM-DBTMIG") for i in ids
+    ), "a waiver id must not be read as a conversion marker"
 
 
 def _main() -> int:
