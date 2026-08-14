@@ -22,8 +22,10 @@ Match the user's request to the most relevant skill and load it.
 
 - **dbt-migration** — end-to-end orchestrator: discovery, planning, conversion, testing, deployment
   → `./skills/dbt-migration`
-- **dbt-migration-validation** — validate converted models: schema checks, anti-patterns, auto-fixes
-  → `./skills/dbt-migration-validation`
+- **dbt-validate** — validate a converted model file: anti-patterns, tests, docs →
+  `../dbt-quality/skills/dbt-validate`
+- **dbt-audit** — assess the converted project as a whole, with an HTML report →
+  `../dbt-quality/skills/dbt-audit`
 
 ## Source-platform converters
 

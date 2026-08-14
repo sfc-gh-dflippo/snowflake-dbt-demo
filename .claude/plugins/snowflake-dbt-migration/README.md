@@ -18,7 +18,8 @@ first to handle initial conversion, then use `/dbt-migrate` for dbt-specific mod
 | Skill                       | Description                                                        |
 | --------------------------- | ------------------------------------------------------------------ |
 | dbt-migration               | Orchestrator: discovery, planning, conversion, testing, deployment |
-| dbt-migration-validation    | Validate dbt models and schema YAML files                          |
+| dbt-validate                | Validate one dbt model file (dbt-quality plugin)                   |
+| dbt-audit                   | Project-wide dbt anti-pattern audit (dbt-quality plugin)           |
 | dbt-migration-snowflake     | Convert Snowflake DDL to dbt models                                |
 | dbt-migration-bigquery      | Convert BigQuery DDL to dbt models                                 |
 | dbt-migration-db2           | Convert IBM DB2 DDL to dbt models                                  |

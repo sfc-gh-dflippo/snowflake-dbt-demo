@@ -497,7 +497,8 @@ Always include header comments explaining:
 ## Related Documentation
 
 - $dbt-migration - Main migration workflow skill
-- $dbt-migration-validation - Validation rules and quality checks
+- $dbt-validate - Validate a single converted model file
+- $dbt-audit - Project-wide anti-pattern audit and HTML assessment
 - $dbt-modeling - CTE patterns and SQL structure
 - $dbt-testing - Testing strategies with dbt_constraints
 - $dbt-architecture - Project organization and naming conventions
@@ -537,7 +538,8 @@ cortex skill add https://github.com/sfc-gh-dflippo/snowflake-dbt-demo/.claude/sk
 | `dbt-migration-hive`          | Hive / Spark / Databricks        | External tables, PARTITIONED BY    |
 | `dbt-migration-vertica`       | Vertica                          | Projections, flex tables           |
 | `dbt-migration-sybase`        | Sybase IQ                        | T-SQL variant                      |
-| `dbt-migration-validation`    | All platforms                    | Validate models against rules      |
+| `dbt-validate`                | All platforms                    | Validate one converted model file  |
+| `dbt-audit`                   | All platforms                    | Audit the converted project        |
 
 #### Core dbt Skills
 

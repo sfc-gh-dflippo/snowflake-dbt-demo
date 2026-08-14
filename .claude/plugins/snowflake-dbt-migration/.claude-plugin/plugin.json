@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "snowflake-dbt-migration",
   "version": "1.0.0",
   "description": "dbt migration skills for converting source database SQL to dbt models on Snowflake",
