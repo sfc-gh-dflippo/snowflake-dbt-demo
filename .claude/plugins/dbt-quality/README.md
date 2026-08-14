@@ -57,11 +57,11 @@ The plugin supports both Cortex Code and Claude Code. The two hook manifests (`h
 The following table summarizes the three hook-based and editor-based execution modes. Skills and the
 command line interface are described in later sections.
 
-|                     | Scope         | Trigger                         | Output                          |
-| ------------------- | ------------- | ------------------------------- | ------------------------------- |
-| **Validation hook** | One file      | Every write or edit operation   | Findings in the agent's context |
-| **Audit hook**      | Whole project | After dbt rewrites the manifest | Summary in the agent's context  |
-| **Editor tasks**    | Whole project | On demand                       | Problems panel                  |
+|                     | Scope         | Trigger                          | Output                          |
+| ------------------- | ------------- | -------------------------------- | ------------------------------- |
+| **Validation hook** | One file      | Every write or edit operation    | Findings in the agent's context |
+| **Audit hook**      | Whole project | After dbt rewrites the manifest  | Summary in the agent's context  |
+| **Editor tasks**    | Whole project | On demand, or every five minutes | Problems panel                  |
 
 ### Validating a file on write
 
@@ -96,20 +96,116 @@ To force an audit on the next run, delete the stamp files:
 rm -f ~/.cache/dbt-quality/*.stamp
 ```
 
-### Running the editor tasks
+### Integrating with Cortex Code Desktop and Visual Studio Code
 
-Cortex Code Desktop is based on Visual Studio Code, so a `.vscode/tasks.json` entry with a
-`problemMatcher` populates the Problems panel. This repository defines the following four tasks:
+Cortex Code Desktop is based on Visual Studio Code, so a task in `.vscode/tasks.json` with a
+`problemMatcher` is the supported way to populate the Problems panel. The linter emits one line per
+suggestion in the conventional compiler format, and the matcher parses each line into a diagnostic
+that is attached to the correct file, line, and column range. The integration is identical in Cortex
+Code Desktop and in Visual Studio Code, because both read the same task definition.
+
+SARIF is not supported in Cortex Code Desktop, because the SARIF viewer is not present in the
+application bundle. The SQLFluff extension is blocked by the default-deny extension allowlist.
+Therefore the task and `problemMatcher` mechanism is the only route from an external linter to the
+Problems panel.
+
+#### Bootstrapping the tasks
+
+A `SessionStart` hook, `hooks/setup_vscode_task.py`, writes the task definitions into the project so
+that no manual setup is required. Its behavior is deliberately conservative:
+
+- It takes no action unless the session's working directory is inside a dbt project, which it
+  determines by looking for `dbt_project.yml` in the working directory and up to eight parent
+  directories.
+- It creates `.vscode/tasks.json` if the file does not exist.
+- If the file exists, it adds only the missing dbt-quality tasks. Existing tasks are never modified,
+  even if they were edited by hand or point to a different script path.
+- If the file exists but is not valid JSON, for example because it contains JSONC comments, the hook
+  takes no action rather than overwrite a file that it cannot round-trip safely.
+- It uses only the Python standard library, because `hooks.json` invokes it with the bare `python3`
+  interpreter.
+
+The hook creates the following two tasks, which are the minimum required for Problems panel
+integration:
 
 - `dbt: quality suggestions`
-- `dbt: quality suggestions (errors only)`
 - `dbt: quality suggestions (watch, every 5 min)`
-- `dbt: quality report (JSON)`
+
+The `.vscode/tasks.json` file committed in this repository defines two additional tasks. All four
+are described in the following table.
+
+| Task                                            | Command                                   | Purpose                                                                   |
+| ----------------------------------------------- | ----------------------------------------- | ------------------------------------------------------------------------- |
+| `dbt: quality suggestions`                      | `lint.py .`                               | Reports all suggestions for the workspace in the Problems panel           |
+| `dbt: quality suggestions (errors only)`        | `lint.py . --min-level error`             | Reports only the suggestions that permit no legitimate exception          |
+| `dbt: quality suggestions (watch, every 5 min)` | `lint.py .` in a loop, with `sleep 300`   | Refreshes the Problems panel every five minutes while the task is running |
+| `dbt: quality report (JSON)`                    | `audit.py audit . --out suggestions.json` | Writes the full report, including code examples, to `suggestions.json`    |
+
+The JSON report task declares an empty `problemMatcher`, because it produces a file rather than
+diagnostics.
+
+#### Running the tasks
+
+To run a task, open the Command Palette, select **Tasks: Run Task**, and select the task by name.
+All tasks run with `cwd` set to `${workspaceFolder}` and use the `silent` reveal setting, so they do
+not steal focus from the editor.
+
+The watch task sets `runOn: folderOpen`, so it starts automatically when the folder is opened, and
+`isBackground: true`, so the editor does not treat it as a task that terminates. Its `background`
+matcher settings use the `>>> dbt-quality lint start` and `>>> dbt-quality lint done` markers that
+the task echoes around each run, which is how the editor knows when to clear and repopulate
+diagnostics.
+
+> **Note**
+>
+> The watch task starts only when a folder is opened. If the task was added to `tasks.json` during
+> the current session, reload the window or run `dbt: quality suggestions (watch, every 5 min)` once
+> to start it in the current session.
+
+#### Diagnostic format
+
+The linter writes one line per suggestion in the following format:
+
+```text
+path:line:col:endLine:endCol: level: [RULE-ID] message -> remediation
+```
+
+For example:
+
+```text
+models/gold/fact_order_line.sql:5:1:5:38: warning: [SSC-EWI-DBTINC0002] `pre_hook` deletes rows from this model's relation outside dbt's transaction and DAG. -> Express the deletion through the materialization instead.
+```
+
+The `problemMatcher` maps these fields to the Problems panel as follows.
+
+| Linter field        | `problemMatcher` capture group | Problems panel column |
+| ------------------- | ------------------------------ | --------------------- |
+| `path`              | 1 (`file`)                     | File                  |
+| `line`, `col`       | 2, 3 (`line`, `column`)        | Position              |
+| `endLine`, `endCol` | 4, 5 (`endLine`, `endColumn`)  | Underline range       |
+| `level`             | 6 (`severity`)                 | Severity icon         |
+| `RULE-ID`           | 7 (`code`)                     | Code                  |
+| `message`           | 8 (`message`)                  | Message               |
+
+The matcher declares `owner` and `source` as `dbt-quality`, so its diagnostics are attributed to the
+plugin and are cleared as a group on each run, and it sets `fileLocation` to
+`["relative", "${workspaceFolder}"]`, so the reported paths resolve against the workspace root.
+
+The `level` field maps directly to the three severities that Visual Studio Code recognizes: `error`,
+`warning`, and `info`. The `information` level used elsewhere in this plugin is emitted as `info` by
+the linter for this reason.
+
+> **Note**
+>
+> The end position fields are required. A `problemMatcher` that captures only `line` and `column`
+> does not fail cleanly against this format: because the `file` group is non-greedy, the pattern
+> backtracks and captures `path:line:col` as the file name, which does not resolve to a file on
+> disk. If the Problems panel is empty or its entries reference paths that do not exist, compare the
+> `pattern` block in `.vscode/tasks.json` against the format above.
 
 These tasks evaluate the project at a point in time; they do not evaluate it as you type. The
-five-minute watch task starts when the folder is opened. If the task was added during an existing
-session, reload the window or run `dbt: quality suggestions (watch, every 5 min)` once to start it.
-The validation hook covers individual files on write, and the editor tasks cover the whole project.
+validation hook covers individual files as they are written, and the editor tasks cover the whole
+project. The two surfaces are complementary.
 
 ### Using the skills
 
@@ -234,6 +330,13 @@ line interface against the same path to view the complete output.
 **The audit never runs after a dbt command.** Confirm that dbt rewrote `target/manifest.json`; a
 failed run does not. Then delete the stamp files. Note that dbt Projects on Snowflake runs
 server-side and does not update a local manifest, so no audit is expected in that case.
+
+**The Problems panel is empty, or its entries reference paths that do not exist.** Run the
+`dbt: quality suggestions` task and check the task terminal output. If the linter printed
+suggestions but no diagnostics appeared, the `problemMatcher` pattern in `.vscode/tasks.json` does
+not match the linter's output format; compare it against the format in
+[Diagnostic format](#diagnostic-format). If the task terminal is also empty, run the linter from the
+command line to confirm that it produces output at all.
 
 **The audit runs too often.** The audit hook is registered for Bash only. Its first condition
 requires a shell command that directly invokes dbt with a manifest-producing subcommand, as

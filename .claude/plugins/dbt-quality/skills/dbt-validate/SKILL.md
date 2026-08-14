@@ -116,13 +116,22 @@ catches a failed run, which matches the subcommand but leaves no newer manifest.
 
 ### tasks.json — project-wide editor diagnostics
 
-`.vscode/tasks.json` at the repo root defines four tasks:
+A `SessionStart` hook, `hooks/setup_vscode_task.py`, bootstraps the task definitions into
+`.vscode/tasks.json` at the dbt project root. It is idempotent and additive: it adds only missing
+dbt-quality tasks, never modifies existing ones, skips a `tasks.json` that is not valid JSON, and
+takes no action outside a dbt project. It creates the first two tasks below; this repository commits
+all four.
+
+The linter emits `path:line:col:endLine:endCol: level: [RULE-ID] message -> fix`, and the matcher
+must capture all five position fields. A pattern that captures only `line` and `column` does not
+fail cleanly: the non-greedy `file` group backtracks and captures `path:line:col` as the file name,
+which resolves to nothing. See the plugin README for the full field mapping.
 
 | Task                                            | What it does                                                                                  |
 | ----------------------------------------------- | --------------------------------------------------------------------------------------------- |
 | `dbt: quality suggestions`                      | Runs `dbt-lint` against the project through a `problemMatcher`, populating the Problems panel |
-| `dbt: quality suggestions (errors only)`        | Same, with `--min-level error`                                                                |
 | `dbt: quality suggestions (watch, every 5 min)` | Refreshes project-wide diagnostics every five minutes while the background task runs          |
+| `dbt: quality suggestions (errors only)`        | Same as the first, with `--min-level error`                                                   |
 | `dbt: quality report (JSON)`                    | Runs the full audit and writes `suggestions.json`                                             |
 
 Cortex Code Desktop is a VS Code fork, so `tasks.json` plus a `problemMatcher` is the supported

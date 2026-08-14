@@ -12,7 +12,7 @@ Linter entry point, for wiring into an editor.
 
 Emits one line per suggestion in the classic linter shape:
 
-    path:line:col: level: [RULE] message -> fix
+    path:line:col:endLine:endCol: level: [RULE] message -> fix
 
 which a VS Code ``problemMatcher`` can parse into the Problems panel. See
 ``.vscode/tasks.json`` for the matcher, and the ``dbt-validate`` skill for how the

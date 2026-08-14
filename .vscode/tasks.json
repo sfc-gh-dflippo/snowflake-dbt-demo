@@ -17,13 +17,15 @@
         "source": "dbt-quality",
         "fileLocation": ["relative", "${workspaceFolder}"],
         "pattern": {
-          "regexp": "^(.+?):(\\d+):(\\d+):\\s+(error|warning|info):\\s+\\[(SSC-(?:EWI|FDM|PRF)-DBT[A-Z]{3}\\d{4})\\]\\s+(.*)$",
+          "regexp": "^(.+?):(\\d+):(\\d+):(\\d+):(\\d+):\\s+(error|warning|info):\\s+\\[(SSC-(?:EWI|FDM|PRF)-DBT[A-Z]{3}\\d{4})\\]\\s+(.*)$",
           "file": 1,
           "line": 2,
           "column": 3,
-          "severity": 4,
-          "code": 5,
-          "message": 6
+          "endLine": 4,
+          "endColumn": 5,
+          "severity": 6,
+          "code": 7,
+          "message": 8
         }
       },
       "group": "test"
@@ -45,13 +47,15 @@
         "source": "dbt-quality",
         "fileLocation": ["relative", "${workspaceFolder}"],
         "pattern": {
-          "regexp": "^(.+?):(\\d+):(\\d+):\\s+(error|warning|info):\\s+\\[(SSC-(?:EWI|FDM|PRF)-DBT[A-Z]{3}\\d{4})\\]\\s+(.*)$",
+          "regexp": "^(.+?):(\\d+):(\\d+):(\\d+):(\\d+):\\s+(error|warning|info):\\s+\\[(SSC-(?:EWI|FDM|PRF)-DBT[A-Z]{3}\\d{4})\\]\\s+(.*)$",
           "file": 1,
           "line": 2,
           "column": 3,
-          "severity": 4,
-          "code": 5,
-          "message": 6
+          "endLine": 4,
+          "endColumn": 5,
+          "severity": 6,
+          "code": 7,
+          "message": 8
         },
         "background": {
           "activeOnStart": true,
@@ -77,13 +81,15 @@
         "source": "dbt-quality",
         "fileLocation": ["relative", "${workspaceFolder}"],
         "pattern": {
-          "regexp": "^(.+?):(\\d+):(\\d+):\\s+(error|warning|info):\\s+\\[(SSC-(?:EWI|FDM|PRF)-DBT[A-Z]{3}\\d{4})\\]\\s+(.*)$",
+          "regexp": "^(.+?):(\\d+):(\\d+):(\\d+):(\\d+):\\s+(error|warning|info):\\s+\\[(SSC-(?:EWI|FDM|PRF)-DBT[A-Z]{3}\\d{4})\\]\\s+(.*)$",
           "file": 1,
           "line": 2,
           "column": 3,
-          "severity": 4,
-          "code": 5,
-          "message": 6
+          "endLine": 4,
+          "endColumn": 5,
+          "severity": 6,
+          "code": 7,
+          "message": 8
         }
       }
     },
