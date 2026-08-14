@@ -8,11 +8,6 @@ description:
   multi-project assessment with an HTML report, use the dbt-audit skill instead. Triggers: validate
   this model, check this dbt file, lint dbt model, dbt validation hook, validate on save, why did my
   save fail, pre-commit dbt check, dbt validate, check my model before committing."
-category: develop
-tags:
-  - dbt
-  - data-quality
-  - data-engineering
 ---
 
 # dbt Model Validation

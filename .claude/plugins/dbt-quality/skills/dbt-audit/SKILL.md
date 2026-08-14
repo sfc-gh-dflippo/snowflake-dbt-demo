@@ -11,12 +11,6 @@ description:
   project, dbt quality assessment, dbt anti-patterns, dbt health check, assess dbt project, grade
   dbt project, what is wrong with my dbt project, dbt technical debt, dbt best practice check, is my
   dbt project any good, too many dbt projects, dbt code review."
-category: operate
-tags:
-  - dbt
-  - data-quality
-  - data-engineering
-  - migration
 ---
 
 # dbt Anti-Pattern Audit
