@@ -1,0 +1,24 @@
+{
+  "name": "migrations_canonical",
+  "description": "Demo profile for migrations",
+  "ownerTeam": "migrations",
+  "version": "1.1",
+  "skillRepos": [
+    {
+      "source": "github:snowflake-eng/migrations-ai-skills",
+      "ref": "dbasar-FDE-406-init-profile"
+    }
+  ],
+  "envVars": {
+    "SNOWFLAKE_WAREHOUSE": "COMPUTE_WH",
+    "CW_GH": "github:snowflake-eng/migrations-canonical-workloads",
+    "SERVER_HOST": "op://migrations_demo/azure_sqlserver_cp1/host",
+    "DB_NAME": "op://migrations_demo/azure_sqlserver_cp1/database",
+    "USERNAME": "op://migrations_demo/azure_sqlserver_cp1/username",
+    "PASSWORD": "op://migrations_demo/azure_sqlserver_cp1/password"
+  },
+  "settingsOverrides": {
+    "model": "claude-opus-4-6"
+  },
+  "localModified": false
+}

@@ -1,0 +1,30 @@
+{
+  "distinguisher": "seed-compatible: same signature as the seeded reference type, so it REUSES rather than minting.",
+  "first_observed": "gate_b.py CustomerSummaryDerive.dsx / TREE:dag",
+  "hashed_material": "aim.sig.v1\u001fREF\u001freference:upstream-element\u001freference-does-not-resolve",
+  "id": "AIM-REF-19ec51fddf7b",
+  "impact": "output-absent",
+  "note": "Seeded from two measured engine causes with one symptom; Gate B reaches the same type from the artifact side by reading the ref graph.",
+  "note_lint": {
+    "findings": [],
+    "rule_version": "aim.text.v1",
+    "scope": "instance",
+    "verdict": "PASS"
+  },
+  "proposed_by": "gate_b:sourced",
+  "sig_version": "aim.sig.v1",
+  "signature": {
+    "category": "REF",
+    "construct": "reference:upstream-element",
+    "reason": "reference-does-not-resolve"
+  },
+  "supersedes": "",
+  "text": "A generated artifact for element '{element}' references the unit '{detail}', and no generated unit of that name is present in the output. The reference cannot resolve, so the artifact cannot run as generated. This states a defect in the generated output and claims nothing about the document.",
+  "text_lint": {
+    "findings": [],
+    "rule_version": "aim.text.v1",
+    "scope": "type",
+    "verdict": "PASS"
+  },
+  "title": "A generated reference names a unit that is not in the output"
+}

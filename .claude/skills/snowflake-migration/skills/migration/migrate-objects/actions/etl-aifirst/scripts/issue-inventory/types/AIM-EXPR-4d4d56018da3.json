@@ -1,0 +1,56 @@
+{
+  "distinguisher": "seed",
+  "first_observed": "findings/41-the-fallback-ladder.md (Java derivation, tier 2); poc/spikes/element-id-fit/platform_datastage.json kind_dispatch['CTransformerStage'].degrade_reason",
+  "hashed_material": "aim.sig.v1\u001fEXPR\u001felement:derivation-text\u001fno-lowering-for-source-language",
+  "id": "AIM-EXPR-4d4d56018da3",
+  "impact": "output-incomplete",
+  "mint": {
+    "at": "2026-08-03T17:18:34Z",
+    "by": "seed",
+    "category_novel": false,
+    "classification": {
+      "considered": [
+        {
+          "differs_in": [
+            "category",
+            "construct",
+            "reason"
+          ],
+          "id": "AIM-REPR-5161af7f0af6",
+          "parts": {
+            "category_equal": 0.0,
+            "construct_jaccard": 0.2,
+            "reason_similarity": 0.3137,
+            "text_similarity": 0.0498
+          },
+          "score": 0.1302
+        }
+      ],
+      "rule": "NO_CANDIDATE_ABOVE_THRESHOLD",
+      "verdict": "NOVEL"
+    },
+    "distinguisher": "seed"
+  },
+  "note": "Two measured instances, both refused deliberately rather than mapped: a transformer stage whose derivations are in a procedural BASIC dialect, and a user-defined-expression step whose body is Java. Mapping either onto the expression-carrying element would have put untranslated text into a .sql file -- syntactically plausible, semantically wrong, and with no marker saying so. One of the two has an unconsumed parser already in the engine tree (findings/45), so a deterministic lowering is tractable there and a model is a stopgap; for the other no such groundwork exists.",
+  "note_lint": {
+    "findings": [],
+    "rule_version": "aim.text.v1",
+    "scope": "instance",
+    "verdict": "PASS"
+  },
+  "sig_version": "aim.sig.v1",
+  "signature": {
+    "category": "EXPR",
+    "construct": "element:derivation-text",
+    "reason": "no-lowering-for-source-language"
+  },
+  "supersedes": "",
+  "text": "Element '{element}' of kind '{kind}' carries derivation text in the document. This migration has no lowering from that text's language into the target dialect, so the text was read and not translated. Nothing generated for this element computes the values the text names, and no check here establishes what they should be. {detail}",
+  "text_lint": {
+    "findings": [],
+    "rule_version": "aim.text.v1",
+    "scope": "type",
+    "verdict": "PASS"
+  },
+  "title": "Derivation text in a language this migration does not lower"
+}

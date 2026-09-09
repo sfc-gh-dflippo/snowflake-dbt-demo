@@ -1,0 +1,30 @@
+{
+  "distinguisher": "This is not a construct the representation failed to carry and not a predicate no rule could read: the construct WAS carried and WAS lowered, and the lowering's result differs from the document's for an input the record names. A reviewer acts on it by comparing two expressions, not by supplying a missing one.",
+  "first_observed": "gate_b.py CustomerSummaryDerive.dsx / MD:customersummaryderive__odbc_customer_summary",
+  "hashed_material": "aim.sig.v1\u001fSEM\u001fcolumn:value-derivation\u001flowered-expression-differs-on-some-input",
+  "id": "AIM-SEM-fea89cc30673",
+  "impact": "output-incorrect",
+  "note": "Raised by Gate B, a reading pass over the emitted SQL beside the source document. The measured case that motivates the type: one generated string is emitted for two different source platforms and is faithful for one of them, so no structural check, diff or compiler can separate the two. The instance record carries the platform, the cited dialect rule and the failing input.",
+  "note_lint": {
+    "findings": [],
+    "rule_version": "aim.text.v1",
+    "scope": "instance",
+    "verdict": "PASS"
+  },
+  "proposed_by": "gate_b:sourced",
+  "sig_version": "aim.sig.v1",
+  "signature": {
+    "category": "SEM",
+    "construct": "column:value-derivation",
+    "reason": "lowered-expression-differs-on-some-input"
+  },
+  "supersedes": "",
+  "text": "Column '{element}' was generated from an expression the document states for element of kind '{kind}'. A verification pass identified an input for which the generated expression and the document's expression do not yield the same value, and recorded that input and both results. Nothing here executed either side. {detail}",
+  "text_lint": {
+    "findings": [],
+    "rule_version": "aim.text.v1",
+    "scope": "type",
+    "verdict": "PASS"
+  },
+  "title": "A lowered expression and the document's expression differ for a stated input"
+}

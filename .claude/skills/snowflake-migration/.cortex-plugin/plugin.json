@@ -1,0 +1,101 @@
+{
+  "name": "snowflake-migration",
+  "version": "2.44.0",
+  "description": "Snowflake AIM for Data Warehouses \u2014 end-to-end database migration to Snowflake: assessment, conversion, validation, and deployment",
+  "author": {
+    "name": "db-eng-migrations"
+  },
+  "skills": [
+    "skills/migration"
+  ],
+  "mcpServers": {
+    "mcp": {
+      "type": "stdio",
+      "command": "scai",
+      "args": [
+        "mcp",
+        "run"
+      ],
+      "env": {
+        "CUSTOM_SNOWCONVERT_DATABASE": "${CUSTOM_SNOWCONVERT_DATABASE:-}",
+        "CUSTOM_SNOWFLAKE_DATABASE_FOR_METADATA": "${CUSTOM_SNOWFLAKE_DATABASE_FOR_METADATA:-}"
+      }
+    }
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/session-start.cmd",
+            "type": "command"
+          }
+        ],
+        "matcher": "*"
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/mcp-hook.cmd session-context",
+            "type": "command"
+          }
+        ],
+        "matcher": "*"
+      }
+    ],
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/mcp-hook.cmd stamp-agent-id",
+            "type": "command"
+          }
+        ],
+        "matcher": "*"
+      },
+      {
+        "hooks": [
+          {
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/mcp-hook.cmd agent-ledger",
+            "type": "command"
+          }
+        ],
+        "matcher": "*"
+      },
+      {
+        "hooks": [
+          {
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/mcp-hook.cmd deny-agent-output-wait",
+            "type": "command"
+          }
+        ],
+        "matcher": "agent_output"
+      }
+    ],
+    "SubagentStart": [
+      {
+        "hooks": [
+          {
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/mcp-hook.cmd agent-ledger",
+            "type": "command"
+          }
+        ],
+        "matcher": "*"
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/mcp-hook.cmd agent-ledger",
+            "type": "command"
+          }
+        ],
+        "matcher": "*"
+      }
+    ]
+  },
+  "buildChannel": "preview"
+}

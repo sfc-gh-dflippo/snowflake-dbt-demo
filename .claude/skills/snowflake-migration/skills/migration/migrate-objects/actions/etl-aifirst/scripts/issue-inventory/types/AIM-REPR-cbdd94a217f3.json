@@ -1,0 +1,129 @@
+{
+  "distinguisher": "the KIND is mapped and the ROLE is not, so the element's payload is carried correctly and only its classification is missing. The other no-vocabulary-member types lose the payload.",
+  "first_observed": "",
+  "hashed_material": "aim.sig.v1\u001fREPR\u001felement:role\u001fno-vocabulary-member",
+  "id": "AIM-REPR-cbdd94a217f3",
+  "impact": "output-unverified",
+  "mint": {
+    "at": "2026-08-03T17:18:36Z",
+    "by": "detector:unmapped_role",
+    "category_novel": false,
+    "classification": {
+      "considered": [
+        {
+          "differs_in": [
+            "construct"
+          ],
+          "id": "AIM-REPR-5161af7f0af6",
+          "parts": {
+            "category_equal": 1.0,
+            "construct_jaccard": 0.25,
+            "reason_similarity": 1.0,
+            "text_similarity": 0.1043
+          },
+          "score": 0.6407
+        },
+        {
+          "differs_in": [
+            "category",
+            "construct",
+            "reason"
+          ],
+          "id": "AIM-SHAPE-1d790c23a72b",
+          "parts": {
+            "category_equal": 0.0,
+            "construct_jaccard": 0.25,
+            "reason_similarity": 0.5,
+            "text_similarity": 0.125
+          },
+          "score": 0.1937
+        },
+        {
+          "differs_in": [
+            "category",
+            "construct",
+            "reason"
+          ],
+          "id": "AIM-EXPR-4d4d56018da3",
+          "parts": {
+            "category_equal": 0.0,
+            "construct_jaccard": 0.25,
+            "reason_similarity": 0.2353,
+            "text_similarity": 0.1265
+          },
+          "score": 0.141
+        },
+        {
+          "differs_in": [
+            "category",
+            "construct",
+            "reason"
+          ],
+          "id": "AIM-SHAPE-6f18b6827d1f",
+          "parts": {
+            "category_equal": 0.0,
+            "construct_jaccard": 0.2,
+            "reason_similarity": 0.1786,
+            "text_similarity": 0.1243
+          },
+          "score": 0.1144
+        },
+        {
+          "differs_in": [
+            "category",
+            "construct",
+            "reason"
+          ],
+          "id": "AIM-REF-19ec51fddf7b",
+          "parts": {
+            "category_equal": 0.0,
+            "construct_jaccard": 0.25,
+            "reason_similarity": 0.1739,
+            "text_similarity": 0.017
+          },
+          "score": 0.1123
+        },
+        {
+          "differs_in": [
+            "category",
+            "construct",
+            "reason"
+          ],
+          "id": "AIM-PRED-47f7de0cd8c0",
+          "parts": {
+            "category_equal": 0.0,
+            "construct_jaccard": 0.0,
+            "reason_similarity": 0.4255,
+            "text_similarity": 0.1072
+          },
+          "score": 0.1012
+        }
+      ],
+      "rule": "NO_CANDIDATE_ABOVE_THRESHOLD",
+      "verdict": "NOVEL"
+    },
+    "distinguisher": "the KIND is mapped and the ROLE is not, so the element's payload is carried correctly and only its classification is missing. The other no-vocabulary-member types lose the payload."
+  },
+  "note": "",
+  "note_lint": {
+    "findings": [],
+    "rule_version": "aim.text.v1",
+    "scope": "instance",
+    "verdict": "PASS"
+  },
+  "sig_version": "aim.sig.v1",
+  "signature": {
+    "category": "REPR",
+    "construct": "element:role",
+    "reason": "no-vocabulary-member"
+  },
+  "supersedes": "",
+  "text": "Element '{element}' of kind '{kind}' has a role this migration's node-type vocabulary does not name, so its node carries the placeholder type '{detail}'. A consumer that branches on node type therefore takes the same path for this element as for one whose role it could not determine.",
+  "text_lint": {
+    "findings": [],
+    "rule_version": "aim.text.v1",
+    "scope": "type",
+    "verdict": "PASS"
+  },
+  "title": "Element role not named by the representation's node-type vocabulary"
+}

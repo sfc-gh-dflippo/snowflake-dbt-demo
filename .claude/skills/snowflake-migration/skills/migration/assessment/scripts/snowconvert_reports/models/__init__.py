@@ -1,0 +1,39 @@
+# Copyright 2026 Snowflake Inc.
+# SPDX-License-Identifier: Apache-2.0
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+from .issue import IssueRecord
+from .element import Element
+from .code_unit import TopLevelCodeUnit
+from .object_reference import ObjectReference
+from .partition_member import PartitionMember
+from .estimation import IssueEstimationEntry, SeverityBaseline, ObjectEstimation
+from .etl_issue import Issue
+from .component import Component
+from .etl_component import ETLIssue, ETLComponent  # backward-compatible aliases
+
+__all__ = [
+    "IssueRecord",
+    "Element",
+    "TopLevelCodeUnit",
+    "ObjectReference",
+    "PartitionMember",
+    "IssueEstimationEntry",
+    "SeverityBaseline",
+    "ObjectEstimation",
+    "Issue",
+    "Component",
+    "ETLIssue",
+    "ETLComponent",
+]

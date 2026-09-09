@@ -1,0 +1,10 @@
+{
+  "complexity_thresholds": {
+    "low_max": 50,
+    "medium_max": 150
+  },
+  "volume_thresholds": {
+    "low_max": 250,
+    "medium_max": 1000
+  }
+}

@@ -1,0 +1,727 @@
+{
+  "platform": "IbmInfoSphereDataStage",
+  "table_version": "datastage.v1",
+  "_comment": "Per-platform configuration for an IBM InfoSphere DataStage 11.7 .dsx export. Nothing here is read from a source file; every entry is a reviewable policy decision. The fixture is MaskDemo.dsx (7514 lines, 12 jobs, 31 stages, 1 link with column metadata). Two things make this table structurally unlike the Informatica and SSIS ones: the source is NOT XML, and identifiers are NOT document-unique.",
+  "structure": {
+    "_comment": "The document model is declared, not assumed. See docmodel.py for the seam and dsxdoc.py for the record-block projection.",
+    "unsupported_body_max_chars": 4000,
+    "_unsupported_body_max_chars_comment": "FRAMEWORK CHANGE 63 (b). Cap on the source fragment a degraded element carries into its placeholder model as SQL comments. THE PLATFORM THAT NEEDS THE CAP. A stage's fragment includes its reparented pin records, and a connector stage's XMLProperties value alone is a 4 KB embedded XML document (detail_max_chars above exists for the same value). MEASURED on CustomerSummaryDerive.dsx: the Transformer's fragment is 3.4 KB with the pins; on MaskDemo.dsx a connector stage exceeds this and is truncated with the cut announced in the body. A cut is always announced inside the body, so a truncated fragment never reads as a complete one.",
+    "document_model": {
+      "kind": "RECORD_BLOCK",
+      "root_tag": "dsx",
+      "default_encoding": "utf-8",
+      "_section_comment": "Subrecord grouping in a .dsx is POSITIONAL: a scalar line whose value names a subrecord class opens a section and every DSSUBRECORD until the next such line belongs to it. Naming DSSUBRECORD here is what turns those runs into container nodes; without it a stage's connection properties, its column metadata and its APT runtime bag are one flat list.",
+      "section_blocks": [
+        "DSSUBRECORD"
+      ],
+      "unsectioned_tag": "_unsectioned",
+      "_compound_comment": "A single .dsx value can carry a delimited tuple. Partner \"V0S1|V0S1P1\" names a partner STAGE and a partner PIN in one string. XML attribute values are opaque, so the framework had no concept for this. Parts are exposed as Partner$1 / Partner$2 so a `where` string still points at the real key.",
+      "compound_attrs": {
+        "Partner": {
+          "separator": "|"
+        }
+      },
+      "_reparent_comment": "Link records are SIBLINGS of the stage records they belong to. Ownership is stated on the stage as OutputPins / InputPins. Reparenting by that declared list -- never by the shape of an identifier -- gives the DataStage tree the same shape as an SSIS component tree, after which the framework's existing ancestry machinery works untouched. UNVERIFIED: no stage in this fixture declares more than one pin per direction, so the multi-pin split (OutputPins \"V0S1P2|V0S1P3\") is implemented but unexercised.",
+      "reparent": [
+        {
+          "scope_tag": "DSJOB",
+          "owner_tag": "DSRECORD",
+          "child_tag": "DSRECORD",
+          "owner_list_attrs": [
+            "InputPins",
+            "OutputPins"
+          ],
+          "child_key_attr": "Identifier",
+          "separator": "|"
+        }
+      ]
+    },
+    "_key_scope_comment": "MEASURED: MaskDemo.dsx contains 65 stage and link records carrying only 22 distinct Identifier values; 14 are reused across jobs. V0S1 names eight different stages. An Informatica INSTANCE/@NAME and an SSIS @refId are document-unique, so no prior platform exposed this. Without scoping, eight stages collapse into one element and edges cross between unrelated jobs.",
+    "key_scope": {
+      "tag": "DSJOB",
+      "key_attr": "Identifier",
+      "separator": "/"
+    },
+    "detail_max_chars": 120,
+    "attr_where_template": "*/DSSUBRECORD[@Name='{key}']/@Value",
+    "_attr_where_template_comment": "SECTION-AGNOSTIC for the same reason self_def_site.attr_site is: the holder tag is DATA, not schema. This template is only the FALLBACK for a key whose located `where` the front-end did not record, so naming `Properties` here would have produced an unresolvable citation on any document without that marker.",
+    "_container_comment": "DELIBERATELY NULL. A .dsx names no unit of work. It is a bag of independently named jobs plus a HEADER that names the exporting server and tool, and calling either of those the document's name would be an invention. Informatica names a MAPPING and SSIS names a package; DataStage names nothing at this level, so the framework reports None.",
+    "container": null,
+    "levels": [
+      {
+        "_comment": "JOBS. Swept for the same reason the SSIS pass swept the Data Flow Task: skipping them would hide from the fit score the fact that the IR contract cannot represent a job at all. A DSJOB block states no kind attribute of any kind -- it is a job because of the keyword that opens it -- hence kind_literal.",
+        "name": "job",
+        "elements": "./DSJOB",
+        "key_attr": "Identifier",
+        "kind_attr": null,
+        "kind_literal": "DSJOB",
+        "role_attr": null,
+        "display_name_attr": "Identifier",
+        "flag_attrs": {}
+      },
+      {
+        "_comment": "DATA-FLOW STAGES. Role comes from PIN DIRECTION. The tempting alternative is the 'Context' property (values source / target), and it is wrong twice: absent on all 6 PxDataSet stages, and stating the non-role value 'request' on all 7 JavaStagePX stages. Where Context IS present and IS a direction it agrees with pin direction on all 20 stages, so the derivation is the total mechanism and Context is corroboration.",
+        "name": "stage",
+        "elements": "./DSJOB/DSRECORD[@OLEType='CCustomStage']",
+        "key_attr": "Identifier",
+        "kind_attr": "StageType",
+        "role_attr": null,
+        "role_from": {
+          "kind": "PIN_DIRECTION",
+          "input_list_attr": "InputPins",
+          "output_list_attr": "OutputPins",
+          "roles": {
+            "OUT_ONLY": "SOURCE",
+            "IN_ONLY": "TARGET",
+            "BOTH": "TRANSFORMATION",
+            "NEITHER": "ISOLATED"
+          }
+        },
+        "display_name_attr": "Name",
+        "flag_attrs": {
+          "allow_column_mapping": "AllowColumnMapping"
+        }
+      },
+      {
+        "_comment": "SERVER-JOB TRANSFORMER STAGES. A SECOND data-flow level, and it exists because ElementTree's xpath subset has no disjunction: `OLEType` is the only attribute that identifies a stage record and there is no way to write `OLEType in (CCustomStage, CTransformerStage)` in one query. So a stage family the first level's predicate does not name needs its own level, and the level is where the omission is fixed.",
+        "_why_comment": "REQUIRED BY EDGE RESOLUTION, not added on its own account. kind_dispatch ALREADY declares CTransformerStage (ir_kind null, role TRANSFORMATION, degrade_to UnsupportedTransformation) -- the table's intent was recorded and only the sweep never reached it -- and without the sweep reaching it the stage is not an element, so the two link records it declares have no endpoint. An endpoint resolves by walking to the nearest ANCESTOR element, so those two edges did not disappear: they LANDED ON THE ENCLOSING JOB. MEASURED with edge resolution fixed and this level absent: `ODBC_CUSTOMER -> CustomerSummaryDerive` and `CustomerSummaryDerive -> Filter_BirthYear`, two links the document does not state, reported by edge_policy.pin_pairs.audit as 2 fall-through endpoints. Both then vanish in hydration anyway ($kind null, degrade_to null on DSJOB), so the fabrication also bought no lineage.",
+        "_scope_comment": "This closes ONE half of the defect the driver's stage-3d comment and Gate A both record: `V0S2 [CTransformerStage] : NOT_IDENTIFIED  kind IS in kind_dispatch ... the identification SWEEP never produced this element`. It does NOT close the other half. The loss ledger's denominator is still the sweep's own match set, so a DSRECORD no level query matches is still absent from `declared` rather than counted as lost -- true here for the CJobDefn root record, for CContainerView records and for every link record. That is a framework defect in `accounting()` and is deliberately left alone.",
+        "name": "transformer_stage",
+        "elements": "./DSJOB/DSRECORD[@OLEType='CTransformerStage']",
+        "key_attr": "Identifier",
+        "kind_attr": "StageType",
+        "role_attr": null,
+        "_role_comment": "From kind_dispatch, which declares TRANSFORMATION. PIN_DIRECTION would derive the same value on this document (both InputPins and OutputPins are stated -> BOTH -> TRANSFORMATION), so the two mechanisms agree and the declared one is preferred for being the one already written down.",
+        "display_name_attr": "Name",
+        "flag_attrs": {
+          "stage_version": "StageVersion"
+        }
+      },
+      {
+        "_comment": "SEQUENCE ACTIVITIES. A job sequence's activities are control flow, not data flow: their pins are dependencies, not rowsets. Pin direction would mis-role them as source and target, so this level takes its role from kind_dispatch instead.",
+        "name": "sequence_activity",
+        "elements": "./DSJOB/DSRECORD[@OLEType='CJSJobActivity']",
+        "key_attr": "Identifier",
+        "kind_attr": "StageType",
+        "role_attr": null,
+        "display_name_attr": "Name",
+        "flag_attrs": {
+          "checkpoint": "CheckPoint"
+        }
+      }
+    ],
+    "census": {
+      "_comment": "ADDITION 2 -- EXHAUSTIVE IDENTIFICATION. `levels` above says what an element IS. This says what is DELIBERATELY NOT one. Anything matched by neither becomes an UNKNOWN OBJECT: inventoried, citable, tracked. The defect that forced this was measured on THIS platform -- CustomerSummaryDerive.dsx holds 5 elements and the ledger reported `declared=4 identified=4 lost=0 balances=True`, because a DSRECORD no level query matched never entered the denominator at all. See identify.py `_census`.",
+      "_scale_comment": "MaskDemo.dsx projects to 1341 nodes against 43 elements. 1092 of those are DSSUBRECORD property ROWS and 138 are section containers the projection itself invents, so counting every unmatched node as an unknown object would produce a 1298-entry inventory of things that are not records. Every rule below therefore has to earn its place by naming a MECHANISM that already inventories what it excludes, and its count is reported per rule so over-exclusion is visible rather than hidden in a total.",
+      "column_census": {
+        "_comment": "THE COLUMN-LEVEL ANALOGUE OF THE RECORD LEDGER, and it exists for the same reason: A CHECK MAY NOT USE THE THING IT IS CHECKING AS ITS OWN DENOMINATOR. `declared_vs_identified` fixed that for RECORDS -- `declared` used to mean 'nodes the level queries matched', so a record no level matched was not reported lost, it was not reported at all. THE IDENTICAL BLIND SPOT EXISTS ONE LEVEL DOWN, and a Gate A verifier named it while checking type_vocabulary.known_defect: every column-keyed no_slot fact on this platform (sqltype_is_numeric_code, placeholder_precision_scale, dangling_output_column) is keyed from PORT, so with zero ports read none of them fires -- and the type-code defect scores as satisfied by having nothing left to score. THAT IS NOT HYPOTHETICAL: it is the measured state CustomerSummaryDerive.dsx was in when the port sites still assumed a `Columns` holder and the CCustom* pin spellings, all five stages came out with ports=0, and four models came out column-less while the fit score reported no column obligations to fail. `document_query` is an INDEPENDENT denominator -- a whole-document sweep for every subrecord that states the datatype attribute, evaluated with no reference to the port sites -- so a column the port sites do not reach is a SHORTFALL that fails the gate rather than a silence. MEASURED, both documents: MaskDemo.dsx 2 stated / 2 read, CustomerSummaryDerive.dsx 16 stated / 16 read.",
+        "document_query": ".//DSSUBRECORD[@SqlType]",
+        "what_it_counts": "every column subrecord in the document, at any depth, in any section, under any record -- including under a record this table does not identify as an element",
+        "why_this_query": "`[@SqlType]` is the same predicate the six port_sites use to make their `*` holder safe, and it is the ONE attribute a column subrecord states that a property row and a MetaBag row do not. Naming a section or a pin OLEType here instead would make the denominator share the port sites' own assumptions, which is exactly the self-reference this census exists to break."
+      },
+      "identity_attrs": [
+        "OLEType",
+        "Identifier",
+        "Name",
+        "StageType"
+      ],
+      "_identity_attrs_comment": "How an unknown record is IDENTIFIED in the inventory. An unknown object has no key_attr to cite by -- that is what makes it unknown -- so these are the keys a .dsx record states about its own class and identity. OLEType is the class discriminator every DSRECORD carries; Identifier and Name are its two names; StageType narrows a stage record whose OLEType is a family.",
+      "exclusions": [
+        {
+          "id": "dsx-export-envelope-root",
+          "kind": "QUERY",
+          "match": ".",
+          "excludes": "the single `dsx` node the record-block front-end creates as the tree root",
+          "why": "There is no `dsx` block in the file. `dsxdoc.RecordBlockDocument` creates this node because the framework's query language needs one root and a .dsx is a FLAT sequence of top-level blocks. It carries no key, no OLEType and no content of its own. Excluding it is excluding a projection artefact, not a record -- and `structure.container` is null on this platform precisely because the file states no single named unit of work."
+        },
+        {
+          "id": "dsx-export-header",
+          "kind": "QUERY",
+          "match": "./HEADER",
+          "subtree": true,
+          "excludes": "the HEADER block and everything inside it",
+          "why": "The export header states the DataStage client/server version, the export date, the operating-system user and the CharacterSet -- properties of the EXPORT ACTION, not of any job. The one value in it the framework does read is CharacterSet, and it reads it before the tree exists (`dsxdoc._decode` sniffs it from the raw bytes, because the character set has to be known in order to decode the file that declares it). SUBTREE: yes, and this is one of two rules here that use it -- the header's contents are as irrelevant as the header."
+        },
+        {
+          "id": "dsx-link-record",
+          "kind": "EDGE_RECORD",
+          "excludes": "every record matched by `edge_levels` -- i.e. every DSRECORD carrying @Partner",
+          "why": "A link record IS an edge and is inventoried as one. Derived from the edge_levels declaration above rather than restated here, so the two cannot drift apart: widen the edge query and this exclusion widens with it. MEASURED on MaskDemo.dsx: 38 link records -> 19 edges. A link record whose partner does NOT resolve is still excluded here and is NOT silently gone -- it lands in `unresolved_edges` and in edge_policy.pin_pairs.audit, which is a second ledger with its own report."
+        },
+        {
+          "id": "dsx-subrecord-property-row",
+          "kind": "QUERY",
+          "match": ".//DSSUBRECORD",
+          "excludes": "every DSSUBRECORD, at any depth",
+          "why": "A DSSUBRECORD is ONE ROW inside a record's Properties / MetaBag / Columns / Parameters section -- a name/value pair, a column definition, a parameter definition. It is not a record of the graph, so it is not an element and not an unknown OBJECT. 1092 of MaskDemo.dsx's 1341 nodes are these rows. THIS RULE STILL EXCLUDES EVERY ONE OF THEM FROM THE RECORD CENSUS, AND THE COST NO LONGER DISAPPEARS WITH THEM -- that is the change, and it is a mechanism and not a rewording. Where each row is read: the six `self_def_site.port_sites` read the rows carrying @SqlType as the owning element's COLUMNS, `self_def_site.attr_site` reads the rows carrying @Value as its PROPERTY BAG (section-agnostic since the marker-name defect -- see that site's comment), and `no_slot_facts.dsx_unread_stage_property` then raises ONE RESIDUE OBLIGATION IN THE FIT SCORE for every property row in that bag which no rule reads. So an unread property row is now counted, cited and unsatisfied rather than invisible. WHAT THIS RULE'S OLD TEXT GOT WRONG, kept because the correction is the point: it said 'an unread property row is invisible to the census', called that 'THE ARGUABLE PART' and 'the largest single exclusion in this table', and never sized it. MEASURED SIZE: seven distinct property rows on CustomerSummaryDerive.dsx (data_source, user, password, read_method, nulls, write_method, write_mode -- ten rows), of which `write_method \"write\"` at dsx:319-320 and `write_mode \"append\"` at dsx:323-324 are behaviour, and 308 rows on MaskDemo.dsx. Honest about a cost is not the same as accounting for it. WHAT REMAINS EXCLUDED AND UNCOUNTED, stated so it can be argued with: a property row in a section the attr_site does not reach, i.e. one that is not a direct child of a section that is a direct child of an ELEMENT record. That is the CJobDefn root record's Parameters, and JobInvocationID / Dependencies / ParameterValues on a sequence record -- because those records are not identified elements on this table, so they have no property bag for the sweep to complete. Their enclosing RECORD is inventoried as an unknown object with a citable location, which is one inventory entry pointing at the unread record rather than N pointing at its rows."
+        },
+        {
+          "id": "dsx-projected-section-container",
+          "kind": "QUERY",
+          "match": ".//DSSUBRECORD/..",
+          "excludes": "the container node the projection creates for each run of DSSUBRECORDs",
+          "why": "Subrecord grouping in a .dsx is POSITIONAL: a scalar line whose value names a subrecord class (Properties \"CCustomProperty\", MetaBag \"CMetaProperty\") opens a section and every DSSUBRECORD until the next such line belongs to it. ARCHITECTURAL CHANGE A2 turns each run into a real container node so that ordinary containment queries work. Those nodes are NOT blocks in the file. Matching them as `the parent of a DSSUBRECORD` rather than by listing tag names is deliberate: the section tag is DATA (it is whatever key opened the run), so a tag list would silently stop covering a section name this fixture happens not to contain."
+        },
+        {
+          "id": "dsx-designer-canvas-view",
+          "kind": "QUERY",
+          "match": "./DSJOB/DSRECORD[@OLEType='CContainerView']",
+          "excludes": "the Designer canvas record, one per job",
+          "why": "GEOMETRY. StageXPos/StageYPos/StageXSize/StageYSize/SnapToGrid/GridLines/ZoomValue/ContainerViewSizing/LinkNamePositionXs -- where the boxes sit on the canvas. Nothing in it changes what the job computes. NOTED AND DELIBERATE: it also restates graph facts as compound lists (StageList, StageNames, LinkNames, TargetStageIDs, LinkSourcePinIDs). Those are excluded WITH the geometry because the stage and link records state the same graph authoritatively and per-record; using the view as a second source of truth would mean two derivations of one graph that can disagree."
+        }
+      ]
+    },
+    "load_order": null,
+    "ref_attrs": [
+      "Identifier"
+    ],
+    "lineage": null,
+    "edge_levels": [
+      {
+        "_comment": "PIN-PAIR LINKS -- ONE level for every link in a .dsx, of every kind. A link record IS one of its own endpoints: it sits under the stage that declares it in InputPins/OutputPins and names its peer in Partner. `from_attr` null therefore means 'this record's own owner' and `to_attr` is the partner reference resolved to ITS owner, which keeps the whole derivation ownership-based rather than string-based.",
+        "_selection_comment": "The MATCH is `[@Partner]` -- every link record and no other record -- which is the same predicate self_def_site.group_site already uses to find a stage's links. The DIRECTION is then supplied by edge_policy.pin_pairs, NOT by the xpath. This replaced two levels that each matched ONE pin class by OLEType (CCustomOutput, CJSActivityOutput) and that was the measured zero-edge defect: matching by class means every class not enumerated is silently invisible, and CustomerSummaryDerive.dsx states CustomOutput and CTrxOutput. A class list is still what supplies direction -- there is no other stated direction fact -- but it now lives in ONE place beside its input-side mirror, and edge_policy.pin_pairs.audit makes an unenumerated class a REPORTED unclassified link instead of a missing edge.",
+        "name": "pin_pair_links",
+        "xpath": ".//DSRECORD[@Partner]",
+        "endpoint_kind": "PORT_REF",
+        "direction": "PIN_PAIR",
+        "from_attr": null,
+        "_to_attr_comment": "Partner$1, not Partner$2, and this is the load-bearing detail. Partner is a compound value (see document_model.compound_attrs) whose SHAPE VARIES BY DOCUMENT: MaskDemo.dsx states the tuple Partner \"V0S1|V0S1P1\" (partner stage, partner pin) so $1 is the STAGE and $2 is the pin; CustomerSummaryDerive.dsx states the bare Partner \"V0S2P1\" so $1 is the PIN and $2 does not exist at all. $2 therefore reads nothing on the second document -- the second half of the zero-edge defect. $1 is TOTAL across both shapes because the framework resolves the reference through ref_attrs and then walks to the nearest owning element: the stage form resolves to the stage itself, the pin form resolves to the pin whose declared owner IS that stage. Both name the same endpoint element, so this is a widening and not a change of meaning -- MaskDemo.dsx emits the same 19 edges with the same labels either way.",
+        "to_attr": "Partner$1",
+        "label_attr": "Name"
+      }
+    ],
+    "default_def_site": "SELF",
+    "def_sites": {},
+    "self_def_site": {
+      "_comment": "After reparenting, a stage's DSRECORD children are exactly its link records, and each link's column metadata sits ONE SECTION DEEP inside it. Note the SYMMETRY that SSIS lacked: every site below uses the same attribute names (Name / SqlType / Precision / Scale) because every one of them is the same column-subrecord class.\n\nWHY THE SECTION IS `*` AND NOT `Columns`, and why there are six sites instead of two. Both halves were MEASURED as a defect on CustomerSummaryDerive.dsx, where all five stages came out with ports=0 and four models came out column-less.\n  (1) THE SECTION NAME IS NOT DEPENDABLE. Subrecord grouping in a .dsx is POSITIONAL (see document_model._section_comment): the section takes the name of the scalar key that precedes the first DSSUBRECORD. MaskDemo.dsx precedes its columns with the real marker `Columns \"COutputColumn\"`, so the holder is `<Columns>`. CustomerSummaryDerive.dsx states NO marker at all, so the holder is named after whatever key happened to come last -- measured as `<TableName>` (10 columns), `<Constraint>` (2), `<LinkType>` (2) and `<Description>` (2). Naming those four here would encode an accident. `*` matches the holder whatever it is called, INCLUDING the `_unsectioned` holder a marker-less record would get under a stricter section rule, so it is robust in both directions. THE `[@SqlType]` PREDICATE IS WHAT MAKES `*` SAFE: it is the same datatype_attr each site already declares, a COLUMN subrecord states it and a property or MetaBag subrecord does not. VERIFIED on MaskDemo.dsx: of its 1090 DSSUBRECORDs, exactly 2 carry @SqlType and both are in a `Columns` section, so the wildcard returns the identical 2 columns the `/Columns/` path returned -- byte-identical output, and the DataStage node/edge/fit numbers confirm it.\n  (2) THE PIN OLEType SPELLING VARIES BY DOCUMENT. MaskDemo.dsx uses CCustomInput / CCustomOutput for parallel-job custom stage pins. CustomerSummaryDerive.dsx uses CustomInput / CustomOutput for the same thing and CTrxInput / CTrxOutput for its Transformer stage's pins. ElementTree's XPath subset has no `or` and no `ends-with`, so one value per site is the only way to state this; the alternative -- keying off `[@Partner]`, which every link record carries -- would lose the DIRECTION, which is exactly what OLEType is carrying here.\nOne site is UNEXERCISED: nothing in either fixture is a CJSActivityInput/Output pin with columns, and those are sequence-activity links rather than data links, so they are deliberately absent rather than forgotten.",
+      "port_sites": [
+        {
+          "id": "input_link_column",
+          "xpath": "./DSRECORD[@OLEType='CCustomInput']/*/DSSUBRECORD[@SqlType]",
+          "porttype": "INPUT",
+          "name_attr": "Name",
+          "datatype_attr": "SqlType",
+          "precision_attrs": [
+            "Precision"
+          ],
+          "scale_attrs": [
+            "Scale"
+          ],
+          "group_from": "ANCESTOR"
+        },
+        {
+          "id": "output_link_column",
+          "xpath": "./DSRECORD[@OLEType='CCustomOutput']/*/DSSUBRECORD[@SqlType]",
+          "porttype": "OUTPUT",
+          "name_attr": "Name",
+          "datatype_attr": "SqlType",
+          "precision_attrs": [
+            "Precision"
+          ],
+          "scale_attrs": [
+            "Scale"
+          ],
+          "group_from": "ANCESTOR"
+        },
+        {
+          "id": "input_link_column_unprefixed",
+          "xpath": "./DSRECORD[@OLEType='CustomInput']/*/DSSUBRECORD[@SqlType]",
+          "porttype": "INPUT",
+          "name_attr": "Name",
+          "datatype_attr": "SqlType",
+          "precision_attrs": [
+            "Precision"
+          ],
+          "scale_attrs": [
+            "Scale"
+          ],
+          "group_from": "ANCESTOR"
+        },
+        {
+          "id": "output_link_column_unprefixed",
+          "xpath": "./DSRECORD[@OLEType='CustomOutput']/*/DSSUBRECORD[@SqlType]",
+          "porttype": "OUTPUT",
+          "name_attr": "Name",
+          "datatype_attr": "SqlType",
+          "precision_attrs": [
+            "Precision"
+          ],
+          "scale_attrs": [
+            "Scale"
+          ],
+          "group_from": "ANCESTOR"
+        },
+        {
+          "id": "input_transformer_column",
+          "xpath": "./DSRECORD[@OLEType='CTrxInput']/*/DSSUBRECORD[@SqlType]",
+          "porttype": "INPUT",
+          "name_attr": "Name",
+          "datatype_attr": "SqlType",
+          "precision_attrs": [
+            "Precision"
+          ],
+          "scale_attrs": [
+            "Scale"
+          ],
+          "group_from": "ANCESTOR"
+        },
+        {
+          "id": "output_transformer_column",
+          "_expression_comment": "Derivation is DELIBERATELY NOT read as an expression here. The value is DataStage BASIC (`lnk_Customer_In.FirstName : \" \" : lnk_Customer_In.LastName`), no engine translator lowers that dialect, and CTransformerStage is mapped to no ir_kind for exactly that reason -- so reading it would put BASIC where the emitter expects Snowflake. The stage degrades to UnsupportedTransformation, whose translator projects `null AS <col>` per column, and the derivations reach the artifact as the commented source fragment instead.",
+          "xpath": "./DSRECORD[@OLEType='CTrxOutput']/*/DSSUBRECORD[@SqlType]",
+          "porttype": "OUTPUT",
+          "name_attr": "Name",
+          "datatype_attr": "SqlType",
+          "precision_attrs": [
+            "Precision"
+          ],
+          "scale_attrs": [
+            "Scale"
+          ],
+          "group_from": "ANCESTOR"
+        }
+      ],
+      "group_site": {
+        "_comment": "A LINK is DataStage's named branch, the closest analogue to an Informatica GROUP or an SSIS output. OLEType carries the direction, so the group type is the direction. No routing condition exists: a DataStage link is a pipe, not a predicate. The [@Partner] predicate is load-bearing: a JOB element's DSRECORD children are its definition record, its canvas record and its stages, none of which is a link. All 38 link records in the fixture carry Partner and no other record does.",
+        "xpath": "./DSRECORD[@Partner]",
+        "name_attr": "Name",
+        "type_attr": "OLEType",
+        "order_attr": null,
+        "expression_attr": null,
+        "flag_attrs": {
+          "link_type": "LinkType",
+          "condition_not_met": "ConditionNotMet"
+        }
+      },
+      "attr_site": {
+        "_comment": "Stage properties. THE SECTION NAME IS NOT DEPENDABLE, and this site assumed it was -- exactly as the six port_sites once assumed `Columns`. It read `./Properties/DSSUBRECORD`, which finds the run only when the record precedes it with the literal marker `Properties \"CCustomProperty\"`. MaskDemo.dsx does; CustomerSummaryDerive.dsx states no marker at all, so the positional projection names the holder after whatever scalar key came last -- MEASURED as `<AllowColumnMapping>` on V0S1/V0S3/V0S4. Result: el.table_attrs was EMPTY on all 5 elements of that document while its records state 12 property rows between them, and an empty bag is indistinguishable from a document that states no properties. `./*/DSSUBRECORD[@Value]` matches the holder whatever it is called, and `[@Value]` is what makes `*` safe on exactly the footing `[@SqlType]` gives the port sites: a PROPERTY row states @Value, a COLUMN row does not. MEASURED both ways -- the bag goes 0 -> 9 distinct keys on CustomerSummaryDerive.dsx and 32 -> 34 on MaskDemo.dsx (gaining Execmode and OutputLinkOrder, which sit in a second run the marker-anchored path never reached), and fit, node count and edge count are UNCHANGED on both documents by the widening ALONE, because no ELEMENT_ATTR rule names a newly visible key. What turns a newly visible key into a counted cost is `no_slot_facts.dsx_unread_stage_property`.",
+        "xpath": "./*/DSSUBRECORD[@Value]",
+        "name_attr": "Name",
+        "value_attr": "Value",
+        "value_from": "ATTR"
+      }
+    }
+  },
+  "kind_dispatch": {
+    "_comment": "StageType -> IR element $kind. ir_kind_by_role exists because DataStage reuses one StageType in both directions: JDBCConnectorPX is a source in MaskJdbc and a target in DictSubst. Mapping it to SourceQualifier unconditionally would emit a read where the document states a write -- a fabrication, not a lossy mapping.",
+    "DSJOB": {
+      "degrade_to": null,
+      "degrade_reason": "LEFT NULL DELIBERATELY. A job is the unit of work -- a container -- and 12 of them share this one export. Third platform where the unit of work has no door. Evidence for ENG-001.",
+      "ir_kind": null,
+      "role": "JOB",
+      "supported": false,
+      "def_site": "SELF",
+      "note": "A DataStage job is a whole unit of work with its own parameter set. The IR is a flat node/edge graph of data-flow elements; it has no representation for a job, for a job parameter, or for the fact that 12 unrelated graphs share one export file."
+    },
+    "CJobActivity": {
+      "degrade_to": null,
+      "degrade_reason": "LEFT NULL DELIBERATELY. Pure orchestration: a sequence activity invoking another job by name. The 1 edge of 19 that still does not survive hydration is SeqJdbc/V0S0 -> SeqJdbc/V0S1, between two of these, and it SHOULD not survive -- it is a job-invocation order, not a data hop. Note the DSX format does not distinguish the two: both are DSLink-labelled, so the discrimination is by StageType here in kind_dispatch, which is what this table is for.",
+      "ir_kind": null,
+      "role": "TASK",
+      "supported": false,
+      "def_site": "SELF",
+      "note": "A sequence activity that invokes another job by name (Jobname) with a parameter set. Pure orchestration; the IR contract has no door for it, exactly as it had none for an SSIS Data Flow Task."
+    },
+    "JavaStagePX": {
+      "ir_kind": null,
+      "role": null,
+      "supported": false,
+      "def_site": "SELF",
+      "degrade_to": "UnsupportedTransformation",
+      "degrade_reason": "A DATA-FLOW stage, not orchestration: it sits between a read and a write and 7 of the 19 element edges in this export pass through one. Left at ir_kind null it took 14 of those edges out of the graph with it. UnsupportedTransformation is the engine's own class for an identified element it cannot translate, so the node keeps its place and its lineage while the census still reports NotSupported. No transform class was invented: nothing in the .dsx says what the Java code computes, so any real transform class would be a fabrication.",
+      "note": "A custom Java operator. In this workload it IS the business logic -- the masking transform -- and its behaviour lives in a Java class outside the export entirely. Neither SourceQualifier nor ExpressionTransformation describes it, and nothing in the .dsx says what it computes."
+    },
+    "OracleConnectorPX": {
+      "ir_kind_by_role": {
+        "SOURCE": "SourceQualifier",
+        "TARGET": null,
+        "TRANSFORMATION": null,
+        "ISOLATED": null
+      },
+      "ir_kind": null,
+      "role": null,
+      "supported": true,
+      "def_site": "SELF",
+      "degrade_to": "UnsupportedTransformation",
+      "degrade_reason": "In TARGET role this is a WRITE stage. TargetTransformation is the engine's right class for a write and it was rejected here on evidence, not on principle: the write target's table, schema and database live inside the XMLProperties blob and do not survive identification, and TargetTranslatorBase substitutes YOUR_DB plus a fallback schema when Database and SchemaName are null -- so emitting TargetTransformation would state a destination the document does not. Degrading instead keeps the node and its inbound edge and reports NotSupported.",
+      "note": "Oracle connector. As a source it maps to SourceQualifier -- but see no_slot_facts: the SELECT statement is inside the XMLProperties blob and does not survive."
+    },
+    "JDBCConnectorPX": {
+      "ir_kind_by_role": {
+        "SOURCE": "SourceQualifier",
+        "TARGET": null,
+        "TRANSFORMATION": null,
+        "ISOLATED": null
+      },
+      "ir_kind": null,
+      "role": null,
+      "supported": true,
+      "def_site": "SELF",
+      "degrade_to": "UnsupportedTransformation",
+      "degrade_reason": "Same as OracleConnectorPX: a WRITE stage in TARGET role whose destination identity does not survive identification. 4 of the 43 nodes and 4 inbound edges.",
+      "note": "JDBC connector. Appears in BOTH directions across the 12 jobs, which is what forced ir_kind_by_role."
+    },
+    "DB2ConnectorPX": {
+      "ir_kind_by_role": {
+        "SOURCE": "SourceQualifier",
+        "TARGET": null,
+        "TRANSFORMATION": null,
+        "ISOLATED": null
+      },
+      "ir_kind": null,
+      "role": null,
+      "supported": true,
+      "def_site": "SELF",
+      "degrade_to": "UnsupportedTransformation",
+      "degrade_reason": "Same as OracleConnectorPX: a WRITE stage in TARGET role.",
+      "note": "DB2 connector."
+    },
+    "PxDataSet": {
+      "ir_kind_by_role": {
+        "SOURCE": "SourceQualifier",
+        "TARGET": null,
+        "TRANSFORMATION": null,
+        "ISOLATED": null
+      },
+      "ir_kind": null,
+      "role": null,
+      "supported": true,
+      "def_site": "SELF",
+      "degrade_to": "UnsupportedTransformation",
+      "degrade_reason": "A WRITE to a parallel-engine .ds spill file. Not a table at all, so TargetTransformation would be wrong twice over -- wrong destination identity AND wrong kind of destination. Degrading keeps the node and its inbound edge and reports NotSupported.",
+      "note": "A parallel-engine DataSet file. Mapped to SourceQualifier when read because that is the IR's only source-shaped door, but a .ds file is an engine-internal spill format, not a table, and the IR has nowhere to record that."
+    },
+    "PxOdbc": {
+      "ir_kind_by_role": {
+        "SOURCE": "SourceQualifier",
+        "TARGET": "TargetTransformation",
+        "TRANSFORMATION": null,
+        "ISOLATED": null
+      },
+      "ir_kind": null,
+      "role": null,
+      "supported": true,
+      "def_site": "SELF",
+      "element_fields": {
+        "TableName": {
+          "rule": "dsx_prop_table",
+          "required": true
+        }
+      },
+      "degrade_to": "UnsupportedTransformation",
+      "note": "WIDENING. Role is DERIVED from pin direction (OUT_ONLY -> SOURCE, IN_ONLY -> TARGET), measured working on this document. Unlike OracleConnectorPX/JDBCConnectorPX/DB2ConnectorPX, PxOdbc's table DOES survive identification, which is exactly why it earns TargetTransformation where they do not. REQUIRED for the reason OracleConnectorPX's degrade_reason already gives: TargetTranslatorBase substitutes YOUR_DB plus a fallback schema when fields are null, so a TargetTransformation without a table states a destination the document does not. This makes that hand-made judgement MECHANICAL -- a write stage whose table survives identification qualifies, one whose table is buried in an XMLProperties blob degrades, and neither is curated by hand."
+    },
+    "PxFilter": {
+      "ir_kind": "FilterTransformation",
+      "role": "TRANSFORMATION",
+      "supported": true,
+      "def_site": "SELF",
+      "element_fields": {
+        "FilterConditions": {
+          "rule": "dsx_prop_where",
+          "required": true
+        }
+      },
+      "degrade_to": "UnsupportedTransformation",
+      "note": "WIDENING. REQUIRED. FilterTranslator's shared base substitutes `WHERE TRUE` for an empty predicate and records it only as a log warning -- a filter that silently returns every row. So an unextractable predicate must degrade, not emit a hollow FilterTransformation."
+    },
+    "CTransformerStage": {
+      "ir_kind": null,
+      "role": "TRANSFORMATION",
+      "supported": true,
+      "def_site": "SELF",
+      "degrade_to": "UnsupportedTransformation",
+      "degrade_reason": "NOT mapped to ExpressionTransformation, and this is the deliberate line. A Transformer's derivations are DataStage BASIC (`:` concat, YearFromDate()), and no engine translator lowers that dialect. Mapping it would emit BASIC into a .sql file -- syntactically plausible, semantically wrong, and with no marker saying so. A silent wrong answer is worse than a loud NotSupported. This is where expression translation for an unsupported dialect actually needs a model, not a table entry. CORRECTION (findings/45): the engine DOES ship DsBasicExprAST + DsBasicExprParser under Parsers/Assemblies/DataStage/, unconsumed by Assemblies/EtlToDbt. The refusal above stands -- unlowered BASIC in a .sql file is still a silent wrong answer -- but a deterministic BASIC->Snowflake transformer is tractable on that existing AST, so a model is a STOPGAP here rather than the answer. Contrast Pentaho's Janino, where no such groundwork exists."
+    },
+    "unmapped_kind_degrade_to": "UnsupportedTransformation"
+  },
+  "role_to_node_type": {
+    "SOURCE": "source",
+    "TARGET": "target",
+    "TRANSFORMATION": "transformation",
+    "ISOLATED": "transformation",
+    "JOB": "transformation",
+    "TASK": "transformation",
+    "unmapped_role_node_type": "unknown",
+    "unmapped_role_reason": "Declared for the same reason as Informatica's, where it was a MEASURED crash. All six DataStage roles here are DERIVED -- from pin direction or from kind_dispatch -- and the derivation is total, so no unmapped role occurs on this fixture. Declared anyway because the crash it prevents costs the whole document, not one node.",
+    "known_defect": "'JOB', 'TASK' and 'ISOLATED' have no node type of their own and are emitted as transformation-typed nodes with a null $kind. A sequence dependency is also emitted as an ordinary data edge. Both are wrong in kind rather than merely lossy, and are recorded rather than hidden."
+  },
+  "naming_policy": {
+    "_comment": "The element KEY is a positional identifier (V0S1), meaningless to a reader and NOT unique across the file, so modelName must come from the display name. DataStage names are already identifier-safe in this fixture but the whitespace rule is kept because nothing forbids a space in a stage name.",
+    "policy_id": "datastage.modelname.v2",
+    "name_source": "DSRECORD/@Name",
+    "name_from": "DISPLAY_NAME",
+    "element_name_from": "DISPLAY_NAME",
+    "lowercase": true,
+    "sanitize_identifier": {
+      "allowed_chars": "abcdefghijklmnopqrstuvwxyz0123456789_",
+      "allowed_leading_chars": "abcdefghijklmnopqrstuvwxyz_",
+      "replace_illegal_with": "_",
+      "leading_prefix": "m_",
+      "_comment": "MEASURED on Pentaho: 'Dummy (do nothing)' -> 'dummy_(do_nothing)' and 'safe-stop-gen-rows' kept its hyphens; neither is a legal UNQUOTED Snowflake or dbt identifier. Declared on EVERY platform rather than only the one that needed it, so a legal name is provably unaffected: the IR of the other four is byte-identical with this rule present. One replacement character per illegal character, NOT a collapsed run -- collapsing merges 'a--b' into 'a_b', and merging two distinct names is the defect qualify_with_container exists to prevent. A name that cannot start a bare identifier is PREFIXED, not trimmed, for the same reason. Residual merges remain possible in principle, so emit() asserts injectivity across the document and raises rather than letting the dbt writer overwrite one model with another."
+    },
+    "replace_whitespace_with": "_",
+    "split_camel_case": false,
+    "strip_kind_prefixes": false,
+    "qualify_with_task": false,
+    "qualify_with_container": {
+      "separator": "__"
+    },
+    "qualify_reason": "v1 -> v2. The v1 known_risk below was not a risk, it was a measured data loss: 29 data-flow nodes collapsed onto 9 model names, DbtModelsWriter silently overwrote 20 of them, and ObjectReferences deduplicated 18 lineage edges down to 6. The scope used is the enclosing DSJOB, which is the only containment the .dsx states -- key_scope already uses it for element keys, so this makes modelName agree with the key rather than inventing a scope. VERIFIED before enabling: (job, display name) is unique for all 43 elements, so qualification yields 43 distinct names with no arbitrary tie-break.",
+    "known_risk": "MEASURED COLLISION, NOW FIXED by qualify_with_container. Retained for the record: the display name 'Mask' is used by 7 different stages and 'Input' / 'Output' by 5 and 6, in different jobs. Element KEYS are scoped by job so they did not collide, but modelName was not, so 7 stages competed for the model name 'mask'. Informatica had no analogue and the SSIS table flagged this as untested; on DataStage it was a certainty."
+  },
+  "column_propagation": {
+    "_comment": "DATASTAGE BUFFER SEMANTICS, and this platform STATES the rule rather than leaving it to be inferred. A link record carries its own column list, and when it has none the runtime takes the columns from upstream -- the feature is called RUNTIME COLUMN PROPAGATION, and MaskDemo.dsx declares the condition outright: CContainerView carries LinkHasMetaDatas \"False| \" (dsx:725), and exactly ONE of that export's link records has a Columns \"COutputColumn\" section at all (1 of 36). So 28 of 29 stages can only ever get columns this way. A DECLARED list is exhaustive, which is why the mode is FILL_WHEN_UNDECLARED and not ACCUMULATE: a Transformer's output link names every column it emits, including the ones it merely copies, so accumulating would duplicate the input buffer onto it.",
+    "mode": "FILL_WHEN_UNDECLARED",
+    "algorithm_id": "predecessor_column_propagation.v1",
+    "_stop_comment": "Empty on evidence. PxJoin / PxFunnel / PxMerge are the DataStage analogues of the engine's five SSIS stop kinds and none appears in either fixture, so listing them would present a guess as coverage.",
+    "stop_at_kinds": [],
+    "stop_at_roles": []
+  },
+  "port_policy": {
+    "_comment": "DataStage has no local-variable port concept at the link level and no per-column default. Scale is emitted even when zero because a .dsx states it explicitly for every column -- see no_slot_facts.placeholder_precision_scale for why that statement should not be trusted.",
+    "output_column_order": "COLUMN_SUBRECORD_DOCUMENT_ORDER",
+    "input_column_naming": "UPSTREAM_FIELD",
+    "_input_columns_from_comment": "INPUT_PORTS, and this entry is the FIX for a measured hole in our own verification. A .dsx states NO field-level lineage -- a link record names its Partner pin and nothing finer -- so field_edges is 0 on every .dsx and the FIELD_EDGES mechanism made InputColumns structurally EMPTY on 29 of 29 MaskDemo.dsx nodes and 4 of 4 CustomerSummaryDerive.dsx nodes. Any check that inspects InputColumns therefore inspected nothing on this platform while appearing to pass. The receiving list IS stated, on the element's own INPUT LINK RECORD, and the framework already reads it: CustomerSummaryDerive.dsx declares 8 input columns across three input pins (V0S2P1 FirstName/MiddleName/LastName/BirthDate, V0S3P1 and V0S4P1 FullName/BirthYear) and all 8 were read as INPUT ports and then discarded. So this recovers a reading already made, at SOURCE provenance with a per-column citation -- not a derivation and not new data. MaskDemo.dsx has 0 input-link columns (its records carry none), so the canonical run is byte-identical and the change is visible only where the document actually states the list.",
+    "input_columns_from": "INPUT_PORTS",
+    "input_column_type_from": "LOCAL_PORT",
+    "emit_scale_when_zero": true,
+    "inline_local_variables": false,
+    "drop_local_variables_from_outputs": false,
+    "port_reference_case_insensitive": true,
+    "local_variable_porttype": "__DATASTAGE_HAS_NO_LOCAL_VARIABLE_PORTTYPE__",
+    "output_porttypes": [
+      "OUTPUT"
+    ],
+    "input_porttypes": [
+      "INPUT"
+    ],
+    "exclude_port_groups_with_flag": null,
+    "ref_field_passthrough_rule": null
+  },
+  "type_vocabulary": {
+    "_comment": "DataStage carries NO type NAME. SqlType is an integer JDBC type code. MaskDemo.dsx's two columns state SqlType \"-5\" (java.sql.Types.BIGINT); CustomerSummaryDerive.dsx's eighteen column entries state \"12\" (VARCHAR), \"9\" (DATE) and \"4\" (INTEGER). Carrying either verbatim into the IR's DataType field puts an integer where a type name belongs. This is a strictly worse starting point than Informatica ('string', 'double') or SSIS ('wstr', 'i4'), both of which at least name their types.",
+    "carry": "DATASTAGE_SQLTYPE_CODE",
+    "precision_field_carries": "PRECISION",
+    "known_defect": "DataType is emitted as the raw code -- '-5' on MaskDemo.dsx, '12'/'9'/'4' on CustomerSummaryDerive.dsx. A java.sql.Types code -> name table is required and is NOT part of this spike. Recorded as a no_slot RESIDUE fact per PORT, in THE FIT-SCORE OBLIGATION LEDGER (fit.py, i.e. the UNMET list of the per-document report), so the cost appears in the fit score rather than passing as a satisfied obligation. TWO CORRECTIONS TO THE OLD WORDING OF THIS CLAIM, both from Gate A verifiers who checked it and found it unsupported. (1) IT SAID 'per column' AND MEANT 'per OUTPUT column'. `sqltype_is_numeric_code` declared porttype_class OUTPUT while port_policy.input_columns_from is INPUT_PORTS, so InputColumns carried the same raw codes and raised nothing: 18 IR column entries on CustomerSummaryDerive.dsx, 8 facts. The restriction is removed and it is now 16 facts, one per port -- V0S4's 2 OutputColumns are target_projection_mirrors_input copies of its 2 input ports, whose source lines are already counted. (2) IT SAID 'the ledger' AND DID NOT SAY WHICH ONE. Two verifiers read it as gate_a.py's obligations.json and reported the mechanism missing, correctly: that bundle's RESIDUE family is a census over unmatched BLOCK signatures (DSRECORD / HEADER) and a per-column fact is not a block, so no per-column obligation can appear there and none ever did. The claim was true of the fit ledger and false of the obligations ledger, and a claim that does not name its ledger is not checkable. See `residue.per_column_residue_not_in_gate_a_obligations` for the standing gap that follows from this."
+  },
+  "edge_policy": {
+    "_comment": "DataStage STATES its element-level edges: each link record names its partner. Like SSIS and unlike Informatica, they are read rather than derived. There is NO field-level lineage anywhere in a .dsx -- no analogue of an Informatica CONNECTOR field pair or an SSIS lineageId -- so field_edges is always empty and per-column origin is unknowable from the export.",
+    "element_edges_from": "EXPLICIT_EDGE_ELEMENTS",
+    "collapse_connectors_by": null,
+    "label_source": "LINK_NAME",
+    "label_when_absent": null,
+    "pin_pairs": {
+      "_comment": "A .dsx HAS NO LINK OBJECT. One logical link is TWO records -- an output pin under the upstream stage and an input pin under the downstream stage -- carrying the SAME link Name and pointing at each other through Partner. Reading both halves as edges would emit every link twice, once in each direction, so exactly one half must be selected and that half is the OUTPUT side.",
+      "_direction_comment": "OLEType is the only STATED direction fact on a pin record, and the vocabulary is per stage FAMILY, not global: a parallel custom stage's pins are CCustomInput/CCustomOutput, a server Transformer's are CTrxInput/CTrxOutput, a sequence activity's are CJSActivityInput/CJSActivityOutput. The alternatives were checked and rejected: LinkType is NOT a direction (V0S1P1 is an output and states LinkType \"0\" while V0S3P2 is an output and states \"1\"), and the genuinely total oracle -- the pin id appearing in the owner's OutputPins rather than its InputPins list -- is stated on the OWNER and so cannot be reached by a predicate on the pin, which is what the framework's site queries are. So a closed class list it is, WITH the audit below, because a closed list that silently drops an unlisted class is exactly how the zero-edge defect happened.",
+      "marker_attr": "Partner",
+      "class_attr": "OLEType",
+      "output_classes": [
+        "CCustomOutput",
+        "CustomOutput",
+        "CTrxOutput",
+        "CJSActivityOutput"
+      ],
+      "input_classes": [
+        "CCustomInput",
+        "CustomInput",
+        "CTrxInput",
+        "CJSActivityInput"
+      ],
+      "_class_provenance": "CCustom*/CJSActivity* are read from MaskDemo.dsx, a genuine IBM InfoSphere 8/11.7 export (18 + 18 + 1 + 1 records). CTrx* are the server-job Transformer's pin classes, read from CustomerSummaryDerive.dsx. CustomInput/CustomOutput are ALSO read from CustomerSummaryDerive.dsx and they BREAK the C-prefixed class-name convention every other OLEType in both documents follows (CJobDefn, CCustomStage, CContainerView, CTransformerStage) -- so that fixture is most likely hand-authored and dropping the C. Declared anyway, because the framework's job is to read the document in front of it and say so, not to correct it. FLAGGED here rather than silently normalised, because a table that quietly accepted both spellings would hide a fixture defect from whoever wrote the fixture.",
+      "audit": {
+        "_comment": "THE GATE THAT MAKES AN INCOMPLETE CLASS LIST LOUD. Every record carrying marker_attr must fall in output_classes (produces one edge) or input_classes (is the peer half of one). A record in NEITHER is an UNCLASSIFIED LINK and is reported: it means this document uses a pin class the table has never seen, and the honest response is to name it, not to emit a graph with a hole in it. On the two documents measured this balances exactly -- MaskDemo.dsx 38 marker records = 19 out + 19 in -> 19 edges; CustomerSummaryDerive.dsx 6 = 3 + 3 -> 3 edges.",
+        "_fallthrough_comment": "The audit also counts FALL-THROUGH endpoints. An endpoint resolves by walking from the referenced node to the nearest ANCESTOR that is an identified element, and when a pin's own declaring stage is not an element the walk does not stop -- it keeps going and lands on the enclosing DSJOB, so the edge silently reattaches to the job CONTAINER. That is not a lossy reading, it is an edge the document does not state. MEASURED on CustomerSummaryDerive.dsx before the transformer_stage level existed: 2 of 3 edges became ODBC_CUSTOMER -> job and job -> Filter_BirthYear, and because the job node carries $kind null with degrade_to null the hydrator then dropped the job AND both edges -- so the fabrication also bought nothing. Reported and not dropped: dropping would change reading behaviour on documents this spike has never seen, and a named fabrication a reviewer can see beats an unexplained missing edge.",
+        "report": true
+      }
+    }
+  },
+  "default_value_policy": {
+    "_comment": "No analogue exists. A DataStage link column has no default-value slot; nulls are handled by Nullable plus the stage's own reject handling, which is a different mechanism entirely.",
+    "error_function_prefix": null,
+    "error_default_disposition": null,
+    "literal_default_on_unconnected_input": null,
+    "discardable_label": "DISCARDABLE",
+    "load_bearing_label": "LOAD_BEARING"
+  },
+  "expression_syntax": {
+    "_comment": "DataStage BASIC. UNVERIFIED AND UNEXERCISED: MaskDemo.dsx contains no Transformer stage and therefore not one column derivation, so no expression is scanned and none of these values is tested by the run. They are recorded so the gap is visible rather than absent. The .dsx lexer itself is IGNORECASE (Dsx.atg:6), which is why case-insensitive resolution is set, but that is a property of the export format and not proof about the expression language.",
+    "string_quotes": [
+      "\"",
+      "'"
+    ],
+    "reference_delimiters": null,
+    "identifier_extra_chars": ".",
+    "case_insensitive_resolution": true,
+    "expression_property_read": null,
+    "expression_property_ignored": null
+  },
+  "no_slot_facts": [
+    {
+      "id": "stage_properties_blob",
+      "from": "ELEMENT_ATTR",
+      "attr": "XMLProperties",
+      "provenance": "RESIDUE"
+    },
+    {
+      "id": "connector_declared_context",
+      "from": "ELEMENT_ATTR",
+      "attr": "Context"
+    },
+    {
+      "id": "connector_name",
+      "from": "ELEMENT_ATTR",
+      "attr": "ConnectorName"
+    },
+    {
+      "id": "execution_engine",
+      "from": "ELEMENT_ATTR",
+      "attr": "Engine"
+    },
+    {
+      "id": "connection_string_ref",
+      "from": "ELEMENT_ATTR",
+      "attr": "ConnectionString"
+    },
+    {
+      "id": "credential_ref",
+      "from": "ELEMENT_ATTR",
+      "attr": "Username"
+    },
+    {
+      "id": "variant_library",
+      "from": "ELEMENT_ATTR",
+      "attr": "VariantLibrary"
+    },
+    {
+      "id": "reject_threshold",
+      "from": "ELEMENT_ATTR",
+      "attr": "RejectThreshold"
+    },
+    {
+      "id": "dataset_file_path",
+      "from": "CHILD_ATTR",
+      "xpath": "./DSRECORD/Properties/DSSUBRECORD[@Name='dataset']",
+      "attr": "Value",
+      "key_attr": "Name"
+    },
+    {
+      "id": "sqltype_is_numeric_code",
+      "from": "PORT",
+      "keyed_by": "name",
+      "where_suffix": "/@SqlType",
+      "provenance": "RESIDUE",
+      "detail": "DataType emitted as JDBC type code '{datatype}'; no code -> name table exists",
+      "_porttype_class_comment": "NO porttype_class, and it USED to be \"OUTPUT\". type_vocabulary.known_defect claims this fact is raised PER COLUMN, and with the restriction it was raised per OUTPUT column only -- while `port_policy.input_columns_from` is INPUT_PORTS on this platform, so an element's InputColumns carry the same raw JDBC code from the same kind of subrecord and raised nothing. MEASURED on CustomerSummaryDerive.dsx: 18 IR column entries all carrying raw codes ('12', '9', '4'), 8 residue facts. Now 16, which is one per PORT -- the remaining 2 IR entries are V0S4's OutputColumns, which target_projection_mirrors_input copies from its 2 input ports, so the same two source lines are already counted once each and counting them twice would inflate the cost of one document fact. Effect: CustomerSummaryDerive.dsx 76.3% -> 71.9% (unsatisfied 31 -> 39). MaskDemo.dsx is UNCHANGED, because both of its two columns with @SqlType are output-side -- which is precisely why the asymmetry survived on the canonical run.",
+      "_conditionality_caveat": "THIS FACT IS KEYED FROM PORT, so it fires once per port READ and not once per column the document STATES. That is a conditional cost, not an unconditional one: before the port sites were widened to `*`/`[@SqlType]` and to the CustomInput/CustomOutput/CTrx* spellings, all five stages of CustomerSummaryDerive.dsx came out with ports=0 -- and with no ports there were no columns in the IR, no column obligations, and the type-code defect scored as satisfied by having nothing left to score. The general guard against that recurring is `structure.census.port_census` plus the COLUMN CENSUS gate in declared_vs_identified.py, which compares the columns the DOCUMENT states against the ports the port sites read, using a denominator that is not the port sites' own output."
+    },
+    {
+      "id": "placeholder_precision_scale",
+      "from": "PORT",
+      "requires": "placeholder_precision",
+      "placeholder_values": [
+        0
+      ],
+      "keyed_by": "name",
+      "where_suffix": "/@Precision",
+      "provenance": "RESIDUE",
+      "detail": "Precision and Scale are both stated as 0 for type '{datatype}'. The value IS at that line, so provenance reads SOURCE and is truthful -- but 0 here means 'not applicable to this type', not zero. This is the SSIS precision-defaulting bug relocated from the reader into the source format, where provenance cannot detect it.",
+      "_porttype_class_comment": "NO porttype_class, for the same reason as sqltype_is_numeric_code above and with the same evidence: `input_column_type_from` is LOCAL_PORT, so a placeholder Precision on an INPUT port reaches element.InputColumns[i].Precision exactly as an output one reaches OutputColumns. MEASURED EFFECT: NIL on both documents -- no input port in either fixture states Precision 0 -- so this widening is implemented and unexercised. Kept anyway rather than left OUTPUT-only, because leaving it is re-creating on one rule the exact asymmetry that hid the type-code cost on the rule above it."
+    },
+    {
+      "id": "link_transaction_settings",
+      "from": "GROUP",
+      "keyed_by": "name",
+      "detail": "link '{name}' of type {type}; the IR edge carries a label and nothing else"
+    },
+    {
+      "id": "dangling_output_column",
+      "from": "PORT",
+      "porttype_class": "OUTPUT",
+      "connectivity": "UNCONNECTED",
+      "keyed_by": "name",
+      "detail": "no field-level lineage exists in a .dsx, so no output column can be shown to be consumed",
+      "_porttype_class_comment": "OUTPUT-ONLY DELIBERATELY, and this is the one of the three column-keyed rules where the restriction is the fact rather than an oversight. The claim is 'this output column cannot be shown to be CONSUMED downstream'; the input-side mirror would be 'this input column cannot be shown to be PRODUCED upstream', which is a different fact about a different half of the graph and is not what this rule's detail says. Widening it would make the obligation text false of half the facts it raised."
+    },
+    {
+      "id": "job_containment",
+      "from": "CONTAINER",
+      "detail": "element lives inside job {container}; the IR graph is flat, so 12 unrelated job graphs are emitted as one node set"
+    },
+    {
+      "id": "allow_column_mapping",
+      "from": "ELEMENT_FLAG",
+      "flag": "allow_column_mapping",
+      "where_suffix": "/@AllowColumnMapping"
+    },
+    {
+      "id": "dsx_prop_table",
+      "from": "CHILD_ATTR",
+      "xpath": "./*/DSSUBRECORD[@Name='table']",
+      "attr": "Value",
+      "key_attr": "Name",
+      "note": "PxOdbc states its table as a plain subrecord property -- unlike the connector stages, where it is inside an XMLProperties blob and does not survive.",
+      "_xpath_comment": "`./*/`, and it was `.//`. A DESCENDANT axis attributes a property row to every ANCESTOR element, not to the record that states it. MEASURED on CustomerSummaryDerive.dsx: V0S1 and V0S4 each state a `table` row, both are promoted into element.TableName on their own stage and therefore suppressed there -- and the DSJOB element picked up BOTH of them by descent and reported `!dsx_prop_table[table]` twice, at CUSTOMER and CUSTOMER_SUMMARY. The DSJOB block states neither property. So the cost was counted on the container and NOT on the stage, which is the wrong element twice over, and it disagreed with `dsx_unread_stage_property`, which attributes a property row to its own record via the property bag. `./*/` is the same one-section-deep shape the attr_site uses, for the same reason. EFFECT: 3 obligations retired on CustomerSummaryDerive.dsx (149 -> 146, unsatisfied 49 -> 46, 67.1% -> 68.5%), all three provably false -- wrong subject, and the fact itself is carried in the IR at SOURCE provenance on the correct node. MaskDemo.dsx is byte-identical: it contains no PxOdbc and no `table` property row."
+    },
+    {
+      "id": "dsx_prop_where",
+      "from": "CHILD_ATTR",
+      "xpath": "./*/DSSUBRECORD[@Name='where']",
+      "attr": "Value",
+      "key_attr": "Name",
+      "note": "The PxFilter predicate.",
+      "_xpath_comment": "`./*/` rather than `.//`, for the reason given on dsx_prop_table above. The measured instance here is V0S3's `where \"BirthYear >= 1990\"`: promoted into element.FilterConditions on V0S3 and reported as an unmet obligation on the enclosing DSJOB, which states no predicate."
+    },
+    {
+      "id": "dsx_unread_stage_property",
+      "from": "ATTR_RESIDUE",
+      "provenance": "RESIDUE",
+      "note": "THE RESIDUAL PROPERTY SWEEP -- one RESIDUE obligation per stage-property row that no other rule in this table reads and whose value is not a declared neutral default. THE MEASURED LOSS IT CLOSES: on CustomerSummaryDerive.dsx seven distinct property rows died in silence -- data_source, user, password, read_method (V0S1), nulls (V0S3), write_method, write_mode (V0S4), ten rows in total -- and the material pair is V0S4's `write_method \"write\"` at dsx:319-320 with `write_mode \"append\"` at dsx:323-324. Neither reached the IR, nor a no_slot fact, nor a residue line. A mart materialized as a table REPLACES CUSTOMER_SUMMARY every run while the document says APPEND, so from run 2 the migration and the original disagree about the target's contents with nothing anywhere saying so. MEASURED: 10 new obligations on CustomerSummaryDerive.dsx and 308 on MaskDemo.dsx (23 connector stages x ~13 unread properties each), taking that document from 44.6% to 28.8% with the satisfied count unchanged at 249. THE FIT FELL BECAUSE A REAL COST NOW APPEARS; nothing was newly lost.",
+      "_residual_not_whitelist": "This rule is a COMPLEMENT and not a list, and that is the whole design. Every other rule kind here names one key, one xpath or one porttype, so a property name nobody has thought of is not reported as uncovered -- it is not reported at all. A curated list of behaviour-bearing property names would have to be extended for every new document, and the failure mode of forgetting is silence. Naming the complement means a property name this table has never seen raises an obligation BY CONSTRUCTION. It is also why the fix is here and not in the `dsx-subrecord-property-row` census `why` text: widening prose does not make a cost appear in a number.",
+      "_credentials_are_not_excluded": "STATED EXPLICITLY because it was offered as an option and declined. data_source, user and password ARE raised, on the same footing as write_mode. Two reasons, both from this table rather than from principle: (1) this table ALREADY ledgers credential and connection references as costs -- `credential_ref` (@Username) and `connection_string_ref` (@ConnectionString) are existing no_slot rules for the connector-stage spelling of the same facts, so excluding the property-row spelling would make one document's credentials a counted cost and another's free; (2) a suppression list is the mechanism that swallowed write_mode, and re-introducing one for a category that sounds harmless is how the next material property gets swallowed. The DECLARED, REVIEWABLE knob for suppression is `neutral_defaults`, per key, and it is the only one this rule honours.",
+      "_neutral_defaults_trap": "AND `neutral_defaults` MAY ONLY BE USED FOR A VERIFIED VENDOR DEFAULT THAT CARRIES NO DESIGN INTENT, which is narrower than 'equals the default'. Nothing from this sweep has been declared neutral: MaskDemo.dsx's `RejectNumber 0`, `RejectUsesPercentage false` and `OutputLinkOrder 0` all look like defaults and no vendor documentation was consulted, so declaring them would present a guess as verified coverage. The counter-example that fixes the wording is on the other platform: SSIS's FastLoadKeepNulls is MATERIAL AT ITS DEFAULT VALUE (false means 'insert the column DEFAULT instead of NULL'), so 'is the default' does not imply 'carries no intent'."
+    }
+  ],
+  "neutral_defaults": {
+    "_comment": "A fact only creates an obligation when its value differs from the neutral default. RejectThreshold 0 with RejectFromLink -1 is the DataStage default meaning 'no reject link'. AllowColumnMapping 0 is the default for a connector stage.",
+    "RejectThreshold": "0",
+    "allow_column_mapping": "0"
+  },
+  "dialect": {
+    "_comment": "UNEXERCISED BY THE READER, AND NOT BY THE DOCUMENTS -- and the old wording of this line was 'No expression appears in the fixture', which is false of one of the two documents this table serves and was authored against the other. MaskDemo.dsx contains no Transformer and no derivation, so nothing here is reached on the canonical run. CustomerSummaryDerive.dsx DOES: V0S2 is a CTransformerStage whose output pin states two Derivations -- `lnk_Customer_In.FirstName : \" \" : lnk_Customer_In.MiddleName : \" \" : lnk_Customer_In.LastName` at dsx:205 and `YearFromDate(lnk_Customer_In.BirthDate)` at dsx:216. The FIRST of those is FOUR occurrences of the ':' operator this table records as syntactically identical and semantically divergent, which is the exact hazard the entry below was written for. It is still unreached because `output_transformer_column._expression_comment` deliberately does not read Derivation and CTransformerStage maps to no ir_kind, so the text arrives in the artifact as a commented source fragment instead of as an expression -- unexercised BY CHOICE, with the choice recorded, rather than absent from the input.",
+    "identical": [
+      "*",
+      "-",
+      "/",
+      ">",
+      "<",
+      ">=",
+      "<=",
+      "=",
+      "<>",
+      "(",
+      ")",
+      ","
+    ],
+    "syntactically_identical_semantically_divergent": {
+      ":": "DataStage BASIC ':' is string concatenation. Snowflake ':' is VARIANT path access. Same character, unrelated operations, and unlike '||' or '+' the Snowflake form does not even fail loudly -- it returns NULL on a non-VARIANT operand."
+    },
+    "divergent_operator_lengths": [
+      1
+    ],
+    "known_functions_identical": [],
+    "unknown_identifier_disposition": "RESIDUE"
+  },
+  "residue": {
+    "_comment": "Facts that structure identifies but cannot RESOLVE. EVERY ENTRY BELOW NAMES THE DOCUMENT IT IS TRUE OF. This table serves TWO documents -- MaskDemo.dsx (12 jobs, 43 elements, the canonical run) and CustomerSummaryDerive.dsx (1 job, 5 elements, the Gate A blind document) -- and `expression_language` below was authored against the first while being shipped, in the Gate A bundle, beside the second, where it was false. An unqualified 'the fixture' is not checkable when a table has more than one.",
+    "embedded_xml_properties": "MaskDemo.dsx. Every connector stage stores its real configuration -- SELECT statement, table name, write mode, table action, transaction and session settings -- as an embedded XML document inside a single string value. Reading it requires a SECOND document projection nested inside the first, on a value whose schema is per-connector. NOT a factor on CustomerSummaryDerive.dsx, whose PxOdbc stages state the same class of settings as plain property rows instead; those rows are read into the property bag and counted by no_slot_facts.dsx_unread_stage_property.",
+    "java_stage_behaviour": "MaskDemo.dsx. JavaStagePX is the business logic of that workload and the .dsx states only its classpath and heap size. What it computes is in a Java class outside the export. No JavaStagePX stage exists in CustomerSummaryDerive.dsx.",
+    "sqltype_code_mapping": "BOTH DOCUMENTS. JDBC integer type codes -> Snowflake types. Counted per port by no_slot_facts.sqltype_is_numeric_code; see type_vocabulary.known_defect for which ledger that lands in and which it does not.",
+    "job_parameter_substitution": "BOTH DOCUMENTS. Values are #Param# and #Set.Param# references into job parameter sets -- on CustomerSummaryDerive.dsx these are `#DBUser#` and `#DBPassword#` at dsx:311 and dsx:315. Resolving them needs the DSPARAMETERSETS block plus the invoking sequence's ParameterValues, and neither document contains one.",
+    "control_flow_translation": "MaskDemo.dsx. A job sequence invoking 12 jobs by name has no IR representation. CustomerSummaryDerive.dsx has a single job and no sequence, so this is not a cost on it.",
+    "expression_language": "CORRECTED. It said 'Entirely untouched: no Transformer stage, no derivation, no expression in the fixture', which is true of MaskDemo.dsx and FALSE of CustomerSummaryDerive.dsx -- the document this table is shipped beside in the Gate A bundle, and the one two independent verifiers were reading when they flagged it. That document's V0S2 IS a CTransformerStage (dsx:124-137) and its output pin states TWO derivations: `lnk_Customer_In.FirstName : \" \" : lnk_Customer_In.MiddleName : \" \" : lnk_Customer_In.LastName` at dsx:205 and `YearFromDate(lnk_Customer_In.BirthDate)` at dsx:216. Both are DataStage BASIC, no engine translator lowers that dialect, and CTransformerStage is deliberately mapped to no ir_kind for that reason -- so the FACT is unchanged (the expressions are not translated) while the REASON is the opposite of what was written: they are untranslated because the dialect has no translator, NOT because the input contains no expression. The old text read as coverage of a document it did not describe, which is worse than silence, and it also mis-stated the residual risk: the first derivation uses the ':' concatenation operator four times, which `dialect.syntactically_identical_semantically_divergent` records as returning NULL rather than failing if it ever reached Snowflake unchanged. Where the text DOES go: V0S2 degrades to UnsupportedTransformation and both derivations arrive in the artifact as a commented source fragment via `_unsupported_body`.",
+    "stage_property_residue_in_gate_a_obligations": "A DECLARED GAP IN A LEDGER THIS TABLE DOES NOT OWN, recorded because silence is what the exhaustive-census work exists to remove. Unread stage-property rows are now counted in the FIT-SCORE ledger, one RESIDUE obligation each (`no_slot_facts.dsx_unread_stage_property`: 10 on CustomerSummaryDerive.dsx, 308 on MaskDemo.dsx). They raise NO obligation in gate_a.py's obligations.json, and cannot: that bundle's RESIDUE family is a census over unmatched BLOCK signatures -- DSRECORD, HEADER -- and a DSSUBRECORD property row is not a block, so the signature `DSSUBRECORD[Name=write_mode]` has nowhere to be raised. Closing it means a new obligation family in gate_a.py, which is a different file with a different owner, so it is NOT closed here and is stated here instead. CONSEQUENCE, precisely: a Gate A verifier who answers every obligation in the bundle has still not been asked about write_mode. The fit-score report is where that question currently lives.",
+    "per_column_residue_not_in_gate_a_obligations": "THE SAME GAP, one family over, and it is the one a verifier hit when checking type_vocabulary.known_defect. Per-COLUMN facts -- the raw JDBC type code, the placeholder precision, the unconsumable output column -- are fit-score obligations keyed from PORT and are not block signatures either, so obligations.json's 4 RESIDUE entries are all block-level and none is per column. Additionally, and this is the sharper half: the COLUMN CONTENT of a CustomOutput / CustomInput / CTrx* pin record has no obligation family at all in that bundle. The link rule CONSUMES those records (they ARE the edge, so they are excluded from the residue census by `dsx-link-record`) and the LINK obligation's question is ENDPOINTS-ONLY -- 'does the IR carry this link as an edge? Matching is on ENDPOINTS, never on label.' So V0S1P1's four column definitions at dsx:79-122 and V0S3P2's two at dsx:275-292 are asked about by nothing. In THIS ledger they are covered: all 18 are read as ports at SOURCE provenance with per-column citations (port_policy.input_columns_from = INPUT_PORTS), and each carries a sqltype_is_numeric_code RESIDUE fact. So the loss the verifier identified is real ABOUT THE OBLIGATION SET and not about the IR, and the fix belongs in gate_a.py's residue rules -- give a consumed link record's column rows a family of their own -- not in this table.",
+    "expression_dialect_of_derivations": "CustomerSummaryDerive.dsx, and split out of `expression_language` because it is a DIFFERENT gap from 'no translator exists'. Even with a BASIC -> Snowflake translator, `lnk_Customer_In.FirstName` is a LINK-QUALIFIED column reference: the qualifier is the name of an input link, not of a table or a CTE, so lowering it needs the link-to-model mapping the emitter builds and the expression does not carry."
+  }
+}

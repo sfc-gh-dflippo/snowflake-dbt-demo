@@ -1,0 +1,2734 @@
+{
+    "Issues": [
+        {
+            "Severity": "Critical",
+            "Code": "SSC-EWI-0001",
+            "ManualEffort": 27
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-0002",
+            "ManualEffort": 7
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-0003",
+            "ManualEffort": 2
+        },
+        {
+            "Severity": "Critical",
+            "Code": "SSC-EWI-0005",
+            "ManualEffort": 202
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-0006",
+            "ManualEffort": 7
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-0008",
+            "ManualEffort": 16.5
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-0009",
+            "ManualEffort": 30
+        },
+        {
+            "Severity": "Critical",
+            "Code": "SSC-EWI-0013",
+            "ManualEffort": 77
+        },
+        {
+            "Severity": "Critical",
+            "Code": "SSC-EWI-0014",
+            "ManualEffort": 280
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-0015",
+            "ManualEffort": 42
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-0016",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-0021",
+            "ManualEffort": 30
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-0022",
+            "ManualEffort": 4
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-0023",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-0025",
+            "ManualEffort": 2.5
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-0026",
+            "ManualEffort": 32.5
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-0027",
+            "ManualEffort": 10
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-0028",
+            "ManualEffort": 5
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-0029",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-0030",
+            "ManualEffort": 60
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-0031",
+            "ManualEffort": 38
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-0032",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-0033",
+            "ManualEffort": 1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-0034",
+            "ManualEffort": 1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-0035",
+            "ManualEffort": 1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-0036",
+            "ManualEffort": 11
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-0040",
+            "ManualEffort": 5
+        },
+        {
+            "Severity": "Critical",
+            "Code": "SSC-EWI-0041",
+            "ManualEffort": 15
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-0045",
+            "ManualEffort": 1
+        },
+        {
+            "Severity": "Critical",
+            "Code": "SSC-EWI-0046",
+            "ManualEffort": 1
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-0049",
+            "ManualEffort": 5
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-0052",
+            "ManualEffort": 8
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-0053",
+            "ManualEffort": 9
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-0054",
+            "ManualEffort": 29
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-0056",
+            "ManualEffort": 3
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-0058",
+            "ManualEffort": 48
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-0062",
+            "ManualEffort": 3
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-0066",
+            "ManualEffort": 45
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-0067",
+            "ManualEffort": 60
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-0068",
+            "ManualEffort": 30
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-0073",
+            "ManualEffort": 10
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-0077",
+            "ManualEffort": 60
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-0080",
+            "ManualEffort": 3
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-0084",
+            "ManualEffort": 14
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-0086",
+            "ManualEffort": 2.5
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-0094",
+            "ManualEffort": 8
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-0101",
+            "ManualEffort": 4
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-0102",
+            "ManualEffort": 1.5
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-0107",
+            "ManualEffort": 15
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-0108",
+            "ManualEffort": 45
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-0114",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TD0001",
+            "ManualEffort": 45
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TD0003",
+            "ManualEffort": 9
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TD0004",
+            "ManualEffort": 3
+        },
+        {
+            "Severity": "Critical",
+            "Code": "SSC-EWI-TD0005",
+            "ManualEffort": 2
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TD0006",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TD0007",
+            "ManualEffort": 1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TD0008",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TD0009",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TD0010",
+            "ManualEffort": 1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TD0012",
+            "ManualEffort": 1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TD0017",
+            "ManualEffort": 8
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TD0020",
+            "ManualEffort": 12
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TD0023",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TD0024",
+            "ManualEffort": 4
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TD0025",
+            "ManualEffort": 2
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TD0027",
+            "ManualEffort": 1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TD0029",
+            "ManualEffort": 1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TD0031",
+            "ManualEffort": 2
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TD0034",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-TD0039",
+            "ManualEffort": 1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TD0040",
+            "ManualEffort": 1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TD0041",
+            "ManualEffort": 3
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-TD0046",
+            "ManualEffort": 9
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-TD0049",
+            "ManualEffort": 30
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TD0051",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TD0052",
+            "ManualEffort": 4
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TD0053",
+            "ManualEffort": 1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TD0055",
+            "ManualEffort": 1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TD0057",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TD0059",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TD0060",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TD0061",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-TD0063",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TD0066",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-TD0068",
+            "ManualEffort": 17
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TD0069",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-TD0070",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-TD0076",
+            "ManualEffort": 8
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-TD0077",
+            "ManualEffort": 10
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TD0079",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-TD0082",
+            "ManualEffort": 5
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-TD0083",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-TD0087",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-TD0091",
+            "ManualEffort": 23
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TD0092",
+            "ManualEffort": 4
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-TD0093",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-OR0001",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-OR0002",
+            "ManualEffort": 27
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-OR0004",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-OR0005",
+            "ManualEffort": 15
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-OR0006",
+            "ManualEffort": 1
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-OR0007",
+            "ManualEffort": 4
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-OR0008",
+            "ManualEffort": 5
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-OR0009",
+            "ManualEffort": 27
+        },
+        {
+            "Severity": "Critical",
+            "Code": "SSC-EWI-OR0010",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-OR0011",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-OR0013",
+            "ManualEffort": 15
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-OR0014",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-OR0016",
+            "ManualEffort": 60
+        },
+        {
+            "Severity": "Critical",
+            "Code": "SSC-EWI-OR0020",
+            "ManualEffort": 2
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-OR0023",
+            "ManualEffort": 60
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-OR0026",
+            "ManualEffort": 3
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-OR0029",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-OR0030",
+            "ManualEffort": 32
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-OR0031",
+            "ManualEffort": 1
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-OR0032",
+            "ManualEffort": 17
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-OR0033",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-OR0035",
+            "ManualEffort": 13
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-OR0036",
+            "ManualEffort": 4
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-OR0038",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-OR0039",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-OR0042",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-OR0045",
+            "ManualEffort": 16.5
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-OR0046",
+            "ManualEffort": 5
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-0109",
+            "ManualEffort": 1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-OR0047",
+            "ManualEffort": 3
+        },
+        {
+            "Severity": "Critical",
+            "Code": "SSC-EWI-OR0049",
+            "ManualEffort": 7
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-OR0050",
+            "ManualEffort": 16.5
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-OR0051",
+            "ManualEffort": 5
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-OR0052",
+            "ManualEffort": 5
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-OR0053",
+            "ManualEffort": 16.5
+        },
+        {
+            "Severity": "Critical",
+            "Code": "SSC-EWI-OR0057",
+            "ManualEffort": 43
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-OR0067",
+            "ManualEffort": 17
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-OR0068",
+            "ManualEffort": 5
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-OR0069",
+            "ManualEffort": 15
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-OR0070",
+            "ManualEffort": 2
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-OR0071",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-OR0072",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-OR0075",
+            "ManualEffort": 15
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-OR0076",
+            "ManualEffort": 1
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-OR0078",
+            "ManualEffort": 60
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-OR0082",
+            "ManualEffort": 20
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-OR0087",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-OR0089",
+            "ManualEffort": 5
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-OR0090",
+            "ManualEffort": 17
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-OR0092",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-OR0095",
+            "ManualEffort": 11
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-OR0097",
+            "ManualEffort": 3
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-OR0099",
+            "ManualEffort": 3
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-OR0100",
+            "ManualEffort": 15.0
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-OR0101",
+            "ManualEffort": 15
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-OR0103",
+            "ManualEffort": 23
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-OR0104",
+            "ManualEffort": 17
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-OR0105",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-OR0108",
+            "ManualEffort": 15
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-OR0109",
+            "ManualEffort": 15
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-OR0110",
+            "ManualEffort": 29
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-OR0116",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-OR0118",
+            "ManualEffort": 5
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-OR0121",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-OR0123",
+            "ManualEffort": 1
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-OR0126",
+            "ManualEffort": 7
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-OR0128",
+            "ManualEffort": 4
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-OR0129",
+            "ManualEffort": 4
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-OR0133",
+            "ManualEffort": 14
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-OR0135",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Critical",
+            "Code": "SSC-EWI-OR0136",
+            "ManualEffort": 11
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-OR0137",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Critical",
+            "Code": "SSC-EWI-TS0001",
+            "ManualEffort": 48
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TS0002",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TS0003",
+            "ManualEffort": 4
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-TS0009",
+            "ManualEffort": 38
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-TS0010",
+            "ManualEffort": 30
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TS0013",
+            "ManualEffort": 4
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-TS0015",
+            "ManualEffort": 17
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-TS0016",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TS0017",
+            "ManualEffort": 1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TS0023",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TS0024",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TS0025",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TS0026",
+            "ManualEffort": 3
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-TS0032",
+            "ManualEffort": 30
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-TS0034",
+            "ManualEffort": 29
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-TS0035",
+            "ManualEffort": 2
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-TS0036",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-TS0037",
+            "ManualEffort": 8
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-TS0039",
+            "ManualEffort": 60
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-TS0041",
+            "ManualEffort": 37
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-TS0043",
+            "ManualEffort": 80
+        },
+        {
+            "Severity": "Critical",
+            "Code": "SSC-EWI-TS0044",
+            "ManualEffort": 45
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TS0045",
+            "ManualEffort": 9
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-TS0046",
+            "ManualEffort": 10
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TS0047",
+            "ManualEffort": 5
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-TS0049",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-TS0055",
+            "ManualEffort": 10
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TS0020",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TS0056",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TS0057",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-TS0060",
+            "ManualEffort": 12
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-TS0061",
+            "ManualEffort": 20
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-TS0063",
+            "ManualEffort": 17
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-TS0067",
+            "ManualEffort": 30
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TS0070",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TS0072",
+            "ManualEffort": 53
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TS0073",
+            "ManualEffort": 1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TS0074",
+            "ManualEffort": 4
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-TS0075",
+            "ManualEffort": 17
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-TS0076",
+            "ManualEffort": 8
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TS0077",
+            "ManualEffort": 1
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-TS0078",
+            "ManualEffort": 9
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-TS0079",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-TS0080",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TS0081",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "Critical",
+            "Code": "SSC-EWI-TS0082",
+            "ManualEffort": 90
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TS0083",
+            "ManualEffort": 10
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-TS0085",
+            "ManualEffort": 30
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-TS0086",
+            "ManualEffort": 45
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-TS0087",
+            "ManualEffort": 45
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-TS0088",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-PG0001",
+            "ManualEffort": 10
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-PG0002",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-PG0003",
+            "ManualEffort": 4
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-PG0004",
+            "ManualEffort": 10
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-PG0006",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-PG0007",
+            "ManualEffort": 8
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-PG0008",
+            "ManualEffort": 30
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-PG0009",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-PG0010",
+            "ManualEffort": 4
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-PG0011",
+            "ManualEffort": 3
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-PG0012",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-PG0014",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-PG0015",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-PG0016",
+            "ManualEffort": 2
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-GP0001",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-RS0002",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-RS0003",
+            "ManualEffort": 10
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-RS0004",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-RS0005",
+            "ManualEffort": 9
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-RS0006",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-RS0007",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-RS0008",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-RS0009",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-RS0010",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-RS0001",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-RS0002",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-RS0003",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-RS0004",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-RS0005",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-RS0006",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-RS0007",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-RS0008",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-BQ0001",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-BQ0002",
+            "ManualEffort": 2
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-BQ0003",
+            "ManualEffort": 2
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-BQ0004",
+            "ManualEffort": 15
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-BQ0005",
+            "ManualEffort": 20
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-BQ0006",
+            "ManualEffort": 2
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-BQ0007",
+            "ManualEffort": 1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-BQ0008",
+            "ManualEffort": 2
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-BQ0009",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-BQ0010",
+            "ManualEffort": 10
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-BQ0011",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-BQ0012",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-BQ0013",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-BQ0014",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-BQ0015",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-BQ0016",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-BQ0017",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-DB0001",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-DB0003",
+            "ManualEffort": 20
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-DB0004",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-DB0005",
+            "ManualEffort": 40
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-DB0006",
+            "ManualEffort": 10
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-DB0007",
+            "ManualEffort": 10
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-DB0008",
+            "ManualEffort": 10
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-DB0009",
+            "ManualEffort": 20
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-DB0010",
+            "ManualEffort": 20
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-DB0011",
+            "ManualEffort": 30
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-DB0012",
+            "ManualEffort": 10
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-DB0013",
+            "ManualEffort": 10
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-DB0014",
+            "ManualEffort": 20
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-DB0015",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-DB0016",
+            "ManualEffort": 20
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-DB0017",
+            "ManualEffort": 30
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-DB0018",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-DB0019",
+            "ManualEffort": 5
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-DB0020",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-DB0021",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-DB0022",
+            "ManualEffort": 20
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-DB0001",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-0001",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-0002",
+            "ManualEffort": 15
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-0003",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-0004",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-0005",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-0006",
+            "ManualEffort": 1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-0007",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-0008",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-0009",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-0010",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-0011",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-0012",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-0013",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-0014",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-0015",
+            "ManualEffort": 1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-0016",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-0017",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-0018",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-0019",
+            "ManualEffort": 1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-0020",
+            "ManualEffort": 34
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-0021",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-0022",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-0023",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-0024",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-0025",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-0026",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-0027",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-0028",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-0030",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-0029",
+            "ManualEffort": 54
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-0031",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-0032",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-0033",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-0034",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-0035",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-0036",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-0037",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-0038",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-0039",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-0040",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TD0001",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TD0002",
+            "ManualEffort": 1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TD0003",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TD0004",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TD0005",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TD0006",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TD0007",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TD0008",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TD0009",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TD0010",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TD0011",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TD0012",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TD0013",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TD0014",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TD0016",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TD0017",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TD0018",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TD0019",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TD0020",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TD0022",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TD0023",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TD0024",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TD0025",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TD0026",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TD0027",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TD0028",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TD0029",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TD0030",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TD0031",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TD0032",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TD0033",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TD0034",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TD0035",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TD0036",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0001",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0002",
+            "ManualEffort": 5
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0003",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0004",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0005",
+            "ManualEffort": 1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0006",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0007",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0008",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0009",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0010",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0011",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0012",
+            "ManualEffort": 1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0013",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0014",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0015",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0016",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0017",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0018",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0019",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0020",
+            "ManualEffort": 5
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0021",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0022",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0023",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0024",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0025",
+            "ManualEffort": 5
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0026",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0027",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0028",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0029",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0030",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0031",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0032",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0033",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0034",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0035",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0036",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0037",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0038",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0039",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0040",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0041",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0042",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0043",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0044",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0045",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0046",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0047",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0048",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0049",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-OR0050",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TS0001",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TS0002",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TS0003",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TS0004",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TS0005",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TS0006",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TS0007",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TS0008",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TS0009",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TS0010",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TS0011",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TS0012",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TS0013",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TS0014",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TS0016",
+            "ManualEffort": 1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TS0017",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TS0018",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TS0019",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TS0021",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TS0022",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TS0023",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TS0024",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TS0025",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TS0026",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TS0027",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TS0028",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TS0029",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TS0030",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TS0031",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TS0032",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TS0033",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TS0034",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-TS0035",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-BQ0001",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-BQ0002",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-BQ0003",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-BQ0004",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-BQ0005",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-BQ0006",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-BQ0007",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-BQ0008",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-BQ0010",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-BQ0011",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-PG0001",
+            "ManualEffort": 4
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-PG0002",
+            "ManualEffort": 1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-PG0003",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-PG0004",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-PG0005",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-PG0006",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-PG0007",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-PG0008",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-PG0009",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-PG0010",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-PG0011",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-PG0012",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-PG0013",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-PG0014",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-PG0015",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-PG0016",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-PG0017",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-PG0018",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-PRF-0001",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-PRF-0002",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-PRF-0003",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-PRF-0004",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-PRF-0005",
+            "ManualEffort": 36
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-PRF-0006",
+            "ManualEffort": 25
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-PRF-0007",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-PRF-0008",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-PRF-0009",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-PRF-TS0001",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-OOS",
+            "ManualEffort": 19
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-OOS-0001",
+            "ManualEffort": 120
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-0110",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "Critical",
+            "Code": "SSC-EWI-0111",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Critical",
+            "Code": "SSC-EWI-0112",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-0113",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-SY0001",
+            "ManualEffort": 1
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-SY0002",
+            "ManualEffort": 1
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-SY0003",
+            "ManualEffort": 1
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-SY0004",
+            "ManualEffort": 1
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-SY0005",
+            "ManualEffort": 1
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-SY0006",
+            "ManualEffort": 1
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-SY0007",
+            "ManualEffort": 1
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-SY0008",
+            "ManualEffort": 1
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-SY0009",
+            "ManualEffort": 1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-SY0001",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-SY0002",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-SPK0001",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-HV0001",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-HV0001",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-HV0002",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-SPK0001",
+            "ManualEffort": 0
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-VT0001",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-EWI-VT0002",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-VT0001",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Critical",
+            "Code": "SSC-EWI-INF0001",
+            "ManualEffort": 204
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-INF0002",
+            "ManualEffort": 45
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-INF0003",
+            "ManualEffort": 45
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-INF0004",
+            "ManualEffort": 45
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-INF0005",
+            "ManualEffort": 45
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-INF0006",
+            "ManualEffort": 45
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-INF0001",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-INF0002",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-INF0003",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-EWI-INF0007",
+            "ManualEffort": 45
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-INF0008",
+            "ManualEffort": 16.5
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-INF0004",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Critical",
+            "Code": "SSC-EWI-INF0009",
+            "ManualEffort": 204
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-EWI-INF0010",
+            "ManualEffort": 45
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-INF0011",
+            "ManualEffort": 45
+        },
+        {
+            "Severity": "Critical",
+            "Code": "SSC-EWI-SSIS0001",
+            "ManualEffort": 204
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-SSIS0002",
+            "ManualEffort": 45
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-SSIS0003",
+            "ManualEffort": 45
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-SSIS0004",
+            "ManualEffort": 45
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-SSIS0005",
+            "ManualEffort": 45
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-SSIS0006",
+            "ManualEffort": 45
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-SSIS0007",
+            "ManualEffort": 45
+        },
+        {
+            "Severity": "Medium",
+            "Code": "SSC-EWI-SSIS0008",
+            "ManualEffort": 60
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-SSIS0001",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-SSIS0009",
+            "ManualEffort": 45
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-SSIS0010",
+            "ManualEffort": 45
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-SSIS0011",
+            "ManualEffort": 45
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-SSIS0012",
+            "ManualEffort": 45
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-SSIS0013",
+            "ManualEffort": 45
+        },
+        {
+            "Severity": "High",
+            "Code": "SSC-EWI-SSIS0014",
+            "ManualEffort": 45
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-FDM-SSIS0002",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-SSIS0003",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "Low",
+            "Code": "SSC-FDM-SSIS0004",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-SSIS0005",
+            "ManualEffort": -1
+        },
+        {
+            "Severity": "None",
+            "Code": "SSC-FDM-SSIS0006",
+            "ManualEffort": -1
+        }
+    ]
+}

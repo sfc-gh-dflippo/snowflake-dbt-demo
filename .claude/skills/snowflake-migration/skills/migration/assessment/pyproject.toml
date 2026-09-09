@@ -1,0 +1,19 @@
+# Dependency manifest for assessment skill scripts that are run via
+# `uv run --project ai/plugin/skills/migration/assessment python .../scripts/...`
+# (see SKILL.md). Scripts are stdlib-only — no external deps needed at runtime.
+[project]
+name = "snowconvert-assessment-scripts"
+version = "0.1.0"
+description = "Runtime dependencies for SnowConvert migration assessment scripts"
+requires-python = ">=3.11"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.3",
+]
+
+[tool.uv]
+# Scripts are imported via PYTHONPATH / -m, not installed as a wheel — uv only
+# needs to manage the dependency environment, not build this project.
+package = false

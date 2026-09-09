@@ -1,0 +1,1311 @@
+import json
+import sys
+from pathlib import Path
+_SCRIPTS = Path(__file__).resolve().parent.parent / "scripts"
+if str(_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_SCRIPTS))
+from pathlib import Path
+
+table = {
+"platform": "alteryx",
+"table_version": "v1",
+"_comment": (
+    "Alteryx .yxmd/.yxmc, the first platform this project did not design the "
+    "framework around. Built from a self-derived frequency census over "
+    "poc/inputs/alteryx-public (311 workflows, 355 macro definitions; see "
+    "alteryx_census.py) -- never from poc/inputs/alteryx/ (the barred, blind "
+    "held-out fixture) and never from a cited number in the FY27 planning doc, "
+    "which states format notes only. TWO GAPS NO PRIOR PLATFORM HAD: (1) Alteryx "
+    "states its element identity and its edge identity ONE LEVEL BELOW the node "
+    "the framework's flat node.get() dispatch reads (GuiSettings/@Plugin under "
+    "<Node>, Origin/@ToolID and Destination/@ToolID under <Connection>) -- see "
+    "alteryxdoc.py, the LIFT_XML front-end this table requires. (2) Alteryx has "
+    "NO attr_site: no residual key/value property bag anywhere in the schema, so "
+    "this table cannot declare ELEMENT_ATTR / DEF_SITE_ATTR / ATTR_RESIDUE at "
+    "all -- every un-named Configuration sub-property that no CHILD_ATTR/"
+    "CHILD_TEXT rule below reads surfaces as a plain UNKNOWN OBJECT with no "
+    "residue safety net. Both are declared gaps, not oversights."
+),
+"structure": {
+    "_comment": (
+        "A .yxmd is <AlteryxDocument><Nodes><Node ToolID=\"n\">...</Node>...</Nodes>"
+        "<Connections><Connection><Origin ToolID=\"a\" Connection=\"Output\"/>"
+        "<Destination ToolID=\"b\" Connection=\"Input\"/></Connection>...</Connections>"
+        "<Properties>...</Properties></AlteryxDocument>. MEASURED (live corpus dump): "
+        "<Node> carries ONLY ToolID; <Connection> itself carries NO attribute at all. "
+        "A ToolContainer's <ChildNodes> holds full nested <Node> elements DIRECTLY -- "
+        "no intermediate <Nodes> wrapper the way the document root has one -- so the "
+        "'tools' level below is RECURSIVE (.//Node) to reach a contained tool, while "
+        "Connections stay flat/document-global (a container never wraps its own "
+        "<Connections>; every connection in the corpus was found at the document's "
+        "single top-level <Connections>)."
+    ),
+    "document_model": {
+        "kind": "LIFT_XML",
+        "_lift_rules_comment": (
+            "ONE Node-level rule, deliberately: GuiSettings/@Plugin -> Node/@Plugin. "
+            "A macro/custom-tool invocation's <GuiSettings> has NO @Plugin at all "
+            "(MEASURED: world_data_prep.yxmd ToolID 16, EngineSettings Macro="
+            "'Cleanse.yxmc' and no Plugin anywhere on the node) -- the rule then "
+            "simply does not fire, node.get('Plugin','') reads '', and kind_raw='' "
+            "is exactly the natural fallback this table uses for a macro call. NO "
+            "second rule reads EngineSettings/@Macro into any kind attribute, by "
+            "standing decision: this table refuses to decode a macro's internals, "
+            "and a macro invocation is identified ONLY through that empty-string "
+            "fallback, never through its target filename. Two more rules lift each "
+            "Connection endpoint's own ToolID onto the <Connection> itself, because "
+            "edge_levels.from_attr/to_attr below read a FLAT node.get() on whatever "
+            "node the edge query matched, and that node is <Connection>, not "
+            "<Origin>/<Destination>. A fourth (CONCAT) rule lifts a human-readable "
+            "port label (e.g. 'True->Input', 'Left_->Join') for the edge's own "
+            "label_attr -- review-facing only; port-level ROUTING is not resolved "
+            "through it (see port_policy)."
+        ),
+        "lift_rules": [
+            {
+                "on_tag": "Node",
+                "from_child": "GuiSettings",
+                "from_attr": "Plugin",
+                "onto_attr": "Plugin"
+            },
+            {
+                "on_tag": "Connection",
+                "from_child": "Origin",
+                "from_attr": "ToolID",
+                "onto_attr": "FromToolID"
+            },
+            {
+                "on_tag": "Connection",
+                "from_child": "Destination",
+                "from_attr": "ToolID",
+                "onto_attr": "ToToolID"
+            },
+            {
+                "on_tag": "Connection",
+                "concat": [
+                    {"from_child": "Origin", "from_attr": "Connection"},
+                    {"from_child": "Destination", "from_attr": "Connection"}
+                ],
+                "separator": "->",
+                "onto_attr": "PortLabel"
+            }
+        ]
+    },
+    "container": {
+        "xpath": ".",
+        "name_attr": "AlteryxDocumentName",
+        "_comment": (
+            "A .yxmd states NO document-level name anywhere in its own XML -- "
+            "@yxmdVer is a schema version, not a title. 'AlteryxDocumentName' names "
+            "an attribute that does not exist and never will; _read_container_name's "
+            "None fallback is the honest answer here, not a bug. The workflow's real "
+            "name is its OS filename, which is outside the document this table "
+            "describes."
+        )
+    },
+    "levels": [
+        {
+            "_comment": (
+                "ONE level. Alteryx has one graph, unlike SSIS's control-flow-plus-"
+                "data-flow split. `elements` is RECURSIVE (.//Node, not ./Nodes/Node) "
+                "specifically because a ToolContainer's <ChildNodes> nests real "
+                "<Node> elements below the document's own top-level <Nodes>, and a "
+                "non-recursive query would silently lose every contained tool."
+            ),
+            "name": "tools",
+            "elements": ".//Node",
+            "key_attr": "ToolID",
+            "kind_attr": "Plugin",
+            "role_attr": None,
+            "display_name_attr": None,
+            "_display_name_comment": (
+                "LEFT NULL, DELIBERATELY. Alteryx never states a human-readable tool "
+                "label as an XML ATTRIBUTE -- it is always child TEXT (Properties/"
+                "Configuration/Caption for a ToolContainer, Properties/Annotation/"
+                "DefaultAnnotationText for an ordinary tool). identify.py's display-"
+                "name read is a flat node.get(), and lift_rules only lift ATTRIBUTES "
+                "(alteryxdoc.py's own module docstring: 'the lift is ONE LEVEL ONLY' "
+                "and copies a child's ATTRIBUTE, never a child's TEXT). So there is no "
+                "route from this platform's real labels into this framework's display-"
+                "name mechanism at all -- not unimplemented, UNREACHABLE by the "
+                "existing contract. display_name therefore falls back to key_attr "
+                "(ToolID), so every element's name in a report is its bare integer "
+                "id ('74'), not 'Filter Pandora Rows'. A concrete, reportable gap."
+            ),
+            "description_attr": None,
+            "flag_attrs": {}
+        }
+    ],
+    "census": {
+        "_comment": (
+            "EXHAUSTIVE IDENTIFICATION, same contract as every other table. "
+            "identity_attrs is short because Alteryx states almost everything as a "
+            "real attribute -- most unknown-object entries will show ToolID/field/"
+            "connection directly, unlike a DataStage DSSUBRECORD dump."
+        ),
+        "identity_attrs": ["ToolID", "Plugin", "field", "connection", "name"],
+        "exclusions": [
+            {
+                "id": "alteryx-document-root",
+                "kind": "QUERY",
+                "match": ".",
+                "excludes": "the <AlteryxDocument> root",
+                "why": (
+                    "structure.container already names this node as the document's "
+                    "unit of work, not a graph element -- same reasoning as SSIS's "
+                    "'ssis-package-root' rule."
+                )
+            },
+            {
+                "id": "alteryx-anonymous-collection-wrapper",
+                "kind": "QUERY",
+                "match": [
+                    ".//Nodes", ".//Connections", ".//ChildNodes",
+                    ".//GuiSettings", ".//EngineSettings",
+                    ".//Properties", ".//Configuration"
+                ],
+                "excludes": (
+                    "the wrapper tags that exist only to hold a list or a bag, and "
+                    "carry no fact of their own"
+                ),
+                "why": (
+                    "Same reasoning as SSIS's 'ssis-anonymous-collection-wrapper': "
+                    "<Nodes>/<Connections>/<ChildNodes> group a list and state "
+                    "nothing; <GuiSettings>/<EngineSettings>/<Properties> exist so "
+                    "identity and configuration have somewhere to sit and are read "
+                    "through lift_rules, kind_dispatch and self_def_sites rather "
+                    "than as records in their own right. NOT excluded WITH them: "
+                    "everything actually nested inside <Configuration> (FormulaField, "
+                    "SelectField, JoinInfo, File, FieldName, ...) is left to be "
+                    "classified on its own account -- read by a no_slot_facts rule "
+                    "where one is declared below, or an honest UNKNOWN OBJECT where "
+                    "none is. MEASURED CAVEAT: <Configuration> itself sometimes "
+                    "carries an attribute directly (Join's own "
+                    "joinByRecordPos=\"False\"), and excluding the wrapper element "
+                    "means that attribute is read only if a CHILD_ATTR rule below "
+                    "separately targets it -- seeb 'join_by_record_pos'."
+                )
+            },
+            {
+                "id": "alteryx-workflow-settings",
+                "kind": "QUERY",
+                "match": "./Properties",
+                "subtree": True,
+                "excludes": "the document root's OWN <Properties> block",
+                "why": (
+                    "Workflow-level settings (RuntimeAnnotation, Events, "
+                    "GlobalRecordLimit, ThirdPartySettings, MetaInfo cache toggles) "
+                    "are PROJECT settings, not a fact about any transformation "
+                    "element -- there is exactly one such block per document, so the "
+                    "subtree exclusion hides a small, bounded amount and its own "
+                    "children (if genuinely unclassified) would otherwise inflate the "
+                    "unknown count by a handful of entries per document that name no "
+                    "tool at all. NOTE: './Properties', not './/Properties' -- this "
+                    "rule is scoped to the document ROOT's own Properties child only; "
+                    "every per-Node <Properties> is covered by the wrapper rule above "
+                    "instead, matched non-recursively there too, so the two rules do "
+                    "not overlap despite the shared tag name."
+                )
+            }
+        ],
+        "_no_chrome_exclusion_comment": (
+            "DELIBERATELY NO EXCLUSION RULE NAMES TextBox, ToolContainer, OR "
+            "BrowseV2, even though all three are frequent, non-transformation "
+            "'chrome' -- and an earlier revision of this table got that wrong by "
+            "writing an exclusion rule ('alteryx-chrome-textbox', match .//Node["
+            "@Plugin='...TextBox...'], excludes: 'nothing -- SEE NOTE') that was "
+            "meant as a documented non-match but was still a real QUERY rule with "
+            "a real xpath, so declared_vs_identified.py's own gate caught it: the "
+            "'tools' level's .//Node query identifies a TextBox BEFORE any "
+            "exclusion runs, so the exclusion's xpath matched a node _census had "
+            "ALREADY placed in `self._matched_nodes` -- census_contested (7 hits "
+            "on LoadDim.yxmd), balances=False, GATE FAILED. THE CHOICE, decided "
+            "deliberately rather than by deleting the failing rule blindly: "
+            "narrow the EXCLUSION side to nothing (remove the rule), not the "
+            "LEVEL side. Narrowing 'tools'.elements (.//Node) to exclude TextBox "
+            "by predicate is not available either -- it would need the same "
+            "negated-predicate capability ($@Plugin!='...') that ElementTree's "
+            "supported XPath subset does not have, the identical limitation "
+            "already documented for the *Unknown sentinel row in "
+            "port_policy.known_defect, and rewriting the query as a whitelist of "
+            "every mapped Plugin value would couple two independently-maintained "
+            "parts of this table for no benefit. So TextBox, ToolContainer and "
+            "BrowseV2 are counted as ELEMENTS -- real kind_dispatch entries with "
+            "role ANNOTATION/CONTAINER/TARGET, ir_kind null or a non-"
+            "transformation role -- not as EXCLUDED. This is a real modelling "
+            "choice with a coverage-denominator consequence, not a free one: "
+            "'elements' (113 on LoadDim.yxmd) includes 12 ToolContainer + 7 "
+            "TextBox that will never carry a $kind, so a naive 'elements this "
+            "table maps' reading of that count overstates transformation "
+            "coverage; the corrected reading is in kind_dispatch's own per-kind "
+            "breakdown, not in this count alone."
+        )
+    },
+    "load_order": None,
+    "ref_attrs": [
+        "ToolID"
+    ],
+    "_ref_attrs_comment": (
+        "_index_refs walks EVERY node in the document for @ToolID, which means it "
+        "also finds ToolID on <Origin>/<Destination> themselves, not only on <Node>. "
+        "RELIES ON DOCUMENT ORDER: a .yxmd always states <Nodes> before "
+        "<Connections> (MEASURED: root children order is always "
+        "['Nodes','Connections','Properties']), so ET's document-order iteration "
+        "indexes the real <Node ToolID='n'> for each id FIRST, and _ref_index."
+        "setdefault silently keeps that entry when an <Origin>/<Destination> with "
+        "the same ToolID value is walked afterward. An Alteryx export with the "
+        "sections reordered would break this silently; unmeasured because no "
+        "corpus file does that."
+    ),
+    "edge_levels": [
+        {
+            "_comment": (
+                "The endpoints are the lifted FromToolID/ToToolID, which resolve "
+                "through _ref_index straight to the owning <Node> (see ref_attrs "
+                "comment) -- Alteryx needs no ancestor walk the way an SSIS <path> "
+                "does, because a Connection's endpoint IS the tool's own key, not a "
+                "port's. label_attr is the lifted PortLabel (e.g. 'True->Input', "
+                "'Left_->Join', '#1->Input3') -- review-facing annotation of which "
+                "named anchor point on each side this edge uses; it does not resolve "
+                "the edge to a distinct output GROUP the way SSIS's output name "
+                "does, because no Alteryx tool in this table declares a group_site."
+            ),
+            "name": "connections",
+            "xpath": "./Connections/Connection",
+            "endpoint_kind": "PORT_REF",
+            "from_attr": "FromToolID",
+            "to_attr": "ToToolID",
+            "label_attr": "PortLabel"
+        }
+    ],
+    "default_def_site": "SELF",
+    "def_sites": {},
+    "self_def_site": {},
+    "_self_def_site_comment": (
+        "Base is EMPTY, deliberately -- no attr_site (Alteryx has no property bag, "
+        "see the table's own top comment), no group_site (no tool in this table "
+        "declares named OUTPUT branches as a def-node fact; True/False, Left/Right/"
+        "Join etc. are carried only on the CONNECTION side, via PortLabel, and "
+        "never resolved to a group), and no default port_sites -- a tool this table "
+        "does not name below gets ZERO ports, which is correct: most of Alteryx's "
+        "~60 distinct tools have a Configuration shape this table never inspected, "
+        "and inventing a generic port reader for them would be a guess dressed as a "
+        "fact. Every tool that DOES get ports below names its own self_def_sites "
+        "entry through kind_dispatch[*].self_def_site, the same per-kind-sub-schema "
+        "override Kettle introduced (FRAMEWORK CHANGE 54) for exactly this reason: "
+        "Alteryx's Configuration is a DIFFERENT sub-schema per tool plugin, just "
+        "like a Kettle <step>'s <fields>."
+    ),
+    "self_def_sites": {
+        "dbfileinput": {
+            "_comment": (
+                "MEASURED: Properties/MetaInfo is SPORADIC across the corpus -- "
+                "only DbFileInput reliably carries one (~179/218 sampled "
+                "instances), with a real RecordInfo/Field schema; every other "
+                "tool type sampled (Formula, AlteryxSelect, BrowseV2, TextBox, "
+                "Filter, Summarize, TextInput, ToolContainer, RecordID, Join, "
+                "Sort, DbFileOutput, RegEx, ...) carries ZERO. So this is the ONE "
+                "site in this table read from MetaInfo rather than Configuration, "
+                "and a DbFileInput whose document happens not to state MetaInfo "
+                "gets no self-declared OUTPUT ports at all -- an honest absence, "
+                "not a bug in the xpath."
+            ),
+            "port_sites": [
+                {
+                    "id": "dbfileinput_output",
+                    "xpath": "./Properties/MetaInfo[@connection='Output']/RecordInfo/Field",
+                    "porttype": "OUTPUT",
+                    "name_attr": "name",
+                    "datatype_attr": "type",
+                    "precision_attrs": ["size"],
+                    "scale_attrs": ["scale"]
+                }
+            ]
+        },
+        "formula": {
+            "_comment": (
+                "FormulaField/@expression is a real ATTRIBUTE (MEASURED, live "
+                "corpus dump) -- the ATTR form of the port expression dict, unlike "
+                "SSIS's TEXT-carried Expression property."
+            ),
+            "port_sites": [
+                {
+                    "id": "formula_output",
+                    "xpath": "./Properties/Configuration/FormulaFields/FormulaField",
+                    "porttype": "OUTPUT",
+                    "name_attr": "field",
+                    "datatype_attr": "type",
+                    "precision_attrs": ["size"],
+                    "expression": {"from": "ATTR", "attr": "expression"}
+                }
+            ]
+        },
+        "summarize": {
+            "_comment": (
+                "SummarizeField/@rename is the ONE reshape-tool output name this "
+                "table trusts as a name_attr. MEASURED corpus-wide (551 rows): 0 "
+                "empty rename values and no sentinel-row pattern -- unlike "
+                "AlteryxSelect/Join/JoinMultiple below, which all fail this same "
+                "check (see no_slot_facts and port_policy comments) and get NO "
+                "port_site as a result. The aggregate action itself (Sum/Count/"
+                "GroupBy/Concat/...) is not carried into `expression` -- it is not "
+                "an expression over the input the way a Formula's is, it is a "
+                "closed vocabulary of aggregate verbs this table does not attempt "
+                "to map onto anything Snowflake-shaped; captured instead as a "
+                "no_slot_fact residue pair (see 'summarize_action')."
+            ),
+            "port_sites": [
+                {
+                    "id": "summarize_output",
+                    "xpath": "./Properties/Configuration/SummarizeFields/SummarizeField",
+                    "porttype": "OUTPUT",
+                    "name_attr": "rename"
+                }
+            ]
+        }
+    },
+    "_end_structure": None
+},
+"kind_dispatch": {
+    "_comment": (
+        "Keyed on the FULL dotted Plugin string as it appears in GuiSettings/"
+        "@Plugin (post-lift, so this reads exactly what the source states, e.g. "
+        "'AlteryxBasePluginsGui.Filter.Filter'). ir_kind draws from the closed "
+        "5-value vocabulary MEASURED across every other platform table in this "
+        "project (ExpressionTransformation, FilterTransformation, "
+        "SourceQualifier, TargetTransformation, UnsupportedTransformation): a "
+        "tool with no IR-native door gets ir_kind null and degrades. This table "
+        "covers the REQUIRED set (Input/Output Data, Select, Formula, Filter, "
+        "Join, Union, Summarize, Sort, Unique, Sample) plus JoinMultiple, "
+        "RecordID, ToolContainer, BrowseV2 and TextBox -- macro invocations are "
+        "covered by the single '' (empty kind_raw) entry, per the standing "
+        "refusal to decode a macro's own internals. The other ~46 distinct "
+        "Plugin values MEASURED in the census (TextInput, RegEx, MultiRowFormula, "
+        "TextToColumns, GenerateRows, AppendFields, CrossTab, Transpose, "
+        "DateTime, spatial tools, ...) are DELIBERATELY UNMAPPED: "
+        "kind_dispatch.get(kind_raw, {}) returns {} for each, which the fixed "
+        "'stop crashing on an unmapped role' path degrades gracefully rather "
+        "than raising. Measuring fit on a bounded, named vocabulary is the "
+        "point of this table, not exhaustive coverage of a ~60-tool surface."
+    ),
+    "AlteryxBasePluginsGui.DbFileInput.DbFileInput": {
+        "ir_kind": "SourceQualifier",
+        "role": "SOURCE",
+        "supported": True,
+        "def_site": "SELF",
+        "self_def_site": "dbfileinput",
+        "element_fields": {
+            "TableName": {
+                "rule": "config_file_path",
+                "required": False
+            }
+        },
+        "note": (
+            "Reads a file/DSN via Configuration/File. required=False for the "
+            "same reason SSIS's OLEDBSource TableName is: a source whose File "
+            "text is not extractable (e.g. an ODBC connection string this table "
+            "does not further parse) is a truthful absence, not a reason to "
+            "degrade a working source."
+        )
+    },
+    "AlteryxBasePluginsGui.DbFileOutput.DbFileOutput": {
+        "ir_kind": "TargetTransformation",
+        "role": "TARGET",
+        "supported": True,
+        "def_site": "SELF",
+        "element_fields": {
+            "TableName": {
+                "rule": "config_file_path",
+                "required": True
+            }
+        },
+        "degrade_to": "UnsupportedTransformation",
+        "note": (
+            "Writes a file via Configuration/File. required=True, same reasoning "
+            "as SSIS's OLEDBDestination: a TARGET with no extractable destination "
+            "states a write the document does not. No self_def_site declared -- "
+            "TARGET auto-projection mirrors the inbound buffer into OutputColumns, "
+            "which is the whole reason DbFileOutput needs no self-declared port."
+        )
+    },
+    "AlteryxBasePluginsGui.Formula.Formula": {
+        "ir_kind": "ExpressionTransformation",
+        "role": "TRANSFORMATION",
+        "supported": True,
+        "def_site": "SELF",
+        "self_def_site": "formula",
+        "note": "Adds/replaces named fields via a real per-field expression attribute."
+    },
+    "AlteryxBasePluginsGui.Filter.Filter": {
+        "ir_kind": "FilterTransformation",
+        "role": "TRANSFORMATION",
+        "supported": True,
+        "def_site": "SELF",
+        "element_fields": {
+            "FilterConditions": {
+                "rule": ["filter_expression", "filter_simple_predicate"],
+                "required": True,
+                "transform": {"filter_expression": "NORMALIZE_EXPRESSION_SYNTAX"}
+            }
+        },
+        "degrade_to": "UnsupportedTransformation",
+        "note": (
+            "REQUIRED for the same reason as SSIS's ConditionalSplit: an "
+            "unextractable predicate must degrade rather than emit a "
+            "FilterTransformation with no condition. The True/False branch split "
+            "is NOT modelled as two output groups -- see edge_levels.label_attr "
+            "and port_policy; only the predicate survives, not which branch is "
+            "which. MEASURED BY RUNNING runall.py's alteryx entry against "
+            "LoadDim.yxmd: 'Configuration/Expression carries the predicate "
+            "regardless of Mode' is FALSE for Simple-mode Filters -- a Custom-"
+            "mode Filter states BOTH <Expression> and a populated <Simple> block "
+            "side by side (Designer keeps the simple-builder state in sync even "
+            "when Custom is what actually runs), but a SIMPLE-mode Filter states "
+            "ONLY <Simple><Operator>/<Field>/<Operands><Operand> and NO "
+            "<Expression> child at all. On this one real, non-blind fixture, 9 "
+            "of its 10 Filter tools are Simple-mode. PATCHED: FilterConditions' "
+            "`rule` now names a SECOND candidate, `filter_simple_predicate` "
+            "(no_slot_facts 'from': CHILD_TEXT_TEMPLATE, a rule kind added to "
+            "emit.py for exactly this gap -- reads the three sibling children "
+            "and assembles a predicate from a table-declared template keyed by "
+            "the Operator's own value), tried only when filter_expression finds "
+            "no <Expression> text, so Custom-mode Filters resolve byte-for-byte "
+            "as before. Only the FOUR operators measured on this fixture are "
+            "mapped (IsEmpty, IsNull, IsNotNull, '='); an Operator outside that "
+            "set still returns None and the tool still degrades honestly rather "
+            "than emit a guessed predicate. The synthesised value is already "
+            "final Snowflake SQL ('\"Risk\" IS NULL', '\"Address\" = 'Address Not "
+            "Available''), not Alteryx expression syntax, so it is declared with "
+            "NO transform (transform is now keyed per candidate rule id: only "
+            "filter_expression's raw Alteryx text needs "
+            "NORMALIZE_EXPRESSION_SYNTAX; re-lexing the synthesised SQL's own "
+            "double-quoted identifiers would misread them as Alteryx "
+            "\"literal\" strings and mangle them into single-quoted text)."
+        )
+    },
+    "AlteryxBasePluginsGui.AlteryxSelect.AlteryxSelect": {
+        "ir_kind": None,
+        "role": "TRANSFORMATION",
+        "supported": False,
+        "degrade_to": "UnsupportedTransformation",
+        "degrade_reason": (
+            "The IR has no rename/reproject-only door (ExpressionTransformation "
+            "requires a stated per-field expression; AlteryxSelect states none), "
+            "so widening it there would fabricate expressions the document does "
+            "not carry -- the same 'widening has limits' judgement SSIS's "
+            "ConditionalSplit-vs-Router entry already recorded for a different "
+            "tool. INDEPENDENTLY UNBUILDABLE ANYWAY: see no_slot_facts and "
+            "port_policy for the *Unknown sentinel-row problem, which rules out a "
+            "self-declared OUTPUT port_site for this tool regardless of ir_kind."
+        ),
+        "note": "Column reshape (select/deselect/rename/retype) with no per-field expression."
+    },
+    "AlteryxBasePluginsGui.Join.Join": {
+        "ir_kind": None,
+        "role": "TRANSFORMATION",
+        "supported": False,
+        "degrade_to": "UnsupportedTransformation",
+        "degrade_reason": (
+            "No JoinTransformation exists in this project's IR vocabulary -- a "
+            "genuine, reportable door the framework does not have, filed rather "
+            "than worked around, same posture as SSIS's Router gap. Join key "
+            "fields are captured as no_slot_facts residue (join_left_key_field / "
+            "join_right_key_field); the reshape half is residue too, same "
+            "sentinel-row limitation as AlteryxSelect."
+        ),
+        "note": "Two-input equi-join by named field pair, with its own Select-shaped reshape."
+    },
+    "AlteryxBasePluginsGui.JoinMultiple.JoinMultiple": {
+        "ir_kind": None,
+        "role": "TRANSFORMATION",
+        "supported": False,
+        "degrade_to": "UnsupportedTransformation",
+        "degrade_reason": "Same gap as Join, widened to N inputs (#1, #2, ... by connection number).",
+        "note": "N-way join; join key fields captured as residue, reshape half not captured at all."
+    },
+    "AlteryxSpatialPluginsGui.Summarize.Summarize": {
+        "ir_kind": None,
+        "role": "TRANSFORMATION",
+        "supported": False,
+        "def_site": "SELF",
+        "self_def_site": "summarize",
+        "degrade_to": "UnsupportedTransformation",
+        "degrade_reason": (
+            "No AggregateTransformation exists in this project's IR vocabulary. "
+            "UNLIKE Join/AlteryxSelect, this tool DOES get a real self-declared "
+            "OUTPUT port_site (SummarizeField/@rename is safe, measured 0 empty "
+            "values corpus-wide) -- the gap is the missing IR DOOR, not a source-"
+            "shape problem, so the output shape is still modelled correctly for "
+            "column_propagation even though the element itself degrades."
+        ),
+        "note": "GroupBy/aggregate. Genuinely redefines its own output shape -- see column_propagation.stop_at_kinds."
+    },
+    "AlteryxBasePluginsGui.Sort.Sort": {
+        "ir_kind": None,
+        "role": "TRANSFORMATION",
+        "supported": False,
+        "degrade_to": "UnsupportedTransformation",
+        "degrade_reason": "No ordering-only transformation exists in the IR vocabulary.",
+        "note": (
+            "Reorders rows via SortInfo/Field[@field,@order]; does not change the "
+            "column set, so NOT in column_propagation.stop_at_kinds."
+        )
+    },
+    "AlteryxBasePluginsGui.Unique.Unique": {
+        "ir_kind": None,
+        "role": "TRANSFORMATION",
+        "supported": False,
+        "degrade_to": "UnsupportedTransformation",
+        "degrade_reason": "No dedup/distinct transformation exists in the IR vocabulary.",
+        "note": (
+            "Dedups rows by UniqueFields/Field[@field]; does not change the "
+            "column set, so NOT in column_propagation.stop_at_kinds."
+        )
+    },
+    "AlteryxBasePluginsGui.Sample.Sample": {
+        "ir_kind": None,
+        "role": "TRANSFORMATION",
+        "supported": False,
+        "degrade_to": "UnsupportedTransformation",
+        "degrade_reason": "No row-limiting transformation exists in the IR vocabulary.",
+        "note": (
+            "First/Last/Skip/RandomPercent row limiting, optionally per GroupFields "
+            "group; does not change the column set, so NOT in "
+            "column_propagation.stop_at_kinds."
+        )
+    },
+    "AlteryxBasePluginsGui.Union.Union": {
+        "ir_kind": None,
+        "role": "TRANSFORMATION",
+        "supported": False,
+        "degrade_to": "UnsupportedTransformation",
+        "degrade_reason": "No union/set-combine transformation exists in the IR vocabulary.",
+        "note": (
+            "Combines multiple upstream buffers into one by-name-reconciled shape "
+            "-- genuinely redefines its own output shape, so it IS in "
+            "column_propagation.stop_at_kinds, same reasoning as SSIS's UnionAll."
+        )
+    },
+    "AlteryxBasePluginsGui.RecordID.RecordID": {
+        "ir_kind": None,
+        "role": "TRANSFORMATION",
+        "supported": False,
+        "degrade_to": "UnsupportedTransformation",
+        "degrade_reason": (
+            "No stateful-sequence-generator transformation exists in the IR "
+            "vocabulary. FURTHER, INDEPENDENTLY UNBUILDABLE: even if one existed, "
+            "the new column's NAME is stated as Configuration/FieldName child "
+            "TEXT ('order_id'), not an attribute -- and this front-end's LIFT_XML "
+            "projection only lifts child ATTRIBUTES (alteryxdoc.py: 'the lift is "
+            "ONE LEVEL ONLY' and copies an attribute, never text). A port_site's "
+            "name_attr is a flat f.get(), so there is no route from RecordID's "
+            "real column name into a port at all. FieldName/StartValue/FieldType/"
+            "FieldSize captured as no_slot_facts residue instead; the column "
+            "RecordID actually adds is invisible to column_propagation."
+        ),
+        "note": "Adds one monotonically increasing integer id column ahead of the buffer."
+    },
+    "AlteryxGuiToolkit.ToolContainer.ToolContainer": {
+        "ir_kind": None,
+        "role": "CONTAINER",
+        "supported": False,
+        "degrade_to": None,
+        "degrade_reason": (
+            "LEFT NULL DELIBERATELY, same posture as SSIS's Microsoft.Pipeline: a "
+            "ToolContainer is a VISUAL GROUPING of other tools, not a "
+            "transformation, and forcing a placeholder UnsupportedTransformation "
+            "body onto it would state a data operation that does not exist. Its "
+            "contained tools are identified independently (the 'tools' level is "
+            "recursive) and carry no containment edge in the IR graph -- see "
+            "no_slot_facts 'tool_containment'."
+        ),
+        "note": "A collapsible visual grouping box; Caption/Disabled/Folded captured as residue."
+    },
+    "AlteryxBasePluginsGui.BrowseV2.BrowseV2": {
+        "ir_kind": None,
+        "role": "TARGET",
+        "supported": False,
+        "degrade_to": "UnsupportedTransformation",
+        "degrade_reason": (
+            "A runtime data-preview terminal, not a persistent destination -- but "
+            "role TARGET is still the honest shape (data flows in, nothing flows "
+            "out) and is KEPT rather than excluded specifically so an edge running "
+            "into a Browse resolves normally instead of becoming an unresolved-"
+            "edge false alarm. Excluding chrome that IS a real connection endpoint "
+            "would distort connectivity accounting in the opposite direction from "
+            "including chrome that never connects at all (TextBox, below)."
+        ),
+        "note": "Data preview terminal; always a sink, never a source of further edges in this corpus."
+    },
+    "AlteryxGuiToolkit.TextBox.TextBox": {
+        "ir_kind": None,
+        "role": "ANNOTATION",
+        "supported": False,
+        "degrade_to": None,
+        "degrade_reason": (
+            "A floating comment box with no ports and no Configuration fact "
+            "resembling a transformation -- same 'container/annotation gets no "
+            "placeholder body' posture as ToolContainer above, not "
+            "UnsupportedTransformation. MEASURED: a TextBox is never an endpoint "
+            "of any <Connection> in the corpus. Kept as a real, mapped element "
+            "(not a census exclusion) because a level query identifies every "
+            "<Node> before any exclusion runs -- see "
+            "structure.census._no_chrome_exclusion_comment for why an exclusion "
+            "rule cannot do this instead, and for the gate failure that proved it."
+        ),
+        "note": "Pure UI annotation; Text/Font/TextColor/FillColor captured as residue."
+    },
+    "": {
+        "ir_kind": None,
+        "role": "TRANSFORMATION",
+        "supported": False,
+        "degrade_to": "UnsupportedTransformation",
+        "degrade_reason": (
+            "A macro or custom-tool invocation. STANDING REFUSAL: this table does "
+            "not decode EngineSettings/@Macro into a kind, and does not expand a "
+            ".yxmc's internals -- identified ONLY through kind_raw='' (the natural "
+            "outcome of the Plugin lift rule not firing, since <GuiSettings> under "
+            "a macro call has no @Plugin at all). MEASURED: 710 macro-invoking "
+            "<Node> elements across the corpus, referencing 197 distinct .yxmc "
+            "filenames -- CountRecords.yxmc (97), Cleanse.yxmc (57) and "
+            "AdventOfCodeInput.yxmc (47+41+25+2+1+1, spelled six different ways by "
+            "relative/absolute path) the heaviest. An opaque black box from the "
+            "calling workflow's point of view; role TRANSFORMATION is a "
+            "placeholder, not a claim about what the macro actually does inside."
+        ),
+        "note": "Macro/custom-tool invocation; kind_raw is the empty string by construction."
+    }
+},
+"role_to_node_type": {
+    "SOURCE": "source",
+    "TARGET": "target",
+    "TRANSFORMATION": "transformation",
+    "CONTAINER": "transformation",
+    "ANNOTATION": "transformation",
+    "unmapped_role_node_type": "unknown",
+    "unmapped_role_reason": (
+        "Same posture as SSIS/DataStage: the role is derived from kind_dispatch "
+        "rather than read from a source attribute, so an unmapped role would mean "
+        "an unmapped KIND reached this map with a role this table's kind_dispatch "
+        "never declared -- identify.validate_table raises on that condition on "
+        "every platform, so the fallback should be unreachable by construction, "
+        "not merely untested."
+    ),
+    "known_defect": (
+        "CONTAINER and ANNOTATION have no node type of their own -- a "
+        "ToolContainer or a TextBox is emitted as a transformation-typed node "
+        "with a null $kind, wrong in kind rather than merely lossy, same known "
+        "defect SSIS records for TASK."
+    )
+},
+"naming_policy": {
+    "_comment": (
+        "Reused near-verbatim from SSIS/Pentaho. name_source differs: Alteryx's "
+        "element key IS its display name (ToolID falls back from a display name "
+        "this platform's flat-attribute mechanism cannot reach -- see "
+        "levels[0]._display_name_comment), so every model name is sanitized from "
+        "a bare integer string."
+    ),
+    "policy_id": "alteryx.modelname.v1",
+    "name_source": "Node/@ToolID (display_name falls back to key_attr)",
+    "name_from": "DISPLAY_NAME",
+    "element_name_from": "DISPLAY_NAME",
+    "sanitize_element_name": True,
+    "_sanitize_element_name_comment": (
+        "I-19/SNOW-3936576: element.Name is not just a display label -- "
+        "BaseEtlElementTranslator's structural resolvers (e.g. FilterTranslator's "
+        "incoming-entity alias) print it as a bare, unquoted SQL correlation "
+        "name. Every Alteryx display_name IS a bare-integer ToolID (see "
+        "sanitize_identifier's own comment above), so an un-sanitized "
+        "element.Name prints 'AS 3', which is not a legal identifier on any SQL "
+        "dialect. Runs element.Name through the SAME sanitize_identifier rule as "
+        "model_name (so the Union node's alias and its model name agree: both "
+        "'m_3'), via a separate ir_element_name() helper -- ai_for()'s sidecar "
+        "lookup keeps calling the raw element_name() unchanged, so this does not "
+        "disturb sidecar key matching."
+    ),
+    "lowercase": True,
+    "sanitize_identifier": {
+        "allowed_chars": "abcdefghijklmnopqrstuvwxyz0123456789_",
+        "allowed_leading_chars": "abcdefghijklmnopqrstuvwxyz_",
+        "replace_illegal_with": "_",
+        "leading_prefix": "m_",
+        "_comment": (
+            "Load-bearing here more than on any prior platform: EVERY Alteryx "
+            "model name is an all-digit ToolID ('74'), which is illegal as a bare "
+            "identifier's leading character on every platform this rule already "
+            "covers -- so leading_prefix fires on effectively 100% of Alteryx "
+            "elements, turning '74' into 'm_74'. Two tools with the same ToolID in "
+            "two different documents is fine (different runs); two DIFFERENT "
+            "ToolIDs never collide after prefixing, since the prefix is constant "
+            "and the digits are already unique within one document."
+        )
+    },
+    "replace_whitespace_with": "_",
+    "split_camel_case": False,
+    "strip_kind_prefixes": False,
+    "qualify_with_task": False,
+    "qualify_with_container": None,
+    "qualify_reason": (
+        "LEFT OFF. A ToolContainer groups tools for layout/readability, not for "
+        "namespacing -- ToolID is already unique per document regardless of which "
+        "container (if any) a tool sits inside, so container-qualifying the model "
+        "name would rename every model for no uniqueness benefit."
+    ),
+    "known_risk": (
+        "None specific to naming beyond the ToolID-is-model-name consequence "
+        "above: two workflows migrated into the same target namespace can both "
+        "produce 'm_74', since ToolID is unique only WITHIN one .yxmd. Untested "
+        "here -- every fixture run is one document at a time."
+    )
+},
+"column_propagation": {
+    "_comment": (
+        "SSIS-style buffer passthrough, MEASURED as the right reading for this "
+        "corpus too: Formula/Filter/RecordID/Sort/Unique/Sample/AlteryxSelect all "
+        "pass the WHOLE upstream buffer through and only touch (add, filter, "
+        "reorder, dedup, sample, reshape) part of it -- none of their "
+        "Configuration blocks states an exhaustive output column list the way a "
+        "SOURCE's MetaInfo does."
+    ),
+    "mode": "ACCUMULATE",
+    "algorithm_id": "predecessor_column_propagation.v1",
+    "stop_at_kinds": [
+        "AlteryxSpatialPluginsGui.Summarize.Summarize"
+    ],
+    "_stop_comment": (
+        "Summarize is the one tool in this table's covered set that GENUINELY "
+        "redefines its own output shape rather than passing a buffer through it "
+        "-- its output is exactly its GroupBy/aggregate actions, not 'whatever "
+        "came in, plus/minus a few columns'. Union was here too until "
+        "I-19/SNOW-3936576: Union has NO self-declared OUTPUT port_site (see "
+        "port_policy.known_defect's reshape_semantics for the same "
+        "sentinel-row-shaped gap AlteryxSelect/Join have), so 'stop the walk "
+        "here' was meaningless for it -- there was no declared shape to stop "
+        "AT, and stopping just starved every mapped successor (Filter, on this "
+        "fixture) of OutputColumns, which is what makes "
+        "BaseEtlElementTranslator.GetSourceModelName's column-driven "
+        "FirstOrDefault return null and print `int_NOT_FOUND`. Removing Union "
+        "restores ACCUMULATE through it, which happens to match this fixture's "
+        "own `ByName_OutputMode=All` semantics (union of every input's columns) "
+        "-- but that is a property of THIS configuration, not a general "
+        "guarantee: a `ByName_OutputMode=Intersection` Union would still "
+        "over-accumulate. Union's OWN emitted SQL stays a degraded "
+        "UnsupportedTransformation placeholder regardless (Bucket A, not "
+        "required to be competent) -- this change only affects what its MAPPED "
+        "successors resolve against. Join/JoinMultiple/AlteryxSelect are NOT "
+        "here for the identical no-self-declared-port-site reason, and stay "
+        "un-stopped too. RECORDED, NOT FULLY FIXED -- see residue."
+    ),
+    "stop_at_roles": [
+        "TARGET"
+    ],
+    "_stop_roles_comment": (
+        "Same reasoning as SSIS: a TARGET's projection is already derived from "
+        "its own inbound mapping by the TARGET auto-projection mechanic, so "
+        "accumulating further upstream columns into it would state a write the "
+        "document does not make."
+    )
+},
+"port_policy": {
+    "_comment": (
+        "Alteryx has NO lineage-ID mechanism of any kind (no equivalent of an "
+        "SSIS lineageId or a DataStage pin id) -- column identity across a "
+        "<Connection> is NAME-based only, so input_columns_from is INPUT_PORTS, "
+        "not FIELD_EDGES."
+    ),
+    "output_column_order": "OUTPUT_PORT_DOCUMENT_ORDER",
+    "input_column_naming": "UPSTREAM_FIELD",
+    "input_columns_from": "INPUT_PORTS",
+    "input_column_type_from": "LOCAL_PORT",
+    "emit_scale_when_zero": False,
+    "inline_local_variables": False,
+    "drop_local_variables_from_outputs": False,
+    "port_reference_case_insensitive": False,
+    "local_variable_porttype": "__ALTERYX_HAS_NO_LOCAL_VARIABLE_PORTTYPE__",
+    "output_porttypes": ["OUTPUT"],
+    "input_porttypes": ["INPUT"],
+    "exclude_port_groups_with_flag": None,
+    "ref_field_passthrough_rule": None,
+    "known_defect": (
+        "AlteryxSelect, Join and JoinMultiple declare NO self_def_site at all -- "
+        "MEASURED: all three tools' column-reshaping configuration always "
+        "includes a @field=\"*Unknown\" sentinel row (AlteryxSelect 409/4225 "
+        "SelectField rows; Join/JoinMultiple 194/1772 SelectField rows corpus-"
+        "wide), and ElementTree's supported XPath predicate subset here "
+        "([@attr], [@attr='value'], [tag], [tag='text'], [position]) has no "
+        "negation, no !=, no starts-with(), no last() -- so there is no "
+        "supported predicate that excludes the sentinel row. [@type] cannot "
+        "discriminate it either: most REAL rows also lack @type (3578/4225 for "
+        "AlteryxSelect). And @rename -- the one attribute that would otherwise "
+        "be the natural OUTPUT name_attr -- is EMPTY for the majority of real, "
+        "unrenamed columns (762/measured Join/JoinMultiple rows), while "
+        "identify.py's _read_ports only skips a port when name_attr resolves to "
+        "None, never when it resolves to an empty string -- so using @rename as "
+        "name_attr would manufacture a bogus port literally named '' for every "
+        "column the user did not rename. CONCLUSION, held across this whole "
+        "table: these three tools' reshape is captured ONLY as no_slot_facts "
+        "residue, never as a port, and column_propagation.stop_at_kinds does not "
+        "include them (see that section's own comment). This is a genuine XPath-"
+        "expressiveness limitation of the engine, not a table oversight -- "
+        "Summarize's SummarizeField/@rename passes the identical safety check "
+        "(0/551 empty, no sentinel) and gets a real port_site above."
+    )
+},
+"type_vocabulary": {
+    "_comment": (
+        "Carry Alteryx-native type names (V_String, V_WString, Int32, "
+        "FixedDecimal, Double, Date, DateTime, Bool, ...) verbatim. 'size' is "
+        "mapped onto the IR's Precision field for the same not-the-same-concept "
+        "reason as SSIS's 'length': for a V_String/V_WString it is a character "
+        "count, for a FixedDecimal it is a digit count, and this table does not "
+        "distinguish the two."
+    ),
+    "carry": "ALTERYX_NATIVE",
+    "precision_field_carries": "SIZE_OR_PRECISION",
+    "known_defect": (
+        "V_String size 254 emits Precision 254, conflating character length "
+        "with numeric precision, same known defect as SSIS's wstr length."
+    )
+},
+"edge_policy": {
+    "_comment": (
+        "Alteryx STATES its element-level edges as <Connection> elements, so "
+        "they are read, not derived -- same posture as SSIS's <path>, opposite "
+        "of Informatica's connector-only-exists-as-a-DISTINCT-over-field-edges."
+    ),
+    "element_edges_from": "EXPLICIT_EDGE_ELEMENTS",
+    "collapse_connectors_by": None,
+    "label_source": "PORT_LABEL",
+    "label_when_absent": None
+},
+"default_value_policy": {
+    "_comment": (
+        "No Alteryx tool in this table states a per-column default value or an "
+        "error-row disposition comparable to SSIS's errorRowDisposition -- a bad "
+        "row in Alteryx is normally handled by an Error Message tool or a "
+        "workflow-level 'cancel running the workflow on error' setting, neither "
+        "of which is in this table's covered tool set, so there is nothing "
+        "analogous to record here yet."
+    ),
+    "error_function_prefix": None,
+    "error_default_disposition": None,
+    "literal_default_on_unconnected_input": None,
+    "discardable_label": "DISCARDABLE",
+    "load_bearing_label": "LOAD_BEARING"
+},
+"expression_syntax": {
+    "_comment": (
+        "Alteryx Formula expression language. Strings are DOUBLE-quoted; column "
+        "references are wrapped in square brackets ([Timestamp]), which is "
+        "already closer to a structural reference than SSIS's #{lineageId} "
+        "requires resolving, but this table does not attempt to resolve a "
+        "bracketed name against the port set -- it is carried as opaque text, "
+        "same posture as Informatica's bare identifiers."
+    ),
+    "string_quotes": ["\""],
+    "reference_delimiters": ["[", "]"],
+    "identifier_extra_chars": " ",
+    "case_insensitive_resolution": False,
+    "expression_property_read": "expression",
+    "expression_property_ignored": None
+},
+"no_slot_facts": [
+    {
+        "id": "config_file_path",
+        "from": "CHILD_TEXT",
+        "xpath": "./Properties/Configuration/File",
+        "note": (
+            "Shared by DbFileInput (element_fields.TableName, the SOURCE relation) "
+            "and DbFileOutput (element_fields.TableName, the TARGET relation) -- "
+            "ONE rule, not two, because both read the identical File-child shape "
+            "for the identical semantic purpose. Declaring two separately-named "
+            "rules over the same xpath would double-fire on every element that "
+            "has a File child, since this rule kind is not kind-gated."
+        )
+    },
+    {
+        "id": "dbfileinput_first_row_data",
+        "from": "CHILD_TEXT",
+        "xpath": "./Properties/Configuration/FormatSpecificOptions/FirstRowData"
+    },
+    {
+        "id": "dbfileoutput_multifile",
+        "from": "CHILD_ATTR",
+        "xpath": "./Properties/Configuration/MultiFile",
+        "attr": "value"
+    },
+    {
+        "id": "filter_expression",
+        "from": "CHILD_TEXT",
+        "xpath": "./Properties/Configuration/Expression",
+        "note": "Promoted onto Filter's element_fields.FilterConditions; required."
+    },
+    {
+        "id": "config_mode",
+        "from": "CHILD_TEXT",
+        "xpath": "./Properties/Configuration/Mode",
+        "note": (
+            "Shared generic rule -- Filter states Simple/Custom here, Union "
+            "states ByName/etc, Sample states First/Last/Skip/RandomPercent/etc. "
+            "One rule capturing whichever bare Mode child a tool states; the "
+            "emitted fact's own citation (el.where) is what tells a reader which "
+            "tool it came from, exactly the way this rule kind is meant to be "
+            "used across dissimilar tools sharing one shape."
+        )
+    },
+    {
+        "id": "filter_simple_field",
+        "from": "CHILD_TEXT",
+        "xpath": "./Properties/Configuration/Simple/Field"
+    },
+    {
+        "id": "filter_simple_operator",
+        "from": "CHILD_TEXT",
+        "xpath": "./Properties/Configuration/Simple/Operator"
+    },
+    {
+        "id": "filter_simple_predicate",
+        "from": "CHILD_TEXT_TEMPLATE",
+        "parts": {
+            "field": "./Properties/Configuration/Simple/Field",
+            "operator": "./Properties/Configuration/Simple/Operator",
+            "operand": "./Properties/Configuration/Simple/Operands/Operand"
+        },
+        "templates": {
+            "IsEmpty": "(\"{field}\" IS NULL OR \"{field}\" = '')",
+            "IsNull": "\"{field}\" IS NULL",
+            "IsNotNull": "\"{field}\" IS NOT NULL",
+            "=": "\"{field}\" = '{operand}'"
+        },
+        "note": (
+            "Promoted onto Filter's element_fields.FilterConditions as the "
+            "SECOND candidate rule, tried only when filter_expression finds no "
+            "<Expression> text (Simple mode). Only the four Operator values "
+            "MEASURED on LoadDim.yxmd are mapped; an unmapped Operator (e.g. "
+            "Alteryx's 'Contains', '>', '<') returns None and the Filter still "
+            "degrades to UnsupportedTransformation with an honest EWI, same as "
+            "before this rule existed. `operand` is read but unused by IsEmpty/ "
+            "IsNull/IsNotNull's templates -- deliberately: Designer leaves a "
+            "stale '<Operand>1</Operand>' behind on IsNull rows (the simple-"
+            "builder's own leftover UI state), and requiring every read part to "
+            "be non-blank rather than only the parts a template actually "
+            "references would have blocked those rows on a value the template "
+            "never uses."
+        )
+    },
+    {
+        "id": "alteryxselect_field_deselected",
+        "from": "CHILD_ATTR",
+        "xpath": "./Properties/Configuration/SelectFields/SelectField",
+        "attr": "selected",
+        "key_attr": "field",
+        "note": (
+            "AlteryxSelect's DIRECT SelectFields/SelectField shape (distinct from "
+            "Join/JoinMultiple's nested SelectConfiguration/Configuration/"
+            "SelectFields/SelectField below -- the two never collide). "
+            "neutral_defaults.selected='True' suppresses every ordinarily-kept "
+            "column AND, as a side effect, the @field='*Unknown' sentinel row "
+            "(MEASURED: the sentinel's own selected value is always 'True') -- so "
+            "this rule surfaces ONLY genuinely deselected (dropped) columns, "
+            "which is both the materially interesting fact and an incidental fix "
+            "for the sentinel-row noise problem port_policy describes."
+        )
+    },
+    {
+        "id": "alteryxselect_field_renamed",
+        "from": "CHILD_ATTR",
+        "xpath": "./Properties/Configuration/SelectFields/SelectField",
+        "attr": "rename",
+        "key_attr": "field",
+        "note": (
+            "No neutral default needed: an empty/absent rename is already falsy "
+            "and record_no_slot_facts' own `if v and ...` check skips it -- which "
+            "also means the sentinel row (no rename attribute at all) never "
+            "reaches here."
+        )
+    },
+    {
+        "id": "join_reshape_deselected",
+        "from": "CHILD_ATTR",
+        "xpath": "./Properties/Configuration/SelectConfiguration/Configuration/SelectFields/SelectField",
+        "attr": "selected",
+        "key_attr": "field",
+        "note": "Shared by Join and JoinMultiple -- identical nested SelectConfiguration shape on both."
+    },
+    {
+        "id": "join_reshape_renamed",
+        "from": "CHILD_ATTR",
+        "xpath": "./Properties/Configuration/SelectConfiguration/Configuration/SelectFields/SelectField",
+        "attr": "rename",
+        "key_attr": "field"
+    },
+    {
+        "id": "join_left_key_field",
+        "from": "CHILD_ATTR",
+        "xpath": "./Properties/Configuration/JoinInfo[@connection='Left']/Field",
+        "attr": "field",
+        "key_attr": "field"
+    },
+    {
+        "id": "join_right_key_field",
+        "from": "CHILD_ATTR",
+        "xpath": "./Properties/Configuration/JoinInfo[@connection='Right']/Field",
+        "attr": "field",
+        "key_attr": "field"
+    },
+    {
+        "id": "join_by_record_pos",
+        "from": "CHILD_ATTR",
+        "xpath": "./Properties/Configuration",
+        "attr": "joinByRecordPos",
+        "note": (
+            "Join's own <Configuration joinByRecordPos=\"...\"> attribute -- a "
+            "fact stated on the def node itself rather than on a further child, "
+            "the same shape CHILD_ATTR's own docstring gives for an SSIS "
+            "<connection>."
+        )
+    },
+    {
+        "id": "joinmultiple_key_field",
+        "from": "CHILD_ATTR",
+        "xpath": "./Properties/Configuration/JoinFields/JoinInfo/Field",
+        "attr": "field",
+        "key_attr": "field",
+        "note": (
+            "Matches every JoinInfo regardless of its @connection value (#1, #2, "
+            "#4, #5, ... -- MEASURED non-contiguous on a real fixture). The "
+            "per-input identity is visible only through the fact's own citation "
+            "index, not through the fact key, because ElementTree's predicate "
+            "subset has no way to enumerate an unbounded, non-contiguous set of "
+            "connection numbers in one xpath. A deliberate simplification, not "
+            "an oversight."
+        )
+    },
+    {
+        "id": "joinmultiple_cartesian_mode",
+        "from": "CHILD_TEXT",
+        "xpath": "./Properties/Configuration/CartesianMode"
+    },
+    {
+        "id": "summarize_action",
+        "from": "CHILD_ATTR",
+        "xpath": "./Properties/Configuration/SummarizeFields/SummarizeField",
+        "attr": "action",
+        "key_attr": "rename",
+        "note": (
+            "The aggregate verb (GroupBy/Sum/Count/Concat/Max/Min/Avg/First/Prod/"
+            "Median/CountDistinct/...; MEASURED distribution: GroupBy 233, Sum "
+            "116, Count 73, Concat 44, Max 35, Min 19, Avg 8, First 5, Prod 5, "
+            "Median 3, CountDistinct 3, plus rare spatial actions). Not carried "
+            "as an `expression` on the port_site -- it is a closed vocabulary of "
+            "aggregate functions, not an expression over the input, and this "
+            "table does not attempt a per-function Snowflake mapping."
+        )
+    },
+    {
+        "id": "sort_field",
+        "from": "CHILD_ATTR",
+        "xpath": "./Properties/Configuration/SortInfo/Field",
+        "attr": "field",
+        "key_attr": "field"
+    },
+    {
+        "id": "sort_order",
+        "from": "CHILD_ATTR",
+        "xpath": "./Properties/Configuration/SortInfo/Field",
+        "attr": "order",
+        "key_attr": "field"
+    },
+    {
+        "id": "unique_field",
+        "from": "CHILD_ATTR",
+        "xpath": "./Properties/Configuration/UniqueFields/Field",
+        "attr": "field",
+        "key_attr": "field"
+    },
+    {
+        "id": "sample_n",
+        "from": "CHILD_TEXT",
+        "xpath": "./Properties/Configuration/N"
+    },
+    {
+        "id": "sample_group_field",
+        "from": "CHILD_ATTR",
+        "xpath": "./Properties/Configuration/GroupFields/Field",
+        "attr": "name",
+        "key_attr": "name"
+    },
+    {
+        "id": "union_by_name_error_mode",
+        "from": "CHILD_TEXT",
+        "xpath": "./Properties/Configuration/ByName_ErrorMode"
+    },
+    {
+        "id": "union_by_name_output_mode",
+        "from": "CHILD_TEXT",
+        "xpath": "./Properties/Configuration/ByName_OutputMode"
+    },
+    {
+        "id": "union_set_output_order",
+        "from": "CHILD_ATTR",
+        "xpath": "./Properties/Configuration/SetOutputOrder",
+        "attr": "value"
+    },
+    {
+        "id": "recordid_field_name",
+        "from": "CHILD_TEXT",
+        "xpath": "./Properties/Configuration/FieldName",
+        "note": (
+            "The column RecordID actually adds -- captured here as the ONLY "
+            "route available, since it cannot become a port at all (see "
+            "kind_dispatch['...RecordID...'].degrade_reason)."
+        )
+    },
+    {
+        "id": "recordid_start_value",
+        "from": "CHILD_TEXT",
+        "xpath": "./Properties/Configuration/StartValue"
+    },
+    {
+        "id": "recordid_field_type",
+        "from": "CHILD_TEXT",
+        "xpath": "./Properties/Configuration/FieldType"
+    },
+    {
+        "id": "toolcontainer_caption",
+        "from": "CHILD_TEXT",
+        "xpath": "./Properties/Configuration/Caption",
+        "note": "The ToolContainer's own display title -- the nearest thing to a real display_name this table can read, but not wired into naming_policy: it is text, and levels[0].display_name_attr must name an attribute."
+    },
+    {
+        "id": "toolcontainer_disabled",
+        "from": "CHILD_ATTR",
+        "xpath": "./Properties/Configuration/Disabled",
+        "attr": "value"
+    },
+    {
+        "id": "toolcontainer_folded",
+        "from": "CHILD_ATTR",
+        "xpath": "./Properties/Configuration/Folded",
+        "attr": "value"
+    },
+    {
+        "id": "tool_containment",
+        "from": "CONTAINER",
+        "detail": "element lives inside ToolContainer {container}; the IR graph is flat and has no containment edge"
+    },
+    {
+        "id": "textbox_text",
+        "from": "CHILD_TEXT",
+        "xpath": "./Properties/Configuration/Text"
+    },
+    {
+        "id": "textbox_font",
+        "from": "CHILD_ATTR",
+        "xpath": "./Properties/Configuration/Font",
+        "attr": "name"
+    }
+],
+"neutral_defaults": {
+    "_comment": (
+        "GLOBAL BY ATTRIBUTE NAME, same mechanism as SSIS's table -- every "
+        "CHILD_ATTR rule reading an attribute of this name is suppressed when "
+        "the value equals the default, across every tool that uses it."
+    ),
+    "selected": "True",
+    "value": "False"
+},
+"dialect": {
+    "_comment": (
+        "Alteryx Formula-language operators. Column references are "
+        "[bracket-delimited], closer to structural than SSIS's #{lineageId} but "
+        "not resolved against the port set here -- carried as opaque text, same "
+        "posture as Informatica. '+' is the same sharp case as SSIS: Alteryx "
+        "overloads '+' for string concatenation on V_String/V_WString operands "
+        "(MEASURED: [Timestamp]+\":00\"), and Snowflake's '+' on VARCHAR attempts "
+        "a numeric cast instead."
+    ),
+    "identical": [
+        "-", "*", "/", ">", "<", ">=", "<=", "==", "!=", "(", ")", ","
+    ],
+    "syntactically_identical_semantically_divergent": {
+        "+": (
+            "Alteryx '+' on V_String/V_WString operands is string concatenation; "
+            "Snowflake '+' on VARCHAR attempts numeric coercion and errors. The "
+            "operand types decide which operation '+' denotes, same divergence "
+            "SSIS's '+' has, for the same reason."
+        )
+    },
+    "divergent_operator_lengths": [1],
+    "known_functions_identical": [],
+    "unknown_identifier_disposition": "RESIDUE",
+    "_functions_note": (
+        "Deliberately EMPTY, same posture as SSIS. Alteryx's AND/OR/NOT are "
+        "WORD operators, not &&/||/! -- neither spelling is declared identical "
+        "or divergent here, so both surface as RESIDUE rather than a guessed "
+        "mapping."
+    )
+},
+"residue": {
+    "_comment": (
+        "Facts this table identifies but cannot resolve, named per document-"
+        "shape rather than per fixture -- this table has not yet been run "
+        "against a chosen poc/inputs/alteryx-public fixture, so these are "
+        "STRUCTURAL predictions from the census and the corpus dumps above, not "
+        "yet measured counts on one document. Flagged as such rather than "
+        "presented as verified."
+    ),
+    "reshape_semantics": (
+        "AlteryxSelect, Join and JoinMultiple all reshape their output (select/"
+        "deselect/rename/retype, or a join's combined column set) with NO "
+        "self-declared OUTPUT port_site at all -- see port_policy.known_defect. "
+        "column_propagation therefore keeps accumulating the PRE-reshape column "
+        "set straight through all three, which is not merely incomplete, it is "
+        "actively WRONG downstream of any of them: a column AlteryxSelect "
+        "deselected, or a column name a rename replaced, still appears to exist "
+        "under its old name for every element further down the graph."
+    ),
+    "join_and_aggregate_semantics": (
+        "Join, JoinMultiple, Summarize, Union, Sort, Unique, Sample and RecordID "
+        "all degrade to UnsupportedTransformation -- none of the IR's five kinds "
+        "has a door for a join, an aggregate, a set-combine, an order, a dedup, "
+        "a row-limit or a stateful sequence generator. Filed as a coverage gap "
+        "in the vocabulary itself, not worked around."
+    ),
+    "recordid_added_column": (
+        "The one column RecordID actually adds to the buffer is NAMED as child "
+        "TEXT (Configuration/FieldName), and this front-end's LIFT_XML "
+        "projection lifts only child ATTRIBUTES -- so there is no route from "
+        "that name into a port at all, by construction, not merely because this "
+        "table chose not to build one."
+    ),
+    "macro_internals": (
+        "710 macro-invoking <Node> elements across the corpus (197 distinct "
+        ".yxmc targets) are identified only as an opaque black box (kind_raw=''"
+        "); what a macro actually does -- which is itself a full nested workflow, "
+        "MEASURED with its own dense internal tool mix: AlteryxSelect (1098), "
+        "Formula (1043), Action (780, a macro-only control tool with no .yxmd "
+        "analogue at all), Filter (770), MacroOutput/MacroInput (544/481, also "
+        "with no .yxmd analogue) -- is entirely unresolved by standing decision."
+    ),
+    "function_semantics": "Alteryx Formula functions (Contains, IIF, DateTimeAdd, Left, Right, Trim, ...) -> Snowflake. Nothing whitelisted.",
+    "no_residual_property_sweep": (
+        "Alteryx has no attr_site, so this table has NO equivalent of SSIS's "
+        "ssis_unread_component_property / DataStage's dsx_unread_stage_property "
+        "ATTR_RESIDUE sweep. Every Configuration sub-property that no CHILD_ATTR/"
+        "CHILD_TEXT rule above happens to name is not residue at all -- it is a "
+        "plain UNKNOWN OBJECT in the exhaustive census, indistinguishable from a "
+        "record this table never considered. A genuine, deliberately accepted "
+        "framework gap: there is no safety net catching a property this table's "
+        "author simply did not think to read, the way there is on every other "
+        "platform in this project."
+    )
+}
+}
+
+with open(str(Path(__file__).resolve().parent.parent / "platforms" / "platform_alteryx.json"), "w") as f:
+    json.dump(table, f, indent=2)
+    f.write("\n")
+
+print("wrote", len(json.dumps(table)), "bytes (compact)")

@@ -1,0 +1,638 @@
+{
+  "platform": "PentahoDataIntegration",
+  "table_version": "pentaho.v1",
+  "_comment": "Per-platform configuration for a Pentaho Data Integration (Kettle) .ktr transformation. Nothing here is read from a source file; every entry is a reviewable policy decision. Fixtures: sample_trans.ktr (147 lines, 2 steps, 1 hop) and safe-stop-gen-rows.ktr (548 lines, 3 steps, 2 hops), both from pentaho/pentaho-kettle. The structural fact that makes this table unlike the three before it: a .ktr contains ZERO XML attributes. It is XML, and the existing XML front-end parses it, and identifies nothing.",
+  "structure": {
+    "_comment": "CHILD_TEXT_XML, not XML. Same parser, different place for the values. See ktrdoc.py.",
+    "unsupported_body_max_chars": 4000,
+    "_unsupported_body_max_chars_comment": "FRAMEWORK CHANGE 63 (b). Cap on the source fragment a degraded element carries into its placeholder model as SQL comments. A <step> holds its <fields> and, for a Janino step, its <formulas> -- which is exactly the content the placeholder exists to preserve. MEASURED on customer_summary_fullname_birthyear.ktr: the Janino step is 1.4 KB. A cut is always announced inside the body, so a truncated fragment never reads as a complete one.",
+    "document_model": {
+      "kind": "CHILD_TEXT_XML"
+    },
+    "_key_scope_comment": "DELIBERATELY NULL. A .ktr holds exactly one transformation, so a step name has nothing to be scoped against. UNVERIFIED AS A STATED RULE: nothing in the format or in TransMeta.addStep enforces step-name uniqueness. It is enforced by the designer (Spoon.newStep loops while transMeta.findStep(newName) != null and renames) and it is functionally required because <hop><from>/<to> resolve BY NAME through TransHopMeta.searchStep, which takes the first match. So uniqueness is relied on here without being guaranteed by the file.",
+    "key_scope": null,
+    "detail_max_chars": 120,
+    "_attr_where_comment": "Unused: this platform's attr site is SELF_ATTRS, whose where is built from the front-end's own attr_ref and therefore carries an exact source line. Kept null so nothing falls back to an unlocated template.",
+    "attr_where_template": null,
+    "_container_comment": "The transformation's name is inside <info>, not on the root. <transformation> itself carries only <slave_transformation> after the scalar lift.",
+    "container": {
+      "xpath": "./info",
+      "name_attr": "name"
+    },
+    "levels": [
+      {
+        "_comment": "THE TRANSFORMATION ITSELF, swept for the same reason the SSIS pass swept the Data Flow Task and the DataStage pass swept DSJOB: skipping it hides from the fit score the fact that the IR cannot represent a unit of work, its parameters, or its logging configuration. <info> is swept rather than the root because <info> is where the name is. A .ktr states no kind for it, so the kind is asserted by the table -- provenance TABLE, not SOURCE.",
+        "name": "transformation",
+        "elements": "./info",
+        "key_attr": "name",
+        "kind_attr": null,
+        "kind_literal": "transformation",
+        "role_attr": null,
+        "display_name_attr": "name",
+        "flag_attrs": {
+          "capture_step_performance": "capture_step_performance"
+        }
+      },
+      {
+        "_comment": "STEPS. <type> is the step plugin ID (StepMeta.getXML writes getStepID()). There is NO second axis: StepMeta.getXML emits no direction, role, source or target field, so a step's direction is knowable only from the plugin type. That is why role comes from kind_dispatch and why 100% of role provenance on this platform is TABLE. The alternative considered and REJECTED: deriving direction from hop topology, as the DataStage pass derived it from declared pin lists. Rejected because it is wrong in general -- a Table Input step with no inbound hop is a source, but so is a Dummy step at the head of a fragment, and the two are not the same fact. Kettle states pin direction nowhere, so there is nothing to derive FROM.",
+        "name": "step",
+        "elements": "./step",
+        "key_attr": "name",
+        "kind_attr": "type",
+        "role_attr": null,
+        "display_name_attr": "name",
+        "flag_attrs": {
+          "distribute": "distribute",
+          "copies": "copies"
+        }
+      }
+    ],
+    "census": {
+      "_comment": "ADDITION 2 -- EXHAUSTIVE IDENTIFICATION. `levels` says what an element IS; this says what is DELIBERATELY NOT one, with a reason per rule. Anything matched by neither is an UNKNOWN OBJECT: inventoried with a citable location rather than dropped. See identify.py `_census`.",
+      "_scale_comment": "safe-stop-gen-rows.ktr projects to 437 nodes against 4 elements, and the reason is the format rather than the document: a .ktr has ZERO XML attributes, so EVERY value is the text of a child element and `ktrdoc._lift` copies it onto the parent WITHOUT removing the child. Roughly two thirds of the projected nodes are those copies. That is what the VALUE_CARRIER rule below covers, and it is why this platform needs one structural rule doing most of the work rather than a long tag list.",
+      "identity_attrs": [
+        "name",
+        "type",
+        "id",
+        "from",
+        "to",
+        "enabled"
+      ],
+      "_identity_attrs_comment": "How an unknown record is identified in the inventory. In a .ktr these are LIFTED child-element texts rather than real attributes (see ktrdoc PROJECTION RULE 1), which is exactly why the citation on an unknown object carries the front-end's ktr:LINE prefix -- the attribute spelling is the projection's, the line number is the file's. `from`/`to`/`enabled` are here so an unmatched hop is readable as the edge it is.",
+      "exclusions": [
+        {
+          "id": "ktr-transformation-root",
+          "kind": "QUERY",
+          "match": ".",
+          "excludes": "the <transformation> document root",
+          "why": "The root states nothing. Kettle puts the transformation's own identity in <info> -- which is why `levels[0].elements` is './info' and `structure.container` is './info' too -- so the root is a wrapper around <info>, the steps and the hop order, and each of those is classified separately."
+        },
+        {
+          "id": "ktr-lifted-scalar-or-valueless-key",
+          "kind": "VALUE_CARRIER",
+          "excludes": "every child element whose entire content is a scalar the projection already lifted onto its parent, and every element stated with no value at all",
+          "why": "STRUCTURAL, not a tag list -- see identify.py `_is_value_carrier`. A node qualifies only when it has no element children, no attributes of its own, and either its parent carries an attribute of the same name holding exactly this node's text (the projection lifted it, so the fact is inventoried as the parent's attribute and cited via `attr_ref` as /tag/text()#ktr:LINE) or it states no text whatsoever. The second half is Kettle's <tag/>, which its own writer emits for null AND for the empty string, so the two are not distinguishable by any reader -- the front-end reports them in its `unaccounted` line and this rule keeps them out of the unknown inventory rather than filling it with 60 empty tags."
+        },
+        {
+          "id": "ktr-hop-edge",
+          "kind": "EDGE_RECORD",
+          "excludes": "every <hop> matched by edge_levels -- which is `./order/hop[@enabled='Y']`",
+          "why": "A hop IS an edge and is inventoried as one. NOTE THE PREDICATE, because it is the interesting case on this platform: the edge level matches only ENABLED hops, so a DISABLED hop matches neither a level nor this rule and comes out as an UNKNOWN OBJECT. That is the correct answer -- a disabled hop is a stated connection the graph does not contain, and it should be visible rather than assumed away. Neither fixture contains one (both hops in safe-stop-gen-rows.ktr and the one in sample_trans.ktr state enabled Y), so this path is reasoned and unexercised."
+        },
+        {
+          "id": "ktr-hop-collection",
+          "kind": "QUERY",
+          "match": "./order",
+          "excludes": "the <order> element that holds the hops",
+          "why": "An anonymous collection. It states nothing of its own; the name is Kettle's, because hop order in the file is also execution order. The hops inside it are classified separately."
+        },
+        {
+          "id": "ktr-run-logging-configuration",
+          "kind": "QUERY",
+          "match": "./info/log",
+          "subtree": true,
+          "excludes": "the <log> block under <info> and everything in it -- five log tables and their field lists",
+          "why": "Where the Kettle ENGINE writes its own run telemetry: trans-log-table, perf-log-table, channel-log-table, step-log-table, metrics-log-table, each with a connection, a schema, a table name, a timeout and a list of which metric fields to record (ID_BATCH, LINES_READ, LINES_WRITTEN, ...). None of it is the transformation's data flow; it is observability configuration for the tool being migrated away from. SUBTREE, and it is the largest exclusion in this table after the value carriers -- 70+ nodes on safe-stop-gen-rows.ktr -- which is precisely why it is one named rule with one argument a reviewer can reject, rather than spread across a tag list."
+        },
+        {
+          "id": "ktr-step-canvas-geometry",
+          "kind": "QUERY",
+          "match": "./step/GUI",
+          "subtree": true,
+          "excludes": "each step's <GUI> block",
+          "why": "GEOMETRY: <xloc>, <yloc>, <draw>. Where the box sits on the Spoon canvas. Nothing in it changes what the step computes."
+        },
+        {
+          "id": "ktr-step-execution-topology",
+          "kind": "QUERY",
+          "match": [
+            "./step/partitioning",
+            "./step/remotesteps"
+          ],
+          "subtree": true,
+          "excludes": "each step's <partitioning> and <remotesteps> blocks",
+          "why": "HOW Kettle distributes the step across copies and cluster slaves, not WHAT it computes: <partitioning><method>none</method><schema_name/></partitioning> and <remotesteps><input/><output/></remotesteps>. <partitioning> is not unread -- `no_slot_facts.partitioning_method` reads ./partitioning/@method through the CHILD_ATTR mechanism and raises a NO_SLOT obligation when the value differs from the neutral default 'none', so the one fact in it that can change results IS recorded. <remotesteps> has no reader at all.",
+          "_arguable_part": "STATED SO IT CAN BE ARGUED WITH. On both canonical fixtures every one of these is the default (method 'none', empty remote lists), so excluding them loses nothing MEASURED -- but the exclusion covers <schema_name> and the whole <remotesteps> subtree, for which there is no reader and therefore no obligation. A .ktr that partitions a step by a real schema would have the schema name excluded here rather than reported, and partitioning can change row grouping and therefore results. If this project ever migrates a partitioned transformation, this rule is the first one to delete."
+        },
+        {
+          "id": "ktr-step-field-row",
+          "kind": "QUERY",
+          "match": [
+            "./step/fields",
+            "./step/fields/field"
+          ],
+          "subtree": true,
+          "excludes": "each step's <fields> collection and the <field> rows in it",
+          "why": "One <field> row per output column of the step. Read by `self_def_site.port_sites[0]` (xpath ./fields/field) as the step's OUTPUT ports and by `self_def_sites.incoming_field_names` as its INPUT port names, so each row is inventoried as a Port with its own `where`. <fields> itself is an anonymous collection. SUBTREE because a field row's own children (<name>, <type>, <length>) are the lifted scalars the port reader reads."
+        }
+      ]
+    },
+    "load_order": null,
+    "_ref_attrs_comment": "MEASURED HAZARD. This index is document-global and <name> is the most common leaf tag in a .ktr: safe-stop-gen-rows.ktr has 60 <name> elements, of which 3 are steps and 56 are log-table field definitions inside <info>/<log>. The index keeps the FIRST node per value, and <info> is serialised before the steps, so a step whose name collided with a log-table field id (ID_BATCH, LINES_READ, ...) would resolve to the log field, whose owner is no element, and the hop would be silently DROPPED rather than mis-pointed. Not triggered by either fixture. Fixing it needs a scoped ref site, which is a framework change this pass did not make.",
+    "ref_attrs": [
+      "name"
+    ],
+    "lineage": null,
+    "edge_levels": [
+      {
+        "_comment": "HOPS. A hop is a third element naming both endpoints by step name, exactly like an SSIS <path> and unlike a DataStage link record. The [@enabled='Y'] predicate is load-bearing and is a SEMANTIC filter, not a convenience: Trans.prepareExecution allocates row sets from getTransHopSteps(false) and findNextSteps, both of which gate on hi.isEnabled(), so a disabled hop creates no RowSet and no rows flow along it. Emitting it as an IR edge would state a dataflow the engine does not run. UNVERIFIED EDGE CASE: TransHopMeta reads enabled as en.equalsIgnoreCase(\"Y\"), i.e. ABSENT means true, and an XPath equality predicate cannot express that. Both fixtures state Y explicitly on all 3 hops so it is not reached here.",
+        "name": "hops",
+        "xpath": "./order/hop[@enabled='Y']",
+        "endpoint_kind": "PORT_REF",
+        "from_attr": "from",
+        "to_attr": "to",
+        "label_attr": null
+      }
+    ],
+    "default_def_site": "SELF",
+    "def_sites": {},
+    "self_def_site": {
+      "_comment": "The BASE self site: <fields>/<field> read as OUTPUT columns. Steps with no <fields> element (Delay, Dummy) simply yield no ports. Kettle's <length> is mapped into the IR's Precision and Kettle's <precision> into the IR's Scale, following the SSIS table, which already put an SSIS `length` into Precision. That mapping is a reinterpretation and is charged for in no_slot_facts.kettle_precision_is_ir_scale rather than passed off as a clean read.",
+      "port_sites": [
+        {
+          "id": "step_output_field",
+          "xpath": "./fields/field",
+          "porttype": "OUTPUT",
+          "name_attr": "name",
+          "datatype_attr": "type",
+          "precision_attrs": [
+            "length"
+          ],
+          "scale_attrs": [
+            "precision"
+          ],
+          "default_attr": null
+        }
+      ],
+      "group_site": null,
+      "attr_site": {
+        "_comment": "A Kettle step has no name/value property site. Its configuration IS its own child elements, whose tags differ per step plugin -- <limit>/<never_ending> on a RowGenerator, <timeout>/<scaletime> on a Delay, <loglevel>/<displayHeader> on a WriteToLog. After the scalar lift those are the step node's own attributes. See FRAMEWORK CHANGE 49.",
+        "value_from": "SELF_ATTRS"
+      }
+    },
+    "self_def_sites": {
+      "_comment": "Per-step-plugin overrides of the base self site. This is the single biggest structural difference between Kettle and the three prior platforms: there is no ONE column schema for the format, there are ~250, one per step plugin, and each is versioned with its plugin. See FRAMEWORK CHANGE 54.",
+      "incoming_field_names": {
+        "_comment": "WriteToLog. Its <fields>/<field> state ONLY a <name> and they are INCOMING, not produced: WriteToLogMeta.fieldName is commented 'by which fields to display?', the class has no getFields override so it adds no output field, and WriteToLog.processRow resolves each with getInputRowMeta().indexOfValue. Reading them as outputs would invent an output row the step does not produce. No datatype attribute is named because the element states none -- naming one would make an absent value look present.",
+        "port_sites": [
+          {
+            "id": "step_input_field_name_only",
+            "xpath": "./fields/field",
+            "porttype": "INPUT",
+            "name_attr": "name",
+            "datatype_attr": null,
+            "precision_attrs": [],
+            "scale_attrs": []
+          }
+        ]
+      }
+    }
+  },
+  "kind_dispatch": {
+    "_comment": "Step plugin ID -> IR element $kind. Kettle's plugin ID is the ONLY thing that says what a step does, so this table is the whole semantic model of the platform. The four step types in these two fixtures are four entries; stock PDI ships several hundred, and because step types are a plugin registry the list is not closed by the format at all.",
+    "transformation": {
+      "degrade_to": null,
+      "degrade_reason": "LEFT NULL DELIBERATELY. The transformation is the unit of work -- a container with parameters and log tables. Same reasoning as DSJOB, an ADF Pipeline and an SSIS Data Flow Task. It has no hop, so nothing is lost by leaving it out of the graph. Evidence for ENG-001.",
+      "ir_kind": null,
+      "role": "UNIT_OF_WORK",
+      "supported": false,
+      "def_site": "SELF",
+      "note": "The transformation itself: named parameters, five log tables, a maxdate range, row-set sizing and feedback settings. The IR is a flat node/edge graph of data-flow elements and has no representation for any of it -- the same gap the DataStage pass recorded for DSJOB and the SSIS pass for the Data Flow Task."
+    },
+    "RowGenerator": {
+      "ir_kind": "SourceQualifier",
+      "role": "SOURCE",
+      "supported": true,
+      "def_site": "SELF",
+      "note": "POLICY CALL, recorded because it is arguable. RowGenerator emits a fixed number of constant rows -- <limit>3</limit> -- from a declared field list; there is no table, no connection and no query. SourceQualifier is the IR's only source-shaped door, and mapping to it does carry the real output columns, which is a true gain. What it loses is that this is a generator: the row count, the never-ending flag and the interval are all recorded as no-slot facts instead. This follows the same reasoning the DataStage table used for PxDataSet, an engine-internal spill file also mapped to SourceQualifier."
+    },
+    "SystemInfo": {
+      "ir_kind": "SourceQualifier",
+      "role": "SOURCE",
+      "supported": true,
+      "def_site": "SELF",
+      "note": "Emits runtime metadata (transformation name, Kettle version, hostname, dates) as a row. Mapped to SourceQualifier for the same reason as RowGenerator, but with a sharper defect: its <field><type> is NOT a data type. See no_slot_facts.field_type_is_a_selector."
+    },
+    "WriteToLog": {
+      "degrade_to": "UnsupportedTransformation",
+      "degrade_reason": "A DATA-FLOW step: rows arrive on a hop and terminate in it, so it is the sink end of the one lineage edge in sample_trans.ktr. Left at ir_kind null it took that edge down with it and the transformation had no graph. The note below is still exactly right about why it is not a target -- a log stream is not a relation -- and degrading does not claim otherwise: UnsupportedTransformation states the node exists, keeps the hop, and the census still says NotSupported.",
+      "ir_kind": null,
+      "role": "TARGET",
+      "supported": false,
+      "def_site": "SELF",
+      "self_def_site": "incoming_field_names",
+      "note": "Writes selected incoming fields to the Kettle log at a chosen level. It is a TARGET in the sense that rows terminate in it, but its destination is a log stream, not a table, and the IR has no door for that. Emitting it as a target would state a write to a relation that does not exist."
+    },
+    "Delay": {
+      "degrade_to": "UnsupportedTransformation",
+      "degrade_reason": "A DATA-FLOW step with a hop in and a hop out; it is the middle of the only chain in safe-stop-gen-rows.ktr, so leaving it out of the graph dropped BOTH edges. ExpressionTransformation would still be a lie for the reason the note gives. UnsupportedTransformation states no semantics at all, which is the truth here.",
+      "ir_kind": null,
+      "role": "TRANSFORMATION",
+      "supported": false,
+      "def_site": "SELF",
+      "note": "Passes every row through unchanged after waiting <timeout> <scaletime>. It transforms no value, so ExpressionTransformation would be a lie; it is pure rate control. The IR has no notion of time in a pipeline."
+    },
+    "Dummy": {
+      "degrade_to": "UnsupportedTransformation",
+      "degrade_reason": "A DATA-FLOW step and the sink end of the second hop in safe-stop-gen-rows.ktr. Same reasoning as Delay: degrading asserts nothing about behaviour, so 'there is nothing to translate' stays the reported outcome while the hop survives.",
+      "ir_kind": null,
+      "role": "TRANSFORMATION",
+      "supported": false,
+      "def_site": "SELF",
+      "note": "An explicit no-op, used as a hop target or a placeholder. Honest as unsupported: there is nothing to translate, and mapping it to ExpressionTransformation would emit a transform with no expressions."
+    },
+    "TableInput": {
+      "ir_kind": "SourceQualifier",
+      "role": "SOURCE",
+      "supported": true,
+      "def_site": "SELF",
+      "note": "WIDENING. Previously absent, so Pentaho had no reader and every node was dropped."
+    },
+    "FilterRows": {
+      "ir_kind": "FilterTransformation",
+      "role": "TRANSFORMATION",
+      "supported": true,
+      "def_site": "SELF",
+      "element_fields": {
+        "FilterConditions": {
+          "rule": "ktr_filter_condition_DETERMINISTICALLY_UNREACHABLE",
+          "required": true
+        }
+      },
+      "degrade_to": "UnsupportedTransformation",
+      "note": "WIDENING, expected to DEGRADE WHEN NO MODEL ANSWERS. REQUIRED. FilterTranslator's shared base substitutes `WHERE TRUE` for an empty predicate and records it only as a log warning -- a filter that silently returns every row. So an unextractable predicate must degrade, not emit a hollow FilterTransformation. AS WITH Janino ABOVE, `degrade_to` is the TIER-1 outcome: MEASURED on customer_summary_fullname_birthyear.ktr with its sidecar present, this step emits `$kind: FilterTransformation` and `FilterConditions: \"BirthYear >= 1990\"` at MODEL provenance. The requirement is what forces tier 2 to answer rather than letting a hollow filter through."
+    },
+    "TableOutput": {
+      "ir_kind": "TargetTransformation",
+      "role": "TARGET",
+      "supported": true,
+      "def_site": "SELF",
+      "element_fields": {
+        "TableName": {
+          "rule": "ktr_table_output_table",
+          "required": true
+        }
+      },
+      "degrade_to": "UnsupportedTransformation",
+      "note": "WIDENING. REQUIRED for the reason OracleConnectorPX's degrade_reason already gives: TargetTranslatorBase substitutes YOUR_DB plus a fallback schema when fields are null, so a TargetTransformation without a table states a destination the document does not. This makes that hand-made judgement MECHANICAL -- a write stage whose table survives identification qualifies, one whose table is buried in an XMLProperties blob degrades, and neither is curated by hand."
+    },
+    "Janino": {
+      "ir_kind": null,
+      "role": "TRANSFORMATION",
+      "supported": true,
+      "def_site": "SELF",
+      "degrade_to": "UnsupportedTransformation",
+      "degrade_reason": "NOT mapped to ExpressionTransformation BY THE DETERMINISTIC READER, same line as DataStage's CTransformerStage. A User Defined Java Expression step holds JAVA: `BirthDate.getYear() + 1900` is a deprecated method call, not a function, and Java string + renders null as the text 'null'. Emitting that as SQL from a structural rule would be a silent wrong answer.",
+      "_scope_of_this_declaration": "THESE TWO KEYS ARE THE TIER-1 DEFAULT, NOT THE PIPELINE'S OUTCOME. Corrected after a Gate A review found this entry contradicting the IR it produces. `ir_kind: null` and `degrade_to` are what the DETERMINISTIC reader concludes; emit.py then takes the model sidecar as an override, per element, on the record (`sidecar:$kind`, MODEL provenance). MEASURED on customer_summary_fullname_birthyear.ktr with its .ai.json present: this step emits `$kind: ExpressionTransformation` with two lowered ColumnExpressions (`FirstName || ' ' || MiddleName || ' ' || LastName` and the BirthYear derivation), NOT an UnsupportedTransformation. So the reason above is still good evidence and the consequence is only the consequence WHEN NO MODEL ANSWERS. Anything reading this entry as 'Pentaho Janino steps degrade' is reading a tier-1 default as a pipeline outcome."
+    },
+    "unmapped_kind_degrade_to": "UnsupportedTransformation"
+  },
+  "role_to_node_type": {
+    "SOURCE": "source",
+    "TARGET": "target",
+    "TRANSFORMATION": "transformation",
+    "UNIT_OF_WORK": "transformation",
+    "unmapped_role_node_type": "unknown",
+    "unmapped_role_reason": "Declared for the same reason as Informatica's, where it was a MEASURED crash. A Kettle step's role comes from kind_dispatch, and Kettle ships hundreds of step types of which this table maps a handful -- so an unmapped role is near-certain on any real .ktr, and before this it would have been a KeyError rather than a recorded gap. Not exercised by either fixture.",
+    "known_defect": "'UNIT_OF_WORK' has no node type of its own and is emitted as a transformation-typed node with a null $kind, the same known misrepresentation the DataStage table records for 'JOB'."
+  },
+  "naming_policy": {
+    "_comment": "A Kettle step key IS its human name, as in Informatica -- so name_from and element_name_from agree and the distinction the SSIS pass introduced is not exercised here.",
+    "policy_id": "pentaho.modelname.v1",
+    "name_source": "step/name/text()",
+    "name_from": "DISPLAY_NAME",
+    "element_name_from": "DISPLAY_NAME",
+    "lowercase": true,
+    "sanitize_identifier": {
+      "allowed_chars": "abcdefghijklmnopqrstuvwxyz0123456789_",
+      "allowed_leading_chars": "abcdefghijklmnopqrstuvwxyz_",
+      "replace_illegal_with": "_",
+      "leading_prefix": "m_",
+      "_comment": "MEASURED on Pentaho: 'Dummy (do nothing)' -> 'dummy_(do_nothing)' and 'safe-stop-gen-rows' kept its hyphens; neither is a legal UNQUOTED Snowflake or dbt identifier. Declared on EVERY platform rather than only the one that needed it, so a legal name is provably unaffected: the IR of the other four is byte-identical with this rule present. One replacement character per illegal character, NOT a collapsed run -- collapsing merges 'a--b' into 'a_b', and merging two distinct names is the defect qualify_with_container exists to prevent. A name that cannot start a bare identifier is PREFIXED, not trimmed, for the same reason. Residual merges remain possible in principle, so emit() asserts injectivity across the document and raises rather than letting the dbt writer overwrite one model with another."
+    },
+    "replace_whitespace_with": "_",
+    "split_camel_case": false,
+    "strip_kind_prefixes": false,
+    "qualify_with_task": false,
+    "qualify_with_container": null,
+    "qualify_reason": "LEFT OFF, and NOT because it is safe. A .ktr holds one transformation and the transformation element is a SIBLING of the steps rather than an ancestor, so there is no container to qualify with -- container is null for every step. Kettle also guarantees step-name uniqueness within a transformation, so a collision cannot arise inside one file. The v1 known_risk below is a DIFFERENT and still-open defect: 'Dummy (do nothing)' becomes 'dummy_(do_nothing)', which is not a legal unquoted identifier. Qualification does not touch that.",
+    "known_risk": "MEASURED: the step named 'Dummy (do nothing)' becomes the model name 'dummy_(do_nothing)'. Whitespace is handled and PARENTHESES are not, so this policy emits a model name containing characters that are not legal in an unquoted Snowflake or dbt identifier. Kettle places no restriction on a step name beyond designer-level uniqueness, so this is a general hazard rather than a property of the fixture."
+  },
+  "column_propagation": {
+    "_comment": "PENTAHO BUFFER SEMANTICS, chosen CONSERVATIVELY and the reason recorded. A Kettle row does pass through a step, and several step kinds (Calculator, Modified Java Script Value) declare only the fields they ADD -- which would argue for ACCUMULATE, the same reading as SSIS. It is NOT declared here because no fixture in this spike exercises it: the two canonical .ktr files and the blind one all state the FULL field list on the steps that state any at all, so ACCUMULATE would be an unverified widening whose only visible effect would be a higher fit number. FILL_WHEN_UNDECLARED is the subset that is evidenced -- it fixes the FilterRows and TableOutput steps, which declare no fields whatsoever -- and it can be widened later against a fixture that shows the difference.",
+    "mode": "FILL_WHEN_UNDECLARED",
+    "algorithm_id": "predecessor_column_propagation.v1",
+    "stop_at_kinds": [],
+    "stop_at_roles": []
+  },
+  "port_policy": {
+    "_comment": "Kettle has no local-variable field concept at the row level and no per-field default. <nullif> is the inverse of a default -- 'read this value AS null' -- so it is recorded as a no-slot fact instead of being fed to default_value_policy, which would invert its meaning.",
+    "output_column_order": "FIELD_ELEMENT_DOCUMENT_ORDER",
+    "input_column_naming": "UPSTREAM_FIELD",
+    "_input_columns_from_comment": "NONE, declared rather than defaulted. A Kettle <hop> names two steps by name and states no fields, and a step's own <fields>/<field> list is its OUTPUT schema -- there is no receiving column list anywhere in the format. MEASURED on both canonical .ktr files and the blind one: 0 field edges AND 0 INPUT ports, so NONE and FIELD_EDGES are byte-identical here. Declared anyway so the not-applicability is a reviewable table entry instead of an accident of whichever mechanism happens to return an empty list.",
+    "input_columns_from": "NONE",
+    "input_column_type_from": "LOCAL_PORT",
+    "emit_scale_when_zero": true,
+    "inline_local_variables": false,
+    "drop_local_variables_from_outputs": false,
+    "port_reference_case_insensitive": false,
+    "local_variable_porttype": "__KETTLE_HAS_NO_LOCAL_VARIABLE_PORTTYPE__",
+    "output_porttypes": [
+      "OUTPUT"
+    ],
+    "input_porttypes": [
+      "INPUT"
+    ],
+    "exclude_port_groups_with_flag": null,
+    "ref_field_passthrough_rule": null
+  },
+  "type_vocabulary": {
+    "_comment": "Kettle DOES name its types, which puts it ahead of DataStage's bare JDBC integer codes. ValueMetaInterface.typeCodes is {'-','Number','String','Date','Boolean','Integer','BigNumber','Serializable','Binary','Timestamp','Internet Address'} and ValueMetaFactory.getValueMetaNames() drops index 0 and Serializable to give the nine names below. CAVEAT: value types are themselves a plugin type (ValueMetaPluginType), so the list is closed for stock PDI only, not by the format.",
+    "carry": "KETTLE_TYPE_NAME",
+    "vocabulary": [
+      "Number",
+      "String",
+      "Date",
+      "Boolean",
+      "Integer",
+      "BigNumber",
+      "Binary",
+      "Timestamp",
+      "Internet Address"
+    ],
+    "precision_field_carries": "KETTLE_LENGTH",
+    "known_defect": "The IR's Precision is fed from Kettle's <length> and the IR's Scale from Kettle's <precision>. For a String that means the IR's Precision holds a character length. Charged per column rather than hidden."
+  },
+  "edge_policy": {
+    "_comment": "Kettle STATES its element-level edges as <hop> entries, so they are read rather than derived, as in SSIS and DataStage and unlike Informatica. There is NO field-level lineage anywhere in a .ktr: a hop carries a whole row and names no columns, so field_edges is always empty and per-column origin is unknowable from the file. A hop also carries no name, so there is no label to read.",
+    "element_edges_from": "EXPLICIT_EDGE_ELEMENTS",
+    "collapse_connectors_by": null,
+    "label_source": "KETTLE_HOPS_ARE_UNNAMED",
+    "label_when_absent": null
+  },
+  "default_value_policy": {
+    "_comment": "No analogue. A Kettle field has no default-value slot. <nullif> is the reverse direction and <set_empty_string> is a null-handling switch; both are recorded as no-slot facts.",
+    "error_function_prefix": null,
+    "error_default_disposition": null,
+    "literal_default_on_unconnected_input": null,
+    "discardable_label": "DISCARDABLE",
+    "load_bearing_label": "LOAD_BEARING"
+  },
+  "expression_syntax": {
+    "_comment": "UNVERIFIED AND UNEXERCISED, AND THE OLD REASON WAS FALSE OF ONE OF THE THREE DOCUMENTS THIS TABLE SERVES. It said 'Neither fixture contains a step that computes an expression -- no Calculator, no Formula, no Modified Java Script Value, no User Defined Java Expression', which is true of the two canonical .ktr files (safe-stop-gen-rows.ktr and sample_trans.ktr) and FALSE of customer_summary_fullname_birthyear.ktr, the Gate A blind document, whose 'Derive FullName and BirthYear' step is a <type>Janino</type> -- a User Defined Java Expression -- carrying two <formulas>/<formula> subtrees at ktr:231-247. 'Neither' is also the wrong arity for three documents. THE CONCLUSION IS UNCHANGED and the reason is now the true one: nothing here is reached by any run because no port site and no rule kind reads a <formula> subtree (see residue.step_internal_subtrees_have_no_obligation, which records that as a declared framework gap needing a COMPOSING rule kind), not because no input states an expression. Kettle has no single expression language: each of those four steps uses a different one (a fixed operation enum, a Libre/OpenFormula subset, Rhino JavaScript, and compiled Java respectively). Declaring one syntax for the platform would be wrong, and these values are placeholders recorded so the gap is visible rather than absent.",
+    "string_quotes": [
+      "\"",
+      "'"
+    ],
+    "reference_delimiters": null,
+    "identifier_extra_chars": ".",
+    "case_insensitive_resolution": false,
+    "expression_property_read": null,
+    "expression_property_ignored": null
+  },
+  "no_slot_facts": [
+    {
+      "id": "row_set_buffer_size",
+      "from": "ELEMENT_ATTR",
+      "attr": "size_rowset"
+    },
+    {
+      "id": "unique_connections",
+      "from": "ELEMENT_ATTR",
+      "attr": "unique_connections"
+    },
+    {
+      "id": "feedback_size",
+      "from": "ELEMENT_ATTR",
+      "attr": "feedback_size"
+    },
+    {
+      "id": "sleep_time_empty",
+      "from": "ELEMENT_ATTR",
+      "attr": "sleep_time_empty"
+    },
+    {
+      "id": "sleep_time_full",
+      "from": "ELEMENT_ATTR",
+      "attr": "sleep_time_full"
+    },
+    {
+      "id": "using_thread_priorities",
+      "from": "ELEMENT_ATTR",
+      "attr": "using_thread_priorities"
+    },
+    {
+      "id": "repository_directory",
+      "from": "ELEMENT_ATTR",
+      "attr": "directory"
+    },
+    {
+      "id": "step_copies",
+      "from": "ELEMENT_FLAG",
+      "flag": "copies"
+    },
+    {
+      "id": "row_distribution_mode",
+      "from": "ELEMENT_FLAG",
+      "flag": "distribute"
+    },
+    {
+      "id": "performance_capture",
+      "from": "ELEMENT_FLAG",
+      "flag": "capture_step_performance"
+    },
+    {
+      "id": "generated_row_limit",
+      "from": "ELEMENT_ATTR",
+      "attr": "limit"
+    },
+    {
+      "id": "never_ending_generator",
+      "from": "ELEMENT_ATTR",
+      "attr": "never_ending"
+    },
+    {
+      "id": "generator_interval_ms",
+      "from": "ELEMENT_ATTR",
+      "attr": "interval_in_ms"
+    },
+    {
+      "id": "generator_row_time_field",
+      "from": "ELEMENT_ATTR",
+      "attr": "row_time_field"
+    },
+    {
+      "id": "generator_last_time_field",
+      "from": "ELEMENT_ATTR",
+      "attr": "last_time_field"
+    },
+    {
+      "id": "log_level",
+      "from": "ELEMENT_ATTR",
+      "attr": "loglevel"
+    },
+    {
+      "id": "log_display_header",
+      "from": "ELEMENT_ATTR",
+      "attr": "displayHeader"
+    },
+    {
+      "id": "log_limit_rows",
+      "from": "ELEMENT_ATTR",
+      "attr": "limitRows"
+    },
+    {
+      "id": "delay_timeout",
+      "from": "ELEMENT_ATTR",
+      "attr": "timeout"
+    },
+    {
+      "id": "delay_scaletime",
+      "from": "ELEMENT_ATTR",
+      "attr": "scaletime"
+    },
+    {
+      "id": "partitioning_method",
+      "from": "CHILD_ATTR",
+      "xpath": "./partitioning",
+      "attr": "method",
+      "key_attr": "method"
+    },
+    {
+      "id": "field_nullif",
+      "from": "PORT",
+      "porttype_class": "OUTPUT",
+      "keyed_by": "name",
+      "requires": "attr_present",
+      "attrs": [
+        "nullif"
+      ],
+      "where_suffix": "/nullif/text()",
+      "provenance": "RESIDUE",
+      "detail": "field '{name}' declares a nullif substitution; the IR column has no null-handling slot and nullif is the INVERSE of a default value, so it cannot be carried as one"
+    },
+    {
+      "id": "field_type_is_a_selector",
+      "from": "PORT",
+      "porttype_class": "OUTPUT",
+      "requires": "datatype_outside_vocabulary",
+      "vocabulary": [
+        "Number",
+        "String",
+        "Date",
+        "Boolean",
+        "Integer",
+        "BigNumber",
+        "Binary",
+        "Timestamp",
+        "Internet Address"
+      ],
+      "keyed_by": "name",
+      "where_suffix": "/type/text()",
+      "provenance": "RESIDUE",
+      "detail": "DataType emitted as '{datatype}', which is NOT a Kettle data type. SystemDataMeta.getXML writes the SystemDataTypes enum code into the same <type> element that RowGeneratorMeta uses for a real type, so one reader produces two different kinds of fact. Provenance reads SOURCE and is truthful -- the value is at that line -- and the IR still ends up with a type field holding a value selector."
+    },
+    {
+      "id": "placeholder_length_precision",
+      "from": "PORT",
+      "porttype_class": "OUTPUT",
+      "requires": "placeholder_precision",
+      "placeholder_values": [
+        -1
+      ],
+      "keyed_by": "name",
+      "where_suffix": "/length/text()",
+      "provenance": "RESIDUE",
+      "detail": "length and precision are both stated as -1 for type '{datatype}'. -1 is Kettle's 'nothing specified' sentinel -- ValueMetaBase(name, type) delegates to this(name, type, -1, -1) -- not a real length. Third platform in a row where the SOURCE FORMAT states a placeholder that provenance cannot detect, and the first where the placeholder is not 0: DataStage's is 0, so a rule hardcoded to 0 would have passed every Kettle column as fine."
+    },
+    {
+      "id": "kettle_precision_is_ir_scale",
+      "from": "PORT",
+      "porttype_class": "OUTPUT",
+      "keyed_by": "name",
+      "requires": "attr_present",
+      "attrs": [
+        "length",
+        "precision"
+      ],
+      "where_suffix": "/precision/text()",
+      "provenance": "RESIDUE",
+      "detail": "field '{name}' of type '{datatype}': Kettle <length> is emitted as the IR Precision and Kettle <precision> as the IR Scale. For a String that puts a character length in a field named Precision."
+    },
+    {
+      "id": "dangling_output_column",
+      "from": "PORT",
+      "porttype_class": "OUTPUT",
+      "connectivity": "UNCONNECTED",
+      "keyed_by": "name",
+      "detail": "no field-level lineage exists in a .ktr -- a hop carries a whole row and names no columns -- so no output column can be shown to be consumed"
+    },
+    {
+      "id": "ktr_table_output_table",
+      "from": "ELEMENT_ATTR",
+      "attr": "table",
+      "note": "TableOutput states @table directly (the .ktr projection lifts leaf children to attrs)."
+    },
+    {
+      "id": "ktr_filter_condition_DETERMINISTICALLY_UNREACHABLE",
+      "from": "ELEMENT_ATTR",
+      "attr": "condition",
+      "note": "UNRESOLVABLE BY ANY DETERMINISTIC RULE HERE, which is narrower than the name this rule used to carry. FilterRows states its predicate as a nested <condition> TREE (negated / leftvalue / function / rightvalue / value, recursive), not a scalar, so `from: ELEMENT_ATTR attr: condition` reads nothing and raises a MISSING obligation. Turning that tree into a predicate string needs a COMPOSING rule kind, which does not exist.",
+      "_renamed_and_why": "Was `ktr_filter_condition_UNREACHABLE`, and its note said the consequence was that the element 'degrades honestly rather than becoming WHERE TRUE'. A Gate A verifier found the IR carrying `FilterConditions: \"BirthYear >= 1990\"` -- a CORRECT reading of the condition tree at lines 275-284 of customer_summary_fullname_birthyear.ktr -- and flagged it as right against the document but unproducible by the declared rules. The declaration was stale, not the output: the model sidecar supplies it at tier 2 (MODEL provenance) and the element emits `$kind: FilterTransformation`. MEASURED, same run. 'UNREACHABLE' unqualified read as a claim about the pipeline; the rule is unreachable for the STRUCTURAL reader only, and the name now says so.",
+      "_what_did_not_change": "`required: true` on FilterRows.element_fields.FilterConditions stays, and stays correct. FilterTranslator's shared base substitutes `WHERE TRUE` for an empty predicate and records it only as a log warning -- a filter that silently returns every row -- so a document with NO sidecar must still degrade rather than emit a hollow FilterTransformation. The requirement is what makes tier 2 load-bearing instead of decorative."
+    },
+    {
+      "id": "ktr_step_connection_and_dialect",
+      "from": "ELEMENT_ATTR",
+      "attr": "connection",
+      "note": "ADDED after a Gate A verifier reported this as MATERIAL_AND_ABSENT: the `DW` connection is named by BOTH data-touching steps (lines 194 and 317 of customer_summary_fullname_birthyear.ktr), appears NOWHERE in the IR, and was not a declared no_slot fact -- so it was read into table_attrs by attr_site SELF_ATTRS and then dropped with no record at all. It carries the ONLY statement of which SQL dialect the <sql> body is written in: the top-level <connection> block at line 153 states type MSSQL. Without it, `SELECT ... FROM CUSTOMER` is a string in an unnamed dialect. The IR has no connection slot, so NO_SLOT is the truthful provenance -- and a declared NO_SLOT obligation is the difference between a recorded gap and a silent one. The connection DEFINITION at line 153 is a separate fact and is inventoried separately, as an UNKNOWN OBJECT by structure.census; this rule records the step's REFERENCE to it."
+    },
+    {
+      "id": "ktr_table_input_sql",
+      "from": "ELEMENT_ATTR",
+      "attr": "sql",
+      "note": "ADDED for the same reason and it is the larger of the two. A TableInput step's ENTIRE read specification is this one element (lines 195-199): the column list and `FROM CUSTOMER`. MEASURED: the IR node for `Read CUSTOMER` carries no query, no table CUSTOMER, and empty InputColumns AND OutputColumns -- the whole read is absent, and until now nothing raised an obligation for it, because the deterministic reader lifts <sql> to an attribute and the IR contract has no slot to put it in. The verifier called this the second-largest loss in the document with no obligation of its own. It has one now."
+    },
+    {
+      "id": "ktr_table_output_truncate",
+      "from": "ELEMENT_ATTR",
+      "attr": "truncate",
+      "note": "ADDED, and deliberately NOT listed in neutral_defaults even though `N` is Kettle's default. This is the load-bearing half of a divergence class this project has already recorded and had no obligation for: PDI TableOutput with truncate=N APPENDS, and a dbt table/view materialization REPLACES. Two runs of the source produce 2N rows; two runs of the migration produce N. Suppressing it as a neutral default would delete the one fact that makes the divergence detectable, so the neutral-default filter is deliberately not applied to it."
+    }
+  ],
+  "neutral_defaults": {
+    "_comment": "A fact only creates an obligation when its value differs from the neutral default. NOTE A REPORTED FRAMEWORK GAP: this filter is applied to ELEMENT_ATTR and ELEMENT_FLAG rules only, never to PORT rules. A rule for <set_empty_string> was written, measured, and then REMOVED for exactly that reason: both fixtures state Kettle's default N, so the rule added a NO_SLOT obligation per column for a fact carrying no design intent, and there was no neutral-default filter to suppress it. Reported rather than fixed; fixing it is a framework change this pass did not make. These are Kettle's own defaults as written by a fresh Spoon transformation, so they carry no design intent. DELIBERATE OMISSION: canvas geometry (<GUI><xloc>/<yloc>/<draw>) is not listed as a no_slot fact at all. It is a real source fact with no IR slot, and counting it would inflate NO_SLOT with something nobody wants represented. Excluding it is a policy choice and is stated here so the count cannot be read as exhaustive.",
+    "method": "none",
+    "distribute": "Y",
+    "copies": "1",
+    "capture_step_performance": "N",
+    "limitRows": "N",
+    "unique_connections": "N",
+    "using_thread_priorities": "Y",
+    "sleep_time_empty": "50",
+    "sleep_time_full": "50",
+    "size_rowset": "10000",
+    "feedback_size": "50000"
+  },
+  "dialect": {
+    "_comment": "UNEXERCISED, AND NOT BECAUSE THE INPUT IS EXPRESSION-FREE -- the old wording, 'No expression appears in either fixture', is true of the two canonical .ktr files and FALSE of customer_summary_fullname_birthyear.ktr, whose Janino step states two Java expressions at ktr:231-247. Nothing here is reached because no rule reads a <formula> subtree; see expression_syntax._comment for the full correction. Kettle's string concatenation depends on which of its four expression steps is used, so no single divergent operator can be named for the platform; the entry is empty rather than guessed.",
+    "identical": [],
+    "syntactically_identical_semantically_divergent": {},
+    "divergent_operator_lengths": [
+      1
+    ],
+    "known_functions_identical": [],
+    "unknown_identifier_disposition": "RESIDUE"
+  },
+  "residue": {
+    "_comment": "Facts that structure identifies but cannot RESOLVE.",
+    "step_internal_subtrees_have_no_obligation": "DECIDED AND STATED, because silence is exactly what the exhaustive-census work exists to remove. A Gate A verifier found that step-internal content is reachable only indirectly through the four ELEMENT obligations, so the second-largest loss in customer_summary_fullname_birthyear.ktr had no obligation of its own. THREE of those facts now do -- see no_slot_facts ktr_step_connection_and_dialect, ktr_table_input_sql and ktr_table_output_truncate, all added for that finding. The remaining ones are SUBTREES and deliberately get none: <formulas>/<formula> (a Janino step's expressions, lines 231-247) and <compare>/<condition>/<value> (a FilterRows predicate tree, lines 275-284) are not scalars on the step, and EVERY no_slot_fact mechanism -- ELEMENT_ATTR, ELEMENT_FLAG, CHILD_ATTR, PORT -- reads ONE NAMED KEY. A recursive tree needs a COMPOSING rule kind, the same one ktr_filter_condition_DETERMINISTICALLY_UNREACHABLE records the absence of. THEY ARE NOT SILENT: structure.census inventories each as an UNKNOWN OBJECT with a citable location and the step containing it -- <formulas> at ktr:231, <formula> at ktr:232, <formula> at ktr:240 (container 'Derive FullName and BirthYear'); <compare> at ktr:275, <condition> at ktr:276, <value> name=constant type=Integer at ktr:281 (container 'Filter BirthYear'). What they lack is an OBLIGATION in the fit score, because raising one means emitting the Unknown Object into the IR, which is a change in emit.py and not in this table. A declared follow-up, not an omission.",
+    "step_plugin_semantics": "A .ktr states a step's plugin ID and its own configuration and nothing about what the plugin DOES. Stock PDI ships several hundred step plugins and the set is extensible, so the semantic model of this platform is entirely outside the file -- a strictly larger gap than SSIS's componentClassID, which at least maps to a documented fixed set.",
+    "four_expression_languages": "Calculator (operation enum), Formula (OpenFormula subset), Modified Java Script Value (Rhino JavaScript) and User Defined Java Expression (compiled Java) each carry a different language. There is no 'the Kettle expression language' to write a scanner for.",
+    "field_type_polysemy": "The <type> element inside <fields><field> means a data type in one step and a value selector in another. Resolving it requires knowing the step plugin.",
+    "null_versus_empty": "XMLHandler.addTagValue emits a self-closing <tag/> for BOTH null and the empty string, so the distinction is destroyed by Kettle's own writer and is not recoverable by any reader. Recorded as valueless keys: 58 in sample_trans.ktr and 67 in safe-stop-gen-rows.ktr.",
+    "variable_substitution": "Values throughout a .ktr may be ${VAR} or %%VAR%% references resolved from kettle.properties, the parameter block, or the environment at runtime. NONE of the three documents this table serves uses one -- measured 0 occurrences of '${' in safe-stop-gen-rows.ktr, sample_trans.ktr and customer_summary_fullname_birthyear.ktr. (Said 'Neither fixture', which is the wrong arity for three documents even though the fact held for all of them.)",
+    "step_scalar_residue_not_swept": "A DECLARED EXCLUSION WITH ITS SIZE BESIDE IT. platform_datastage.json and platform_ssis.json both declare an ATTR_RESIDUE rule -- a residual sweep raising one obligation per element property that no rule reads -- and THIS TABLE DELIBERATELY DOES NOT. The reason is mechanical: `self_def_site.attr_site` here reads value_from=SELF_ATTRS, so after the scalar lift the property bag is the STEP NODE'S OWN ATTRIBUTES and holds the element's IDENTITY beside its configuration. MEASURED: a sweep declared here reports `name` and `type` as unread residue on 4 of 4 elements of safe-stop-gen-rows.ktr, which is false twice over -- both are read, and `name` IS the element key. Separating identity from configuration needs the level's key_attr / kind_attr / display_name_attr / flag_attrs excluded from the bag, a framework change this pass did not make; `emit.Emitter._assert_attr_residue_usable` RAISES if the rule is declared here anyway, so the decision is enforced and not merely written down. THE SIZE OF THE FAMILY THAT IS THEREFORE STILL UNCOUNTED, so the exclusion can be argued with rather than taken on trust: 16 keys on safe-stop-gen-rows.ktr and 34 on customer_summary_fullname_birthyear.ktr. The material ones on the blind document, named: `send_true_to` (a FilterRows step's TRUE branch target -- routing, and the IR edge carries a label only), `commit`, `use_batch`, `return_keys`, `specify_fields`, `tablename_in_field`, `tablename_in_table` (TableOutput write behaviour -- note that `truncate` is NOT in this list, because `no_slot_facts.ktr_table_output_truncate` already reads it; it is the Kettle analogue of the DataStage write_mode loss and it is the one member of the family this table had already closed), `execute_each_row`, `lazy_conversion_active`, `variables_active`, `ignore_errors`, `partitioning_enabled`. A follow-up with a number, not an omission.",
+    "shared_objects": "<shared_objects_file> points at a shared.xml holding database connections defined outside the transformation."
+  }
+}

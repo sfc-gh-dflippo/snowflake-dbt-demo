@@ -1,0 +1,475 @@
+{
+  "platform": "AzureDataFactory",
+  "table_version": "adf.v1",
+  "_comment": "Per-platform configuration for an Azure Data Factory / Synapse pipeline JSON. Nothing here is read from a source file; every entry is a reviewable policy decision. Fixtures: myPipeline.json (5279 bytes, 2 activities) and adf_First_Pipeline.json (1361 bytes, 2 activities), both from Azure/Azure-DataFactory. This is the FIRST non-markup, non-record-block source in the spike: a pipeline is JSON, so objects, arrays and TYPED scalars all have to be projected. See jsondoc.py.",
+  "structure": {
+    "document_model": {
+      "kind": "JSON",
+      "root_tag": "pipeline"
+    },
+    "_key_scope_comment": "DELIBERATELY NULL, and this is a WEAKER position than on Pentaho. Microsoft's naming-rules page gives uniqueness rules for the factory, linked services, datasets, pipelines, data flows, data-flow transformations and pipeline parameters/variables -- and states NO rule for ACTIVITY names. The dependsOn mechanism resolves a predecessor BY NAME, so uniqueness is required for the format to work, and it is undocumented. Recorded as an assumption rather than a fact: learn.microsoft.com/en-us/azure/data-factory/naming-rules",
+    "key_scope": null,
+    "detail_max_chars": 120,
+    "attr_where_template": null,
+    "_container_comment": "The pipeline name is a top-level member, so the container IS the root object.",
+    "container": {
+      "xpath": ".",
+      "name_attr": "name"
+    },
+    "levels": [
+      {
+        "_comment": "THE PIPELINE ITSELF, swept for the same reason DSJOB and <info> are swept: skipping it hides from the fit score that the IR cannot represent a pipeline, its parameters, or its folder. A pipeline states its `type` only in myPipeline.json ('Microsoft.Synapse/workspaces/pipelines') and not at all in adf_First_Pipeline.json, so reading the kind from the document would identify the same construct as two different kinds -- and as none at all in the second file. The kind is therefore asserted by the table, and the real `type` is recorded as a fact instead.",
+    "unsupported_body_max_chars": 4000,
+    "_unsupported_body_max_chars_comment": "FRAMEWORK CHANGE 63 (b). Cap on the source fragment a degraded element carries into its placeholder model as SQL comments. An activity object re-serialised as JSON. MEASURED on both fixtures: largest 1.1 KB. A cut is always announced inside the body, so a truncated fragment never reads as a complete one.",
+        "name": "pipeline",
+        "elements": ".",
+        "key_attr": "name",
+        "kind_attr": null,
+        "kind_literal": "Pipeline",
+        "role_attr": null,
+        "display_name_attr": "name",
+        "flag_attrs": {}
+      },
+      {
+        "_comment": "ACTIVITIES. `properties.activities[]` is an array of objects, projected as repeated <activities> children of <properties> -- so an ordinary containment query reaches them (jsondoc.py PROJECTION RULE 2). `type` is the activity type and is the only thing that says what the activity does. There is NO role axis: an activity states nothing about direction, and unlike a DataStage stage it has no pin lists to derive one from. A Copy activity is a reader AND a writer in one element.",
+        "name": "activity",
+        "elements": "./properties/activities",
+        "key_attr": "name",
+        "kind_attr": "type",
+        "role_attr": null,
+        "display_name_attr": "name",
+        "description_attr": "description",
+        "flag_attrs": {}
+      }
+    ],
+    "census": {
+      "_comment": "ADDITION 2 -- EXHAUSTIVE IDENTIFICATION. `levels` says what an element IS; this says what is DELIBERATELY NOT one, with a reason per rule. Anything matched by neither is an UNKNOWN OBJECT: inventoried with a citable location rather than dropped. See identify.py `_census`.",
+      "_deliberately_short_comment": "THIS LIST IS SHORT ON PURPOSE, and the reason is the state of the rest of this table rather than the shape of the format. `self_def_site` here declares port_sites [], group_site null and attr_site null -- this platform reads an activity's NAME and TYPE and nothing else. So there is no mechanism to point at for an activity's typeProperties, its inputs/outputs dataset references, its policy or the pipeline's parameters, and writing exclusion rules for them would be asserting they are accounted for when nothing accounts for them. They come out as UNKNOWN OBJECTS, which is the honest reading: on ADF the framework identifies the graph and not the work.",
+      "identity_attrs": [
+        "name",
+        "type",
+        "referenceName",
+        "activity",
+        "value"
+      ],
+      "_identity_attrs_comment": "How an unknown record is identified in the inventory. In a JSON projection these are object members lifted to attributes (jsondoc PROJECTION RULE 1), and the citation on an unknown object carries the RFC 6901 pointer that addresses the member in the file. `type` is the discriminator ADF uses for everything -- DatasetReference, BinarySource, AzureBlobFSReadSettings, Expression.",
+      "exclusions": [
+        {
+          "id": "adf-properties-member",
+          "kind": "QUERY",
+          "match": "./properties",
+          "excludes": "the top-level `properties` object member",
+          "why": "A grouping member with no identity of its own. The pipeline IS the document -- `levels[0].elements` is '.' and `structure.container` is '.' too, both reading the top-level `name` -- and `properties` is where ADF puts everything that belongs to it. Its contents (activities, parameters, folder) are classified separately."
+        },
+        {
+          "id": "adf-activity-dependency-edge",
+          "kind": "EDGE_RECORD",
+          "excludes": "every `dependsOn` entry, via the edge_levels declaration",
+          "why": "A dependsOn entry IS an edge and is inventoried as one. It points BACKWARDS -- `dependsOn[].activity` names the PREDECESSOR that must run first -- which is why edge_policy inverts it. Derived from edge_levels rather than restated, so the two cannot drift. An EMPTY dependsOn array projects to no node at all and so cannot be counted here; jsondoc reports empty arrays in its own `unaccounted` line, because after projection a stated-and-empty array is indistinguishable from an absent key."
+        },
+        {
+          "id": "adf-studio-folder-placement",
+          "kind": "QUERY",
+          "match": "./properties/folder",
+          "excludes": "the `folder` member",
+          "why": "Where the pipeline appears in the ADF Studio folder tree -- `{\"name\": \"hashtag\"}`. Authoring-tool organisation, not pipeline content. Worth naming rather than leaving unknown for a second reason recorded in `_ref_attrs_comment` above: its `name` lands in the document-global reference index and in myPipeline.json it COLLIDES with a pipeline parameter also called hashtag."
+        }
+      ]
+    },
+    "load_order": null,
+    "_ref_attrs_comment": "`name` is the addressable identity of an activity. The index also picks up the pipeline root (name=myPipeline) and, in myPipeline.json, properties.folder (name=hashtag) -- which happens to collide with the pipeline PARAMETER also called hashtag. Not triggered, because dependsOn only ever names activities, and a miss drops an edge rather than mis-pointing one. Same document-global-index hazard as the Pentaho table records.",
+    "ref_attrs": [
+      "name"
+    ],
+    "lineage": null,
+    "edge_levels": [
+      {
+        "_comment": "ACTIVITY DEPENDENCIES. This is the MIRROR IMAGE of a DataStage link record and the reason for FRAMEWORK CHANGE 50. A dependsOn entry sits under its own DOWNSTREAM activity and names the PREDECESSOR: 'Activity Dependency defines how subsequent activities depend on previous activities' and the doc's example has MySecondActivity carrying dependsOn: [{activity: MyFirstActivity}]. So `to` is the record's own owner (to_attr null) and `from` is the named activity. Getting this backwards would invert every edge in the graph and nothing in the IR would flag it. learn.microsoft.com/en-us/azure/data-factory/concepts-pipelines-activities",
+        "name": "activity_dependencies",
+        "xpath": ".//dependsOn",
+        "endpoint_kind": "PORT_REF",
+        "from_attr": "activity",
+        "to_attr": null,
+        "label_attr": "dependencyConditions$1"
+      }
+    ],
+    "default_def_site": "SELF",
+    "def_sites": {},
+    "self_def_site": {
+      "_comment": "NO PORT SITE AND NO GROUP SITE, and that is the central finding for this platform rather than an omission. A pipeline JSON carries NO column metadata of any kind. A Copy activity's column mapping lives in typeProperties.translator, which Microsoft's own table marks Required: No -- 'Specify explicit column mappings from source to sink. This property applies when the default copy behavior does not meet your needs' -- and neither fixture has one. Column schema lives in the DATASET resources the activity references, which are separate files not present here, and column-level lineage lives in a Mapping Data Flow, a separate resource again. Declaring a port site pointing at inputs[] or outputs[] would read a DATASET REFERENCE as if it were a column, which is a fabrication of a kind no provenance check would catch. learn.microsoft.com/en-us/azure/data-factory/copy-activity-overview and .../concepts-data-flow-overview",
+      "port_sites": [],
+      "group_site": null,
+      "_attr_site_comment": "DELIBERATELY ABSENT, and MEASURED as such. A SELF_ATTRS attr site was configured, and removing it left both fixtures' output BYTE-IDENTICAL: an activity's own scalar members are name, type and description, and all three are consumed as identity, so the site had nothing left to report. Every remaining ADF fact lives on a NESTED child object -- policy, typeProperties, inputs, outputs -- and is reached by CHILD_ATTR instead. Kettle is the opposite: removing its SELF_ATTRS site raises safe-stop-gen-rows.ktr from 62.5% to 78.1% by hiding 8 real gaps.",
+      "attr_site": null
+    },
+    "self_def_sites": {}
+  },
+  "kind_dispatch": {
+    "_comment": "Activity type -> IR element $kind. EVERY entry is null, and that is the measurement, not a shortcut. The hydrator accepts SourceQualifier and ExpressionTransformation. An ADF pipeline activity is neither: it is a unit of ORCHESTRATION that invokes work elsewhere -- a notebook, a copy engine, a validation check. Mapping Copy to SourceQualifier was considered and rejected: a Copy activity reads AND writes, so calling it a source would state half of what it does and invent the direction of the other half, and it carries no columns for a SourceQualifier to hold anyway.",
+    "Pipeline": {
+      "degrade_to": null,
+      "degrade_reason": "LEFT NULL DELIBERATELY. A pipeline is the unit of work -- a container. Same reasoning as an SSIS Data Flow Task and a DataStage DSJOB. Evidence for ENG-001.",
+      "ir_kind": null,
+      "role": "UNIT_OF_WORK",
+      "supported": false,
+      "def_site": "SELF",
+      "note": "The pipeline: named parameters with default values, a folder, annotations, a publish timestamp. The IR is a flat node/edge graph of data-flow elements and has no representation for any of it. Third platform in a row where the unit of work has no door -- DSJOB, a Kettle transformation, an ADF pipeline."
+    },
+    "Copy": {
+      "degrade_to": "UnsupportedTransformation",
+      "degrade_reason": "LIVE DEFAULT: ir_kind null + degrade_to UnsupportedTransformation, so ADF migrates end to end on the CURRENT hydrator. emit.py consults degrade_to ONLY when ir_kind is null (`if ir_kind is None:`), so a non-null ir_kind the hydrator does not know is not a fallback \u2014 it is a hard failure: 'Producer IR node mycopy declares element $kind DualReaderWriter, which no registered translator handles.' Note pre-ENG-014 ADF could not emit EITHER, because ir_kind and degrade_to were both null and the node left the graph entirely. This is the first state in which ADF migrates at all. THE ENG-014 VARIANT IS PRESERVED at .eng014-revert/platform_adf.WITH-ENG014.json and sets ir_kind DualReaderWriter + external_io, which measured ADF fit 35.7->54.5% and 51.7->74.2%, NO_SLOT 31->18. Restore it together with engine branch feature/gvenegas/eng014-kind-widening (commit 2e12a2ddc54), which teaches the hydrator the kind. The two must move together.",
+      "ir_kind": null,
+      "role": "COPY",
+      "supported": true,
+      "def_site": "SELF",
+      "external_io": "Reads|Writes",
+      "_external_io_slots_comment": "Which no_slot_facts the widened classification can now HOLD. DELIBERATELY NARROW. The dataset references and the source/sink types ARE the read spec and the write spec, and a dual reader/writer node has somewhere to put them. Everything else stays NO_SLOT on purpose: copy_source_store_settings / copy_sink_store_settings name a CONNECTION (AzureBlobFSReadSettings / AzureBlobFSWriteSettings) which is ENG-002; activity_policy_timeout and activity_policy_secure_input are execution policy, ENG-012; copy_wildcard_file_name and copy_recursive are file-source READ OPTIONS that no ticket covers. Promoting any of those would credit ENG-014 with closing gaps it does not close.",
+      "external_io_slots": {
+        "ExternalRead": {
+          "DatasetReference": "input_dataset_reference",
+          "SourceType": "copy_source_type"
+        },
+        "ExternalWrite": {
+          "DatasetReference": "output_dataset_reference",
+          "SinkType": "copy_sink_type"
+        }
+      },
+      "note": "The closest thing ADF has to a data-flow element, and under ENG-014 it finally fits the CLASSIFICATION: one activity holding a source reader and a sink writer is expressible as one node carrying two external-I/O facts, rather than needing to be split into a source node, a target node and an invented edge. What ENG-014 does NOT supply is column metadata -- the pipeline JSON states no columns for either end, so InputColumns/OutputColumns stay unmet and the census stays Partial rather than Success. See findings/25: ADF needs this ticket AND column information from another source."
+    },
+    "SynapseNotebook": {
+      "degrade_to": null,
+      "degrade_reason": "LEFT NULL DELIBERATELY. Orchestration: it invokes a notebook that is not in this file. Degrading it would state that a data hop exists where the document states a Succeeded dependency.",
+      "ir_kind": null,
+      "role": "TASK",
+      "supported": false,
+      "def_site": "SELF",
+      "note": "Runs a Synapse notebook by reference, passing parameters. The transformation logic is in the notebook, which is a separate resource not present in the pipeline file -- structurally the same gap as DataStage's JavaStagePX, where the business logic lived in a Java class outside the export."
+    },
+    "Validation": {
+      "degrade_to": null,
+      "degrade_reason": "LEFT NULL DELIBERATELY. A precondition gate, i.e. orchestration. Same reasoning as SynapseNotebook.",
+      "ir_kind": null,
+      "role": "TASK",
+      "supported": false,
+      "def_site": "SELF",
+      "note": "Blocks the pipeline until a referenced dataset exists and meets a size criterion, or times out. A precondition gate. The IR has no concept of a gate, a wait, or a pipeline that has not started yet."
+    },
+    "unmapped_kind_degrade_to": "UnsupportedTransformation"
+  },
+  "role_to_node_type": {
+    "COPY": "transformation",
+    "TASK": "transformation",
+    "UNIT_OF_WORK": "transformation",
+    "unmapped_role_node_type": "unknown",
+    "unmapped_role_reason": "Declared for the same reason as Informatica's, where it was a MEASURED crash. ADF activity types are an open and growing set and this table maps three, so an unmapped role is near-certain on any real pipeline. Not exercised by either fixture.",
+    "known_defect": "NOT ONE of this platform's roles has a node type of its own. All three are emitted as transformation-typed nodes with a null $kind, and a control-flow dependency edge -- which may be conditioned on Failed or Skipped -- is emitted as an ordinary data edge. Both are wrong in kind rather than merely lossy. There is no `source` and no `target` node in either emitted graph, because a pipeline has neither."
+  },
+  "naming_policy": {
+    "_comment": "An activity key IS its human name, as in Informatica and Kettle.",
+    "policy_id": "adf.modelname.v1",
+    "name_source": "activity/name",
+    "name_from": "DISPLAY_NAME",
+    "element_name_from": "DISPLAY_NAME",
+    "lowercase": true,
+    "sanitize_identifier": {
+      "allowed_chars": "abcdefghijklmnopqrstuvwxyz0123456789_",
+      "allowed_leading_chars": "abcdefghijklmnopqrstuvwxyz_",
+      "replace_illegal_with": "_",
+      "leading_prefix": "m_",
+      "_comment": "MEASURED on Pentaho: 'Dummy (do nothing)' -> 'dummy_(do_nothing)' and 'safe-stop-gen-rows' kept its hyphens; neither is a legal UNQUOTED Snowflake or dbt identifier. Declared on EVERY platform rather than only the one that needed it, so a legal name is provably unaffected: the IR of the other four is byte-identical with this rule present. One replacement character per illegal character, NOT a collapsed run -- collapsing merges 'a--b' into 'a_b', and merging two distinct names is the defect qualify_with_container exists to prevent. A name that cannot start a bare identifier is PREFIXED, not trimmed, for the same reason. Residual merges remain possible in principle, so emit() asserts injectivity across the document and raises rather than letting the dbt writer overwrite one model with another."
+    },
+    "replace_whitespace_with": "_",
+    "split_camel_case": false,
+    "strip_kind_prefixes": false,
+    "qualify_with_task": false,
+    "qualify_with_container": null,
+    "qualify_reason": "LEFT OFF. A pipeline JSON holds one pipeline and activity names are unique within it, so no collision can arise inside one file. Every ADF node is also null-kind, so no model is emitted to name.",
+    "known_risk": "MEASURED: 'Validate_adf_FileSystemInput_activity' lowercases to a 38-character model name, and ADF permits activity names up to 55 characters. No collision or illegal character occurs in either fixture. Activity-name uniqueness is undocumented (see key_scope), so a collision between two same-named activities would silently merge two nodes."
+  },
+  "column_propagation": {
+    "_comment": "DECLARED OFF, and this is the entry that shows the knob is a real decision rather than a default. Neither ADF fixture contains a Mapping Data Flow: every element is a PIPELINE ACTIVITY (Copy, ExecutePipeline, Lookup, Wait), the edges are dependsOn ORCHESTRATION order and not a data buffer at all, and no activity states a column list. Propagating along a dependsOn edge would assert that one activity's output rows reach the next, which ADF does not state and which is usually false. NONE is the correct answer here; it is not a placeholder for work not done.",
+    "mode": "NONE",
+    "algorithm_id": "predecessor_column_propagation.v1",
+    "stop_at_kinds": [],
+    "stop_at_roles": []
+  },
+  "port_policy": {
+    "_comment": "Every value here is inert: with no port site there is no port to classify. The porttype lists are non-empty sentinels rather than [] so that a future port site cannot silently classify every column as neither input nor output.",
+    "output_column_order": "ADF_STATES_NO_COLUMNS",
+    "input_column_naming": "UPSTREAM_FIELD",
+    "_input_columns_from_comment": "NONE, for a stronger reason than Pentaho's. A dependsOn entry is ORCHESTRATION order between activities, not a data buffer, and no activity in either fixture states a column list in either direction -- port_policy already spells output_porttypes as __ADF_STATES_NO_OUTPUT_COLUMNS__. Reading InputColumns off a dependsOn edge would assert that one activity's rows reach the next, which ADF does not state and which is usually false. Same position as column_propagation.mode=NONE, and for the same reason.",
+    "input_columns_from": "NONE",
+    "input_column_type_from": "LOCAL_PORT",
+    "emit_scale_when_zero": true,
+    "inline_local_variables": false,
+    "drop_local_variables_from_outputs": false,
+    "port_reference_case_insensitive": false,
+    "local_variable_porttype": "__ADF_HAS_NO_LOCAL_VARIABLE_PORTTYPE__",
+    "output_porttypes": [
+      "__ADF_STATES_NO_OUTPUT_COLUMNS__"
+    ],
+    "input_porttypes": [
+      "__ADF_STATES_NO_INPUT_COLUMNS__"
+    ],
+    "exclude_port_groups_with_flag": null,
+    "ref_field_passthrough_rule": null
+  },
+  "type_vocabulary": {
+    "_comment": "There is no type vocabulary to record, because there are no columns and therefore no types. This is the first platform of the five with nothing to put here. Types exist in ADF -- in the dataset resources and in Mapping Data Flow schemas -- and none of them is in a pipeline file.",
+    "carry": "ADF_PIPELINE_STATES_NO_COLUMN_TYPES",
+    "precision_field_carries": null,
+    "known_defect": "Not applicable: no column is emitted, so no type is emitted."
+  },
+  "edge_policy": {
+    "_comment": "ADF STATES its element-level edges, like SSIS, DataStage and Kettle and unlike Informatica. The label is the dependency CONDITION, which is a genuinely new kind of edge label: an SSIS output-group name and a DataStage link name identify a branch, whereas Succeeded / Failed / Skipped / Completed is a PREDICATE on the predecessor's outcome. The IR label is a string, so the value survives and its meaning does not.",
+    "element_edges_from": "EXPLICIT_EDGE_ELEMENTS",
+    "collapse_connectors_by": null,
+    "label_source": "DEPENDENCY_CONDITION",
+    "label_when_absent": null
+  },
+  "default_value_policy": {
+    "_comment": "No analogue at the column level, because there is no column level. Pipeline PARAMETERS do have defaultValue, but a parameter is not a port and feeding it here would put a pipeline-scoped value into a per-column mechanism.",
+    "error_function_prefix": null,
+    "error_default_disposition": null,
+    "literal_default_on_unconnected_input": null,
+    "discardable_label": "DISCARDABLE",
+    "load_bearing_label": "LOAD_BEARING"
+  },
+  "expression_syntax": {
+    "_comment": "UNEXERCISED BY THE SCANNER, but PRESENT IN THE SOURCE -- the first platform where those two differ. myPipeline.json contains four ADF expressions, e.g. @concat('myfolder/',formatDateTime(utcnow(),'yyyyMMdd')). They are not scanned because the scanner runs on a PORT's expression and this platform has no ports: an ADF expression sits in a typeProperties value, not on a column. So the values below are declared from Microsoft's documentation and are not tested by the run. `@` introduces an expression, `@@` escapes a literal `@`, and `@{...}` interpolates inside a string.",
+    "string_quotes": [
+      "'"
+    ],
+    "reference_delimiters": [
+      "@{",
+      "}"
+    ],
+    "identifier_extra_chars": ".",
+    "case_insensitive_resolution": false,
+    "expression_property_read": null,
+    "expression_property_ignored": null
+  },
+  "_containment_slots_comment": "ENG-001 SPIKE. Names the no_slot_facts whose fact IS a containment relationship and which a modelled `node.container` field can now hold. Both rules stay declared in no_slot_facts so that reverting this one key restores the baseline exactly; the promotion suppresses them rather than deleting them. `activity_containment` fires on the two activities in each fixture (the CONTAINER rule kind). `pipeline_folder` fires only on the pipeline element of myPipeline.json -- adf_First_Pipeline.json declares no folder, so the rule does not fire there and no slot appears, which is the correct behaviour for a fact the source does not state. Note this is promoted for UNSUPPORTED elements too: the notebook and validation activities have no representable kind and still live inside a pipeline, and ENG-001 was found on the 31 non-job DataStage elements, none of which is a supported kind.",
+  "containment_slots": {
+    "ContainerId": "activity_containment",
+    "Folder": "pipeline_folder"
+  },
+  "no_slot_facts": [
+    {
+      "id": "activity_policy_timeout",
+      "from": "CHILD_ATTR",
+      "xpath": "./policy",
+      "attr": "timeout",
+      "key_attr": "timeout"
+    },
+    {
+      "id": "activity_policy_retry",
+      "from": "CHILD_ATTR",
+      "xpath": "./policy",
+      "attr": "retry",
+      "key_attr": "retry"
+    },
+    {
+      "id": "activity_policy_retry_interval",
+      "from": "CHILD_ATTR",
+      "xpath": "./policy",
+      "attr": "retryIntervalInSeconds",
+      "key_attr": "retryIntervalInSeconds"
+    },
+    {
+      "id": "activity_policy_secure_input",
+      "from": "CHILD_ATTR",
+      "xpath": "./policy",
+      "attr": "secureInput",
+      "key_attr": "secureInput"
+    },
+    {
+      "id": "activity_policy_secure_output",
+      "from": "CHILD_ATTR",
+      "xpath": "./policy",
+      "attr": "secureOutput",
+      "key_attr": "secureOutput"
+    },
+    {
+      "id": "input_dataset_reference",
+      "from": "CHILD_ATTR",
+      "xpath": "./inputs",
+      "attr": "referenceName",
+      "key_attr": "referenceName"
+    },
+    {
+      "id": "output_dataset_reference",
+      "from": "CHILD_ATTR",
+      "xpath": "./outputs",
+      "attr": "referenceName",
+      "key_attr": "referenceName"
+    },
+    {
+      "id": "notebook_reference",
+      "from": "CHILD_ATTR",
+      "xpath": "./typeProperties/notebook",
+      "attr": "referenceName",
+      "key_attr": "referenceName"
+    },
+    {
+      "id": "validated_dataset_reference",
+      "from": "CHILD_ATTR",
+      "xpath": "./typeProperties/dataset",
+      "attr": "referenceName",
+      "key_attr": "referenceName"
+    },
+    {
+      "id": "copy_source_type",
+      "from": "CHILD_ATTR",
+      "xpath": "./typeProperties/source",
+      "attr": "type",
+      "key_attr": "type"
+    },
+    {
+      "id": "copy_sink_type",
+      "from": "CHILD_ATTR",
+      "xpath": "./typeProperties/sink",
+      "attr": "type",
+      "key_attr": "type"
+    },
+    {
+      "id": "copy_source_store_settings",
+      "from": "CHILD_ATTR",
+      "xpath": "./typeProperties/source/storeSettings",
+      "attr": "type",
+      "key_attr": "type"
+    },
+    {
+      "id": "copy_sink_store_settings",
+      "from": "CHILD_ATTR",
+      "xpath": "./typeProperties/sink/storeSettings",
+      "attr": "type",
+      "key_attr": "type"
+    },
+    {
+      "id": "copy_wildcard_file_name",
+      "from": "CHILD_ATTR",
+      "xpath": "./typeProperties/source/storeSettings",
+      "attr": "wildcardFileName",
+      "key_attr": "wildcardFileName"
+    },
+    {
+      "id": "copy_recursive",
+      "from": "CHILD_ATTR",
+      "xpath": "./typeProperties/source/storeSettings",
+      "attr": "recursive",
+      "key_attr": "recursive"
+    },
+    {
+      "id": "copy_wildcard_folder_expression",
+      "from": "CHILD_ATTR",
+      "xpath": "./typeProperties/source/storeSettings/wildcardFolderPath",
+      "attr": "value",
+      "key_attr": "value",
+      "provenance": "RESIDUE"
+    },
+    {
+      "id": "validation_minimum_size",
+      "from": "CHILD_ATTR",
+      "xpath": "./typeProperties",
+      "attr": "minimumSize",
+      "key_attr": "minimumSize"
+    },
+    {
+      "id": "validation_sleep",
+      "from": "CHILD_ATTR",
+      "xpath": "./typeProperties",
+      "attr": "sleep",
+      "key_attr": "sleep"
+    },
+    {
+      "id": "validation_timeout",
+      "from": "CHILD_ATTR",
+      "xpath": "./typeProperties",
+      "attr": "timeout",
+      "key_attr": "timeout"
+    },
+    {
+      "id": "notebook_parameter_expression",
+      "from": "CHILD_ATTR",
+      "xpath": "./typeProperties/parameters/*/value",
+      "attr": "value",
+      "key_attr": "value",
+      "provenance": "RESIDUE"
+    },
+    {
+      "id": "dataset_parameter_expression",
+      "from": "CHILD_ATTR",
+      "xpath": "./inputs/parameters/*/value",
+      "attr": "value",
+      "key_attr": "value",
+      "provenance": "RESIDUE"
+    },
+    {
+      "id": "sink_dataset_parameter_expression",
+      "from": "CHILD_ATTR",
+      "xpath": "./outputs/parameters/*/value",
+      "attr": "value",
+      "key_attr": "value",
+      "provenance": "RESIDUE"
+    },
+    {
+      "id": "pipeline_parameter_default",
+      "from": "CHILD_ATTR",
+      "xpath": "./properties/parameters/*",
+      "attr": "defaultValue",
+      "key_attr": "defaultValue"
+    },
+    {
+      "id": "pipeline_folder",
+      "from": "CHILD_ATTR",
+      "xpath": "./properties/folder",
+      "attr": "name",
+      "key_attr": "name"
+    },
+    {
+      "id": "pipeline_last_publish_time",
+      "from": "CHILD_ATTR",
+      "xpath": "./properties",
+      "attr": "lastPublishTime",
+      "key_attr": "lastPublishTime"
+    },
+    {
+      "id": "activity_containment",
+      "from": "CONTAINER",
+      "detail": "activity lives inside pipeline {container}; the IR graph is flat and has no node for the pipeline it belongs to"
+    }
+  ],
+  "neutral_defaults": {
+    "_comment": "A rule for the `type` member was WRITTEN, MEASURED and REMOVED: ELEMENT_ATTR rules apply to every element, so a rule for the pipeline's resource type also fired on each ACTIVITY and reported its activity type -- a value already accounted for by element.$kind, which reports it as MISSING with the type named in the detail. It was counted twice and the rule id named the wrong thing. Removed. || Only values Microsoft DOCUMENTS as the default are listed, so a fact is suppressed on evidence and not on a guess. retry 0 and retryIntervalInSeconds 30 are documented defaults; secureOutput is documented as defaulting to false. secureInput is DELIBERATELY ABSENT from this list: it is real and documented in the REST reference but its default is not stated anywhere, and the concepts-doc policy table omits the property entirely -- so `secureInput: false` creates an obligation rather than being assumed neutral. `timeout` is also absent, and cannot be resolved: the concepts doc says the default is 12 hours and the REST reference says 7 days, so there is no single default to compare against. Note these keys apply to CHILD_ATTR facts by the rule's key, which is how a policy value on a child object is reached.",
+    "retry": "0",
+    "retryIntervalInSeconds": "30",
+    "secureOutput": "false"
+  },
+  "dialect": {
+    "_comment": "UNEXERCISED. Four expressions are present in the source and none reaches the scanner, because this platform has no ports for the scanner to run over. The divergent entry below is recorded from documentation for the next fixture and is not tested.",
+    "identical": [
+      "(",
+      ")",
+      ","
+    ],
+    "syntactically_identical_semantically_divergent": {
+      "@": "ADF '@' introduces an expression when it is the FIRST character of a value, and is a literal '@' anywhere else; '@@' escapes it. Snowflake '@' names a STAGE. Same character, unrelated meanings, and unlike a divergent operator this one changes meaning based on POSITION in the string rather than on operand type."
+    },
+    "divergent_operator_lengths": [
+      1
+    ],
+    "known_functions_identical": [],
+    "unknown_identifier_disposition": "RESIDUE"
+  },
+  "residue": {
+    "_comment": "Facts that structure identifies but cannot RESOLVE.",
+    "no_column_metadata_anywhere": "The single largest gap of any platform in the spike. A pipeline JSON states no column, no type, no precision and no column mapping. Schema is in the referenced DATASET resources; column-level lineage is in a Mapping Data Flow resource. Both are separate files and neither is in a pipeline export, so a pipeline alone cannot populate InputColumns or OutputColumns for any activity at all.",
+    "dataset_and_linked_service_resolution": "Every reference -- inputs, outputs, typeProperties.dataset, typeProperties.notebook -- is a referenceName into another resource. Resolving any of them needs the rest of the factory.",
+    "expression_language": "ADF's expression language, with @, @{} interpolation, pipeline().parameters.X, dataset(), activity().output, and a function library (concat, formatDateTime, utcnow, ...). Four instances are present and untouched because they are not attached to a column.",
+    "control_flow_translation": "dependencyConditions Succeeded / Failed / Skipped / Completed make an edge CONDITIONAL on the predecessor's outcome. The IR edge has a label and no predicate, so Failed and Succeeded emit the same shape of edge. There is no analogue in any prior platform: an SSIS precedence constraint is the nearest, and the SSIS fixture had none.",
+    "copy_is_two_nodes": "One Copy activity is a reader and a writer. Representing it faithfully means splitting one source element into two IR nodes plus an edge, which no other platform in this spike has required and which the identification framework has no mechanism for.",
+    "parameter_scopes": "Pipeline parameters, activity-level dataset parameters and notebook parameters are three different scopes, all called `parameters`, all resolved at runtime.",
+    "activity_scalar_residue_not_swept": "A DECLARED EXCLUSION, stated because the other four tables now each say something about this family. The residual property sweep (`ATTR_RESIDUE`, declared on the DataStage and SSIS tables) raises one obligation per element property no rule reads. It is NOT declared here and cannot be: `structure.self_def_site._attr_site_comment` records that this table has NO attr_site at all, deliberately and with the measurement -- configuring a SELF_ATTRS one left both fixtures' output byte-identical because an activity's own scalar members are name, type and description and all three are already read. With no attr_site the property bag is empty on every element, so a sweep would be a check incapable of firing; `emit.Emitter._assert_attr_residue_usable` RAISES if it is declared here anyway. WHERE THIS PLATFORM'S EQUIVALENT COST ACTUALLY LIVES: an ADF activity's configuration is not a flat property bag but nested `typeProperties` objects, and those are covered by the CHILD_ATTR rules plus, structurally, by `no_column_metadata_anywhere` above -- which is the larger fact and is already the first entry in this list."
+  }
+}

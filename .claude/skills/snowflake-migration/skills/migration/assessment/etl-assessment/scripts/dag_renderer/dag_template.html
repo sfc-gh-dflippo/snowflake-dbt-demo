@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>ETL DAG</title>
+  <script src="https://unpkg.com/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+  <script src="https://unpkg.com/dagre@0.8.5/dist/dagre.min.js"></script>
+  <script src="https://unpkg.com/cytoscape-dagre@2.5.0/cytoscape-dagre.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: system-ui, -apple-system, sans-serif; background: #F9FAFB; min-height: 100vh; }
+    .header {
+      background: linear-gradient(135deg, #8B5CF6, #7C3AED);
+      color: white;
+      padding: 20px 24px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .header h1 { font-size: 1.5rem; font-weight: 600; margin-bottom: 4px; }
+    .header p { font-size: 0.875rem; opacity: 0.9; }
+    .controls {
+      padding: 12px 24px;
+      background: white;
+      border-bottom: 1px solid #E5E7EB;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .controls button {
+      padding: 6px 16px;
+      background: #6B7280;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.875rem;
+    }
+    .controls button:hover { background: #4B5563; }
+    #cy {
+      height: calc(100vh - 180px);
+      background: white;
+      margin: 16px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .legend {
+      display: flex;
+      gap: 20px;
+      padding: 12px 24px;
+      background: white;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      color: #4B5563;
+    }
+    .legend-color {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      border: 2px solid;
+    }
+    .legend-success { background: #DCFCE7; border-color: #22C55E; }
+    .legend-partial { background: #FEF3C7; border-color: #F59E0B; }
+    .legend-notsupported { background: #FEE2E2; border-color: #EF4444; }
+    .legend-unknown { background: #F3F4F6; border-color: #6B7280; }
+    .clickable-hint {
+      font-size: 0.75rem;
+      color: #6B7280;
+      margin-left: auto;
+    }
+    #sqlTooltip {
+      position: fixed;
+      display: none;
+      background: #1E293B;
+      color: #E2E8F0;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+      font-size: 12px;
+      max-width: 600px;
+      max-height: 400px;
+      overflow: auto;
+      z-index: 1000;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      white-space: pre-wrap;
+      word-break: break-word;
+      line-height: 1.5;
+    }
+    #sqlTooltip .tooltip-header {
+      font-family: system-ui, sans-serif;
+      font-weight: 600;
+      color: #94A3B8;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #334155;
+    }
+    #sqlTooltip .sql-content {
+      color: #A5F3FC;
+    }
+    .sql-indicator {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: #3B82F6;
+      border-radius: 50%;
+      margin-left: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1 id="dagTitle">ETL DAG</h1>
+    <p id="dagSubtitle"></p>
+  </div>
+
+  <div class="controls">
+    <button id="fitBtn">Fit to Screen</button>
+    <button id="zoomInBtn">Zoom In</button>
+    <button id="zoomOutBtn">Zoom Out</button>
+    <button id="layoutLRBtn" style="background: #3B82F6;">&#8592; &#8594; Left to Right</button>
+    <button id="layoutTBBtn">&#8595; Top to Bottom</button>
+    <span class="clickable-hint" id="clickHint"></span>
+  </div>
+
+  <div id="cy"></div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-color legend-success"></div> Success (Supported)</div>
+    <div class="legend-item"><div class="legend-color legend-partial"></div> Partial (Needs Review)</div>
+    <div class="legend-item"><div class="legend-color legend-notsupported"></div> Not Supported</div>
+    <div class="legend-item"><div class="legend-color legend-unknown"></div> Unknown</div>
+  </div>
+
+  <!-- SQL Tooltip for ExecuteSQLTask nodes -->
+  <div id="sqlTooltip">
+    <div class="tooltip-header">SQL Statement</div>
+    <div class="sql-content" id="sqlContent"></div>
+  </div>
+
+  <script id="dag-data" type="application/json">/*__DAG_DATA__*/</script>
+
+  <script>
+    // Status -> color map (ported from get_node_color_by_status).
+    function colorForStatus(status) {
+      switch ((status || '').toUpperCase()) {
+        case 'SUCCESS': return { background: '#DCFCE7', border: '#22C55E' };
+        case 'PARTIAL': return { background: '#FEF3C7', border: '#F59E0B' };
+        case 'NOTSUPPORTED': return { background: '#FEE2E2', border: '#EF4444' };
+        default: return { background: '#F3F4F6', border: '#6B7280' };
+      }
+    }
+
+    // Subtype -> short display name (ported from get_short_type_name).
+    function shortType(subtype) {
+      var short = subtype || 'Unknown';
+      if (short.indexOf('Microsoft.') === 0) short = short.slice(10);
+      if (short.indexOf('STOCK:') === 0) short = short.slice(6);
+      if (short.indexOf('SSIS.') === 0) short = short.slice(5);
+      if (short === 'Pipeline.3') return 'Data Flow (Old Format)';
+      return short;
+    }
+
+    function readGraph() {
+      var el = document.getElementById('dag-data');
+      if (!el) return {};
+      var raw = el.textContent || '';
+      if (!raw.trim() || raw.indexOf('/*__DAG_') === 0) return {};
+      try {
+        return JSON.parse(raw) || {};
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function buildElements(graph) {
+      var elements = [];
+      var nodes = (graph && graph.nodes) || [];
+      var edges = (graph && graph.edges) || [];
+
+      nodes.forEach(function (node) {
+        var color = colorForStatus(node.status);
+        var sqlInfo = node.sql_info || null;
+        var data = {
+          id: node.id,
+          label: node.label + '\n[' + shortType(node.subtype) + ']',
+          status: node.status || 'Unknown',
+          subtype: node.subtype || 'Unknown',
+          isContainer: node.is_container === true,
+          bgColor: color.background,
+          borderColor: color.border,
+          hasSql: sqlInfo !== null,
+          sqlStatement: sqlInfo ? (sqlInfo.sql || '') : '',
+          sqlSourceType: sqlInfo ? (sqlInfo.source_type || '') : '',
+          taskName: sqlInfo ? (sqlInfo.task_name || '') : ''
+        };
+        if (node.parent != null) {
+          data.parent = node.parent;
+        }
+        elements.push({ data: data });
+      });
+
+      edges.forEach(function (edge) {
+        elements.push({
+          data: {
+            id: edge.from + '_to_' + edge.to,
+            source: edge.from,
+            target: edge.to
+          }
+        });
+      });
+
+      return elements;
+    }
+
+    var graph = readGraph();
+    var elements = buildElements(graph);
+
+    if (graph.title) {
+      document.title = graph.title;
+      document.getElementById('dagTitle').textContent = graph.title;
+    }
+    if (graph.subtitle) {
+      document.getElementById('dagSubtitle').textContent = graph.subtitle;
+    }
+
+    // data_flow -> Left-to-Right, control_flow -> Top-to-Bottom.
+    var initialDirection = graph.kind === 'data_flow' ? 'LR' : 'TB';
+
+    var cy = cytoscape({
+      container: document.getElementById('cy'),
+      elements: elements,
+      style: [
+        {
+          selector: 'node',
+          style: {
+            'label': 'data(label)',
+            'text-wrap': 'wrap',
+            'text-valign': 'center',
+            'text-halign': 'center',
+            'font-size': '11px',
+            'font-family': 'system-ui, sans-serif',
+            'background-color': 'data(bgColor)',
+            'border-color': 'data(borderColor)',
+            'border-width': 2,
+            'padding': '10px',
+            'shape': 'roundrectangle',
+            'width': 'label',
+            'height': 'label'
+          }
+        },
+        {
+          selector: 'node[?isContainer]',
+          style: {
+            'background-opacity': 0.3,
+            'border-width': 3,
+            'border-style': 'dashed',
+            'font-weight': 'bold',
+            'font-size': '12px',
+            'text-valign': 'top',
+            'text-margin-y': 10,
+            'padding': '25px'
+          }
+        },
+        {
+          selector: ':parent',
+          style: {
+            'background-color': '#F8FAFC',
+            'background-opacity': 0.7,
+            'border-width': 2,
+            'border-color': '#94A3B8',
+            'border-style': 'dashed',
+            'text-valign': 'top',
+            'text-margin-y': 8,
+            'padding': '20px'
+          }
+        },
+        {
+          selector: 'edge',
+          style: {
+            'width': 2,
+            'line-color': '#6B7280',
+            'target-arrow-color': '#6B7280',
+            'target-arrow-shape': 'triangle',
+            'curve-style': 'bezier',
+            'arrow-scale': 1.2
+          }
+        },
+        {
+          selector: 'node:selected',
+          style: {
+            'border-width': 4,
+            'border-color': '#3B82F6'
+          }
+        },
+        {
+          selector: '.highlighted',
+          style: {
+            'border-width': 4,
+            'border-color': '#3B82F6',
+            'line-color': '#3B82F6',
+            'target-arrow-color': '#3B82F6'
+          }
+        },
+        {
+          selector: 'node[?hasSql]',
+          style: {
+            'border-style': 'double',
+            'border-width': 4
+          }
+        },
+        {
+          selector: 'node[?hasSql]:hover',
+          style: {
+            'overlay-color': '#8B5CF6',
+            'overlay-opacity': 0.15
+          }
+        }
+      ],
+      layout: { name: 'preset' }
+    });
+
+    // Compute levels based on topological order
+    function computeLevels() {
+      const nodes = cy.nodes();
+      const edges = cy.edges();
+
+      // Build adjacency and reverse adjacency
+      const successors = {};
+      const predecessors = {};
+      const indegree = {};
+
+      nodes.forEach(n => {
+        const id = n.id();
+        successors[id] = [];
+        predecessors[id] = [];
+        indegree[id] = 0;
+      });
+
+      edges.forEach(e => {
+        const src = e.data('source');
+        const tgt = e.data('target');
+        if (successors[src] && predecessors[tgt]) {
+          successors[src].push(tgt);
+          predecessors[tgt].push(src);
+          indegree[tgt]++;
+        }
+      });
+
+      // Compute levels using longest path (ensures proper ordering)
+      const level = {};
+      const order = {};
+
+      // Initialize roots at level 0
+      const queue = [];
+      nodes.forEach(n => {
+        const id = n.id();
+        if (indegree[id] === 0) {
+          level[id] = 0;
+          queue.push(id);
+        }
+      });
+
+      // BFS to compute levels
+      let orderIdx = 0;
+      const processed = new Set();
+
+      while (queue.length > 0) {
+        // Sort queue by current level to process in order
+        queue.sort((a, b) => (level[a] || 0) - (level[b] || 0));
+        const current = queue.shift();
+
+        if (processed.has(current)) continue;
+        processed.add(current);
+
+        order[current] = orderIdx++;
+
+        for (const next of (successors[current] || [])) {
+          // Level is max of all predecessors + 1
+          const newLevel = (level[current] || 0) + 1;
+          level[next] = Math.max(level[next] || 0, newLevel);
+          indegree[next]--;
+          if (indegree[next] === 0) {
+            queue.push(next);
+          }
+        }
+      }
+
+      // Handle any unprocessed nodes (cycles or disconnected)
+      nodes.forEach(n => {
+        const id = n.id();
+        if (!processed.has(id)) {
+          level[id] = 0;
+          order[id] = orderIdx++;
+        }
+      });
+
+      // Group nodes by level
+      const levelGroups = {};
+      nodes.forEach(n => {
+        const id = n.id();
+        const lvl = level[id] || 0;
+        if (!levelGroups[lvl]) levelGroups[lvl] = [];
+        levelGroups[lvl].push({ id, order: order[id], node: n });
+      });
+
+      // Sort each level group by order
+      Object.keys(levelGroups).forEach(lvl => {
+        levelGroups[lvl].sort((a, b) => a.order - b.order);
+      });
+
+      return { levelGroups, levels: Object.keys(levelGroups).map(Number).sort((a, b) => a - b) };
+    }
+
+    // Compute positions for Left-to-Right layout
+    function computePositionsLR() {
+      const { levelGroups, levels } = computeLevels();
+      const levelWidth = 250;
+      const nodeHeight = 120;
+      const startX = 100;
+      const startY = 100;
+
+      const positions = {};
+
+      levels.forEach(lvl => {
+        const group = levelGroups[lvl];
+        const x = startX + lvl * levelWidth;
+
+        group.forEach((item, idx) => {
+          const y = startY + idx * nodeHeight;
+          positions[item.id] = { x, y };
+        });
+      });
+
+      return positions;
+    }
+
+    // Compute positions for Top-to-Bottom layout
+    function computePositionsTB() {
+      const { levelGroups, levels } = computeLevels();
+      const levelHeight = 150;
+      const nodeWidth = 200;
+      const startX = 100;
+      const startY = 100;
+
+      const positions = {};
+
+      levels.forEach(lvl => {
+        const group = levelGroups[lvl];
+        const y = startY + lvl * levelHeight;
+
+        group.forEach((item, idx) => {
+          const x = startX + idx * nodeWidth;
+          positions[item.id] = { x, y };
+        });
+      });
+
+      return positions;
+    }
+
+    // Apply layout
+    function runLayout(direction) {
+      const positions = direction === 'TB' ? computePositionsTB() : computePositionsLR();
+
+      cy.nodes().forEach(n => {
+        const pos = positions[n.id()];
+        if (pos) {
+          n.position(pos);
+        }
+      });
+
+      cy.fit(50);
+
+      // Update button styles
+      const lrBtn = document.getElementById('layoutLRBtn');
+      const tbBtn = document.getElementById('layoutTBBtn');
+      if (direction === 'TB') {
+        tbBtn.style.background = '#3B82F6';
+        lrBtn.style.background = '#6B7280';
+      } else {
+        lrBtn.style.background = '#3B82F6';
+        tbBtn.style.background = '#6B7280';
+      }
+    }
+
+    if (elements.length > 0) {
+      runLayout(initialDirection);
+    }
+
+    // Controls
+    document.getElementById('fitBtn').addEventListener('click', () => cy.fit(50));
+    document.getElementById('zoomInBtn').addEventListener('click', () => cy.zoom(cy.zoom() * 1.2));
+    document.getElementById('zoomOutBtn').addEventListener('click', () => cy.zoom(cy.zoom() / 1.2));
+    document.getElementById('layoutLRBtn').addEventListener('click', () => runLayout('LR'));
+    document.getElementById('layoutTBBtn').addEventListener('click', () => runLayout('TB'));
+
+    // Highlight on click
+    cy.on('tap', 'node', function(evt) {
+      cy.elements().removeClass('highlighted');
+      evt.target.addClass('highlighted');
+      evt.target.neighborhood().addClass('highlighted');
+    });
+
+    cy.on('tap', function(evt) {
+      if (evt.target === cy) cy.elements().removeClass('highlighted');
+    });
+
+    // Show hints for interactive nodes
+    const sqlNodes = cy.nodes('[?hasSql]');
+    const hints = [];
+
+    if (sqlNodes.length > 0) {
+      hints.push('Hover SQL Tasks to see query');
+    }
+
+    const hint = document.getElementById('clickHint');
+    if (hint && hints.length > 0) {
+      hint.textContent = hints.join(' | ');
+    }
+
+    // SQL Tooltip for ExecuteSQLTask nodes
+    const sqlTooltip = document.getElementById('sqlTooltip');
+    const sqlContent = document.getElementById('sqlContent');
+    let tooltipVisible = false;
+
+    cy.on('mouseover', 'node[?hasSql]', function(evt) {
+      const node = evt.target;
+      const sql = node.data('sqlStatement');
+
+      if (sql) {
+        sqlContent.textContent = sql;
+
+        // Position tooltip near mouse
+        const renderedPos = node.renderedPosition();
+        const container = document.getElementById('cy');
+        const containerRect = container.getBoundingClientRect();
+
+        let left = containerRect.left + renderedPos.x + 20;
+        let top = containerRect.top + renderedPos.y;
+
+        // Keep tooltip on screen
+        const tooltipWidth = 500;
+        const tooltipHeight = 300;
+        if (left + tooltipWidth > window.innerWidth) {
+          left = window.innerWidth - tooltipWidth - 20;
+        }
+        if (top + tooltipHeight > window.innerHeight) {
+          top = window.innerHeight - tooltipHeight - 20;
+        }
+        if (top < 10) top = 10;
+        if (left < 10) left = 10;
+
+        sqlTooltip.style.left = left + 'px';
+        sqlTooltip.style.top = top + 'px';
+        sqlTooltip.style.display = 'block';
+        tooltipVisible = true;
+      }
+    });
+
+    cy.on('mouseout', 'node[?hasSql]', function() {
+      sqlTooltip.style.display = 'none';
+      tooltipVisible = false;
+    });
+
+    // Hide tooltip when clicking elsewhere
+    cy.on('tap', function() {
+      if (tooltipVisible) {
+        sqlTooltip.style.display = 'none';
+        tooltipVisible = false;
+      }
+    });
+  </script>
+</body>
+</html>

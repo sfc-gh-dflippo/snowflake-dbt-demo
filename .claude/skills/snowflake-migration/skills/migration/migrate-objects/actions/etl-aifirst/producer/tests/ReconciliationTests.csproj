@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <AssemblyName>AiFirst.Producer.Tests</AssemblyName>
+    <EngineBin Condition="'$(EngineBin)' == ''">$(AIFIRST_ENGINE_BIN)</EngineBin>
+    <EngineBin Condition="'$(EngineBin)' != ''">$([MSBuild]::EnsureTrailingSlash('$(EngineBin)'))</EngineBin>
+    <ProducerAssembly Condition="'$(AIFIRST_PRODUCER_ASSEMBLY)' != ''">$(AIFIRST_PRODUCER_ASSEMBLY)</ProducerAssembly>
+    <ProducerAssembly Condition="'$(ProducerAssembly)' == ''">../bin/Debug/net10.0/aifirst-migrate.dll</ProducerAssembly>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="aifirst-migrate">
+      <HintPath>$(ProducerAssembly)</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <Target Name="ValidateEngineBin" BeforeTargets="AddEngineReferences">
+    <Error Condition="'$(EngineBin)' == ''"
+           Text="Set AIFIRST_ENGINE_BIN or pass -p:EngineBin=..." />
+    <Error Condition="'$(EngineBin)' != '' and !Exists('$(EngineBin)')"
+           Text="EngineBin does not exist: $(EngineBin)" />
+  </Target>
+
+  <PropertyGroup>
+    <_ExcludeDlls>$(EngineBin)aifirst-migrate.dll;$(EngineBin)UnitTests.dll;$(EngineBin)Moq.dll;$(EngineBin)Castle.Core.dll;$(EngineBin)Microsoft.VisualStudio.TestPlatform*.dll;$(EngineBin)Microsoft.TestPlatform*.dll;$(EngineBin)MSTest*.dll;$(EngineBin)testhost.dll</_ExcludeDlls>
+  </PropertyGroup>
+
+  <Target Name="AddEngineReferences" BeforeTargets="ResolveReferences">
+    <ItemGroup>
+      <ReferencePath Include="$(EngineBin)*.dll" Exclude="$(_ExcludeDlls)" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="StageEngineRuntime" AfterTargets="Build">
+    <ItemGroup>
+      <_Runtime Include="$(EngineBin)*.dll" Exclude="$(_ExcludeDlls);$(EngineBin)aifirst-migrate.dll" />
+      <_Runtime Include="$(EngineBin)*.json" />
+      <_Native Include="$(EngineBin)runtimes/$(NETCoreSdkPortableRuntimeIdentifier)/native/*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(_Runtime)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(_Native)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
+  </Target>
+</Project>

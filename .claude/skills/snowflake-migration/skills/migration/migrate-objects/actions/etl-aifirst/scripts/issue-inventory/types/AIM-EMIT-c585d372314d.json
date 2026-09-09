@@ -1,0 +1,161 @@
+{
+  "distinguisher": "this is about the RENDERER, not the representation: the element was represented and the step that writes the artifact failed. The representation-side types describe elements that never got that far.",
+  "first_observed": "",
+  "hashed_material": "aim.sig.v1\u001fEMIT\u001fmodel:rendered-output\u001frenderer-raised-an-error",
+  "id": "AIM-EMIT-c585d372314d",
+  "impact": "output-absent",
+  "mint": {
+    "at": "2026-08-03T17:18:36Z",
+    "by": "detector:renderer_failures",
+    "category_novel": false,
+    "classification": {
+      "considered": [
+        {
+          "differs_in": [
+            "category",
+            "construct",
+            "reason"
+          ],
+          "id": "AIM-SHAPE-6f18b6827d1f",
+          "parts": {
+            "category_equal": 0.0,
+            "construct_jaccard": 0.1667,
+            "reason_similarity": 0.3667,
+            "text_similarity": 0.0653
+          },
+          "score": 0.1331
+        },
+        {
+          "differs_in": [
+            "category",
+            "construct",
+            "reason"
+          ],
+          "id": "AIM-REF-19ec51fddf7b",
+          "parts": {
+            "category_equal": 0.0,
+            "construct_jaccard": 0.0,
+            "reason_similarity": 0.36,
+            "text_similarity": 0.1456
+          },
+          "score": 0.0938
+        },
+        {
+          "differs_in": [
+            "category",
+            "construct",
+            "reason"
+          ],
+          "id": "AIM-PRED-47f7de0cd8c0",
+          "parts": {
+            "category_equal": 0.0,
+            "construct_jaccard": 0.0,
+            "reason_similarity": 0.3922,
+            "text_similarity": 0.0473
+          },
+          "score": 0.0855
+        },
+        {
+          "differs_in": [
+            "category",
+            "construct",
+            "reason"
+          ],
+          "id": "AIM-SHAPE-1d790c23a72b",
+          "parts": {
+            "category_equal": 0.0,
+            "construct_jaccard": 0.0,
+            "reason_similarity": 0.375,
+            "text_similarity": 0.0567
+          },
+          "score": 0.0835
+        },
+        {
+          "differs_in": [
+            "category",
+            "construct",
+            "reason"
+          ],
+          "id": "AIM-REF-c5b6a3e418c9",
+          "parts": {
+            "category_equal": 0.0,
+            "construct_jaccard": 0.0,
+            "reason_similarity": 0.3265,
+            "text_similarity": 0.0751
+          },
+          "score": 0.0766
+        },
+        {
+          "differs_in": [
+            "category",
+            "construct",
+            "reason"
+          ],
+          "id": "AIM-EXPR-4d4d56018da3",
+          "parts": {
+            "category_equal": 0.0,
+            "construct_jaccard": 0.0,
+            "reason_similarity": 0.2909,
+            "text_similarity": 0.0469
+          },
+          "score": 0.0652
+        },
+        {
+          "differs_in": [
+            "category",
+            "construct",
+            "reason"
+          ],
+          "id": "AIM-REPR-5161af7f0af6",
+          "parts": {
+            "category_equal": 0.0,
+            "construct_jaccard": 0.0,
+            "reason_similarity": 0.1364,
+            "text_similarity": 0.0712
+          },
+          "score": 0.0379
+        },
+        {
+          "differs_in": [
+            "category",
+            "construct",
+            "reason"
+          ],
+          "id": "AIM-REPR-cbdd94a217f3",
+          "parts": {
+            "category_equal": 0.0,
+            "construct_jaccard": 0.0,
+            "reason_similarity": 0.1364,
+            "text_similarity": 0.0612
+          },
+          "score": 0.0365
+        }
+      ],
+      "rule": "NO_CANDIDATE_ABOVE_THRESHOLD",
+      "verdict": "NOVEL"
+    },
+    "distinguisher": "this is about the RENDERER, not the representation: the element was represented and the step that writes the artifact failed. The representation-side types describe elements that never got that far."
+  },
+  "note": "",
+  "note_lint": {
+    "findings": [],
+    "rule_version": "aim.text.v1",
+    "scope": "instance",
+    "verdict": "PASS"
+  },
+  "sig_version": "aim.sig.v1",
+  "signature": {
+    "category": "EMIT",
+    "construct": "model:rendered-output",
+    "reason": "renderer-raised-an-error"
+  },
+  "supersedes": "",
+  "text": "The generated artifact '{element}' carries {detail}. The renderer did not produce usable output for this element, and the marker is in the file so that anything compiling it fails rather than running it. Nothing here establishes what the artifact should have contained.",
+  "text_lint": {
+    "findings": [],
+    "rule_version": "aim.text.v1",
+    "scope": "type",
+    "verdict": "PASS"
+  },
+  "title": "A generated model carries a marker that stops it from being used"
+}

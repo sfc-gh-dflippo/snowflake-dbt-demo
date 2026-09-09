@@ -1,0 +1,23 @@
+# Sanitized session_status.json derived from wf_op_ar_accomprice (credentials/schema names stripped).
+# Used as a shape reference; tests build working copies via helpers.base_session().
+{
+  "migration_object": "wf_op_ar_accomprice",
+  "migration_object_path": "/sanitized/unit",
+  "orchestration_file": null,
+  "source_file_path": "/sanitized/source.xml",
+  "platform_id": "informatica",
+  "elements": [
+    {"name": "el_fixed_a", "statement": "public.wf_op_ar_accomprice", "status": "fixed", "phase": 1, "test_strategy": "isolated"},
+    {"name": "el_fixed_b", "statement": "public.wf_op_ar_accomprice", "status": "fixed", "phase": 1, "test_strategy": "isolated"},
+    {"name": "el_needs_user", "statement": "public.wf_op_ar_accomprice", "status": "needs-user", "phase": 1, "test_strategy": "grouped:inf0058_dg1"}
+  ],
+  "dbt_projects": [{"name": "m_op_ar_accomprice", "path": "m_op_ar_accomprice", "status": "pending"}],
+  "dbt_nodes": [],
+  "test_environment": {"database": "TEST_DB", "schema": "TEST_SCHEMA"},
+  "roadmap": {
+    "phases": [
+      {"phase": 1, "name": "Orchestration", "scope": "orchestration", "status": "in_progress", "goal": "fix orch", "decisions": [], "parallel_safe": false, "depends_on": []},
+      {"phase": 2, "name": "dbt", "scope": "dbt", "status": "pending", "goal": "fix dbt", "decisions": [], "parallel_safe": false, "depends_on": [1]}
+    ]
+  }
+}

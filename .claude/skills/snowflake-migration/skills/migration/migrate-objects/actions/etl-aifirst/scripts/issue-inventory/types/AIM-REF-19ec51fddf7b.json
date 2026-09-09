@@ -1,0 +1,101 @@
+{
+  "distinguisher": "seed",
+  "first_observed": "tickets/ENG-021-ref-resolved-through-columns.md; tickets/ENG-022-notfound-placeholder-emits-a-dangling-ref.md",
+  "hashed_material": "aim.sig.v1\u001fREF\u001freference:upstream-element\u001freference-does-not-resolve",
+  "id": "AIM-REF-19ec51fddf7b",
+  "impact": "output-absent",
+  "mint": {
+    "at": "2026-08-03T17:18:34Z",
+    "by": "seed",
+    "category_novel": false,
+    "classification": {
+      "considered": [
+        {
+          "differs_in": [
+            "category",
+            "construct",
+            "reason"
+          ],
+          "id": "AIM-SHAPE-1d790c23a72b",
+          "parts": {
+            "category_equal": 0.0,
+            "construct_jaccard": 0.2,
+            "reason_similarity": 0.32,
+            "text_similarity": 0.1306
+          },
+          "score": 0.1436
+        },
+        {
+          "differs_in": [
+            "category",
+            "construct",
+            "reason"
+          ],
+          "id": "AIM-EXPR-4d4d56018da3",
+          "parts": {
+            "category_equal": 0.0,
+            "construct_jaccard": 0.2,
+            "reason_similarity": 0.2807,
+            "text_similarity": 0.0968
+          },
+          "score": 0.1307
+        },
+        {
+          "differs_in": [
+            "category",
+            "construct",
+            "reason"
+          ],
+          "id": "AIM-REPR-5161af7f0af6",
+          "parts": {
+            "category_equal": 0.0,
+            "construct_jaccard": 0.2,
+            "reason_similarity": 0.2174,
+            "text_similarity": 0.0571
+          },
+          "score": 0.112
+        },
+        {
+          "differs_in": [
+            "category",
+            "construct",
+            "reason"
+          ],
+          "id": "AIM-PRED-47f7de0cd8c0",
+          "parts": {
+            "category_equal": 0.0,
+            "construct_jaccard": 0.0,
+            "reason_similarity": 0.2642,
+            "text_similarity": 0.09
+          },
+          "score": 0.0663
+        }
+      ],
+      "rule": "NO_CANDIDATE_ABOVE_THRESHOLD",
+      "verdict": "NOVEL"
+    },
+    "distinguisher": "seed"
+  },
+  "note": "Two measured causes with one symptom. The engine resolves an upstream reference by walking COLUMNS, so an element whose column lists are empty gets a reference to nothing (ENG-021); and when the walk fails the renderer emits a not-found placeholder that reaches the artifact as a dangling reference (ENG-022). A column-poor platform hits both.",
+  "note_lint": {
+    "findings": [],
+    "rule_version": "aim.text.v1",
+    "scope": "instance",
+    "verdict": "PASS"
+  },
+  "sig_version": "aim.sig.v1",
+  "signature": {
+    "category": "REF",
+    "construct": "reference:upstream-element",
+    "reason": "reference-does-not-resolve"
+  },
+  "supersedes": "",
+  "text": "A generated artifact for element '{element}' references the unit '{detail}', and no generated unit of that name is present in the output. The reference cannot resolve, so the artifact cannot run as generated. This states a defect in the generated output and claims nothing about the document.",
+  "text_lint": {
+    "findings": [],
+    "rule_version": "aim.text.v1",
+    "scope": "type",
+    "verdict": "PASS"
+  },
+  "title": "A generated reference names a unit that is not in the output"
+}

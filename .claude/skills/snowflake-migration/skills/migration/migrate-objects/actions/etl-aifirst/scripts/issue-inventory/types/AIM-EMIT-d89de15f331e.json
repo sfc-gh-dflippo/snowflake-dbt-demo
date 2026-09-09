@@ -1,0 +1,204 @@
+{
+  "distinguisher": "a marker-carrying model is unusable and says so; this one is usable-looking and unverified, which is the harder review problem and a different action for a reviewer.",
+  "first_observed": "",
+  "hashed_material": "aim.sig.v1\u001fEMIT\u001fmodel:rendered-output\u001fno-usable-output-from-the-renderer",
+  "id": "AIM-EMIT-d89de15f331e",
+  "impact": "output-unverified",
+  "mint": {
+    "at": "2026-08-03T17:18:43Z",
+    "by": "detector:filled_models",
+    "category_novel": false,
+    "classification": {
+      "considered": [
+        {
+          "differs_in": [
+            "reason"
+          ],
+          "id": "AIM-EMIT-c585d372314d",
+          "parts": {
+            "category_equal": 1.0,
+            "construct_jaccard": 1.0,
+            "reason_similarity": 0.2759,
+            "text_similarity": 0.0816
+          },
+          "score": 0.7174
+        },
+        {
+          "differs_in": [
+            "category",
+            "construct",
+            "reason"
+          ],
+          "id": "AIM-SHAPE-6f18b6827d1f",
+          "parts": {
+            "category_equal": 0.0,
+            "construct_jaccard": 0.1667,
+            "reason_similarity": 0.2571,
+            "text_similarity": 0.0948
+          },
+          "score": 0.1157
+        },
+        {
+          "differs_in": [
+            "category",
+            "construct",
+            "reason"
+          ],
+          "id": "AIM-REPR-5161af7f0af6",
+          "parts": {
+            "category_equal": 0.0,
+            "construct_jaccard": 0.0,
+            "reason_similarity": 0.4074,
+            "text_similarity": 0.0482
+          },
+          "score": 0.0887
+        },
+        {
+          "differs_in": [
+            "category",
+            "construct",
+            "reason"
+          ],
+          "id": "AIM-REPR-cbdd94a217f3",
+          "parts": {
+            "category_equal": 0.0,
+            "construct_jaccard": 0.0,
+            "reason_similarity": 0.4074,
+            "text_similarity": 0.0219
+          },
+          "score": 0.0848
+        },
+        {
+          "differs_in": [
+            "category",
+            "construct",
+            "reason"
+          ],
+          "id": "AIM-EXPR-542a49f76777",
+          "parts": {
+            "category_equal": 0.0,
+            "construct_jaccard": 0.0,
+            "reason_similarity": 0.3385,
+            "text_similarity": 0.1124
+          },
+          "score": 0.0846
+        },
+        {
+          "differs_in": [
+            "category",
+            "construct",
+            "reason"
+          ],
+          "id": "AIM-PRED-47f7de0cd8c0",
+          "parts": {
+            "category_equal": 0.0,
+            "construct_jaccard": 0.0,
+            "reason_similarity": 0.3934,
+            "text_similarity": 0.026
+          },
+          "score": 0.0826
+        },
+        {
+          "differs_in": [
+            "category",
+            "construct",
+            "reason"
+          ],
+          "id": "AIM-REF-c5b6a3e418c9",
+          "parts": {
+            "category_equal": 0.0,
+            "construct_jaccard": 0.0,
+            "reason_similarity": 0.339,
+            "text_similarity": 0.0814
+          },
+          "score": 0.08
+        },
+        {
+          "differs_in": [
+            "category",
+            "construct",
+            "reason"
+          ],
+          "id": "AIM-SHAPE-1d790c23a72b",
+          "parts": {
+            "category_equal": 0.0,
+            "construct_jaccard": 0.0,
+            "reason_similarity": 0.2759,
+            "text_similarity": 0.0701
+          },
+          "score": 0.0657
+        },
+        {
+          "differs_in": [
+            "category",
+            "construct",
+            "reason"
+          ],
+          "id": "AIM-EXPR-4d4d56018da3",
+          "parts": {
+            "category_equal": 0.0,
+            "construct_jaccard": 0.0,
+            "reason_similarity": 0.2462,
+            "text_similarity": 0.0651
+          },
+          "score": 0.059
+        },
+        {
+          "differs_in": [
+            "category",
+            "construct",
+            "reason"
+          ],
+          "id": "AIM-REF-19ec51fddf7b",
+          "parts": {
+            "category_equal": 0.0,
+            "construct_jaccard": 0.0,
+            "reason_similarity": 0.2,
+            "text_similarity": 0.1096
+          },
+          "score": 0.0564
+        },
+        {
+          "differs_in": [
+            "category",
+            "construct",
+            "reason"
+          ],
+          "id": "AIM-REPR-507534cad1e5",
+          "parts": {
+            "category_equal": 0.0,
+            "construct_jaccard": 0.0,
+            "reason_similarity": 0.1311,
+            "text_similarity": 0.0678
+          },
+          "score": 0.0364
+        }
+      ],
+      "rule": "NO_CANDIDATE_ABOVE_THRESHOLD",
+      "verdict": "NOVEL"
+    },
+    "distinguisher": "a marker-carrying model is unusable and says so; this one is usable-looking and unverified, which is the harder review problem and a different action for a reviewer."
+  },
+  "note": "",
+  "note_lint": {
+    "findings": [],
+    "rule_version": "aim.text.v1",
+    "scope": "instance",
+    "verdict": "PASS"
+  },
+  "sig_version": "aim.sig.v1",
+  "signature": {
+    "category": "EMIT",
+    "construct": "model:rendered-output",
+    "reason": "no-usable-output-from-the-renderer"
+  },
+  "supersedes": "",
+  "text": "The renderer produced no usable artifact for element '{element}', so one was written by a model. The reason recorded at the time was: {detail}. Nothing in this migration has compiled that artifact against the target, run it, or compared it with the behaviour of the element it stands in for.",
+  "text_lint": {
+    "findings": [],
+    "rule_version": "aim.text.v1",
+    "scope": "type",
+    "verdict": "PASS"
+  },
+  "title": "The renderer produced no usable artifact for an element and a model wrote one instead"
+}

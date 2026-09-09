@@ -1,0 +1,86 @@
+{
+  "distinguisher": "seed",
+  "first_observed": "findings/41-the-fallback-ladder.md (tier-3 table: reader declares no field metadata; writer column lists empty)",
+  "hashed_material": "aim.sig.v1\u001fSHAPE\u001felement:column-set\u001fnot-declared-by-document",
+  "id": "AIM-SHAPE-1d790c23a72b",
+  "impact": "output-incomplete",
+  "mint": {
+    "at": "2026-08-03T17:18:34Z",
+    "by": "seed",
+    "category_novel": false,
+    "classification": {
+      "considered": [
+        {
+          "differs_in": [
+            "category",
+            "construct",
+            "reason"
+          ],
+          "id": "AIM-REPR-5161af7f0af6",
+          "parts": {
+            "category_equal": 0.0,
+            "construct_jaccard": 0.2,
+            "reason_similarity": 0.5,
+            "text_similarity": 0.0507
+          },
+          "score": 0.1676
+        },
+        {
+          "differs_in": [
+            "category",
+            "construct",
+            "reason"
+          ],
+          "id": "AIM-EXPR-4d4d56018da3",
+          "parts": {
+            "category_equal": 0.0,
+            "construct_jaccard": 0.2,
+            "reason_similarity": 0.2909,
+            "text_similarity": 0.1953
+          },
+          "score": 0.1475
+        },
+        {
+          "differs_in": [
+            "category",
+            "construct",
+            "reason"
+          ],
+          "id": "AIM-PRED-47f7de0cd8c0",
+          "parts": {
+            "category_equal": 0.0,
+            "construct_jaccard": 0.0,
+            "reason_similarity": 0.4706,
+            "text_similarity": 0.2012
+          },
+          "score": 0.1243
+        }
+      ],
+      "rule": "NO_CANDIDATE_ABOVE_THRESHOLD",
+      "verdict": "NOVEL"
+    },
+    "distinguisher": "seed"
+  },
+  "note": "Measured on a reader step that declares no field metadata at all: the column list existed only inside the step's embedded query text. Also measured on a writer element where both column lists came back empty because the table rule did not resolve the step's field mapping -- so this type covers a real document gap AND a gap in our own port policy, and the instance record is where they are told apart.",
+  "note_lint": {
+    "findings": [],
+    "rule_version": "aim.text.v1",
+    "scope": "instance",
+    "verdict": "PASS"
+  },
+  "sig_version": "aim.sig.v1",
+  "signature": {
+    "category": "SHAPE",
+    "construct": "element:column-set",
+    "reason": "not-declared-by-document"
+  },
+  "supersedes": "",
+  "text": "Element '{element}' of kind '{kind}' is represented with no input columns and no output columns. The document states none at the place this migration's rule looks for them, so nothing generated from this element can name a column and a generated artifact for it can only project a placeholder. {detail}",
+  "text_lint": {
+    "findings": [],
+    "rule_version": "aim.text.v1",
+    "scope": "type",
+    "verdict": "PASS"
+  },
+  "title": "No column metadata for an element"
+}

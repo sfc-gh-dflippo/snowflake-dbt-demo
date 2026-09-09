@@ -1,0 +1,116 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    SPIKE 1 — does the AI-first producer chain run OUTSIDE the xUnit/MSTest host?
+
+    Deliberately lives OUTSIDE the engine repo so that neither the repo-root
+    Directory.Build.props, nor Parsers/Directory.Build.targets, nor the AMG package can
+    participate. That matters for two reasons:
+      1. It makes the dependency question honest — nothing is inherited implicitly.
+      2. Importing the amg package would drag in GenerateAstMachinery, which has no
+         Inputs/Outputs and regenerates 42 ASTs (~45-60 min). See tickets/ENG-016.
+
+    References are DLLs the engine build already produced, resolved by path from the test
+    project's own output directory, because that directory is by construction the closed set
+    of assemblies the chain needs at runtime. No project references, so no rebuild.
+  -->
+
+  <ItemGroup>
+    <Compile Remove="tests/**/*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>AiFirst.Producer.Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <AssemblyName>aifirst-migrate</AssemblyName>
+    <RootNamespace>AiFirst</RootNamespace>
+    <!-- The producer files were written for a test project and carry its analyzer settings.
+         Treat warnings as warnings here: the question is whether it RUNS, not whether it is
+         lint-clean in a new home. Any warning that matters is reported in the finding. -->
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <NoWarn>$(NoWarn);SA0001;SA1600;SA1633;CS1591</NoWarn>
+    <EnableNETAnalyzers>false</EnableNETAnalyzers>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <!-- ReferencePath compiles but does NOT populate deps.json, and the .NET host resolves
+         assemblies from deps.json rather than from the directory. Net effect on the first run:
+         a clean build, 257 assemblies staged beside the exe, and a runtime
+         FileNotFoundException for an assembly sitting right there. Suppressing the dependency
+         file makes the host fall back to probing the app directory. Worth knowing for the real
+         extraction: a project with proper ProjectReferences will not hit this. -->
+    <GenerateDependencyFile>false</GenerateDependencyFile>
+  </PropertyGroup>
+
+  <!-- The engine is intentionally external to this source-only project. Callers must identify a
+       real, already-built engine output; no checkout layout or machine path is assumed. -->
+  <PropertyGroup>
+    <EngineBin Condition="'$(EngineBin)' == ''">$(AIFIRST_ENGINE_BIN)</EngineBin>
+    <EngineBin Condition="'$(EngineBin)' != ''">$([MSBuild]::EnsureTrailingSlash('$(EngineBin)'))</EngineBin>
+  </PropertyGroup>
+
+  <Target Name="ValidateEngineBin" BeforeTargets="AddEngineReferences">
+    <Error Condition="'$(EngineBin)' == ''"
+           Text="Set AIFIRST_ENGINE_BIN to an existing SnowConvert engine bin directory (or pass -p:EngineBin=...)." />
+    <Error Condition="'$(EngineBin)' != '' and !Exists('$(EngineBin)')"
+           Text="AIFIRST_ENGINE_BIN/EngineBin does not exist: $(EngineBin)" />
+  </Target>
+
+  <!-- Reference every assembly in that directory EXCEPT the test host and the test project
+       itself. Excluding them is the point of the spike: if the chain still compiles and runs
+       with MSTest, Moq and UnitTests.dll absent, it is not coupled to the test host.
+
+       Injected as ReferencePath rather than Reference. A `Reference` item built from an item
+       TRANSFORM loses the per-item HintPath association, which silently produced 128 CS0246
+       "type not found" errors on the first attempt — the references appeared declared and
+       resolved to nothing. ReferencePath is what the compiler consumes directly, so there is
+       no resolution step to get wrong. -->
+  <PropertyGroup>
+    <_ExcludeDlls>$(EngineBin)UnitTests.dll;$(EngineBin)Moq.dll;$(EngineBin)Castle.Core.dll;$(EngineBin)Microsoft.VisualStudio.TestPlatform*.dll;$(EngineBin)Microsoft.TestPlatform*.dll;$(EngineBin)MSTest*.dll;$(EngineBin)testhost.dll</_ExcludeDlls>
+  </PropertyGroup>
+
+  <Target Name="AddEngineReferences" BeforeTargets="ResolveReferences">
+    <ItemGroup>
+      <ReferencePath Include="$(EngineBin)*.dll" Exclude="$(_ExcludeDlls)" />
+    </ItemGroup>
+    <Message Importance="high" Text="spike: referencing @(ReferencePath->Count()) engine assemblies (test host excluded)" />
+  </Target>
+
+  <!-- ReferencePath bypasses copy-local, so the runtime closure has to be staged explicitly. -->
+  <Target Name="StageEngineRuntime" AfterTargets="Build">
+    <ItemGroup>
+      <_Runtime Include="$(EngineBin)*.dll" Exclude="$(_ExcludeDlls);$(EngineBin)aifirst-migrate.dll;$(EngineBin)aifirst-migrate.pdb" />
+      <!-- Data files read from disk at runtime, not references. EwiModelReader resolves
+           IssueResources.json relative to its OWN assembly location, so it must sit beside
+           the staged DLLs or every EWI lookup silently returns nothing. -->
+      <_Runtime Include="$(EngineBin)*.json" />
+    </ItemGroup>
+    <Copy SourceFiles="@(_Runtime)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
+    <Message Importance="high" Text="spike: staged @(_Runtime->Count()) runtime assemblies into $(OutDir)" />
+  </Target>
+
+  <!-- NATIVE assets, which the managed staging above cannot cover.
+       MEASURED: ObjectReferenceCalculator is SQLite-backed, and the first run with reports wired in
+       failed with `TypeInitializationException: The type initializer for
+       'Microsoft.Data.Sqlite.SqliteConnection' threw an exception` — SQLitePCLRaw could not load
+       `libe_sqlite3`. The engine bin DOES ship it, under runtimes/<rid>/native/, but RID-specific
+       native asset resolution is a deps.json feature and GenerateDependencyFile is false above (see
+       the note there). Without deps.json the host only probes beside the executable, so the native
+       library has to be copied flat. Everything else about the reports worked before this — the
+       lineage report was the only one absent, which is precisely the shape that would have read as
+       "lineage is not drivable" if the exception had not been printed. -->
+  <Target Name="StageNativeRuntime" AfterTargets="Build">
+    <ItemGroup>
+      <_Native Include="$(EngineBin)runtimes/$(NETCoreSdkPortableRuntimeIdentifier)/native/*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(_Native)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
+    <Message Importance="high" Text="spike: staged @(_Native->Count()) native asset(s) for $(NETCoreSdkPortableRuntimeIdentifier)" />
+  </Target>
+
+</Project>

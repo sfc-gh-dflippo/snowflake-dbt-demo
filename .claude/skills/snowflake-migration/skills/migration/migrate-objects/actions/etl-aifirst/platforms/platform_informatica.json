@@ -1,0 +1,572 @@
+{
+  "platform": "InformaticaPowerCenter",
+  "table_version": "informatica.v2",
+  "_comment": "Per-platform configuration. NOTHING here is read from a source file. Every entry is a reviewable policy decision. This file IS the TABLE bucket of the three-way split. v2 = the SSIS generalisation pass moved every Informatica vocabulary literal out of framework code and into this file. The v1->v2 diff IS the inventory of what the framework had hardcoded.",
+  "structure": {
+    "_comment": "Where the big building blocks live, and what the attributes carrying them are CALLED. v1 kept the xpaths here but the attribute names in Python.",
+    "unsupported_body_max_chars": 4000,
+    "_unsupported_body_max_chars_comment": "FRAMEWORK CHANGE 63 (b). Cap on the source fragment a degraded element carries into its placeholder model as SQL comments. A TRANSFORMATION definition plus its TRANSFORMFIELDs and TABLEATTRIBUTEs. MEASURED on m_CUSTOMER_SUMMARY: the largest is 1.5 KB, so 4000 leaves headroom without letting a reusable transformation with 200 ports become the model. A cut is always announced inside the body, so a truncated fragment never reads as a complete one.",
+    "namespaces": {},
+    "attr_where_template": "TABLEATTRIBUTE[@NAME='{key}']/@VALUE",
+    "_key_scope_comment": "MEASURED, and this entry closes the loss the declared-versus-identified ledger was written to expose. An INSTANCE/@NAME is unique inside its MAPPING and NOT inside the document: WF_PARAMFILE_MULTI_SESSION.XML declares tableA / SQ_tableA / tableC once per MAPPING in three MAPPINGs (NEWMAPPING40/41/46), so 9 declared elements collapsed onto 3 keys and SIX were silently overwritten. That loss also INFLATED the fit score, because fit divides by obligations RAISED and a lost element raises none: the document scored 88.7% (63/71) with two thirds of it missing, the highest Informatica number in the project. WITH THE SCOPE: 9 declared, 9 identified, 0 lost, 6 nodes, 3 edges, and the fit number falls to 86.7% (117/135, unsatisfied 8 -> 18) -- the number gets WORSE and TRUER, which is the whole point. The single-mapping fixtures are numerically unchanged (MappingForTest.XML stays 84.5% 186/220 with 6 nodes and 5 edges; the blind m_CUSTOMER_SUMMARY document stays 94.4% 102/108); only node.id and modelName gain the mapping prefix. HELD UNTIL NOW FOR A REAL REASON: three sites resolved a raw document key against these scoped keys -- an ELEMENT_KEY edge's two endpoints, and the `associated` and `load_order` references -- so declaring the scope alone broke every edge (84.5% -> 72.8%, KeyError 'INCR_SALARY' in decisions.py). Fixed first, in identify._scoped_ref; see FRAMEWORK CHANGE 66 (c). DataStage never exposed it because its edges resolve through _ref_index, which was already keyed by (scope, id).",
+    "key_scope": {
+      "tag": "MAPPING",
+      "key_attr": "NAME",
+      "separator": "\\"
+    },
+    "container": {
+      "xpath": "./REPOSITORY/FOLDER/MAPPING",
+      "name_attr": "NAME"
+    },
+    "levels": [
+      {
+        "name": "mapping",
+        "elements": "./REPOSITORY/FOLDER/MAPPING/INSTANCE",
+        "key_attr": "NAME",
+        "kind_attr": "TRANSFORMATION_TYPE",
+        "role_attr": "TYPE",
+        "def_name_attr": "TRANSFORMATION_NAME",
+        "description_attr": "DESCRIPTION",
+        "flag_attrs": {
+          "reusable": "REUSABLE"
+        },
+        "associated": {
+          "xpath": "./ASSOCIATED_SOURCE_INSTANCE",
+          "name_attr": "NAME"
+        }
+      }
+    ],
+    "census": {
+      "_comment": "ADDITION 2 -- EXHAUSTIVE IDENTIFICATION. `levels` says what an element IS; this says what is DELIBERATELY NOT one, with a reason per rule. Anything matched by neither becomes an UNKNOWN OBJECT: inventoried with a citable location rather than dropped. See identify.py `_census` for the defect that forced this -- the loss ledger's denominator used to be the level sweep's own match set, so a record no level matched could not be reported missing.",
+      "identity_attrs": [
+        "NAME",
+        "TYPE",
+        "TRANSFORMATION_TYPE",
+        "OBJECTTYPE"
+      ],
+      "_identity_attrs_comment": "How an unknown record is identified in the inventory. An unknown record has no key_attr to cite by -- that is what makes it unknown -- so these are the keys a PowerCenter export uses to name a thing and state its class.",
+      "exclusions": [
+        {
+          "id": "inf-export-envelope",
+          "kind": "QUERY",
+          "match": [
+            ".",
+            "./REPOSITORY",
+            "./REPOSITORY/FOLDER"
+          ],
+          "excludes": "the POWERMART / REPOSITORY / FOLDER wrapper nodes",
+          "why": "The export envelope. POWERMART states the repository export version, REPOSITORY the repository name and codepage, FOLDER the folder the objects were exported from. None of the three is a unit of work; the unit of work is the MAPPING inside them, which `structure.container` names and `structure.key_scope` scopes element keys by. NOT subtree: their CONTENTS are the document, and each content node is classified on its own account below."
+        },
+        {
+          "id": "inf-mapping-container",
+          "kind": "QUERY",
+          "match": "./REPOSITORY/FOLDER/MAPPING",
+          "excludes": "the MAPPING node itself",
+          "why": "The MAPPING is the document's unit of work, not an element in its graph: `structure.container` reads its @NAME as the document name and `structure.key_scope` uses it to scope every element key (an INSTANCE/@NAME is unique inside a mapping, not inside a file). Its children -- INSTANCE, CONNECTOR, TRANSFORMATION, TARGETLOADORDER -- are each classified separately."
+        },
+        {
+          "id": "inf-connector-edge",
+          "kind": "EDGE_RECORD",
+          "excludes": "every CONNECTOR, via the edge_levels declaration",
+          "why": "A CONNECTOR is an edge and is inventoried as one -- field-level lineage, from FROMINSTANCE/FROMFIELD to TOINSTANCE/TOFIELD. Derived from edge_levels rather than restated, so widening the edge query widens this exclusion with it. MEASURED on MappingForTest.XML: 13 CONNECTORs -> 5 element-level edges."
+        },
+        {
+          "id": "inf-definition-record",
+          "kind": "DEFINITION_OF_ELEMENT",
+          "excludes": "a TRANSFORMATION / SOURCE / TARGET record that IS the resolved definition of an identified element",
+          "why": "PowerCenter splits identity from payload: the element is the INSTANCE in the mapping, and everything it does lives on the TRANSFORMATION (or SOURCE / TARGET) it names. `def_sites` reads that definition, so it is already inventoried. DERIVED, not a tag list, and the difference is the point: a definition record NO element references does NOT match this rule and stays an UNKNOWN OBJECT -- which is the honest answer, because an unreferenced definition is a thing in the file that nothing in the graph accounts for."
+        },
+        {
+          "id": "inf-port-row",
+          "kind": "QUERY",
+          "match": [
+            ".//TRANSFORMFIELD",
+            ".//SOURCEFIELD",
+            ".//TARGETFIELD"
+          ],
+          "excludes": "the port/field rows of a definition record",
+          "why": "One row per port. Read as an element's ports by the three `port_sites` -- TRANSFORMFIELD under a TRANSFORMATION, SOURCEFIELD under a SOURCE, TARGETFIELD under a TARGET -- so each is inventoried as a Port on the element that owns it, with its own `where`.",
+          "_targetfield_caveat": "FIXED, and the old text is kept below because the census is what exposed it and the record of that is worth more than a clean line. TARGETFIELD WAS the weak member of this rule: `def_sites.target` declared a port_site that reads it while `kind_dispatch['Target Definition'].def_site` was 'SELF', so nothing dispatched to it and the reader was declared-but-unreached -- MEASURED on MappingForTest.XML as MyReportTable identified with 0 ports beside a TARGET record stating 2 TARGETFIELDs, with the target's columns arriving from inbound field edges instead. The def_site is now 'target' (see that entry's _def_site_comment for the measured type defect it was hiding) and TARGETFIELD is now read on exactly the same footing as TRANSFORMFIELD and SOURCEFIELD, so this rule's stated reason -- 'inventoried as a Port on the element that owns it' -- is true of all three members rather than two. `identify.validate_table` now RAISES on any recurrence of a declared-but-unreached def site, on every platform, so the drift cannot come back silently."
+        },
+        {
+          "id": "inf-table-attribute-row",
+          "kind": "QUERY",
+          "match": ".//TABLEATTRIBUTE",
+          "excludes": "the NAME/VALUE property rows of a definition record",
+          "why": "One row per property. Read by `def_sites.transformation.attr_site` as the element's table attributes, which is where the Filter condition, the Lookup SQL override and the Sequence increment come from."
+        },
+        {
+          "id": "inf-output-group-row",
+          "kind": "QUERY",
+          "match": ".//GROUP",
+          "excludes": "the output-group rows of a definition record",
+          "why": "A GROUP names one output port group of a multi-output transformation (a Router's groups, a Normalizer's). Read by `def_sites.transformation.group_site` and inventoried as the element's groups; it also supplies the edge label under edge_policy.label_source."
+        },
+        {
+          "id": "inf-instance-reference-row",
+          "kind": "QUERY",
+          "match": [
+            ".//ASSOCIATED_SOURCE_INSTANCE",
+            ".//TARGETLOADORDER"
+          ],
+          "excludes": "two rows that are pure references to an element named elsewhere",
+          "why": "ASSOCIATED_SOURCE_INSTANCE is the site `levels[].associated` reads -- it is how a Source Qualifier says which source it reads, and it is what `_apply_collapse` resolves. TARGETLOADORDER is the site `structure.load_order` reads -- @TARGETINSTANCE plus @ORDER. Neither states anything of its own: each names an element that is inventoried in its own right, so counting them as records would double-count elements already in the ledger."
+        }
+      ]
+    },
+    "load_order": {
+      "xpath": "./REPOSITORY/FOLDER/MAPPING/TARGETLOADORDER",
+      "key_attr": "TARGETINSTANCE",
+      "order_attr": "ORDER"
+    },
+    "ref_attrs": [],
+    "lineage": null,
+    "edge_levels": [
+      {
+        "name": "connectors",
+        "xpath": "./REPOSITORY/FOLDER/MAPPING/CONNECTOR",
+        "endpoint_kind": "ELEMENT_KEY",
+        "from_attr": "FROMINSTANCE",
+        "from_field_attr": "FROMFIELD",
+        "to_attr": "TOINSTANCE",
+        "to_field_attr": "TOFIELD"
+      }
+    ],
+    "default_def_site": "transformation",
+    "self_def_site": {},
+    "def_sites": {
+      "transformation": {
+        "xpath": "./REPOSITORY/FOLDER/MAPPING/TRANSFORMATION",
+        "key_attr": "NAME",
+        "port_sites": [
+          {
+            "id": "TRANSFORMFIELD",
+            "xpath": "./TRANSFORMFIELD",
+            "porttype_attr": "PORTTYPE",
+            "name_attr": "NAME",
+            "datatype_attr": "DATATYPE",
+            "precision_attrs": [
+              "PRECISION"
+            ],
+            "scale_attrs": [
+              "SCALE"
+            ],
+            "default_attr": "DEFAULTVALUE",
+            "ref_attr": "REF_FIELD",
+            "group_attr": "GROUP",
+            "expression": {
+              "from": "ATTR",
+              "attr": "EXPRESSION"
+            }
+          }
+        ],
+        "group_site": {
+          "xpath": "./GROUP",
+          "name_attr": "NAME",
+          "type_attr": "TYPE",
+          "order_attr": "ORDER",
+          "expression_attr": "EXPRESSION"
+        },
+        "attr_site": {
+          "xpath": "./TABLEATTRIBUTE",
+          "name_attr": "NAME",
+          "value_attr": "VALUE",
+          "value_from": "ATTR",
+          "where_template": "TABLEATTRIBUTE[@NAME='{key}']/@VALUE"
+        }
+      },
+      "source": {
+        "xpath": "./REPOSITORY/FOLDER/SOURCE",
+        "key_attr": "NAME",
+        "harvest_attrs": {
+          "database": "DBDNAME",
+          "schema": "OWNERNAME",
+          "table": "NAME",
+          "database_type": "DATABASETYPE"
+        },
+        "port_sites": [
+          {
+            "id": "SOURCEFIELD",
+            "xpath": "./SOURCEFIELD",
+            "porttype": "INPUT/OUTPUT",
+            "name_attr": "NAME",
+            "datatype_attr": "DATATYPE",
+            "precision_attrs": [
+              "PRECISION"
+            ],
+            "scale_attrs": [
+              "SCALE"
+            ]
+          }
+        ]
+      },
+      "target": {
+        "xpath": "./REPOSITORY/FOLDER/TARGET",
+        "key_attr": "NAME",
+        "port_sites": [
+          {
+            "id": "TARGETFIELD",
+            "xpath": "./TARGETFIELD",
+            "porttype": "INPUT",
+            "name_attr": "NAME",
+            "datatype_attr": "DATATYPE",
+            "precision_attrs": [
+              "PRECISION"
+            ],
+            "scale_attrs": [
+              "SCALE"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "kind_dispatch": {
+    "_comment": "INSTANCE/@TRANSFORMATION_TYPE -> IR element $kind + node type. 'ir_kind': null means the hydrator has no door onto this element type -> census NotSupported. Settles blind decisions #4 and #5 by table, not by guess. 'def_site' replaces what v1 hardcoded as `if kind_raw == 'Source Definition'`.",
+    "Source Qualifier": {
+      "ir_kind": "SourceQualifier",
+      "node_type": "source",
+      "supported": true,
+      "def_site": "transformation",
+      "element_fields": {
+        "TableName": {
+          "rule": "source_table_qualification",
+          "required": false
+        }
+      },
+      "_element_fields_comment": "THE SOURCE RELATION. SourceQualifierTranslator builds its FROM from ctx.GetIncomingEntities(sourceQualifier) and reads `source.TableName ?? source.Name` off each incoming Source entity (SourceQualifierTranslator.cs:524-544); with no Source upstream the entity list is empty and CreateFromClause emits `FROM` with no table factor at all -- the dangling FROM measured on all four platforms. The value comes from the <SOURCE> definition this instance names as its ASSOCIATED_SOURCE_INSTANCE, which `collapse` already absorbs into this element as a def-site HARVEST. REQUIRED IS FALSE: a Source Qualifier whose Sql Query overrides the read has no plain table to name, and that is a truthful absence."
+    },
+    "Expression": {
+      "ir_kind": "ExpressionTransformation",
+      "node_type": "transformation",
+      "supported": true,
+      "def_site": "transformation"
+    },
+    "Source Definition": {
+      "degrade_to": null,
+      "degrade_reason": "NOT APPLICABLE. This entry never becomes a node at all -- `collapse` absorbs it into the Source Qualifier that declares ASSOCIATED_SOURCE_INSTANCE -- so there is no node to keep in the graph and no edge to lose.",
+      "ir_kind": null,
+      "node_type": "source",
+      "supported": false,
+      "def_site": "source",
+      "collapse": {
+        "into": "ASSOCIATING_ELEMENT",
+        "carry_harvest": true,
+        "set_host_role": "SOURCE"
+      },
+      "note": "Not emitted as its own node; absorbed by the Source Qualifier that declares ASSOCIATED_SOURCE_INSTANCE."
+    },
+    "Router": {
+      "degrade_to": "UnsupportedTransformation",
+      "degrade_reason": "The engine DOES have the right class -- RouterTransformation / InfPcRouterTransformation, already listed in engine_models_present -- and it was rejected here on evidence, not on principle. A router's load-bearing field is Group.Expression, the per-group ROUTING CONDITION, and that condition is Informatica expression text. Nothing in this chain translates an Informatica expression to Snowflake (the vertical slice found the same hole for SSIS and had to stub it), so emitting the condition untranslated would put a WHERE clause in the wrong dialect into generated SQL -- confidently wrong output, which is worse than a NotSupported row. The IR schema also exposes no group at all, so this is a schema widening rather than a table edit. Degrading keeps the node, its inbound edge and its labelled outbound edge in the graph and reports NotSupported.",
+      "ir_kind": null,
+      "node_type": "transformation",
+      "supported": false,
+      "def_site": "transformation",
+      "engine_models_present": [
+        "RouterTransformation",
+        "InfPcRouterTransformation",
+        "RouterGroup"
+      ],
+      "note": "Fan-out element. Hydrator HydrateElement accepts only SourceQualifier and ExpressionTransformation."
+    },
+    "Target Definition": {
+      "ir_kind": "TargetTransformation",
+      "role": "TARGET",
+      "supported": true,
+      "def_site": "target",
+      "_def_site_comment": "'target', and it was 'SELF' -- a THIRD instance of the defect FRAMEWORK CHANGE 63 (a) recorded for Filter's def_site 'RESOLVED', in the same table, with the same signature: A DECLARED READER NO DISPATCH PATH REACHES. `structure.def_sites.target` declares a TARGETFIELD port site and nothing ever dispatched to it, so a Target Definition element got NO ports and NO property bag from the TARGET record it names, and the mart was typed by column propagation from whatever fed it. MEASURED on m_CUSTOMER_SUMMARY_fullname_birthyear.xml: the document declares `BirthYear DATATYPE=\"number(p,s)\" PRECISION=\"4\" SCALE=\"0\"` (line 14) and the IR node's OutputColumns said integer / precision 10, which is the UPSTREAM EXP_DERIVE_CUSTOMER port width from line 40. After: number(p,s) / precision 4, at SOURCE provenance citing line 14. On MappingForTest.XML the same change also DELETES A FABRICATION -- propagation had put THREE columns (op1, op2, result) into a 2-column mart, and `op2` is fed by no CONNECTOR at all. NOW DETECTABLE AND UNEXERCISED: an unfed TARGETFIELD, i.e. a target column the mapping never writes. Both fixtures feed every target column, so the detection is real and untested here. WHY THE FIT ROSE: MappingForTest.XML 84.5% -> 85.5% and the blind document 94.4% -> 95.7%, because 8 SOURCE obligations were newly READ per document and TWO false obligations retired -- `element.InputColumns MISSING: the document projects no InputColumns` (the document projects two, at TARGETFIELD) and a DERIVED propagation slot claiming columns the document does not state. Both are provably false, which is the only ground on which retiring one is legitimate.",
+      "element_fields": {
+        "TableName": {
+          "rule": "inf_target_instance_name",
+          "required": true
+        }
+      },
+      "degrade_to": "UnsupportedTransformation",
+      "note": "WIDENING. Was degrading to UnsupportedTransformation, which emitted a mart of NULLs plus SSC-EWI-INF0001. REQUIRED for the reason OracleConnectorPX's degrade_reason already gives: TargetTranslatorBase substitutes YOUR_DB plus a fallback schema when fields are null, so a TargetTransformation without a table states a destination the document does not. This makes that hand-made judgement MECHANICAL -- a write stage whose table survives identification qualifies, one whose table is buried in an XMLProperties blob degrades, and neither is curated by hand."
+    },
+    "Filter": {
+      "ir_kind": "FilterTransformation",
+      "role": "TRANSFORMATION",
+      "supported": true,
+      "def_site": "transformation",
+      "element_fields": {
+        "FilterConditions": {
+          "rule": "inf_filter_condition",
+          "required": true
+        }
+      },
+      "degrade_to": "UnsupportedTransformation",
+      "note": "WIDENING, and it now RESOLVES rather than degrading. REQUIRED for the reason that has not changed: FilterTranslator's shared base substitutes `WHERE TRUE` for an empty predicate and records it only as a log warning -- a filter that silently returns every row -- so an unextractable predicate must still degrade. def_site was 'RESOLVED', which structure.def_sites does not declare; the framework silently gave this element no ports AND no property bag, so the predicate the entry claimed was 'unreachable by any rule kind' had in fact never been read at all. Two facts were hiding behind one: the def site did not resolve (fixed by naming the site that exists, and by _attach_definitions now raising on an undeclared name), and no rule kind read a def-site property (fixed by DEF_SITE_ATTR). MEASURED after: ports 0 -> 2 and FilterConditions 'BirthYear >= 1990' at SOURCE provenance."
+    },
+    "unmapped_kind_degrade_to": "UnsupportedTransformation"
+  },
+  "role_to_node_type": {
+    "_comment": "INSTANCE/@TYPE -> node 'type' string. Settles blind decision #5's source half. The consumer's KindForNode reads only 'source' vs anything-else, so 'target' silently becomes Intermediate. Recorded as a known table defect.",
+    "SOURCE": "source",
+    "TRANSFORMATION": "transformation",
+    "TARGET": "target",
+    "unmapped_role_node_type": "unknown",
+    "unmapped_role_reason": "MEASURED CRASH, now a degradation. INSTANCE/@TYPE is an OPEN vocabulary and this table maps three of its values. `InfPc/Registry/MappletPart/mapplet_part.xml` states TYPE='MAPPLET' and the emitter raised KeyError: 'MAPPLET', losing all 12 elements of that document and producing no IR and no fit number -- so the gap was invisible rather than small. The value is deliberately 'unknown' and NOT 'transformation': the consumer's KindForNode maps both to Intermediate so nothing downstream changes, but the IR text does not claim a role the producer failed to determine. node.type is recorded MISSING for such an element, so it earns no fit credit.",
+    "known_defect": "'target' has no distinct meaning downstream; KindForNode maps non-'source' to Intermediate."
+  },
+  "naming_policy": {
+    "_comment": "modelName is a TARGET-artifact decision. Nothing in the XML constrains it. Recording it here as a named, versioned policy is the whole point: it is reviewable and testable without a model. Settles blind decisions #1, #2, #3.",
+    "policy_id": "informatica.modelname.v2",
+    "name_source": "INSTANCE/@NAME",
+    "name_from": "ELEMENT_KEY",
+  "_element_name_from_comment": "DISPLAY_NAME, and this had to be DECLARED once structure.key_scope landed. It was absent -- the only platform of five without it -- and that was harmless only while the element key and the display name were the same string. With the scope, el.instance_name is 'MappingForTest\\\\SQ_EMPLOYEE', and element.Name fell back to it: the IR emitted the composed KEY in a field that means the element's NAME, and the element.Name provenance slot cites @NAME, so the citation and the emitted value disagreed. MEASURED and fixed in the same pass. node.id stays scoped (that is the identity) and element.Name is the raw @NAME again, which is what the other four platforms already do.",
+  "element_name_from": "DISPLAY_NAME",
+    "lowercase": true,
+    "sanitize_identifier": {
+      "allowed_chars": "abcdefghijklmnopqrstuvwxyz0123456789_",
+      "allowed_leading_chars": "abcdefghijklmnopqrstuvwxyz_",
+      "replace_illegal_with": "_",
+      "leading_prefix": "m_",
+      "_comment": "MEASURED on Pentaho: 'Dummy (do nothing)' -> 'dummy_(do_nothing)' and 'safe-stop-gen-rows' kept its hyphens; neither is a legal UNQUOTED Snowflake or dbt identifier. Declared on EVERY platform rather than only the one that needed it, so a legal name is provably unaffected: the IR of the other four is byte-identical with this rule present. One replacement character per illegal character, NOT a collapsed run -- collapsing merges 'a--b' into 'a_b', and merging two distinct names is the defect qualify_with_container exists to prevent. A name that cannot start a bare identifier is PREFIXED, not trimmed, for the same reason. Residual merges remain possible in principle, so emit() asserts injectivity across the document and raises rather than letting the dbt writer overwrite one model with another."
+    },
+    "split_camel_case": false,
+    "strip_kind_prefixes": false,
+    "qualify_with_mapping": false,
+    "qualify_with_container": null,
+    "qualify_reason": "v1 -> v2, and the change is a CONSEQUENCE of structure.key_scope rather than a separate naming decision. v1 said qualify_with_container was LEFT OFF because Informatica elements sit directly under MAPPING with no enclosing ELEMENT (container is null, so that knob is still a no-op here and is still null) and because a cross-mapping collision needs two MAPPINGs in one XML \"which this fixture does not have\". WF_PARAMFILE_MULTI_SESSION.XML has three, and it was a measured six-element loss, not a hazard. name_from is ELEMENT_KEY and the key is now MAPPING-scoped, so the model name follows the key automatically -- newmapping40_tablec / newmapping41_tablec / newmapping46_tablec instead of three models called tablec, of which DbtModelsWriter would have kept one. This is the same resolution platform_datastage.json took for the same defect, and for the reason recorded there: make modelName AGREE WITH THE KEY rather than invent a second scope. MEASURED cost on single-mapping documents: every Informatica model file is renamed (incr_salary -> mappingfortest_incr_salary), which changes filenames and nothing else -- node/edge counts, fit, obligations and provenance are all byte-identical, and decisions.py #1/#2 were updated to assert the qualified name.",
+    "collapsed_source_named_after": "SOURCE_QUALIFIER_INSTANCE"
+  },
+  "column_propagation": {
+    "_comment": "INFORMATICA BUFFER SEMANTICS, stated. A PowerCenter transformation declares EVERY port it has -- TRANSFORMFIELD rows are exhaustive, and an absent port is genuinely absent rather than implicitly passed through. So ACCUMULATE would fabricate columns here; the only honest propagation is FILL_WHEN_UNDECLARED, which touches an element ONLY when it declares no projection at all. Measured case it fixes: the TARGET instance of m_CUSTOMER_SUMMARY_fullname_birthyear declares neither ports nor a field-level connector, so InputColumns and OutputColumns were both empty, target_projection_mirrors_input had nothing to mirror, and TargetTranslatorBase emitted `SELECT` with an empty projection over `SELECT * FROM ref(...)` -- valid-looking SQL that selects nothing.",
+    "mode": "FILL_WHEN_UNDECLARED",
+    "algorithm_id": "predecessor_column_propagation.v1",
+    "_stop_comment": "Empty on evidence, not by omission. The engine's stop list is five SSIS componentClassIDs; the Informatica analogues (Joiner, Union, Normalizer) would belong here, and NONE of them appears in a fixture this spike runs. Declaring an unexercised guess would read as verified coverage. Under FILL_WHEN_UNDECLARED the exposure is also smaller than it looks: a Joiner that declares its ports is untouched either way, and only one that declares none at all could be filled wrongly.",
+    "stop_at_kinds": [],
+    "stop_at_roles": []
+  },
+  "port_policy": {
+    "_comment": "Settles blind decisions #6, #7, #9, #11, #12, #19.",
+    "output_column_order": "TRANSFORMFIELD_DOCUMENT_ORDER",
+    "input_column_naming": "UPSTREAM_FIELD",
+    "_input_columns_from_comment": "FIELD_EDGES, and this platform is why the mechanism was unconditional. A CONNECTOR names BOTH endpoints at field granularity (FROMINSTANCE/FROMFIELD -> TOINSTANCE/TOFIELD), so the receiving column list is stated as lineage and reading it any other way would discard the upstream field name that input_column_naming=UPSTREAM_FIELD depends on. MEASURED: 13 connectors on MappingForTest.XML, 12 INPUT ports, InputColumns non-empty on 4 of 6 nodes.",
+    "input_columns_from": "FIELD_EDGES",
+    "input_column_type_from": "LOCAL_PORT",
+    "emit_scale_when_zero": true,
+    "inline_local_variables": true,
+    "drop_local_variables_from_outputs": true,
+    "port_reference_case_insensitive": true,
+    "local_variable_porttype": "LOCAL VARIABLE",
+    "output_porttypes": [
+      "OUTPUT",
+      "INPUT/OUTPUT"
+    ],
+    "input_porttypes": [
+      "INPUT",
+      "INPUT/OUTPUT"
+    ],
+    "exclude_port_groups_with_flag": null,
+    "ref_field_passthrough_rule": "REF_FIELD_IS_UPSTREAM_NAME",
+    "known_defect": "A TARGET'S COLUMN NAMES ARE THE UPSTREAM FIELD'S, NOT THE TARGET DDL'S -- newly VISIBLE rather than newly caused, and it became visible only because `kind_dispatch['Target Definition'].def_site` now reaches the TARGET record. `input_column_naming` is UPSTREAM_FIELD, and `target_projection_mirrors_input` copies InputColumns verbatim into OutputColumns, so on MappingForTest.XML the mart's columns are emitted as `result` and `op1` while the TARGET record declares `desc` and `name` (the CONNECTORs state result -> desc and op1 -> name). The TYPES are now right -- ntext/104857600 and varchar/50, read from TARGETFIELD -- and the NAMES are still the sending side's. NOT FIXED HERE, and the reason is blast radius rather than doubt: the mirror is shared by every platform with a TARGET role, so making it prefer the local port name is a framework change affecting SSIS and Pentaho marts too, and it needs its own measurement. On m_CUSTOMER_SUMMARY_fullname_birthyear.xml the defect is invisible because the CONNECTORs map FullName -> FullName and BirthYear -> BirthYear, so upstream and DDL names coincide -- which is exactly the kind of coincidence that keeps a defect out of a fixture."
+  },
+  "type_vocabulary": {
+    "_comment": "Settles blind decisions #17, #18. Carry Informatica-native type names. For a collapsed source node, prefer the Source Qualifier's Informatica type over the SOURCEFIELD physical type.",
+    "carry": "INFORMATICA_NATIVE",
+    "collapsed_source_type_from": "SOURCE_QUALIFIER_TRANSFORMFIELD"
+  },
+  "edge_policy": {
+    "_comment": "Settles blind decisions #8, #21. 'element_edges_from' is new in v2: v1 hardcoded the assumption that element edges are always DERIVED by collapsing field-level connectors, which is false for any platform that states edges explicitly.",
+    "element_edges_from": "COLLAPSE_FIELD_EDGES",
+    "collapse_connectors_by": "DISTINCT_FROMINSTANCE_TOINSTANCE",
+    "label_source": "OUTPUT_GROUP_NAME_WHEN_PRESENT",
+    "label_when_absent": null
+  },
+  "default_value_policy": {
+    "_comment": "Informatica DEFAULTVALUE. ERROR(...) is row-level error handling with no SELECT-projection equivalent -> classified as a discardable drop. A non-ERROR default on an unconnected input port is LIVE DATA -> classified as a load-bearing drop that needs a model. Settles the mechanical half of blind decision #13.",
+    "error_function_prefix": "ERROR(",
+    "error_default_disposition": "DISCARDABLE_DROP",
+    "literal_default_on_unconnected_input": "LOAD_BEARING_DROP",
+    "discardable_label": "DISCARDABLE",
+    "load_bearing_label": "LOAD_BEARING"
+  },
+  "expression_syntax": {
+    "_comment": "New in v2. v1's scanner hardcoded the single-quote string literal and knew no delimited-reference form, because Informatica needs neither configured. Stating it here is what let SSIS's #{lineageId} form be read by the same scanner.",
+    "string_quotes": [
+      "'"
+    ],
+    "reference_delimiters": null,
+    "identifier_extra_chars": "$",
+    "case_insensitive_resolution": true
+  },
+  "no_slot_facts": [
+    {
+      "_comment": "Source facts this platform emits for which the IR contract has NO field. Each one, when present with a non-default value, creates an unsatisfied fit obligation. This list is what makes the fit score bite. v1 held these as a flat dict of documentation strings while the actual detection logic sat hardcoded in emit.py; v2 makes the detection declarative.",
+      "id": "__comment__",
+      "from": "NONE"
+    },
+    {
+      "id": "source_table_qualification",
+      "from": "HARVEST",
+      "harvest_key": "table",
+      "_harvest_key_comment": "Names which part of the harvested {database, schema, table, database_type} tuple an IR field can hold. `table` is the physical relation name and is the only part with a door: SourceQualifierTranslator reads `source.TableName ?? source.Name` from the incoming Source entity. DATABASE AND SCHEMA STAY WITHOUT ONE ON PURPOSE -- asserting a SQL Server owner name as the Snowflake target schema would state a destination the migration has not decided, the same reasoning the SSIS destination records for dropping `dbo`. The detail below is worded so the NO_SLOT that remains says what is still lost rather than implying the whole tuple is.",
+      "detail": "{database}.{schema} qualification has no IR field (the {table} part now populates SourceQualifier.TableName)"
+    },
+    {
+      "id": "sql_override",
+      "from": "ELEMENT_ATTR",
+      "attr": "Sql Query"
+    },
+    {
+      "id": "source_filter",
+      "from": "ELEMENT_ATTR",
+      "attr": "Source Filter"
+    },
+    {
+      "id": "select_distinct",
+      "from": "ELEMENT_ATTR",
+      "attr": "Select Distinct"
+    },
+    {
+      "id": "user_defined_join",
+      "from": "ELEMENT_ATTR",
+      "attr": "User Defined Join"
+    },
+    {
+      "id": "pre_sql",
+      "from": "ELEMENT_ATTR",
+      "attr": "Pre SQL"
+    },
+    {
+      "id": "post_sql",
+      "from": "ELEMENT_ATTR",
+      "attr": "Post SQL"
+    },
+    {
+      "id": "router_group_condition",
+      "from": "GROUP",
+      "when_type": "OUTPUT",
+      "requires": "expression",
+      "keyed_by": "name",
+      "where_suffix": "/@EXPRESSION",
+      "detail": "{expression}"
+    },
+    {
+      "id": "router_default_group",
+      "from": "GROUP",
+      "when_type": "OUTPUT/DEFAULT",
+      "keyed_by": "name",
+      "provenance": "RESIDUE",
+      "detail": "condition must be derived from Router semantics incl. NULL routing"
+    },
+    {
+      "id": "port_default_value",
+      "from": "PORT",
+      "requires": "default_value",
+      "keyed_by": "name",
+      "where_suffix": "/@DEFAULTVALUE",
+      "detail": "{default_value} ({disposition})"
+    },
+    {
+      "id": "local_variable_port",
+      "from": "PORT",
+      "porttype_class": "LOCAL",
+      "keyed_by": "name",
+      "where_suffix": "/@PORTTYPE",
+      "detail": "IsLocal withheld by schema; inlining is mandatory"
+    },
+    {
+      "id": "unconnected_input_port",
+      "from": "PORT",
+      "porttype_class": "INPUT",
+      "connectivity": "UNCONNECTED",
+      "exclude_roles": [
+        "SOURCE"
+      ],
+      "keyed_by": "name",
+      "detail": "no per-port connected flag in the IR"
+    },
+    {
+      "id": "dangling_output_port",
+      "from": "PORT",
+      "porttype_class": "OUTPUT",
+      "connectivity": "UNCONNECTED",
+      "exclude_roles": [
+        "TARGET"
+      ],
+      "keyed_by": "name",
+      "detail": "no per-port connected flag in the IR"
+    },
+    {
+      "id": "per_port_origin",
+      "from": "FIELD_EDGE",
+      "when": "RENAME",
+      "keyed_by": "to_field",
+      "detail": "{from_instance}.{from_field} -> {to_field}; no origin field, rename survives only inside expression text"
+    },
+    {
+      "id": "target_load_order",
+      "from": "LOAD_ORDER",
+      "where_suffix": "/@ORDER"
+    },
+    {
+      "id": "reusable_instance",
+      "from": "ELEMENT_FLAG",
+      "flag": "reusable",
+      "where_suffix": "/@REUSABLE"
+    },
+    {
+      "id": "inf_target_instance_name",
+      "from": "ELEMENT_ATTR",
+      "attr": "NAME",
+      "note": "A Target Definition INSTANCE's @NAME IS the target table name."
+    },
+    {
+      "id": "inf_filter_condition",
+      "from": "DEF_SITE_ATTR",
+      "attr": "Filter Condition",
+      "note": "REPLACES inf_filter_condition_UNREACHABLE, which was declared as ELEMENT_ATTR over an invented attribute name (@FILTER_CONDITION) so that it could not fire. The predicate is a property of the resolved TRANSFORMATION definition, <TABLEATTRIBUTE NAME='Filter Condition' VALUE=...>, and DEF_SITE_ATTR reads the def-site property bag -- the same bag sql_override and select_distinct already read. The value is Informatica expression text and is emitted VERBATIM: 'BirthYear >= 1990' happens to be portable, and `dialect` above is what records that >= is identical in both dialects. A predicate using an Informatica-only function would arrive in Snowflake untranslated, which is a REAL residual risk of this rule and the reason the dialect table exists rather than a reason not to read the field."
+    }
+  ],
+  "neutral_defaults": {
+    "_comment": "A fact only creates an obligation when its value differs from the neutral default. 'Select Distinct = NO' carries no information that must be represented; 'YES' does.",
+    "Select Distinct": "NO",
+    "Number Of Sorted Ports": "0",
+    "Tracing Level": "Normal",
+    "Is Partitionable": "NO",
+    "Output is deterministic": "NO",
+    "Output is repeatable": "Never",
+    "reusable": "NO"
+  },
+  "dialect": {
+    "_comment": "Minimal operator table so 'is this expression mechanically portable?' is a lookup, not an opinion. Settles blind decision #15 by making the divergence a table fact rather than a judgement call -- but the FIX (NVL-wrapping) is still residue, because the table records that the operator diverges, not what to emit instead.",
+    "identical": [
+      "*",
+      "+",
+      "-",
+      "/",
+      ">",
+      "<",
+      ">=",
+      "<=",
+      "=",
+      "AND",
+      "OR",
+      "NOT",
+      "(",
+      ")",
+      ",",
+      "."
+    ],
+    "syntactically_identical_semantically_divergent": {
+      "||": "Informatica coerces NULL to empty string; Snowflake propagates NULL. NAME || '!!!' is '!!!' vs NULL."
+    },
+    "divergent_operator_lengths": [
+      2
+    ],
+    "known_functions_identical": [],
+    "unknown_identifier_disposition": "RESIDUE"
+  },
+  "residue": {
+    "_comment": "Facts that structure identifies but cannot RESOLVE. These are handed to a model. Enumerated here so the agentic surface is bounded and auditable.",
+    "expression_dialect_translation": "Informatica expression language -> Snowflake SQL. Operator and function semantics, notably || NULL coercion.",
+    "router_default_group_condition": "Derive 'no other group matched' incl. NULL routing.",
+    "unconnected_input_default_substitution": "Whether a port's DEFAULTVALUE stands in for the always-NULL value of an unconnected input.",
+    "transformation_intent": "Business meaning / whether a Description is authoritative.",
+    "table_attribute_residue": "MEASURED EMPTY, which is why there is no ATTR_RESIDUE rule in no_slot_facts here and why that absence is stated rather than left to be inferred. The residual sweep the DataStage and SSIS tables declare -- one obligation per element property no rule reads -- was RUN against this table on both documents it serves (MappingForTest.XML and m_CUSTOMER_SUMMARY_fullname_birthyear.xml) and raised ZERO obligations: every TABLEATTRIBUTE either has a named rule (Sql Query, Source Filter, Select Distinct, User Defined Join, Pre SQL, Post SQL, Filter Condition) or a declared neutral default (Number Of Sorted Ports, Tracing Level, Is Partitionable, Output is deterministic, Output is repeatable). So this platform's property coverage is now a measurement instead of an assumption. THE RULE IS NOT DECLARED ANYWAY because a rule that raises nothing on every available document is a check that cannot fire, and this project has already found four of those; the measurement above is the record, and the moment a document states a property outside that set the sweep should be added and will bite."
+  }
+}

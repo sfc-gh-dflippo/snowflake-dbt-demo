@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    font-size: 11pt;
+    line-height: 1.5;
+    color: #222;
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 0 20px;
+  }
+  h1 { font-size: 22pt; color: #1a73e8; margin-bottom: 4px; }
+  h2 { font-size: 16pt; color: #333; border-bottom: 1px solid #ddd; padding-bottom: 4px; margin-top: 28px; }
+  h3 { font-size: 13pt; color: #444; margin-top: 20px; }
+  p.subtitle { font-size: 11pt; color: #555; margin-top: 0; }
+  table { border-collapse: collapse; width: 100%; margin: 12px 0; }
+  th, td { border: 1px solid #ccc; padding: 8px 10px; text-align: left; vertical-align: top; font-size: 10pt; }
+  th { background: #f0f4f9; font-weight: bold; }
+  code { font-family: 'Courier New', monospace; font-size: 10pt; background: #f5f5f5; padding: 1px 4px; border-radius: 3px; }
+  pre { background: #f5f5f5; border: 1px solid #ddd; border-radius: 4px; padding: 12px; font-family: 'Courier New', monospace; font-size: 10pt; overflow-x: auto; line-height: 1.4; }
+  ul { margin: 8px 0; padding-left: 24px; }
+  li { margin-bottom: 4px; }
+  blockquote { border-left: 3px solid #1a73e8; margin: 12px 0; padding: 8px 16px; background: #f0f4f9; font-style: italic; }
+  .badge { display: inline-block; background: #e8f0fe; color: #1a73e8; font-size: 9pt; font-weight: bold; padding: 2px 8px; border-radius: 10px; margin-left: 6px; }
+  .stage-row td:first-child { font-weight: bold; white-space: nowrap; }
+  .checklist { background: #fafafa; border: 1px solid #e0e0e0; border-radius: 4px; padding: 12px 16px; font-family: 'Courier New', monospace; font-size: 10pt; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<h1>Snowflake Migration Plugin</h1>
+<p>An AI-powered plugin that guides you through end-to-end database migration to Snowflake. It provides an interactive, conversational workflow &mdash; from connecting to your source database through deployment, data migration, and validation.</p>
+<p><strong>Supported sources:</strong> SQL Server, Amazon Redshift, Oracle</p>
+
+<!-- ================================================================ -->
+<h2>Quick Start</h2>
+
+<h3>1. Launch the plugin</h3>
+<pre>cortex --plugin-dir /your/path/ending/with/plugin/</pre>
+<p>Dependencies (<code>uv</code>, <code>scai</code>) are installed automatically on first launch.</p>
+
+<h3>2. Start migrating</h3>
+<blockquote>"Migrate my database to Snowflake"</blockquote>
+<p>The agent configures the session, detects where you are in the migration, and picks up from there. You can also jump to any specific skill at any time.</p>
+
+<!-- ================================================================ -->
+<h2>Migration Workflow</h2>
+<p>The plugin guides you through six stages. At every stage the agent detects your progress and resumes where you left off.</p>
+
+<table class="stage-row">
+  <tr><th>Stage</th><th>What happens</th></tr>
+  <tr><td>1. Connect</td><td>Set up a connection to your source database (SQL Server or Redshift)</td></tr>
+  <tr><td>2. Init</td><td>Create a migration project</td></tr>
+  <tr><td>3. Register</td><td>Extract DDL/code from the source database, or import local SQL files</td></tr>
+  <tr><td>4. Convert</td><td>Translate source SQL into Snowflake SQL via SnowConvert</td></tr>
+  <tr><td>5. Assess</td><td>Generate assessment reports (deployment waves, object exclusions, dynamic SQL patterns, ETL analysis)</td></tr>
+  <tr><td>6. Migrate</td><td>Deploy objects, migrate data, validate, and fix &mdash; wave by wave</td></tr>
+</table>
+
+<p>A progress checklist is shown each time you start a session:</p>
+<div class="checklist">
+&#x2705; 1. Connect &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&mdash; Connected to SQL Server<br>
+&#x2705; 2. Init &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&mdash; Project initialized<br>
+&#x2705; 3. Register &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&mdash; 342 objects registered<br>
+&#x25D0; &nbsp;4. Initial Conv &nbsp;&nbsp;&nbsp;&mdash; 280/342 converted<br>
+&#x2B1A; &nbsp;5. Assess &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&mdash; Not run<br>
+&#x2B1A; &nbsp;6. Migrate Objects &mdash; 0/120 tables deployed
+</div>
+
+<!-- ================================================================ -->
+<h2>Skills</h2>
+<p>The plugin is organized as a <strong>skill tree</strong> &mdash; a hierarchy of Markdown instructions that tell the AI agent what to do at each stage. The root skill detects your project state and routes to the right sub-skill automatically. You can also ask for any skill directly.</p>
+
+<h3>Setup Skills (Steps 1&ndash;5)</h3>
+<table>
+  <tr><th style="width:160px">Skill</th><th>What it does</th></tr>
+  <tr>
+    <td><strong>connection</strong></td>
+    <td>Walks you through connecting to SQL Server or Redshift &mdash; gathering credentials, testing the connection, and saving it for reuse.</td>
+  </tr>
+  <tr>
+    <td><strong>register-code-units</strong></td>
+    <td>Gets source code into the project. Choose between extracting DDL/code from a live database or importing local <code>.sql</code> files from a directory.</td>
+  </tr>
+  <tr>
+    <td><strong>convert</strong></td>
+    <td>Runs SnowConvert to translate your source SQL to Snowflake-compatible syntax. Produces converted files, reports, and a summary of EWIs (Early Warning Issues) by severity.</td>
+  </tr>
+  <tr>
+    <td><strong>assessment</strong></td>
+    <td>Generates an interactive HTML assessment report. Includes deployment wave planning (dependency-aware ordering), object exclusion detection (temp tables, staging, deprecated), dynamic SQL pattern analysis, and SSIS/ETL package analysis.</td>
+  </tr>
+</table>
+
+<h3>Code Conversion Skills (Step 6)</h3>
+<table>
+  <tr><th style="width:160px">Skill</th><th>What it does</th></tr>
+  <tr>
+    <td><strong>migrate-objects</strong></td>
+    <td>The main deploy loop. Gets the next dependency-ready object, then dispatches to the appropriate action: tables are deployed and data-migrated, views are deployed, functions and procedures go through a deploy&ndash;test&ndash;fix cycle. Repeats until all objects in the current wave are done.</td>
+  </tr>
+  <tr>
+    <td><strong>baseline-capture</strong></td>
+    <td>Captures the output of source stored procedures and functions to use as test baselines. Supports two paths: parsing real query logs (CSV of EXEC/CALL statements) or AI-assisted test case generation when no logs are available.</td>
+  </tr>
+  <tr>
+    <td><strong>rule-engine</strong></td>
+    <td>Manages reusable migration rules stored in Snowflake. Rules encode known source-to-Snowflake fix patterns (regex or AI-guided). Sub-skills: <strong>search</strong> (find rules for a SQL file), <strong>apply</strong> (run matched rules on local files), <strong>extract</strong> (create a rule from a code fix or git history), <strong>propagate</strong> (find all code units a rule applies to and batch-apply).</td>
+  </tr>
+</table>
+
+<h3>Skill Map</h3>
+<pre>migration/                                  &larr; Root router (detects state, delegates)
+&#9500;&#9472; setup/                                    &larr; Steps 1&ndash;5 orchestration
+&#9474;   &#9500;&#9472; connection/
+&#9474;   &#9474;   &#9500;&#9472; sql-server-connection/            &larr; SQL Server credentials &amp; setup
+&#9474;   &#9474;   &#9492;&#9472; redshift-connection/              &larr; Redshift credentials &amp; setup
+&#9474;   &#9500;&#9472; register-code-units/                  &larr; Extract from DB or import local files
+&#9474;   &#9500;&#9472; convert/                              &larr; SnowConvert translation
+&#9474;   &#9492;&#9472; assessment/                          &larr; Assessment report generation
+&#9474;       &#9500;&#9472; waves-generator/                  &larr; Dependency analysis &amp; wave planning
+&#9474;       &#9500;&#9472; object_exclusion_detection/        &larr; Wrapper around scai assessment object-exclusion
+&#9474;       &#9500;&#9472; analyzing-sql-dynamic-patterns/    &larr; Dynamic SQL classification (wraps `scai assessment sql-dynamic`)
+&#9474;       &#9492;&#9472; etl-assessment/                   &larr; SSIS package analysis
+&#9500;&#9472; migrate-objects/                          &larr; Deploy / test / fix loop (Step 6)
+&#9474;   &#9500;&#9472; actions/                              &larr; Per-type playbooks (table, view, function)
+&#9474;   &#9500;&#9472; baseline-capture/                     &larr; Source output capture for validation
+&#9474;   &#9500;&#9472; setup/                                &larr; Validation framework setup
+&#9474;   &#9492;&#9472; rule-engine/                          &larr; Migration rule management
+&#9474;       &#9500;&#9472; search/                           &larr; Find rules for a file
+&#9474;       &#9500;&#9472; apply/                            &larr; Apply matched rules
+&#9474;       &#9500;&#9472; extract/                          &larr; Create rules from fixes
+&#9474;       &#9492;&#9472; propagate/                        &larr; Batch-apply rules across project</pre>
+
+<!-- ================================================================ -->
+<h2>What You Can Ask</h2>
+<p>You don't need to follow the prescribed path &mdash; you can ask for any capability at any time.</p>
+
+<h3>Status &amp; Navigation</h3>
+<ul>
+  <li><em>"What is the current state?"</em> &mdash; shows the progress checklist</li>
+  <li><em>"What should I work on next?"</em> &mdash; returns the next dependency-ready object</li>
+  <li><em>"Continue"</em> &mdash; picks up the prescribed migration path</li>
+</ul>
+
+<h3>Setup</h3>
+<ul>
+  <li><em>"Connect to my SQL Server database"</em></li>
+  <li><em>"Extract objects from the source"</em></li>
+  <li><em>"Import SQL files from ./my-scripts/"</em></li>
+  <li><em>"Convert my source code"</em></li>
+</ul>
+
+<h3>Assessment</h3>
+<ul>
+  <li><em>"Run a full assessment"</em></li>
+  <li><em>"Generate deployment waves"</em></li>
+  <li><em>"Identify temporary and staging objects"</em></li>
+  <li><em>"Analyze dynamic SQL patterns"</em></li>
+  <li><em>"Assess my SSIS packages"</em></li>
+</ul>
+
+<h3>Migration</h3>
+<ul>
+  <li><em>"Deploy tables"</em></li>
+  <li><em>"Migrate data"</em></li>
+  <li><em>"Deploy and test the next function"</em></li>
+  <li><em>"Capture baselines for dbo.GetCustomerOrders"</em></li>
+</ul>
+
+<h3>Rules</h3>
+<ul>
+  <li><em>"Search rules for this file"</em></li>
+  <li><em>"Apply all matched rules"</em></li>
+  <li><em>"Extract a rule from my last fix"</em></li>
+  <li><em>"Propagate this rule across the project"</em></li>
+</ul>
+
+<!-- ================================================================ -->
+<h2>Prerequisites</h2>
+<ul>
+  <li><strong>Snowflake account</strong> with a connection configured in <code>~/.snowflake/connections.toml</code></li>
+  <li><strong>Source database</strong> accessible from your machine (SQL Server or Redshift)</li>
+</ul>
+<p>All other dependencies (<code>uv</code>, <code>scai</code>, Python packages) are installed automatically by the plugin on first launch.</p>
+
+<!-- ================================================================ -->
+<h2>Troubleshooting</h2>
+<ul>
+  <li><strong>Plugin fails on startup</strong> &mdash; Check <code>plugin/logs/install-dependencies.log</code>. The install hook requires Homebrew (macOS/Linux) or winget (Windows).</li>
+  <li><strong><code>scai</code> not found</strong> &mdash; Run the install hook manually: <code>plugin/hooks/install-dependencies</code>, or install via Homebrew: <code>brew install --cask snowflakedb/snowconvert-ai/snowconvert-ai</code>.</li>
+  <li><strong>Snowflake connection errors</strong> &mdash; Verify your connection in <code>~/.snowflake/connections.toml</code> and make sure the name matches what you provided during setup.</li>
+  <li><strong>Agent seems lost</strong> &mdash; Say "What is the current state?" to reset context. The agent re-reads project status and shows the progress checklist.</li>
+</ul>
+
+</body>
+</html>

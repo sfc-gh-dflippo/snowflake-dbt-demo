@@ -1,0 +1,71 @@
+{
+  "distinguisher": "seed",
+  "first_observed": "poc/spikes/element-id-fit/platform_ssis.json kind_dispatch['Microsoft.ConditionalSplit'].note; findings/41-the-fallback-ladder.md (nested condition tree)",
+  "hashed_material": "aim.sig.v1\u001fPRED\u001fpredicate:row-filter\u001fnot-extractable-by-any-rule",
+  "id": "AIM-PRED-47f7de0cd8c0",
+  "impact": "output-incomplete",
+  "mint": {
+    "at": "2026-08-03T17:18:34Z",
+    "by": "seed",
+    "category_novel": false,
+    "classification": {
+      "considered": [
+        {
+          "differs_in": [
+            "category",
+            "construct",
+            "reason"
+          ],
+          "id": "AIM-EXPR-4d4d56018da3",
+          "parts": {
+            "category_equal": 0.0,
+            "construct_jaccard": 0.0,
+            "reason_similarity": 0.3448,
+            "text_similarity": 0.1209
+          },
+          "score": 0.0871
+        },
+        {
+          "differs_in": [
+            "category",
+            "construct",
+            "reason"
+          ],
+          "id": "AIM-REPR-5161af7f0af6",
+          "parts": {
+            "category_equal": 0.0,
+            "construct_jaccard": 0.0,
+            "reason_similarity": 0.383,
+            "text_similarity": 0.0456
+          },
+          "score": 0.0834
+        }
+      ],
+      "rule": "NO_CANDIDATE_ABOVE_THRESHOLD",
+      "verdict": "NOVEL"
+    },
+    "distinguisher": "seed"
+  },
+  "note": "The engine's filter translator substitutes WHERE TRUE for an empty predicate and records it only as a log warning -- a filter that keeps every row with nothing in the artifact saying so. That is why an unobtainable predicate has to degrade loudly instead of hydrating a hollow filter. Measured shape: a predicate held as a nested condition tree that no flat scrape rule reaches.",
+  "note_lint": {
+    "findings": [],
+    "rule_version": "aim.text.v1",
+    "scope": "instance",
+    "verdict": "PASS"
+  },
+  "sig_version": "aim.sig.v1",
+  "signature": {
+    "category": "PRED",
+    "construct": "predicate:row-filter",
+    "reason": "not-extractable-by-any-rule"
+  },
+  "supersedes": "",
+  "text": "Element '{element}' of kind '{kind}' is represented as a row-selection step and the representation carries no condition for it. No extraction rule in this migration obtained one from the document. A row-selection step with no condition must not be generated as one that keeps every row, because that changes which rows reach the output while looking correct, so no selection is generated here at all. {detail}",
+  "text_lint": {
+    "findings": [],
+    "rule_version": "aim.text.v1",
+    "scope": "type",
+    "verdict": "PASS"
+  },
+  "title": "Row-selection condition not obtained by any extraction rule"
+}

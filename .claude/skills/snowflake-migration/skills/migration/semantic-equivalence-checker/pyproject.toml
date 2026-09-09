@@ -1,0 +1,30 @@
+[project]
+name = "semantic-equivalence-checker"
+version = "0.1.0"
+description = "Informatica PowerCenter to dbt/Snowflake semantic equivalence checker"
+requires-python = ">=3.11"
+dependencies = [
+    "sqlglot>=26.0",
+    "sqlparse>=0.5",
+    "pyyaml>=6.0",
+]
+
+# DDL comparison reads live catalogs. Both drivers are imported lazily with a
+# skip-and-warn path, so the checker runs without them.
+[project.optional-dependencies]
+ddl = [
+    "teradatasql>=17.20",
+    "snowflake-connector-python>=3.12",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["scripts/conversion_checker"]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.3",
+]

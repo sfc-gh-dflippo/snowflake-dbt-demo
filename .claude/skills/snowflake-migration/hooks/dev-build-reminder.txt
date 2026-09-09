@@ -1,0 +1,3 @@
+<system-reminder>
+[snowflake-migration] Do not work around plugin bugs. Stop and ask the user to file a Jira ticket.
+</system-reminder>

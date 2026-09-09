@@ -1,0 +1,30 @@
+{
+  "distinguisher": "The generated text is not runnable at all, rather than runnable with a different result. A reviewer fixes it by naming a function that exists; the value-divergence type needs a semantic decision instead.",
+  "first_observed": "gate_b.py m_CUSTOMER_SUMMARY_fullname_birthyear.xml / EX:m_customer_summary_customer_summary#BirthYear",
+  "hashed_material": "aim.sig.v1\u001fSEM\u001fcolumn:value-derivation\u001flowered-expression-names-no-target-function",
+  "id": "AIM-SEM-2854b30f4eb4",
+  "impact": "output-absent",
+  "note": "Cheap for a rule to catch as well, and recorded as its own type precisely so that the expensive semantic type is not diluted by it. findings/42 scored this one low for that reason while noting that missing it would still be bad.",
+  "note_lint": {
+    "findings": [],
+    "rule_version": "aim.text.v1",
+    "scope": "instance",
+    "verdict": "PASS"
+  },
+  "proposed_by": "gate_b:sourced",
+  "sig_version": "aim.sig.v1",
+  "signature": {
+    "category": "SEM",
+    "construct": "column:value-derivation",
+    "reason": "lowered-expression-names-no-target-function"
+  },
+  "supersedes": "",
+  "text": "Column '{element}' was generated from an expression the document states for element of kind '{kind}'. The generated expression names a function that is not defined in the target dialect, so the generated model cannot run as written. This states a defect in the generated output and claims nothing about the document. {detail}",
+  "text_lint": {
+    "findings": [],
+    "rule_version": "aim.text.v1",
+    "scope": "type",
+    "verdict": "PASS"
+  },
+  "title": "A lowered expression names a function the target dialect does not define"
+}

@@ -1,0 +1,529 @@
+{
+  "platform": "SqlServerIntegrationServices",
+  "table_version": "ssis.v1",
+  "_comment": "Per-platform configuration for SSIS .dtsx. NOTHING here is read from a source file. Every entry is a reviewable policy decision, derived from the .dtsx fixture's own conventions -- not ported from platform_informatica.json. Where a policy value differs from Informatica's it is because SSIS states the fact differently, and that is noted.",
+  "structure": {
+    "_comment": "A .dtsx puts BOTH graph levels in one document: the DTS-namespaced control flow, and a non-namespaced <pipeline> data flow nested inside a task's ObjectData. Note the mixed namespacing -- DTS elements are namespace-qualified, pipeline elements are not. ElementTree {uri}tag paths handle this with no framework support required.",
+    "unsupported_body_max_chars": 4000,
+    "_unsupported_body_max_chars_comment": "FRAMEWORK CHANGE 63 (b). Cap on the source fragment a degraded element carries into its placeholder model as SQL comments. A <component> carries its inputColumns and outputColumns, each with cached metadata, so a wide Derived Column is the big case. MEASURED on DerivedColumn.dtsx: largest 2.6 KB. A cut is always announced inside the body, so a truncated fragment never reads as a complete one.",
+    "namespaces": {
+      "DTS": "www.microsoft.com/SqlServer/Dts"
+    },
+    "attr_where_template": "properties/property[@name='{key}']/text()",
+    "container": {
+      "xpath": ".",
+      "name_attr": "{www.microsoft.com/SqlServer/Dts}ObjectName"
+    },
+    "levels": [
+      {
+        "_comment": "CONTROL FLOW. The Informatica fixture had no analogue: a mapping is data flow only. Sweeping this level is deliberate -- skipping it would hide from the fit score the fact that the IR contract cannot represent a control-flow task at all.",
+        "name": "control_flow",
+        "elements": "./{www.microsoft.com/SqlServer/Dts}Executables/{www.microsoft.com/SqlServer/Dts}Executable",
+        "key_attr": "{www.microsoft.com/SqlServer/Dts}refId",
+        "kind_attr": "{www.microsoft.com/SqlServer/Dts}ExecutableType",
+        "role_attr": null,
+        "display_name_attr": "{www.microsoft.com/SqlServer/Dts}ObjectName",
+        "description_attr": "{www.microsoft.com/SqlServer/Dts}Description",
+        "flag_attrs": {}
+      },
+      {
+        "_comment": "DATA FLOW. componentClassID is a dotted name in this fixture ('Microsoft.DerivedColumn'). SSIS also emits GUID class ids in some saved packages; kind_dispatch would need both spellings as separate keys. UNVERIFIED here -- only one fixture was available.",
+        "name": "data_flow",
+        "elements": "./{www.microsoft.com/SqlServer/Dts}Executables/{www.microsoft.com/SqlServer/Dts}Executable/{www.microsoft.com/SqlServer/Dts}ObjectData/pipeline/components/component",
+        "key_attr": "refId",
+        "kind_attr": "componentClassID",
+        "role_attr": null,
+        "display_name_attr": "name",
+        "description_attr": "description",
+        "flag_attrs": {
+          "uses_dispositions": "usesDispositions"
+        }
+      }
+    ],
+    "census": {
+      "_comment": "ADDITION 2 -- EXHAUSTIVE IDENTIFICATION. `levels` says what an element IS; this says what is DELIBERATELY NOT one, with a reason per rule. Anything matched by neither is an UNKNOWN OBJECT: inventoried with a citable location rather than dropped. See identify.py `_census`.",
+      "identity_attrs": [
+        "{www.microsoft.com/SqlServer/Dts}refId",
+        "{www.microsoft.com/SqlServer/Dts}ObjectName",
+        "{www.microsoft.com/SqlServer/Dts}CreationName",
+        "{www.microsoft.com/SqlServer/Dts}Name",
+        "refId",
+        "name",
+        "componentClassID"
+      ],
+      "_identity_attrs_comment": "How an unknown record is identified in the inventory. A .dtsx names things twice over -- the DTS namespace for control-flow objects, bare attributes inside a pipeline -- so both spellings are listed. refId is a full path-shaped identity and is the single most useful line in an unknown entry.",
+      "exclusions": [
+        {
+          "id": "ssis-package-root",
+          "kind": "QUERY",
+          "match": ".",
+          "excludes": "the package Executable at the document root",
+          "why": "`structure.container` names this node -- xpath '.', name_attr @ObjectName -- so the package is the document's unit of work rather than an element in its graph. FRAMEWORK CHANGE 1 exists because of exactly this node: the container of the components is <Executables>, which is anonymous, and the named unit is the package root."
+        },
+        {
+          "id": "ssis-designer-layout",
+          "kind": "QUERY",
+          "match": ".//{www.microsoft.com/SqlServer/Dts}DesignTimeProperties",
+          "subtree": true,
+          "excludes": "the DesignTimeProperties block and everything in it",
+          "why": "GEOMETRY. Its own CDATA says so: 'This CDATA section contains the layout information of the package ... (x,y) coordinates, width, and height ... If you manually edit this section and make a mistake, you can delete it. The package will still be able to load normally.' A block whose own documentation says it is deletable without effect is not part of the migration."
+        },
+        {
+          "id": "ssis-anonymous-collection-wrapper",
+          "kind": "QUERY",
+          "match": [
+            ".//{www.microsoft.com/SqlServer/Dts}Executables",
+            ".//{www.microsoft.com/SqlServer/Dts}ObjectData",
+            ".//{www.microsoft.com/SqlServer/Dts}ConnectionManagers",
+            ".//{www.microsoft.com/SqlServer/Dts}Variables",
+            ".//{www.microsoft.com/SqlServer/Dts}PrecedenceConstraints",
+            ".//pipeline",
+            ".//components",
+            ".//inputs",
+            ".//outputs",
+            ".//inputColumns",
+            ".//outputColumns",
+            ".//externalMetadataColumns",
+            ".//properties",
+            ".//connections",
+            ".//paths"
+          ],
+          "excludes": "the anonymous collection elements that group the things a .dtsx actually declares",
+          "why": "Each of these states NOTHING: no refId, no name, no property -- it exists only so that XML can hold a list. The things inside them are classified on their own account, which is the whole reason this is NOT a subtree rule. Deliberately NOT excluded with them: a {dts}ConnectionManager inside {dts}ConnectionManagers and a {dts}Variable inside {dts}Variables ARE objects, and they come out as UNKNOWN OBJECTS because this table has no level for either. MEASURED on DerivedColumn.dtsx: both {dts}Variables elements are stated and EMPTY and {dts}PrecedenceConstraints is stated and EMPTY, so excluding the wrapper hides nothing there; the ConnectionManagers wrapper holds a real ODBC connection manager and that IS reported."
+        },
+        {
+          "id": "ssis-path-edge",
+          "kind": "EDGE_RECORD",
+          "excludes": "every <path> and every {dts}PrecedenceConstraint, via the edge_levels declaration",
+          "why": "A <path> IS a data-flow edge (startId -> endId between output and input) and a PrecedenceConstraint IS a control-flow edge. Both are inventoried as edges. Derived from edge_levels rather than restated, so the two cannot drift."
+        },
+        {
+          "id": "ssis-buffer-column-row",
+          "kind": "QUERY",
+          "match": [
+            ".//inputColumn",
+            ".//outputColumn"
+          ],
+          "excludes": "the buffer column rows of a component",
+          "why": "One row per column in the pipeline buffer. Read by the two `self_def_site.port_sites` -- inputColumn as INPUT ports (cachedName / cachedDataType / lineageId as a REFERENCE), outputColumn as OUTPUT ports (name / dataType / lineageId as a DECLARE) -- so each is inventoried as a Port with its own `where`."
+        },
+        {
+          "id": "ssis-output-group",
+          "kind": "QUERY",
+          "match": ".//outputs/output",
+          "excludes": "the <output> rows of a component",
+          "why": "An <output> is one output port group -- which is how a Conditional Split states its cases (@exclusionGroup) and how a component states its error output (@isErrorOut). Read by `self_def_site.group_site` and inventoried as the element's groups, and it is where an outputColumn's group comes from (group_from ANCESTOR)."
+        },
+        {
+          "id": "ssis-property-row",
+          "kind": "QUERY",
+          "match": ".//properties/property",
+          "excludes": "the <property> rows of a component and of an output column",
+          "why": "One row per named property, value in the element TEXT. Read by `self_def_site.attr_site` (xpath ./properties/property, value_from TEXT) as the element's table attributes, and by the outputColumn port_site's expression reader (./properties/property[@name='Expression']) -- which is where a Derived Column's expression actually is."
+        }
+      ]
+    },
+    "load_order": null,
+    "ref_attrs": [
+      "refId"
+    ],
+    "lineage": {
+      "_comment": "SSIS column identity. An outputColumn DECLARES a lineageId; a downstream inputColumn carries the SAME lineageId as a back-reference to it. This is the only place field-level lineage exists -- a <path> carries none. Informatica needs no analogue because a CONNECTOR names both fields directly.",
+      "reference_attr": "lineageId",
+      "referencing_porttypes": [
+        "INPUT"
+      ]
+    },
+    "edge_levels": [
+      {
+        "_comment": "A <path> names an OUTPUT refId and an INPUT refId, never the components. Both endpoints must be resolved to their owning component by ancestry.",
+        "name": "paths",
+        "xpath": "./{www.microsoft.com/SqlServer/Dts}Executables/{www.microsoft.com/SqlServer/Dts}Executable/{www.microsoft.com/SqlServer/Dts}ObjectData/pipeline/paths/path",
+        "endpoint_kind": "PORT_REF",
+        "from_attr": "startId",
+        "to_attr": "endId",
+        "label_attr": "name"
+      },
+      {
+        "_comment": "Control-flow ordering. Empty in this fixture, so it creates nothing. Present so a multi-task package does not silently lose its ordering.",
+        "name": "precedence",
+        "xpath": "./{www.microsoft.com/SqlServer/Dts}PrecedenceConstraints/{www.microsoft.com/SqlServer/Dts}PrecedenceConstraint",
+        "endpoint_kind": "PORT_REF",
+        "from_attr": "{www.microsoft.com/SqlServer/Dts}From",
+        "to_attr": "{www.microsoft.com/SqlServer/Dts}To",
+        "label_attr": "{www.microsoft.com/SqlServer/Dts}Value"
+      }
+    ],
+    "default_def_site": "SELF",
+    "def_sites": {},
+    "self_def_site": {
+      "_comment": "An SSIS component carries its own columns; there is no separate definition section to join to. Note the attribute-name ASYMMETRY between the two port sites: inputs use cachedName/cachedDataType/cachedLength, outputs use name/dataType/length. A single per-platform attribute-name map could not express this.",
+      "port_sites": [
+        {
+          "id": "inputColumn",
+          "xpath": "./inputs/input/inputColumns/inputColumn",
+          "porttype": "INPUT",
+          "name_attr": "cachedName",
+          "datatype_attr": "cachedDataType",
+          "precision_attrs": [
+            "cachedLength",
+            "cachedPrecision"
+          ],
+          "scale_attrs": [
+            "cachedScale"
+          ],
+          "lineage_attr": "lineageId",
+          "lineage_role": "REFERENCE"
+        },
+        {
+          "id": "outputColumn",
+          "xpath": "./outputs/output/outputColumns/outputColumn",
+          "porttype": "OUTPUT",
+          "name_attr": "name",
+          "datatype_attr": "dataType",
+          "precision_attrs": [
+            "length",
+            "precision"
+          ],
+          "scale_attrs": [
+            "scale"
+          ],
+          "lineage_attr": "lineageId",
+          "lineage_role": "DECLARE",
+          "group_from": "ANCESTOR",
+          "expression": {
+            "from": "TEXT",
+            "xpath": "./properties/property[@name='Expression']"
+          }
+        }
+      ],
+      "group_site": {
+        "_comment": "SSIS output groups. Closest structural analogue to an Informatica GROUP, but they carry no routing condition -- an SSIS output is a named branch, not a predicate. isErrorOut marks the error branch.",
+        "xpath": "./outputs/output",
+        "name_attr": "name",
+        "type_attr": null,
+        "order_attr": null,
+        "expression_attr": null,
+        "flag_attrs": {
+          "is_error_out": "isErrorOut",
+          "exclusion_group": "exclusionGroup"
+        }
+      },
+      "attr_site": {
+        "_comment": "Component properties. Lowercase @name, and the VALUE is element text, not an attribute.",
+        "xpath": "./properties/property",
+        "name_attr": "name",
+        "value_attr": null,
+        "value_from": "TEXT"
+      }
+    }
+  },
+  "kind_dispatch": {
+    "_comment": "componentClassID / ExecutableType -> IR element $kind. 'ir_kind': null means the hydrator has no door onto this element type -> census NotSupported. 'role' is present because an SSIS component declares no role attribute: unlike Informatica's INSTANCE/@TYPE, there is exactly one classification axis and the role has to be derived from it.",
+    "Microsoft.Pipeline": {
+      "degrade_to": null,
+      "degrade_reason": "LEFT NULL DELIBERATELY. A Data Flow Task is a CONTAINER, and no data-flow class describes a container -- in the engine it becomes a DIRECTORY plus a row in the orchestration SQL, never a model. It is also load-bearing as a null: the vertical slice's orchestration half reads this node out of HydratedIr.UnsupportedNodes to get its boundary marker, so degrading it would take that fact away. Its one edge is unaffected: the SSIS graph's only edge runs OLE DB Source -> Derived Column and never touches the container. Evidence for ENG-001 (a containment tier).",
+      "ir_kind": null,
+      "role": "TASK",
+      "supported": false,
+      "def_site": "SELF",
+      "note": "A Data Flow Task is a CONTROL-FLOW element containing a whole data flow. The IR is a flat node/edge graph of data-flow elements with $kind in {SourceQualifier, ExpressionTransformation}; it has no representation for a task, for containment, or for control flow of any kind."
+    },
+    "Microsoft.DerivedColumn": {
+      "ir_kind": "ExpressionTransformation",
+      "role": "TRANSFORMATION",
+      "supported": true,
+      "def_site": "SELF",
+      "note": "Adds computed columns to a synchronous flow. Maps onto the IR's expression-carrying element."
+    },
+    "Microsoft.OLEDBSource": {
+      "ir_kind": "SourceQualifier",
+      "role": "SOURCE",
+      "supported": true,
+      "def_site": "SELF",
+      "element_fields": {
+        "TableName": {
+          "rule": "oledb_open_rowset",
+          "required": false,
+          "transform": "UNQUALIFIED_TAIL"
+        }
+      },
+      "_element_fields_comment": "THE SOURCE RELATION, and the reason the staging model used to end on a bare `FROM`. SourceQualifierTranslator does NOT read the SourceQualifier's own properties for its FROM clause: BuildStandardSelectQuery calls ctx.GetIncomingEntities(sourceQualifier) and takes `source.TableName ?? source.Name` off each incoming Source entity (Assemblies/EtlToDbt/DbtGeneration/Translations/SourceQualifierTranslator.cs:524-544). Our IR had no Source upstream of the SourceQualifier, so the entity list was EMPTY, CreateFromClause built a FROM with zero table factors, and the model printed `FROM` and stopped. Supplying the relation here lets the consumer answer that context query. REQUIRED IS FALSE, deliberately: AccessMode 2/3 states a SqlCommand instead of an OpenRowset and there is then no table name to read, which is a truthful absence rather than a reason to degrade a working source to UnsupportedTransformation. SAME RULE AS THE DESTINATION -- the .dtsx states both tables identically, as the text of a child <property name=\"OpenRowset\">. TABLE REDUNDANCY, NOW FIXED. `open_rowset` (ELEMENT_ATTR @OpenRowset) and `oledb_open_rowset` (CHILD_TEXT ./properties/property[@name='OpenRowset']) were the SAME reading spelled two ways -- the census's ELEMENT_ATTR branch reads el.table_attrs, which _read_table_attrs fills from this platform's own attr_site, i.e. from that very property node. Promotion suppresses only the promoted id, so `!open_rowset` was still reported UNMET, citing the same location with the same value ('[dbo].[DimCustomer]'), on an element whose element.TableName was SOURCE-populated from it. That is a FALSE unmet obligation, not a coverage gap, and it is the ONE case where retiring an obligation is correct: the document states the fact and the IR carries it. `open_rowset` is deleted; emit.Emitter._assert_fact_rules_distinct now RAISES on any recurrence, on every platform, so the redundancy cannot come back silently. Fit effect MEASURED, and it is one obligation per element that states an OpenRowset: canonical DerivedColumn.dtsx 46/81 -> 46/80 (unsatisfied 35 -> 34, 56.8% -> 57.5%); the blind CustomerSummary_DerivedColumn_ConditionalSplit.dtsx retires two, one per OLE DB endpoint. Satisfied count does NOT move, because nothing new was read -- only a duplicate denominator entry was removed. No other platform moves.",
+      "note": "Reads a rowset via a connection manager. Mapped to SourceQualifier because that is the IR's only source-shaped door -- the SQL command and the connection are still dropped; the rowset name is not, any more."
+    },
+    "Microsoft.ConditionalSplit": {
+      "ir_kind": "FilterTransformation",
+      "role": "TRANSFORMATION",
+      "supported": true,
+      "def_site": "SELF",
+      "element_fields": {
+        "FilterConditions": {
+          "rule": "cspl_friendly_expression",
+          "required": true
+        }
+      },
+      "degrade_to": "UnsupportedTransformation",
+      "note": "WIDENING. A split with ONE live branch is a filter. A split with two live branches is a ROUTER and is still unrepresentable: RouterTransformation is abstract and its only subclasses are SsisRouterTransformation / InfPcRouterTransformation, so a producer would have to assert a platform. Filed, not worked around. REQUIRED. FilterTranslator's shared base substitutes `WHERE TRUE` for an empty predicate and records it only as a log warning -- a filter that silently returns every row. So an unextractable predicate must degrade, not emit a hollow FilterTransformation."
+    },
+    "Microsoft.OLEDBDestination": {
+      "ir_kind": "TargetTransformation",
+      "role": "TARGET",
+      "supported": true,
+      "def_site": "SELF",
+      "element_fields": {
+        "TableName": {
+          "rule": "oledb_open_rowset",
+          "required": true,
+          "transform": "UNQUALIFIED_TAIL"
+        }
+      },
+      "degrade_to": "UnsupportedTransformation",
+      "note": "WIDENING. Previously ABSENT -- our SSIS profile had never seen a destination. REQUIRED for the reason OracleConnectorPX's degrade_reason already gives: TargetTranslatorBase substitutes YOUR_DB plus a fallback schema when fields are null, so a TargetTransformation without a table states a destination the document does not. This makes that hand-made judgement MECHANICAL -- a write stage whose table survives identification qualifies, one whose table is buried in an XMLProperties blob degrades, and neither is curated by hand."
+    },
+    "unmapped_kind_degrade_to": "UnsupportedTransformation"
+  },
+  "role_to_node_type": {
+    "SOURCE": "source",
+    "TARGET": "target",
+    "_target_comment": "ADDED. It was MISSING while this table's own kind_dispatch declares `role: \"TARGET\"` for Microsoft.OLEDBDestination, so every OLE DB Destination took the unmapped fallback and was emitted with node type \"unknown\" -- and node.type was recorded MISSING, costing the element an obligation it should have satisfied from the table. MEASURED on CustomerSummary_DerivedColumn_ConditionalSplit.dtsx, where OLE_DST CUSTOMER_SUMMARY is the mart. NOT MEASURABLE on the canonical fixture: DerivedColumn.dtsx has no destination component at all, which is exactly why the hole survived. The value 'target' matches what the other four tables state for the same role, and it is the same value platform_informatica.json records as having no distinct meaning downstream (KindForNode maps every non-'source' type to Intermediate) -- so this fixes the IR TEXT and the fit obligation, and changes nothing in the consumer.",
+    "TRANSFORMATION": "transformation",
+    "TASK": "transformation",
+    "unmapped_role_node_type": "unknown",
+    "unmapped_role_reason": "Declared for the same reason as Informatica's, where it was a MEASURED crash. On SSIS the role is derived from kind_dispatch rather than read from an attribute, so an unmapped role means an unmapped KIND. CORRECTED CLAIM: this used to say the path was 'untested here because every componentClassID in the fixture is mapped', which conflates two vocabularies. Every KIND being mapped says nothing about every ROLE being mapped, and the fallback was in fact FIRING -- on TARGET, a role this table's kind_dispatch declares and this map did not carry. `identify.validate_table` now RAISES when role_to_node_type omits a role the table can produce, on every platform, so the fallback is once again reachable only by an unmapped KIND and that claim is now enforced instead of asserted.",
+    "known_defect": "'TASK' has no node type of its own. A control-flow task is emitted as a transformation-typed node with a null $kind, which is wrong in kind rather than merely lossy. Recorded rather than hidden."
+  },
+  "naming_policy": {
+    "_comment": "modelName is a TARGET-artifact decision; nothing in the .dtsx constrains it. SSIS forces two choices Informatica did not: (1) the element KEY is a backslash-delimited path, not a name, so modelName must come from the display name; (2) SSIS display names contain SPACES ('Derived Column', 'OLE DB Source DimCustomer'), which no Snowflake/dbt identifier may carry unquoted.",
+    "policy_id": "ssis.modelname.v1",
+    "name_source": "component/@name",
+    "name_from": "DISPLAY_NAME",
+    "element_name_from": "DISPLAY_NAME",
+    "lowercase": true,
+    "sanitize_identifier": {
+      "allowed_chars": "abcdefghijklmnopqrstuvwxyz0123456789_",
+      "allowed_leading_chars": "abcdefghijklmnopqrstuvwxyz_",
+      "replace_illegal_with": "_",
+      "leading_prefix": "m_",
+      "_comment": "MEASURED on Pentaho: 'Dummy (do nothing)' -> 'dummy_(do_nothing)' and 'safe-stop-gen-rows' kept its hyphens; neither is a legal UNQUOTED Snowflake or dbt identifier. Declared on EVERY platform rather than only the one that needed it, so a legal name is provably unaffected: the IR of the other four is byte-identical with this rule present. One replacement character per illegal character, NOT a collapsed run -- collapsing merges 'a--b' into 'a_b', and merging two distinct names is the defect qualify_with_container exists to prevent. A name that cannot start a bare identifier is PREFIXED, not trimmed, for the same reason. Residual merges remain possible in principle, so emit() asserts injectivity across the document and raises rather than letting the dbt writer overwrite one model with another."
+    },
+    "replace_whitespace_with": "_",
+    "split_camel_case": false,
+    "strip_kind_prefixes": false,
+    "qualify_with_task": false,
+    "qualify_with_container": null,
+    "qualify_reason": "LEFT OFF. A .dtsx holds ONE package, so a display-name collision needs two components in two different tasks of the same package -- possible but not present in any fixture, and the element KEY (refId, a backslash path) already carries the task. Turning this on would change the SSIS IR, which is the one platform whose output must stay byte-identical. The v1 known_risk below therefore still stands and is still untested.",
+    "known_risk": "Two components in different tasks of one package may share a display name; refId cannot collide but modelName can. Untested -- the fixture has one task."
+  },
+  "column_propagation": {
+    "_comment": "SSIS BUFFER SEMANTICS, stated. A synchronous output passes the WHOLE input buffer through and the <outputColumns> list names only the columns the component ADDS; an <inputColumns> list names only the columns the component REFERENCES. So a declared column list is never exhaustive on this platform and ACCUMULATE is the only faithful reading. Measured consequence of not doing this: 'CSPL Filter BirthYear' projected 1 of the 6 columns on its buffer and the destination model's FullName reference had no upstream column to resolve against.",
+    "mode": "ACCUMULATE",
+    "algorithm_id": "predecessor_column_propagation.v1",
+    "_stop_comment": "The five componentClassIDs are SsisProjectionContext.ComponentsThatStopColumnWalkback (Assemblies/EtlToDbt/DtsxSsis/SsisProjectionContext.cs:27-34) -- the engine's own list of components that define their own output shape instead of passing input through. Copied, not invented. NONE of the five appears in any fixture this spike runs, so the list is DECLARED AND UNEXERCISED and is marked as such rather than presented as verified.",
+    "stop_at_kinds": [
+      "Microsoft.UnionAll",
+      "Microsoft.Merge",
+      "Microsoft.UnPivot",
+      "Microsoft.MergeJoin",
+      "Microsoft.FuzzyLookup"
+    ],
+    "_stop_roles_comment": "A WRITE stage defines its own output shape: an OLE DB Destination writes exactly the columns its <inputColumns> maps, and its projection is already derived from those by target_projection_mirrors_input. Accumulating the upstream buffer into it would make the mart model write four columns the destination does not map. TARGET is therefore a stop element on the same grounds as the five kinds above -- it does not pass input through.",
+    "stop_at_roles": [
+      "TARGET"
+    ]
+  },
+  "port_policy": {
+    "_comment": "SSIS states porttype by CONTAINMENT, not by an attribute, so the porttype values here are the ones the port sites synthesise. There is no local-variable concept in an SSIS data flow at all: an intermediate value is a separate output column of a separate Derived Column, so nothing is inlined.",
+    "output_column_order": "OUTPUTCOLUMN_DOCUMENT_ORDER",
+    "input_column_naming": "UPSTREAM_FIELD",
+    "_input_columns_from_comment": "FIELD_EDGES. A .dtsx states field lineage in the one place SSIS has it: an <inputColumn> carries the @lineageId of the upstream <outputColumn> that declared it (structure.lineage), which the sweep reconstructs into field edges. The <path> carries none. MEASURED: 4 field edges on DerivedColumn.dtsx and InputColumns=['FirstName','MiddleName','LastName','BirthDate'] on the Derived Column.",
+    "input_columns_from": "FIELD_EDGES",
+    "input_column_type_from": "LOCAL_PORT",
+    "emit_scale_when_zero": false,
+    "inline_local_variables": false,
+    "drop_local_variables_from_outputs": false,
+    "port_reference_case_insensitive": false,
+    "local_variable_porttype": "__SSIS_HAS_NO_LOCAL_VARIABLE_PORTTYPE__",
+    "output_porttypes": [
+      "OUTPUT"
+    ],
+    "input_porttypes": [
+      "INPUT"
+    ],
+    "exclude_port_groups_with_flag": "is_error_out",
+    "ref_field_passthrough_rule": null
+  },
+  "type_vocabulary": {
+    "_comment": "Carry SSIS-native SSIS Data Flow type names (wstr, i4, dbDate). 'length' is mapped onto the IR's Precision field because it is the nearest available slot; they are NOT the same concept -- length is a character count, precision is a digit count. Recorded as a known table defect.",
+    "carry": "SSIS_NATIVE",
+    "precision_field_carries": "LENGTH_OR_PRECISION",
+    "known_defect": "wstr length 50 emits Precision 50, conflating character length with numeric precision."
+  },
+  "edge_policy": {
+    "_comment": "SSIS STATES its element-level edges as <path> elements, so they are read, not derived. This is the opposite of Informatica, where element edges only exist as a DISTINCT over field-level connectors. The label is the path name, which in this fixture equals the upstream output-group name.",
+    "element_edges_from": "EXPLICIT_EDGE_ELEMENTS",
+    "collapse_connectors_by": null,
+    "label_source": "PATH_NAME",
+    "label_when_absent": null
+  },
+  "default_value_policy": {
+    "_comment": "SSIS data-flow columns have no DEFAULTVALUE attribute; there is nothing analogous to Informatica's per-port default. Error handling is per-column errorRowDisposition plus a separate error output branch, which is a different mechanism entirely and is recorded in no_slot_facts instead.",
+    "error_function_prefix": null,
+    "error_default_disposition": null,
+    "literal_default_on_unconnected_input": null,
+    "discardable_label": "DISCARDABLE",
+    "load_bearing_label": "LOAD_BEARING"
+  },
+  "expression_syntax": {
+    "_comment": "SSIS expression language. Strings are DOUBLE-quoted, not single-quoted. Column references are wrapped in #{...} around a full lineageId, which makes them exactly resolvable against the closed lineage set -- strictly more structural than Informatica's bare identifiers. The alternative FriendlyExpression property carries unqualified names and is deliberately NOT read: it is a designer convenience marked expressionType='Notify' whose identifiers can collide.",
+    "string_quotes": [
+      "\""
+    ],
+    "reference_delimiters": [
+      "#{",
+      "}"
+    ],
+    "identifier_extra_chars": "",
+    "case_insensitive_resolution": false,
+    "expression_property_read": "Expression",
+    "expression_property_ignored": "FriendlyExpression"
+  },
+  "no_slot_facts": [
+    {
+      "id": "sql_command",
+      "from": "ELEMENT_ATTR",
+      "attr": "SqlCommand"
+    },
+    {
+      "id": "access_mode",
+      "from": "ELEMENT_ATTR",
+      "attr": "AccessMode"
+    },
+    {
+      "id": "default_code_page",
+      "from": "ELEMENT_ATTR",
+      "attr": "DefaultCodePage"
+    },
+    {
+      "id": "command_timeout",
+      "from": "ELEMENT_ATTR",
+      "attr": "CommandTimeout"
+    },
+    {
+      "id": "error_output_branch",
+      "from": "GROUP",
+      "when_flag": "is_error_out",
+      "keyed_by": "name",
+      "detail": "an entire output branch, with its own columns, is dropped: the IR graph has one output per element -- and the branch's DISPOSITION goes with it, so a row this component would have diverted or failed on is instead processed normally by the migrated model"
+    },
+    {
+      "id": "column_lineage_identity",
+      "from": "PORT",
+      "porttype_class": "OUTPUT",
+      "skip_excluded_groups": true,
+      "keyed_by": "name",
+      "where_suffix": "/@lineageId",
+      "detail": "{lineage}"
+    },
+    {
+      "id": "dangling_output_column",
+      "from": "PORT",
+      "porttype_class": "OUTPUT",
+      "connectivity": "UNCONNECTED",
+      "skip_excluded_groups": true,
+      "keyed_by": "name",
+      "detail": "no per-column connected flag in the IR"
+    },
+    {
+      "id": "per_column_origin",
+      "from": "FIELD_EDGE",
+      "when": "RENAME",
+      "keyed_by": "to_field",
+      "detail": "{from_instance}.{from_field} -> {to_field}; no origin field in the IR"
+    },
+    {
+      "id": "connection_manager_ref",
+      "from": "CHILD_ATTR",
+      "xpath": "./connections/connection",
+      "attr": "connectionManagerRefId",
+      "key_attr": "name"
+    },
+    {
+      "id": "uses_dispositions",
+      "from": "ELEMENT_FLAG",
+      "flag": "uses_dispositions",
+      "where_suffix": "/@usesDispositions",
+      "detail_note": "The IR has no field for a row disposition, and the DIRECTION of the resulting error matters: with errorRowDisposition=\"FailComponent\" a bad row ABORTS the SSIS package, while the migrated dbt model has no disposition at all and completes. So the loss inverts the failure behaviour -- a pipeline that stopped loudly becomes one that finishes quietly with different data -- rather than merely omitting a setting. See residue.error_output_semantics."
+    },
+    {
+      "id": "task_containment",
+      "from": "CONTAINER",
+      "detail": "element lives inside control-flow element {container}; the IR graph is flat and has no containment edge"
+    },
+    {
+      "id": "cspl_friendly_expression",
+      "from": "CHILD_TEXT",
+      "xpath": "./outputs/output/properties/property[@name='FriendlyExpression']",
+      "note": "The Conditional Split predicate. Text of a <property>, so CHILD_ATTR cannot read it."
+    },
+    {
+      "id": "oledb_open_rowset",
+      "from": "CHILD_TEXT",
+      "xpath": "./properties/property[@name='OpenRowset']",
+      "note": "The destination table, e.g. [dbo].[CUSTOMER_SUMMARY]."
+    },
+    {
+      "id": "ssis_unread_component_property",
+      "from": "ATTR_RESIDUE",
+      "provenance": "RESIDUE",
+      "note": "THE RESIDUAL PROPERTY SWEEP -- one RESIDUE obligation per component <property> that no other rule in this table reads and whose value is not a declared neutral default. Same mechanism, same rule kind and the same reasoning as platform_datastage.json's `dsx_unread_stage_property`; a Gate A round-2 verifier found the family on this platform independently. MEASURED: 0 obligations on the canonical DerivedColumn.dtsx -- every property that document states is already read by a named rule or already neutral-defaulted, so the canonical numbers are byte-identical and the coverage claim is now measured rather than asserted -- and 4 on CustomerSummary_DerivedColumn_ConditionalSplit.dtsx, all on OLE_DST CUSTOMER_SUMMARY: FastLoadKeepIdentity, FastLoadKeepNulls, FastLoadMaxInsertCommitSize, FastLoadOptions.",
+      "_the_material_one": "FastLoadKeepNulls, at dtsx:439-442, and the document states the consequence itself: its own @description reads 'Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default value inserted at the destination.' It is FALSE here. So SSIS inserts the destination column's DEFAULT where a NULL arrives, and a plain dbt insert writes NULL -- and this package produces exactly those rows, because FullName is built by concatenating a NULLABLE MiddleName. That is a per-row value divergence, not a metadata one, and before this rule nothing raised it, nothing carried it and no no_slot_fact named it. NOTE WHY IT CANNOT BE NEUTRAL-DEFAULTED: false IS the SSIS default for this property, so the ordinary 'equals the default, carries no design intent' test would suppress precisely the material fact. See dsx_unread_stage_property._neutral_defaults_trap, which records the same trap from the other direction.",
+      "_the_others": "FastLoadOptions 'TABLOCK,CHECK_CONSTRAINTS' (dtsx:446) states table locking and constraint checking on the insert. FastLoadMaxInsertCommitSize 2147483647 (dtsx:450) is the commit granularity -- one commit at the end -- which is a transaction-boundary fact a dbt model does not carry. FastLoadKeepIdentity false (dtsx:438) lets the destination auto-generate identity values. AccessMode 3 is NOT in this list: it is already read by the `access_mode` rule and reported as its own NO_SLOT obligation, which a verifier reasonably grouped with the others from the outside."
+    }
+  ],
+  "neutral_defaults": {
+    "_comment": "A fact only creates an obligation when its value differs from the neutral default. CommandTimeout 0 means 'infinite', the SSIS default, and carries nothing that must be represented.",
+    "CommandTimeout": "0",
+    "AlwaysUseDefaultCodePage": "false",
+    "OpenRowsetVariable": "",
+    "SqlCommandVariable": "",
+    "ParameterMapping": "",
+    "uses_dispositions": "false"
+  },
+  "dialect": {
+    "_comment": "SSIS expression operators. '+' is the sharp one: on DT_WSTR operands it is string CONCATENATION, and Snowflake's '+' on VARCHAR attempts a numeric cast instead. Same character, different operation -- so it is syntactically identical and semantically divergent, exactly the category Informatica's '||' fell into, but for a different reason and with a different fix.",
+    "identical": [
+      "*",
+      "-",
+      "/",
+      ">",
+      "<",
+      ">=",
+      "<=",
+      "==",
+      "!=",
+      "&&",
+      "||",
+      "(",
+      ")",
+      ","
+    ],
+    "syntactically_identical_semantically_divergent": {
+      "+": "SSIS '+' on DT_WSTR operands is string concatenation; Snowflake '+' on VARCHAR attempts numeric coercion and errors. The operand types decide which operation '+' denotes, so the choice cannot be made from the operator alone."
+    },
+    "divergent_operator_lengths": [
+      1
+    ],
+    "known_functions_identical": [],
+    "unknown_identifier_disposition": "RESIDUE",
+    "_functions_note": "known_functions_identical is deliberately EMPTY. YEAR() appears in this fixture and is very likely equivalent to Snowflake's YEAR(), but nothing here verified its NULL and out-of-range behaviour against SSIS's, so the scanner reports it as residue. Promoting it is a one-line table change once someone checks."
+  },
+  "residue": {
+    "_comment": "Facts that structure identifies but cannot RESOLVE. Handed to a model, enumerated here so the agentic surface is bounded and auditable. EVERY ENTRY NAMES THE DOCUMENT IT IS TRUE OF: this table serves DerivedColumn.dtsx (canonical, 3 elements, one task, no destination) and CustomerSummary_DerivedColumn_ConditionalSplit.dtsx (the Gate A blind document, with a Conditional Split and an OLE DB Destination). An unqualified 'the fixture' is not checkable when a table has two.",
+    "operator_overload_resolution": "BOTH DOCUMENTS. Whether '+' in a given expression means concatenation or addition depends on operand types, which requires the SSIS type system.",
+    "function_semantics": "BOTH DOCUMENTS. SSIS expression functions -> Snowflake. Nothing whitelisted.",
+    "error_output_semantics": "BOTH DOCUMENTS, and the consequence is a BEHAVIOUR INVERSION rather than a lossy field. What a FailComponent disposition and a dropped error branch should become in a dbt model is unresolved -- and what happens meanwhile is not merely that the branch is absent. Every component in CustomerSummary_DerivedColumn_ConditionalSplit.dtsx states usesDispositions=\"true\" with errorRowDisposition=\"FailComponent\" (e.g. dtsx:464 on the destination input), which in SSIS means A BAD ROW ABORTS THE PACKAGE. The migrated dbt model has no such disposition, so the same bad row is inserted, or silently coerced, and the model SUCCEEDS. A pipeline that used to stop loudly becomes one that finishes quietly with different data -- the inversion is worse than the omission, and neither the model nor any artefact records it. THIS IS NOT A HIDDEN LOSS: `uses_dispositions` (ELEMENT_FLAG) and `error_output_branch` (GROUP) both raise unmet obligations per element, and both details now state the inversion rather than only the missing field. It is recorded here as well because a census line saying 'an entire output branch is dropped' is read as a completeness gap, and this is a correctness gap.",
+    "fast_load_null_handling": "CustomerSummary_DerivedColumn_ConditionalSplit.dtsx. The destination states FastLoadKeepNulls false (dtsx:439-442) and the document's own @description says that when false, a column containing NULL has THE DESTINATION COLUMN'S DEFAULT inserted instead of NULL. dbt writes NULL. This package produces exactly the affected rows: FullName is concatenated from a NULLABLE MiddleName, so every customer with no middle name is a row where SSIS and the migration disagree about the stored value. Resolving it needs the destination table's DDL defaults, which are not in the .dtsx -- so it is genuinely unresolvable from this document, which is what puts it here. It is COUNTED by no_slot_facts.ssis_unread_component_property; before that rule existed it was in neither ledger. Not a factor on DerivedColumn.dtsx, which has no destination component.",
+    "control_flow_translation": "BOTH DOCUMENTS. A Data Flow Task has no IR representation; how a package's control flow becomes orchestration is entirely outside this contract.",
+    "component_property_residue_in_gate_a_obligations": "A DECLARED GAP IN A LEDGER THIS TABLE DOES NOT OWN. Unread component properties are now FIT-SCORE obligations (4 on the blind document). They raise nothing in gate_a.py's obligations.json, and cannot: that bundle's RESIDUE family for this platform is a census over tags the element rule (<component>) and link rule (<path>) do not account for, and a <property> sits INSIDE a counted <component>, so it is consumed by the ELEMENT obligation -- whose question is 'does the IR carry this source element', not 'does it carry this element's properties'. Closing it means a new obligation family in gate_a.py, a different file with a different owner. Stated rather than closed, and stated so that a verifier who has answered every obligation in the bundle knows they were not asked about FastLoadKeepNulls."
+  }
+}

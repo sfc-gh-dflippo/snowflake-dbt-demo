@@ -1,0 +1,40 @@
+{
+  "distinguisher": "seed",
+  "first_observed": "poc/spikes/element-id-fit/platform_ssis.json kind_dispatch['Microsoft.Pipeline'].degrade_reason; ticket ENG-001-ir-containment-tier.md",
+  "hashed_material": "aim.sig.v1\u001fREPR\u001felement:containment-scope\u001fno-vocabulary-member",
+  "id": "AIM-REPR-5161af7f0af6",
+  "impact": "output-incomplete",
+  "mint": {
+    "at": "2026-08-03T17:18:34Z",
+    "by": "seed",
+    "category_novel": false,
+    "classification": {
+      "considered": [],
+      "rule": "NO_CANDIDATE_ABOVE_THRESHOLD",
+      "verdict": "NOVEL"
+    },
+    "distinguisher": "seed"
+  },
+  "note": "The engine's intermediate representation has no containment tier at all; a task holding a whole data flow becomes a directory plus a row in the orchestration SQL and never a model. Filed as ENG-001. Left unrepresented deliberately rather than degraded, because the orchestration half reads these nodes to find its boundary marker.",
+  "note_lint": {
+    "findings": [],
+    "rule_version": "aim.text.v1",
+    "scope": "instance",
+    "verdict": "PASS"
+  },
+  "sig_version": "aim.sig.v1",
+  "signature": {
+    "category": "REPR",
+    "construct": "element:containment-scope",
+    "reason": "no-vocabulary-member"
+  },
+  "supersedes": "",
+  "text": "The document declares an element of kind '{kind}' named '{element}' that contains other elements. The representation this migration uses is a flat graph of data-flow elements with no member for an element that contains others, so it is carried as an unrepresented node: no model is generated from it, and whatever it declares about the elements inside it is not carried. {detail}",
+  "text_lint": {
+    "findings": [],
+    "rule_version": "aim.text.v1",
+    "scope": "type",
+    "verdict": "PASS"
+  },
+  "title": "Element kind with no member in the representation for a containment scope"
+}

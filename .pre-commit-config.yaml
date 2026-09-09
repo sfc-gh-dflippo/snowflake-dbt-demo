@@ -10,6 +10,9 @@
 # 4. Validators (check file validity)
 # 5. Security (scan for secrets)
 
+# Do not touch vendored plugin files. Leave them exactly as shipped.
+exclude: '^\.claude/skills/snowflake-migration/'
+
 repos:
   # ============================================================================
   # STAGE 1: FORMATTERS - Auto-fix code style

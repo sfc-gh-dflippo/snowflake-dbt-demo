@@ -1,0 +1,30 @@
+{
+  "distinguisher": "The representation carried a column set and the generated SQL projects a different one; the column-metadata type covers an element for which no column set was declared at all.",
+  "first_observed": "gate_b.py CustomerSummaryDerive.dsx / MD:stg_raw__customersummaryderive__odbc_customer",
+  "hashed_material": "aim.sig.v1\u001fSHAPE\u001felement:column-set\u001fgenerated-row-set-differs-from-declared",
+  "id": "AIM-SHAPE-d11b10218611",
+  "impact": "output-incomplete",
+  "note": "Distinct from a missing column list: here a column set exists and states something the document does not, which is why it is a divergence rather than an absence.",
+  "note_lint": {
+    "findings": [],
+    "rule_version": "aim.text.v1",
+    "scope": "instance",
+    "verdict": "PASS"
+  },
+  "proposed_by": "gate_b:sourced",
+  "sig_version": "aim.sig.v1",
+  "signature": {
+    "category": "SHAPE",
+    "construct": "element:column-set",
+    "reason": "generated-row-set-differs-from-declared"
+  },
+  "supersedes": "",
+  "text": "The generated artifact for '{element}' of kind '{kind}' produces a row set that does not correspond to what the document declares: columns, row count or a routing decision. A verification pass recorded an input on which the two differ. {detail}",
+  "text_lint": {
+    "findings": [],
+    "rule_version": "aim.text.v1",
+    "scope": "type",
+    "verdict": "PASS"
+  },
+  "title": "The generated row set does not match what the document declares for the element"
+}

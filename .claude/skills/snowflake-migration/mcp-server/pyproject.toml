@@ -1,0 +1,16 @@
+[project]
+name = "migration-mcp-python-deps"
+version = "0.1.0"
+description = "Python dependencies for the rule benchmark harness. The MCP server no longer embeds Python — it reaches Snowflake through the scai CLI."
+requires-python = ">=3.11"
+dependencies = [
+    "snowflake-snowpark-python>=1.20",
+    "mcp>=1.0",
+]
+
+[tool.uv]
+environments = [
+    "sys_platform == 'darwin'",
+    "sys_platform == 'linux'",
+    "sys_platform == 'win32'",
+]

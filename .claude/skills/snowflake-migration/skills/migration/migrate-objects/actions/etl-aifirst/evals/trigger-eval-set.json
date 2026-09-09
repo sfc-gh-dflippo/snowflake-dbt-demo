@@ -1,0 +1,142 @@
+[
+  {
+    "query": "I've got an Alteryx workflow (Order_Enrichment_Regional_Summary.yxmd) that joins a few tables and rolls up regional sales -- my manager wants it running against our new Snowflake warehouse instead of the old on-prem Alteryx server by end of quarter.",
+    "should_trigger": true,
+    "split": "train",
+    "platform": "alteryx",
+    "note": "explicit platform name, file extension, concrete deadline"
+  },
+  {
+    "query": "We have a handful of legacy SSIS packages (.dtsx files, built in SQL Server 2016) doing nightly extracts from three source systems into our warehouse staging tables. Now that we're moving the warehouse to Snowflake, what's the path for getting these packages converted?",
+    "should_trigger": true,
+    "split": "train",
+    "platform": "ssis",
+    "note": "explicit platform name and file extension"
+  },
+  {
+    "query": "Our data eng team inherited a pile of IBM DataStage jobs (exported as .dsx from an old InfoSphere repo) that populate the finance mart every night. We need these ported over as part of the Snowflake migration -- is that something this can help with?",
+    "should_trigger": true,
+    "split": "train",
+    "platform": "datastage",
+    "note": "explicit platform name and export format"
+  },
+  {
+    "query": "All our transformation logic lives in Informatica PowerCenter mappings (the repo export is an XML dump of REPOSITORY/FOLDER/MAPPING nodes) -- probably 40+ mappings feeding the CUSTOMER_SUMMARY tables. Can you help move these to Snowflake?",
+    "should_trigger": true,
+    "split": "train",
+    "platform": "informatica",
+    "note": "explicit platform name and repo format detail"
+  },
+  {
+    "query": "We run Pentaho Data Integration (.ktr transformations and a .kjb job orchestrating them) for our ETL, it's all open-source Kettle stuff from like 2018. Need this migrated as part of the Snowflake cutover.",
+    "should_trigger": true,
+    "split": "train",
+    "platform": "pentaho",
+    "note": "explicit platform name, casual tone, file extensions"
+  },
+  {
+    "query": "Our warehouse loads run through Azure Data Factory pipelines -- a mix of Copy activities and a couple of Mapping Data Flows pulling from Azure SQL into the lake. We're consolidating everything onto Snowflake, what do we do with the ADF side?",
+    "should_trigger": true,
+    "split": "train",
+    "platform": "adf",
+    "note": "explicit platform name and activity types"
+  },
+  {
+    "query": "hey so we're finally doing the full SnowConvert migration and I keep seeing 'code convert' mentioned everywhere in the docs, but our actual transformation layer is a drag-and-drop Alteryx workflow, not SQL code -- does the normal convert path even handle that or is there something else for it?",
+    "should_trigger": true,
+    "split": "test",
+    "platform": "alteryx",
+    "note": "held-out: explicitly contrasts with the generic code-convert path, which should lose to this skill"
+  },
+  {
+    "query": "our etl is built with this visual boxes-and-arrows tool where you drag nodes onto a canvas and wire them together instead of writing code, license renewal is coming up and we want to be off it before then and onto whatever snowflake wants us to run our transforms in",
+    "should_trigger": true,
+    "split": "test",
+    "platform": "alteryx-or-pentaho (unnamed)",
+    "note": "held-out: never names a specific tool, all lowercase/casual, tests functional-description matching"
+  },
+  {
+    "query": "we've got a ton of dtsx files sitting in an old ssisdb catalog on a sql server box thats getting decommissioned, someone said this migration project has a way to bring those over to snowflake but idk how",
+    "should_trigger": true,
+    "split": "test",
+    "platform": "ssis",
+    "note": "held-out: typo-laden, casual, names the file extension but not 'SSIS' itself"
+  },
+  {
+    "query": "our nightly loads run through an open source java-based ETL scheduler with .kjb job files calling a bunch of .ktr transform steps, all pretty old kettle-era stuff -- want that gone before we finish the snowflake move",
+    "should_trigger": true,
+    "split": "test",
+    "platform": "pentaho",
+    "note": "held-out: names file extensions and 'kettle' (Pentaho's engine name) instead of the product name"
+  },
+  {
+    "query": "We've got about 200 SQL Server stored procedures and a dozen views that need converting to Snowflake syntax as part of our migration -- no ETL tool involved, it's all just T-SQL.",
+    "should_trigger": false,
+    "split": "train",
+    "platform": "sqlserver (native)",
+    "note": "natively-supported dialect, explicitly disclaims any ETL tool"
+  },
+  {
+    "query": "Our warehouse is on Redshift today, mostly plain SQL scripts and some DDL, want to get the schema and the SQL logic itself moved over to Snowflake.",
+    "should_trigger": false,
+    "split": "train",
+    "platform": "redshift (native)",
+    "note": "natively-supported dialect, plain SQL/DDL only"
+  },
+  {
+    "query": "Quick one -- can you just help me write a dedup query against our SQL Server orders table before we cut over? Nothing fancy, just need it working today.",
+    "should_trigger": false,
+    "split": "train",
+    "platform": "sqlserver (native)",
+    "note": "trivial one-off SQL task, not a migration request at all"
+  },
+  {
+    "query": "We already use dbt for all our transformations on Redshift -- the SQL models are fine as-is, we just need the underlying warehouse itself migrated to Snowflake.",
+    "should_trigger": false,
+    "split": "train",
+    "platform": "redshift (native)",
+    "note": "dbt already in place, warehouse-only migration"
+  },
+  {
+    "query": "Our reporting layer is a bunch of Tableau workbooks connected straight to Redshift -- when we move the warehouse to Snowflake we'll need to repoint those, any guidance?",
+    "should_trigger": false,
+    "split": "train",
+    "platform": "n/a (BI tool)",
+    "note": "adjacent domain: BI/reporting repointing, not ETL conversion"
+  },
+  {
+    "query": "We have a nightly cron job that's just a plain SQL Server batch script running some MERGE statements between two databases, nothing exotic, want to know if that needs anything special for the Snowflake move.",
+    "should_trigger": false,
+    "split": "train",
+    "platform": "sqlserver (native)",
+    "note": "plain scheduled SQL, no proprietary ETL tool"
+  },
+  {
+    "query": "Our data pipeline orchestration is all Airflow DAGs, but every task in them is just a PythonOperator calling straight SQL against SQL Server -- is that something your ETL migration path handles or is that a different conversation?",
+    "should_trigger": false,
+    "split": "test",
+    "platform": "n/a (Airflow/Python)",
+    "note": "held-out near-miss: shares 'ETL pipeline' framing, but Airflow/Python is not one of the six platform tables"
+  },
+  {
+    "query": "We built our own little in-house ETL framework in Python -- some scripts that pull from SQL Server, transform in pandas, and load into staging tables -- nothing off-the-shelf. Curious if that's in scope for this migration tool.",
+    "should_trigger": false,
+    "split": "test",
+    "platform": "n/a (custom Python)",
+    "note": "held-out near-miss: explicitly ETL-shaped but a bespoke framework, not a recognized platform table"
+  },
+  {
+    "query": "Someone mentioned SSAS cubes need to move with the rest of our BI stack when we migrate off SQL Server to Snowflake -- is that part of what you handle?",
+    "should_trigger": false,
+    "split": "test",
+    "platform": "n/a (SSAS)",
+    "note": "held-out near-miss: SSAS shares a prefix with SSIS but is an OLAP cube technology, unrelated skill"
+  },
+  {
+    "query": "We're on Redshift and want to convert the handful of stored procedures and materialized views we have -- nothing ETL-related, just the SQL layer.",
+    "should_trigger": false,
+    "split": "test",
+    "platform": "redshift (native)",
+    "note": "held-out: reinforces native-dialect negative with an explicit 'nothing ETL-related' disclaimer"
+  }
+]
