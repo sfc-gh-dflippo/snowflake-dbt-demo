@@ -51,8 +51,7 @@ uv run .claude/setup_migration_plugin.py
 ```
 
 The script gets the most recent commit on the branch. It then installs the plugin again. Each run
-replaces the complete install directory. Thus the script also removes the files that upstream
-deleted.
+replaces the complete install directory. The script also removes the files that upstream deleted.
 
 ### Options
 
