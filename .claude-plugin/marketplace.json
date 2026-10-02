@@ -7,15 +7,6 @@
   },
   "plugins": [
     {
-      "name": "dbt-quality",
-      "source": "./.claude/plugins/dbt-quality",
-      "description": "dbt anti-pattern audit with an HTML quality assessment, plus per-file validation on save",
-      "version": "0.1.0",
-      "author": {
-        "name": "Snowflake"
-      }
-    },
-    {
       "name": "snowflake-dbt-migration",
       "source": "./.claude/plugins/snowflake-dbt-migration",
       "description": "dbt migration skills for converting source database SQL to dbt models on Snowflake",
