@@ -17,11 +17,26 @@ modeling conventions, testing strategies, and performance optimization.
 
 ### Recommended Folder Structure
 
-models/ ├── staging/ # One-to-one with source tables │ ├── source_name/ │ │ ├── \_models.yml │ │ ├──
-stg_source_name**table_name.sql │ │ └── ... ├── intermediate/ # Business logic transformations │ ├──
-\_models.yml │ ├── int_subject_area**transformation.sql │ └── ... ├── marts/ # Business-ready data
-products │ ├── core/ # Company-wide metrics │ ├── finance/ # Department-specific │ ├── marketing/ #
-Department-specific │ └── ... └── utilities/ # Helper models and references ├── \_models.yml └── ...
+```text
+models/
+├── staging/                # One-to-one with source tables
+│   ├── source_name/
+│   │   ├── _models.yml
+│   │   ├── stg_source_name__table_name.sql
+│   │   └── ...
+├── intermediate/           # Business logic transformations
+│   ├── _models.yml
+│   ├── int_subject_area__transformation.sql
+│   └── ...
+├── marts/                  # Business-ready data products
+│   ├── core/               # Company-wide metrics
+│   ├── finance/            # Department-specific
+│   ├── marketing/          # Department-specific
+│   └── ...
+└── utilities/              # Helper models and references
+    ├── _models.yml
+    └── ...
+```
 
 ### Layer Responsibilities
 

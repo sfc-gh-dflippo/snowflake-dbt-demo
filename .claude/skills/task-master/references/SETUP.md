@@ -141,10 +141,20 @@ Available profiles:
 
 ### Project Structure Created
 
-.taskmaster/ ├── config.json # Configuration ├── state.json # Current state ├── tasks/ │ └──
-tasks.json # Task definitions ├── docs/ │ ├── prd.txt # Your PRD (create this) │ └── research/ #
-Research outputs ├── reports/ │ └── task-complexity-report.json └── templates/ └── example_prd.txt #
-Example PRD
+```text
+.taskmaster/
+├── config.json             # Configuration
+├── state.json              # Current state
+├── tasks/
+│   └── tasks.json          # Task definitions
+├── docs/
+│   ├── prd.txt             # Your PRD (create this)
+│   └── research/           # Research outputs
+├── reports/
+│   └── task-complexity-report.json
+└── templates/
+    └── example_prd.txt     # Example PRD
+```
 
 ## Model Configuration
 
