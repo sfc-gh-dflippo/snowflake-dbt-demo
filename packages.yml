@@ -1,11 +1,11 @@
 packages:
   - package: Snowflake-Labs/dbt_constraints
-    version: "1.0.9"
+    version: "1.0.10"
 
   - package: dbt-labs/dbt_utils
     version: "1.4.1"
 
   - package: brooklyn-data/dbt_artifacts
-    version: "2.11.0"
+    version: "2.11.1"
 #  - package: dbt-labs/dbt_project_evaluator
 #    version: "1.0.2"
