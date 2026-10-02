@@ -2225,7 +2225,7 @@ CAST to a column on the left side of the comparison has priority.
 
 For example:
 
-- `SELECT * FROM employees WHERE last_name (NOT CASESPECIFIC) = 'snoW';` \*will return **5 rows.\***
+- `SELECT * FROM employees WHERE last_name (NOT CASESPECIFIC) = 'snoW';` _will return **5 rows**._
 - `SELECT * FROM employees WHERE last_name = 'snoW' (NOT CASESPECIFIC);` _will return **0 rows**
   with this setup data._
 
