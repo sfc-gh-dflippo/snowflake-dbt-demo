@@ -39,6 +39,7 @@ clean-targets: # directories to be removed by `dbt clean`
 # These are not required but will allow us to reduce consumption to the second
 on-run-start:
   - "{{ create_masking_policies() }}"
+  - "{{ create_staging_sources() }}"
 
 on-run-end:
   # - "{{ dbt_artifacts.upload_results(results) }}"
