@@ -1,0 +1,10 @@
+version: 2
+sources:
+  - name: raw
+    schema: YOUR_SCHEMA
+    database: YOUR_DB
+    tables:
+      - name: R_FISCAL_MONTH_TO_YEAR
+      - name: R_FISCAL_WEEK_TO_YEAR
+      - name: WI_BKGS_HIER_ANTY_MTH_CNTL
+      - name: WI_BKGS_HIER_PROCESS_MTH_CNTL

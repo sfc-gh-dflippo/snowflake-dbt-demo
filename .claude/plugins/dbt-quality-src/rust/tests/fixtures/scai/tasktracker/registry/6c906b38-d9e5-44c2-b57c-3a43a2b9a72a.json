@@ -1,0 +1,135 @@
+{
+  "codeStatus": {
+    "assessment": {
+      "containsCommit": false,
+      "exclusion": [],
+      "status": "inProgress"
+    },
+    "conversion": {
+      "converterVersion": "2.46.0-Pr.305",
+      "status": "completed",
+      "updatedAt": "2026-09-26T01:03:22Z"
+    },
+    "registration": {
+      "sourceId": "",
+      "status": "completed",
+      "updatedAt": "2026-09-26T01:03:22Z"
+    }
+  },
+  "dependencies": {
+    "dependsOn": [
+      {
+        "id": "441302c2-fcd4-45fc-8944-656f75f4f28c",
+        "isMissing": false,
+        "relationTypes": [
+          "SELECT - FROM"
+        ]
+      }
+    ],
+    "hasTransitiveMissingDependencies": false,
+    "requiredBy": []
+  },
+  "extensions": {},
+  "files": {
+    "artifacts": {
+      "path": "artifacts/tasktracker/dbo/procedure/getemployeeworkload"
+    },
+    "converted": {
+      "checksum": "3dd9bedec98032d30db16cca8e0753ad",
+      "path": "snowflake/tasktracker/dbo/procedure/getemployeeworkload.sql"
+    },
+    "source": {
+      "path": "source/tasktracker/dbo/procedure/getemployeeworkload.sql"
+    }
+  },
+  "id": "6c906b38-d9e5-44c2-b57c-3a43a2b9a72a",
+  "inScope": true,
+  "isMissing": false,
+  "issues": [
+    {
+      "code": "SSC-FDM-TS0029",
+      "count": 1
+    }
+  ],
+  "kind": "databaseObject",
+  "planning": {
+    "topologicalRank": 3
+  },
+  "schemaVersion": 1,
+  "signature": {
+    "columns": [],
+    "parameters": {
+      "arguments": [
+        {
+          "direction": "in",
+          "isCursor": false,
+          "name": "@Department",
+          "required": false,
+          "targetName": "DEPARTMENT",
+          "targetType": "STRING",
+          "type": "VARCHAR"
+        }
+      ],
+      "returns": [
+        {
+          "name": "AssigneeName",
+          "targetName": "AssigneeName",
+          "targetType": "STRING",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "Department",
+          "targetName": "Department",
+          "targetType": "VARCHAR",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "TotalTasks",
+          "targetName": "TotalTasks",
+          "targetType": "EXACTNUMERIC",
+          "type": "INTEGER"
+        },
+        {
+          "name": "OpenTasks",
+          "targetName": "OpenTasks",
+          "targetType": "EXACTNUMERIC",
+          "type": "EXACTNUMERIC"
+        },
+        {
+          "name": "InProgressTasks",
+          "targetName": "InProgressTasks",
+          "targetType": "EXACTNUMERIC",
+          "type": "EXACTNUMERIC"
+        },
+        {
+          "name": "DoneTasks",
+          "targetName": "DoneTasks",
+          "targetType": "EXACTNUMERIC",
+          "type": "EXACTNUMERIC"
+        },
+        {
+          "name": "AvgAgeDays",
+          "targetName": "AvgAgeDays",
+          "targetType": "APROXNUMERIC",
+          "type": "INTEGER"
+        }
+      ]
+    }
+  },
+  "source": {
+    "canonicalName": "dbo.GetEmployeeWorkload(VARCHAR)",
+    "format": "sql",
+    "name": "GetEmployeeWorkload",
+    "objectType": "procedure",
+    "platform": "sqlServer",
+    "schema": "dbo"
+  },
+  "target": {
+    "canonicalName": "dbo.GetEmployeeWorkload(STRING)",
+    "format": "snowflakeSQL",
+    "name": "GetEmployeeWorkload",
+    "objectType": "procedure",
+    "schema": "dbo"
+  },
+  "updatedAt": "2026-09-26T01:03:22Z"
+}

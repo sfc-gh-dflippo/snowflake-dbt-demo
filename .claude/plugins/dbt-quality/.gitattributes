@@ -1,0 +1,2 @@
+*.cmd text eol=crlf
+bin/dbt-quality text eol=lf

@@ -1,0 +1,56 @@
+{{ config(
+    tags=['m_WI_AUD_RSTD_BKGS_MEASURE_ORDER_MTH'],
+    database=var('sc_override_wi_aud_rstd_bkg_thrshld_values1_db'),
+    schema=var('sc_override_wi_aud_rstd_bkg_thrshld_values1_schema'),
+    alias=var('sc_override_wi_aud_rstd_bkg_thrshld_values1_table')
+) }}
+{{ config(materialized='table') }}
+-- Pre/Post SQL hooks: the orchestration task may override these defaults at runtime via dbt --vars.
+{% set post_sql = var('m_WI_AUD_RSTD_BKGS_MEASURE_ORDER_MTH_wi_aud_rstd_bkg_thrshld_values1_post_sql', '') %}
+{% if post_sql != '' %}
+  {{ config(post_hook=post_sql) }}
+{% endif %}
+--** SSC-FDM-INF0058 - TABLE 'WI_AUD_RSTD_BKG_THRSHLD_VALUES' IS USED AS BOTH SOURCE AND TARGET IN THIS MAPPING. DBT EXECUTION ORDER HAS BEEN ADJUSTED TO PREVENT CIRCULAR DATA CORRUPTION: SEE STAGING AND MART MODELS FOR DETAILS. **
+WITH source_data_2 AS
+(
+   SELECT
+      AUDIT_TABLE_NAME,
+      AUDIT_COLUMN_NAME,
+      AMOUNTDIFF_FLG
+   FROM
+      {{ ref('stg_raw__SQ_WI_AUD_RSTD_BKG_THRSHLD_VALUES') }}
+),
+results_with_locals AS
+(
+   SELECT
+      AUDIT_TABLE_NAME,
+      AUDIT_COLUMN_NAME,
+      IFF(AMOUNTDIFF_FLG = 'Y',
+      !!!RESOLVE EWI!!! /*** SSC-EWI-INF0060 - INFORMATICA POWERCENTER ABORT() IMMEDIATELY STOPS THE INTEGRATION SERVICE SESSION AND MARKS IT AS FAILED. THERE IS NO EQUIVALENT SESSION-ABORT MECHANISM IN SNOWFLAKE SQL. THE FUNCTION IS REPLACED WITH NULL. IMPLEMENT THE REQUIRED ERROR-HANDLING LOGIC USING SNOWFLAKE STREAMS, TASKS, OR PRE/POST SQL SCRIPTS. ***/!!!
+      NULL,
+      --** SSC-FDM-INF0003 - IIF FUNCTION MISSING 'ONFALSEVALUE' PARAMETER DEFAULTED TO NULL. REPLACE WITH APPROPRIATE DEFAULT VALUE BASED ON 'ONTRUEVALUE' PARAMETER DATA TYPE. **
+      NULL) AS AMOUNTDIFF_FLG_out
+   FROM
+      source_data_2
+),
+FILTRANS AS
+(
+   SELECT
+      AUDIT_TABLE_NAME,
+      AUDIT_COLUMN_NAME
+   FROM
+      results_with_locals
+   WHERE
+      FALSE
+)
+SELECT
+   sd.AUDIT_TABLE_NAME,
+   sd.AUDIT_COLUMN_NAME,
+   NULL :: NUMERIC(38, 6) AS MIN_THRESHOLD_VALUE,
+   NULL :: NUMERIC(38, 6) AS MAX_THRESHOLD_VALUE,
+   NULL :: VARCHAR(30) AS EDW_CREATE_USER,
+   NULL :: TIMESTAMP AS EDW_CREATE_DATETIME,
+   NULL :: VARCHAR(30) AS EDW_UPDATE_USER,
+   NULL :: TIMESTAMP AS EDW_UPDATE_DATETIME
+FROM
+   FILTRANS AS sd

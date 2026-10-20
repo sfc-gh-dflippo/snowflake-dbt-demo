@@ -1,0 +1,2804 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DTS:Executable
+  xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="5/23/2025 3:45:04 AM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="EC2AMAZ-QV3ETJV"
+  DTS:CreatorName="EC2AMAZ-QV3ETJV\Administrator"
+  DTS:DTSID="{E50414DA-B4A0-4D1E-9E1E-B7DF8E84DB4B}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="16.0.5685.0"
+  DTS:LocaleID="1033"
+  DTS:ObjectName="Package"
+  DTS:PackageType="5"
+  DTS:VersionBuild="15"
+  DTS:VersionGUID="{B0885489-FE11-442C-93F1-20747DA90FC0}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[localhost.AdventureWorksDW2022.sa]"
+      DTS:CreationName="ODBC"
+      DTS:DTSID="{FB1C51A1-F9CA-4895-B585-03C11B4E94B5}"
+      DTS:ObjectName="localhost.AdventureWorksDW2022.sa">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="server=localhost;user id=sa;Driver={SQL Server};database=AdventureWorksDW2022;trustservercertificate=true;">
+          <DTS:Password
+            DTS:Name="pwd"
+            Sensitive="1"
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA/GzKkniSwEibF4l0HIMgvwAAAAAIAAAARABUAFMAAAAQZgAAAAEAACAAAADuDhOqbpKeS60fVF+lnWkXdnYvllkRQNXYGYzjNHzvzgAAAAAOgAAAAAIAACAAAAC0Td2h50rZtZFz+ZVsJLBliNce2D0R6aesNvSccIWDhyAAAADY2d/tcmJFWa2YNsGzaD6LATYCEQajOWDMm0YZENfyLkAAAAB1DyZ5RQAZtSNaolT6+jpZLtct08YCoRm8lJP6BfSJ2LVFeRGja+2bLduaF5VDK0w6KQps1JAzj3ynI3zs8ezF</DTS:Password>
+        </DTS:ConnectionManager>
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+      DTS:refId="Package.ConnectionManagers[snow_convert_row_count_log]"
+      DTS:CreationName="FILE"
+      DTS:DTSID="{2AC2D39E-4FE2-4193-A7F2-026620834F4E}"
+      DTS:ObjectName="snow_convert_row_count_log">
+      <DTS:PropertyExpression
+        DTS:Name="ConnectionString">@[User::SnowConvertLogsDirectory] +
+ "\\" +
+ @[System::PackageName] +
+"_" +
+"data_flow_log" +
+".csv"</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:FileUsageType="1"
+          DTS:ConnectionString="C:\temp\DfLogging_20000101_000000.txt" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{542E1CA4-2FAE-4226-84F7-40A1BD018AC2}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="CustomerName">
+      <DTS:VariableValue
+        DTS:DataType="8">John</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+      DTS:CreationName=""
+      DTS:DTSID="{43DC36DC-8521-42CA-A46C-2E8B5DB476CC}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="SnowConvertLogsDirectory">
+      <DTS:VariableValue
+        DTS:DataType="8">C:\tmp\</DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:LogProviders>
+    <DTS:LogProvider
+      xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+      DTS:ConfigString="snow_convert_row_count_log"
+      DTS:CreationName="Microsoft.LogProviderTextFile"
+      DTS:Description="Writes log entries for events to a CSV file"
+      DTS:DTSID="{6305F749-BED7-4552-B1F0-90A9B06A1777}"
+      DTS:ObjectName="SSIS log provider for Text files">
+      <DTS:ObjectData>
+        <InnerObject />
+      </DTS:ObjectData>
+    </DTS:LogProvider>
+  </DTS:LogProviders>
+  <DTS:LoggingOptions
+    xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+    DTS:FilterKind="0"
+    DTS:LoggingMode="1">
+    <DTS:Property
+      DTS:DataType="8"
+      DTS:Name="EventFilter">1,18,OnPipelineRowsSent</DTS:Property>
+    <DTS:Property
+      DTS:EventName="OnPipelineRowsSent"
+      DTS:Name="ColumnFilter">
+      <DTS:Property
+        DTS:Name="Computer">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="Operator">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceName">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="SourceID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="ExecutionID">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="MessageText">-1</DTS:Property>
+      <DTS:Property
+        DTS:Name="DataBytes">-1</DTS:Property>
+    </DTS:Property>
+    <DTS:SelectedLogProviders>
+      <DTS:SelectedLogProvider
+        DTS:InstanceID="{6305F749-BED7-4552-B1F0-90A9B06A1777}" />
+    </DTS:SelectedLogProviders>
+  </DTS:LoggingOptions>
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Sequence Container"
+      DTS:CreationName="STOCK:SEQUENCE"
+      DTS:Description="Sequence Container"
+      DTS:DTSID="{D54E0A0B-31C4-4674-8778-4C51B40BD1EA}"
+      DTS:ExecutableType="STOCK:SEQUENCE"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Sequence Container">
+      <DTS:Variables />
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\Sequence Container\Data Flow Task"
+          DTS:CreationName="Microsoft.Pipeline"
+          DTS:Description="Data Flow Task"
+          DTS:DTSID="{87290773-0DF7-485B-AD5D-972C78CC69C5}"
+          DTS:ExecutableType="Microsoft.Pipeline"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Data Flow Task"
+          DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:PropertyExpression
+            DTS:Name="[ODBC Source].[SqlCommand]">"SELECT * FROM " +  @[$Project::Database] + ".DBO" + ".DimCustomer"</DTS:PropertyExpression>
+          <DTS:ObjectData>
+            <pipeline
+              version="1">
+              <components>
+                <component
+                  refId="Package\Sequence Container\Data Flow Task\Data Conversion"
+                  componentClassID="Microsoft.DataConvert"
+                  contactInfo="Data Conversion;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+                  description="Data Conversion"
+                  name="Data Conversion"
+                  usesDispositions="true">
+                  <inputs>
+                    <input
+                      refId="Package\Sequence Container\Data Flow Task\Data Conversion.Inputs[Data Conversion Input]"
+                      name="Data Conversion Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\Sequence Container\Data Flow Task\Data Conversion.Inputs[Data Conversion Input].Columns[BirthDate]"
+                          cachedDataType="wstr"
+                          cachedLength="10"
+                          cachedName="BirthDate"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[BirthDate]" />
+                      </inputColumns>
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Sequence Container\Data Flow Task\Data Conversion.Outputs[Data Conversion Output]"
+                      exclusionGroup="1"
+                      name="Data Conversion Output"
+                      synchronousInputId="Package\Sequence Container\Data Flow Task\Data Conversion.Inputs[Data Conversion Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\Data Conversion.Outputs[Data Conversion Output].Columns[BirthDateString]"
+                          codePage="1252"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          length="50"
+                          lineageId="Package\Sequence Container\Data Flow Task\Data Conversion.Outputs[Data Conversion Output].Columns[BirthDateString]"
+                          name="BirthDateString"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.Int32"
+                              description="Specifies the input column used as the source of data for the conversion."
+                              name="SourceInputColumnLineageID">#{Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[BirthDate]}</property>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                              name="FastParse">false</property>
+                          </properties>
+                        </outputColumn>
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                    <output
+                      refId="Package\Sequence Container\Data Flow Task\Data Conversion.Outputs[Data Conversion Error Output]"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="Data Conversion Error Output"
+                      synchronousInputId="Package\Sequence Container\Data Flow Task\Data Conversion.Inputs[Data Conversion Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\Data Conversion.Outputs[Data Conversion Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container\Data Flow Task\Data Conversion.Outputs[Data Conversion Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\Data Conversion.Outputs[Data Conversion Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container\Data Flow Task\Data Conversion.Outputs[Data Conversion Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Sequence Container\Data Flow Task\Derived Column"
+                  componentClassID="Microsoft.DerivedColumn"
+                  contactInfo="Derived Column;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+                  description="Creates new column values by applying expressions to transformation input columns. Create new columns or overwrite existing ones. For example, concatenate the values from the 'first name' and 'last name' column to make a 'full name' column."
+                  name="Derived Column"
+                  usesDispositions="true">
+                  <inputs>
+                    <input
+                      refId="Package\Sequence Container\Data Flow Task\Derived Column.Inputs[Derived Column Input]"
+                      description="Input to the Derived Column Transformation"
+                      name="Derived Column Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\Sequence Container\Data Flow Task\Derived Column.Inputs[Derived Column Input].Columns[FirstName]"
+                          cachedDataType="wstr"
+                          cachedLength="50"
+                          cachedName="FirstName"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[FirstName]" />
+                        <inputColumn
+                          refId="Package\Sequence Container\Data Flow Task\Derived Column.Inputs[Derived Column Input].Columns[MiddleName]"
+                          cachedDataType="wstr"
+                          cachedLength="50"
+                          cachedName="MiddleName"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[MiddleName]" />
+                        <inputColumn
+                          refId="Package\Sequence Container\Data Flow Task\Derived Column.Inputs[Derived Column Input].Columns[LastName]"
+                          cachedDataType="wstr"
+                          cachedLength="50"
+                          cachedName="LastName"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[LastName]" />
+                      </inputColumns>
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Sequence Container\Data Flow Task\Derived Column.Outputs[Derived Column Output]"
+                      description="Default Output of the Derived Column Transformation"
+                      exclusionGroup="1"
+                      name="Derived Column Output"
+                      synchronousInputId="Package\Sequence Container\Data Flow Task\Derived Column.Inputs[Derived Column Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\Derived Column.Outputs[Derived Column Output].Columns[FullName]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          length="152"
+                          lineageId="Package\Sequence Container\Data Flow Task\Derived Column.Outputs[Derived Column Output].Columns[FullName]"
+                          name="FullName"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">#{Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[FirstName]} + " " + #{Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[MiddleName]} + " " + #{Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[LastName]}</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">FirstName + " " + MiddleName + " " + LastName</property>
+                          </properties>
+                        </outputColumn>
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                    <output
+                      refId="Package\Sequence Container\Data Flow Task\Derived Column.Outputs[Derived Column Error Output]"
+                      description="Error Output of the Derived Column Transformation"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="Derived Column Error Output"
+                      synchronousInputId="Package\Sequence Container\Data Flow Task\Derived Column.Inputs[Derived Column Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\Derived Column.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container\Data Flow Task\Derived Column.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\Derived Column.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container\Data Flow Task\Derived Column.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Sequence Container\Data Flow Task\ODBC Source"
+                  componentClassID="Microsoft.SSISODBCSrc"
+                  contactInfo="ODBC Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;1"
+                  description="ODBC Source"
+                  name="ODBC Source"
+                  usesDispositions="true"
+                  version="1">
+                  <properties>
+                    <property
+                      dataType="System.String"
+                      description="The name of the table to be fetched."
+                      expressionType="Notify"
+                      name="TableName"></property>
+                    <property
+                      dataType="System.String"
+                      description="The SQL command to be executed."
+                      expressionType="Notify"
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=16.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">SELECT * FROM AdventureWorksDW2022.DBO.DimCustomer</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specify the number of rows fetched per batch."
+                      expressionType="Notify"
+                      name="BatchSize">1000</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Determines the chunk size allocation for LOB columns"
+                      expressionType="Notify"
+                      name="LobChunkSize">32768</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Determines how the component exposes CHAR columns. If False, CHAR columns are exposed as (multi-)byte strings (DT_STR), if True, CHAR columns are exposed as wide strings (DT_WSTR)"
+                      expressionType="Notify"
+                      name="ExposeCharColumnsAsUnicode">false</property>
+                    <property
+                      dataType="System.Int32"
+                      description="The number of seconds to wait for an SQL statement to execute before returning to the application."
+                      expressionType="Notify"
+                      name="StatementTimeout">0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="The code page to use when code page information is unavailable from the data source."
+                      expressionType="Notify"
+                      name="DefaultCodePage">1252</property>
+                    <property
+                      dataType="System.Int32"
+                      description="The method used for fetching data."
+                      expressionType="Notify"
+                      name="FetchMethod">1</property>
+                    <property
+                      dataType="System.Int32"
+                      description="The ODBC C data type for binding numeric data."
+                      expressionType="Notify"
+                      name="BindNumericAs">0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Determines how the component would bind columns of (multi)-byte string types (i.e., SQL_CHAR, SQL_VARCHAR, SQL_LONGVARCHAR). The options are: Unicode (SQL_C_WCHAR) and ANSI (SQL_C_CHAR)."
+                      expressionType="Notify"
+                      name="BindCharColumnsAs">0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="The mode used to access the database."
+                      expressionType="Notify"
+                      name="AccessMode"
+                      typeConverter="AccessMode">1</property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Sequence Container\Data Flow Task\ODBC Source.Connections[ODBCConnection]"
+                      connectionManagerID="Package.ConnectionManagers[localhost.AdventureWorksDW2022.sa]"
+                      connectionManagerRefId="Package.ConnectionManagers[localhost.AdventureWorksDW2022.sa]"
+                      description="The ODBC runtime connection used to access the database."
+                      name="ODBCConnection" />
+                  </connections>
+                  <outputs>
+                    <output
+                      refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output]"
+                      errorRowDisposition="FailComponent"
+                      name="ODBC Source Output"
+                      truncationRowDisposition="FailComponent">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[CustomerKey]"
+                          dataType="i4"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[CustomerKey]"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[CustomerKey]"
+                          name="CustomerKey" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[GeographyKey]"
+                          dataType="i4"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[GeographyKey]"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[GeographyKey]"
+                          name="GeographyKey" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[CustomerAlternateKey]"
+                          dataType="wstr"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[CustomerAlternateKey]"
+                          length="15"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[CustomerAlternateKey]"
+                          name="CustomerAlternateKey" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[Title]"
+                          dataType="wstr"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[Title]"
+                          length="8"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[Title]"
+                          name="Title" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[FirstName]"
+                          dataType="wstr"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[FirstName]"
+                          length="50"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[FirstName]"
+                          name="FirstName" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[MiddleName]"
+                          dataType="wstr"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[MiddleName]"
+                          length="50"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[MiddleName]"
+                          name="MiddleName" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[LastName]"
+                          dataType="wstr"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[LastName]"
+                          length="50"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[LastName]"
+                          name="LastName" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[NameStyle]"
+                          dataType="bool"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[NameStyle]"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[NameStyle]"
+                          name="NameStyle" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[BirthDate]"
+                          dataType="wstr"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[BirthDate]"
+                          length="10"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[BirthDate]"
+                          name="BirthDate" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[MaritalStatus]"
+                          dataType="wstr"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[MaritalStatus]"
+                          length="1"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[MaritalStatus]"
+                          name="MaritalStatus" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[Suffix]"
+                          dataType="wstr"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[Suffix]"
+                          length="10"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[Suffix]"
+                          name="Suffix" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[Gender]"
+                          dataType="wstr"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[Gender]"
+                          length="1"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[Gender]"
+                          name="Gender" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[EmailAddress]"
+                          dataType="wstr"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[EmailAddress]"
+                          length="50"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[EmailAddress]"
+                          name="EmailAddress" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[YearlyIncome]"
+                          dataType="cy"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[YearlyIncome]"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[YearlyIncome]"
+                          name="YearlyIncome" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[TotalChildren]"
+                          dataType="ui1"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[TotalChildren]"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[TotalChildren]"
+                          name="TotalChildren" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[NumberChildrenAtHome]"
+                          dataType="ui1"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[NumberChildrenAtHome]"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[NumberChildrenAtHome]"
+                          name="NumberChildrenAtHome" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[EnglishEducation]"
+                          dataType="wstr"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[EnglishEducation]"
+                          length="40"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[EnglishEducation]"
+                          name="EnglishEducation" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[SpanishEducation]"
+                          dataType="wstr"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[SpanishEducation]"
+                          length="40"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[SpanishEducation]"
+                          name="SpanishEducation" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[FrenchEducation]"
+                          dataType="wstr"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[FrenchEducation]"
+                          length="40"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[FrenchEducation]"
+                          name="FrenchEducation" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[EnglishOccupation]"
+                          dataType="wstr"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[EnglishOccupation]"
+                          length="100"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[EnglishOccupation]"
+                          name="EnglishOccupation" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[SpanishOccupation]"
+                          dataType="wstr"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[SpanishOccupation]"
+                          length="100"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[SpanishOccupation]"
+                          name="SpanishOccupation" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[FrenchOccupation]"
+                          dataType="wstr"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[FrenchOccupation]"
+                          length="100"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[FrenchOccupation]"
+                          name="FrenchOccupation" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[HouseOwnerFlag]"
+                          dataType="wstr"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[HouseOwnerFlag]"
+                          length="1"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[HouseOwnerFlag]"
+                          name="HouseOwnerFlag" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[NumberCarsOwned]"
+                          dataType="ui1"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[NumberCarsOwned]"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[NumberCarsOwned]"
+                          name="NumberCarsOwned" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[AddressLine1]"
+                          dataType="wstr"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[AddressLine1]"
+                          length="120"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[AddressLine1]"
+                          name="AddressLine1" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[AddressLine2]"
+                          dataType="wstr"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[AddressLine2]"
+                          length="120"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[AddressLine2]"
+                          name="AddressLine2" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[Phone]"
+                          dataType="wstr"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[Phone]"
+                          length="20"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[Phone]"
+                          name="Phone" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[DateFirstPurchase]"
+                          dataType="wstr"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[DateFirstPurchase]"
+                          length="10"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[DateFirstPurchase]"
+                          name="DateFirstPurchase" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[CommuteDistance]"
+                          dataType="wstr"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[CommuteDistance]"
+                          length="15"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[CommuteDistance]"
+                          name="CommuteDistance" />
+                      </outputColumns>
+                      <externalMetadataColumns
+                        isUsed="True">
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[CustomerKey]"
+                          dataType="i4"
+                          name="CustomerKey" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[GeographyKey]"
+                          dataType="i4"
+                          name="GeographyKey" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[CustomerAlternateKey]"
+                          dataType="wstr"
+                          length="15"
+                          name="CustomerAlternateKey" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[Title]"
+                          dataType="wstr"
+                          length="8"
+                          name="Title" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[FirstName]"
+                          dataType="wstr"
+                          length="50"
+                          name="FirstName" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[MiddleName]"
+                          dataType="wstr"
+                          length="50"
+                          name="MiddleName" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[LastName]"
+                          dataType="wstr"
+                          length="50"
+                          name="LastName" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[NameStyle]"
+                          dataType="bool"
+                          name="NameStyle" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[BirthDate]"
+                          dataType="wstr"
+                          length="10"
+                          name="BirthDate" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[MaritalStatus]"
+                          dataType="wstr"
+                          length="1"
+                          name="MaritalStatus" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[Suffix]"
+                          dataType="wstr"
+                          length="10"
+                          name="Suffix" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[Gender]"
+                          dataType="wstr"
+                          length="1"
+                          name="Gender" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[EmailAddress]"
+                          dataType="wstr"
+                          length="50"
+                          name="EmailAddress" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[YearlyIncome]"
+                          dataType="cy"
+                          name="YearlyIncome" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[TotalChildren]"
+                          dataType="ui1"
+                          name="TotalChildren" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[NumberChildrenAtHome]"
+                          dataType="ui1"
+                          name="NumberChildrenAtHome" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[EnglishEducation]"
+                          dataType="wstr"
+                          length="40"
+                          name="EnglishEducation" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[SpanishEducation]"
+                          dataType="wstr"
+                          length="40"
+                          name="SpanishEducation" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[FrenchEducation]"
+                          dataType="wstr"
+                          length="40"
+                          name="FrenchEducation" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[EnglishOccupation]"
+                          dataType="wstr"
+                          length="100"
+                          name="EnglishOccupation" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[SpanishOccupation]"
+                          dataType="wstr"
+                          length="100"
+                          name="SpanishOccupation" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[FrenchOccupation]"
+                          dataType="wstr"
+                          length="100"
+                          name="FrenchOccupation" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[HouseOwnerFlag]"
+                          dataType="wstr"
+                          length="1"
+                          name="HouseOwnerFlag" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[NumberCarsOwned]"
+                          dataType="ui1"
+                          name="NumberCarsOwned" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[AddressLine1]"
+                          dataType="wstr"
+                          length="120"
+                          name="AddressLine1" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[AddressLine2]"
+                          dataType="wstr"
+                          length="120"
+                          name="AddressLine2" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[Phone]"
+                          dataType="wstr"
+                          length="20"
+                          name="Phone" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[DateFirstPurchase]"
+                          dataType="wstr"
+                          length="10"
+                          name="DateFirstPurchase" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[CommuteDistance]"
+                          dataType="wstr"
+                          length="15"
+                          name="CommuteDistance" />
+                      </externalMetadataColumns>
+                    </output>
+                    <output
+                      refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output]"
+                      isErrorOut="true"
+                      name="ODBC Source Error Output">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[CustomerKey]"
+                          dataType="i4"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[CustomerKey]"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[CustomerKey]"
+                          name="CustomerKey" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[GeographyKey]"
+                          dataType="i4"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[GeographyKey]"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[GeographyKey]"
+                          name="GeographyKey" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[CustomerAlternateKey]"
+                          dataType="wstr"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[CustomerAlternateKey]"
+                          length="15"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[CustomerAlternateKey]"
+                          name="CustomerAlternateKey" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[Title]"
+                          dataType="wstr"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[Title]"
+                          length="8"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[Title]"
+                          name="Title" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[FirstName]"
+                          dataType="wstr"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[FirstName]"
+                          length="50"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[FirstName]"
+                          name="FirstName" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[MiddleName]"
+                          dataType="wstr"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[MiddleName]"
+                          length="50"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[MiddleName]"
+                          name="MiddleName" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[LastName]"
+                          dataType="wstr"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[LastName]"
+                          length="50"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[LastName]"
+                          name="LastName" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[NameStyle]"
+                          dataType="bool"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[NameStyle]"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[NameStyle]"
+                          name="NameStyle" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[BirthDate]"
+                          dataType="wstr"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[BirthDate]"
+                          length="10"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[BirthDate]"
+                          name="BirthDate" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[MaritalStatus]"
+                          dataType="wstr"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[MaritalStatus]"
+                          length="1"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[MaritalStatus]"
+                          name="MaritalStatus" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[Suffix]"
+                          dataType="wstr"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[Suffix]"
+                          length="10"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[Suffix]"
+                          name="Suffix" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[Gender]"
+                          dataType="wstr"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[Gender]"
+                          length="1"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[Gender]"
+                          name="Gender" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[EmailAddress]"
+                          dataType="wstr"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[EmailAddress]"
+                          length="50"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[EmailAddress]"
+                          name="EmailAddress" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[YearlyIncome]"
+                          dataType="cy"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[YearlyIncome]"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[YearlyIncome]"
+                          name="YearlyIncome" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[TotalChildren]"
+                          dataType="ui1"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[TotalChildren]"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[TotalChildren]"
+                          name="TotalChildren" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[NumberChildrenAtHome]"
+                          dataType="ui1"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[NumberChildrenAtHome]"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[NumberChildrenAtHome]"
+                          name="NumberChildrenAtHome" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[EnglishEducation]"
+                          dataType="wstr"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[EnglishEducation]"
+                          length="40"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[EnglishEducation]"
+                          name="EnglishEducation" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[SpanishEducation]"
+                          dataType="wstr"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[SpanishEducation]"
+                          length="40"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[SpanishEducation]"
+                          name="SpanishEducation" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[FrenchEducation]"
+                          dataType="wstr"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[FrenchEducation]"
+                          length="40"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[FrenchEducation]"
+                          name="FrenchEducation" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[EnglishOccupation]"
+                          dataType="wstr"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[EnglishOccupation]"
+                          length="100"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[EnglishOccupation]"
+                          name="EnglishOccupation" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[SpanishOccupation]"
+                          dataType="wstr"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[SpanishOccupation]"
+                          length="100"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[SpanishOccupation]"
+                          name="SpanishOccupation" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[FrenchOccupation]"
+                          dataType="wstr"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[FrenchOccupation]"
+                          length="100"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[FrenchOccupation]"
+                          name="FrenchOccupation" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[HouseOwnerFlag]"
+                          dataType="wstr"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[HouseOwnerFlag]"
+                          length="1"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[HouseOwnerFlag]"
+                          name="HouseOwnerFlag" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[NumberCarsOwned]"
+                          dataType="ui1"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[NumberCarsOwned]"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[NumberCarsOwned]"
+                          name="NumberCarsOwned" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[AddressLine1]"
+                          dataType="wstr"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[AddressLine1]"
+                          length="120"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[AddressLine1]"
+                          name="AddressLine1" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[AddressLine2]"
+                          dataType="wstr"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[AddressLine2]"
+                          length="120"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[AddressLine2]"
+                          name="AddressLine2" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[Phone]"
+                          dataType="wstr"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[Phone]"
+                          length="20"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[Phone]"
+                          name="Phone" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[DateFirstPurchase]"
+                          dataType="wstr"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[DateFirstPurchase]"
+                          length="10"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[DateFirstPurchase]"
+                          name="DateFirstPurchase" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[CommuteDistance]"
+                          dataType="wstr"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].ExternalColumns[CommuteDistance]"
+                          length="15"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[CommuteDistance]"
+                          name="CommuteDistance" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Sequence Container\Data Flow Task\OLE DB Destination"
+                  componentClassID="Microsoft.OLEDBDestination"
+                  contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+                  description="OLE DB Destination"
+                  name="OLE DB Destination"
+                  usesDispositions="true"
+                  version="4">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                      name="CommandTimeout">0</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the name of the database object used to open a rowset."
+                      name="OpenRowset">[newDimCustomer]</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable that contains the name of the database object used to open a rowset."
+                      name="OpenRowsetVariable"></property>
+                    <property
+                      dataType="System.String"
+                      description="The SQL command to be executed."
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the column code page to use when code page information is unavailable from the data source."
+                      name="DefaultCodePage">1252</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Forces the use of the DefaultCodePage property value when describing character data."
+                      name="AlwaysUseDefaultCodePage">false</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the mode used to access the database."
+                      name="AccessMode"
+                      typeConverter="AccessMode">3</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                      name="FastLoadKeepIdentity">false</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                      name="FastLoadKeepNulls">false</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                      name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                      name="FastLoadMaxInsertCommitSize">2147483647</property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Sequence Container\Data Flow Task\OLE DB Destination.Connections[OleDbConnection]"
+                      connectionManagerID="{A82F85F3-D5B5-4674-A354-B304B3E1CAAB}:external"
+                      connectionManagerRefId="Project.ConnectionManagers[localhost.AdventureWorksDW2022]"
+                      description="The OLE DB runtime connection used to access the database."
+                      name="OleDbConnection" />
+                  </connections>
+                  <inputs>
+                    <input
+                      refId="Package\Sequence Container\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input]"
+                      errorOrTruncationOperation="Insert"
+                      errorRowDisposition="FailComponent"
+                      hasSideEffects="true"
+                      name="OLE DB Destination Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\Sequence Container\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[CustomerKey]"
+                          cachedDataType="i4"
+                          cachedName="CustomerKey"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[CustomerKey]"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[CustomerKey]" />
+                        <inputColumn
+                          refId="Package\Sequence Container\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[BirthDateString]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="50"
+                          cachedName="BirthDateString"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[BirthDateString]"
+                          lineageId="Package\Sequence Container\Data Flow Task\Data Conversion.Outputs[Data Conversion Output].Columns[BirthDateString]" />
+                        <inputColumn
+                          refId="Package\Sequence Container\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[FullName]"
+                          cachedDataType="wstr"
+                          cachedLength="152"
+                          cachedName="FullName"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[FullName]"
+                          lineageId="Package\Sequence Container\Data Flow Task\Derived Column.Outputs[Derived Column Output].Columns[FullName]" />
+                        <inputColumn
+                          refId="Package\Sequence Container\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[AddressLine1]"
+                          cachedDataType="wstr"
+                          cachedLength="120"
+                          cachedName="AddressLine1"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[AddressLine2]"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[AddressLine1]" />
+                        <inputColumn
+                          refId="Package\Sequence Container\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[AddressLine2]"
+                          cachedDataType="wstr"
+                          cachedLength="120"
+                          cachedName="AddressLine2"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[AddressLine1]"
+                          lineageId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output].Columns[AddressLine2]" />
+                      </inputColumns>
+                      <externalMetadataColumns
+                        isUsed="True">
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[CustomerKey]"
+                          dataType="i4"
+                          name="CustomerKey" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[AddressLine1]"
+                          dataType="wstr"
+                          length="120"
+                          name="AddressLine1" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[AddressLine2]"
+                          dataType="wstr"
+                          length="120"
+                          name="AddressLine2" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[BirthDateString]"
+                          codePage="1252"
+                          dataType="str"
+                          length="50"
+                          name="BirthDateString" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[FullName]"
+                          dataType="wstr"
+                          length="152"
+                          name="FullName" />
+                      </externalMetadataColumns>
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Sequence Container\Data Flow Task\OLE DB Destination.Outputs[OLE DB Destination Error Output]"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="OLE DB Destination Error Output"
+                      synchronousInputId="Package\Sequence Container\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container\Data Flow Task\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container\Data Flow Task\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+              </components>
+              <paths>
+                <path
+                  refId="Package\Sequence Container\Data Flow Task.Paths[Data Conversion Output]"
+                  endId="Package\Sequence Container\Data Flow Task\Derived Column.Inputs[Derived Column Input]"
+                  name="Data Conversion Output"
+                  startId="Package\Sequence Container\Data Flow Task\Data Conversion.Outputs[Data Conversion Output]" />
+                <path
+                  refId="Package\Sequence Container\Data Flow Task.Paths[Derived Column Output]"
+                  endId="Package\Sequence Container\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input]"
+                  name="Derived Column Output"
+                  startId="Package\Sequence Container\Data Flow Task\Derived Column.Outputs[Derived Column Output]" />
+                <path
+                  refId="Package\Sequence Container\Data Flow Task.Paths[ODBC Source Output]"
+                  endId="Package\Sequence Container\Data Flow Task\Data Conversion.Inputs[Data Conversion Input]"
+                  name="ODBC Source Output"
+                  startId="Package\Sequence Container\Data Flow Task\ODBC Source.Outputs[ODBC Source Output]" />
+              </paths>
+            </pipeline>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Sequence Container\Data Flow Task 2"
+          DTS:CreationName="Microsoft.Pipeline"
+          DTS:Description="Data Flow Task"
+          DTS:DTSID="{bf9e51a1-5ce1-4810-89de-1f073b5f4c3c}"
+          DTS:ExecutableType="Microsoft.Pipeline"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Data Flow Task 2"
+          DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <pipeline
+              version="1">
+              <components>
+                <component
+                  refId="Package\Sequence Container\Data Flow Task 2\Data Conversion"
+                  componentClassID="Microsoft.DataConvert"
+                  contactInfo="Data Conversion;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+                  description="Data Conversion"
+                  name="Data Conversion"
+                  usesDispositions="true">
+                  <inputs>
+                    <input
+                      refId="Package\Sequence Container\Data Flow Task 2\Data Conversion.Inputs[Data Conversion Input]"
+                      name="Data Conversion Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\Data Conversion.Inputs[Data Conversion Input].Columns[BirthDate]"
+                          cachedDataType="dbDate"
+                          cachedName="BirthDate"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[BirthDate]" />
+                      </inputColumns>
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Sequence Container\Data Flow Task 2\Data Conversion.Outputs[Data Conversion Output]"
+                      exclusionGroup="1"
+                      name="Data Conversion Output"
+                      synchronousInputId="Package\Sequence Container\Data Flow Task 2\Data Conversion.Inputs[Data Conversion Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\Data Conversion.Outputs[Data Conversion Output].Columns[BirthDateString]"
+                          codePage="1252"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          length="50"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\Data Conversion.Outputs[Data Conversion Output].Columns[BirthDateString]"
+                          name="BirthDateString"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.Int32"
+                              description="Specifies the input column used as the source of data for the conversion."
+                              name="SourceInputColumnLineageID">#{Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[BirthDate]}</property>
+                            <property
+                              dataType="System.Boolean"
+                              description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                              name="FastParse">false</property>
+                          </properties>
+                        </outputColumn>
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                    <output
+                      refId="Package\Sequence Container\Data Flow Task 2\Data Conversion.Outputs[Data Conversion Error Output]"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="Data Conversion Error Output"
+                      synchronousInputId="Package\Sequence Container\Data Flow Task 2\Data Conversion.Inputs[Data Conversion Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\Data Conversion.Outputs[Data Conversion Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\Data Conversion.Outputs[Data Conversion Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\Data Conversion.Outputs[Data Conversion Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\Data Conversion.Outputs[Data Conversion Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Sequence Container\Data Flow Task 2\Lookup"
+                  componentClassID="Microsoft.Lookup"
+                  contactInfo="Lookup;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;6"
+                  description="Joins additional columns to the data flow by looking up values in a table. For example, join to the 'employee id' column the employees table to get 'hire date' and 'employee name'. We recommend this transformation when the lookup table can fit into memory."
+                  name="Lookup"
+                  usesDispositions="true"
+                  version="6">
+                  <properties>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the SQL statement that generates the lookup table."
+                      expressionType="Notify"
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from [dbo].[FactInternetSales]</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies a SQL statement that uses parameters to generate the lookup table."
+                      expressionType="Notify"
+                      name="SqlCommandParam"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from (select * from [dbo].[FactInternetSales]) [refTable]
+where [refTable].[CurrencyKey] = ?</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the type of connection used to access the reference dataset."
+                      name="ConnectionType"
+                      typeConverter="LookupConnectionType">0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the cache type of the lookup table."
+                      name="CacheType"
+                      typeConverter="CacheType">0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies how the Lookup transformation handles rows without matching entries in the reference data set."
+                      name="NoMatchBehavior"
+                      typeConverter="LookupNoMatchBehavior">0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the percentage of the cache that is allocated for rows with no matching entries in the reference dataset."
+                      name="NoMatchCachePercentage">0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Maximum Memory Usage for Reference Cache on a 32 bit platform."
+                      name="MaxMemoryUsage">25</property>
+                    <property
+                      dataType="System.Int64"
+                      description="Maximum Memory Usage for Reference Cache on a 64 bit platform."
+                      name="MaxMemoryUsage64">25</property>
+                    <property
+                      dataType="System.String"
+                      description="Indicates whether to reference metadata in an XML format."
+                      name="ReferenceMetadataXml">&lt;referenceMetadata&gt;&lt;referenceColumns&gt;&lt;referenceColumn name="ProductKey" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="OrderDateKey" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="DueDateKey" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="ShipDateKey" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="CustomerKey" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="PromotionKey" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="CurrencyKey" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="SalesTerritoryKey" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="SalesOrderNumber" dataType="DT_WSTR" length="20" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="SalesOrderLineNumber" dataType="DT_UI1" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="RevisionNumber" dataType="DT_UI1" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="OrderQuantity" dataType="DT_I2" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="UnitPrice" dataType="DT_CY" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="ExtendedAmount" dataType="DT_CY" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="UnitPriceDiscountPct" dataType="DT_R8" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="DiscountAmount" dataType="DT_R8" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="ProductStandardCost" dataType="DT_CY" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="TotalProductCost" dataType="DT_CY" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="SalesAmount" dataType="DT_CY" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="TaxAmt" dataType="DT_CY" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="Freight" dataType="DT_CY" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="CarrierTrackingNumber" dataType="DT_WSTR" length="25" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="CustomerPONumber" dataType="DT_WSTR" length="25" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="OrderDate" dataType="DT_DBTIMESTAMP" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="DueDate" dataType="DT_DBTIMESTAMP" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="ShipDate" dataType="DT_DBTIMESTAMP" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;/referenceColumns&gt;&lt;/referenceMetadata&gt;</property>
+                    <property
+                      containsID="true"
+                      dataType="System.String"
+                      description="Specifies the list of lineage identifiers that map to the parameters that the SQL statement in the SQLCommand property uses. Entries in the list are separated by semicolons."
+                      name="ParameterMap">#{Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[CustomerKey]};</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the column code page to use when code page information is unavailable from the data source."
+                      name="DefaultCodePage">1252</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Determines whether duplicate keys in the reference data should be treated as errors when full cache mode is used."
+                      name="TreatDuplicateKeysAsError">false</property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Sequence Container\Data Flow Task 2\Lookup.Connections[OleDbConnection]"
+                      connectionManagerID="{A82F85F3-D5B5-4674-A354-B304B3E1CAAB}:external"
+                      connectionManagerRefId="Project.ConnectionManagers[localhost.AdventureWorksDW2022]"
+                      description="Connection manager used to access lookup data."
+                      name="OleDbConnection" />
+                  </connections>
+                  <inputs>
+                    <input
+                      refId="Package\Sequence Container\Data Flow Task 2\Lookup.Inputs[Lookup Input]"
+                      name="Lookup Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\Lookup.Inputs[Lookup Input].Columns[CustomerKey]"
+                          cachedDataType="i4"
+                          cachedName="CustomerKey"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[CustomerKey]">
+                          <properties>
+                            <property
+                              dataType="System.String"
+                              description="Specifies the column in the reference table that a column joins."
+                              name="JoinToReferenceColumn">CurrencyKey</property>
+                            <property
+                              dataType="System.Null"
+                              description="Specifies the column in the reference table from which a column is copied."
+                              name="CopyFromReferenceColumn" />
+                          </properties>
+                        </inputColumn>
+                      </inputColumns>
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Sequence Container\Data Flow Task 2\Lookup.Outputs[Lookup Match Output]"
+                      errorOrTruncationOperation="Lookup"
+                      errorRowDisposition="FailComponent"
+                      exclusionGroup="1"
+                      name="Lookup Match Output"
+                      synchronousInputId="Package\Sequence Container\Data Flow Task 2\Lookup.Inputs[Lookup Input]">
+                      <externalMetadataColumns />
+                    </output>
+                    <output
+                      refId="Package\Sequence Container\Data Flow Task 2\Lookup.Outputs[Lookup No Match Output]"
+                      description="The Lookup output that handles rows with no matching entries in the reference dataset. Use this output when the NoMatchBehavior property is set to &quot;Send rows with no matching entries to the no match output.&quot;"
+                      exclusionGroup="1"
+                      name="Lookup No Match Output"
+                      synchronousInputId="Package\Sequence Container\Data Flow Task 2\Lookup.Inputs[Lookup Input]">
+                      <externalMetadataColumns />
+                    </output>
+                    <output
+                      refId="Package\Sequence Container\Data Flow Task 2\Lookup.Outputs[Lookup Error Output]"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="Lookup Error Output"
+                      synchronousInputId="Package\Sequence Container\Data Flow Task 2\Lookup.Inputs[Lookup Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\Lookup.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\Lookup.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\Lookup.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\Lookup.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Sequence Container\Data Flow Task 2\OLE DB Destination"
+                  componentClassID="Microsoft.OLEDBDestination"
+                  contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+                  description="OLE DB Destination"
+                  name="OLE DB Destination"
+                  usesDispositions="true"
+                  version="4">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                      name="CommandTimeout">0</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the name of the database object used to open a rowset."
+                      name="OpenRowset">[newDimCustomer]</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable that contains the name of the database object used to open a rowset."
+                      name="OpenRowsetVariable"></property>
+                    <property
+                      dataType="System.String"
+                      description="The SQL command to be executed."
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the column code page to use when code page information is unavailable from the data source."
+                      name="DefaultCodePage">1252</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Forces the use of the DefaultCodePage property value when describing character data."
+                      name="AlwaysUseDefaultCodePage">false</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the mode used to access the database."
+                      name="AccessMode"
+                      typeConverter="AccessMode">3</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                      name="FastLoadKeepIdentity">false</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                      name="FastLoadKeepNulls">false</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                      name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                      name="FastLoadMaxInsertCommitSize">2147483647</property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Sequence Container\Data Flow Task 2\OLE DB Destination.Connections[OleDbConnection]"
+                      connectionManagerID="{A82F85F3-D5B5-4674-A354-B304B3E1CAAB}:external"
+                      connectionManagerRefId="Project.ConnectionManagers[localhost.AdventureWorksDW2022]"
+                      description="The OLE DB runtime connection used to access the database."
+                      name="OleDbConnection" />
+                  </connections>
+                  <inputs>
+                    <input
+                      refId="Package\Sequence Container\Data Flow Task 2\OLE DB Destination.Inputs[OLE DB Destination Input]"
+                      errorOrTruncationOperation="Insert"
+                      errorRowDisposition="FailComponent"
+                      hasSideEffects="true"
+                      name="OLE DB Destination Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[CustomerKey]"
+                          cachedDataType="i4"
+                          cachedName="CustomerKey"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task 2\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[CustomerKey]"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[CustomerKey]" />
+                        <inputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[BirthDateString]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="50"
+                          cachedName="BirthDateString"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task 2\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[BirthDateString]"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\Data Conversion.Outputs[Data Conversion Output].Columns[BirthDateString]" />
+                        <inputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[FirstName]"
+                          cachedDataType="wstr"
+                          cachedLength="50"
+                          cachedName="FirstName"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task 2\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[FullName]"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[FirstName]" />
+                        <inputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[AddressLine1]"
+                          cachedDataType="wstr"
+                          cachedLength="120"
+                          cachedName="AddressLine1"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task 2\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[AddressLine2]"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[AddressLine1]" />
+                        <inputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[AddressLine2]"
+                          cachedDataType="wstr"
+                          cachedLength="120"
+                          cachedName="AddressLine2"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task 2\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[AddressLine1]"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[AddressLine2]" />
+                      </inputColumns>
+                      <externalMetadataColumns
+                        isUsed="True">
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[CustomerKey]"
+                          dataType="i4"
+                          name="CustomerKey" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[AddressLine1]"
+                          dataType="wstr"
+                          length="120"
+                          name="AddressLine1" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[AddressLine2]"
+                          dataType="wstr"
+                          length="120"
+                          name="AddressLine2" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[BirthDateString]"
+                          codePage="1252"
+                          dataType="str"
+                          length="50"
+                          name="BirthDateString" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[FullName]"
+                          dataType="wstr"
+                          length="152"
+                          name="FullName" />
+                      </externalMetadataColumns>
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Sequence Container\Data Flow Task 2\OLE DB Destination.Outputs[OLE DB Destination Error Output]"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="OLE DB Destination Error Output"
+                      synchronousInputId="Package\Sequence Container\Data Flow Task 2\OLE DB Destination.Inputs[OLE DB Destination Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source"
+                  componentClassID="Microsoft.OLEDBSource"
+                  contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+                  description="OLE DB Source"
+                  name="OLE DB Source"
+                  usesDispositions="true"
+                  version="7">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                      name="CommandTimeout">0</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the name of the database object used to open a rowset."
+                      name="OpenRowset"></property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable that contains the name of the database object used to open a rowset."
+                      name="OpenRowsetVariable"></property>
+                    <property
+                      dataType="System.String"
+                      description="The SQL command to be executed."
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT * FROM dimCustomer
+WHERE BirthDate &lt; '1970-01-01 00:00:00';</property>
+                    <property
+                      dataType="System.String"
+                      description="The variable that contains the SQL command to be executed."
+                      name="SqlCommandVariable"></property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the column code page to use when code page information is unavailable from the data source."
+                      name="DefaultCodePage">1252</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Forces the use of the DefaultCodePage property value when describing character data."
+                      name="AlwaysUseDefaultCodePage">false</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the mode used to access the database."
+                      name="AccessMode"
+                      typeConverter="AccessMode">2</property>
+                    <property
+                      dataType="System.String"
+                      description="The mappings between the parameters in the SQL command and variables."
+                      name="ParameterMapping"></property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Connections[OleDbConnection]"
+                      connectionManagerID="{A82F85F3-D5B5-4674-A354-B304B3E1CAAB}:external"
+                      connectionManagerRefId="Project.ConnectionManagers[localhost.AdventureWorksDW2022]"
+                      description="The OLE DB runtime connection used to access the database."
+                      name="OleDbConnection" />
+                  </connections>
+                  <outputs>
+                    <output
+                      refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output]"
+                      name="OLE DB Source Output">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[CustomerKey]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[CustomerKey]"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[CustomerKey]"
+                          name="CustomerKey"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[GeographyKey]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[GeographyKey]"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[GeographyKey]"
+                          name="GeographyKey"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[CustomerAlternateKey]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[CustomerAlternateKey]"
+                          length="15"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[CustomerAlternateKey]"
+                          name="CustomerAlternateKey"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[Title]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Title]"
+                          length="8"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[Title]"
+                          name="Title"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[FirstName]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[FirstName]"
+                          length="50"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[FirstName]"
+                          name="FirstName"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[MiddleName]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[MiddleName]"
+                          length="50"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[MiddleName]"
+                          name="MiddleName"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[LastName]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[LastName]"
+                          length="50"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[LastName]"
+                          name="LastName"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[NameStyle]"
+                          dataType="bool"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[NameStyle]"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[NameStyle]"
+                          name="NameStyle"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[BirthDate]"
+                          dataType="dbDate"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[BirthDate]"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[BirthDate]"
+                          name="BirthDate"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[MaritalStatus]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[MaritalStatus]"
+                          length="1"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[MaritalStatus]"
+                          name="MaritalStatus"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[Suffix]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Suffix]"
+                          length="10"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[Suffix]"
+                          name="Suffix"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[Gender]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Gender]"
+                          length="1"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[Gender]"
+                          name="Gender"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[EmailAddress]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[EmailAddress]"
+                          length="50"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[EmailAddress]"
+                          name="EmailAddress"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[YearlyIncome]"
+                          dataType="cy"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[YearlyIncome]"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[YearlyIncome]"
+                          name="YearlyIncome"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[TotalChildren]"
+                          dataType="ui1"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[TotalChildren]"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[TotalChildren]"
+                          name="TotalChildren"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[NumberChildrenAtHome]"
+                          dataType="ui1"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[NumberChildrenAtHome]"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[NumberChildrenAtHome]"
+                          name="NumberChildrenAtHome"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[EnglishEducation]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[EnglishEducation]"
+                          length="40"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[EnglishEducation]"
+                          name="EnglishEducation"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[SpanishEducation]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[SpanishEducation]"
+                          length="40"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[SpanishEducation]"
+                          name="SpanishEducation"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[FrenchEducation]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[FrenchEducation]"
+                          length="40"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[FrenchEducation]"
+                          name="FrenchEducation"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[EnglishOccupation]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[EnglishOccupation]"
+                          length="100"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[EnglishOccupation]"
+                          name="EnglishOccupation"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[SpanishOccupation]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[SpanishOccupation]"
+                          length="100"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[SpanishOccupation]"
+                          name="SpanishOccupation"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[FrenchOccupation]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[FrenchOccupation]"
+                          length="100"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[FrenchOccupation]"
+                          name="FrenchOccupation"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[HouseOwnerFlag]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[HouseOwnerFlag]"
+                          length="1"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[HouseOwnerFlag]"
+                          name="HouseOwnerFlag"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[NumberCarsOwned]"
+                          dataType="ui1"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[NumberCarsOwned]"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[NumberCarsOwned]"
+                          name="NumberCarsOwned"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[AddressLine1]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[AddressLine1]"
+                          length="120"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[AddressLine1]"
+                          name="AddressLine1"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[AddressLine2]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[AddressLine2]"
+                          length="120"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[AddressLine2]"
+                          name="AddressLine2"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[Phone]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Phone]"
+                          length="20"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[Phone]"
+                          name="Phone"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[DateFirstPurchase]"
+                          dataType="dbDate"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[DateFirstPurchase]"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[DateFirstPurchase]"
+                          name="DateFirstPurchase"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[CommuteDistance]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[CommuteDistance]"
+                          length="15"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].Columns[CommuteDistance]"
+                          name="CommuteDistance"
+                          truncationRowDisposition="FailComponent" />
+                      </outputColumns>
+                      <externalMetadataColumns
+                        isUsed="True">
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[CustomerKey]"
+                          dataType="i4"
+                          name="CustomerKey" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[GeographyKey]"
+                          dataType="i4"
+                          name="GeographyKey" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[CustomerAlternateKey]"
+                          dataType="wstr"
+                          length="15"
+                          name="CustomerAlternateKey" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Title]"
+                          dataType="wstr"
+                          length="8"
+                          name="Title" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[FirstName]"
+                          dataType="wstr"
+                          length="50"
+                          name="FirstName" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[MiddleName]"
+                          dataType="wstr"
+                          length="50"
+                          name="MiddleName" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[LastName]"
+                          dataType="wstr"
+                          length="50"
+                          name="LastName" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[NameStyle]"
+                          dataType="bool"
+                          name="NameStyle" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[BirthDate]"
+                          dataType="dbDate"
+                          name="BirthDate" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[MaritalStatus]"
+                          dataType="wstr"
+                          length="1"
+                          name="MaritalStatus" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Suffix]"
+                          dataType="wstr"
+                          length="10"
+                          name="Suffix" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Gender]"
+                          dataType="wstr"
+                          length="1"
+                          name="Gender" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[EmailAddress]"
+                          dataType="wstr"
+                          length="50"
+                          name="EmailAddress" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[YearlyIncome]"
+                          dataType="cy"
+                          name="YearlyIncome" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[TotalChildren]"
+                          dataType="ui1"
+                          name="TotalChildren" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[NumberChildrenAtHome]"
+                          dataType="ui1"
+                          name="NumberChildrenAtHome" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[EnglishEducation]"
+                          dataType="wstr"
+                          length="40"
+                          name="EnglishEducation" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[SpanishEducation]"
+                          dataType="wstr"
+                          length="40"
+                          name="SpanishEducation" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[FrenchEducation]"
+                          dataType="wstr"
+                          length="40"
+                          name="FrenchEducation" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[EnglishOccupation]"
+                          dataType="wstr"
+                          length="100"
+                          name="EnglishOccupation" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[SpanishOccupation]"
+                          dataType="wstr"
+                          length="100"
+                          name="SpanishOccupation" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[FrenchOccupation]"
+                          dataType="wstr"
+                          length="100"
+                          name="FrenchOccupation" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[HouseOwnerFlag]"
+                          dataType="wstr"
+                          length="1"
+                          name="HouseOwnerFlag" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[NumberCarsOwned]"
+                          dataType="ui1"
+                          name="NumberCarsOwned" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[AddressLine1]"
+                          dataType="wstr"
+                          length="120"
+                          name="AddressLine1" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[AddressLine2]"
+                          dataType="wstr"
+                          length="120"
+                          name="AddressLine2" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Phone]"
+                          dataType="wstr"
+                          length="20"
+                          name="Phone" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[DateFirstPurchase]"
+                          dataType="dbDate"
+                          name="DateFirstPurchase" />
+                        <externalMetadataColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[CommuteDistance]"
+                          dataType="wstr"
+                          length="15"
+                          name="CommuteDistance" />
+                      </externalMetadataColumns>
+                    </output>
+                    <output
+                      refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output]"
+                      isErrorOut="true"
+                      name="OLE DB Source Error Output">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[CustomerKey]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[CustomerKey]"
+                          name="CustomerKey" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[GeographyKey]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[GeographyKey]"
+                          name="GeographyKey" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[CustomerAlternateKey]"
+                          dataType="wstr"
+                          length="15"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[CustomerAlternateKey]"
+                          name="CustomerAlternateKey" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Title]"
+                          dataType="wstr"
+                          length="8"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Title]"
+                          name="Title" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[FirstName]"
+                          dataType="wstr"
+                          length="50"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[FirstName]"
+                          name="FirstName" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[MiddleName]"
+                          dataType="wstr"
+                          length="50"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[MiddleName]"
+                          name="MiddleName" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[LastName]"
+                          dataType="wstr"
+                          length="50"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[LastName]"
+                          name="LastName" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[NameStyle]"
+                          dataType="bool"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[NameStyle]"
+                          name="NameStyle" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[BirthDate]"
+                          dataType="dbDate"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[BirthDate]"
+                          name="BirthDate" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[MaritalStatus]"
+                          dataType="wstr"
+                          length="1"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[MaritalStatus]"
+                          name="MaritalStatus" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Suffix]"
+                          dataType="wstr"
+                          length="10"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Suffix]"
+                          name="Suffix" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Gender]"
+                          dataType="wstr"
+                          length="1"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Gender]"
+                          name="Gender" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[EmailAddress]"
+                          dataType="wstr"
+                          length="50"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[EmailAddress]"
+                          name="EmailAddress" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[YearlyIncome]"
+                          dataType="cy"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[YearlyIncome]"
+                          name="YearlyIncome" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[TotalChildren]"
+                          dataType="ui1"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[TotalChildren]"
+                          name="TotalChildren" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[NumberChildrenAtHome]"
+                          dataType="ui1"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[NumberChildrenAtHome]"
+                          name="NumberChildrenAtHome" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[EnglishEducation]"
+                          dataType="wstr"
+                          length="40"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[EnglishEducation]"
+                          name="EnglishEducation" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[SpanishEducation]"
+                          dataType="wstr"
+                          length="40"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[SpanishEducation]"
+                          name="SpanishEducation" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[FrenchEducation]"
+                          dataType="wstr"
+                          length="40"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[FrenchEducation]"
+                          name="FrenchEducation" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[EnglishOccupation]"
+                          dataType="wstr"
+                          length="100"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[EnglishOccupation]"
+                          name="EnglishOccupation" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[SpanishOccupation]"
+                          dataType="wstr"
+                          length="100"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[SpanishOccupation]"
+                          name="SpanishOccupation" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[FrenchOccupation]"
+                          dataType="wstr"
+                          length="100"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[FrenchOccupation]"
+                          name="FrenchOccupation" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[HouseOwnerFlag]"
+                          dataType="wstr"
+                          length="1"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[HouseOwnerFlag]"
+                          name="HouseOwnerFlag" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[NumberCarsOwned]"
+                          dataType="ui1"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[NumberCarsOwned]"
+                          name="NumberCarsOwned" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[AddressLine1]"
+                          dataType="wstr"
+                          length="120"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[AddressLine1]"
+                          name="AddressLine1" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[AddressLine2]"
+                          dataType="wstr"
+                          length="120"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[AddressLine2]"
+                          name="AddressLine2" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Phone]"
+                          dataType="wstr"
+                          length="20"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Phone]"
+                          name="Phone" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[DateFirstPurchase]"
+                          dataType="dbDate"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[DateFirstPurchase]"
+                          name="DateFirstPurchase" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[CommuteDistance]"
+                          dataType="wstr"
+                          length="15"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[CommuteDistance]"
+                          name="CommuteDistance" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+              </components>
+              <paths>
+                <path
+                  refId="Package\Sequence Container\Data Flow Task 2.Paths[Data Conversion Output]"
+                  endId="Package\Sequence Container\Data Flow Task 2\Lookup.Inputs[Lookup Input]"
+                  name="Data Conversion Output"
+                  startId="Package\Sequence Container\Data Flow Task 2\Data Conversion.Outputs[Data Conversion Output]" />
+                <path
+                  refId="Package\Sequence Container\Data Flow Task 2.Paths[Lookup No Match Output]"
+                  endId="Package\Sequence Container\Data Flow Task 2\OLE DB Destination.Inputs[OLE DB Destination Input]"
+                  name="Lookup No Match Output"
+                  startId="Package\Sequence Container\Data Flow Task 2\Lookup.Outputs[Lookup No Match Output]" />
+                <path
+                  refId="Package\Sequence Container\Data Flow Task 2.Paths[OLE DB Source Output]"
+                  endId="Package\Sequence Container\Data Flow Task 2\Data Conversion.Inputs[Data Conversion Input]"
+                  name="OLE DB Source Output"
+                  startId="Package\Sequence Container\Data Flow Task 2\OLE DB Source.Outputs[OLE DB Source Output]" />
+              </paths>
+            </pipeline>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Sequence Container\Execute SQL Task"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{B99BEDCA-7AD4-44A7-B24B-E2599F15E1D3}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Execute SQL Task"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{A82F85F3-D5B5-4674-A354-B304B3E1CAAB}"
+              SQLTask:SqlStatementSource="exec sp_columns dimCustomer"
+              xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Sequence Container\Execute SQL Task 2"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{44BE19DA-E43B-436D-885D-D4C550CC4089}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Execute SQL Task 2"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{A82F85F3-D5B5-4674-A354-B304B3E1CAAB}"
+              SQLTask:SqlStatementSource="SELECT * FROM dimCustomer WHERE FirstName = ?"
+              xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="0"
+                SQLTask:DtsVariableName="User::CustomerName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="130"
+                SQLTask:ParameterSize="50" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+      <DTS:PrecedenceConstraints>
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Sequence Container.PrecedenceConstraints[Constraint]"
+          DTS:CreationName=""
+          DTS:DTSID="{3E0C0A0E-23FA-49BE-817B-C5FA9F9A7EE9}"
+          DTS:From="Package\Sequence Container\Data Flow Task"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint"
+          DTS:To="Package\Sequence Container\Execute SQL Task" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Sequence Container.PrecedenceConstraints[Constraint 1]"
+          DTS:CreationName=""
+          DTS:DTSID="{25256321-834E-4DEC-96D0-3098255293C1}"
+          DTS:From="Package\Sequence Container\Execute SQL Task 2"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 1"
+          DTS:To="Package\Sequence Container\Data Flow Task 2" />
+      </DTS:PrecedenceConstraints>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Sequence Container 2"
+      DTS:CreationName="STOCK:SEQUENCE"
+      DTS:Description="Sequence Container"
+      DTS:DTSID="{B3A0B03E-8471-4316-A7DC-7FF9545B47FA}"
+      DTS:ExecutableType="STOCK:SEQUENCE"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Sequence Container 2">
+      <DTS:Variables />
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\Sequence Container 2\Execute Process Task"
+          DTS:CreationName="Microsoft.ExecuteProcess"
+          DTS:Description="Execute Process Task"
+          DTS:DTSID="{EB5C4E2D-9AB2-4F5B-B465-A2D482C47647}"
+          DTS:ExecutableType="Microsoft.ExecuteProcess"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Execute Process Task"
+          DTS:TaskContact="Execute Process Task;Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <ExecuteProcessData
+              Executable="notepad.exe" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{B8090F6B-6378-4C9E-B29A-6540BB205200}"
+      DTS:From="Package\Sequence Container"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\Sequence Container 2" />
+  </DTS:PrecedenceConstraints>
+  <DTS:EventHandlers>
+    <DTS:EventHandler
+      xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+      DTS:refId="Package.EventHandlers[OnPostExecute]"
+      DTS:CreationName="OnPostExecute"
+      DTS:DTSID="{8D4E208E-663D-42D3-A3BB-1690DF14C987}"
+      DTS:EventID="2"
+      DTS:EventName="OnPostExecute"
+      DTS:LocaleID="-1">
+      <DTS:Variables>
+        <DTS:Variable
+          DTS:CreationName=""
+          DTS:Description="The propagate property of the event"
+          DTS:DTSID="{05A7D985-F8D7-4B30-8D6B-3384BF2DFEA1}"
+          DTS:IncludeInDebugDump="6789"
+          DTS:Namespace="System"
+          DTS:ObjectName="Propagate">
+          <DTS:VariableValue
+            DTS:DataType="11">-1</DTS:VariableValue>
+        </DTS:Variable>
+      </DTS:Variables>
+      <DTS:Executables>
+        <DTS:Executable
+          xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+          DTS:refId="Package.EventHandlers[OnPostExecute]\Call SnowConvert Logging Package"
+          DTS:CreationName="Microsoft.ExecutePackageTask"
+          DTS:Description="Execute Package Task"
+          DTS:DTSID="{670EC6DD-3643-49C5-A8E6-BEDA9F0C33F7}"
+          DTS:ExecutableType="Microsoft.ExecutePackageTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Call SnowConvert Logging Package"
+          DTS:TaskContact="Microsoft Corporation; Microsoft SQL Server; Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <ExecutePackageTask>
+              <UseProjectReference>True</UseProjectReference>
+              <PackageName>SnowConvertLoggingPackage.dtsx</PackageName>
+              <ParameterAssignment>
+                <ParameterName>CurrentExecutable</ParameterName>
+                <BindedVariableOrParameterName>System::SourceName</BindedVariableOrParameterName>
+              </ParameterAssignment>
+              <ParameterAssignment>
+                <ParameterName>CurrentExecutableId</ParameterName>
+                <BindedVariableOrParameterName>System::SourceID</BindedVariableOrParameterName>
+              </ParameterAssignment>
+              <ParameterAssignment>
+                <ParameterName>SnowConvertLogsDirectory</ParameterName>
+                <BindedVariableOrParameterName>User::SnowConvertLogsDirectory</BindedVariableOrParameterName>
+              </ParameterAssignment>
+              <ParameterAssignment>
+                <ParameterName>SourcePackageName</ParameterName>
+                <BindedVariableOrParameterName>System::PackageName</BindedVariableOrParameterName>
+              </ParameterAssignment>
+            </ExecutePackageTask>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+    </DTS:EventHandler>
+  </DTS:EventHandlers>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="151.5,42"
+          Id="Package\Sequence Container\Data Flow Task"
+          TopLeft="32,21.2083332553092" />
+        <NodeLayout
+          Size="166.5,42"
+          Id="Package\Sequence Container\Execute SQL Task"
+          TopLeft="26.5,107.7916655824" />
+        <EdgeLayout
+          Id="Package\Sequence Container.PrecedenceConstraints[Constraint]"
+          TopLeft="108.75,63.2083332553092">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,44.5833323270911"
+              Start="0,0"
+              End="0,37.0833323270911">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,37.0833323270911" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="175,42"
+          Id="Package\Sequence Container\Execute SQL Task 2"
+          TopLeft="272.5,12.9999993865689" />
+        <NodeLayout
+          Size="186.5,46"
+          Id="Package\Sequence Container\Data Flow Task 2"
+          TopLeft="262,99.9583317217314" />
+        <EdgeLayout
+          Id="Package\Sequence Container.PrecedenceConstraints[Constraint 1]"
+          TopLeft="357.625,54.9999993865689">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,44.9583323351625"
+              Start="0,0"
+              End="0,37.4583323351625">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,37.4583323351625" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="479,222"
+          Size="479,265"
+          Id="Package\Sequence Container"
+          TopLeft="93.5,125.666666042474" />
+        <NodeLayout
+          Size="183,42"
+          Id="Package\Sequence Container 2\Execute Process Task"
+          TopLeft="28,30.5833305190835" />
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="261,127.5"
+          Size="261,170.5"
+          Id="Package\Sequence Container 2"
+          TopLeft="315.5,492.916664218323" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="333,390.666666042474">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="113,102.24999817585"
+              Start="0,0"
+              End="113,94.7499981758496">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,47.1249990879248" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,47.1249990879248"
+                    Point2="0,51.1249990879248"
+                    Point3="4,51.1249990879248" />
+                  <mssgle:LineSegment
+                    End="109,51.1249990879248" />
+                  <mssgle:CubicBezierSegment
+                    Point1="109,51.1249990879248"
+                    Point2="113,51.1249990879248"
+                    Point3="113,55.1249990879248" />
+                  <mssgle:LineSegment
+                    End="113,94.7499981758496" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <TaskHost
+    design-time-name="Package\Sequence Container\Data Flow Task">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="173,42"
+          Id="Package\Sequence Container\Data Flow Task\OLE DB Destination"
+          TopLeft="141,444.166664460467" />
+        <NodeLayout
+          Size="157,42"
+          Id="Package\Sequence Container\Data Flow Task\Data Conversion"
+          TopLeft="60,230.208332189876" />
+        <NodeLayout
+          Size="154.5,42"
+          Id="Package\Sequence Container\Data Flow Task\Derived Column"
+          TopLeft="63.5,329.333331697517" />
+        <EdgeLayout
+          Id="Package\Sequence Container\Data Flow Task.Paths[Data Conversion Output]"
+          TopLeft="139.625,272.208332189876">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,57.1249995076408"
+              Start="0,0"
+              End="0,49.6249995076408">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,49.6249995076408" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container\Data Flow Task.Paths[Derived Column Output]"
+          TopLeft="140.75,371.333331697517">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="86.75,72.83333276295"
+              Start="0,0"
+              End="86.75,65.33333276295">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,32.416666381475" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,32.416666381475"
+                    Point2="0,36.416666381475"
+                    Point3="4,36.416666381475" />
+                  <mssgle:LineSegment
+                    End="82.75,36.416666381475" />
+                  <mssgle:CubicBezierSegment
+                    Point1="82.75,36.416666381475"
+                    Point2="86.75,36.416666381475"
+                    Point3="86.75,40.416666381475" />
+                  <mssgle:LineSegment
+                    End="86.75,65.33333276295" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="145.5,58"
+          Id="Package\Sequence Container\Data Flow Task\ODBC Source"
+          TopLeft="152,108.333332795236" />
+        <EdgeLayout
+          Id="Package\Sequence Container\Data Flow Task.Paths[ODBC Source Output]"
+          TopLeft="224.75,166.333332795236">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-86.25,63.8749993946404"
+              Start="0,0"
+              End="-86.25,56.3749993946404">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,27.9374996973202" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,27.9374996973202"
+                    Point2="0,31.9374996973202"
+                    Point3="-4,31.9374996973202" />
+                  <mssgle:LineSegment
+                    End="-82.25,31.9374996973202" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-82.25,31.9374996973202"
+                    Point2="-86.25,31.9374996973202"
+                    Point3="-86.25,35.9374996973202" />
+                  <mssgle:LineSegment
+                    End="-86.25,56.3749993946404" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Sequence Container\Data Flow Task\OLE DB Destination">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <TaskHost
+    design-time-name="Package\Sequence Container\Data Flow Task 2">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="157,42"
+          Id="Package\Sequence Container\Data Flow Task 2\Data Conversion"
+          TopLeft="60,230.208332189876" />
+        <NodeLayout
+          Size="173,42"
+          Id="Package\Sequence Container\Data Flow Task 2\OLE DB Destination"
+          TopLeft="141,444.166664460467" />
+        <NodeLayout
+          Size="153.5,42"
+          Id="Package\Sequence Container\Data Flow Task 2\OLE DB Source"
+          TopLeft="97.5,118.083332746807" />
+        <EdgeLayout
+          Id="Package\Sequence Container\Data Flow Task 2.Paths[OLE DB Source Output]"
+          TopLeft="174.25,160.083332746807">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-35.75,70.1249994430691"
+              Start="0,0"
+              End="-35.75,62.6249994430691">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,31.0624997215346" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,31.0624997215346"
+                    Point2="0,35.0624997215346"
+                    Point3="-4,35.0624997215346" />
+                  <mssgle:LineSegment
+                    End="-31.75,35.0624997215346" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-31.75,35.0624997215346"
+                    Point2="-35.75,35.0624997215346"
+                    Point3="-35.75,39.0624997215346" />
+                  <mssgle:LineSegment
+                    End="-35.75,62.6249994430691" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="113.5,42"
+          Id="Package\Sequence Container\Data Flow Task 2\Lookup"
+          TopLeft="362.5,269.5" />
+        <EdgeLayout
+          Id="Package\Sequence Container\Data Flow Task 2.Paths[Data Conversion Output]"
+          TopLeft="217,251.208332189876">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="145.5,39.291667810124"
+              Start="0,0"
+              End="138,39.291667810124">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="68.75,0" />
+                  <mssgle:CubicBezierSegment
+                    Point1="68.75,0"
+                    Point2="72.75,0"
+                    Point3="72.75,4" />
+                  <mssgle:LineSegment
+                    End="72.75,35.291667810124" />
+                  <mssgle:CubicBezierSegment
+                    Point1="72.75,35.291667810124"
+                    Point2="72.75,39.291667810124"
+                    Point3="76.75,39.291667810124" />
+                  <mssgle:LineSegment
+                    End="138,39.291667810124" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container\Data Flow Task 2.Paths[Lookup No Match Output]"
+          TopLeft="419.25,311.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-191.75,132.666664460467"
+              Start="0,0"
+              End="-191.75,125.166664460467">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,62.3333322302335" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,62.3333322302335"
+                    Point2="0,66.3333322302335"
+                    Point3="-4,66.3333322302335" />
+                  <mssgle:LineSegment
+                    End="-187.75,66.3333322302335" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-187.75,66.3333322302335"
+                    Point2="-191.75,66.3333322302335"
+                    Point3="-191.75,70.3333322302335" />
+                  <mssgle:LineSegment
+                    End="-191.75,125.166664460467" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-151.68138671875,71.3333322302335,111.6127734375,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Sequence Container\Data Flow Task 2\Lookup">
+    <Properties>
+      <Property>
+        <Name>OverwriteParamsSQLProp</Name>
+        <Value
+          type="q2:boolean">false</Value>
+      </Property>
+      <Property>
+        <Name>UsedTableName</Name>
+        <Value
+          type="q3:string">[dbo].[FactInternetSales]</Value>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q4:int">0</Value>
+      </Property>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Sequence Container\Data Flow Task\ODBC Source">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>

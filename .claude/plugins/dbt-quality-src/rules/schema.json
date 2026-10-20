@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://snowflake.com/dbt-quality/rules.schema.json",
+  "title": "dbt-quality rule pack",
+  "description": "One file per pack (rules/<PACK>.json). The only source of rule metadata; Rust code supplies only the detector.",
+  "type": "object",
+  "required": ["pack", "rules"],
+  "additionalProperties": false,
+  "properties": {
+    "pack": { "type": "string", "pattern": "^[A-Z]{3}$", "description": "Must equal the file name." },
+    "rules": { "type": "array", "items": { "$ref": "#/$defs/rule" } }
+  },
+  "$defs": {
+    "rule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code", "number", "kind", "name", "short_description", "long_description",
+        "remediation", "level", "severity", "tier", "scope", "effort", "since"
+      ],
+      "properties": {
+        "code": { "type": "string", "pattern": "^SSC-(EWI|FDM|PRF)-DBT[A-Z]{3}\\d{4}$" },
+        "number": { "type": "integer", "minimum": 1, "maximum": 9999 },
+        "kind": { "enum": ["EWI", "FDM", "PRF"] },
+        "name": { "type": "string", "maxLength": 60 },
+        "short_description": { "type": "string", "maxLength": 160 },
+        "long_description": { "type": "string", "description": "Markdown." },
+        "remediation": { "type": "string", "description": "Markdown." },
+        "level": { "enum": ["error", "warning", "information"] },
+        "severity": { "enum": ["critical", "high", "medium", "low"] },
+        "tier": { "enum": ["universal", "architecture", "migration"] },
+        "scope": { "enum": ["model", "project", "portfolio"] },
+        "effort": { "enum": ["low", "medium", "high"] },
+        "per_line": { "type": "boolean", "default": false, "description": "Each finding is a separate edit at its own site, so one file may carry several findings with the same remediation." },
+        "anti_patterns": { "type": "array", "items": { "type": "string" } },
+        "principles": { "type": "array", "items": { "type": "string" } },
+        "marker_subject": { "type": "string" },
+        "examples": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["title", "bad", "good"],
+            "additionalProperties": false,
+            "properties": { "title": { "type": "string" }, "bad": { "type": "string" }, "good": { "type": "string" } }
+          }
+        },
+        "references": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["title", "url"],
+            "additionalProperties": false,
+            "properties": { "title": { "type": "string" }, "url": { "type": "string" } }
+          }
+        },
+        "since": { "type": "string" },
+        "status": { "enum": ["active", "deprecated"], "default": "active" }
+      }
+    }
+  }
+}

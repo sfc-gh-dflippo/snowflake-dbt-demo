@@ -1,291 +1,191 @@
 ---
 name: dbt-audit
 description:
-  "Audit dbt projects for anti-patterns and produce an HTML quality assessment with prioritized
-  remediation. Use when: reviewing, auditing, assessing, grading, or health-checking a dbt project
-  or an estate of projects; asking what is wrong with a dbt project or where its technical debt is;
-  finding dbt anti-patterns; evaluating migrated dbt output. Covers project fragmentation,
+  "Audit dbt projects for anti-patterns, produce an HTML quality assessment with prioritized
+  remediation, and drive the marker-based fix loop. Use when: reviewing, auditing, assessing,
+  grading, or health-checking a dbt project or an estate of projects; asking what is wrong with a
+  dbt project or where its technical debt is; finding dbt anti-patterns; evaluating or consolidating
+  migrated dbt output (SnowConvert Informatica, SSIS, DataStage); marking findings in the files so
+  they can be fixed. Covers project fragmentation, var and parameter misuse, hooks that write,
   truncate/delete-load instead of incremental models, subqueries that should be CTEs or ephemeral
   models, macro over-use and under-use, materialization fitness, test and documentation coverage,
-  and unresolved lift-and-shift conversion debt. Triggers: audit dbt, dbt audit, review my dbt
-  project, dbt quality assessment, dbt anti-patterns, dbt health check, assess dbt project, grade
-  dbt project, what is wrong with my dbt project, dbt technical debt, dbt best practice check, is my
-  dbt project any good, too many dbt projects, dbt code review."
+  and unresolved conversion debt. Triggers: audit dbt, dbt audit, review my dbt project, dbt
+  quality assessment, dbt anti-patterns, dbt health check, assess dbt project, what is wrong with my
+  dbt project, dbt technical debt, consolidate dbt projects, mark dbt findings, SSC-EWI-DBT, too
+  many dbt projects, dbt code review."
 ---
 
-# dbt Anti-Pattern Audit
+# dbt anti-pattern audit
 
-Produce a dbt quality assessment: a deterministic Python analyzer emits suggestions as JSON, then
-you render an HTML report with prioritized remediation.
+The Rust analyzer uses dbt's Jinja parser and local SQL analysis to produce JSON findings and an
+HTML report. It can also write `SSC-EWI-DBT*` markers into dbt files. It does not execute models or
+connect to a warehouse.
 
-The split is deliberate. Suggestions must be reproducible run to run so a customer can re-audit
-after a sprint and see movement — that is the analyzer's job. The remediation narrative must reflect
-this specific project, so it is yours.
+Use the findings to plan project-specific fixes. Check the evidence before changing code, test
+each fix, and audit again. The same inputs and settings should produce the same findings; an
+HTML edit alone does not change those results.
 
-## Stopping Points
+## Tools
 
-- **Before running `dbt parse`:** always ask via `ask_user_question`. It writes inside the user's
-  project.
-- **Before writing the HTML report:** confirm a durable output location if none is obvious. Never
-  write the report or `suggestions.json` into the user's repo without asking; use scratch.
+Prefer the `dbt-quality` MCP server. It is declared in this plugin's manifest.
+
+| MCP tool   | Use                                                                                                   |
+| ---------- | ----------------------------------------------------------------------------------------------------- |
+| `report`   | Audit `path`; writes `dbt-audit-suggestions.json` and `dbt-audit-report.html` into `out_dir` (default: a scratch dir under the system temp dir, never the project); returns their paths and counts |
+| `findings` | Active findings as JSON, filtered by `rule_ids`, `files`, `min_level`                                  |
+| `annotate` | Write markers above each finding. `dry_run: true` (default) returns the diff only. Writes need `dry_run: false` |
+| `rules`    | The rule list, or one rule's full record (long description, remediation, examples) with `code`        |
+| `version`  | Server version and the pinned dbt commit                                                              |
+
+The same operations are on the CLI: `${CLAUDE_PLUGIN_ROOT}/bin/dbt-quality audit|lint|rules|annotate <path>`.
+On Windows, use `bin\dbt-quality.cmd` in an installed plugin or `bin/dbt-quality.exe` in a release archive, with
+PowerShell's `&` call operator; resolve the plugin's absolute path before invoking it. Prefer the MCP tools when shell conventions differ.
+
+## Stopping points
+
+- **Before `annotate` with `dry_run: false`:** show the diff from a dry run and get approval. The
+  tool refuses to write when the git tree has uncommitted changes (the two report files do not
+  count). It writes only files inside `path`. With `rule_ids` it replaces only those rules'
+  markers. Never pass `allow_dirty: true`
+  unless the user explicitly asks you to.
+- **Before writing reports:** use the tool's default scratch directory or a location the user
+  approved. Confirm a durable destination before retaining or sharing the report. Do not write
+  into the user's repo without asking.
+- **Before including model text:** explain that sharing the report shares that source. Set
+  `include_models: true` only when the user approves source inclusion; it requires HTML output.
 - **Before reporting a suggestion:** spot-check two or three against the actual files.
 
 ## Routing
 
-| User intent                                                 | Surface                                                                               |
-| ----------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| "Check this one model" / a save-time hook fired             | **`dbt-validate` skill** — one file, model-scoped rules                               |
-| "Populate the Problems panel" / CI gate                     | **`dbt-lint`** — whole project, one line per suggestion, `--strict` exits 1 on errors |
-| "Audit my project" / "assess this estate" / customer review | **`dbt-audit`** — this skill: all rules, `suggestions.json` plus HTML report          |
-
-|             | `dbt-validate`        | `dbt-lint`                        | `dbt-audit`                         |
-| ----------- | --------------------- | --------------------------------- | ----------------------------------- |
-| Scope       | One model file        | A project or path                 | A project, or an estate             |
-| Rules       | Model-scoped only     | Model-scoped                      | All rules                           |
-| Output      | Suggestions to stderr | One line per suggestion to stdout | `suggestions.json` plus HTML report |
-| Typical use | Save hook             | Editor task, CI                   | Full assessment                     |
-
----
-
-## Reference: Rule Packs
-
-Ten packs. Run `uv run audit.py rules` for the current catalog with tiers and levels.
-
-| Pack | Concern                                          |
-| ---- | ------------------------------------------------ |
-| PRJ  | Project structure and fragmentation              |
-| INC  | Load patterns and incremental correctness        |
-| SQL  | Query construction: subquery vs CTE vs ephemeral |
-| MAC  | Macro over-use and under-use                     |
-| MAT  | Materialization fitness                          |
-| TST  | Testing and constraint coverage                  |
-| DOC  | Documentation coverage                           |
-| ARC  | Architecture and lineage conventions             |
-| MIG  | Unresolved conversion debt                       |
-| OPS  | Operational hygiene                              |
-
-**Load** [references/rule-catalog.md](references/rule-catalog.md) for per-rule detection signal and
-the practice each protects — when a user asks why something was flagged or disputes a suggestion.
-
----
-
-## Reference: Lift-and-Shift Tiers
-
-Every rule carries a tier, and the engine suppresses one tier for converted projects.
-
-| Tier             | Applies to                                                                                                                | Suppressed?                                                                          |
-| ---------------- | ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| **UNIVERSAL**    | Always. A truncate-and-load is wrong whether a person wrote it or a converter emitted it.                                 | Never                                                                                |
-| **ARCHITECTURE** | Medallion folders, layer-crossing lineage — a greenfield ideal.                                                           | Yes, when the project is detected as mechanically converted from Informatica or SSIS |
-| **MIGRATION**    | Fires _because_ the code was converted: unresolved `SSC-EWI`/`SSC-FDM` markers, ETL control columns, shipped scaffolding. | Never                                                                                |
-
-Two rules for the report:
-
-1. **Suppression is not absolution.** Detecting machine-generated code excuses it from architectural
-   expectations, not from defects. Converter output routinely contains genuine anti-patterns — a
-   project per data flow, `DELETE FROM {{ this }}` in a `pre_hook`, folder hooks that truncate once
-   per model, per-transformation model chains. Report all of those.
-2. **State what was suppressed.** Give the count and the reason, so nobody reads a clean summary as
-   "no architectural debt." Present it as a modernization opportunity, separate from the suggestion
-   list.
-
-Provenance detection is automatic and evidence-based. If the user disputes the classification, show
-them `projects[].provenance.signals` from the JSON and offer `.dbt-quality.yml`
-(`migration.mode: native | lift_and_shift`, `migration.paths`).
+| User intent                                       | Surface                                                     |
+| ------------------------------------------------- | ----------------------------------------------------------- |
+| "Check this one model"                            | **`dbt-validate` skill**: one file, model-scoped rules      |
+| "Populate the Problems panel" / CI gate           | `dbt-quality lint`; `--strict` exits 1 on errors            |
+| "Audit my project" / "assess this estate"         | **This skill**: `report`, then the HTML report              |
+| "Fix / consolidate these migrated projects"       | **This skill**: the marker loop below                       |
 
 ---
 
 ## Workflow
 
-### Step 1: Establish Scope
+### Step 1: Establish scope
 
-**Goal:** Know what to audit before running anything.
+Ask what to audit if it is not clear. Use the common estate root when the audit must compare
+projects. Discovery looks for `dbt_project.yml` below that root and excludes generated/dependency
+directories. A single-project root cannot reveal cross-project collisions. Estate checks include
+fragmentation (PRJ0001-0003), conflicting var defaults (PRJ0012), macros copied across projects
+(MAC0015/0016), and duplicated logic (MAC0010, SQL0002).
 
-**Actions:**
+### Step 2: Run the audit
 
-1. Ask what to audit if it is not already clear.
-2. Prefer the estate root over a single project when the user has more than one. Pointing at a
-   parent directory discovers every `dbt_project.yml` beneath it, and that tree mode is the only way
-   fragmentation suggestions can fire.
+Call `report` with `path`. Omit `out_dir` to use the default scratch directory, or pass a
+location the user approved (it can be outside `path`). It returns the paths it wrote,
+the counts, and the top remediation items. The analyzer does not run dbt, read `target/manifest.json`, or connect to a warehouse. Graph checks use the `ref()` calls in the model files.
+The tool writes JSON and HTML reports; `html:false` omits HTML. Default HTML contains evidence,
+not complete model files. Opt in to bounded SQL/Python model snapshots with `include_models: true`;
+never combine that option with `html:false`. Normal findings JSON remains unchanged.
 
-### Step 2: Check Artifacts, Then Offer Generation
+### Step 3: Read before writing
 
-**Goal:** Know which rules can actually be evaluated.
+Work from `summary`, `remediation` and `suppressed` in the JSON. `remediation` is already grouped
+by rule and ranked by impact over effort. Read each finding on three independent axes:
 
-**Actions:**
+| Axis       | Values                            | Meaning                                                                    |
+| ---------- | --------------------------------- | -------------------------------------------------------------------------- |
+| `kind`     | `EWI`, `FDM`, `PRF`               | Issue / possible functional difference / performance concern              |
+| `level`    | `error`, `warning`, `information` | Diagnostic level; confirm the evidence and conditions before changing code |
+| `severity` | `critical`, `high`, `medium`, `low` | Potential impact if the concern applies                                  |
 
-1. Check manifest coverage:
+Compare `per_model` across re-audits only when scope, settings, and coverage are comparable. No
+grade is produced. HTML labels all-audit counts separately from returned or browser-filtered
+findings. Skipped checks and read errors are coverage gaps, not passes.
 
-   ```bash
-   cd .claude/plugins/dbt-quality/scripts
-   uv run audit.py manifest-status <path>
-   ```
+### Step 4: Review or share the report
 
-   Ephemeral fan-out, layer-crossing dependencies, and single-consumer models need
-   `target/manifest.json`. Without it they are reported as **skipped**, never as passing.
+`report` writes standalone HTML following [references/report-spec.md](references/report-spec.md).
+It has Auto/Light/Dark themes, findings filters, rule detail, and model source panels. The pinned
+Chart.js asset needs CDN access; filters and code panels do not need Chart.js. Static findings and
+rule text remain readable when JavaScript is blocked. A Snowflake shared-report sandbox or editor
+preview may block these assets. Do not promise full interactive support there. Follow the
+`html-authoring` skill if adapting HTML for the shared-report sandbox.
 
-2. If any project needs a parse, **ask the user first** via `ask_user_question`. State the trade-off
-   plainly: `dbt parse` executes no models and uses no warehouse compute, but it needs a working
-   profile and it writes to `target/`. Offer three options — run it now, audit without the graph
-   checks, or the user runs it themselves.
+The report keeps `snowflake-source` and `snowflake-report-metadata` provenance. Its CSP blocks data
+connections and uses script hashes. The CDN library still runs in the page context. Review paths
+and evidence before sharing, even when complete model text is not included.
 
-   ⛔ **Never run `dbt parse` unprompted.** It writes inside the user's project.
+A source panel can show included text or a user-selected local file. A selected file's path is not
+proof of identity. Without a matching snapshot hash, confirm its association and label locations
+unverified or stale. Source snapshots have limits of 256 KiB/file, 4 MiB total, and 100 files; they
+exclude profiles/configuration files, unsafe paths, and unsupported content. These controls do not
+sandbox the audit reader.
 
-3. If `target/catalog.json` exists, inspect it before making contextual recommendations:
-   - **Clustering:** use the Snowflake relation type, approximate rows, bytes, and last-modified
-     time to explain whether the relation warrants investigation. Do not recommend a clustering key
-     until query predicates and pruning behavior justify one.
-   - **`source()` vs `ref()`:** compare exact catalog `database`, `schema`, and relation `name`
-     values for sources and dbt nodes. An exact match is a `ref()` candidate because it restores
-     lineage and build ordering. Keep `source()` when the relation is an intentionally independently
-     deployed contract boundary.
+Edits affect a copy in the report. The reader can preview changes, copy text, or download a new
+file; the report never overwrites project files. Mixed or CR-only line endings are read-only.
+Use downloads when exact bytes matter, and use manual text copy if clipboard access fails. Apply
+changes separately, review the diff, test, then audit again. Do not mark a finding resolved from
+a browser edit. There is no live linter, SQL execution, local write server, or WASM validator.
 
-   Catalog evidence guides your report; it is not a static lint finding by itself.
+### Step 5: Use markers to fix and consolidate
 
-### Step 3: Run the Audit
+1. `report` on the root.
+2. `annotate` with `dry_run: true`. Show the diff and get approval.
+3. `annotate` with `dry_run: false`.
+4. For each marker `--** SSC-EWI-DBT<PACK><NNNN> - <name>: <subject> **` (YAML: `# ** … **`),
+   call `rules` with that `code` for its remediation and examples. Fix the construct the marker
+   sits above. Leave the marker in place. The next `annotate` run removes markers of fixed findings.
+5. Test the code changes. Run `report` again, then preview `annotate` again and approve any writes.
+   With the same inputs, a second `annotate` changes nothing. `remove: true` removes dbt-quality
+   markers in scope. With no intervening edits, removal restores the pre-annotation bytes; it does
+   not undo code changes.
 
-**Goal:** Produce `suggestions.json`.
+Markers carry only dbt-quality codes (`SSC-{EWI|FDM|PRF}-DBT<three letters><four digits>`). The
+engine ignores them when it scans, so findings do not change because markers are present.
+SnowConvert's own markers, such as `SSC-EWI-DBT0001` or `SSC-EWI-INF0039`, are left alone. MIG0002
+and MIG0003 still report them.
 
-**Actions:**
+Use this order as a starting point for migrated estates, then adjust it to the actual dependencies:
 
-1. Run the analyzer, writing output to scratch:
-
-   ```bash
-   uv run audit.py audit <path> --out <scratch>/suggestions.json
-   ```
-
-   The analyzer never runs dbt, never connects to a warehouse, and writes nothing inside the audited
-   project except the suggestions file you name. Keep `suggestions.json` out of the user's repo.
-
-2. If `uv` cannot reach its index — common on configured corporate installs — fall back to:
-
-   ```bash
-   UV_DEFAULT_INDEX=https://pypi.org/simple uv run --no-config --no-project \
-     --with pyyaml --with typer --with rich python audit.py audit <path> --out <path>
-   ```
-
-### Step 4: Read the Suggestions Before Writing Anything
-
-**Goal:** Understand the findings well enough to rank them.
-
-**Actions:**
-
-1. Open `suggestions.json` and work from `summary`, `remediation`, and `suppressed`. `remediation`
-   is already grouped by rule and ranked by impact over effort — trust that ordering; it is what
-   makes the report actionable rather than a list.
-
-   The summary prints like this:
-
-   ```text
-   Projects: 1   Models: 41
-   Suggestions: 208 — 2 error, 7 warning, 199 information
-   Severity: 2 critical, 6 high, 111 medium, 89 low
-   Per model: 5.07
-   Manifest coverage: 1/1   Rules skipped: 0
-   ```
-
-   `per_model` is the number to track across re-audits; raw counts are not comparable across
-   projects of different sizes. No grade or score is produced — the engine lacks the context to
-   justify a verdict on heuristic rules whose applicability only you can settle.
-
-2. Read each suggestion on its three independent axes:
-
-   | Axis       | Values                              | Meaning                                                                                                                                                                                                                                        |
-   | ---------- | ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-   | `kind`     | `EWI`, `FDM`, `PRF`                 | What the rule is: an issue, a functional difference where model results diverge from the source system, or performance/cost                                                                                                                    |
-   | `level`    | `error`, `warning`, `information`   | Confidence that something is wrong: `error` admits no legitimate condition, `warning` is a real problem in nearly all cases, `information` (the default) is context-dependent and states the condition under which the code is already correct |
-   | `severity` | `critical`, `high`, `medium`, `low` | Blast radius if the rule is right                                                                                                                                                                                                              |
-
-   Level and severity are orthogonal: a rule can be `information` level and `critical` severity,
-   because "likely fine, but catastrophic if wrong" is a real position. Rule codes such as
-   `SSC-EWI-DBTOPS0002` follow SnowConvert's `SSC`/`EWI` documentation convention — this project is
-   part of the SnowConvert team in Snowflake Engineering and adopts those conventions for
-   consistency. Nothing blocks a save at any level; gate on errors in CI with `dbt-lint --strict`.
-
-3. Spot-check two or three suggestions against the actual files before reporting them. The analyzer
-   is text-level by design and can misread unusual formatting. One obviously wrong suggestion costs
-   the reader's trust in all of them.
-
-### Step 5: Render the HTML Report
-
-**Goal:** A self-contained report that renders in the Snowflake sandbox.
-
-**Load** [references/report-spec.md](references/report-spec.md) for structure and the full sandbox
-rules. The essentials, because getting these wrong produces a blank page:
-
-- Self-contained: no CDN, no remote fonts, no remote images, no `fetch`.
-- Charts from `/libs/chart.js@4.4.4/chart.umd.js` only.
-- No inline event handlers — use `addEventListener` inside an inline `<script>`.
-- `:root { color-scheme: light dark; }` and `light-dark()` colors, so it is readable in both themes.
-- Include `<meta name="snowflake-source" content="cortex-agent-authored">` and the
-  `snowflake-report-metadata` provenance block.
-
-Save it somewhere durable — the workspace by default, never `/tmp`. Ask if no durable location is
-obvious.
-
-### Step 6: Report and Offer Next Steps
-
-**Goal:** A summary the user can act on.
-
-**Actions:**
-
-1. Summarize in two or three sentences: the counts and per-model rate, the single highest-leverage
-   fix, and anything suppressed or skipped.
-2. Offer to fix the top suggestion. Most are a few lines, and a customer who watches one get fixed
-   engages with the rest.
+1. Vars and parameters (PRJ0009-0018): verify sentinel defaults and required values before changing load behavior.
+2. Hooks that write (INC0001-0003, INC0010, INC0016-0020).
+3. Macro duplication across projects (MAC0010, MAC0015-0017).
+4. Review project consolidation (PRJ0001-0003, PRJ0006) after confirming ownership and deployment boundaries.
 
 ---
 
-## Writing Remediation That Gets Acted On
+## Write actionable remediation
 
-The analyzer supplies a remediation string per rule. Improve on it with what only you can see:
+- Use actual identifiers, such as `unique_key='order_line_id'`, once you have confirmed the key.
+- Group findings that share a fix; several models missing a key test may be one piece of work.
+- Sequence dependent fixes and explain those dependencies.
+- State a supported consequence, such as duplicate rows on reprocessing, rather than "violates best practice".
+- Record accepted trade-offs with narrow waivers and their reasons.
 
-- **Use their identifiers.** "Add `unique_key='order_line_id'`" beats "add a unique key." Read the
-  model and name the real column.
-- **Group the work.** 43 models missing a primary-key test is one afternoon, not 43 tickets. Say so,
-  and say which layer to start with.
-- **Sequence dependent fixes.** Renaming ETL-named models is much cheaper after collapsing
-  per-transformation chains, because there are fewer names left to choose. Point that out rather
-  than listing both as peers.
-- **Say what breaks if ignored.** Not "violates best practice" but "reprocessing duplicates rows
-  silently, and no test would catch it."
-- **Concede genuine trade-offs.** Some suggestions are defensible choices; a single large project
-  may be intentional. Ask rather than assert when the evidence is ambiguous, and record the decision
-  so the next audit does not re-raise it.
+Keep the summary proportional to the findings and coverage. Do not inflate either the risks or
+the confidence of a clean result.
 
-Do not inflate. If a project is in good shape, say so and keep the report short. An audit that
-manufactures concern to look thorough is worse than no audit.
+## Lift-and-shift tiers
 
----
+Migration detection does not suppress `universal` or `migration` rules. `architecture` findings
+can be suppressed for detected converted code and are counted separately for later review.
+Suppression is a scope policy, not proof that the code is correct. Disabled rules and waivers
+still apply. If the user disputes the classification, show `projects[].provenance.signals` and
+offer `.dbt-quality.yml` (`migration.mode: native | lift_and_shift`, `migration.paths`).
 
-## Configuration
+## Configuration and waivers
 
-`.dbt-quality.yml` at the audit root, all optional: thresholds, `migration.mode`, `migration.paths`,
-`disabled_rules`. Full schema in [`../../scripts/README.md`](../../scripts/README.md).
+`.dbt-quality.yml`, found by walking up from the audit root: `thresholds`, `migration`,
+`disabled_rules`, `ignore`. Inline waivers are `-- dbt-quality: ignore <codes>` on the reported line
+or the line above, and `-- dbt-quality: ignore-file <codes>`. Prefer the narrowest waiver.
 
-`disabled_rules` accepts any exact registered rule ID. A disabled rule emits no suggestion, does not
-affect lint counts, and is reported as skipped with `disabled in .dbt-quality.yml`. Use it for
-project-specific exceptions rather than inline suppression comments.
+## Output
 
-**Names are not audited.** If someone asks why: a model may keep the name its object had in the
-source database it was migrated from, and a dbt project records that name nowhere machine-readable.
-The prescribed `/* Original Object: */` header is a comment that never reaches `manifest.json`;
-`meta.original_object` and any crosswalk file do not exist; the one real source-to-target mapping
-sits in SnowConvert's external registry and writes nothing back. A naming rule would be guessing, so
-there is none. Full reasoning in [references/rule-catalog.md](references/rule-catalog.md).
-
----
+Return the report paths, scope, coverage gaps, and a short list of fixes supported by the evidence.
+State whether complete model text was included and whether the output is temporary. Do not claim
+that edits are validated until the project's checks and a fresh audit have run.
 
 ## References
 
-| File                                                     | Load when                                                                     |
-| -------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| [references/rule-catalog.md](references/rule-catalog.md) | A user asks why a rule fired, disputes a suggestion, or you are adding a rule |
-| [references/report-spec.md](references/report-spec.md)   | Rendering the HTML report                                                     |
-| [`../../scripts/README.md`](../../scripts/README.md)     | Configuring thresholds, or running the analyzer directly                      |
-
-## Related Skills
-
-`dbt-architecture`, `dbt-modeling`, `dbt-materializations`, `dbt-testing`, and `dbt-performance`
-state the practices this audit inverts. Cite them when a user wants the positive guidance behind a
-suggestion.
+| File                                                     | Load when                                                       |
+| -------------------------------------------------------- | --------------------------------------------------------------- |
+| [references/rule-catalog.md](references/rule-catalog.md) | A user asks why a rule fired, disputes a finding, or adds a rule |
+| [references/report-spec.md](references/report-spec.md)   | Authoring or reviewing the HTML report                          |

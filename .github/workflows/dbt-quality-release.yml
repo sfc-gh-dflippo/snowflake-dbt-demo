@@ -1,0 +1,81 @@
+name: dbt-quality release
+
+# Push a tag such as dbt-quality-v0.3.0 to publish a GitHub Release. The release holds the
+# archives that the build workflow tested in this run. The tag must match the Cargo workspace
+# version; the build's launcher test checks that the plugin launchers' VERSION matches it too.
+# The plugin launchers download these archives on first use, so this repository must stay public.
+# Release immutability is on: assets are attached to a draft, then the draft is published.
+on:
+  push:
+    tags:
+      - "dbt-quality-v*"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dbt-quality-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  check-version:
+    name: Check tag matches Cargo version
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Compare tag and workspace version
+        shell: bash
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          version=$(sed -n '/^\[workspace.package\]/,/^\[/s/^version = "\(.*\)"/\1/p' .claude/plugins/dbt-quality-src/rust/Cargo.toml)
+          if [ "dbt-quality-v$version" != "$TAG" ]; then
+            echo "::error::Tag $TAG does not match workspace version $version (expected dbt-quality-v$version)"
+            exit 1
+          fi
+
+  # Runs at the same time as check-version; publish waits for both.
+  build:
+    name: Build and test
+    uses: ./.github/workflows/dbt-quality-build.yml
+
+  publish:
+    name: Publish GitHub Release
+    needs: [check-version, build]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - name: Download tested archives
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          pattern: dbt-quality-*
+          path: dist
+          merge-multiple: true
+      - name: Check every target is present
+        shell: bash
+        run: |
+          cd dist
+          for target in x86_64-unknown-linux-musl aarch64-unknown-linux-musl x86_64-apple-darwin aarch64-apple-darwin; do
+            test -f "dbt-quality-$target.tar.gz" && test -f "dbt-quality-$target.tar.gz.sha256" || { echo "::error::Missing $target archive"; exit 1; }
+          done
+          test -f dbt-quality-x86_64-pc-windows-msvc.zip && test -f dbt-quality-x86_64-pc-windows-msvc.zip.sha256 || { echo "::error::Missing Windows archive"; exit 1; }
+          # Users verify with sha256sum/shasum -c, which reject CRLF checksum files.
+          sha256sum -c ./*.sha256
+          ls -l
+      - name: Create release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          gh release create "$TAG" dist/* \
+            --draft \
+            --verify-tag \
+            --title "$TAG" \
+            --notes "Native dbt-quality binaries built and tested by CI for commit ${{ github.sha }}. The dbt-quality plugin in .claude/plugins/dbt-quality downloads them on first use. macOS and Windows binaries are unsigned. See .claude/plugins/dbt-quality-src/README.md for setup."
+          # With release immutability, assets can only be attached while the release is a draft.
+          gh release edit "$TAG" --draft=false

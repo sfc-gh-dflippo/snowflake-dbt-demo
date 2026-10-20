@@ -1,0 +1,181 @@
+{
+  "pack": "ARC",
+  "rules": [
+    {
+      "code": "SSC-EWI-DBTARC0001",
+      "number": 1,
+      "kind": "EWI",
+      "name": "Model outside a recognised layer folder",
+      "short_description": "The model path does not match a layer folder recognised by this linter.",
+      "long_description": "Layer folders let a project apply shared configuration to groups of models. This rule checks folder names, not the effective configuration. A model outside a recognised layer can still inherit project configuration.\n\nThe bronze/silver/gold layout is a local convention, not a dbt requirement. Waive this rule if the project uses another layout or has not yet been restructured after conversion.\n\nReferences\n- [dbt staging models](https://docs.getdbt.com/best-practices/how-we-structure/2-staging)\n- [dbt materializations](https://docs.getdbt.com/docs/build/materializations)",
+      "remediation": "If the project uses layers, move the model to the folder that matches its role. Check the inherited configuration after the move.",
+      "level": "information",
+      "severity": "low",
+      "tier": "architecture",
+      "scope": "model",
+      "effort": "medium",
+      "since": "0.1.0",
+      "examples": [
+        {
+          "title": "Typical case",
+          "bad": "select * from {{ source('crm','accounts') }}  -- models/misc/accounts.sql",
+          "good": "-- models/bronze/stg_crm__accounts.sql\nselect * from {{ source('crm','accounts') }}"
+        }
+      ],
+      "references": [
+        {
+          "title": "dbt staging models",
+          "url": "https://docs.getdbt.com/best-practices/how-we-structure/2-staging"
+        },
+        {
+          "title": "dbt materializations",
+          "url": "https://docs.getdbt.com/docs/build/materializations"
+        }
+      ]
+    },
+    {
+      "code": "SSC-EWI-DBTARC0003",
+      "number": 3,
+      "kind": "EWI",
+      "name": "source() used outside the staging layer",
+      "short_description": "A silver or gold model calls source() directly instead of reading a staging model.",
+      "long_description": "dbt recommends one staging model for each source table. Downstream models can then reuse its column names and type conversions through `ref()`. Direct source reads outside staging can bypass that shared preparation.\n\nThis is a local architecture check, not a dbt syntax restriction. Waive it if the project intentionally uses another layout or is awaiting restructuring after conversion.\n\nReferences\n- [dbt staging models](https://docs.getdbt.com/best-practices/how-we-structure/2-staging)",
+      "remediation": "Add a staging model for the source table. Put shared renaming, type conversion, and light cleaning there. Use `ref()` to read it from this model.",
+      "level": "information",
+      "severity": "medium",
+      "tier": "architecture",
+      "scope": "model",
+      "effort": "medium",
+      "since": "0.1.0",
+      "examples": [
+        {
+          "title": "Typical case",
+          "bad": "-- models/silver/int_orders.sql\nselect * from {{ source('shop','orders') }}",
+          "good": "-- models/silver/int_orders.sql\nselect * from {{ ref('stg_shop__orders') }}"
+        }
+      ],
+      "references": [
+        {
+          "title": "dbt staging models",
+          "url": "https://docs.getdbt.com/best-practices/how-we-structure/2-staging"
+        }
+      ]
+    },
+    {
+      "code": "SSC-EWI-DBTARC0004",
+      "number": 4,
+      "kind": "EWI",
+      "name": "Source table has more than one staging model",
+      "short_description": "Two or more bronze models read the same source table.",
+      "long_description": "A shared staging model keeps common renaming and type conversions in one place. Separate staging models for the same source can develop different definitions.\n\nThe finding lists distinct model files by root-relative path. Repeated reads in one file count once. This rule applies the local layered architecture. Waive it for intentional alternatives or converted projects awaiting restructuring.\n\nReferences\n- [dbt staging models](https://docs.getdbt.com/best-practices/how-we-structure/2-staging)",
+      "remediation": "Keep one staging model for shared preparation. Use `ref()` in downstream models. Put consumer-specific changes in the intermediate layer.",
+      "level": "information",
+      "severity": "medium",
+      "tier": "architecture",
+      "scope": "project",
+      "effort": "medium",
+      "since": "0.1.0",
+      "examples": [
+        {
+          "title": "Typical case",
+          "bad": "-- stg_orders.sql and stg_orders_v2.sql both read source('shop','orders')",
+          "good": "-- one stg_shop__orders.sql reads source('shop','orders'); others ref() it"
+        }
+      ],
+      "references": [
+        {
+          "title": "dbt staging models",
+          "url": "https://docs.getdbt.com/best-practices/how-we-structure/2-staging"
+        }
+      ]
+    },
+    {
+      "code": "SSC-EWI-DBTARC0005",
+      "number": 5,
+      "kind": "EWI",
+      "name": "Dependency flows against the layer order",
+      "short_description": "A model depends on a parent in a later layer of the local bronze-to-silver-to-gold order.",
+      "long_description": "The local layer order puts source preparation before intermediate logic and consumer-facing marts. A dependency on a later layer conflicts with that order. It does not, by itself, prove that the graph contains a cycle.\n\nThis check reads dependencies from the `ref()` calls in each model file. It does not read `target/manifest.json`. Waive it if the project uses another architecture or is awaiting restructuring after conversion.\n\nReferences\n- [dbt staging models](https://docs.getdbt.com/best-practices/how-we-structure/2-staging)\n- [dbt ref function](https://docs.getdbt.com/reference/dbt-jinja-functions/ref)",
+      "remediation": "Move shared logic into an earlier layer so both models can read it. If the child belongs downstream, move the child instead.",
+      "level": "information",
+      "severity": "medium",
+      "tier": "architecture",
+      "scope": "model",
+      "effort": "high",
+      "since": "0.1.0",
+      "examples": [
+        {
+          "title": "Typical case",
+          "bad": "-- models/bronze/stg_a.sql\nselect * from {{ ref('fct_b') }}",
+          "good": "-- models/bronze/stg_a.sql\nselect * from {{ source('s','a') }}"
+        }
+      ],
+      "references": [
+        {
+          "title": "dbt staging models",
+          "url": "https://docs.getdbt.com/best-practices/how-we-structure/2-staging"
+        },
+        {
+          "title": "dbt ref function",
+          "url": "https://docs.getdbt.com/reference/dbt-jinja-functions/ref"
+        }
+      ]
+    },
+    {
+      "code": "SSC-EWI-DBTARC0006",
+      "number": 6,
+      "kind": "EWI",
+      "name": "Staging model contains joins or aggregation",
+      "short_description": "A bronze staging model contains a join or an aggregation.",
+      "long_description": "dbt recommends that staging models prepare individual source tables without changing their grain. Joins can combine sources, and aggregation can remove detail needed downstream.\n\nSome staging joins are intentional. The dbt guide describes base models for these cases. Review the purpose before moving logic. Waive the rule for a documented exception, another architecture, or a converted project awaiting restructuring.\n\nReferences\n- [dbt staging models](https://docs.getdbt.com/best-practices/how-we-structure/2-staging)",
+      "remediation": "Keep common renaming and type conversion in staging. Move business joins and aggregation to an intermediate model. If a join is needed to prepare a source, document the base-model design.",
+      "level": "information",
+      "severity": "low",
+      "tier": "architecture",
+      "scope": "model",
+      "effort": "medium",
+      "since": "0.1.0",
+      "examples": [
+        {
+          "title": "Typical case",
+          "bad": "select o.id, sum(l.amt) from {{ source('s','o') }} o join {{ source('s','l') }} l using (id) group by 1",
+          "good": "select id, amt::number(18,2) as amount from {{ source('s','o') }}"
+        }
+      ],
+      "references": [
+        {
+          "title": "dbt staging models",
+          "url": "https://docs.getdbt.com/best-practices/how-we-structure/2-staging"
+        }
+      ]
+    },
+    {
+      "code": "SSC-EWI-DBTARC0007",
+      "number": 7,
+      "kind": "EWI",
+      "name": "Nested folder repeats a parent's tags",
+      "short_description": "A nested folder in dbt_project.yml repeats a tag it already inherits.",
+      "long_description": "Model tags accumulate through the configuration hierarchy. Repeating an inherited tag does not add a new tag to the model. It leaves another declaration to maintain.\n\nThis check does not require bronze/silver/gold folders. Keep the repetition only if a documented local convention needs it.\n\nReferences\n- [dbt tags](https://docs.getdbt.com/reference/resource-configs/tags)",
+      "remediation": "Remove the repeated tag from the child folder. Keep tags that the child does not inherit.",
+      "level": "information",
+      "severity": "low",
+      "tier": "architecture",
+      "scope": "project",
+      "effort": "low",
+      "since": "0.1.0",
+      "examples": [
+        {
+          "title": "Typical case",
+          "bad": "models:\n  demo:\n    +tags: [analytics]\n    silver:\n      +tags: [analytics]",
+          "good": "models:\n  demo:\n    +tags: [analytics]\n    silver: {}"
+        }
+      ],
+      "references": [
+        {
+          "title": "dbt tags",
+          "url": "https://docs.getdbt.com/reference/resource-configs/tags"
+        }
+      ]
+    }
+  ]
+}

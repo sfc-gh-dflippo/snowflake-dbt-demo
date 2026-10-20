@@ -1,0 +1,13 @@
+version: 2
+sources:
+  - name: raw
+    schema: YOUR_SCHEMA
+    database: YOUR_DB
+    tables:
+      - name: AUDIT_SERVICE_ANNUALISED
+      - name: MT_RSTD_BKGS_MEASURE
+      - name: MT_RSTD_BKGS_MSR_ANNUITY
+      - name: N_BKGS_MEASURE
+      - name: N_BOOKINGS_MEASURE
+      - name: R_FISCAL_DAY_TO_YEAR
+      - name: R_FISCAL_MONTH_TO_YEAR

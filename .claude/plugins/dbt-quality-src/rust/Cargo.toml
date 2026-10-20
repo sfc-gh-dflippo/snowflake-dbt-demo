@@ -1,0 +1,39 @@
+[workspace]
+members = ["crates/dbt-quality-core", "crates/dbt-quality-cli"]
+resolver = "2"
+
+[workspace.package]
+version = "0.3.0"
+edition = "2024"
+license = "Apache-2.0"
+
+# Copied from vendor/dbt/Cargo.toml. Cargo applies patches only from the root workspace.
+# scripts/check-dbt-pin.sh fails when this block differs from the submodule.
+[patch.crates-io]
+ring = { git = "https://github.com/sdf-labs/ring.git", rev = "3c35ce0b7e1bd9fe83180b19eda21d302e0b5006" }
+datafusion-common = { git = "https://github.com/sdf-labs/datafusion", rev = "c0627e28fdd64ad1e33e3e8f3d6515c7ecb886ed" } # @ sdf/50
+datafusion-expr = { git = "https://github.com/sdf-labs/datafusion", rev = "c0627e28fdd64ad1e33e3e8f3d6515c7ecb886ed" } # @ sdf/50
+datafusion = { git = "https://github.com/sdf-labs/datafusion", rev = "c0627e28fdd64ad1e33e3e8f3d6515c7ecb886ed" } # @ sdf/50
+datafusion-catalog = { git = "https://github.com/sdf-labs/datafusion", rev = "c0627e28fdd64ad1e33e3e8f3d6515c7ecb886ed" } # @ sdf/50
+sqlparser = { git = "https://github.com/sdf-labs/datafusion-sqlparser-rs", rev = "36843ce564b129a0e0a15b58997d8c132b7ce6d4" } # @ sdf/0.58.0
+arrow-flight = { git = "https://github.com/sdf-labs/arrow-rs", rev = "e4924d7d6d07bb12ba6628e595f9f58c2c02c9a1" } # @ sdf/56.0.0
+arrow = { git = "https://github.com/sdf-labs/arrow-rs", rev = "e4924d7d6d07bb12ba6628e595f9f58c2c02c9a1" } # @ sdf/56.0.0
+arrow-arith = { git = "https://github.com/sdf-labs/arrow-rs", rev = "e4924d7d6d07bb12ba6628e595f9f58c2c02c9a1" } # @ sdf/56.0.0
+arrow-array = { git = "https://github.com/sdf-labs/arrow-rs", rev = "e4924d7d6d07bb12ba6628e595f9f58c2c02c9a1" } # @ sdf/56.0.0
+arrow-buffer = { git = "https://github.com/sdf-labs/arrow-rs", rev = "e4924d7d6d07bb12ba6628e595f9f58c2c02c9a1" } # @ sdf/56.0.0
+arrow-cast = { git = "https://github.com/sdf-labs/arrow-rs", rev = "e4924d7d6d07bb12ba6628e595f9f58c2c02c9a1" } # @ sdf/56.0.0
+arrow-csv = { git = "https://github.com/sdf-labs/arrow-rs", rev = "e4924d7d6d07bb12ba6628e595f9f58c2c02c9a1" } # @ sdf/56.0.0
+arrow-data = { git = "https://github.com/sdf-labs/arrow-rs", rev = "e4924d7d6d07bb12ba6628e595f9f58c2c02c9a1" } # @ sdf/56.0.0
+arrow-ipc = { git = "https://github.com/sdf-labs/arrow-rs", rev = "e4924d7d6d07bb12ba6628e595f9f58c2c02c9a1" } # @ sdf/56.0.0
+arrow-json = { git = "https://github.com/sdf-labs/arrow-rs", rev = "e4924d7d6d07bb12ba6628e595f9f58c2c02c9a1" } # @ sdf/56.0.0
+arrow-ord = { git = "https://github.com/sdf-labs/arrow-rs", rev = "e4924d7d6d07bb12ba6628e595f9f58c2c02c9a1" } # @ sdf/56.0.0
+arrow-row = { git = "https://github.com/sdf-labs/arrow-rs", rev = "e4924d7d6d07bb12ba6628e595f9f58c2c02c9a1" } # @ sdf/56.0.0
+arrow-schema = { git = "https://github.com/sdf-labs/arrow-rs", rev = "e4924d7d6d07bb12ba6628e595f9f58c2c02c9a1" } # @ sdf/56.0.0
+arrow-select = { git = "https://github.com/sdf-labs/arrow-rs", rev = "e4924d7d6d07bb12ba6628e595f9f58c2c02c9a1" } # @ sdf/56.0.0
+arrow-string = { git = "https://github.com/sdf-labs/arrow-rs", rev = "e4924d7d6d07bb12ba6628e595f9f58c2c02c9a1" } # @ sdf/56.0.0
+
+[profile.release]
+lto = "thin"
+codegen-units = 4
+strip = true
+panic = "unwind"

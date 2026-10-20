@@ -1,0 +1,81 @@
+{{ config(
+    tags=['m_WI_BKGS_HIER'],
+    database=var('sc_override_wi_bkgs_hier_srvc_trueup_6_db'),
+    schema=var('sc_override_wi_bkgs_hier_srvc_trueup_6_schema'),
+    alias=var('sc_override_wi_bkgs_hier_srvc_trueup_6_table')
+) }}
+{{ config(materialized='table') }}
+-- Pre/Post SQL hooks: the orchestration task may override these defaults at runtime via dbt --vars.
+{% set pre_sql = var('m_WI_BKGS_HIER_wi_bkgs_hier_srvc_trueup_6_pre_sql', '') %}
+{% set post_sql = var('m_WI_BKGS_HIER_wi_bkgs_hier_srvc_trueup_6_post_sql', '') %}
+{% if pre_sql != '' and post_sql != '' %}
+  {{ config(pre_hook=pre_sql, post_hook=post_sql) }}
+{% elif pre_sql != '' %}
+  {{ config(pre_hook=pre_sql) }}
+{% elif post_sql != '' %}
+  {{ config(post_hook=post_sql) }}
+{% endif %}
+--** SSC-FDM-INF0058 - TABLE 'WI_BKGS_HIER_SRVC_TRUEUP' IS USED AS BOTH SOURCE AND TARGET IN THIS MAPPING. DBT EXECUTION ORDER HAS BEEN ADJUSTED TO PREVENT CIRCULAR DATA CORRUPTION: SEE STAGING AND MART MODELS FOR DETAILS. **
+WITH source_data AS
+(
+   SELECT
+      FISCAL_YEAR_WEEK_NUM_INT,
+      FISCAL_YEAR_MTH_NUMBER_INT,
+      SALES_TERRITORY_KEY,
+      PRODUCT_KEY,
+      BILL_TO_CUSTOMER_KEY,
+      END_CUSTOMER_KEY,
+      SOLD_TO_CUSTOMER_KEY,
+      SHIP_TO_CUSTOMER_KEY,
+      IDE_ADJUSTMENT_CODE,
+      ISO_COUNTRY_CODE,
+      PRODUCT_TYPE,
+      SALES_ORDER_LINE_KEY,
+      BKGS_MEASURE_TRANS_TYPE_CODE,
+      DV_SRVC_BOOKINGS_TYPE,
+      ACCOUNT_NAME,
+      TRUEUP_AMT,
+      DEAL_SS_CD,
+      DV_DEAL_ID,
+      XCAT_FLG,
+      BK_OFFER_TYPE_NAME,
+      RECURRING_OFFER_FLG,
+      ELA_FLG,
+      DV_RECURRING_OFFER_CD,
+      DV_FMV_FLG,
+      ADJUSTMENT_CODE,
+      ACQUISITION_ORDER_ORIGIN_CD,
+      ACQUISITION_ROLE
+   FROM
+      {{ ref('stg_raw__SQ_6_WI_BKGS_HIER_SRVC_TRUEUP') }}
+)
+SELECT
+   sd.FISCAL_YEAR_WEEK_NUM_INT AS FISCAL_YEAR_WEEK_NUM_INT,
+   sd.FISCAL_YEAR_MTH_NUMBER_INT AS FISCAL_YEAR_MTH_NUMBER_INT,
+   sd.SALES_TERRITORY_KEY AS SALES_TERRITORY_KEY,
+   sd.PRODUCT_KEY AS PRODUCT_KEY,
+   sd.BILL_TO_CUSTOMER_KEY AS BILL_TO_CUSTOMER_KEY,
+   sd.END_CUSTOMER_KEY AS END_CUSTOMER_KEY,
+   sd.SOLD_TO_CUSTOMER_KEY AS SOLD_TO_CUSTOMER_KEY,
+   sd.SHIP_TO_CUSTOMER_KEY AS SHIP_TO_CUSTOMER_KEY,
+   sd.IDE_ADJUSTMENT_CODE AS IDE_ADJUSTMENT_CODE,
+   sd.ISO_COUNTRY_CODE AS ISO_COUNTRY_CODE,
+   sd.PRODUCT_TYPE AS PRODUCT_TYPE,
+   sd.SALES_ORDER_LINE_KEY AS SALES_ORDER_LINE_KEY,
+   sd.BKGS_MEASURE_TRANS_TYPE_CODE AS BKGS_MEASURE_TRANS_TYPE_CODE,
+   sd.DV_SRVC_BOOKINGS_TYPE AS DV_SRVC_BOOKINGS_TYPE,
+   sd.ACCOUNT_NAME AS ACCOUNT_NAME,
+   sd.TRUEUP_AMT AS TRUEUP_AMT,
+   sd.DEAL_SS_CD AS DEAL_SS_CD,
+   sd.DV_DEAL_ID AS DV_DEAL_ID,
+   sd.XCAT_FLG AS XCAT_FLG,
+   sd.BK_OFFER_TYPE_NAME AS BK_OFFER_TYPE_NAME,
+   sd.RECURRING_OFFER_FLG AS RECURRING_OFFER_FLG,
+   sd.ELA_FLG AS ELA_FLG,
+   sd.DV_RECURRING_OFFER_CD AS DV_RECURRING_OFFER_CD,
+   sd.DV_FMV_FLG AS DV_FMV_FLG,
+   sd.ADJUSTMENT_CODE AS ADJUSTMENT_CODE,
+   sd.ACQUISITION_ORDER_ORIGIN_CD AS ACQUISITION_ORDER_ORIGIN_CD,
+   sd.ACQUISITION_ROLE AS ACQUISITION_ROLE
+FROM
+   source_data AS sd

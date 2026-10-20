@@ -1,0 +1,118 @@
+{
+  "pack": "DOC",
+  "rules": [
+    {
+      "code": "SSC-EWI-DBTDOC0001",
+      "number": 1,
+      "kind": "EWI",
+      "name": "Model missing description",
+      "short_description": "A model entry in schema YAML has an empty or missing description.",
+      "long_description": "dbt shows model descriptions in its documentation. State what one row represents and how consumers should use the model.\n\nThis rule checks models that already have a schema entry. Missing entries are checked by the test pack. Gold-layer findings have medium severity; other findings have low severity. These priorities are local policy. Waive the rule for an internal pass-through model whose purpose and grain are clear from its name.\n\nReferences\n- [dbt resource descriptions](https://docs.getdbt.com/reference/resource-properties/description)",
+      "remediation": "Add a description to the model entry. State what one row represents, the intended use, and the refresh schedule. Record the actual schedule rather than copying an example.",
+      "level": "information",
+      "severity": "low",
+      "tier": "universal",
+      "scope": "model",
+      "effort": "low",
+      "since": "0.1.0",
+      "examples": [
+        {
+          "title": "Model without description",
+          "bad": "models:\n  - name: stg_customers\n    columns: []",
+          "good": "models:\n  - name: stg_customers\n    description: |\n      One row per customer. Refreshed daily."
+        }
+      ],
+      "references": [
+        {
+          "title": "dbt resource descriptions",
+          "url": "https://docs.getdbt.com/reference/resource-properties/description"
+        }
+      ]
+    },
+    {
+      "code": "SSC-EWI-DBTDOC0002",
+      "number": 2,
+      "kind": "EWI",
+      "name": "Column documentation below threshold",
+      "short_description": "Too few columns listed in the model YAML have descriptions.",
+      "long_description": "Column descriptions explain details that a model description cannot, such as currency, units, and the meaning of a date. Shared descriptions can use a `docs` block through `doc()`.\n\nThis rule measures columns listed in YAML, not all columns in the database. It skips models with fewer than 3 listed columns. The `column_doc_coverage` default is 0.8. Both limits are local review heuristics, not dbt requirements. Waive the rule for generated columns whose meaning is already clear.\n\nReferences\n- [dbt resource descriptions](https://docs.getdbt.com/reference/resource-properties/description)",
+      "remediation": "Document ambiguous columns first, especially amounts, dates, flags, and codes. Reuse a `docs` block for definitions that several models share.",
+      "level": "information",
+      "severity": "low",
+      "tier": "universal",
+      "scope": "model",
+      "effort": "medium",
+      "per_line": true,
+      "since": "0.1.0",
+      "examples": [
+        {
+          "title": "Undocumented columns",
+          "bad": "columns:\n  - name: amount\n  - name: order_date\n  - name: status",
+          "good": "columns:\n  - name: amount\n    description: Net order amount in USD.\n  - name: order_date\n    description: Date the order was placed.\n  - name: status\n    description: Current order status."
+        }
+      ],
+      "references": [
+        {
+          "title": "dbt resource descriptions",
+          "url": "https://docs.getdbt.com/reference/resource-properties/description"
+        }
+      ]
+    },
+    {
+      "code": "SSC-EWI-DBTDOC0003",
+      "number": 3,
+      "kind": "EWI",
+      "name": "Source or source table missing description",
+      "short_description": "A source or one of its tables has no description.",
+      "long_description": "dbt supports descriptions for sources and source tables. Record where the data comes from and what each table contains.\n\nThis rule can report two findings for one source: a missing source description and a list of tables without descriptions. Waive it if another team maintains accessible documentation for these definitions.\n\nReferences\n- [dbt resource descriptions](https://docs.getdbt.com/reference/resource-properties/description)",
+      "remediation": "Describe the upstream system, its owner, and the expected load schedule. Describe the grain of each source table. Link to maintained upstream documentation when appropriate.",
+      "level": "information",
+      "severity": "low",
+      "tier": "universal",
+      "scope": "project",
+      "effort": "low",
+      "since": "0.1.0",
+      "examples": [
+        {
+          "title": "Source without description",
+          "bad": "sources:\n  - name: raw\n    tables:\n      - name: orders",
+          "good": "sources:\n  - name: raw\n    description: Orders landed hourly from the OLTP system.\n    tables:\n      - name: orders\n        description: One row per order."
+        }
+      ],
+      "references": [
+        {
+          "title": "dbt resource descriptions",
+          "url": "https://docs.getdbt.com/reference/resource-properties/description"
+        }
+      ]
+    },
+    {
+      "code": "SSC-EWI-DBTDOC0004",
+      "number": 4,
+      "kind": "EWI",
+      "name": "Project-level persist_docs not found",
+      "short_description": "Model descriptions exist, but no enabled persist_docs setting was found under models in dbt_project.yml.",
+      "long_description": "`persist_docs` can write model and column descriptions as database comments on supported adapters, including Snowflake. Tools that display database comments can then show the descriptions.\n\nThis rule checks only the `models:` section of `dbt_project.yml`. It does not prove that comments are missing: model SQL or properties YAML can also enable `persist_docs`. Review the effective configuration before changing it. Adapter support and column quoting can affect persistence.\n\nReferences\n- [dbt persist_docs](https://docs.getdbt.com/reference/resource-configs/persist_docs)",
+      "remediation": "Enable relation and column persistence at the required scope if it is not already set elsewhere. Run dbt with a role that can write the comments. Check the resulting database metadata.",
+      "level": "information",
+      "severity": "low",
+      "tier": "universal",
+      "scope": "project",
+      "effort": "low",
+      "since": "0.1.0",
+      "examples": [
+        {
+          "title": "No persist_docs",
+          "bad": "models:\n  demo:\n    +materialized: table",
+          "good": "models:\n  demo:\n    +materialized: table\n    +persist_docs:\n      relation: true\n      columns: true"
+        }
+      ],
+      "references": [
+        {
+          "title": "dbt persist_docs",
+          "url": "https://docs.getdbt.com/reference/resource-configs/persist_docs"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+version: 2
+sources:
+  - name: raw_InputSchema
+    schema: "{{ var('InputSchema', 'InputSchema') }}"
+    database: YOUR_DB
+    tables:
+      - name: DEPT
+      - name: EMP

@@ -1,0 +1,11 @@
+version: 2
+sources:
+  - name: raw
+    schema: YOUR_SCHEMA
+    database: YOUR_DB
+    tables:
+      - name: MT_RSTD_BKGS_MEASURE
+      - name: N_BOOKINGS_CHANNEL_MEASURE
+      - name: R_FISCAL_DAY_TO_YEAR
+      - name: WI_RSTD_BKGS_REF_MTH_INTS
+      - name: WI2_RSTD_BKGS_ORDER_MTH

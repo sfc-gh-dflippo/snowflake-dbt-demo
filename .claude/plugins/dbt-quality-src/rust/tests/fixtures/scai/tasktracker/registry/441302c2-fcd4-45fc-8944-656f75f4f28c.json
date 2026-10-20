@@ -1,0 +1,166 @@
+{
+  "codeStatus": {
+    "assessment": {
+      "containsCommit": false,
+      "exclusion": [],
+      "status": "inProgress"
+    },
+    "conversion": {
+      "converterVersion": "2.46.0-Pr.305",
+      "status": "completed",
+      "updatedAt": "2026-09-26T01:03:22Z"
+    },
+    "registration": {
+      "sourceId": "",
+      "status": "completed",
+      "updatedAt": "2026-09-26T01:03:22Z"
+    }
+  },
+  "dependencies": {
+    "dependsOn": [
+      {
+        "id": "4ec361c2-4fc3-4771-99d2-ca276399073e",
+        "isMissing": false,
+        "relationTypes": [
+          "SELECT - JOIN"
+        ]
+      },
+      {
+        "id": "82bd1b4e-ffc4-4dbe-8f69-90144cf3427b",
+        "isMissing": false,
+        "relationTypes": [
+          "SELECT - JOIN"
+        ]
+      }
+    ],
+    "hasTransitiveMissingDependencies": false,
+    "requiredBy": [
+      "6c906b38-d9e5-44c2-b57c-3a43a2b9a72a"
+    ]
+  },
+  "extensions": {},
+  "files": {
+    "artifacts": {
+      "path": "artifacts/tasktracker/dbo/view/tasksummary"
+    },
+    "converted": {
+      "checksum": "e6076802a5b9b6458e54053b35694e5b",
+      "path": "snowflake/tasktracker/dbo/view/tasksummary.sql"
+    },
+    "source": {
+      "path": "source/tasktracker/dbo/view/tasksummary.sql"
+    }
+  },
+  "id": "441302c2-fcd4-45fc-8944-656f75f4f28c",
+  "inScope": true,
+  "isMissing": false,
+  "kind": "databaseObject",
+  "planning": {
+    "topologicalRank": 2
+  },
+  "schemaVersion": 1,
+  "signature": {
+    "columns": [
+      {
+        "isCaseSpecific": false,
+        "isPrimaryKey": false,
+        "name": "TaskID",
+        "nullable": true,
+        "targetName": "TaskID",
+        "targetType": "INT",
+        "type": "INT"
+      },
+      {
+        "isCaseSpecific": false,
+        "isPrimaryKey": false,
+        "name": "Title",
+        "nullable": true,
+        "targetName": "Title",
+        "targetType": "VARCHAR",
+        "type": "VARCHAR"
+      },
+      {
+        "isCaseSpecific": false,
+        "isPrimaryKey": false,
+        "name": "Priority",
+        "nullable": true,
+        "targetName": "Priority",
+        "targetType": "VARCHAR",
+        "type": "VARCHAR"
+      },
+      {
+        "isCaseSpecific": false,
+        "isPrimaryKey": false,
+        "name": "Status",
+        "nullable": true,
+        "targetName": "Status",
+        "targetType": "VARCHAR",
+        "type": "VARCHAR"
+      },
+      {
+        "isCaseSpecific": false,
+        "isPrimaryKey": false,
+        "name": "CreatedAt",
+        "nullable": true,
+        "targetName": "CreatedAt",
+        "targetType": "",
+        "type": "DATETIME"
+      },
+      {
+        "isCaseSpecific": false,
+        "isPrimaryKey": false,
+        "name": "DueDate",
+        "nullable": true,
+        "targetName": "DueDate",
+        "targetType": "DATE",
+        "type": "DATE"
+      },
+      {
+        "isCaseSpecific": false,
+        "isPrimaryKey": false,
+        "name": "AssigneeName",
+        "nullable": true,
+        "targetName": "AssigneeName",
+        "targetType": "STRING",
+        "type": "VARCHAR"
+      },
+      {
+        "isCaseSpecific": false,
+        "isPrimaryKey": false,
+        "name": "Department",
+        "nullable": true,
+        "targetName": "Department",
+        "targetType": "VARCHAR",
+        "type": "VARCHAR"
+      },
+      {
+        "isCaseSpecific": false,
+        "isPrimaryKey": false,
+        "name": "AgeDays",
+        "nullable": true,
+        "targetName": "AgeDays",
+        "type": "INTEGER"
+      }
+    ],
+    "parameters": {
+      "arguments": [],
+      "returns": []
+    }
+  },
+  "source": {
+    "canonicalName": "dbo.TaskSummary",
+    "format": "sql",
+    "name": "TaskSummary",
+    "objectType": "view",
+    "platform": "sqlServer",
+    "schema": "dbo"
+  },
+  "target": {
+    "canonicalName": "dbo.TaskSummary",
+    "format": "snowflakeSQL",
+    "name": "TaskSummary",
+    "objectType": "view",
+    "schema": "dbo"
+  },
+  "updatedAt": "2026-09-26T01:03:22Z"
+}

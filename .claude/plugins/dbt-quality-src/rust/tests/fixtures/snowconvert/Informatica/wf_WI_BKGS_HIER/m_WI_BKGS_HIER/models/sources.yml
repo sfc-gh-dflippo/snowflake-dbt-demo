@@ -1,0 +1,30 @@
+version: 2
+sources:
+  - name: raw
+    schema: YOUR_SCHEMA
+    database: YOUR_DB
+    tables:
+      - name: MT_CS_DEAL_SVC_FIN_HIER_ALLOC
+      - name: MT_RSTD_BKGS_MEASURE
+      - name: MT_RSTD_BKGS_MSR_ANNUITY
+      - name: N_FCM_DEAL_MAPPING
+      - name: N_PRDT_TO_PRDT_CLSFTN_ALCTN
+      - name: N_SALES_ORDER_LINE_TV
+      - name: N_SALES_ORDER_TV
+      - name: N_SALES_ORDER_V1_TV
+      - name: R_FISCAL_DAY_TO_YEAR
+      - name: R_FISCAL_MONTH_TO_YEAR
+      - name: R_PRODUCTS_FIN
+      - name: R_SALES_HIERARCHY_FIN
+      - name: WI_BKGS_HIER
+      - name: WI_BKGS_HIER_ANTY_MTH_CNTL
+      - name: WI_BKGS_HIER_PRDT
+      - name: WI_BKGS_HIER_PRDT_ANNUAL
+      - name: WI_BKGS_HIER_PRDT_ANTY
+      - name: WI_BKGS_HIER_PRDT_MY
+      - name: WI_BKGS_HIER_PROCESS_MTH_CNTL
+      - name: WI_BKGS_HIER_SRVC_ANNUAL
+      - name: WI_BKGS_HIER_SRVC_ANTY
+      - name: WI_BKGS_HIER_SRVC_COST
+      - name: WI_BKGS_HIER_SRVC_MY
+      - name: WI_BKGS_HIER_SRVC_TRUEUP

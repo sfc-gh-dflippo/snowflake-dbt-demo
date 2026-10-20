@@ -1,0 +1,21 @@
+{
+  "name": "dbt-quality-browser-tests",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Development-only browser tests for dbt-quality HTML reports.",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "npm run test:helpers && npm run test:browser",
+    "test:helpers": "node --test helpers/*.test.mjs",
+    "test:browser": "playwright test --project=chromium",
+    "test:browser:all": "playwright test",
+    "install:chromium": "playwright install chromium",
+    "install:browsers": "playwright install chromium firefox webkit"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.61.1"
+  }
+}

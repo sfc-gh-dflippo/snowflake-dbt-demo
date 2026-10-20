@@ -33,7 +33,6 @@ target-version = "py311"
 # line lengths and re-enabled E501.
 src = [
     ".",
-    ".claude/plugins/dbt-quality/scripts/src",
 ]
 extend-exclude = [
     "dbt_packages",

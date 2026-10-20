@@ -1,0 +1,595 @@
+{
+  "pack": "MAC",
+  "rules": [
+    {
+      "code": "SSC-EWI-DBTMAC0001",
+      "number": 1,
+      "kind": "EWI",
+      "name": "High macro-to-model ratio",
+      "short_description": "The number of project macros relative to models reaches the configured review threshold.",
+      "long_description": "Macros expand into compiled SQL. They do not remove logic from the compiled artifact. Many macros can still make source models harder to read because reviewers must follow more calls.\n\nThe local heuristic reports a macro-to-model ratio at or above `macro_model_ratio`, which defaults to 0.5. dbt does not prescribe this limit. Waive it for a macro library or a project with useful, documented abstractions.\n\nReferences\n- [dbt Jinja and macros](https://docs.getdbt.com/docs/build/jinja-macros)",
+      "remediation": "Review macros with few callers. Inline simple logic when that improves readability. Remove unused macros only after checking external and dynamic calls. Consider a model for a shared query.",
+      "level": "information",
+      "severity": "low",
+      "tier": "universal",
+      "scope": "project",
+      "effort": "medium",
+      "since": "0.1.0",
+      "examples": [
+        {
+          "title": "Example",
+          "bad": "macros/: 12 macros, models/: 10 models",
+          "good": "macros/: 3 macros, models/: 40 models"
+        }
+      ],
+      "references": [
+        {
+          "title": "dbt Jinja and macros",
+          "url": "https://docs.getdbt.com/docs/build/jinja-macros"
+        }
+      ]
+    },
+    {
+      "code": "SSC-EWI-DBTMAC0002",
+      "number": 2,
+      "kind": "EWI",
+      "name": "Macro has one detected external call",
+      "short_description": "The linter found one macro call outside the file that defines it.",
+      "long_description": "A simple macro with one caller can require extra navigation without much benefit. A single caller can also justify a macro when it names a business rule or separates complex code.\n\nThis local heuristic counts call sites outside the defining file. It exempts macros with detected logic markers and more than 10 significant lines. Static analysis can miss dynamic or external calls.\n\nReferences\n- [dbt Jinja and macros](https://docs.getdbt.com/docs/build/jinja-macros)",
+      "remediation": "Review the reported caller and any dynamic or external uses. Inline the body if the call adds no useful abstraction. Keep the macro if it makes the code clearer.",
+      "level": "information",
+      "severity": "low",
+      "tier": "universal",
+      "scope": "project",
+      "effort": "low",
+      "since": "0.1.0",
+      "examples": [
+        {
+          "title": "Example",
+          "bad": "{% macro to_cents(x) %}{{ x }} * 100{% endmacro %}\n-- called only from one model",
+          "good": "select amount * 100 as amount_cents from {{ ref('orders') }}"
+        }
+      ],
+      "references": [
+        {
+          "title": "dbt Jinja and macros",
+          "url": "https://docs.getdbt.com/docs/build/jinja-macros"
+        }
+      ]
+    },
+    {
+      "code": "SSC-EWI-DBTMAC0003",
+      "number": 3,
+      "kind": "EWI",
+      "name": "Macro has no detected callers",
+      "short_description": "No macro call was found in this project's models, macros, snapshots, or dbt_project.yml.",
+      "long_description": "Unused macros add code to maintain. This rule finds macros with no detected call site in the scanned project. It excludes selected dbt callback and adapter-dispatch names, such as `generate_schema_name` and `snowflake__` macros.\n\nA finding is not proof that a macro is unused. Commands such as `dbt run-operation`, installed-package consumers, and dynamic calls can use a macro without a visible call site here.\n\nReferences\n- [dbt Jinja and macros](https://docs.getdbt.com/docs/build/jinja-macros)\n- [dbt run-operation](https://docs.getdbt.com/reference/commands/run-operation)",
+      "remediation": "Check jobs, package consumers, and dynamic calls before deleting the macro. If it is still used, document the caller and waive the finding.",
+      "level": "information",
+      "severity": "low",
+      "tier": "universal",
+      "scope": "project",
+      "effort": "low",
+      "since": "0.1.0",
+      "examples": [
+        {
+          "title": "Example",
+          "bad": "{% macro old_helper() %}...{% endmacro %}  -- never called",
+          "good": "-- macro deleted"
+        }
+      ],
+      "references": [
+        {
+          "title": "dbt Jinja and macros",
+          "url": "https://docs.getdbt.com/docs/build/jinja-macros"
+        },
+        {
+          "title": "dbt run-operation",
+          "url": "https://docs.getdbt.com/reference/commands/run-operation"
+        }
+      ]
+    },
+    {
+      "code": "SSC-EWI-DBTMAC0004",
+      "number": 4,
+      "kind": "EWI",
+      "name": "Macro wraps a short expression",
+      "short_description": "A macro contains a short expression with no detected Jinja logic markers.",
+      "long_description": "A short expression may be easier to read in the model than through a macro call. A named macro can still help when it states a shared business rule.\n\nThis local heuristic looks for a short body without detected `if`, `for`, `set`, or `do` logic. It is a readability prompt, not a dbt restriction. The official dbt macro guide itself uses a small currency-conversion macro as an example.\n\nReferences\n- [dbt Jinja and macros](https://docs.getdbt.com/docs/build/jinja-macros)",
+      "remediation": "Inline the expression if its meaning is clear at the call site. Keep the macro when its name, shared use, or adapter-specific behavior makes the code easier to maintain.",
+      "level": "information",
+      "severity": "low",
+      "tier": "universal",
+      "scope": "project",
+      "effort": "low",
+      "since": "0.1.0",
+      "examples": [
+        {
+          "title": "Example",
+          "bad": "{% macro cents(x) %}{{ x }} * 100{% endmacro %}",
+          "good": "select amount * 100 as amount_cents from {{ ref('orders') }}"
+        }
+      ],
+      "references": [
+        {
+          "title": "dbt Jinja and macros",
+          "url": "https://docs.getdbt.com/docs/build/jinja-macros"
+        }
+      ]
+    },
+    {
+      "code": "SSC-EWI-DBTMAC0005",
+      "number": 5,
+      "kind": "EWI",
+      "name": "Macro emits a full query",
+      "short_description": "A macro contains SELECT ... FROM logic that readers must inspect outside the model file.",
+      "long_description": "A query-generating macro puts transformation logic outside its calling model. The query still appears in compiled SQL. dbt can also record dependencies from `ref()` calls found during parsing; a macro does not inherently erase lineage.\n\nThis local check looks for `SELECT ... FROM` in a macro body and excludes selected materialization and operational names. Keep a macro when query generation is intentional. A small shared query may be clearer as an ephemeral model; larger or directly queried results may need a view or table.\n\nReferences\n- [dbt Jinja and macros](https://docs.getdbt.com/docs/build/jinja-macros)\n- [dbt ref function](https://docs.getdbt.com/reference/dbt-jinja-functions/ref)\n- [dbt materializations](https://docs.getdbt.com/docs/build/materializations)",
+      "remediation": "Consider a model when the macro represents a shared transformation. Choose its materialization for the workload. Keep macros for intentional parameterized SQL generation, and inspect the compiled output and dependencies.",
+      "level": "information",
+      "severity": "medium",
+      "tier": "universal",
+      "scope": "project",
+      "effort": "medium",
+      "since": "0.1.0",
+      "examples": [
+        {
+          "title": "Example",
+          "bad": "{% macro orders_q() %}select id, total from {{ ref('orders') }}{% endmacro %}",
+          "good": "-- models/int_orders.sql (materialized: ephemeral)\nselect id, total from {{ ref('orders') }}"
+        }
+      ],
+      "anti_patterns": [
+        "M1"
+      ],
+      "references": [
+        {
+          "title": "dbt Jinja and macros",
+          "url": "https://docs.getdbt.com/docs/build/jinja-macros"
+        },
+        {
+          "title": "dbt ref function",
+          "url": "https://docs.getdbt.com/reference/dbt-jinja-functions/ref"
+        },
+        {
+          "title": "dbt materializations",
+          "url": "https://docs.getdbt.com/docs/build/materializations"
+        }
+      ]
+    },
+    {
+      "code": "SSC-EWI-DBTMAC0006",
+      "number": 6,
+      "kind": "EWI",
+      "name": "Macro hardcodes a relation name",
+      "short_description": "A macro contains a literal dotted relation name instead of a dbt relation reference.",
+      "long_description": "A literal relation name does not create the dependency that `ref()` or `source()` creates. It also fixes the database or schema in the macro text instead of using dbt relation configuration.\n\nThe detector looks for dotted names and excludes `information_schema`. Review each match before changing it. An external table can usually be declared as a source even when no dbt model owns it.\n\nReferences\n- [dbt ref function](https://docs.getdbt.com/reference/dbt-jinja-functions/ref)\n- [dbt source function](https://docs.getdbt.com/reference/dbt-jinja-functions/source)",
+      "remediation": "Pass a relation from the caller. Use `ref()` for a dbt model or `source()` for a declared external table. Document deliberate fixed relations that cannot use either reference.",
+      "level": "warning",
+      "severity": "high",
+      "tier": "universal",
+      "scope": "project",
+      "effort": "medium",
+      "since": "0.1.0",
+      "examples": [
+        {
+          "title": "Example",
+          "bad": "{% macro q() %}select * from raw.sales.orders{% endmacro %}",
+          "good": "{% macro q(rel) %}select * from {{ rel }}{% endmacro %}\n-- caller: {{ q(ref('orders')) }}"
+        }
+      ],
+      "references": [
+        {
+          "title": "dbt ref function",
+          "url": "https://docs.getdbt.com/reference/dbt-jinja-functions/ref"
+        },
+        {
+          "title": "dbt source function",
+          "url": "https://docs.getdbt.com/reference/dbt-jinja-functions/source"
+        }
+      ]
+    },
+    {
+      "code": "SSC-EWI-DBTMAC0007",
+      "number": 7,
+      "kind": "EWI",
+      "name": "Macro call chain is deeply nested",
+      "short_description": "A detected call chain passes through three or more macro definitions.",
+      "long_description": "Nested calls require readers to follow several macro definitions to understand generated SQL. The expanded SQL remains available after compilation.\n\nThis linter uses three or more definitions in a call chain as a local review threshold. dbt sets no such limit. Keep the layers when each has a clear purpose, such as adapter dispatch.\n\nReferences\n- [dbt Jinja and macros](https://docs.getdbt.com/docs/build/jinja-macros)",
+      "remediation": "Inline macros that only pass arguments to another macro. Keep a layer when it handles a separate decision or a documented adapter difference.",
+      "level": "information",
+      "severity": "medium",
+      "tier": "universal",
+      "scope": "project",
+      "effort": "medium",
+      "since": "0.1.0",
+      "examples": [
+        {
+          "title": "Example",
+          "bad": "{% macro a() %}{{ b() }}{% endmacro %}\n{% macro b() %}{{ c() }}{% endmacro %}\n{% macro c() %}{{ d() }}{% endmacro %}",
+          "good": "{% macro a() %}{{ d() }}{% endmacro %}"
+        }
+      ],
+      "references": [
+        {
+          "title": "dbt Jinja and macros",
+          "url": "https://docs.getdbt.com/docs/build/jinja-macros"
+        }
+      ]
+    },
+    {
+      "code": "SSC-EWI-DBTMAC0008",
+      "number": 8,
+      "kind": "EWI",
+      "name": "Model body is mostly Jinja rather than SQL",
+      "short_description": "At least half the counted body lines are Jinja, with at least two non-dbt_ macro calls.",
+      "long_description": "A model with many Jinja statements can be difficult to understand from the source alone. Review its compiled SQL to see the generated query.\n\nThe local heuristic removes the config block from the line ratio. It reports a ratio of at least 50% and at least two calls whose names do not start with `dbt_`. Models with fewer than five significant raw lines are skipped. These limits are not dbt requirements. Generated models can keep this pattern when their purpose and output are documented.\n\nReferences\n- [dbt Jinja and macros](https://docs.getdbt.com/docs/build/jinja-macros)",
+      "remediation": "Keep the main transformation in readable SQL where possible. Use macros for shared or parameterized sections. Document intentional generation and review representative compiled SQL when it changes.",
+      "level": "information",
+      "severity": "medium",
+      "tier": "universal",
+      "scope": "model",
+      "effort": "high",
+      "since": "0.1.0",
+      "examples": [
+        {
+          "title": "Example",
+          "bad": "{% do build_a() %}\n{% do build_b() %}\n{% set x = 1 %}\n{% set y = 2 %}\nselect 1",
+          "good": "select\n  id,\n  total\nfrom {{ ref('orders') }}"
+        }
+      ],
+      "references": [
+        {
+          "title": "dbt Jinja and macros",
+          "url": "https://docs.getdbt.com/docs/build/jinja-macros"
+        }
+      ]
+    },
+    {
+      "code": "SSC-EWI-DBTMAC0009",
+      "number": 9,
+      "kind": "EWI",
+      "name": "Review hashing of key-shaped columns",
+      "short_description": "A hash function uses a column whose name ends in _id or _key.",
+      "long_description": "Snowflake uses micro-partition value ranges and data order for pruning. Hashing can change that distribution. This check cannot prove that a hash is used in a join or that it makes a query slower. Measure the workload before changing its keys.\n\nThe detector checks `HASH`, `MD5`, `SHA1`, `SHA2`, and their supported `_BINARY` forms for `_id` or `_key` names. Names are only a heuristic; non-key change-detection hashes can match. Keep a documented surrogate-key design when its correctness and performance meet requirements. Snowflake warns that `HASH` is not a unique-key guarantee.\n\nReferences\n- [Snowflake micro-partitions and pruning](https://docs.snowflake.com/en/user-guide/tables-clustering-micropartitions)\n- [Snowflake HASH function](https://docs.snowflake.com/en/sql-reference/functions/hash)\n- [Snowflake Query Profile](https://docs.snowflake.com/en/user-guide/ui-query-profile)",
+      "remediation": "Compare representative query profiles before and after any key change. Consider original key columns when they preserve the required semantics. Do not replace a hash with plain concatenation without handling delimiters, NULLs, and type differences. Check key uniqueness and update all dependent joins together.",
+      "level": "information",
+      "severity": "low",
+      "tier": "universal",
+      "scope": "model",
+      "effort": "low",
+      "per_line": true,
+      "since": "0.1.0",
+      "examples": [
+        {
+          "title": "Example",
+          "bad": "select md5(customer_id || order_id) as order_key from t",
+          "good": "select customer_id, order_id from t"
+        }
+      ],
+      "references": [
+        {
+          "title": "Snowflake micro-partitions and pruning",
+          "url": "https://docs.snowflake.com/en/user-guide/tables-clustering-micropartitions"
+        },
+        {
+          "title": "Snowflake HASH function",
+          "url": "https://docs.snowflake.com/en/sql-reference/functions/hash"
+        },
+        {
+          "title": "Snowflake Query Profile",
+          "url": "https://docs.snowflake.com/en/user-guide/ui-query-profile"
+        }
+      ]
+    },
+    {
+      "code": "SSC-EWI-DBTMAC0010",
+      "number": 10,
+      "kind": "EWI",
+      "name": "Repeated SQL block across models",
+      "short_description": "The same multi-line SQL block appears in several model files.",
+      "long_description": "Repeated transformation logic can require the same fix in several files. A shared macro or model can reduce that maintenance, but a little repetition can be clearer than another abstraction.\n\nThe local `duplicate_block_threshold` default is 3 models. The comparison uses configured line windows across the scanned projects. This threshold is not a dbt requirement. Waive accepted boilerplate, including generated audit blocks.\n\nThe comparison blanks config calls and Jinja statement tags. Other rules, SSC-EWI-DBTPRJ0009 and SSC-EWI-DBTINC0019, cover converter scaffolding. String literals and `ref()`, `source()`, and `var()` arguments remain in the comparison key. Blocks that read different model names are not identical.\n\nOverlapping windows in one anchor file merge into regions. One finding holds all regions for that anchor. `context.regions` lists anchor ranges; `context.repeated_in` lists each occurrence by file and line range. Cross-project findings set `cross_project`, list `project:file` pairs, and replace the corresponding per-project finding.\n\nThe check excludes plain pass-through column lists and a bare FROM relation without a join or filter. It does not recommend a macro just to share a select list.\n\nReferences\n- [dbt Jinja and macros](https://docs.getdbt.com/docs/build/jinja-macros)\n- [dbt materializations](https://docs.getdbt.com/docs/build/materializations)",
+      "remediation": "Use a macro for a repeated expression when it improves readability. Consider a model for a shared query and choose its materialization for the workload. Keep deliberate boilerplate when extraction would obscure the transformation.",
+      "level": "information",
+      "severity": "low",
+      "tier": "universal",
+      "scope": "portfolio",
+      "effort": "medium",
+      "since": "0.1.0",
+      "examples": [
+        {
+          "title": "Example",
+          "bad": "-- models a, b, c each repeat the same 4-line CASE expression",
+          "good": "-- one macro `{{ status_label(col) }}` used by a, b, c"
+        }
+      ],
+      "anti_patterns": [
+        "M7"
+      ],
+      "references": [
+        {
+          "title": "dbt Jinja and macros",
+          "url": "https://docs.getdbt.com/docs/build/jinja-macros"
+        },
+        {
+          "title": "dbt materializations",
+          "url": "https://docs.getdbt.com/docs/build/materializations"
+        }
+      ]
+    },
+    {
+      "code": "SSC-EWI-DBTMAC0011",
+      "number": 11,
+      "kind": "EWI",
+      "name": "Macro defined inside the models directory",
+      "short_description": "A macro definition appears in a model file rather than a configured macro path.",
+      "long_description": "dbt discovers macros in the directories listed by `macro-paths`, which defaults to `macros`. The dbt configuration reference states that models and macros cannot be co-located.\n\nThis check finds macro definitions in discovered model files. If the file is not intended to be a model, correct the configured paths rather than relying on its current location.\n\nReferences\n- [dbt macro paths](https://docs.getdbt.com/reference/project-configs/macro-paths)",
+      "remediation": "Move the macro definition to a SQL file under a configured macro path. Leave only the model query and its required Jinja in the model file.",
+      "level": "information",
+      "severity": "medium",
+      "tier": "universal",
+      "scope": "model",
+      "effort": "low",
+      "since": "0.1.0",
+      "examples": [
+        {
+          "title": "Example",
+          "bad": "-- models/a.sql\n{% macro helper() %}1{% endmacro %}\nselect 1",
+          "good": "-- macros/helper.sql\n{% macro helper() %}1{% endmacro %}"
+        }
+      ],
+      "references": [
+        {
+          "title": "dbt macro paths",
+          "url": "https://docs.getdbt.com/reference/project-configs/macro-paths"
+        }
+      ]
+    },
+    {
+      "code": "SSC-EWI-DBTMAC0012",
+      "number": 12,
+      "kind": "EWI",
+      "name": "Macro filename does not match macro name",
+      "short_description": "A file containing one macro has a different name from that macro.",
+      "long_description": "Matching a single-macro filename to the macro name can make its definition easier to find. This is a local naming convention. dbt permits several macros in one file and does not require matching names.\n\nThe rule checks files with one macro. Waive it if the file has a deliberate topic-based name.\n\nReferences\n- [dbt Jinja and macros](https://docs.getdbt.com/docs/build/jinja-macros)",
+      "remediation": "If the project uses this convention, rename the file to the macro name with a .sql extension. Check path-based references in scripts and documentation.",
+      "level": "information",
+      "severity": "low",
+      "tier": "universal",
+      "scope": "project",
+      "effort": "low",
+      "since": "0.1.0",
+      "examples": [
+        {
+          "title": "Example",
+          "bad": "-- macros/other.sql\n{% macro real_name() %}1{% endmacro %}",
+          "good": "-- macros/real_name.sql\n{% macro real_name() %}1{% endmacro %}"
+        }
+      ],
+      "references": [
+        {
+          "title": "dbt Jinja and macros",
+          "url": "https://docs.getdbt.com/docs/build/jinja-macros"
+        }
+      ]
+    },
+    {
+      "code": "SSC-PRF-DBTMAC0013",
+      "number": 13,
+      "kind": "PRF",
+      "name": "Scalar-subquery lookup macro in a select list",
+      "short_description": "A model select list calls a macro with a parameterized aggregate scalar subquery.",
+      "long_description": "The macro returns a parenthesized aggregate query with a parameter in its WHERE clause. It is correlated only if the caller supplies an outer column reference. A literal argument does not establish correlation. SQL shape alone does not prove one physical lookup per row or acceptable performance.\n\nThe detector matches MAX, MIN, or ANY_VALUE scalar-subquery shapes called from model select lists. Review the compiled query and Snowflake support for that form. Compare query profiles before choosing a rewrite.\n\nA LEFT JOIN is equivalent only when the lookup preserves the original aggregate and returns at most one row per key. The example assumes that rates has one row per currency.\n\nReferences\n- [Snowflake subqueries](https://docs.snowflake.com/en/user-guide/querying-subqueries)\n- [Snowflake Query Profile](https://docs.snowflake.com/en/user-guide/ui-query-profile)",
+      "remediation": "Test the compiled query and inspect its profile. If a join is appropriate, aggregate the lookup by its key with the original aggregate before joining. Preserve NULL behavior and prevent row multiplication. Do not replace MAX or MIN with an arbitrary row.",
+      "level": "information",
+      "severity": "medium",
+      "tier": "universal",
+      "scope": "portfolio",
+      "effort": "medium",
+      "anti_patterns": [
+        "M2"
+      ],
+      "marker_subject": "macro",
+      "since": "0.2.0",
+      "examples": [
+        {
+          "title": "Lookup macro in a select list",
+          "bad": "-- macros/lookup_rate.sql\n{% macro lookup_rate(code) %}\n(select max(rate) from {{ ref('rates') }} where currency = {{ code }})\n{% endmacro %}\n-- models/fct.sql\nselect o.id, {{ lookup_rate('o.currency') }} as rate from {{ ref('orders') }} o",
+          "good": "select o.id, r.rate\nfrom {{ ref('orders') }} o\nleft join {{ ref('rates') }} r on r.currency = o.currency"
+        }
+      ],
+      "references": [
+        {
+          "title": "Snowflake subqueries",
+          "url": "https://docs.snowflake.com/en/user-guide/querying-subqueries"
+        },
+        {
+          "title": "Snowflake Query Profile",
+          "url": "https://docs.snowflake.com/en/user-guide/ui-query-profile"
+        }
+      ]
+    },
+    {
+      "code": "SSC-EWI-DBTMAC0014",
+      "number": 14,
+      "kind": "EWI",
+      "name": "Model calls a macro with SQL side effects",
+      "short_description": "A model calls a macro that can write data or change the session through a SQL execution API.",
+      "long_description": "A model-called macro can execute SQL through `run_query`, a statement block, or `adapter.execute`. Writes and session changes then occur outside the model's returned query.\n\nNormal parsing does not execute SQL: `execute` is false then. It becomes true during compilation as well as execution. An `if execute` guard alone therefore does not prevent writes during `dbt compile`.\n\nThis rule follows direct and nested macro calls for data-changing or session-changing SQL. It excludes read-only introspection and calls in hook configuration. Waive only after documenting command guards, repeat-execution safety, and why a model hook, operation, or materialization cannot express the action.\n\nReferences\n- [dbt execute variable](https://docs.getdbt.com/reference/dbt-jinja-functions/execute)\n- [dbt hooks and operations](https://docs.getdbt.com/docs/build/hooks-operations)",
+      "remediation": "Move the action to an explicit operation, an appropriate model hook, or a materialization. Choose the timing for the intended commands. Do not assume run-level hooks are limited to dbt run. Test command guards and safe repeat execution.",
+      "level": "warning",
+      "severity": "high",
+      "tier": "universal",
+      "scope": "portfolio",
+      "effort": "medium",
+      "anti_patterns": [
+        "H10",
+        "M6"
+      ],
+      "marker_subject": "macro",
+      "since": "0.2.0",
+      "examples": [
+        {
+          "title": "DML macro called from a model",
+          "bad": "{% macro log_run() %}\n{% do run_query(\"insert into audit.runs values (current_timestamp())\") %}\n{% endmacro %}\n-- models/m.sql\n{{ log_run() }}\nselect 1",
+          "good": "-- dbt_project.yml\non-run-end:\n  - \"insert into audit.runs values (current_timestamp())\""
+        }
+      ],
+      "references": [
+        {
+          "title": "dbt execute variable",
+          "url": "https://docs.getdbt.com/reference/dbt-jinja-functions/execute"
+        },
+        {
+          "title": "dbt hooks and operations",
+          "url": "https://docs.getdbt.com/docs/build/hooks-operations"
+        }
+      ]
+    },
+    {
+      "code": "SSC-EWI-DBTMAC0015",
+      "number": 15,
+      "kind": "EWI",
+      "name": "Global generate_*_name macro override",
+      "short_description": "A project overrides a macro that controls model schema, alias, or database names.",
+      "long_description": "The `generate_schema_name`, `generate_alias_name`, and `generate_database_name` macros control relation naming. An override can affect models throughout a project. Merging projects with different naming rules can change relation locations or cause collisions. Different macro bodies need review; they do not prove that one combined implementation is impossible.\n\nThis rule reports these names under configured macro paths and identifies differing bodies across projects. Keep intentional shared naming rules after checking development and production targets. dbt ignores an installed package's schema-name override unless the root project explicitly delegates to it.\n\nReferences\n- [dbt custom schemas](https://docs.getdbt.com/docs/build/custom-schemas)\n- [dbt custom aliases](https://docs.getdbt.com/docs/build/custom-aliases)\n- [dbt custom databases](https://docs.getdbt.com/docs/build/custom-databases)",
+      "remediation": "Keep the override entry point in the root project. Delegate to a shared package when needed. Route intentional differences with explicit node metadata or configuration. Preserve target-schema isolation, and compare resolved relation names in each environment before merging.",
+      "level": "information",
+      "severity": "medium",
+      "tier": "universal",
+      "scope": "portfolio",
+      "effort": "medium",
+      "anti_patterns": [
+        "M4",
+        "M4a"
+      ],
+      "marker_subject": "macro",
+      "since": "0.2.0",
+      "examples": [
+        {
+          "title": "Exact-value override",
+          "bad": "{% macro generate_schema_name(custom, node) %}{{ custom }}{% endmacro %}",
+          "good": "{% macro generate_schema_name(custom, node) %}\n  {{ shared_pkg.generate_schema_name(custom, node) }}\n{% endmacro %}"
+        }
+      ],
+      "references": [
+        {
+          "title": "dbt custom schemas",
+          "url": "https://docs.getdbt.com/docs/build/custom-schemas"
+        },
+        {
+          "title": "dbt custom aliases",
+          "url": "https://docs.getdbt.com/docs/build/custom-aliases"
+        },
+        {
+          "title": "dbt custom databases",
+          "url": "https://docs.getdbt.com/docs/build/custom-databases"
+        }
+      ]
+    },
+    {
+      "code": "SSC-EWI-DBTMAC0016",
+      "number": 16,
+      "kind": "EWI",
+      "name": "Incremental strategy or materialization copied per project",
+      "short_description": "Two or more projects define the same incremental-strategy macro or materialization name.",
+      "long_description": "Supported adapters resolve a custom incremental strategy through `get_incremental_<strategy>_sql`. Custom materializations are also selected by name. Copies across projects need coordinated fixes and a naming decision before consolidation.\n\nThis rule reports names found in at least two projects. `identical_bodies` states whether their normalized bodies agree. This is a local consolidation check. Keep separate implementations when the differences are intentional. Adapter and dbt-version support must be checked before sharing a custom strategy.\n\nReferences\n- [dbt incremental strategies](https://docs.getdbt.com/docs/build/incremental-strategy)\n- [dbt materializations](https://docs.getdbt.com/docs/build/materializations)",
+      "remediation": "Move common implementation code into a shared package. Keep project-level strategy wrappers where required by the adapter, as shown in the dbt guide. Give intentional variants distinct names and update their configuration. Verify that each project resolves the intended implementation.",
+      "level": "information",
+      "severity": "medium",
+      "tier": "universal",
+      "scope": "portfolio",
+      "effort": "medium",
+      "anti_patterns": [
+        "M3"
+      ],
+      "marker_subject": "macro",
+      "since": "0.2.0",
+      "examples": [
+        {
+          "title": "Copied strategy",
+          "bad": "-- a/macros/get_incremental_update_only_sql.sql\n-- b/macros/get_incremental_update_only_sql.sql",
+          "good": "-- shared/macros/get_incremental_update_only_sql.sql"
+        }
+      ],
+      "references": [
+        {
+          "title": "dbt incremental strategies",
+          "url": "https://docs.getdbt.com/docs/build/incremental-strategy"
+        },
+        {
+          "title": "dbt materializations",
+          "url": "https://docs.getdbt.com/docs/build/materializations"
+        }
+      ]
+    },
+    {
+      "code": "SSC-EWI-DBTMAC0017",
+      "number": 17,
+      "kind": "EWI",
+      "name": "Shared macro reads a project variable",
+      "short_description": "A macro reads var(), and a model in another scanned project calls that macro.",
+      "long_description": "A `var()` call in a shared macro depends on the context of the node that uses it. For example, a root-project model calling a package macro resolves the variable in the root project's scope. Values can come from project configuration, command-line overrides, or a default argument.\n\nThe detector reports cross-project callers when the caller project has no local macro with that name. This is a local interface review, not proof of a missing variable. Keep the shared variable when callers use the same documented meaning and default behavior.\n\nReferences\n- [dbt project variables](https://docs.getdbt.com/docs/build/project-variables)\n- [dbt Jinja and macros](https://docs.getdbt.com/docs/build/jinja-macros)",
+      "remediation": "If callers need different parameter meanings, pass the value as a macro argument. Read `var()` in each caller. Otherwise, document the shared variable name, scope, and defaults.",
+      "level": "information",
+      "severity": "medium",
+      "tier": "universal",
+      "scope": "portfolio",
+      "effort": "medium",
+      "anti_patterns": [
+        "P7",
+        "M1a"
+      ],
+      "marker_subject": "var_name",
+      "since": "0.2.0",
+      "examples": [
+        {
+          "title": "Var read in shared macro",
+          "bad": "-- shared/macros/mp_filter.sql\n{% macro mp_filter(x) %}{{ x }} + {{ var('mp_min') }}{% endmacro %}",
+          "good": "{% macro mp_filter(x, p_min) %}{{ x }} + {{ p_min }}{% endmacro %}\n-- model\n{{ shared.mp_filter('id', var('mp_min')) }}"
+        }
+      ],
+      "references": [
+        {
+          "title": "dbt project variables",
+          "url": "https://docs.getdbt.com/docs/build/project-variables"
+        },
+        {
+          "title": "dbt Jinja and macros",
+          "url": "https://docs.getdbt.com/docs/build/jinja-macros"
+        }
+      ]
+    },
+    {
+      "code": "SSC-FDM-DBTMAC0018",
+      "number": 18,
+      "kind": "FDM",
+      "name": "Call-site arguments can change macro output",
+      "short_description": "A macro loops or branches on an argument, and callers pass different argument text.",
+      "long_description": "Jinja loops and conditions can generate different SQL for different arguments. This is valid macro behavior. When arguments change columns or relations, review the compiled output for each supported form.\n\nThis local heuristic finds argument access in loops or conditions and at least two distinct argument texts across call sites. Different text does not prove different values or output. Keep a deliberate column-list interface when its supported forms are documented and tested.\n\nReferences\n- [dbt Jinja and macros](https://docs.getdbt.com/docs/build/jinja-macros)",
+      "remediation": "Document and test the supported argument forms. If one macro now handles unrelated transformations, split it into separate macros or models. Keep one macro when its parameterized behavior is clear.",
+      "level": "information",
+      "severity": "medium",
+      "tier": "universal",
+      "scope": "portfolio",
+      "effort": "medium",
+      "anti_patterns": [
+        "P13"
+      ],
+      "marker_subject": "macro",
+      "since": "0.2.0",
+      "examples": [
+        {
+          "title": "Argument-driven columns",
+          "bad": "{% macro mp(src) %}{% for c in src.get('cols', []) %}{{ c }},{% endfor %}id{% endmacro %}\n{{ mp({'cols': ['a']}) }} / {{ mp({'cols': ['b','c']}) }}",
+          "good": "-- one macro or model per shape"
+        }
+      ],
+      "references": [
+        {
+          "title": "dbt Jinja and macros",
+          "url": "https://docs.getdbt.com/docs/build/jinja-macros"
+        }
+      ]
+    }
+  ]
+}

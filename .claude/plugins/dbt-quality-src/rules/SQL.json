@@ -1,0 +1,454 @@
+{
+  "pack": "SQL",
+  "rules": [
+    {
+      "code": "SSC-EWI-DBTSQL0001",
+      "number": 1,
+      "kind": "EWI",
+      "name": "Derived-table subquery in FROM or JOIN",
+      "short_description": "A SELECT in FROM or JOIN could be a named CTE, or a shared model if other models use the same logic.",
+      "long_description": "A named CTE can make a transformation easier to read and inspect. It is part of its model, not a separate dbt node. Shared query logic can move to an intermediate model. Ephemeral materialization embeds that model as a CTE in each dependent query; it does not compute the result once for all consumers.\n\nThe rule compares normalized derived-table bodies within a project. It recommends a CTE for a single-model use and a shared ephemeral model for reuse across models. These are local style recommendations, not SQL requirements. Keep a derived table when restructuring would change correlated references or other semantics, or when you cannot edit generated code.\n\n## References\n\n- [How we style our SQL](https://docs.getdbt.com/best-practices/how-we-style/2-how-we-style-our-sql)\n- [Materializations](https://docs.getdbt.com/docs/build/materializations)",
+      "remediation": "Give the query step a name that describes its output. Use a CTE when only this model needs it. For shared logic, choose an intermediate model and review its materialization. Use ephemeral only when inlining is suitable; compare query cost and debugging needs before choosing a view or table. A CTE can be inspected through a temporary final SELECT, but cannot be selected as a separate database object.",
+      "level": "information",
+      "severity": "low",
+      "tier": "universal",
+      "scope": "project",
+      "effort": "low",
+      "per_line": true,
+      "since": "0.1.0",
+      "examples": [
+        {
+          "title": "Typical case",
+          "bad": "from (select customer_id, max(ts) as last_ts from {{ ref('events') }} group by customer_id) e",
+          "good": "with last_event as (\n    select customer_id, max(ts) as last_ts\n    from {{ ref('events') }}\n    group by customer_id\n)\nselect * from last_event"
+        }
+      ],
+      "references": [
+        {
+          "title": "How we style our SQL",
+          "url": "https://docs.getdbt.com/best-practices/how-we-style/2-how-we-style-our-sql"
+        },
+        {
+          "title": "Materializations",
+          "url": "https://docs.getdbt.com/docs/build/materializations"
+        }
+      ]
+    },
+    {
+      "code": "SSC-EWI-DBTSQL0002",
+      "number": 2,
+      "kind": "EWI",
+      "name": "Repeated SQL block across models",
+      "short_description": "The same normalized CTE body appears in two or more models in the audit.",
+      "long_description": "Repeated logic can diverge when only one copy changes. The dbt style guide recommends a shared intermediate model for repeated CTEs. A macro can share a parameterized expression, but it expands into SQL at each call site.\n\nThe rule compares CTEs within projects and across the audited estate. Cross-project findings set `cross_project` in the context. Matching SQL is a review signal, not proof that the copies have the same ownership or business meaning. Keep separate copies when their lifecycles or intended behavior differ.\n\n## References\n\n- [How we style our SQL](https://docs.getdbt.com/best-practices/how-we-style/2-how-we-style-our-sql)\n- [Materializations](https://docs.getdbt.com/docs/build/materializations)\n- [About ref function](https://docs.getdbt.com/reference/dbt-jinja-functions/ref)",
+      "remediation": "Confirm that the copies have the same meaning. Extract a self-contained query into a shared model, or use a macro for a parameterized expression. Choose the materialization for the workload rather than assuming ephemeral is always best. Across projects, use an installed package or a supported cross-project dependency. Verify that the referenced model is available in that environment before replacing copies.",
+      "level": "information",
+      "severity": "low",
+      "tier": "universal",
+      "scope": "portfolio",
+      "effort": "medium",
+      "per_line": true,
+      "since": "0.1.0",
+      "examples": [
+        {
+          "title": "Typical case",
+          "bad": "-- models/a.sql and models/b.sql\nwith active as (\n    select id, name, status, created_at, updated_at\n    from {{ ref('users') }}\n    where status = 'active'\n)\nselect * from active",
+          "good": "-- models/int_active_users.sql\n{{ config(materialized='ephemeral') }}\nselect id, name, status, created_at, updated_at\nfrom {{ ref('users') }}\nwhere status = 'active'"
+        }
+      ],
+      "anti_patterns": [
+        "M7"
+      ],
+      "references": [
+        {
+          "title": "How we style our SQL",
+          "url": "https://docs.getdbt.com/best-practices/how-we-style/2-how-we-style-our-sql"
+        },
+        {
+          "title": "Materializations",
+          "url": "https://docs.getdbt.com/docs/build/materializations"
+        },
+        {
+          "title": "About ref function",
+          "url": "https://docs.getdbt.com/reference/dbt-jinja-functions/ref"
+        }
+      ]
+    },
+    {
+      "code": "SSC-EWI-DBTSQL0003",
+      "number": 3,
+      "kind": "EWI",
+      "name": "Deeply nested subqueries",
+      "short_description": "A derived table contains two or more nested SELECT levels.",
+      "long_description": "Nested derived tables can make a query harder to follow. Named CTEs can separate logical steps and let you inspect each step during development. The two-level review threshold is a local style choice, not a Snowflake limit.\n\nKeep nesting when it expresses the query more clearly, preserves required scope, or comes from generated code that you cannot change.\n\n## References\n\n- [How we style our SQL](https://docs.getdbt.com/best-practices/how-we-style/2-how-we-style-our-sql)",
+      "remediation": "Move independent steps into named CTEs. Keep the original filters, aggregation levels, and correlated references. Compare results after the rewrite. The order of CTE definitions describes dependencies; it does not guarantee database execution order.",
+      "level": "information",
+      "severity": "low",
+      "tier": "universal",
+      "scope": "model",
+      "effort": "medium",
+      "since": "0.1.0",
+      "examples": [
+        {
+          "title": "Typical case",
+          "bad": "select * from (select * from (select id from {{ ref('t') }}) a where id > 1) b",
+          "good": "with base as (\n    select id from {{ ref('t') }}\n),\nfiltered as (\n    select * from base where id > 1\n)\nselect * from filtered"
+        }
+      ],
+      "references": [
+        {
+          "title": "How we style our SQL",
+          "url": "https://docs.getdbt.com/best-practices/how-we-style/2-how-we-style-our-sql"
+        }
+      ]
+    },
+    {
+      "code": "SSC-EWI-DBTSQL0004",
+      "number": 4,
+      "kind": "EWI",
+      "name": "Window filter in a nested query",
+      "short_description": "A nested query calculates a window result that an outer WHERE filters without QUALIFY.",
+      "long_description": "Snowflake evaluates QUALIFY after window functions. It can replace a wrapper SELECT used only to filter a window result. QUALIFY can also refer to a window alias in the SELECT list, so projecting the window result is not by itself a reason to keep the wrapper.\n\nKeep the nested form when other outer-query operations require a separate scope or when the query must support an engine without QUALIFY. Preserve the selected columns and filter order when rewriting.\n\n## References\n\n- [QUALIFY](https://docs.snowflake.com/en/sql-reference/constructs/qualify)\n- [FIRST_VALUE: Usage notes](https://docs.snowflake.com/en/sql-reference/functions/first_value)",
+      "remediation": "If the wrapper only filters a window result, move that predicate to QUALIFY in the inner query. Retain a projected window alias when consumers need it. For row selection, use ordering columns that distinguish rows within each partition. Compare row counts and results; QUALIFY does not remove the need for a tie-break rule.",
+      "level": "information",
+      "severity": "low",
+      "tier": "universal",
+      "scope": "model",
+      "effort": "low",
+      "since": "0.1.0",
+      "examples": [
+        {
+          "title": "Typical case",
+          "bad": "select * from (\n    select *, row_number() over (partition by id order by ts desc) as rn\n    from {{ ref('t') }}\n) x\nwhere rn = 1",
+          "good": "select * from {{ ref('t') }}\nqualify row_number() over (partition by id order by ts desc) = 1"
+        }
+      ],
+      "references": [
+        {
+          "title": "QUALIFY",
+          "url": "https://docs.snowflake.com/en/sql-reference/constructs/qualify"
+        },
+        {
+          "title": "FIRST_VALUE: Usage notes",
+          "url": "https://docs.snowflake.com/en/sql-reference/functions/first_value"
+        }
+      ]
+    },
+    {
+      "code": "SSC-EWI-DBTSQL0005",
+      "number": 5,
+      "kind": "EWI",
+      "name": "SELECT * outside the staging layer",
+      "short_description": "SELECT * reads directly from a ref() or source() outside the staging layer.",
+      "long_description": "SELECT * includes all columns from the input relation in its column order. Upstream column changes can therefore change the model output without an edit to its SELECT list. Explicit columns make that interface easier to review.\n\nThis rule exempts staging models as a local convention. Keep a full passthrough when it is intentional and its output is checked elsewhere. A macro-generated column list is still sensitive to upstream schema changes.\n\n## References\n\n- [SELECT](https://docs.snowflake.com/en/sql-reference/sql/select)\n- [How we style our SQL](https://docs.getdbt.com/best-practices/how-we-style/2-how-we-style-our-sql)",
+      "remediation": "List the output columns explicitly when their names and order form a stable interface. If you intentionally generate the list, review the compiled SQL and test the resulting schema. Do not treat a generated list as a fixed contract.",
+      "level": "information",
+      "severity": "medium",
+      "tier": "universal",
+      "scope": "model",
+      "effort": "low",
+      "since": "0.1.0",
+      "examples": [
+        {
+          "title": "Typical case",
+          "bad": "select * from {{ ref('stg_orders') }}",
+          "good": "select order_id, customer_id, amount from {{ ref('stg_orders') }}"
+        }
+      ],
+      "references": [
+        {
+          "title": "SELECT",
+          "url": "https://docs.snowflake.com/en/sql-reference/sql/select"
+        },
+        {
+          "title": "How we style our SQL",
+          "url": "https://docs.getdbt.com/best-practices/how-we-style/2-how-we-style-our-sql"
+        }
+      ]
+    },
+    {
+      "code": "SSC-EWI-DBTSQL0006",
+      "number": 6,
+      "kind": "EWI",
+      "name": "Literal relation read without ref or source",
+      "short_description": "A literal relation or stage read bypasses ref/source lineage; variable-built reads and producer cycles have separate rules.",
+      "long_description": "A literal relation name does not create a dbt dependency edge through ref() or source(). It can also bind a model to one environment. The rule reviews literal relation and stage reads; variable-built reads belong to PRJ0021, and producer-cycle checks belong to PRJ0022.\n\nUse ref() only for a verified producer when the dependency is acyclic and available to the project. Otherwise, declare an external input as a source. External ownership alone is not a reason to omit a source declaration. System-schema reads and local CTEs are excluded by this rule.\n\nThe suggested source grouping and invalid_database fallback are local conventions. A stage read requires a supported ingestion or external-table design; a plain source declaration does not turn stage files into a table.\n\n## References\n\n- [About ref function](https://docs.getdbt.com/reference/dbt-jinja-functions/ref)\n- [Add sources to your DAG](https://docs.getdbt.com/docs/build/sources)\n- [External sources in dbt](https://github.com/dbt-labs/dbt-external-tables)",
+      "remediation": "Use the verified producer's ref() for an acyclic model dependency. Otherwise, group sources by database and schema. Use the schema as the source name, or database_schema when needed to avoid ambiguity. Keep schema literal. Use a literal database or a target.name mapping with an invalid_database fallback. For the external-table option, add dbt-external-tables to packages.yml, install it, configure the external source, and run stage_external_sources after checking its prerequisites. This package path is not verified here for native EXECUTE DBT PROJECT.",
+      "level": "information",
+      "severity": "high",
+      "tier": "universal",
+      "scope": "model",
+      "effort": "low",
+      "since": "0.1.0",
+      "examples": [
+        {
+          "title": "Typical case",
+          "bad": "select * from raw.public.orders",
+          "good": "select * from {{ source('raw', 'orders') }}"
+        }
+      ],
+      "marker_subject": "evidence",
+      "references": [
+        {
+          "title": "About ref function",
+          "url": "https://docs.getdbt.com/reference/dbt-jinja-functions/ref"
+        },
+        {
+          "title": "Add sources to your DAG",
+          "url": "https://docs.getdbt.com/docs/build/sources"
+        },
+        {
+          "title": "External sources in dbt",
+          "url": "https://github.com/dbt-labs/dbt-external-tables"
+        }
+      ]
+    },
+    {
+      "code": "SSC-EWI-DBTSQL0007",
+      "number": 7,
+      "kind": "EWI",
+      "name": "Implicit comma join",
+      "short_description": "A comma-separated FROM list places the join condition outside the join.",
+      "long_description": "A comma join relies on a WHERE predicate to relate its inputs. A missing predicate can produce a Cartesian product. Explicit JOIN ... ON keeps the relationship next to the join and makes it easier to review.\n\nThis is a readability recommendation. Snowflake also allows some explicit joins without ON, so explicit syntax alone does not prevent a Cartesian product. Use CROSS JOIN when that product is intentional.\n\n## References\n\n- [JOIN](https://docs.snowflake.com/en/sql-reference/constructs/join)\n- [How we style our SQL](https://docs.getdbt.com/best-practices/how-we-style/2-how-we-style-our-sql)",
+      "remediation": "Use an explicit join type and place its relationship predicate in ON or USING. Keep row filters in WHERE where that preserves the original semantics. Write CROSS JOIN for an intentional Cartesian product, and check the expected row count.",
+      "level": "information",
+      "severity": "medium",
+      "tier": "universal",
+      "scope": "model",
+      "effort": "low",
+      "per_line": true,
+      "since": "0.1.0",
+      "examples": [
+        {
+          "title": "Typical case",
+          "bad": "select o.id from orders o, customers c where o.cid = c.id",
+          "good": "select o.id from orders o join customers c on o.cid = c.id"
+        }
+      ],
+      "references": [
+        {
+          "title": "JOIN",
+          "url": "https://docs.snowflake.com/en/sql-reference/constructs/join"
+        },
+        {
+          "title": "How we style our SQL",
+          "url": "https://docs.getdbt.com/best-practices/how-we-style/2-how-we-style-our-sql"
+        }
+      ]
+    },
+    {
+      "code": "SSC-FDM-DBTSQL0008",
+      "number": 8,
+      "kind": "FDM",
+      "name": "Window row selection without a tie-break rule",
+      "short_description": "A window ORDER BY placeholder does not define which row to choose among tied rows.",
+      "long_description": "A constant or placeholder ordering expression does not distinguish rows in a window partition. Row selection can vary when multiple rows tie. Tests may miss this if they check only counts or use data without ties.\n\nThe rule detects ORDER BY (SELECT null) or ORDER BY 1 in a window. Review which source fields define the intended choice. Keep arbitrary selection only when any row is acceptable and that requirement is documented.\n\n## References\n\n- [FIRST_VALUE: Usage notes](https://docs.snowflake.com/en/sql-reference/functions/first_value)",
+      "remediation": "Order by fields that express the business rule and distinguish tied rows, such as a change timestamp followed by a unique source row identifier. Confirm NULL ordering where it matters. For converted code, derive the choice from source-system behavior rather than inventing an ordering column.",
+      "level": "warning",
+      "severity": "high",
+      "tier": "universal",
+      "scope": "model",
+      "effort": "medium",
+      "since": "0.1.0",
+      "examples": [
+        {
+          "title": "Typical case",
+          "bad": "qualify row_number() over (partition by id order by (select null)) = 1",
+          "good": "qualify row_number() over (partition by id order by updated_at desc, source_row_id) = 1"
+        }
+      ],
+      "references": [
+        {
+          "title": "FIRST_VALUE: Usage notes",
+          "url": "https://docs.snowflake.com/en/sql-reference/functions/first_value"
+        }
+      ]
+    },
+    {
+      "code": "SSC-EWI-DBTSQL0009",
+      "number": 9,
+      "kind": "EWI",
+      "name": "CTE name does not describe its output",
+      "short_description": "A CTE has a generic name such as t1, tmp, or cte.",
+      "long_description": "A name such as t1 gives readers little help with the purpose of a query step. The dbt style guide recommends names that describe a CTE's work and upstream names for import CTEs.\n\nThe generic-name patterns are a local style check. A short name can be reasonable in a small example or temporary debugging query.\n\n## References\n\n- [How we style our SQL](https://docs.getdbt.com/best-practices/how-we-style/2-how-we-style-our-sql)",
+      "remediation": "Rename the CTE to describe its output, such as orders_with_customer or daily_totals. An import CTE can use the upstream model name. Update every reference to the CTE.",
+      "level": "information",
+      "severity": "low",
+      "tier": "universal",
+      "scope": "model",
+      "effort": "low",
+      "since": "0.1.0",
+      "examples": [
+        {
+          "title": "Typical case",
+          "bad": "with t1 as (select * from {{ ref('orders') }}) select * from t1",
+          "good": "with orders as (select * from {{ ref('orders') }}) select * from orders"
+        }
+      ],
+      "marker_subject": "evidence",
+      "references": [
+        {
+          "title": "How we style our SQL",
+          "url": "https://docs.getdbt.com/best-practices/how-we-style/2-how-we-style-our-sql"
+        }
+      ]
+    },
+    {
+      "code": "SSC-EWI-DBTSQL0010",
+      "number": 10,
+      "kind": "EWI",
+      "name": "Unreferenced CTE",
+      "short_description": "A CTE is defined but has no reference outside its own body.",
+      "long_description": "An unused CTE adds code for readers to inspect without contributing to the final query. It can be leftover code or a missing dependency in the SELECT. The rule excludes recursive self-references when checking for use.\n\nRemoving unused CTEs is a local maintenance recommendation, not a database validity requirement. A temporary debugging CTE can remain if its purpose and owner are clear.\n\n## References\n\n- [How we style our SQL](https://docs.getdbt.com/best-practices/how-we-style/2-how-we-style-our-sql)",
+      "remediation": "Check whether the CTE should feed the result. Delete it if it is obsolete. If a required join or transformation is missing, connect it to the query and test the output. Do not assume every unused import proves a missing join.",
+      "level": "information",
+      "severity": "low",
+      "tier": "universal",
+      "scope": "model",
+      "effort": "low",
+      "since": "0.1.0",
+      "examples": [
+        {
+          "title": "Typical case",
+          "bad": "with used as (select 1 as a), dead as (select 2 as b) select * from used",
+          "good": "with used as (select 1 as a) select * from used"
+        }
+      ],
+      "marker_subject": "evidence",
+      "references": [
+        {
+          "title": "How we style our SQL",
+          "url": "https://docs.getdbt.com/best-practices/how-we-style/2-how-we-style-our-sql"
+        }
+      ]
+    },
+    {
+      "code": "SSC-EWI-DBTSQL0011",
+      "number": 11,
+      "kind": "EWI",
+      "name": "Complex SELECT without named CTEs",
+      "short_description": "A model has joins, aggregates, windows, or set operations but no named CTEs.",
+      "long_description": "Named CTEs can separate imports from transformations and make intermediate results easier to inspect. A flat SELECT is still valid SQL and may be clearer for a short query.\n\nThis local style rule flags joins, aggregates, windows, or set operations without named CTEs. It skips staging, ephemeral, and placeholder models. Add structure only when it improves the explanation of the query.\n\n## References\n\n- [How we style our SQL](https://docs.getdbt.com/best-practices/how-we-style/2-how-we-style-our-sql)",
+      "remediation": "Separate distinct transformation steps into CTEs with descriptive names, then select the final result. Preserve the query semantics and check performance after restructuring. Keep a short flat SELECT when extra CTEs would add no useful explanation.",
+      "level": "information",
+      "severity": "low",
+      "tier": "universal",
+      "scope": "model",
+      "effort": "low",
+      "since": "0.1.0",
+      "examples": [
+        {
+          "title": "Typical case",
+          "bad": "select customer_id, sum(amount) from {{ ref('orders') }} group by 1",
+          "good": "with orders as (\n    select * from {{ ref('orders') }}\n)\nselect customer_id, sum(amount) as total from orders group by 1"
+        }
+      ],
+      "references": [
+        {
+          "title": "How we style our SQL",
+          "url": "https://docs.getdbt.com/best-practices/how-we-style/2-how-we-style-our-sql"
+        }
+      ]
+    },
+    {
+      "code": "SSC-EWI-DBTSQL0012",
+      "number": 12,
+      "kind": "EWI",
+      "name": "UNION removes duplicate rows",
+      "short_description": "UNION without ALL removes duplicates from the combined result.",
+      "long_description": "UNION removes duplicate rows. UNION ALL retains them. Choose the operation that matches the required result, rather than applying duplicate elimination by default.\n\nThe rule flags UNION without ALL for review. Removing duplicate elimination can reduce work, but the effect on performance depends on the query. Keep UNION when distinct combined rows are the intended result.\n\n## References\n\n- [Set operators](https://docs.snowflake.com/en/sql-reference/operators-query)\n- [How we style our SQL](https://docs.getdbt.com/best-practices/how-we-style/2-how-we-style-our-sql)",
+      "remediation": "Use UNION ALL when duplicate rows must remain or when the inputs cannot produce duplicates. Keep UNION when duplicates must be removed. Match input column meanings and types, and compare results before changing the operator.",
+      "level": "information",
+      "severity": "low",
+      "tier": "universal",
+      "scope": "model",
+      "effort": "low",
+      "since": "0.1.0",
+      "examples": [
+        {
+          "title": "Typical case",
+          "bad": "select id from {{ ref('a') }} union select id from {{ ref('b') }}",
+          "good": "select id from {{ ref('a') }} union all select id from {{ ref('b') }}"
+        }
+      ],
+      "references": [
+        {
+          "title": "Set operators",
+          "url": "https://docs.snowflake.com/en/sql-reference/operators-query"
+        },
+        {
+          "title": "How we style our SQL",
+          "url": "https://docs.getdbt.com/best-practices/how-we-style/2-how-we-style-our-sql"
+        }
+      ]
+    },
+    {
+      "code": "SSC-EWI-DBTSQL0013",
+      "number": 13,
+      "kind": "EWI",
+      "name": "SELECT DISTINCT may hide a grain problem",
+      "short_description": "SELECT DISTINCT removes duplicate projected rows and warrants a check of the intended row grain.",
+      "long_description": "SELECT DISTINCT removes duplicates across all projected columns. That can be the intended operation, or it can hide duplicate rows introduced by a join. A finding does not prove that the model grain is wrong.\n\nThe rule reports each SELECT DISTINCT for review. Selecting one row per business key with QUALIFY is a different operation and is not a general replacement for DISTINCT.\n\n## References\n\n- [SELECT](https://docs.snowflake.com/en/sql-reference/sql/select)\n- [QUALIFY](https://docs.snowflake.com/en/sql-reference/constructs/qualify)\n- [FIRST_VALUE: Usage notes](https://docs.snowflake.com/en/sql-reference/functions/first_value)",
+      "remediation": "Identify why duplicate rows exist. Keep DISTINCT when the requirement is unique projected rows. Fix join or grain errors at their source. Use ROW_NUMBER with QUALIFY only when the requirement is one row per key and a documented, deterministic ordering chooses that row. The example illustrates that alternative requirement; it is not an equivalent rewrite in general.",
+      "level": "information",
+      "severity": "low",
+      "tier": "universal",
+      "scope": "model",
+      "effort": "low",
+      "since": "0.1.0",
+      "examples": [
+        {
+          "title": "Typical case",
+          "bad": "select distinct customer_id, status from {{ ref('orders') }}",
+          "good": "select customer_id, status from {{ ref('orders') }}\nqualify row_number() over (partition by customer_id order by updated_at desc) = 1"
+        }
+      ],
+      "references": [
+        {
+          "title": "SELECT",
+          "url": "https://docs.snowflake.com/en/sql-reference/sql/select"
+        },
+        {
+          "title": "QUALIFY",
+          "url": "https://docs.snowflake.com/en/sql-reference/constructs/qualify"
+        },
+        {
+          "title": "FIRST_VALUE: Usage notes",
+          "url": "https://docs.snowflake.com/en/sql-reference/functions/first_value"
+        }
+      ]
+    },
+    {
+      "code": "SSC-EWI-DBTSQL0014",
+      "number": 14,
+      "kind": "EWI",
+      "name": "Conditional ref or source without a dependency hint",
+      "short_description": "A ref() or source() appears under checked Jinja control flow without an unconditional call or dependency hint.",
+      "long_description": "dbt discovers dependencies during parsing. A ref() hidden from that phase can be unexpected when execution reaches it. SQL comments with depends_on can expose a dependency; Jinja comments cannot. Conditional code is not automatically wrong: a stable branch can expose all required edges during parsing.\n\nThis rule checks ref()/source() under a for loop or an if condition other than an execute-only guard. It excludes edges also declared unconditionally or through a dependency hint. That execute-only exclusion is detector scope, not a guarantee that such guards are safe.\n\nOne finding describes the model. context.edges lists the missing edges, lines, and conditions. Waive the finding when every supported render exposes the required dependencies.\n\n## References\n\n- [About ref function](https://docs.getdbt.com/reference/dbt-jinja-functions/ref)",
+      "remediation": "For each required edge hidden by control flow, add a SQL depends_on comment that evaluates the corresponding ref() or source(), or move that call outside the branch. Check the parsed dependency graph for each supported set of variables. Do not add unrelated dependencies solely to silence the rule.",
+      "level": "warning",
+      "severity": "high",
+      "tier": "universal",
+      "scope": "model",
+      "effort": "low",
+      "anti_patterns": [
+        "DAG"
+      ],
+      "marker_subject": "edge",
+      "since": "0.2.0",
+      "examples": [
+        {
+          "title": "Conditional ref",
+          "bad": "{% if var('use_b') %}\nselect * from {{ ref('b') }}\n{% else %}\nselect * from {{ ref('a') }}\n{% endif %}",
+          "good": "-- depends_on: {{ ref('a') }}\n-- depends_on: {{ ref('b') }}\n{% if var('use_b') %}\nselect * from {{ ref('b') }}\n{% else %}\nselect * from {{ ref('a') }}\n{% endif %}"
+        }
+      ],
+      "references": [
+        {
+          "title": "About ref function",
+          "url": "https://docs.getdbt.com/reference/dbt-jinja-functions/ref"
+        }
+      ]
+    }
+  ]
+}

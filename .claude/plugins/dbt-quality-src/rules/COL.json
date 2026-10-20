@@ -1,0 +1,224 @@
+{
+  "pack": "COL",
+  "rules": [
+    {
+      "code": "SSC-EWI-DBTCOL0001",
+      "number": 1,
+      "kind": "EWI",
+      "name": "Model matches more than one scai DDL table",
+      "short_description": "More than one table in the scai DDL has the model's relation name, so the column checks cannot pick one.",
+      "long_description": "The COL rules compare a model's output columns with the Snowflake table that scai converted. They match the model alias, or the file name, to the DDL table name. They use the model `schema` and `database` config to choose between tables with the same name. When more than one table still matches, no column check runs for the model.\n\nThe DDL comes from `ddl_paths` in `.dbt-quality.yml` or from the `--ddl` option.\n\nReferences\n- [dbt alias config](https://docs.getdbt.com/reference/resource-configs/alias)\n- [dbt custom schemas](https://docs.getdbt.com/docs/build/custom-schemas)",
+      "remediation": "Set `schema` (and, if necessary, `database`) in the model config so that it names one DDL table. Or limit `ddl_paths` to one scai project.",
+      "level": "warning",
+      "severity": "medium",
+      "tier": "migration",
+      "scope": "model",
+      "effort": "low",
+      "since": "0.3.0",
+      "examples": [
+        {
+          "title": "Two schemas have a CUSTOMERS table",
+          "bad": "-- models/customers.sql, no schema config\nselect id from {{ ref('stg_customers') }}",
+          "good": "{{ config(schema='SALES') }}\nselect id from {{ ref('stg_customers') }}"
+        }
+      ],
+      "references": [
+        {
+          "title": "dbt alias config",
+          "url": "https://docs.getdbt.com/reference/resource-configs/alias"
+        },
+        {
+          "title": "dbt custom schemas",
+          "url": "https://docs.getdbt.com/docs/build/custom-schemas"
+        }
+      ]
+    },
+    {
+      "code": "SSC-EWI-DBTCOL0002",
+      "number": 2,
+      "kind": "EWI",
+      "name": "DDL column missing from the model",
+      "short_description": "A column of the scai DDL table has no matching output column in the model.",
+      "long_description": "The model replaces a converted table, so downstream code expects every column of that table. This rule reports each DDL column that no output column of the model's outer SELECT names. Names are compared with Snowflake identifier rules: unquoted names are upper case, quoted names are exact.\n\nThe rule does not run when the outer SELECT has `*` or a Jinja-only item, because the output columns are then unknown.\n\nReferences\n- [dbt model contracts](https://docs.getdbt.com/reference/resource-configs/contract)\n- [Snowflake identifier requirements](https://docs.snowflake.com/en/sql-reference/identifiers-syntax)",
+      "remediation": "Add the column to the outer SELECT with the DDL name. If the column was removed on purpose, record that decision with a waiver.",
+      "level": "warning",
+      "severity": "high",
+      "tier": "migration",
+      "scope": "model",
+      "effort": "medium",
+      "per_line": true,
+      "since": "0.3.0",
+      "examples": [
+        {
+          "title": "STATUS is in the DDL",
+          "bad": "select order_id from {{ ref('stg_orders') }}",
+          "good": "select order_id, status from {{ ref('stg_orders') }}"
+        }
+      ],
+      "references": [
+        {
+          "title": "dbt model contracts",
+          "url": "https://docs.getdbt.com/reference/resource-configs/contract"
+        },
+        {
+          "title": "Snowflake identifier requirements",
+          "url": "https://docs.snowflake.com/en/sql-reference/identifiers-syntax"
+        }
+      ]
+    },
+    {
+      "code": "SSC-EWI-DBTCOL0003",
+      "number": 3,
+      "kind": "EWI",
+      "name": "Model column not in the DDL",
+      "short_description": "An output column of the model has no column with the same name in the scai DDL table.",
+      "long_description": "An alias that is not in the DDL is an extra column or a misspelled or renamed column. When a DDL column differs only by case, quotes, or underscores, the finding names it.\n\nSnowflake resolves an unquoted alias to upper case. A quoted alias such as `\"OrderId\"` keeps its case and does not match an unquoted DDL column `ORDERID`.\n\nReferences\n- [Snowflake identifier requirements](https://docs.snowflake.com/en/sql-reference/identifiers-syntax)\n- [dbt model contracts](https://docs.getdbt.com/reference/resource-configs/contract)",
+      "remediation": "Rename the alias to the DDL column name, or remove the column. Remove the quotes from an alias when the DDL name is unquoted.",
+      "level": "warning",
+      "severity": "medium",
+      "tier": "migration",
+      "scope": "model",
+      "effort": "low",
+      "per_line": true,
+      "since": "0.3.0",
+      "examples": [
+        {
+          "title": "Renamed alias",
+          "bad": "select order_dt as order_date_ from {{ ref('stg_orders') }}",
+          "good": "select order_dt as order_date from {{ ref('stg_orders') }}"
+        }
+      ],
+      "references": [
+        {
+          "title": "Snowflake identifier requirements",
+          "url": "https://docs.snowflake.com/en/sql-reference/identifiers-syntax"
+        },
+        {
+          "title": "dbt model contracts",
+          "url": "https://docs.getdbt.com/reference/resource-configs/contract"
+        }
+      ]
+    },
+    {
+      "code": "SSC-EWI-DBTCOL0004",
+      "number": 4,
+      "kind": "EWI",
+      "name": "Output column cannot be checked against the DDL",
+      "short_description": "An item of the outer SELECT is `*`, Jinja only, or an expression with no alias.",
+      "long_description": "The column checks need the name of every output column. `*`, `t.*`, a Jinja macro that writes the column list, and an expression with no alias give no name. Snowflake names an expression with no alias after its text, which is rarely the DDL name.\n\nReferences\n- [dbt model contracts](https://docs.getdbt.com/reference/resource-configs/contract)\n- [Snowflake identifier requirements](https://docs.snowflake.com/en/sql-reference/identifiers-syntax)",
+      "remediation": "List the columns explicitly and give each expression an alias with the DDL column name.",
+      "level": "information",
+      "severity": "low",
+      "tier": "migration",
+      "scope": "model",
+      "effort": "low",
+      "per_line": true,
+      "since": "0.3.0",
+      "examples": [
+        {
+          "title": "Expression with no alias",
+          "bad": "select price * qty from {{ ref('stg_lines') }}",
+          "good": "select price * qty as line_amount from {{ ref('stg_lines') }}"
+        }
+      ],
+      "references": [
+        {
+          "title": "dbt model contracts",
+          "url": "https://docs.getdbt.com/reference/resource-configs/contract"
+        },
+        {
+          "title": "Snowflake identifier requirements",
+          "url": "https://docs.snowflake.com/en/sql-reference/identifiers-syntax"
+        }
+      ]
+    },
+    {
+      "code": "SSC-EWI-DBTCOL0005",
+      "number": 5,
+      "kind": "EWI",
+      "name": "Column type differs from the DDL",
+      "short_description": "An output column has no explicit cast, or its cast type differs from the scai DDL type.",
+      "long_description": "Without a catalog, the type of an expression is known only from an outer `CAST(... AS t)`, `TRY_CAST`, or `::t`. This rule reports a column with no outer cast, or with a cast to another type.\n\nTypes are compared after normalization: `NVARCHAR` and `VARCHAR`, `DECIMAL` and `NUMBER`, the integer types and `NUMBER(38,0)`, and `DATETIME` and `TIMESTAMP_NTZ` are equal. With `type_compare: normalized` (the default), a type with no arguments matches the same type with arguments. With `type_compare: strict`, the arguments must be equal.\n\n`dbt-quality fix-columns` writes the DDL type as an outer cast.\n\nReferences\n- [Snowflake CAST](https://docs.snowflake.com/en/sql-reference/functions/cast)\n- [Snowflake data types](https://docs.snowflake.com/en/sql-reference/intro-summary-data-types)",
+      "remediation": "Cast the expression to the DDL type, for example `CAST(x AS NUMBER(18,2)) AS AMOUNT`. Run `dbt-quality fix-columns` to write the casts.",
+      "level": "warning",
+      "severity": "medium",
+      "tier": "migration",
+      "scope": "model",
+      "effort": "low",
+      "per_line": true,
+      "since": "0.3.0",
+      "examples": [
+        {
+          "title": "DDL type is NUMBER(18,2)",
+          "bad": "select amount::float as amount from {{ ref('stg_orders') }}",
+          "good": "select cast(amount as number(18,2)) as amount from {{ ref('stg_orders') }}"
+        }
+      ],
+      "references": [
+        {
+          "title": "Snowflake CAST",
+          "url": "https://docs.snowflake.com/en/sql-reference/functions/cast"
+        },
+        {
+          "title": "Snowflake data types",
+          "url": "https://docs.snowflake.com/en/sql-reference/intro-summary-data-types"
+        }
+      ]
+    },
+    {
+      "code": "SSC-EWI-DBTCOL0006",
+      "number": 6,
+      "kind": "EWI",
+      "name": "Column collation differs from the DDL",
+      "short_description": "A text output column has a collation that differs from the COLLATE in the scai DDL.",
+      "long_description": "scai keeps source collations, such as `COLLATE 'EN-CI-AS'` from SQL Server, on text columns. A model that builds the table must give the column the same collation, or comparisons and joins change behaviour. This rule checks only text columns. It reads a trailing `COLLATE '<c>'` or an outer `COLLATE(x, '<c>')`. Collation names are compared without case.\n\nReferences\n- [Snowflake collation support](https://docs.snowflake.com/en/sql-reference/collation)\n- [Snowflake CAST](https://docs.snowflake.com/en/sql-reference/functions/cast)",
+      "remediation": "Add the DDL collation, for example `CAST(x AS NVARCHAR(100)) COLLATE 'EN-CI-AS' AS STATUS`. Run `dbt-quality fix-columns` to write it.",
+      "level": "warning",
+      "severity": "medium",
+      "tier": "migration",
+      "scope": "model",
+      "effort": "low",
+      "per_line": true,
+      "since": "0.3.0",
+      "examples": [
+        {
+          "title": "DDL column is NVARCHAR(100) COLLATE 'EN-CI-AS'",
+          "bad": "select status from {{ ref('stg_orders') }}",
+          "good": "select cast(status as nvarchar(100)) collate 'EN-CI-AS' as status from {{ ref('stg_orders') }}"
+        }
+      ],
+      "references": [
+        {
+          "title": "Snowflake collation support",
+          "url": "https://docs.snowflake.com/en/sql-reference/collation"
+        },
+        {
+          "title": "Snowflake CAST",
+          "url": "https://docs.snowflake.com/en/sql-reference/functions/cast"
+        }
+      ]
+    },
+    {
+      "code": "SSC-EWI-DBTCOL0007",
+      "number": 7,
+      "kind": "EWI",
+      "name": "scai DDL file not read",
+      "short_description": "A file in `ddl_paths` did not parse, or its columns differ from the scai registry.",
+      "long_description": "The COL rules read every CREATE TABLE statement in `ddl_paths`. A statement that does not parse is skipped, so models built from that table get no column checks. When the scai project has a `registry/` folder, the parsed column names are also compared with `signature.columns` of each table record. A difference shows that the DDL file and the registry disagree.\n\nReferences\n- [Snowflake CREATE TABLE](https://docs.snowflake.com/en/sql-reference/sql/create-table)",
+      "remediation": "Correct the DDL file, or regenerate it with scai. If the parser rejects valid Snowflake syntax, report the statement to the dbt-quality maintainers.",
+      "level": "warning",
+      "severity": "low",
+      "tier": "migration",
+      "scope": "portfolio",
+      "effort": "low",
+      "per_line": true,
+      "since": "0.3.0",
+      "references": [
+        {
+          "title": "Snowflake CREATE TABLE",
+          "url": "https://docs.snowflake.com/en/sql-reference/sql/create-table"
+        }
+      ]
+    }
+  ]
+}

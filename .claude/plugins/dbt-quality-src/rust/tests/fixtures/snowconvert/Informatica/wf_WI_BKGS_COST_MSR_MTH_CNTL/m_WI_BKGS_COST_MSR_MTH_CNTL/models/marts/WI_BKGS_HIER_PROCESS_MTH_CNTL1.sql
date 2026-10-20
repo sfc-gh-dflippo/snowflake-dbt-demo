@@ -1,0 +1,30 @@
+{{ config(
+    alias='WI_BKGS_HIER_PROCESS_MTH_CNTL'
+) }}
+{{ config(materialized='table') }}
+-- Pre/Post SQL hooks: the orchestration task may override these defaults at runtime via dbt --vars.
+{% set pre_sql = var('m_WI_BKGS_COST_MSR_MTH_CNTL_wi_bkgs_hier_process_mth_cntl1_pre_sql', '') %}
+{% set post_sql = var('m_WI_BKGS_COST_MSR_MTH_CNTL_wi_bkgs_hier_process_mth_cntl1_post_sql', '') %}
+{% if pre_sql != '' and post_sql != '' %}
+  {{ config(pre_hook=pre_sql, post_hook=post_sql) }}
+{% elif pre_sql != '' %}
+  {{ config(pre_hook=pre_sql) }}
+{% elif post_sql != '' %}
+  {{ config(post_hook=post_sql) }}
+{% endif %}
+--** SSC-FDM-INF0058 - TABLE 'WI_BKGS_HIER_PROCESS_MTH_CNTL' IS USED AS BOTH SOURCE AND TARGET IN THIS MAPPING. DBT EXECUTION ORDER HAS BEEN ADJUSTED TO PREVENT CIRCULAR DATA CORRUPTION: SEE STAGING AND MART MODELS FOR DETAILS. **
+WITH source_data AS
+(
+   SELECT
+      FISCAL_YEAR_WEEK_NUM_INT,
+      RUN_BATCH_ID,
+      INC_FLAG
+   FROM
+      {{ ref('stg_raw__SQ_2_WI_BKGS_HIER_PROCESS_MTH_CNTL') }}
+)
+SELECT
+   sd.FISCAL_YEAR_WEEK_NUM_INT AS FISCAL_YEAR_WEEK_NUM_INT,
+   sd.RUN_BATCH_ID AS RUN_BATCH_ID,
+   sd.INC_FLAG AS INC_FLAG
+FROM
+   source_data AS sd

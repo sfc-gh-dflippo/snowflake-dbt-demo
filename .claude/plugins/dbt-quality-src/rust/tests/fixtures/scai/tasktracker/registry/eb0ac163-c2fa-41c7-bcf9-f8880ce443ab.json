@@ -1,0 +1,114 @@
+{
+  "codeStatus": {
+    "assessment": {
+      "containsCommit": false,
+      "exclusion": [],
+      "status": "inProgress"
+    },
+    "conversion": {
+      "converterVersion": "2.46.0-Pr.305",
+      "status": "completed",
+      "updatedAt": "2026-09-26T01:03:22Z"
+    },
+    "registration": {
+      "sourceId": "",
+      "status": "completed",
+      "updatedAt": "2026-09-26T01:03:22Z"
+    }
+  },
+  "dependencies": {
+    "dependsOn": [],
+    "hasTransitiveMissingDependencies": false,
+    "requiredBy": []
+  },
+  "extensions": {},
+  "files": {
+    "artifacts": {
+      "path": "artifacts/tasktracker/dbo/table/deprecatedtasks"
+    },
+    "converted": {
+      "checksum": "3a4ee827161b455831c8e20d88bee759",
+      "path": "snowflake/tasktracker/dbo/table/deprecatedtasks.sql"
+    },
+    "source": {
+      "path": "source/tasktracker/dbo/table/deprecatedtasks.sql"
+    }
+  },
+  "id": "eb0ac163-c2fa-41c7-bcf9-f8880ce443ab",
+  "inScope": true,
+  "isMissing": false,
+  "kind": "databaseObject",
+  "planning": {
+    "topologicalRank": 0
+  },
+  "schemaVersion": 1,
+  "signature": {
+    "columns": [
+      {
+        "isCaseSpecific": false,
+        "isPrimaryKey": true,
+        "name": "TaskID",
+        "nullable": true,
+        "targetName": "TaskID",
+        "targetType": "INT",
+        "type": "INT"
+      },
+      {
+        "isCaseSpecific": false,
+        "isPrimaryKey": false,
+        "name": "Title",
+        "nullable": true,
+        "targetName": "Title",
+        "targetType": "VARCHAR",
+        "type": "VARCHAR"
+      },
+      {
+        "isCaseSpecific": false,
+        "isPrimaryKey": false,
+        "name": "Status",
+        "nullable": true,
+        "targetName": "Status",
+        "targetType": "VARCHAR",
+        "type": "VARCHAR"
+      },
+      {
+        "isCaseSpecific": false,
+        "isPrimaryKey": false,
+        "name": "CreatedAt",
+        "nullable": true,
+        "targetName": "CreatedAt",
+        "targetType": "",
+        "type": "DATETIME"
+      },
+      {
+        "isCaseSpecific": false,
+        "isPrimaryKey": false,
+        "name": "DeprecatedAt",
+        "nullable": true,
+        "targetName": "DeprecatedAt",
+        "targetType": "",
+        "type": "DATETIME"
+      }
+    ],
+    "parameters": {
+      "arguments": [],
+      "returns": []
+    }
+  },
+  "source": {
+    "canonicalName": "dbo.DeprecatedTasks",
+    "format": "sql",
+    "name": "DeprecatedTasks",
+    "objectType": "table",
+    "platform": "sqlServer",
+    "schema": "dbo"
+  },
+  "target": {
+    "canonicalName": "dbo.DeprecatedTasks",
+    "format": "snowflakeSQL",
+    "name": "DeprecatedTasks",
+    "objectType": "table",
+    "schema": "dbo"
+  },
+  "updatedAt": "2026-09-26T01:03:22Z"
+}

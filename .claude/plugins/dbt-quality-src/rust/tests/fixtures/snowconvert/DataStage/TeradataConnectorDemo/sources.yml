@@ -1,0 +1,26 @@
+version: 2
+sources:
+  - name: raw
+    schema: YOUR_SCHEMA
+    database: YOUR_DB
+    tables:
+      - name: QUERY_TABLE
+      - name: TD_COLLIDE_A
+      - name: TD_COLLIDE_B
+  - name: raw_DbParams_schema
+    schema: "{{ var('DbParams.schema', 'DbParams.schema') }}"
+    database: YOUR_DB
+    tables:
+      - name: TABLE_A
+      - name: TABLE_B
+  - name: raw_InputSchema
+    schema: "{{ var('InputSchema', 'InputSchema') }}"
+    database: YOUR_DB
+    tables:
+      - name: QUERY_TABLE
+      - name: TD_PARAM_TABLE
+  - name: raw_TD_LITERAL_SCHEMA
+    schema: TD_LITERAL_SCHEMA
+    database: YOUR_DB
+    tables:
+      - name: TD_LITERAL_TABLE

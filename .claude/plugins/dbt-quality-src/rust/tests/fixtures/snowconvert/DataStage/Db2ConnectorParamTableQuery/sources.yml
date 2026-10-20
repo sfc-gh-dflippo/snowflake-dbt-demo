@@ -1,0 +1,8 @@
+version: 2
+sources:
+  - name: raw_pvDB2Schema
+    schema: "{{ var('pvDB2Schema', 'pvDB2Schema') }}"
+    database: YOUR_DB
+    tables:
+      - name: jpTableName01
+        identifier: "{{ var('jpTableName01', 'jpTableName01') }}"

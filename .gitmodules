@@ -1,0 +1,4 @@
+[submodule ".claude/plugins/dbt-quality-src/vendor/dbt"]
+	path = .claude/plugins/dbt-quality-src/vendor/dbt
+	url = https://github.com/dbt-labs/dbt.git
+	shallow = true

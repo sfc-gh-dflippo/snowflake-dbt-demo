@@ -1,0 +1,53 @@
+#!/bin/sh
+# Launcher: runs dbt-quality for this platform. It uses the first of:
+#   1. $DBT_QUALITY_EXE.
+#   2. A local build in bin/<target>/ (scripts/build-plugin.sh).
+#   3. A cached download in ${XDG_CACHE_HOME:-~/.cache}/dbt-quality/<version>/<target>/.
+# Otherwise it downloads the release archive for VERSION, checks its SHA-256, and caches it.
+# bin/dbt-quality.cmd does the same on Windows. Keep VERSION equal to the Cargo version.
+#
+# Integrity ceiling: the .sha256 file comes from the same release as the archive. It detects a
+# corrupt or partial download, not a release that was built wrong. Immutable releases block
+# changes after publication; `gh release verify-asset` checks the release attestation.
+set -eu
+VERSION=0.3.0
+here=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+case "$(uname -s)-$(uname -m)" in
+  Linux-x86_64) target=x86_64-unknown-linux-musl ;;
+  Linux-aarch64|Linux-arm64) target=aarch64-unknown-linux-musl ;;
+  Darwin-arm64) target=aarch64-apple-darwin ;;
+  Darwin-x86_64) target=x86_64-apple-darwin ;;
+  *) echo "dbt-quality: unsupported platform $(uname -s)-$(uname -m)" >&2; exit 1 ;;
+esac
+DBT_QUALITY_BIN="$here/dbt-quality"
+export DBT_QUALITY_BIN
+if [ -n "${DBT_QUALITY_EXE:-}" ]; then exec "$DBT_QUALITY_EXE" "$@"; fi
+if [ -x "$here/$target/dbt-quality" ]; then exec "$here/$target/dbt-quality" "$@"; fi
+
+cache="${XDG_CACHE_HOME:-$HOME/.cache}/dbt-quality/$VERSION/$target"
+bin="$cache/dbt-quality"
+if [ ! -x "$bin" ]; then
+  base="${DBT_QUALITY_DOWNLOAD_BASE:-https://github.com/sfc-gh-dflippo/snowflake-dbt-demo/releases/download}"
+  archive="dbt-quality-$target.tar.gz"
+  url="$base/dbt-quality-v$VERSION/$archive"
+  tmp=
+  fail() {
+    [ -n "$tmp" ] && rm -rf "$tmp"
+    echo "dbt-quality: $1" >&2
+    echo "dbt-quality: download $url and $url.sha256, or build with scripts/build-plugin.sh" >&2
+    exit 1
+  }
+  mkdir -p "$cache" || fail "cannot create $cache"
+  # The temporary directory is in the cache directory, so the final mv is an atomic rename.
+  tmp=$(mktemp -d "$cache/.download.XXXXXX") || fail "cannot create a directory in $cache"
+  # MCP clients wait about 30 s for a server to start. Both downloads together stay under that.
+  curl -fsSL --max-time 5 -o "$tmp/$archive.sha256" "$url.sha256" || fail "cannot download $url.sha256"
+  curl -fsSL --max-time 20 -o "$tmp/$archive" "$url" || fail "cannot download $url"
+  if command -v sha256sum >/dev/null 2>&1; then sum="sha256sum -c"; else sum="shasum -a 256 -c"; fi
+  (cd "$tmp" && $sum "$archive.sha256" >/dev/null 2>&1) || fail "SHA-256 mismatch for $archive"
+  tar -xzf "$tmp/$archive" -C "$tmp" || fail "cannot extract $archive"
+  chmod +x "$tmp/dbt-quality-$target/bin/dbt-quality" || fail "$archive has no bin/dbt-quality"
+  mv -f "$tmp/dbt-quality-$target/bin/dbt-quality" "$bin" || fail "cannot install $bin"
+  rm -rf "$tmp"
+fi
+exec "$bin" "$@"
