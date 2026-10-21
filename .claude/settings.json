@@ -1,0 +1,14 @@
+{
+  "extraKnownMarketplaces": {
+    "snowflake-dbt-demo": {
+      "source": {
+        "source": "github",
+        "repo": "sfc-gh-dflippo/snowflake-dbt-demo"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "dbt-quality@snowflake-dbt-demo": true,
+    "snowflake-dbt-migration@snowflake-dbt-demo": true
+  }
+}
