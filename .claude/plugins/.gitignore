@@ -1,0 +1,5 @@
+# The source copy mirrors upstream tracked files, which include synthetic
+# profiles.yml fixtures. Keep root ignore rules from dropping them.
+!dbt-quality-src/**/profiles.yml
+!dbt-quality-src/**/*.bak
+dbt-quality-src/rust/target/

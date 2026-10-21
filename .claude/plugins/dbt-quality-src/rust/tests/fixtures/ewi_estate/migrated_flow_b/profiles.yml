@@ -1,0 +1,11 @@
+default:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      account: xy12345.us-east-1
+      user: svc_etl
+      password: SuperSecret123!
+      database: ANALYTICS
+      schema: DEV
+      warehouse: TRANSFORM_WH
