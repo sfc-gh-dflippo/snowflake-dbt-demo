@@ -47,3 +47,14 @@ else
   echo "vendor/dbt is not initialized. Run: git submodule update --init, then rerun this script." >&2
 fi
 git -C "$dest" status --short -- "$dest" "$plugin"
+
+# Ignore rules in the demo repo (for example profiles.yml) would silently leave copied files untracked.
+ignored=$( {
+  grep '^plugin/' "$tracked" | sed "s#^plugin/#$plugin/#"
+  grep -v '^plugin/' "$tracked" | sed "s#^#$dest/#"
+} | git -C "$dest" check-ignore --no-index --stdin || true)
+if [ -n "$ignored" ]; then
+  echo "These copied files are ignored by the demo repo; add negation rules to .claude/plugins/.gitignore:" >&2
+  echo "$ignored" >&2
+  exit 1
+fi
