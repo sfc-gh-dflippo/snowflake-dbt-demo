@@ -158,9 +158,8 @@ package-lock.yml
 # SNOWFLAKE
 # ==============================================================================
 
-# Snowflake CLI secrets and session data
-.snowflake/secrets/
-.snowflake/session/
+# Local Snowflake CLI and Cortex Code data: secrets, sessions, plans, notes
+.snowflake/
 
 # Snowflake query results / exports
 *.csv.gz
