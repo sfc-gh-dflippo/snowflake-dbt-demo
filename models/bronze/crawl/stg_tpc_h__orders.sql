@@ -27,7 +27,9 @@ renamed as (
         o_comment as order_comment,
 
         -- Audit columns
-        current_timestamp() as _loaded_at
+        -- Stable watermark: the order date does not change between runs.
+        -- current_timestamp() would be the run time and defeat incremental filters.
+        o_orderdate::timestamp_ntz as _loaded_at
 
     from source
 )
