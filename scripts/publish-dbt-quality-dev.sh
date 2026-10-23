@@ -111,7 +111,8 @@ fi
 
 # 5. Commit, push, and publish. The release is immutable, so attach assets to a draft, then publish it.
 git add -A -- "$plugin" .claude-plugin/marketplace.json
-git commit -m "chore(dbt-quality): publish development build $tag
+# A rerun after a failed release finds the plugin already committed, so skip the commit.
+git diff --cached --quiet || git commit -m "chore(dbt-quality): publish development build $tag
 
 Binaries and plugin package from $src_repo run $run (commit $sha)."
 git push origin HEAD </dev/null
