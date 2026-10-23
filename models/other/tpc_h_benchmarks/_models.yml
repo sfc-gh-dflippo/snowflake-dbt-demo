@@ -39,6 +39,8 @@ models:
               - l_returnflag
               - l_linestatus
 
+  # Benchmark query samples one random part and region, so it has no stable grain.
+  # dbt-quality: ignore SSC-EWI-DBTTST0002
   - name: Q2_MINIMUM_COST_SUPPLIER_QUERY
     description: >
       TPC-H Query 2 (Minimum Cost Supplier). Finds the minimum-cost supplier for parts in a region.
