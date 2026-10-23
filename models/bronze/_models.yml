@@ -221,8 +221,6 @@ models:
         tests:
           - not_null
 
-  # No part or supplier model exists: TPC-H PART and SUPPLIER have no staging model in this demo.
-  # dbt-quality: ignore SSC-EWI-DBTTST0012
   - name: stg_tpc_h__lineitem
     description: >
       Staging model for TPC-H lineitem table. Demonstrates staging best practices for complex
@@ -252,6 +250,8 @@ models:
           - dbt_utils.expression_is_true:
               arguments:
                 expression: ">= 1"
+      # No part or supplier model exists: TPC-H PART and SUPPLIER have no staging model in this demo.
+      # dbt-quality: ignore SSC-EWI-DBTTST0012
       - name: part_key
         description: "Foreign key to parts table"
         data_type: number
