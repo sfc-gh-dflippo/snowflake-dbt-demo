@@ -1,3 +1,5 @@
+{#- dbt-quality: ignore-file SSC-EWI-DBTARC0004 -#}
+{#- ARC0004 waived: the other bronze models that read this source each demo one feature (hooks, CDC stream, incremental). This is the canonical staging model. -#}
 {{ config(
     tags=['staging', 'tpc_h']
 ) }}
