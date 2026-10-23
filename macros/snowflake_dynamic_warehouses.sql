@@ -1,3 +1,5 @@
+{#- dbt-quality: ignore-file SSC-EWI-DBTMAC0003 -#}
+{#- MAC0003 waived. Opt-in pre-hook set_warehouse(). The hook is commented out in dbt_project.yml as a teaching toggle. -#}
 {#
 This macro is designed to automatically change the warehouse after you populate the dynamic_warehouse_assignment model
 #}

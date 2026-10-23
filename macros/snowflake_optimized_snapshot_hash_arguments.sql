@@ -1,3 +1,5 @@
+{#- dbt-quality: ignore-file SSC-EWI-DBTMAC0003 -#}
+{#- MAC0003 waived. refresh_dbt_scd_id() is a one-time snapshot repair. Enable the commented pre-hook in dbt_project.yml to use it. -#}
 
 {#
     This macro returns the concatenated string without the MD5 function applied.
