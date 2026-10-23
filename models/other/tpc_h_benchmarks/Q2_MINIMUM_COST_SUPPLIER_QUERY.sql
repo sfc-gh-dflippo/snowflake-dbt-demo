@@ -1,3 +1,5 @@
+{#- dbt-quality: ignore-file SSC-EWI-DBTSQL0007, SSC-EWI-DBTSQL0011 -#}
+{#- Keeps the published TPC-H query text, including its comma joins. -#}
 /*
     dbt Feature Demonstration: TPC-H BENCHMARK QUERY Q2
 

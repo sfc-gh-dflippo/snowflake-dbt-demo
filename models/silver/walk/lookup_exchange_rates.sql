@@ -1,3 +1,5 @@
+{#- dbt-quality: ignore-file SSC-EWI-DBTARC0005, SSC-EWI-DBTARC0003 -#}
+{#- Legacy input of the fact_order_line_full_reload demo. int_fx_rates__daily replaces it for new models. -#}
 /*
     This model will figure out the exchange rates between many different currencies
 */

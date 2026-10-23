@@ -1,4 +1,4 @@
-{#- dbt-quality: ignore-file SSC-EWI-DBTINC0002, SSC-FDM-DBTINC0007 -#}
+{#- dbt-quality: ignore-file SSC-EWI-DBTINC0002, SSC-PRF-DBTINC0005, SSC-EWI-DBTARC0003 -#}
 {#-
     Simulate a query for the current year sales orders
     This demonstrates some of the Snowflake specific options
@@ -14,16 +14,14 @@
 
     The slice delete is also what makes the load idempotent, so no unique_key is
     needed and none should be added. Do not "fix" this into a merge or a
-    delete+insert strategy; the two dbt-quality rules waived above flag this
-    pattern, which is the pattern the model exists to demonstrate.
-
-    Decorative: merge_exclude_columns requires a unique_key and the merge
-    strategy, and this model intentionally has neither. Kept to show the option.
+    delete+insert strategy. INC0002 and INC0005 are waived above because they
+    flag this pattern, which is the pattern the model exists to demonstrate.
+    ARC0003 is waived because the model reads raw LINEITEM columns (L_ORDERKEY)
+    on purpose; stg_tpc_h__lineitem renames them.
 -#}
 
 {{ config(
-    materialized="incremental",
-    merge_exclude_columns = ["DBT_INSERT_TS"],
+    incremental_strategy="append",
     pre_hook="{% if is_incremental() %} DELETE FROM {{this}} WHERE SOURCE_SYSTEM_CODE = '{{ env_var('SOURCE_SYSTEM_CODE', 'UNKNOWN') }}' {% endif %}",
     alias='FACT_ORDER_LINE_FULL_RELOAD'
     )

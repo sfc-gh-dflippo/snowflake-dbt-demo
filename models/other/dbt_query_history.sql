@@ -11,6 +11,7 @@
 -#}
 {{- config(
     materialized='incremental',
+    incremental_strategy='merge',
     unique_key=['query_id', 'start_time'],
     full_refresh = false,
     on_schema_change='sync_all_columns'

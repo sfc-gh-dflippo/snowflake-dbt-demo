@@ -1,5 +1,3 @@
-{{ config(materialized = 'table') }}
-
 with dwao as (
     -- CSV with specific assignments to use instead of dynamic ones
     select

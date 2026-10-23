@@ -15,7 +15,6 @@
 */
 
 {{ config(
-    materialized='ephemeral',
     tags=['intermediate', 'customers'],
     alias='LKP_CUSTOMERS_WITH_ORDERS'
 ) }}

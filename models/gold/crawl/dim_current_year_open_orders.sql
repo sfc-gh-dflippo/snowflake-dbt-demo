@@ -1,3 +1,5 @@
+{#- dbt-quality: ignore-file SSC-EWI-DBTSQL0005 -#}
+{#- Passthrough of dim_orders by design: select * is the intended interface. -#}
 {{ config(
     alias='DIM_CURRENT_YEAR_OPEN_ORDERS'
 ) }}

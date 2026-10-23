@@ -16,7 +16,7 @@
 */
 
 {{ config(
-    materialized='incremental',
+    incremental_strategy='merge',
     unique_key=['order_key', 'line_number'],
     tags=['marts', 'core', 'facts'],
     alias='FACT_ORDER_LINE'
@@ -93,10 +93,29 @@ fact_order_lines as (
         on fx_rates.from_currency = 'USD'
         and fx_rates.to_currency = 'EUR'
         and orders.order_date between fx_rates.day_dt and fx_rates.end_date
+),
+
+-- cdc_hash_key detects changed rows. It excludes _loaded_at and _updated_at: both are the run time.
+-- A filter on _loaded_at selected every row, so the merge rewrote every row.
+final as (
+    select
+        fact_order_lines.*,
+        hash(
+            part_key, supplier_key, customer_key, quantity, extended_price, discount, tax,
+            eur_conversion_rate, return_flag, line_status, ship_date, commit_date,
+            receipt_date, ship_instruct, ship_mode, line_comment, order_date, order_status_desc
+        ) as cdc_hash_key
+    from fact_order_lines
 )
 
-select * from fact_order_lines
+select final.*
+from final
 
 {% if is_incremental() %}
-    where _loaded_at > (select max(_loaded_at) from {{ this }})
+-- Keep only new lines and lines whose business columns changed.
+left join {{ this }} as existing
+    on final.order_key = existing.order_key
+    and final.line_number = existing.line_number
+where existing.order_key is null
+    or final.cdc_hash_key != existing.cdc_hash_key
 {% endif %}

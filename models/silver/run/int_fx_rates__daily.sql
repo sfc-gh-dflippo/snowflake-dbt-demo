@@ -1,5 +1,4 @@
 {{ config(
-    materialized='table',
     tags=['intermediate', 'fx_rates'],
     alias='LKP_EXCHANGE_RATES'
 ) }}

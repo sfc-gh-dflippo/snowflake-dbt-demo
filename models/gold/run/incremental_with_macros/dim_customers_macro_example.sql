@@ -17,12 +17,11 @@
 
 {#- The following config will use the default variable values
     default_integration_key = "integration_id",
-    default_scd_cdc_hash_key = "cdc_hash_key",
     default_updated_at_column = "dbt_updated_ts",
     default_inserted_at_column = "dbt_inserted_ts" -#}
 
 {{ config(
-    materialized="incremental",
+    incremental_strategy="merge",
     unique_key="customer_surrogate_key",
     merge_exclude_columns=["customer_surrogate_key", "integration_id", "dbt_inserted_ts"],
     transient=false,

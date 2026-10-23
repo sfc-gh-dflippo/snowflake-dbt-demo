@@ -21,13 +21,17 @@ models:
         description: "Primary key for order"
         data_type: number
         tests:
-          - not_null
-          - unique
+          - dbt_constraints.primary_key
       - name: customer_key
         description: "Foreign key to customer dimension"
         data_type: number
         tests:
           - not_null
+          # Test only: dbt_constraints creates no constraint on a dynamic table.
+          - dbt_constraints.foreign_key:
+              arguments:
+                pk_table_name: ref('dim_customers')
+                pk_column_name: customer_key
       - name: order_status
         description: "Order status"
         data_type: varchar
@@ -103,8 +107,7 @@ models:
         description: "Customer identifier"
         data_type: number
         tests:
-          - not_null
-          - unique
+          - dbt_constraints.primary_key
       - name: CUSTOMER_NAME
         description: "Customer name"
         data_type: varchar
@@ -201,13 +204,17 @@ models:
         description: "Primary key for order"
         data_type: number
         tests:
-          - not_null
-          - unique
+          - dbt_constraints.primary_key
       - name: customer_key
         description: "Foreign key to customer dimension"
         data_type: number
         tests:
           - not_null
+          # Test only: the model is a view, so dbt_constraints creates no constraint.
+          - dbt_constraints.foreign_key:
+              arguments:
+                pk_table_name: ref('dim_customers')
+                pk_column_name: customer_key
       - name: order_status
         description: "Order status (always 'O' for open)"
         data_type: varchar
@@ -252,8 +259,7 @@ models:
         description: "Primary key for customer dimension"
         data_type: number
         tests:
-          - not_null
-          - unique
+          - dbt_constraints.primary_key
       - name: customer_name
         description: "Customer name"
         data_type: varchar
@@ -287,10 +293,10 @@ models:
         data_type: number
         tests:
           - not_null
-          - relationships:
+          - dbt_constraints.foreign_key:
               arguments:
-                to: ref('stg_tpc_h__nations')
-                field: nation_key
+                pk_table_name: ref('stg_tpc_h__nations')
+                pk_column_name: nation_key
       - name: nation_name
         description: "Name of customer's nation"
         data_type: varchar
@@ -301,6 +307,11 @@ models:
         data_type: number
         tests:
           - not_null
+          # Test only: the parent is ephemeral, so dbt_constraints creates no constraint.
+          - dbt_constraints.foreign_key:
+              arguments:
+                pk_table_name: ref('stg_tpc_h__regions')
+                pk_column_name: region_key
       - name: total_orders
         description: "Total number of orders placed by customer"
         data_type: number
@@ -351,6 +362,13 @@ models:
         data_type: timestamp_ntz
         tests:
           - not_null
+      - name: cdc_hash_key
+        description:
+          "Hash of the business columns. The incremental filter uses it to select only new or
+          changed rows. Excludes _loaded_at."
+        data_type: number
+        tests:
+          - not_null
 
   - name: dim_orders
     description: >
@@ -362,17 +380,16 @@ models:
         description: "Primary key for order dimension"
         data_type: number
         tests:
-          - not_null
-          - unique
+          - dbt_constraints.primary_key
       - name: customer_key
         description: "Foreign key to customer dimension"
         data_type: number
         tests:
           - not_null
-          - relationships:
+          - dbt_constraints.foreign_key:
               arguments:
-                to: ref('dim_customers')
-                field: customer_key
+                pk_table_name: ref('dim_customers')
+                pk_column_name: customer_key
       - name: order_status
         description: "Raw order status code"
         data_type: varchar
@@ -426,6 +443,10 @@ models:
         data_type: number
         tests:
           - not_null
+          - dbt_constraints.foreign_key:
+              arguments:
+                pk_table_name: ref('clean_nations')
+                pk_column_name: nation_key
       - name: value_segment
         description: "Customer value segment (denormalized)"
         data_type: varchar
@@ -467,6 +488,13 @@ models:
       - name: _updated_at
         description: "Dimension record update timestamp"
         data_type: timestamp_ntz
+        tests:
+          - not_null
+      - name: cdc_hash_key
+        description:
+          "Hash of the business columns. The incremental filter uses it to select only new or
+          changed rows. Excludes _loaded_at."
+        data_type: number
         tests:
           - not_null
 
@@ -520,14 +548,13 @@ models:
         description: "Primary key for calendar day"
         data_type: number
         tests:
-          - not_null
-          - unique
+          - dbt_constraints.primary_key
       - name: day_dt
         description: "Calendar date"
         data_type: date
         tests:
           - not_null
-          - unique
+          - dbt_constraints.unique_key
       - name: DAY_TEXT
         description: "Day of week name"
         data_type: varchar
@@ -558,8 +585,7 @@ models:
         description: "Customer identifier"
         data_type: number
         tests:
-          - not_null
-          - unique
+          - dbt_constraints.primary_key
       - name: customer_name
         description: "Customer name"
         data_type: varchar
@@ -597,9 +623,9 @@ models:
       business metrics with averages and totals. Optimized for time-series analysis and supplier
       performance reporting.
     tests:
-      - dbt_utils.unique_combination_of_columns:
+      - dbt_constraints.primary_key:
           arguments:
-            combination_of_columns:
+            column_names:
               - supplier_key
               - order_year
               - order_month
@@ -745,10 +771,10 @@ models:
         data_type: number
         tests:
           - not_null
-          - relationships:
+          - dbt_constraints.foreign_key:
               arguments:
-                to: ref('dim_orders')
-                field: order_key
+                pk_table_name: ref('dim_orders')
+                pk_column_name: order_key
       - name: line_number
         description: "Line number within order (part of composite PK)"
         data_type: number
@@ -772,10 +798,10 @@ models:
         data_type: number
         tests:
           - not_null
-          - relationships:
+          - dbt_constraints.foreign_key:
               arguments:
-                to: ref('dim_customers')
-                field: customer_key
+                pk_table_name: ref('dim_customers')
+                pk_column_name: customer_key
       - name: quantity
         description: "Quantity of items in the line"
         data_type: number
@@ -903,6 +929,13 @@ models:
       - name: _updated_at
         description: "Fact record update timestamp"
         data_type: timestamp_ntz
+        tests:
+          - not_null
+      - name: cdc_hash_key
+        description:
+          "Hash of the business columns. The incremental filter uses it to select only new or
+          changed rows. Excludes _loaded_at."
+        data_type: number
         tests:
           - not_null
 

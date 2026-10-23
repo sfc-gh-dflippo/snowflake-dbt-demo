@@ -1,7 +1,7 @@
-{#- dbt-quality: ignore-file SSC-FDM-DBTINC0007 -#}
 {{
     config(
         materialized="incremental",
+        incremental_strategy="append",
         transient=false,
         alias='DIM_CUSTOMER_CHANGES'
     )

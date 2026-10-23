@@ -13,7 +13,7 @@
     matched nothing and this model returned 0 rows. 35 years covers the full range
     with margin. If the demo data is ever refreshed to recent dates, narrow it back.
 -#}
-{{ config(unique_key='metric_date') }}
+{{ config(incremental_strategy='merge', unique_key='metric_date') }}
 
 {% set current_year = run_started_at.strftime("%Y") | int %}
 {% set previous_year = current_year - 1 %}

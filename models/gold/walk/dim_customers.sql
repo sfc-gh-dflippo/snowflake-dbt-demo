@@ -17,6 +17,7 @@
 
 {{ config(
     materialized='incremental',
+    incremental_strategy='merge',
     unique_key='customer_key',
     tags=['marts', 'core', 'dimensions'],
     alias='DIM_CUSTOMERS'
@@ -87,10 +88,29 @@ enriched_customers as (
         on customers_base.customer_key = customer_orders.customer_key
     left join nations
         on customers_base.nation_key = nations.nation_key
+),
+
+-- cdc_hash_key detects changed rows. It excludes _loaded_at and _updated_at: both are the run time.
+-- A filter on _loaded_at selected every row, so the merge rewrote every row.
+-- The DIM_CUSTOMERS stream in dim_customer_changes then logged unchanged customers.
+final as (
+    select
+        enriched_customers.*,
+        hash(
+            customer_name, customer_address, customer_phone, account_balance,
+            market_segment, customer_comment, nation_key, nation_name, region_key,
+            total_orders, open_orders, has_orders_flag, has_open_orders_flag, value_segment
+        ) as cdc_hash_key
+    from enriched_customers
 )
 
-select * from enriched_customers
+select final.*
+from final
 
 {% if is_incremental() %}
-    where _loaded_at > (select max(_loaded_at) from {{ this }})
+-- Keep only new customers and customers whose business columns changed.
+left join {{ this }} as existing
+    on final.customer_key = existing.customer_key
+where existing.customer_key is null
+    or final.cdc_hash_key != existing.cdc_hash_key
 {% endif %}

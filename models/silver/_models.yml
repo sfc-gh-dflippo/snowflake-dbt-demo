@@ -22,19 +22,23 @@ models:
         description: "Primary key for nations table"
         data_type: number
         tests:
-          - not_null
-          - unique
+          - dbt_constraints.primary_key
       - name: nation_name
         description: "Cleaned and standardized nation name"
         data_type: varchar
         tests:
           - not_null
-          - unique
+          - dbt_constraints.unique_key
       - name: region_key
         description: "Foreign key reference to regions table"
         data_type: number
         tests:
           - not_null
+          # Test only: the parent is ephemeral, so dbt_constraints creates no constraint.
+          - dbt_constraints.foreign_key:
+              arguments:
+                pk_table_name: ref('stg_tpc_h__regions')
+                pk_column_name: region_key
       - name: nation_comment
         description: "Cleaned nation comments"
         data_type: varchar
@@ -89,8 +93,7 @@ models:
         description: "Customer identifier (primary key from staging)"
         data_type: number
         tests:
-          - not_null
-          - unique
+          - dbt_constraints.primary_key
       - name: order_count
         description: "Total number of orders placed by customer"
         data_type: number
@@ -120,8 +123,7 @@ models:
         description: "Customer identifier"
         data_type: number
         tests:
-          - not_null
-          - unique
+          - dbt_constraints.primary_key
       - name: customer_name
         description: "Customer name"
         data_type: varchar
@@ -191,9 +193,9 @@ models:
       lead() window function. Handles time-series data gaps and provides business-ready rate
       periods.
     tests:
-      - dbt_utils.unique_combination_of_columns:
+      - dbt_constraints.primary_key:
           arguments:
-            combination_of_columns:
+            column_names:
               - day_dt
               - from_currency
               - to_currency

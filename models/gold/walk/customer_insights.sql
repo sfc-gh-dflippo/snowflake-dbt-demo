@@ -1,5 +1,4 @@
 {{ config(
-    materialized='table',
     tags=['gold', 'walk', 'analytics']
 ) }}
 

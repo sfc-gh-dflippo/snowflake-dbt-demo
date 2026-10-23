@@ -1,5 +1,6 @@
 {{ config(
     materialized='incremental',
+    incremental_strategy='merge',
     unique_key='customer_key',
     pre_hook=[
         "{% if not is_incremental() %} drop stream if exists {{this.database}}.{{this.schema}}.{{this.identifier}}_ST {% endif %}"

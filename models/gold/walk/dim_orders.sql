@@ -1,5 +1,6 @@
 {{ config(
     materialized='incremental',
+    incremental_strategy='merge',
     unique_key='order_key',
     tags=['marts', 'core', 'dimensions'],
     alias='DIM_ORDERS'
@@ -64,10 +65,27 @@ enriched_orders as (
     from orders_base
     left join customers
         on orders_base.customer_key = customers.customer_key
+),
+
+-- cdc_hash_key detects changed rows. It excludes _loaded_at and _updated_at: both are the run time.
+-- A filter on _loaded_at selected every row, so the merge rewrote every row.
+final as (
+    select
+        enriched_orders.*,
+        hash(
+            customer_key, order_status, total_price, order_date, order_priority, clerk,
+            ship_priority, order_comment, customer_name, nation_key, value_segment
+        ) as cdc_hash_key
+    from enriched_orders
 )
 
-select * from enriched_orders
+select final.*
+from final
 
 {% if is_incremental() %}
-    where _loaded_at > (select max(_loaded_at) from {{ this }})
+-- Keep only new orders and orders whose business columns changed.
+left join {{ this }} as existing
+    on final.order_key = existing.order_key
+where existing.order_key is null
+    or final.cdc_hash_key != existing.cdc_hash_key
 {% endif %}

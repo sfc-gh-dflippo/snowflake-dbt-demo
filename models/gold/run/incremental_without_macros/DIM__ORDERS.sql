@@ -5,7 +5,7 @@
 {%- set scd_dbt_inserted_at = "dbt_inserted_ts" -%}
 
 {{ config(
-    materialized = "incremental",
+    incremental_strategy = "merge",
     unique_key=scd_surrogate_key,
     merge_exclude_columns = [scd_surrogate_key, scd_dbt_inserted_at],
     transient=false,

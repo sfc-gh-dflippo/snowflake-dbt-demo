@@ -27,7 +27,7 @@ models:
         data_type: varchar
         tests:
           - not_null
-          - unique
+          - dbt_constraints.unique_key
       - name: region_key
         description: "Foreign key reference to regions table"
         data_type: number
@@ -61,7 +61,7 @@ models:
         data_type: varchar
         tests:
           - not_null
-          - unique
+          - dbt_constraints.unique_key
       - name: region_comment
         description: "Comments about the region"
         data_type: varchar
@@ -193,7 +193,9 @@ models:
   - name: stg_customers_with_tests
     description: >
       Bronze layer customer data with quality checks and audit hooks. Demonstrates intermediate
-      staging with data quality patterns. Includes quality flags and audit columns.
+      staging with data quality patterns. Includes quality flags and audit columns. It is a second
+      staging model on TPC_H.CUSTOMER by design: it teaches data quality flags, and
+      stg_tpc_h__customers stays the main staging model.
     columns:
       - name: c_custkey
         description: "Customer primary key"
@@ -342,9 +344,9 @@ models:
       external data sources. Time-series financial data with different schema patterns. Shows how to
       handle non-TPC-H data sources consistently.
     tests:
-      - dbt_utils.unique_combination_of_columns:
+      - dbt_constraints.primary_key:
           arguments:
-            combination_of_columns:
+            column_names:
               - rate_date
               - base_currency
               - quote_currency
@@ -388,6 +390,8 @@ models:
     description: >
       Advanced incremental staging model for TPC-H orders. Demonstrates incremental materialization
       with complex business logic. Features advanced Jinja templating and schema evolution handling.
+      It is a second staging model on TPC_H.ORDERS by design: it teaches incremental staging, and
+      stg_tpc_h__orders stays the main staging model.
     columns:
       - name: o_orderkey
         description: "Primary key for orders table"
@@ -446,7 +450,9 @@ models:
   - name: customer_cdc_stream
     description: >
       CDC stream model for customer changes. Demonstrates Change Data Capture patterns using
-      Snowflake streams. Advanced pattern for real-time data processing.
+      Snowflake streams. Advanced pattern for real-time data processing. It is a third staging model
+      on TPC_H.CUSTOMER by design: it teaches the stream pattern, and stg_tpc_h__customers stays the
+      main staging model.
     columns:
       - name: customer_key
         description: "Customer identifier"

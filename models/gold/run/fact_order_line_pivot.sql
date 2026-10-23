@@ -12,6 +12,7 @@
 
 {{ config(
     alias='FACT_ORDER_LINE_PIVOT',
+    incremental_strategy='merge',
     unique_key=['supplier_key', 'part_key'],
     on_schema_change='sync_all_columns'
 ) }}

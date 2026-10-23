@@ -1,11 +1,13 @@
+{#- dbt-quality: ignore-file SSC-EWI-DBTARC0003, SSC-PRF-DBTINC0009 -#}
+{#- ARC0003: star(source) keeps the raw TPC-H column names on purpose.
+    INC0009: the 90-day window plus open orders is the intended merge window; it needs no target read. -#}
 {#- The following config will use the default variable values
     default_integration_key = "integration_id",
-    default_scd_cdc_hash_key = "cdc_hash_key",
     default_updated_at_column = "dbt_updated_ts",
     default_inserted_at_column = "dbt_inserted_ts" -#}
 
 {{ config(
-    materialized="incremental",
+    incremental_strategy="merge",
     unique_key='o_order_wid',
     merge_exclude_columns=["o_order_wid", "integration_id", "dbt_inserted_ts"],
     transient=false,
