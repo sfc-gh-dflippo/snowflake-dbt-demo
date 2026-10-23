@@ -1,3 +1,4 @@
+{# Caller: dbt run-operation copy_log_to_snowflake #}
 {%- macro copy_log_to_snowflake() -%}
 
   {%- set query -%}

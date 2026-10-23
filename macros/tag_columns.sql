@@ -1,4 +1,5 @@
 {# This is a simple post-hook macro that can be added to tag columns on tables and views #}
+{# Caller: dbt run-operation get_tag_cache. No model in this project calls it. #}
 {% macro get_tag_cache(tag_database='COMMON_UTILITY', tag_schema='SECURITY') -%}
     {% if execute and flags.WHICH in ('run', 'build') %}
 
@@ -32,6 +33,7 @@
 {%- endmacro %}
 
 {# This is a post-hook macro that can be added to tag columns on tables and views #}
+{# Caller: a model post-hook, or dbt run-operation tag_columns. No model in this project calls it. #}
 {% macro tag_columns(tag_cache = var('tag_cache', None)) -%}
     {% if execute and flags.WHICH in ('run', 'build') and model %}
 
