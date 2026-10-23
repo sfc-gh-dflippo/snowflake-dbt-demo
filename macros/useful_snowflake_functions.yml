@@ -10,6 +10,8 @@ macros:
           in tests/singular/test_ghost_key_and_integration_key_macros.sql."
     description: |
       ### integration_key(['COL1', 'COL2', ... ])
+      * Supported argument forms: a list with one item, a list with many items, and an empty list (returns empty text).
+      * Tested by `test_ghost_key_and_integration_key_macros`.
       * Accepts a list of columns and returns text like the following:
       `COALESCE(COL1::VARCHAR, '') || '~' || COALESCE(COL2::VARCHAR, '') || '~' || COALESCE(COL3::VARCHAR, '')`
 
@@ -39,7 +41,7 @@ macros:
       ### insert_ghost_key('KEY_COL', 0, {'COL2': "'N/A'"})
       * Post-hook macro. Inserts one unknown-member row into `this` when the key value is not present.
       * `additional_column_dict` is optional. Supported forms: omitted, `{}`, `none`, a dict with one entry, a dict with many entries.
-      * `insert_ghost_key_sql(relation, ...)` builds the statement without running it. The singular test `test_ghost_key_and_integration_key_macros` checks each argument form.
+      * `insert_ghost_key_sql(...)` builds the statement without running it. The singular test `test_ghost_key_and_integration_key_macros` checks each argument form.
     docs:
       show: true
 
