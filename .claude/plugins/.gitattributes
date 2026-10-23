@@ -1,4 +1,0 @@
-# dbt-quality-src is synced byte for byte from migrations-ai-skills, which has no line-ending
-# normalization. Some test fixtures have mixed line endings on purpose. This file sits outside
-# the synced tree because sync-from-upstream.sh deletes files that upstream does not track.
-dbt-quality-src/** -text

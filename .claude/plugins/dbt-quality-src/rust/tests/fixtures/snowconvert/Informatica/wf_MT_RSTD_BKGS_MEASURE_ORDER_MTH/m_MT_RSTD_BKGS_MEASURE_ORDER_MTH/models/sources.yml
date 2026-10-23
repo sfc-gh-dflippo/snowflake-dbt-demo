@@ -1,8 +1,0 @@
-version: 2
-sources:
-  - name: raw
-    schema: YOUR_SCHEMA
-    database: YOUR_DB
-    tables:
-      - name: MT_RSTD_BKGS_MEASURE_ORDER_MTH
-      - name: WI_RSTD_BKGS_MEASURE_ORDER_MTH

@@ -1,8 +1,0 @@
---** SSC-FDM-0007 - MISSING DEPENDENT OBJECT "EMP" **
---** SSC-FDM-0007 - MISSING DEPENDENT OBJECT "EMP" **
-SELECT
-   EMP_ID
-FROM
-   {{ source('raw', 'EMP') }}
-WHERE
-   seq8() + 1 <= 10

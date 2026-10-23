@@ -1,8 +1,0 @@
-/* leading comment */
---** SSC-FDM-0007 - MISSING DEPENDENT OBJECT "QUERY_TABLE" **
---** SSC-FDM-0007 - MISSING DEPENDENT OBJECT "QUERY_TABLE" **
-SELECT
-   COL1,
-   COL2
-FROM
-   {{ source('raw', 'QUERY_TABLE') }}

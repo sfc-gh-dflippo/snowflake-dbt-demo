@@ -11,9 +11,9 @@
 # 5. Security (scan for secrets)
 
 # Do not touch vendored plugin files. Leave them exactly as shipped.
-# dbt-quality is synced from migrations-ai-skills by
-# .claude/plugins/dbt-quality-src/scripts/sync-from-upstream.sh, so it must stay byte-identical.
-exclude: '^\.claude/(skills/snowflake-migration|plugins/dbt-quality(-src)?)/'
+# scripts/publish-dbt-quality-dev.sh copies dbt-quality from a monorepo CI build,
+# so it must stay byte-identical.
+exclude: '^\.claude/(skills/snowflake-migration|plugins/dbt-quality)/'
 
 repos:
   # ============================================================================

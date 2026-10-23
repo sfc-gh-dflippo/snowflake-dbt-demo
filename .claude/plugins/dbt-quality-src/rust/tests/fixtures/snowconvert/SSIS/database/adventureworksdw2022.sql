@@ -1,3 +1,0 @@
-﻿CREATE DATABASE IF NOT EXISTS AdventureWorksDW2022
-COMMENT = '{ "origin": "sf_sc", "name": "snowconvert", "version": {  "major": 2,  "minor": 42,  "patch": "5-Pr.112" }, "attributes": {  "component": "transact",  "convertedOn": "08/31/2026",  "domain": "no-domain-provided",  "migrationid": "AFqgAYoc4nmXmiUg6NUuiQ==" }}'
-DEFAULT_DDL_COLLATION='EN-CI-AS' /*** SSC-FDM-TS0071 - ONLY THE DEFAULT COLUMN COLLATION IS APPLIED; OTHER EFFECTS OF THE SOURCE DATABASE COLLATION ARE NOT SUPPORTED ***/ /*** SSC-FDM-TS0002 - COLLATION FOR VALUE CP1 NOT SUPPORTED ***/;

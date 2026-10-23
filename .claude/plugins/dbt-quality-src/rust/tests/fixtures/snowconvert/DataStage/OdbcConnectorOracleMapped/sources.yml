@@ -1,7 +1,0 @@
-version: 2
-sources:
-  - name: raw
-    schema: YOUR_SCHEMA
-    database: YOUR_DB
-    tables:
-      - name: EMP
