@@ -178,7 +178,9 @@ models:
         description: "Comments about the order"
         data_type: varchar
       - name: _loaded_at
-        description: "Timestamp when record was loaded into staging"
+        description:
+          "Watermark for incremental filters. Equals order_date; stable between runs (not the run
+          time)."
         data_type: timestamp_ntz
         tests:
           - not_null
@@ -333,7 +335,9 @@ models:
         description: "Comments about the line item"
         data_type: varchar
       - name: _loaded_at
-        description: "Timestamp when record was loaded into staging"
+        description:
+          "Watermark for incremental filters. Equals receipt_date; stable between runs (not the run
+          time)."
         data_type: timestamp_ntz
         tests:
           - not_null
