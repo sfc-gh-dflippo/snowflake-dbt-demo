@@ -377,7 +377,7 @@ terms. Do not claim certified compliance. Keep exact code identifiers and execut
    list consistent with the structured `references` array. State version limits and local policy
    choices. Keep names single-line and at most 60 characters, without annotation/Jinja delimiters;
    keep short descriptions at most 160 characters.
-3. Add the detector in `rust/crates/dbt-quality-core/src/rules/<pack>.rs` and register it in
+3. Add the detector in `ai/crates/dbt-quality/dbt-quality-core/src/rules/<pack>.rs` and register it in
    `DETECTORS` with `Detect::Model`, `Detect::Project`, or `Detect::Portfolio`. Its scope must match
    the record. A test checks that records and detectors correspond.
 4. Build findings with `Suggestion::new(code, message)`, evidence, and finding-specific remediation
@@ -387,6 +387,6 @@ terms. Do not claim certified compliance. Keep exact code identifiers and execut
 5. Add a positive test and a clean counterpart with `crate::testing::TempProject`. Include valid
    exceptions and missing-input cases. Confirm both that the intended pattern fires and that the
    accepted form stays silent.
-6. Regenerate the catalog: `dbt-quality rules --format markdown > plugin/skills/dbt-audit/references/rule-catalog.md`.
+6. Regenerate the catalog with `scripts/build-catalog.sh`, which writes `docs/rule-catalog.md`.
    `scripts/check-catalog.sh` fails when the committed copy differs. Run the Rust tests and report
    checks before treating the change as complete.

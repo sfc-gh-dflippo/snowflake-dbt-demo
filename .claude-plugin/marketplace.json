@@ -10,7 +10,7 @@
       "name": "dbt-quality",
       "source": "./.claude/plugins/dbt-quality",
       "description": "dbt anti-pattern audit with an HTML report, a Problems-panel linter, per-file validation, and an MCP server that writes SSC-EWI-DBT* markers. The plugin downloads its native binary from this repository's releases on first use.",
-      "version": "0.3.0",
+      "version": "0.3.1-pr9528",
       "author": {
         "name": "Snowflake"
       }

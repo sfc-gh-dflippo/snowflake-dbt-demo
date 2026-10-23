@@ -147,7 +147,6 @@ Show unsaved state. Confirm before an in-report switch or reset discards edits. 
 reliable tab-close protection. Never overwrite the original project file or offer a Save-to-project
 action. The browser cannot enforce the linter's clean-Git-tree safeguard. Tell the reader to apply
 the edit, test it, and run the audit again. Do not mark findings resolved after an unverified edit.
-WASM would not bypass browser file permissions, and this report is not a WASM linter.
 
 ### Suppressed findings, skipped checks, and errors
 
@@ -174,10 +173,10 @@ color alone.
 ## Sample and verification
 
 The README links to `sample-report.html`, generated from the tracked synthetic `ewi_estate` fixture.
-Regenerate it from the product root:
+Regenerate it from the repository root:
 
 ```bash
-cargo +1.96 run --locked --manifest-path rust/Cargo.toml -p dbt-quality-core --example sample_report
+cargo run --locked --manifest-path ai/Cargo.toml -p dbt-quality-core --example sample_report
 ```
 
 Append `-- --check` to check drift without rewriting the sample. Never hand-edit generated HTML.
