@@ -1,3 +1,5 @@
+{#- dbt-quality: ignore-file SSC-EWI-DBTARC0004 -#}
+{#- ARC0004 waived: the other bronze models that read this source each demo one feature (hooks, CDC stream, incremental). This is the canonical staging model. -#}
 {{ config(
     tags=['staging', 'tpc_h']
 ) }}
@@ -27,7 +29,9 @@ renamed as (
         o_comment as order_comment,
 
         -- Audit columns
-        current_timestamp() as _loaded_at
+        -- Stable watermark: the order date does not change between runs.
+        -- current_timestamp() would be the run time and defeat incremental filters.
+        o_orderdate::timestamp_ntz as _loaded_at
 
     from source
 )

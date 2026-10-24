@@ -1,3 +1,5 @@
+{#- dbt-quality: ignore-file SSC-EWI-DBTSQL0002 -#}
+{#- SQL0002 waived: this folder is the no-macro SCD pattern, written out in full to contrast with incremental_with_macros (get_scd_sql). Factoring it would remove the contrast. -#}
 /*
     dbt Feature Demonstration: INCREMENTAL MODEL WITHOUT MACROS
 

@@ -3,7 +3,7 @@
 {% macro get_scd_sql(scd_source_sql, surrogate_key=config.meta_get("surrogate_key")) -%}
 
 {%- set integration_key = config.meta_get("integration_key", var("default_integration_id", "integration_id")) -%}
-{%- set cdc_hash_key = config.meta_get("cdc_hash_key", var("default_cdc_hash_key", "cdc_hash_key")) -%}
+{%- set cdc_hash_key = config.meta_get("cdc_hash_key", var("default_scd_cdc_hash_key", "cdc_hash_key")) -%}
 {%- set updated_at_column = config.meta_get("updated_at_column", var("default_updated_at_column", "dbt_updated_ts")) -%}
 {%- set inserted_at_column = config.meta_get("inserted_at_column", var("default_inserted_at_column", "dbt_inserted_ts")) -%}
 

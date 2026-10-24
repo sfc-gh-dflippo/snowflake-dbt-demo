@@ -178,7 +178,9 @@ models:
         description: "Comments about the order"
         data_type: varchar
       - name: _loaded_at
-        description: "Timestamp when record was loaded into staging"
+        description:
+          "Watermark for incremental filters. Equals order_date; stable between runs (not the run
+          time)."
         data_type: timestamp_ntz
         tests:
           - not_null
@@ -248,6 +250,8 @@ models:
           - dbt_utils.expression_is_true:
               arguments:
                 expression: ">= 1"
+      # No part or supplier model exists: TPC-H PART and SUPPLIER have no staging model in this demo.
+      # dbt-quality: ignore SSC-EWI-DBTTST0012
       - name: part_key
         description: "Foreign key to parts table"
         data_type: number
@@ -333,7 +337,9 @@ models:
         description: "Comments about the line item"
         data_type: varchar
       - name: _loaded_at
-        description: "Timestamp when record was loaded into staging"
+        description:
+          "Watermark for incremental filters. Equals receipt_date; stable between runs (not the run
+          time)."
         data_type: timestamp_ntz
         tests:
           - not_null

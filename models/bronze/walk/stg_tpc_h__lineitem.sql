@@ -54,7 +54,9 @@ renamed as (
         l_comment as line_comment,
 
         -- Audit columns
-        current_timestamp() as _loaded_at
+        -- Stable watermark: the receipt date does not change between runs.
+        -- current_timestamp() would be the run time and defeat incremental filters.
+        l_receiptdate::timestamp_ntz as _loaded_at
 
     from source
 )

@@ -630,6 +630,8 @@ models:
               - order_year
               - order_month
     columns:
+      # No part or supplier model exists: TPC-H PART and SUPPLIER have no staging model in this demo.
+      # dbt-quality: ignore SSC-EWI-DBTTST0004
       - name: supplier_key
         description: "Foreign key to suppliers dimension (part of composite PK)"
         data_type: number
@@ -783,6 +785,8 @@ models:
           - dbt_utils.expression_is_true:
               arguments:
                 expression: ">= 1"
+      # No part or supplier model exists: TPC-H PART and SUPPLIER have no staging model in this demo.
+      # dbt-quality: ignore SSC-EWI-DBTTST0004
       - name: part_key
         description: "Foreign key to parts dimension"
         data_type: number
@@ -1044,19 +1048,19 @@ models:
 
   # Legacy models (to be deprecated)
   # Deprecated and example models: not worth full column modeling or key tests.
-  # dbt-quality: ignore SSC-EWI-DBTTST0002, SSC-EWI-DBTTST0003
+  # dbt-quality: ignore SSC-EWI-DBTTST0002
   - name: DIM__CUSTOMERS
     description:
       "Legacy customer dimension with SCD patterns (deprecated - use dim_customers instead)"
 
-  # dbt-quality: ignore SSC-EWI-DBTTST0002, SSC-EWI-DBTTST0003
+  # dbt-quality: ignore SSC-EWI-DBTTST0002
   - name: DIM__ORDERS
     description: "Legacy orders dimension with SCD patterns (deprecated - use dim_orders instead)"
 
-  # dbt-quality: ignore SSC-EWI-DBTTST0002, SSC-EWI-DBTTST0003
+  # dbt-quality: ignore SSC-EWI-DBTTST0002
   - name: dim_customers_macro_example
     description: "Customer dimension using macro patterns (example implementation)"
 
-  # dbt-quality: ignore SSC-EWI-DBTTST0002, SSC-EWI-DBTTST0003
+  # dbt-quality: ignore SSC-EWI-DBTTST0002
   - name: dim_orders_macro_example
     description: "Orders dimension using macro patterns (example implementation)"

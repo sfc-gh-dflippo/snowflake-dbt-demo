@@ -2,8 +2,16 @@ version: 2
 
 macros:
   - name: integration_key
+    arguments:
+      - name: field_list
+        type: list
+        description:
+          "List of column expressions. One item, many items and an empty list are supported. Tested
+          in tests/singular/test_ghost_key_and_integration_key_macros.sql."
     description: |
       ### integration_key(['COL1', 'COL2', ... ])
+      * Supported argument forms: a list with one item, a list with many items, and an empty list (returns empty text).
+      * Tested by `test_ghost_key_and_integration_key_macros`.
       * Accepts a list of columns and returns text like the following:
       `COALESCE(COL1::VARCHAR, '') || '~' || COALESCE(COL2::VARCHAR, '') || '~' || COALESCE(COL3::VARCHAR, '')`
 
@@ -14,5 +22,33 @@ macros:
       * Clustering a table can improve pruning on hash key columns but adds cost.
       * Developers should experiment with different orders of natural key columns using the same methodology as picking cluster keys.
       * Some tests have shown that joining on multiple columns can prune better because the optimizer chooses which columns to prune on.
+    docs:
+      show: true
+
+  - name: insert_ghost_key
+    arguments:
+      - name: key_column_name
+        type: string
+        description: "Key column of the ghost row."
+      - name: key_column_value
+        type: string
+        description: "SQL literal for the key, for example 0."
+      - name: additional_column_dict
+        type: dict
+        description:
+          "Optional map of column name to SQL literal. Pass {} or none to set only the key column."
+    description: |
+      ### insert_ghost_key('KEY_COL', 0, {'COL2': "'N/A'"})
+      * Post-hook macro. Inserts one unknown-member row into `this` when the key value is not present.
+      * `additional_column_dict` is optional. Supported forms: omitted, `{}`, `none`, a dict with one entry, a dict with many entries.
+      * `insert_ghost_key_sql(...)` builds the statement without running it. The singular test `test_ghost_key_and_integration_key_macros` checks each argument form.
+    docs:
+      show: true
+
+  - name: copy_log_to_snowflake
+    description: |
+      ### dbt run-operation copy_log_to_snowflake
+      * Run-operation macro. It has no callers in the project on purpose.
+      * Uploads `logs/dbt.log` to a temporary stage and loads it into the `DBT_LOG` table.
     docs:
       show: true

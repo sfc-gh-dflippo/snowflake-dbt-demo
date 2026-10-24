@@ -1,3 +1,5 @@
+{#- dbt-quality: ignore-file SSC-EWI-DBTSQL0002 -#}
+{#- SQL0002 waived: this folder is the no-macro SCD pattern, written out in full to contrast with incremental_with_macros (get_scd_sql). Factoring it would remove the contrast. -#}
 {%- set scd_surrogate_key = "order_surrogate_key" -%}
 {%- set scd_integration_key = "integration_id" -%}
 {%- set scd_cdc_hash_key = "cdc_hash_key" -%}

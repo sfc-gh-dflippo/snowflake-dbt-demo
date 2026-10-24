@@ -1,3 +1,5 @@
+{#- dbt-quality: ignore-file SSC-EWI-DBTMAC0003 -#}
+{#- MAC0003 waived. Opt-in post-hook dynamic_table_refresh_hook(). The hook is commented out in dbt_project.yml as a teaching toggle. -#}
 {#
     Either of these macros will cause dbt to automatically refresh dynamic tables. Without this, a dynamic table may not
     be up to date when queried in a downstream model.
