@@ -45,19 +45,17 @@ cortex plugin install <path-to-repo>/.claude/plugins/snowflake-dbt-migration
 Or from GitHub:
 
 ```bash
-cortex plugin install https://github.com/<org>/<repo> --path .claude/plugins/snowflake-dbt-migration
+cortex plugin install https://github.com/sfc-gh-dflippo/snowflake-dbt-demo/tree/main/.claude/plugins/snowflake-dbt-migration
 ```
 
 ### Claude Code CLI
 
-```bash
-claude plugin install <path-to-repo>/.claude/plugins/snowflake-dbt-migration
-```
-
-Or from GitHub:
+Claude Code installs plugins from a marketplace. This repository is one
+(`.claude-plugin/marketplace.json`). Add it from GitHub or from a local clone, then install:
 
 ```bash
-claude plugin install https://github.com/<org>/<repo> --path .claude/plugins/snowflake-dbt-migration
+claude plugin marketplace add sfc-gh-dflippo/snowflake-dbt-demo   # or: <path-to-repo>
+claude plugin install snowflake-dbt-migration@snowflake-dbt-demo
 ```
 
 ## Usage
