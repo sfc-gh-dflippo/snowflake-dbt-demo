@@ -10,7 +10,7 @@
 # corrupt or partial download, not a release that was built wrong. Immutable releases block
 # changes after publication; `gh release verify-asset` checks the release attestation.
 set -eu
-VERSION=0.3.1-pr9528
+VERSION=0.3.1-pr9958
 here=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 case "$(uname -s)-$(uname -m)" in
   Linux-x86_64) target=x86_64-unknown-linux-musl ;;

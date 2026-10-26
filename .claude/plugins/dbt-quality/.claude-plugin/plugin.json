@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "dbt-quality",
-  "version": "0.3.1-pr9528",
-  "description": "dbt quality tooling for Snowflake, built on dbt's Jinja parser with local SQL analysis: a project-wide anti-pattern audit with an HTML report, a Problems-panel linter, per-file validation, and an MCP server that writes SSC-EWI-DBT* markers into the dbt files so an agent can consolidate and fix migrated projects. 124 rules across project structure, parameters and vars, hooks, incremental loads, macros, query construction, materialization, tests, docs and conversion debt.",
+  "version": "0.3.1-pr9958",
+  "description": "dbt quality tooling for Snowflake, built on dbt's Jinja parser with local SQL analysis: a project-wide anti-pattern audit with an HTML report, a Problems-panel linter, per-file validation, and an MCP server that writes SSC-EWI-DBT* markers into the dbt files so an agent can consolidate and fix migrated projects. 126 rules across project structure, parameters and vars, hooks, incremental loads, macros, query construction, materialization, tests, docs and conversion debt.",
   "author": {
     "name": "Snowflake"
   },

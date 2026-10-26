@@ -23,19 +23,19 @@ rather than disabling the rule for the entire run.
 | Mechanism | Scope | Effect on the report |
 | --- | --- | --- |
 | `disabled_rules:` | One rule for the run | Listed as skipped, so readers know it was not checked. |
-| `ignore:` config entry | One rule at matching paths | Removed from outputs and counts. |
-| `-- dbt-quality: ignore-file <ids>` | One rule in one file | Removed from outputs and counts. |
-| `-- dbt-quality: ignore <ids>` | One rule at a reported line | Removed from outputs and counts. |
+| `ignore:` config entry | One rule at matching paths | Kept in the report as suppressed, with the waiver as the reason; not counted as active. |
+| `-- dbt-quality: ignore-file <ids>` | One rule in one file | Kept in the report as suppressed, with the waiver as the reason; not counted as active. |
+| `-- dbt-quality: ignore <ids>` | One rule at a reported line | Kept in the report as suppressed, with the waiver as the reason; not counted as active. |
 
-Use full rule codes. A line directive applies to the line it is on or the line immediately below
-it. Place it at the diagnostic's reported location. Config-related rules often anchor at
+Use full rule codes. A line directive written after code applies to that line. On a line of its
+own, it applies to its own line and the next non-blank line. Place it at the diagnostic's reported location. Config-related rules often anchor at
 `{{ config() }}`, but precise read-site rules can report another line. Use `ignore-file` only
 when a file-wide waiver is intended. Project- and portfolio-scoped findings need a configuration
 waiver; their `file` can be a directory or `<portfolio>`.
 
 If an expected finding is missing, search for `dbt-quality: ignore` and inspect the nearest
 `.dbt-quality.yml` for `ignore` and `disabled_rules`. The configuration may be in an ancestor of
-the audit root. See the plugin README for configuration lookup and usage examples.
+the audit root. See the dbt-quality README for configuration lookup and usage examples.
 
 ## Codes, kind, level, and severity
 
@@ -124,14 +124,15 @@ advice; a successful dbt build alone does not prove it correct.
 | SSC-EWI-DBTINC0001 | EWI | warning | critical | universal | model | Hook truncates or drops the model's own relation | A hook runs TRUNCATE or DROP on the model's own relation. |
 | SSC-EWI-DBTINC0002 | EWI | warning | high | universal | model | Hook deletes rows from the model relation | A hook deletes rows from the model's relation and may also reference another model. |
 | SSC-EWI-DBTINC0003 | EWI | warning | high | universal | project | Folder hook changes data once per model | A folder pre-hook or post-hook runs TRUNCATE, DELETE, INSERT, or CALL for each model that inherits it. |
-| SSC-EWI-DBTINC0008 | EWI | information | low | universal | model | Incremental strategy is unset or not recognized | incremental_strategy is unset or is not a built-in strategy recognized by this linter. |
+| SSC-EWI-DBTINC0008 | EWI | warning | low | universal | model | Incremental strategy is not recognized | incremental_strategy is not a built-in strategy recognized by this linter. |
 | SSC-EWI-DBTINC0010 | EWI | information | medium | universal | model | Hook writes to a different relation | A hook, or a macro called by a hook, writes to a relation other than the model output. |
 | SSC-EWI-DBTINC0015 | EWI | information | medium | universal | project | External loader may write to a dbt model | A task or procedure writes to a relation name that matches a dbt model. |
 | SSC-EWI-DBTINC0016 | EWI | warning | high | universal | project | Pre-hook updates the model's own relation | A pre-hook updates the model relation before the materialization runs. |
 | SSC-EWI-DBTINC0018 | EWI | warning | high | universal | project | Hook exports data to stage files | A hook runs COPY INTO a stage, directly or through a macro. |
 | SSC-EWI-DBTINC0019 | EWI | warning | critical | universal | project | Hook SQL comes from a runtime variable | A hook gets its SQL from var(), so command-line variables can change the executed statement. |
 | SSC-EWI-DBTINC0020 | EWI | warning | high | universal | project | Hook scope may differ from the orchestration scope | A hook macro uses raw variable_scope where orchestration may use a run-prefixed scope. |
-| SSC-FDM-DBTINC0007 | FDM | information | high | universal | model | Row-replacement strategy has no unique_key | An explicit merge or delete+insert strategy has no unique_key. |
+| SSC-EWI-DBTINC0022 | EWI | warning | high | universal | model | Incremental watermark is the run time | The incremental filter column is set to the current time in a parent model, so every row passes the filter. |
+| SSC-FDM-DBTINC0007 | FDM | information | high | universal | model | Row-replacement strategy has no unique_key | A merge or delete+insert strategy (explicit, or the unset Snowflake default merge) has no unique_key. |
 | SSC-FDM-DBTINC0011 | FDM | information | high | universal | model | Merge exclusion names a column not found in the model | A merge_exclude_columns entry is not found in the model SQL. |
 | SSC-FDM-DBTINC0012 | FDM | information | high | universal | model | Append model contains possible change-tracking columns | An append model includes names such as updated_at, status, or valid_to. |
 | SSC-FDM-DBTINC0021 | FDM | information | medium | universal | model | Incremental and full branches select different columns | The is_incremental() branch and its else branch have different select lists. |
@@ -148,7 +149,7 @@ advice; a successful dbt build alone does not prove it correct.
 
 | Rule | Kind | Level | Severity | Tier | Scope | Name | Signal |
 | ---- | ---- | ----- | -------- | ---- | ----- | ---- | ------ |
-| SSC-EWI-DBTMAC0001 | EWI | information | low | universal | project | High macro-to-model ratio | The number of project macros relative to models reaches the configured review threshold. |
+| SSC-EWI-DBTMAC0001 | EWI | information | low | universal | project | High macro-to-model ratio | The number of macros called from models, snapshots and tests, relative to models, reaches the configured review threshold. |
 | SSC-EWI-DBTMAC0002 | EWI | information | low | universal | project | Macro has one detected external call | The linter found one macro call outside the file that defines it. |
 | SSC-EWI-DBTMAC0003 | EWI | information | low | universal | project | Macro has no detected callers | No macro call was found in this project's models, macros, snapshots, or dbt_project.yml. |
 | SSC-EWI-DBTMAC0004 | EWI | information | low | universal | project | Macro wraps a short expression | A macro contains a short expression with no detected Jinja logic markers. |
@@ -160,7 +161,7 @@ advice; a successful dbt build alone does not prove it correct.
 | SSC-EWI-DBTMAC0010 | EWI | information | low | universal | portfolio | Repeated SQL block across models | The same multi-line SQL block appears in several model files. |
 | SSC-EWI-DBTMAC0011 | EWI | information | medium | universal | model | Macro defined inside the models directory | A macro definition appears in a model file rather than a configured macro path. |
 | SSC-EWI-DBTMAC0012 | EWI | information | low | universal | project | Macro filename does not match macro name | A file containing one macro has a different name from that macro. |
-| SSC-EWI-DBTMAC0014 | EWI | warning | high | universal | portfolio | Model calls a macro with SQL side effects | A model calls a macro that can write data or change the session through a SQL execution API. |
+| SSC-EWI-DBTMAC0014 | EWI | warning | high | universal | portfolio | Model calls a macro with SQL side effects | A model calls a macro that can write data, change a dbt-managed relation, or change the session through a SQL execution API. |
 | SSC-EWI-DBTMAC0015 | EWI | information | medium | universal | portfolio | Global generate_*_name macro override | A project overrides a macro that controls model schema, alias, or database names. |
 | SSC-EWI-DBTMAC0016 | EWI | information | medium | universal | portfolio | Incremental strategy or materialization copied per project | Two or more projects define the same incremental-strategy macro or materialization name. |
 | SSC-EWI-DBTMAC0017 | EWI | information | medium | universal | portfolio | Shared macro reads a project variable | A macro reads var(), and a model in another scanned project calls that macro. |
@@ -182,7 +183,7 @@ advice; a successful dbt build alone does not prove it correct.
 
 ---
 
-## MIG — Migration debt `migration`
+## MIG — Migration debt `mixed`
 
 | Rule | Kind | Level | Severity | Tier | Scope | Name | Signal |
 | ---- | ---- | ----- | -------- | ---- | ----- | ---- | ------ |
@@ -193,6 +194,7 @@ advice; a successful dbt build alone does not prove it correct.
 | SSC-EWI-DBTMIG0007 | EWI | information | low | migration | project | Model name retains an ETL instance prefix | A model name contains an SQ_, EXP_, FIL_, LKP_, or UPDTRANS instance prefix. |
 | SSC-EWI-DBTMIG0008 | EWI | error | critical | migration | project | Conversion placeholder model remains | A placeholder comment, tag, or empty-query pattern marks a model for conversion review. |
 | SSC-EWI-DBTMIG0009 | EWI | information | medium | migration | project | Generic custom incremental strategy name | A model or macro uses the custom strategy name update_only or insert_only. |
+| SSC-EWI-DBTMIG0010 | EWI | information | low | universal | project | Waiver suppresses nothing | A dbt-quality ignore directive names a rule that no finding in its scope matched. |
 | SSC-FDM-DBTMIG0003 | FDM | warning | high | migration | model | Functional-difference marker needs review | An SSC-FDM marker identifies a possible behavior difference that needs an explicit review decision. |
 | SSC-FDM-DBTMIG0005 | FDM | information | medium | migration | model | ETL operation flags remain in model data | etl_dml_operation__ or DD_* constants carry row-level insert, update, delete, or reject intent. |
 
@@ -222,8 +224,8 @@ advice; a successful dbt build alone does not prove it correct.
 | SSC-EWI-DBTPRJ0004 | EWI | warning | medium | universal | project | profiles.yml is inside the project directory | A profiles.yml file in the project can expose connection details if it enters version control. |
 | SSC-EWI-DBTPRJ0005 | EWI | warning | high | universal | project | Converter placeholders remain in project configuration | Project configuration contains converter placeholders such as YOUR_PROJECT_NAME or YOUR_DB. |
 | SSC-EWI-DBTPRJ0006 | EWI | information | medium | universal | portfolio | dbt projects chained through Snowflake tasks | Orchestration SQL has at least two EXECUTE DBT PROJECT calls; review where dependency ordering belongs. |
-| SSC-EWI-DBTPRJ0007 | EWI | information | low | universal | project | Baseline packages are not declared | The project does not declare dbt_constraints or dbt_semantic_view in packages.yml. |
-| SSC-EWI-DBTPRJ0008 | EWI | information | low | universal | project | Generated directories are not ignored by Git | target/, logs/, or dbt_packages/ exists without a matching .gitignore entry. |
+| SSC-EWI-DBTPRJ0007 | EWI | information | low | universal | project | Baseline packages are not declared | The project does not declare dbt_constraints or dbt_semantic_view in packages.yml or dependencies.yml. |
+| SSC-EWI-DBTPRJ0008 | EWI | information | low | universal | project | Generated directories are not ignored by Git | target/, logs/, or dbt_packages/ exists and git does not ignore it. |
 | SSC-EWI-DBTPRJ0009 | EWI | warning | high | universal | project | Relation location uses a variable | A source or model database, schema, identifier, or alias uses var() or env_var(). |
 | SSC-EWI-DBTPRJ0010 | EWI | information | medium | universal | project | Code branches on target.name | A model, macro, YAML value, or hook compares target.name and can render differently for each target. |
 | SSC-EWI-DBTPRJ0011 | EWI | information | medium | universal | project | Project configuration reads env_var() | A project, model, or source configuration uses an environment variable and can change between processes. |
@@ -249,11 +251,11 @@ advice; a successful dbt build alone does not prove it correct.
 | SSC-EWI-DBTSQL0002 | EWI | information | low | universal | portfolio | Repeated SQL block across models | The same normalized CTE body appears in two or more models in the audit. |
 | SSC-EWI-DBTSQL0003 | EWI | information | low | universal | model | Deeply nested subqueries | A derived table contains two or more nested SELECT levels. |
 | SSC-EWI-DBTSQL0004 | EWI | information | low | universal | model | Window filter in a nested query | A nested query calculates a window result that an outer WHERE filters without QUALIFY. |
-| SSC-EWI-DBTSQL0005 | EWI | information | medium | universal | model | SELECT * outside the staging layer | SELECT * reads directly from a ref() or source() outside the staging layer. |
+| SSC-EWI-DBTSQL0005 | EWI | information | medium | universal | model | SELECT * outside the staging layer | SELECT * or alias.* reads directly from a ref() or source() outside the staging layer. |
 | SSC-EWI-DBTSQL0006 | EWI | information | high | universal | model | Literal relation read without ref or source | A literal relation or stage read bypasses ref/source lineage; variable-built reads and producer cycles have separate rules. |
 | SSC-EWI-DBTSQL0007 | EWI | information | medium | universal | model | Implicit comma join | A comma-separated FROM list places the join condition outside the join. |
 | SSC-EWI-DBTSQL0009 | EWI | information | low | universal | model | CTE name does not describe its output | A CTE has a generic name such as t1, tmp, or cte. |
-| SSC-EWI-DBTSQL0010 | EWI | information | low | universal | model | Unreferenced CTE | A CTE is defined but has no reference outside its own body. |
+| SSC-EWI-DBTSQL0010 | EWI | information | low | universal | model | Unreferenced CTE | A CTE is defined but the final query does not read it, directly or through other CTEs. |
 | SSC-EWI-DBTSQL0011 | EWI | information | low | universal | model | Complex SELECT without named CTEs | A model has joins, aggregates, windows, or set operations but no named CTEs. |
 | SSC-EWI-DBTSQL0012 | EWI | information | low | universal | model | UNION removes duplicate rows | UNION without ALL removes duplicates from the combined result. |
 | SSC-EWI-DBTSQL0013 | EWI | information | low | universal | model | SELECT DISTINCT may hide a grain problem | SELECT DISTINCT removes duplicate projected rows and warrants a check of the intended row grain. |
@@ -268,12 +270,12 @@ advice; a successful dbt build alone does not prove it correct.
 | ---- | ---- | ----- | -------- | ---- | ----- | ---- | ------ |
 | SSC-EWI-DBTTST0001 | EWI | warning | high | universal | project | Project defines no tests | The project has models but no detected tests in YAML or the test directory. |
 | SSC-EWI-DBTTST0002 | EWI | information | medium | universal | model | Model has no primary-key or unique-key test | No recognized primary-key or unique-key test covers the model; staging findings have lower priority. |
-| SSC-EWI-DBTTST0003 | EWI | information | medium | universal | model | Dimension has no dbt_constraints primary-key test | A dim_* model lacks the estate-preferred primary-key test, even if unique and not_null tests exist. |
+| SSC-EWI-DBTTST0003 | EWI | information | medium | universal | model | Dimension has no dbt_constraints primary-key test | A dimension model (dim_*, *_dim or DimName) lacks the estate-preferred primary-key test, even if unique and not_null tests exist. |
 | SSC-EWI-DBTTST0004 | EWI | information | medium | universal | model | Fact table has untested key-shaped columns | A fct_* or fact_* model has _id columns without recognized foreign-key or primary-key coverage. |
 | SSC-EWI-DBTTST0005 | EWI | information | low | universal | model | Built-in tests can use dbt_constraints equivalents | A unique/not_null pair or relationships test can use a package-specific test under the estate policy. |
 | SSC-EWI-DBTTST0006 | EWI | information | low | universal | project | Key-test coverage is below the local threshold | Fewer than 60% of models have a key test; this rule excludes projects with fewer than five models. |
 | SSC-EWI-DBTTST0007 | EWI | information | low | universal | project | Singular test may be reusable as a generic test | A single-table null or count assertion without joins may fit a reusable generic test. |
-| SSC-EWI-DBTTST0008 | EWI | information | low | universal | project | Test failure storage is not enabled | No enabling store_failures setting was found under data_tests or tests in dbt_project.yml. |
+| SSC-EWI-DBTTST0008 | EWI | information | low | universal | project | Test failure storage is not enabled | No enabling store_failures or store_failures_as setting was found under data_tests or tests in dbt_project.yml. |
 | SSC-EWI-DBTTST0009 | EWI | warning | high | universal | project | Snapshot configuration is incomplete | A SQL snapshot lacks unique_key or strategy, or the timestamp/check strategy lacks its required field. |
 | SSC-EWI-DBTTST0010 | EWI | warning | medium | universal | project | Model and YAML property entry do not match | A model has no detected YAML property entry, or a YAML entry has no detected model. |
 | SSC-EWI-DBTTST0012 | EWI | information | medium | universal | model | Key-shaped column has no recognized key test | A model with an existing key test has another key-shaped column without recognized key coverage. |

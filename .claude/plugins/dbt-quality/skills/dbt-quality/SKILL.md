@@ -23,12 +23,12 @@ Prefer the `dbt-quality` MCP server. It is declared in this plugin's manifest.
 
 | MCP tool   | Use                                                                                                   |
 | ---------- | ----------------------------------------------------------------------------------------------------- |
-| `report`   | Audit `path`; writes `dbt-audit-suggestions.json` and `dbt-audit-report.html` into `out_dir` (default: a scratch dir under the system temp dir, never the project); returns their paths and counts |
+| `report`   | Audit `path`; writes `dbt-audit-suggestions.json` and `dbt-audit-report.html` into `out_dir` (default: a scratch dir under the system temp dir, never the project); returns their paths, counts and `inputs` |
 | `findings` | Active findings as JSON, filtered by `rule_ids`, `files`, `min_level`                                  |
 | `annotate` | Write markers above each finding. `dry_run: true` (default) returns the diff only. Writes need `dry_run: false` |
 | `fix_columns` | Cast model output columns to the types and collations in scai DDL (`ddl` paths). `dry_run: true` (default) returns the diff only |
 | `rules`    | The rule list, or one rule's full record (long description, remediation, examples) with `code`        |
-| `version`  | Server version and the pinned dbt commit                                                              |
+| `version`  | Server version, the pinned dbt version and commit, and the rule count                                 |
 
 The same operations are on the CLI: `${CLAUDE_PLUGIN_ROOT}/bin/dbt-quality audit|lint|validate|rules|annotate|fix-columns <path>`.
 On Windows, use `bin\dbt-quality.cmd` in an installed plugin or `bin/dbt-quality.exe` in a release archive, with
@@ -38,7 +38,10 @@ PowerShell's `&` call operator; resolve the plugin's absolute path before invoki
 
 - **Before `annotate` or `fix_columns` with `dry_run: false`:** show the diff from a dry run and get
   approval. Both refuse to write when the git tree has uncommitted changes (the two report files do
-  not count) and write only files inside `path`. With `rule_ids`, `annotate` replaces only those
+  not count). `annotate` writes only files inside `path`. In a migration project, `fix_columns`
+  writes every dbt project the registry's ETL parts target, not only the one at `path`: show the
+  user which projects its diff touches, and get approval for all of them, before writing. Pass
+  `select` (globs on the model path relative to the migration root) to limit it. With `rule_ids`, `annotate` replaces only those
   rules' markers. Pass `allow_dirty: true` only when the user explicitly asks; it bypasses the clean
   tree that makes the change reviewable and reversible.
 - **Before writing reports:** use the tool's default scratch directory or a location the user
@@ -62,6 +65,7 @@ PowerShell's `&` call operator; resolve the plugin's absolute path before invoki
 | "Audit my project" / "assess this estate"         | The workflow below: `report`, then the HTML report          |
 | "Fix / consolidate these migrated projects"       | The marker loop below                                       |
 | "Do the model columns match the converted tables" | Step 6: `fix_columns` with scai `ddl` paths (COL rules) |
+| "Which rules should we enforce?" / tune `.dbt-quality.yml` | The `dbt-standards` skill of the `snowflake-migration` plugin |
 
 ---
 
@@ -76,6 +80,13 @@ fragmentation (PRJ0001-0003), conflicting var defaults (PRJ0012), macros copied 
 (MAC0015/0016), and duplicated logic (MAC0010, SQL0002).
 
 ### Step 2: Run the audit
+
+In a migration project (a `.scai/config/project.yml` at or above `path`), pass any path inside it
+and nothing else: `report`, `findings` and `fix_columns` take every dbt project the registry's ETL
+parts target, the converted table DDL the registry lists, the `snow:` bindings and the project's
+`.dbt-quality.yml`. `ddl`, `projects`, `bindings` and `config` only add to those. Outside a
+migration project they are the only inputs. Tell the user every line in `inputs.gaps`: each one is
+a project, table or binding the run could not use, so a check did not run.
 
 Call `report` with `path`. Omit `out_dir` to use the default scratch directory, or pass a
 location the user approved (it can be outside `path`). It returns the paths it wrote,
@@ -151,9 +162,11 @@ Use this order as a starting point for migrated estates, then adjust it to the a
 
 ### Step 6: Check model columns against scai DDL
 
-1. Ask for the scai project or converted DDL paths if `.dbt-quality.yml` has no `ddl_paths`.
-2. `fix_columns` with `path` and `ddl` (dry run by default). It casts mismatched output columns to
-   the DDL type and collation and changes nothing else. **⚠️ Stop:** show the diff and get approval.
+1. In a migration project the DDL comes from the registry. Outside one, ask for the scai DDL paths
+   if `.dbt-quality.yml` has no `ddl_paths`.
+2. `fix_columns` with `path` (and `ddl` outside a migration project), dry run by default. It casts mismatched output columns to
+   the DDL type and collation and changes nothing else. In a migration project the diff spans every
+   registry dbt project, whichever one `path` names. **⚠️ Stop:** show the diff and get approval.
 3. `fix_columns` with `dry_run: false`, then run the project's dbt tests and `report` again.
 
 ---
@@ -234,9 +247,12 @@ findings; warnings do not fail that gate. Command errors can still return nonzer
 
 ## Configuration and waivers
 
-`.dbt-quality.yml` is found by walking up from the audit root (`thresholds`, `migration`,
-`disabled_rules`, `ignore`). For a false positive or an accepted trade-off, prefer a narrow waiver
-to disabling the rule:
+One `.dbt-quality.yml` (or `.yaml`) applies to the whole audit: the first one at the audit root or up
+to eight folders above it, stopping at the Git root. A project's own file is not read when you audit
+its estate. Keys: `thresholds`, `migration`, `disabled_rules`, `ignore`, `exclude_dirs`, `ddl_paths`,
+`type_compare`, `ddl_bindings`. To choose these settings rule by rule from the project's findings,
+use the `dbt-standards` skill of the `snowflake-migration` plugin. For a false positive or an
+accepted trade-off, prefer a narrow waiver to disabling the rule:
 
 ```sql
 select id from analytics.public.orders  -- dbt-quality: ignore SSC-EWI-DBTSQL0006
@@ -244,21 +260,23 @@ select id from analytics.public.orders  -- dbt-quality: ignore SSC-EWI-DBTSQL000
 ```
 
 ```yaml
-# .dbt-quality.yml — the only surface that can waive project- and portfolio-scoped findings
+# .dbt-quality.yml — waives findings with no single line, such as project- and estate-wide ones
 ignore:
   - paths: ["models/legacy/**"]
     rules: [SSC-EWI-DBTARC0001]
 ```
 
-Waiver directives count only inside comments. An inline directive applies to the diagnostic's
-reported line or the line immediately below the directive. Config-related findings often anchor at
+Waiver directives count only inside comments. A directive after code applies to that line; a
+directive on its own line applies to its own line and the next non-blank line. Config-related findings often anchor at
 `{{ config() }}`; other rules can have a precise read-site anchor. Use the reported location, not a
-pack-wide assumption. Waived findings are removed from outputs and counts. Record why the waiver is
-acceptable.
+pack-wide assumption. Waived findings stay in the report as suppressed, with the waiver as the
+reason, and do not count as active. Record why the waiver is acceptable.
 
 If an expected finding is missing, search for `dbt-quality: ignore` directives and the `ignore:`
-block in the nearest `.dbt-quality.yml`, which can be in an ancestor directory. Also check
-`disabled_rules`, which produces skipped checks rather than findings.
+block in the nearest `.dbt-quality.yml`, which can be in an ancestor directory, and the report's
+`suppressed` section. Also check `disabled_rules`, which produces skipped checks rather than findings.
+To choose which rules a team enforces, see the rule tiers in
+[references/rule-catalog.md](references/rule-catalog.md).
 
 ## Limits
 
@@ -269,6 +287,11 @@ flag ETL-instance names for review.
 Static rules do not provide complete SQL dialect validation or business-result validation. Run the
 project's dbt build and tests after a change. A successful build does not prove all business logic
 correct either.
+
+## References
+
+- [README.md](README.md): the user guide (install, first audit, configuration, CI gating, troubleshooting, limits). Point users to it.
+- [references/rule-catalog.md](references/rule-catalog.md): every rule with its tier and signal. Load it when a user disputes a finding or asks which rules exist.
 
 ## Output
 
