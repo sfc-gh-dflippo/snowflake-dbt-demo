@@ -11,15 +11,14 @@ converting source database SQL to dbt models on Snowflake.
   source-to-model conversion)
 
 If SnowConvert has not been run yet and a user asks for dbt migration, suggest running `/migrate`
-first to handle initial conversion, then use `/dbt-migrate` for dbt-specific modeling.
+first to handle initial conversion, then use the `dbt-migrate` skill for dbt-specific modeling.
 
 ## Included Skills (15)
 
 | Skill                       | Description                                                        |
 | --------------------------- | ------------------------------------------------------------------ |
+| dbt-migrate                 | Entry point: routes a dbt migration request to the right skill     |
 | dbt-migration               | Orchestrator: discovery, planning, conversion, testing, deployment |
-| dbt-validate                | Validate one dbt model file (dbt-quality plugin)                   |
-| dbt-audit                   | Project-wide dbt anti-pattern audit (dbt-quality plugin)           |
 | dbt-migration-snowflake     | Convert Snowflake DDL to dbt models                                |
 | dbt-migration-bigquery      | Convert BigQuery DDL to dbt models                                 |
 | dbt-migration-db2           | Convert IBM DB2 DDL to dbt models                                  |
@@ -60,8 +59,21 @@ claude plugin install snowflake-dbt-migration@snowflake-dbt-demo
 
 ## Usage
 
-After installation, use the `/dbt-migrate` command to start a dbt migration workflow. The command
-routes to the appropriate source-platform skill based on your source database.
+After installation, use the `dbt-migrate` skill to start a dbt migration workflow. It routes to the
+appropriate source-platform skill based on your source database. Static checks and audits of the
+converted models come from the separate `dbt-quality` plugin (`dbt-quality:dbt-quality`); they do
+not run warehouse-backed equivalence tests.
+
+In Claude Code, the plugin namespaces its skills, so the entry point is
+`/snowflake-dbt-migration:dbt-migrate`. In Cortex Code, ask for the `dbt-migrate` skill by name (for
+example "use the dbt-migrate skill to convert this Oracle procedure").
+
+### Windows note for dbt-quality
+
+The `dbt-quality` plugin on Windows needs a release built from
+snowflake-eng/migrations-snowconvert-desktop PR #10027 or later (MCP launcher fix). Its launcher
+downloads the binary on first use and honors `HTTPS_PROXY` or the git `http.proxy` setting for that
+download.
 
 ## Version
 

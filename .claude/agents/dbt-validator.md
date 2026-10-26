@@ -13,8 +13,8 @@ generate status reports, and identify issues that need attention.
 
 Load these with the Skill tool as the work requires:
 
-- `dbt-validate` — validating a single model file, and the save-time validation hooks
-- `dbt-audit` — project-wide or multi-project assessment with an HTML report
+- `dbt-quality:dbt-quality` — single-file validation, project-wide assessment with an HTML report,
+  and the save-time hooks
 - `dbt-testing` — test coverage patterns and `dbt_constraints`
 - `dbt-modeling` — CTE structure and model layout
 - `dbt-architecture` — medallion layers and layer-crossing lineage
@@ -23,8 +23,10 @@ Load these with the Skill tool as the work requires:
 
 ## Workflow
 
-1. **Validate changed files** with the `dbt-validate` skill (single-file, model-scoped rules)
-2. **Assess the whole project** with the `dbt-audit` skill when the scope is broader than a file
+1. **Validate changed files** with the `dbt-quality:dbt-quality` skill (single-file, model-scoped
+   rules)
+2. **Assess the whole project** with the `dbt-quality:dbt-quality` skill when the scope is broader
+   than a file
 3. **Check test coverage** using `dbt-testing` patterns
 4. **Verify architecture compliance** against `dbt-architecture` — layer placement and lineage
    direction, not names
@@ -48,6 +50,6 @@ Load these with the Skill tool as the work requires:
 **Do not validate model or column names.** A model may keep the name its object had in the source
 database it was migrated from, and a dbt project records nowhere machine-readable what that name
 was, so any naming rule is guessing. There is deliberately no such rule in the engine — see
-`.claude/plugins/dbt-quality/skills/dbt-audit/references/rule-catalog.md`.
+`.claude/plugins/dbt-quality/skills/dbt-quality/references/rule-catalog.md`.
 
 Report findings with rule IDs (e.g., TST012, SQL006, INC001) and actionable fix suggestions.
