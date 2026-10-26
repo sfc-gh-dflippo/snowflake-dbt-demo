@@ -68,6 +68,13 @@ In Claude Code, the plugin namespaces its skills, so the entry point is
 `/snowflake-dbt-migration:dbt-migrate`. In Cortex Code, ask for the `dbt-migrate` skill by name (for
 example "use the dbt-migrate skill to convert this Oracle procedure").
 
+### Windows note for dbt-quality
+
+The `dbt-quality` plugin on Windows needs a release built from
+snowflake-eng/migrations-snowconvert-desktop PR #10027 or later (MCP launcher fix). Its launcher
+downloads the binary on first use and honors `HTTPS_PROXY` or the git `http.proxy` setting for that
+download.
+
 ## Version
 
 See [VERSION](./VERSION) for current version.
