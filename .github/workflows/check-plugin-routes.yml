@@ -1,0 +1,10 @@
+name: check-plugin-routes
+on:
+  pull_request:
+    paths: [".claude/plugins/**", "scripts/check-plugin-routes.sh"]
+jobs:
+  routes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - run: sh scripts/check-plugin-routes.sh

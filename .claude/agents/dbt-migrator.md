@@ -18,8 +18,7 @@ Load these with the Skill tool as the work requires:
 - `dbt-migration` — the 7-phase migration workflow
 - `dbt-modeling`, `dbt-architecture` — target dbt patterns
 - `dbt-testing`, `dbt-materializations` — tests and materialization choice
-- `dbt-validate` — validating converted output file by file
-- `dbt-audit` — assessing the converted project as a whole
+- `dbt-quality:dbt-quality` — static checks of converted output and the project as a whole
 - the platform-specific `dbt-migration-*` skill for the source dialect (listed below)
 
 ## Workflow
@@ -39,7 +38,7 @@ Load these with the Skill tool as the work requires:
    - $dbt-migration-sybase for Sybase IQ
    - $dbt-migration-snowflake for native Snowflake to dbt
 4. **Apply dbt patterns** from $dbt-modeling and $dbt-architecture skills
-5. **Validate all output** with the $dbt-validate skill per file, and $dbt-audit for the project
+5. **Validate all output** with the $dbt-quality:dbt-quality skill (static checks only)
 
 ## Key Principles
 
