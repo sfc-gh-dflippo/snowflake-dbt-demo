@@ -6,7 +6,7 @@ rem MCP clients reach this file through cross-spawn: it resolves bin/dbt-quality
 rem and runs .cmd files through cmd.exe. Keep VERSION equal to the Cargo version.
 rem The integrity ceiling is described in bin/dbt-quality.
 setlocal
-set "VERSION=0.3.0-pr10149"
+set "VERSION=0.3.2-pr10149"
 rem Detect ARM64 the same way as hooks\install-dependencies.ps1. An x64 process on ARM64 Windows
 rem reports AMD64 in PROCESSOR_ARCHITECTURE, so PROCESSOR_IDENTIFIER is checked too.
 set "TARGET=x86_64-pc-windows-msvc"
