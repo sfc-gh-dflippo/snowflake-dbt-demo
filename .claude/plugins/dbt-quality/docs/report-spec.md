@@ -7,24 +7,17 @@ SQL, execute dbt, or validate edits.
 ## Standalone and shared-report surfaces
 
 The standalone report opens in a browser from a file URL or a static HTTP origin. Local CSS,
-JavaScript, and report data are embedded in the document. Chart.js loads from the exact CDN asset
-below; no other runtime library, font, image, or data service is needed.
+JavaScript, and report data are embedded in the document. The page loads no remote script, style,
+font, image or data service, so a network-blocked or script-restricted surface can still show it.
 
-| Asset | Pin |
-| --- | --- |
-| Library | Chart.js 4.4.4, MIT license |
-| URL | `https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.js` |
-| Integrity | `sha384-G436+Z2nlA8+PNoeRvWdxKbvOf8E/y+lYxqht2iBwNHTQDV5CJr3+AGVj8fGZi5t` |
-| Cross-origin mode | `anonymous` |
+Filters, decisions and the source viewer use the embedded script. If JavaScript is blocked, keep
+the server-rendered overview, category bars and table, column summary, skipped checks, and rule
+reference readable. Show a notice that explains which controls are unavailable. The rule headings
+and counts under Findings stay visible; the message groups under them need the script.
 
-Charts need CDN access. Filters and code panels use the embedded script and must work without
-Chart.js. If JavaScript is blocked, keep the server-rendered findings, rule guidance, and chart
-table readable. Show a notice that explains which controls are unavailable.
-
-Snowflake's shared-report sandbox is a different surface. Its CSP may reject CDN imports or
-scripts, and its supported library paths are not the standalone CDN URL. Follow the
-`html-authoring` skill when adapting a report for that sandbox. Do not promise full interactive
-support there or in an editor preview. Do not weaken the standalone CSP to work around a preview.
+Snowflake's shared-report sandbox is a different surface. Follow the `html-authoring` skill when
+adapting a report for that sandbox. Do not promise full interactive support there or in an editor
+preview. Do not weaken the standalone CSP to work around a preview.
 
 ## Data and script safety
 
@@ -36,8 +29,8 @@ support there or in an editor preview. Do not weaken the standalone CSP to work 
   `unsafe-eval`. Set `base-uri 'none'` and block script attributes.
 - Deny data connections, form submission, frames, and objects. Do not use `fetch`,
   `XMLHttpRequest`, or `WebSocket` for report or model data. Blob URLs are for downloads only.
-- Set a no-referrer policy. Permit only the pinned chart asset and the required local code/styles.
-  SRI checks the library's bytes; it does not isolate that library from embedded page data.
+- Set a no-referrer policy. Permit only the hashed local script and inline styles. Load nothing
+  from a remote origin.
 - Accept safe absolute HTTPS reference URLs. Reject credentials, controls, whitespace, malformed
   escapes, backslashes, and unsafe schemes. Escape link labels and attributes separately.
   References are user-initiated navigation, not background requests.
@@ -73,49 +66,65 @@ results. State coverage gaps near the summary, not only at the end of the report
 ### Overview
 
 Show the audit scope and date, project/model counts, active findings, and coverage status. Show
-counts by diagnostic level (`error`, `warning`, `information`) and impact severity (`critical`,
-`high`, `medium`, `low`). These are separate fields; show both labels, not color alone.
+counts by diagnostic level (`error`, `warning`, `information`). Impact severity (`critical`,
+`high`, `medium`, `low`) stays in the findings JSON; the grouped report orders and filters by level.
 
-Use a category chart with a table fallback. Keep the chart responsive within its container and
-legible at narrow widths. Use theme tokens for chart text and colors. Do not impose a fixed canvas
-width that overflows the page. Additional charts are optional if they help a reader choose work.
+Show seven tiles: Projects, Models, Active findings, Errors, Warnings, Information and Not
+reported. Draw the category breakdown as server-rendered stacked bars (error, warning,
+information) with the exact values in a table. Set each bar width as an inline percentage; use no
+chart library. Use the Okabe-Ito level colors: error `#D55E00` with a striped pattern, warning
+`#E69F00`, information `#56B4E9`. A level badge always shows its name as text.
 
-Show priority fixes from `remediation` in its given order. Each item needs its rule ID, affected
-count, effort, rationale, remediation, and one concrete file/line/evidence example. Preserve code
-blocks. Make long file lists expandable. Priority is a starting point for review, not a promise
-that the highest-ranked change is safe or beneficial in every project.
-
-For multiple projects, show names, paths, model counts, provenance, and per-project tallies.
-If consolidation rules fire, explain the specific duplication or boundary concern. Separate
-project boundaries may be intentional. Do not claim consolidation is always the largest benefit.
+The report has no Projects table and no Top findings list. The grouped Findings view covers
+both: a finding that fires in more than `group_threshold` projects appears once, with its project
+list. Separate project boundaries may be intentional; do not claim consolidation is always the
+largest benefit.
 
 ### Findings and rule detail
 
-Provide search and project, pack, level, and severity filters. Provide stable sorting, a reset
-control, matched/total counts, and an empty-result state. Bound the number of rendered rows with
-paging or an equivalent limit. Active findings are the default; keep suppressed findings separate.
+Section order: overview, categories, findings, columns, suppressed, checks, rules.
 
-A selected finding shows its file, line, optional column, evidence, and diagnostic text. Include
-the rule rationale, remediation, examples, and verified reference links. A rule explains a
-pattern; confirm the finding against the project before applying that guidance. Treat local
-thresholds and migration conventions as local policy, not upstream requirements.
+Group active findings by rule, then by message template, then by file. Replace the quoted names
+and numbers of a message with `...` and `N`, and keep the replaced values as the detail of each
+line. Cap a detail at 160 characters. Show the rule with its level, count and remediation. Build
+the message groups when the reader opens the rule, and the file list when the reader opens the
+message. Provide search (rule, message, file path), category and level filters at group level, a
+reset control, a matched count, and an empty-result state. Render at most 500 files at once and
+offer a control for the rest. Keep suppressed findings in their own section.
+
+The data block holds interned tables: `folders` (project roots), `labels` (project names),
+`rules` (title, level, category, remediation), `groups` and `suppressed`. A group is
+`[rule, template, rows]`; a row is `[folder, file, [[line, detail?], ...]]`. A portfolio row is
+`[-1, "", [[0, detail?]], [folder, ...]]`. The findings JSON is not changed.
+
+The rule reference states the rationale, remediation, examples and verified reference links. A
+rule explains a pattern; confirm the finding against the project before applying that guidance.
+Treat local thresholds and migration conventions as local policy, not upstream requirements.
+
+Decisions (*Will address*, *Ignore once*, *Ignore permanently*) apply to a rule, a message group
+or a file. The most specific decision wins; *No decision* inside a wider decision clears it for
+that scope. Store decisions by a key built from the rule, the message template and the file path.
+The export expands every decision to one item per finding.
+
+### Column contract
+
+Show the `COL` findings as a summary only: counts per rule (with distinct models, DDL tables and
+projects) and the most common type mismatches. Write every column finding to `column_issues.csv`
+(`project, model, file, line, column, model_type, ddl_type, rule, message`) next to the HTML
+report, or to the path given with `--column-csv`. The CSV lists each model's findings, even when
+portfolio grouping merged them in the findings JSON.
 
 ### Models
 
-Show a model's path and source status, line numbers, the selected finding, and relevant rule
-guidance. Highlight a finding line as verified only when source alignment is verified. Stale or
-unverified text needs a visible warning; do not present its line as confirmed.
+Default reports contain evidence, not model files. `--include-models` on CLI `audit` and
+`include_models: true` on MCP `report` opt in to source snapshots. CLI use requires `--html`; MCP
+use requires HTML to remain enabled. Source text belongs only in the HTML payload, not in normal
+findings JSON or default MCP responses. Warn that sharing the HTML shares the included source text.
 
-Default reports contain evidence, not complete model files. Offer local file selection only for
-findings linked to an exact discovered model. Other findings remain evidence-only. A file picker
-cannot prove the original path of a selected file. Compare its bytes with the snapshot hash when
-one is available. Otherwise require explicit association confirmation and label it unverified.
-A mismatch must show stale locations.
-
-`--include-models` on CLI `audit` and `include_models: true` on MCP `report` opt in to source
-snapshots. CLI use requires `--html`; MCP use requires HTML to remain enabled. Source text belongs
-only in the HTML payload, not in normal findings JSON or default MCP responses. Warn that sharing
-the HTML shares the included source text.
+When the report includes a file, show a **Source** button on that file's entry. It opens the file
+below the entry, 400 lines at a time, with the finding lines marked. Mark a line as verified only
+when source alignment is verified; otherwise say the line numbers are unverified. Without
+`--include-models` there is no source viewer, no file picker and no editing.
 
 Collect only exact discovered SQL/Python models. Require regular files inside both the canonical
 audit and project roots. Reject ambiguous ownership, symlinks in any path component, unsupported
@@ -128,25 +137,12 @@ extensions, profiles/configuration files, binary-like bytes, and invalid UTF-8. 
 | Included model files | 100 |
 
 Use a bounded read before decoding. Record omissions with a reason; never silently truncate
-editable source. These controls protect source snapshots, not the audit's existing file reader.
-Store each source once under its stable project/file identity, not under an ambiguous basename.
-Retain original markers, encoding/BOM, line endings, final-newline state, and a hash of the bytes.
-Verify alignment against the audited text after blanking owned markers. If the file changed
-between audit and collection, mark its source stale.
-
-Local file selection uses a bounded byte read and the same encoding checks. Feature-detect browser
-picker APIs and retain a normal file-input fallback. Handle cancel, denied access, unavailable
-source, and unsupported browser features without discarding the current source or edits.
-
-Let the reader edit a copy, preview changes, copy text, and download a new file. Bound change-preview
-work. Preserve UTF-8, BOM, and LF/CRLF on export. Mixed and CR-only line endings remain read-only;
-explain the restriction rather than normalize them silently. Clipboard text is not a byte-preserving
-file export. Provide a download and manual copy fallback when clipboard access is unavailable.
-
-Show unsaved state. Confirm before an in-report switch or reset discards edits. Do not promise
-reliable tab-close protection. Never overwrite the original project file or offer a Save-to-project
-action. The browser cannot enforce the linter's clean-Git-tree safeguard. Tell the reader to apply
-the edit, test it, and run the audit again. Do not mark findings resolved after an unverified edit.
+source. These controls protect source snapshots, not the audit's existing file reader. Store each
+source once under its stable project/file identity, not under an ambiguous basename. Retain
+original markers, encoding/BOM, line endings, final-newline state, and a hash of the bytes. Verify
+alignment against the audited text after blanking owned markers. If the file changed between audit
+and collection, mark its source stale. Never overwrite the original project file or offer a
+Save-to-project action. Tell the reader to apply the edit, test it, and run the audit again.
 
 ### Suppressed findings, skipped checks, and errors
 
@@ -161,14 +157,14 @@ The audit never needs a manifest or `dbt parse`. List read/parse errors as cover
 ## Themes and access
 
 Provide Auto, Light, and Dark controls. Auto follows the browser color preference. Use complete
-theme tokens for text, surfaces, inputs, badges, code, charts, menus, and focus states. Manual
+theme tokens for text, surfaces, inputs, badges, code, bars, menus, and focus states. Set explicit
+surface and background colors with `light-dark()`. Manual
 controls need JavaScript; static content must remain readable without it. Do not depend on
 storage permission for theme selection.
 
 Use compact navigation at narrow widths. Keep long paths and code inside their containers. Support
-keyboard navigation, visible focus, accessible labels, live result counts, Escape to close a panel,
-and focus return to its opener. Respect reduced-motion preferences. Do not identify severity by
-color alone.
+keyboard navigation, visible focus, accessible labels and live result counts. Respect
+reduced-motion preferences. Do not identify severity by color alone.
 
 ## Sample and verification
 
@@ -183,9 +179,8 @@ Append `-- --check` to check drift without rewriting the sample. Never hand-edit
 The sample does not claim all-rule coverage. Its sources must exclude profiles and configuration
 files, and its provenance must not expose machine-specific absolute paths.
 
-Test the report in real browsers from file URLs and static HTTP, including no-JavaScript,
-CDN-blocked, and failed-integrity cases. Check light/dark themes, keyboard use, narrow layouts,
-source selection, stale-file warnings, edit downloads, and exact exported bytes. Confirm that
+Test the report in real browsers from file URLs and static HTTP, including no-JavaScript
+cases. Check light/dark themes, keyboard use, narrow layouts, and the source viewer. Confirm that
 report/model data cause no external network requests. Native tests alone do not verify these
 browser behaviors.
 

@@ -95,6 +95,11 @@ answer every time.
 - F12. Configuration supports `migration.mode` (`auto`, `native` or `lift_and_shift`),
   `disabled_rules`, `ignore` entries by path and rule, rule `thresholds`, `exclude_dirs`, and the
   column inputs `ddl_paths`, `type_compare` and `ddl_bindings`.
+- F12a. Two keys control report size on large estates. `converter_markers: count` (the default)
+  counts SnowConvert's own markers in `summary.not_reported` instead of one finding per marker;
+  `report` lists each marker. `group_threshold` (default 25, `0` turns it off) merges one rule and
+  message that fires in more projects than the threshold into one `portfolio` finding with its
+  project list.
 
 ### Waivers and suppressions
 
@@ -128,27 +133,34 @@ answer every time.
   what the tool returned, and stops for approval before any write.
 - F19. `audit --fail-on-error`, `lint --strict` and `validate --strict` exit nonzero on active
   error-level findings. Warnings do not fail them.
+- F19a. `audit --timings` prints the wall time of each audit phase to stderr. `audit --column-csv`
+  writes the column contract CSV to a chosen path, with or without `--html`.
 
 ### Reports
 
 - F20. The JSON report lists active findings with evidence and location, project summaries,
   suggestions, skipped checks, suppressed findings, read errors and remediation priorities.
-- F21. The HTML report is one standalone file. It shows the audit scope, coverage gaps and
-  priority fixes, and a findings view with search, filters and sorting. Suppressed findings,
-  skipped checks and read errors have their own views.
+- F21. The HTML report is one standalone file. It shows the audit scope and coverage gaps,
+  a category breakdown, findings grouped by rule, message and file with search and filters, and a
+  column contract summary. Suppressed findings, skipped checks and read errors have their own
+  views. Column contract findings are also written to `column_issues.csv`. The embedded data uses
+  interned tables, and the page builds each group when the reader opens it, so a report with tens
+  of thousands of findings stays small.
 - F22. The HTML report includes model source only when the user opts in (`--include-models` or
   `include_models: true`), within fixed size limits, and never includes profiles or configuration.
-- F23. A reader can record one decision per finding or rule (*Will address*, *Ignore once*,
-  *Ignore permanently*) and export them. The report never writes project files.
+- F23. A reader can record one decision per rule, message group or file (*Will address*,
+  *Ignore once*, *Ignore permanently*) and export them as one item per finding. The report never
+  writes project files.
 - F24. The report meets the safety rules in the [report specification](report-spec.md): escaped
-  embedded data, a strict CSP, no data connections, and one pinned chart library.
+  embedded data, a strict CSP, no data connections, and no remote script.
 
 ### Edits
 
 - F25. `annotate` and `fix-columns` preview a diff by default. A write needs an explicit flag,
   refuses a dirty Git tree unless the user overrides it, and changes only files inside the root.
 - F26. `annotate` writes markers, not fixes. It leaves SnowConvert's own markers alone and does not
-  duplicate them. Annotating and then removing markers restores the input bytes.
+  duplicate them. Annotating and then removing markers restores the input bytes. It writes only
+  to files that are unchanged since the audit read them, and lists the files it skipped.
 - F27. `fix-columns` changes only a column's type and collation, to match the scai DDL. Missing and
   extra columns stay findings.
 
@@ -168,17 +180,22 @@ answer every time.
   Writes stay inside the chosen root and skip symlinks that leave it.
 - N6. **Licensing.** Code taken from dbt is Apache-2.0, MIT or BSD-3-Clause, from the one pinned
   dbt commit. No ELv2 or proprietary dbt code.
+- N7. **Performance.** An audit reads each file from disk at most once and walks the audit root
+  once. Values derived from a project's files (source declarations, locations, profile targets,
+  waivers) are computed at most once per project. The walk, the project build and rule
+  evaluation run in parallel on all cores. Parallel work keeps the order that N2 requires.
 
 ## Quality
 
 - Q1. Every rule has Rust tests for what it flags and what it leaves alone. A defect fix starts
-  with a failing test.
+  with a failing test. Discovery tests assert one read per file and one walk per audit (N7).
 - Q2. CI runs the tests, Clippy, and the catalog, dbt pin and sample report drift checks on every
   pull request that changes dbt-quality. The release workflow runs the tests and the package and
   launcher smoke tests on every target.
 - Q3. Before a large change merges (a new or reworked rule, the SQL tokenizer or Jinja reading,
-  discovery, waivers, levels or the report), the `judging-dbt-quality-reports` skill
-  (`ai/.claude/skills/judging-dbt-quality-reports/`) audits snowflake-dbt-demo with and without the change, and an independent judge checks the
+  discovery, waivers, levels or the report), the
+  [`judging-dbt-quality-reports`](../../../.claude/skills/judging-dbt-quality-reports/SKILL.md)
+  skill audits snowflake-dbt-demo with and without the change, and an independent judge checks the
   findings for false positives and misses.
 
 ## Success criteria
@@ -194,5 +211,7 @@ answer every time.
 - Static analysis cannot follow custom naming macros or unresolved locations to a physical
   producer. Those findings ask the user to confirm.
 - The macOS and Windows binaries are unsigned.
+- Each MCP tool call runs a new audit. The server does not reuse an earlier call's files or DDL
+  index.
 - Full interactive editor integration and `dbt_external_tables` compatibility with native
   `EXECUTE DBT PROJECT` are unverified.

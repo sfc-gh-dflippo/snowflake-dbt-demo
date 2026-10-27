@@ -28,7 +28,7 @@ Prefer the `dbt-quality` MCP server. It is declared in this plugin's manifest.
 | `annotate` | Write markers above each finding. `dry_run: true` (default) returns the diff only. Writes need `dry_run: false` |
 | `fix_columns` | Cast model output columns to the types and collations in scai DDL (`ddl` paths). `dry_run: true` (default) returns the diff only |
 | `rules`    | The rule list, or one rule's full record (long description, remediation, examples) with `code`        |
-| `version`  | Server version, the pinned dbt version and commit, and the rule count                                 |
+| `version`  | Server version and the pinned dbt commit                                                              |
 
 The same operations are on the CLI: `${CLAUDE_PLUGIN_ROOT}/bin/dbt-quality audit|lint|validate|rules|annotate|fix-columns <path>`.
 On Windows, use `bin\dbt-quality.cmd` in an installed plugin or `bin/dbt-quality.exe` in a release archive, with
@@ -247,10 +247,8 @@ findings; warnings do not fail that gate. Command errors can still return nonzer
 
 ## Configuration and waivers
 
-One `.dbt-quality.yml` (or `.yaml`) applies to the whole audit: the first one at the audit root or up
-to eight folders above it, stopping at the Git root. A project's own file is not read when you audit
-its estate. Keys: `thresholds`, `migration`, `disabled_rules`, `ignore`, `exclude_dirs`, `ddl_paths`,
-`type_compare`, `ddl_bindings`. To choose these settings rule by rule from the project's findings,
+`.dbt-quality.yml` is found by walking up from the audit root (`thresholds`, `migration`,
+`disabled_rules`, `ignore`). To choose these settings rule by rule from the project's findings,
 use the `dbt-standards` skill of the `snowflake-migration` plugin. For a false positive or an
 accepted trade-off, prefer a narrow waiver to disabling the rule:
 
@@ -260,23 +258,21 @@ select id from analytics.public.orders  -- dbt-quality: ignore SSC-EWI-DBTSQL000
 ```
 
 ```yaml
-# .dbt-quality.yml — waives findings with no single line, such as project- and estate-wide ones
+# .dbt-quality.yml — the only surface that can waive project- and portfolio-scoped findings
 ignore:
   - paths: ["models/legacy/**"]
     rules: [SSC-EWI-DBTARC0001]
 ```
 
-Waiver directives count only inside comments. A directive after code applies to that line; a
-directive on its own line applies to its own line and the next non-blank line. Config-related findings often anchor at
+Waiver directives count only inside comments. An inline directive applies to the diagnostic's
+reported line or the line immediately below the directive. Config-related findings often anchor at
 `{{ config() }}`; other rules can have a precise read-site anchor. Use the reported location, not a
-pack-wide assumption. Waived findings stay in the report as suppressed, with the waiver as the
-reason, and do not count as active. Record why the waiver is acceptable.
+pack-wide assumption. Waived findings are removed from outputs and counts. Record why the waiver is
+acceptable.
 
 If an expected finding is missing, search for `dbt-quality: ignore` directives and the `ignore:`
-block in the nearest `.dbt-quality.yml`, which can be in an ancestor directory, and the report's
-`suppressed` section. Also check `disabled_rules`, which produces skipped checks rather than findings.
-To choose which rules a team enforces, see the rule tiers in
-[references/rule-catalog.md](references/rule-catalog.md).
+block in the nearest `.dbt-quality.yml`, which can be in an ancestor directory. Also check
+`disabled_rules`, which produces skipped checks rather than findings.
 
 ## Limits
 
@@ -287,11 +283,6 @@ flag ETL-instance names for review.
 Static rules do not provide complete SQL dialect validation or business-result validation. Run the
 project's dbt build and tests after a change. A successful build does not prove all business logic
 correct either.
-
-## References
-
-- [README.md](README.md): the user guide (install, first audit, configuration, CI gating, troubleshooting, limits). Point users to it.
-- [references/rule-catalog.md](references/rule-catalog.md): every rule with its tier and signal. Load it when a user disputes a finding or asks which rules exist.
 
 ## Output
 
