@@ -15,11 +15,14 @@ first to handle initial conversion, then use `/dbt-migrate` for dbt-specific mod
 
 ## Included Skills (15)
 
+Static quality checks (single model or whole project) come from the separate `dbt-quality` plugin,
+through the skill `dbt-quality:dbt-quality`. Those checks do not run dbt and do not compare data
+with the source warehouse.
+
 | Skill                       | Description                                                        |
 | --------------------------- | ------------------------------------------------------------------ |
 | dbt-migration               | Orchestrator: discovery, planning, conversion, testing, deployment |
-| dbt-validate                | Validate one dbt model file (dbt-quality plugin)                   |
-| dbt-audit                   | Project-wide dbt anti-pattern audit (dbt-quality plugin)           |
+| dbt-migrate                 | Entry point: routes to the right source-platform skill             |
 | dbt-migration-snowflake     | Convert Snowflake DDL to dbt models                                |
 | dbt-migration-bigquery      | Convert BigQuery DDL to dbt models                                 |
 | dbt-migration-db2           | Convert IBM DB2 DDL to dbt models                                  |
@@ -58,10 +61,23 @@ claude plugin marketplace add sfc-gh-dflippo/snowflake-dbt-demo   # or: <path-to
 claude plugin install snowflake-dbt-migration@snowflake-dbt-demo
 ```
 
+### Cortex Code Desktop (project scope)
+
+To share the plugin with a team, copy it into the project at
+`.cortex/plugins/snowflake-dbt-migration` and check it in. Do the same for `dbt-quality` if you want
+static quality checks. Paths in the plugin are relative, so no machine-specific edits are needed.
+
 ## Usage
 
-After installation, use the `/dbt-migrate` command to start a dbt migration workflow. The command
-routes to the appropriate source-platform skill based on your source database.
+After installation, use the `dbt-migrate` skill (`/dbt-migrate`) to start a dbt migration workflow.
+The skill routes to the appropriate source-platform skill based on your source database.
+
+## Troubleshooting (Windows)
+
+- **MCP error `spawn ... ENOENT` for `dbt-quality`:** The old plugin cannot start on Windows. Update
+  `dbt-quality` to a later plugin release that includes the Windows launcher, then restart the app.
+- **`curl: (35)` on first-run download behind a proxy:** Set `HTTPS_PROXY` or `SCAI_PROXY` to your
+  proxy URL, then run again. Keep TLS and SHA-256 verification on. Do not disable them.
 
 ## Version
 
