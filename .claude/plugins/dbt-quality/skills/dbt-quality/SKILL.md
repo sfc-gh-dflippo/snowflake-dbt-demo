@@ -23,12 +23,13 @@ Prefer the `dbt-quality` MCP server. It is declared in this plugin's manifest.
 
 | MCP tool   | Use                                                                                                   |
 | ---------- | ----------------------------------------------------------------------------------------------------- |
-| `report`   | Audit `path`; writes `dbt-audit-suggestions.json` and `dbt-audit-report.html` into `out_dir` (default: a scratch dir under the system temp dir, never the project); returns their paths, counts and `inputs` |
+| `report`   | Audit `path`; writes `dbt-audit-suggestions.json` and `dbt-audit-report.html` into `out_dir` (default: a durable per-user folder, `<user data dir>/dbt-quality/reports/<hash>/<timestamp>/`, never the project and never the temp dir; `background: true` returns a `job_id` for `report_status`); returns their paths, counts and `inputs` |
+| `report_status` | State of a `report` job started with `background: true`: `running`, `done` (with the result) or `failed`; takes `job_id` |
 | `findings` | Active findings as JSON, filtered by `rule_ids`, `files`, `min_level`                                  |
 | `annotate` | Write markers above each finding. `dry_run: true` (default) returns the diff only. Writes need `dry_run: false` |
 | `fix_columns` | Cast model output columns to the types and collations in scai DDL (`ddl` paths). `dry_run: true` (default) returns the diff only |
 | `rules`    | The rule list, or one rule's full record (long description, remediation, examples) with `code`        |
-| `version`  | Server version and the pinned dbt commit                                                              |
+| `version`  | Server version, the pinned dbt version and commit, and the rule count                                 |
 
 The same operations are on the CLI: `${CLAUDE_PLUGIN_ROOT}/bin/dbt-quality audit|lint|validate|rules|annotate|fix-columns <path>`.
 On Windows, use `bin\dbt-quality.cmd` in an installed plugin or `bin/dbt-quality.exe` in a release archive, with
@@ -39,12 +40,12 @@ PowerShell's `&` call operator; resolve the plugin's absolute path before invoki
 - **Before `annotate` or `fix_columns` with `dry_run: false`:** show the diff from a dry run and get
   approval. Both refuse to write when the git tree has uncommitted changes (the two report files do
   not count). `annotate` writes only files inside `path`. In a migration project, `fix_columns`
-  writes every dbt project the registry's ETL parts target, not only the one at `path`: show the
+  writes the dbt projects in scope (those under `path`, or all with `estate: true`): show the
   user which projects its diff touches, and get approval for all of them, before writing. Pass
   `select` (globs on the model path relative to the migration root) to limit it. With `rule_ids`, `annotate` replaces only those
   rules' markers. Pass `allow_dirty: true` only when the user explicitly asks; it bypasses the clean
   tree that makes the change reviewable and reversible.
-- **Before writing reports:** use the tool's default scratch directory or a location the user
+- **Before writing reports:** use the tool's default report directory (durable, per user) or a location the user
   approved. Confirm a durable destination before retaining or sharing the report. Do not write
   into the user's repo without asking.
 - **Before including model text:** explain that sharing the report shares that source. Set
@@ -82,13 +83,19 @@ fragmentation (PRJ0001-0003), conflicting var defaults (PRJ0012), macros copied 
 ### Step 2: Run the audit
 
 In a migration project (a `.scai/config/project.yml` at or above `path`), pass any path inside it
-and nothing else: `report`, `findings` and `fix_columns` take every dbt project the registry's ETL
-parts target, the converted table DDL the registry lists, the `snow:` bindings and the project's
+and nothing else: `report`, `findings` and `fix_columns` audit the dbt projects under `path` (the
+whole registry when `path` is the migration root, or when you pass `estate: true`), and take the
+converted table DDL the registry lists, the `snow:` bindings and the project's
 `.dbt-quality.yml`. `ddl`, `projects`, `bindings` and `config` only add to those. Outside a
 migration project they are the only inputs. Tell the user every line in `inputs.gaps`: each one is
 a project, table or binding the run could not use, so a check did not run.
+Also tell the user what `inputs.skipped` lists (build output under `bin/` and `obj/`, stabilization
+backups, `.dbtignore`, `exclude_paths`): those folders are skipped on purpose and are not gaps.
+`exclude_paths`, `include_backups` and `.dbtignore` change that; `exclude_dirs` adds to the defaults.
 
-Call `report` with `path`. Omit `out_dir` to use the default scratch directory, or pass a
+A `missing_dbt_project` gap, an "unregistered project" gap, or a non-zero `inputs.registry_check` means the registry and the dbt folders disagree: a unit targets a folder that is gone, or a project exists that no unit targets (it is not audited). Do not treat these as audit noise. Follow [registry-consolidation](references/registry-consolidation.md).
+
+Call `report` with `path`. Omit `out_dir` to use the default durable report directory, or pass a
 location the user approved (it can be outside `path`). It returns the paths it wrote,
 the counts, and the top remediation items. Graph checks use the `ref()` calls in the model files;
 `target/manifest.json` is not read.
@@ -98,7 +105,7 @@ never combine that option with `html:false`. Normal findings JSON remains unchan
 
 ### Step 3: Read before writing
 
-Work from `summary`, `remediation` and `suppressed` in the JSON. `remediation` is already grouped
+Work from `summary`, `remediation` and `suppressed` in the JSON. `summary.counts` counts entries; a grouped portfolio entry stands for `count` findings at the `sites` it lists, so quote `summary.findings_total` and `summary.tally_findings` as the number of findings. Pass `no_group: true` to `report` for one entry per finding. `remediation` is already grouped
 by rule and ranked by impact over effort. Read each finding on three independent axes:
 
 | Axis       | Values                            | Meaning                                                                    |
@@ -113,21 +120,23 @@ findings. Skipped checks and read errors are coverage gaps, not passes.
 
 ### Step 4: Review or share the report
 
-`report` writes standalone HTML. It has Auto/Light/Dark themes, findings filters, rule detail, and model source panels. The pinned
-Chart.js asset needs CDN access; filters and code panels do not need Chart.js. Static findings and
-rule text remain readable when JavaScript is blocked. A Snowflake shared-report sandbox or editor
-preview may block these assets. Do not promise full interactive support there. Follow the
-`html-authoring` skill if adapting HTML for the shared-report sandbox.
+`report` writes standalone HTML: an overview, category bars, findings grouped by rule, then
+message, then file, a column-contract summary, suppressed findings, skipped checks, and the rule
+reference, with Auto/Light/Dark themes. It loads nothing remote. Filters, decisions, and the source
+viewer need JavaScript; with JavaScript blocked, the overview, categories, column summary, skipped
+checks, and rule text stay readable, but the groups under each rule do not open. A Snowflake
+shared-report sandbox or editor preview may block the script. Do not promise full interactive
+support there. Follow the `html-authoring` skill if adapting HTML for the shared-report sandbox.
 
-The report keeps `snowflake-source` and `snowflake-report-metadata` provenance. Its CSP blocks data
-connections and uses script hashes. The CDN library still runs in the page context. Review paths
-and evidence before sharing, even when complete model text is not included.
+The report keeps `snowflake-source` and `snowflake-report-metadata` provenance. Its CSP allows only
+the embedded script (by hash) and inline styles and blocks data connections. Review paths and
+evidence before sharing, even when complete model text is not included.
 
-A source panel can show included text or a user-selected local file. A selected file's path is not
-proof of identity. Without a matching snapshot hash, confirm its association and label locations
-unverified or stale. Source snapshots have limits of 256 KiB/file, 4 MiB total, and 100 files; they
-exclude profiles/configuration files, unsafe paths, and unsupported content. These controls do not
-sandbox the audit reader.
+With `include_models: true`, each file in a message group has a source viewer with the finding
+lines marked; it marks them only when the snapshot matches the audited bytes, and otherwise says the
+lines are unverified. A report without model text has no source viewer. Source snapshots have
+limits of 256 KiB/file, 4 MiB total, and 100 files; they exclude profiles/configuration files,
+unsafe paths, and unsupported content. These controls do not sandbox the audit reader.
 
 Edits affect a copy in the report. The reader can preview changes, copy text, or download a new
 file; the report never overwrites project files. Mixed or CR-only line endings are read-only.
@@ -150,23 +159,25 @@ a browser edit. There is no live linter, SQL execution, local write server, or W
 
 Markers carry only dbt-quality codes (`SSC-{EWI|FDM|PRF}-DBT<three letters><four digits>`). The
 engine ignores them when it scans, so findings do not change because markers are present.
-SnowConvert's own markers, such as `SSC-EWI-DBT0001` or `SSC-EWI-INF0039`, are left alone. MIG0002
-and MIG0003 still report them.
+SnowConvert's own markers, such as `SSC-EWI-DBT0001` or `SSC-EWI-INF0039`, are left alone. MIG0001,
+MIG0002 and MIG0003 report them. By default (`converter_markers: count`), a marker inside a
+comment is only counted, in `summary.not_reported` with its files and lines. A
+`!!!RESOLVE EWI!!!` marker outside a comment is executable text. It is always a MIG0001 error.
 
 Use this order as a starting point for migrated estates, then adjust it to the actual dependencies:
 
 1. Vars and parameters (PRJ0009-0018): verify sentinel defaults and required values before changing load behavior.
 2. Hooks that write (INC0001-0003, INC0010, INC0016-0020).
 3. Macro duplication across projects (MAC0010, MAC0015-0017).
-4. Review project consolidation (PRJ0001-0003, PRJ0006) after confirming ownership and deployment boundaries.
+4. Review project consolidation (PRJ0001-0003, PRJ0006) after confirming ownership and deployment boundaries. In a migration project, a merge must also retarget the registry: follow [registry-consolidation](references/registry-consolidation.md). **⚠️ Stop:** show the user the affected units and get approval before any registry patch (the `cur_reconciler` retarget).
 
 ### Step 6: Check model columns against scai DDL
 
 1. In a migration project the DDL comes from the registry. Outside one, ask for the scai DDL paths
    if `.dbt-quality.yml` has no `ddl_paths`.
 2. `fix_columns` with `path` (and `ddl` outside a migration project), dry run by default. It casts mismatched output columns to
-   the DDL type and collation and changes nothing else. In a migration project the diff spans every
-   registry dbt project, whichever one `path` names. **⚠️ Stop:** show the diff and get approval.
+   the DDL type and collation and changes nothing else. In a migration project the diff spans the dbt projects under `path`
+   (every registry project with `estate: true`). **⚠️ Stop:** show the diff and get approval.
 3. `fix_columns` with `dry_run: false`, then run the project's dbt tests and `report` again.
 
 ---
@@ -247,8 +258,10 @@ findings; warnings do not fail that gate. Command errors can still return nonzer
 
 ## Configuration and waivers
 
-`.dbt-quality.yml` is found by walking up from the audit root (`thresholds`, `migration`,
-`disabled_rules`, `ignore`). To choose these settings rule by rule from the project's findings,
+One `.dbt-quality.yml` (or `.yaml`) applies to the whole audit: the first one at the audit root or up
+to eight folders above it, stopping at the Git root. A project's own file is not read when you audit
+its estate. Keys: `thresholds`, `migration`, `disabled_rules`, `ignore`, `exclude_dirs`, `ddl_paths`,
+`type_compare`, `ddl_bindings`. To choose these settings rule by rule from the project's findings,
 use the `dbt-standards` skill of the `snowflake-migration` plugin. For a false positive or an
 accepted trade-off, prefer a narrow waiver to disabling the rule:
 
@@ -258,21 +271,23 @@ select id from analytics.public.orders  -- dbt-quality: ignore SSC-EWI-DBTSQL000
 ```
 
 ```yaml
-# .dbt-quality.yml — the only surface that can waive project- and portfolio-scoped findings
+# .dbt-quality.yml — waives findings with no single line, such as project- and estate-wide ones
 ignore:
   - paths: ["models/legacy/**"]
     rules: [SSC-EWI-DBTARC0001]
 ```
 
-Waiver directives count only inside comments. An inline directive applies to the diagnostic's
-reported line or the line immediately below the directive. Config-related findings often anchor at
+Waiver directives count only inside comments. A directive after code applies to that line; a
+directive on its own line applies to its own line and the next non-blank line. Config-related findings often anchor at
 `{{ config() }}`; other rules can have a precise read-site anchor. Use the reported location, not a
-pack-wide assumption. Waived findings are removed from outputs and counts. Record why the waiver is
-acceptable.
+pack-wide assumption. Waived findings stay in the report as suppressed, with the waiver as the
+reason, and do not count as active. Record why the waiver is acceptable.
 
 If an expected finding is missing, search for `dbt-quality: ignore` directives and the `ignore:`
-block in the nearest `.dbt-quality.yml`, which can be in an ancestor directory. Also check
-`disabled_rules`, which produces skipped checks rather than findings.
+block in the nearest `.dbt-quality.yml`, which can be in an ancestor directory, and the report's
+`suppressed` section. Also check `disabled_rules`, which produces skipped checks rather than findings.
+To choose which rules a team enforces, see the rule tiers in
+[references/rule-catalog.md](references/rule-catalog.md).
 
 ## Limits
 
@@ -284,9 +299,14 @@ Static rules do not provide complete SQL dialect validation or business-result v
 project's dbt build and tests after a change. A successful build does not prove all business logic
 correct either.
 
+## References
+
+- [README.md](README.md): the user guide (install, first audit, configuration, CI gating, troubleshooting, limits). Point users to it.
+- [references/rule-catalog.md](references/rule-catalog.md): every rule with its tier and signal. Load it when a user disputes a finding or asks which rules exist.
+
 ## Output
 
 Return the report paths (or the checked file), scope, coverage gaps, and a short list of fixes
 supported by the evidence. State whether complete model text was included and whether the output
-is temporary. Do not claim that edits are validated until the project's checks and a fresh audit
+is in a durable folder. Do not claim that edits are validated until the project's checks and a fresh audit
 have run.
