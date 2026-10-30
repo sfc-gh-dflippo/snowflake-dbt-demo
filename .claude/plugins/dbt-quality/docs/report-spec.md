@@ -46,7 +46,7 @@ Keep a `snowflake-report-metadata` JSON block with the audit root, analyzer comm
 `sections[]` entry for each report anchor. The deterministic sample uses relative paths and a
 fixed date. Normal reports retain their real audit provenance.
 
-Use the report tool's scratch directory when no durable output location is approved. Before
+Use the report tool's default per-user report folder when no output location is approved. Before
 sharing or retaining a report, agree on a destination and review its content. Even evidence-only
 reports can contain sensitive paths and SQL. Including model text increases that exposure.
 

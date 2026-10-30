@@ -60,7 +60,10 @@ answer every time.
 - F1. An audit root is one dbt project or an estate: a directory that contains `dbt_project.yml`
   files at any depth. Cross-project checks run across every project under the root.
 - F2. Discovery skips generated and dependency directories (`target`, `dbt_packages`, `logs`,
-  `.git`, `node_modules` and similar). `exclude_dirs` replaces that list.
+  `.git`, `node_modules`, `bin`, `obj` and similar), `exclude_paths` globs (default
+  `**/stabilization/original/**`) and `.dbtignore` files. `exclude_dirs` adds to the defaults;
+  `exclude_dirs_replace: true` replaces them. A project indexes only its root files and the folders
+  `dbt_project.yml` declares.
 - F3. The analyzer reads model SQL and Python, YAML, macros, snapshots, tests and project
   files. It parses Jinja with dbt's own Jinja parser (the pinned dbt minijinja fork) and SQL with
   dbt's Snowflake lexer and the sqlparser fork that dbt uses. [DBT_PIN.md](../DBT_PIN.md) records
@@ -93,7 +96,8 @@ answer every time.
 - F11. `.dbt-quality.yml` at the project or estate root configures the audit. Lookup takes the
   nearest file in the root's ancestors, up to eight levels, and stops at a Git boundary.
 - F12. Configuration supports `migration.mode` (`auto`, `native` or `lift_and_shift`),
-  `disabled_rules`, `ignore` entries by path and rule, rule `thresholds`, `exclude_dirs`, and the
+  `disabled_rules`, `ignore` entries by path and rule, rule `thresholds`, `exclude_dirs`,
+  `exclude_dirs_replace`, `exclude_paths`, `include_backups`, and the
   column inputs `ddl_paths`, `type_compare` and `ddl_bindings`.
 - F12a. Two keys control report size on large estates. `converter_markers: count` (the default)
   counts SnowConvert's own markers in `summary.not_reported` instead of one finding per marker;
@@ -127,13 +131,16 @@ answer every time.
   | `mcp` | Run the stdio MCP server |
 
 - F17. The MCP server is the `mcp` command. It speaks newline-delimited JSON-RPC over stdio and
-  offers the tools `version`, `report`, `findings`, `rules`, `annotate` and `fix_columns`. The
+  offers the tools `version`, `report`, `report_status`, `findings`, `rules`, `annotate` and `fix_columns`. The
   plugin declares it, so installing the plugin connects it.
 - F18. The `dbt-quality` skill in the plugin routes a user's intent to the right tool, reports only
   what the tool returned, and stops for approval before any write.
 - F19. `audit --fail-on-error`, `lint --strict` and `validate --strict` exit nonzero on active
   error-level findings. Warnings do not fail them.
-- F19a. `audit --timings` prints the wall time of each audit phase to stderr. `audit --column-csv`
+- F19a. `audit --timings` prints the wall time of each audit phase to stderr (`resolve`, `ddl`,
+  `build`, `coverage`, `rules`, `report`, `write.json`, `write.html`, `write.csv`), then `other` (wall
+  time not in a phase) and `total`. `--timings=rules` also prints the 10 slowest rules (the sum of
+  their job times, so it can exceed wall time on many threads). `audit --column-csv`
   writes the column contract CSV to a chosen path, with or without `--html`.
 
 ### Reports
@@ -193,9 +200,8 @@ answer every time.
   pull request that changes dbt-quality. The release workflow runs the tests and the package and
   launcher smoke tests on every target.
 - Q3. Before a large change merges (a new or reworked rule, the SQL tokenizer or Jinja reading,
-  discovery, waivers, levels or the report), the
-  [`judging-dbt-quality-reports`](../../../.claude/skills/judging-dbt-quality-reports/SKILL.md)
-  skill audits snowflake-dbt-demo with and without the change, and an independent judge checks the
+  discovery, waivers, levels or the report), the `judging-dbt-quality-reports` skill
+  (`ai/.claude/skills/judging-dbt-quality-reports/`) audits snowflake-dbt-demo with and without the change, and an independent judge checks the
   findings for false positives and misses.
 
 ## Success criteria

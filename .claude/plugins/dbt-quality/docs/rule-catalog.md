@@ -23,19 +23,19 @@ rather than disabling the rule for the entire run.
 | Mechanism | Scope | Effect on the report |
 | --- | --- | --- |
 | `disabled_rules:` | One rule for the run | Listed as skipped, so readers know it was not checked. |
-| `ignore:` config entry | One rule at matching paths | Removed from outputs and counts. |
-| `-- dbt-quality: ignore-file <ids>` | One rule in one file | Removed from outputs and counts. |
-| `-- dbt-quality: ignore <ids>` | One rule at a reported line | Removed from outputs and counts. |
+| `ignore:` config entry | One rule at matching paths | Kept in the report as suppressed, with the waiver as the reason; not counted as active. |
+| `-- dbt-quality: ignore-file <ids>` | One rule in one file | Kept in the report as suppressed, with the waiver as the reason; not counted as active. |
+| `-- dbt-quality: ignore <ids>` | One rule at a reported line | Kept in the report as suppressed, with the waiver as the reason; not counted as active. |
 
-Use full rule codes. A line directive applies to the line it is on or the line immediately below
-it. Place it at the diagnostic's reported location. Config-related rules often anchor at
+Use full rule codes. A line directive written after code applies to that line. On a line of its
+own, it applies to its own line and the next non-blank line. Place it at the diagnostic's reported location. Config-related rules often anchor at
 `{{ config() }}`, but precise read-site rules can report another line. Use `ignore-file` only
 when a file-wide waiver is intended. Project- and portfolio-scoped findings need a configuration
 waiver; their `file` can be a directory or `<portfolio>`.
 
 If an expected finding is missing, search for `dbt-quality: ignore` and inspect the nearest
 `.dbt-quality.yml` for `ignore` and `disabled_rules`. The configuration may be in an ancestor of
-the audit root. See the plugin README for configuration lookup and usage examples.
+the audit root. See the dbt-quality README for configuration lookup and usage examples.
 
 ## Codes, kind, level, and severity
 
@@ -100,9 +100,10 @@ advice; a successful dbt build alone does not prove it correct.
 | SSC-EWI-DBTCOL0002 | EWI | warning | high | migration | model | DDL column missing from the model | A column of the scai DDL table has no matching output column in the model. |
 | SSC-EWI-DBTCOL0003 | EWI | warning | medium | migration | model | Model column not in the DDL | An output column of the model has no column with the same name in the scai DDL table. |
 | SSC-EWI-DBTCOL0004 | EWI | information | low | migration | model | Output column cannot be checked against the DDL | An item of the outer SELECT is `*`, Jinja only, or an expression with no alias. |
-| SSC-EWI-DBTCOL0005 | EWI | warning | medium | migration | model | Column type differs from the DDL | An output column has no explicit cast, or its cast type differs from the scai DDL type. |
+| SSC-EWI-DBTCOL0005 | EWI | warning | medium | migration | model | Column type differs from the DDL | An output column is cast to a type that differs from the scai DDL type. |
 | SSC-EWI-DBTCOL0006 | EWI | warning | medium | migration | model | Column collation differs from the DDL | A text output column has a collation that differs from the COLLATE in the scai DDL. |
 | SSC-EWI-DBTCOL0007 | EWI | warning | low | migration | portfolio | scai DDL file not read | A file in `ddl_paths` did not parse, or its columns differ from the scai registry. |
+| SSC-FDM-DBTCOL0008 | FDM | information | low | migration | model | Model columns have no explicit cast | A model has output columns with no outer cast, so their types do not follow the scai DDL. |
 
 ---
 
@@ -315,7 +316,7 @@ MIG0003 and SQL0008 can describe the same finding when an FDM marker concerns or
 uses `ORDER BY (SELECT null)`. Read the marker before grouping them. Do not assume every FDM
 marker concerns ordering or that an EWI marker alone proves the SQL cannot compile.
 
-By default (`converter_markers: count`), MIG0001, MIG0002 and MIG0003 emit no finding for markers that SnowConvert wrote. The audit counts them in `summary.not_reported`. Set `converter_markers: report` in `.dbt-quality.yml` to get one finding per marker. Markers that dbt-quality wrote (`SSC-*-DBT<PACK><NNNN>`) are never counted and never reported by these rules.
+By default (`converter_markers: count`), MIG0001, MIG0002 and MIG0003 emit no finding for markers that SnowConvert wrote inside a comment. The audit counts them in `summary.not_reported`, with their files and lines. A marker outside a comment is executable text, so these rules always report it. Set `converter_markers: report` in `.dbt-quality.yml` to get one finding per marker. Markers that dbt-quality wrote (`SSC-*-DBT<PACK><NNNN>`) are never counted and never reported by these rules.
 
 OPS0002 concerns literal credentials in tracked files. PRJ0004 concerns `profiles.yml` placement.
 Keep those concerns separate: a profile's presence alone does not prove credential exposure.

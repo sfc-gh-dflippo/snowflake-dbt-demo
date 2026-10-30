@@ -2,11 +2,15 @@
 rem Launcher: runs dbt-quality on Windows. It follows the same steps as bin/dbt-quality:
 rem %DBT_QUALITY_EXE%, then a local build in bin\<target>\, then a cached download in
 rem %LOCALAPPDATA%\dbt-quality\<version>\<target>\, else download, check the SHA-256, and cache.
-rem MCP clients reach this file through cross-spawn: it resolves bin/dbt-quality with PATHEXT
-rem and runs .cmd files through cmd.exe. Keep VERSION equal to the Cargo version.
+rem MCP clients start the manifest command bin/dbt-quality with cross-spawn and shell:false.
+rem On Windows, cross-spawn accepts a file with a PATHEXT extension first, so it runs this file
+rem through cmd.exe. The SessionStart hook (hooks/fix-dbt-quality-launcher.ps1) deletes the sh
+rem launcher bin/dbt-quality, which cross-spawn would run with sh. Keep VERSION equal to the Cargo version.
+rem Proxy: the download uses HTTPS_PROXY when set. Then SCAI_PROXY. Else it uses the git http.proxy
+rem setting that matches the download URL. Curl reads NO_PROXY. Never print the value.
 rem The integrity ceiling is described in bin/dbt-quality.
 setlocal
-set "VERSION=0.3.2-pr10149"
+set "VERSION=0.3.0-pr10625"
 rem Detect ARM64 the same way as hooks\install-dependencies.ps1. An x64 process on ARM64 Windows
 rem reports AMD64 in PROCESSOR_ARCHITECTURE, so PROCESSOR_IDENTIFIER is checked too.
 set "TARGET=x86_64-pc-windows-msvc"
@@ -31,6 +35,9 @@ if exist "%EXE%" goto run
 if not defined DBT_QUALITY_DOWNLOAD_BASE set "DBT_QUALITY_DOWNLOAD_BASE=https://github.com/sfc-gh-dflippo/snowflake-dbt-demo/releases/download"
 set "ARCHIVE=dbt-quality-%TARGET%.zip"
 set "URL=%DBT_QUALITY_DOWNLOAD_BASE%/dbt-quality-v%VERSION%/%ARCHIVE%"
+set "GITPROXY="
+if not defined HTTPS_PROXY if defined SCAI_PROXY set "HTTPS_PROXY=%SCAI_PROXY%" & set "GITPROXY=1"
+if not defined HTTPS_PROXY where git >nul 2>&1 && for /f "usebackq delims=" %%p in (`git config --get-urlmatch http.proxy "%URL%" 2^>nul`) do set "HTTPS_PROXY=%%p" & set "GITPROXY=1"
 if not exist "%CACHE%" mkdir "%CACHE%" || goto fail
 rem The work directory is in the cache directory, so the final move is a rename.
 set "WORK=%CACHE%\.download-%RANDOM%%RANDOM%"
@@ -38,6 +45,8 @@ mkdir "%WORK%" || goto fail
 rem MCP clients wait about 30 s for a server to start. Both downloads together stay under that.
 curl.exe -fsSL --max-time 5 -o "%WORK%\%ARCHIVE%.sha256" "%URL%.sha256" || goto fail
 curl.exe -fsSL --max-time 20 -o "%WORK%\%ARCHIVE%" "%URL%" || goto fail
+rem Scope the git proxy to the downloads.
+if defined GITPROXY set "HTTPS_PROXY="
 set "EXPECTED="
 for /f "usebackq tokens=1" %%h in ("%WORK%\%ARCHIVE%.sha256") do if not defined EXPECTED set "EXPECTED=%%h"
 set "ACTUAL="
@@ -58,5 +67,6 @@ exit /b %errorlevel%
 :fail
 echo dbt-quality: cannot download and verify %URL% 1>&2
 echo dbt-quality: download it and its .sha256 file, or build with scripts\build-plugin.ps1 1>&2
+echo dbt-quality: if the network needs a proxy, set HTTPS_PROXY or run: git config --global http.proxy ^<url^> 1>&2
 if defined WORK if exist "%WORK%" rmdir /s /q "%WORK%"
 exit /b 1

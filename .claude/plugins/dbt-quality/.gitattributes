@@ -1,2 +1,4 @@
 *.cmd text eol=crlf
 bin/dbt-quality text eol=lf
+# The hook runs through a shell on every platform, so session-start.cmd is an sh/cmd polyglot. Keep LF.
+hooks/*.cmd text eol=lf

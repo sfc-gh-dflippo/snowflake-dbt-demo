@@ -497,8 +497,8 @@ Always include header comments explaining:
 ## Related Documentation
 
 - $dbt-migration - Main migration workflow skill
-- $dbt-validate - Validate a single converted model file
-- $dbt-audit - Project-wide anti-pattern audit and HTML assessment
+- dbt-quality:dbt-quality - Static checks for one model file or the whole project (HTML report). No
+  dbt run and no warehouse data comparison.
 - $dbt-modeling - CTE patterns and SQL structure
 - $dbt-testing - Testing strategies with dbt_constraints
 - $dbt-architecture - Project organization and naming conventions
@@ -524,22 +524,21 @@ cortex skill add https://github.com/sfc-gh-dflippo/snowflake-dbt-demo/.claude/sk
 
 #### Migration Skills
 
-| Skill Name                    | Source Platform                  | Key Features                       |
-| ----------------------------- | -------------------------------- | ---------------------------------- |
-| `dbt-migration`               | All platforms                    | Main orchestration (7-phase)       |
-| `dbt-migration-snowflake`     | Snowflake                        | Native Snowflake to dbt patterns   |
-| `dbt-migration-ms-sql-server` | SQL Server / Azure Synapse       | T-SQL, IDENTITY, TOP, #temp tables |
-| `dbt-migration-oracle`        | Oracle                           | PL/SQL, ROWNUM, CONNECT BY         |
-| `dbt-migration-teradata`      | Teradata                         | QUALIFY, BTEQ, volatile tables     |
-| `dbt-migration-bigquery`      | BigQuery                         | UNNEST, STRUCT/ARRAY               |
-| `dbt-migration-redshift`      | Redshift                         | DISTKEY/SORTKEY, COPY/UNLOAD       |
-| `dbt-migration-postgres`      | PostgreSQL / Greenplum / Netezza | Array expressions                  |
-| `dbt-migration-db2`           | IBM DB2                          | SQL PL, FETCH FIRST                |
-| `dbt-migration-hive`          | Hive / Spark / Databricks        | External tables, PARTITIONED BY    |
-| `dbt-migration-vertica`       | Vertica                          | Projections, flex tables           |
-| `dbt-migration-sybase`        | Sybase IQ                        | T-SQL variant                      |
-| `dbt-validate`                | All platforms                    | Validate one converted model file  |
-| `dbt-audit`                   | All platforms                    | Audit the converted project        |
+| Skill Name                    | Source Platform                  | Key Features                        |
+| ----------------------------- | -------------------------------- | ----------------------------------- |
+| `dbt-migration`               | All platforms                    | Main orchestration (7-phase)        |
+| `dbt-migration-snowflake`     | Snowflake                        | Native Snowflake to dbt patterns    |
+| `dbt-migration-ms-sql-server` | SQL Server / Azure Synapse       | T-SQL, IDENTITY, TOP, #temp tables  |
+| `dbt-migration-oracle`        | Oracle                           | PL/SQL, ROWNUM, CONNECT BY          |
+| `dbt-migration-teradata`      | Teradata                         | QUALIFY, BTEQ, volatile tables      |
+| `dbt-migration-bigquery`      | BigQuery                         | UNNEST, STRUCT/ARRAY                |
+| `dbt-migration-redshift`      | Redshift                         | DISTKEY/SORTKEY, COPY/UNLOAD        |
+| `dbt-migration-postgres`      | PostgreSQL / Greenplum / Netezza | Array expressions                   |
+| `dbt-migration-db2`           | IBM DB2                          | SQL PL, FETCH FIRST                 |
+| `dbt-migration-hive`          | Hive / Spark / Databricks        | External tables, PARTITIONED BY     |
+| `dbt-migration-vertica`       | Vertica                          | Projections, flex tables            |
+| `dbt-migration-sybase`        | Sybase IQ                        | T-SQL variant                       |
+| `dbt-quality:dbt-quality`     | All platforms                    | Static checks: one model or project |
 
 #### Core dbt Skills
 

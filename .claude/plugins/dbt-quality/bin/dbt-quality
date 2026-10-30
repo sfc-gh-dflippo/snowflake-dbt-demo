@@ -5,12 +5,17 @@
 #   3. A cached download in ${XDG_CACHE_HOME:-~/.cache}/dbt-quality/<version>/<target>/.
 # Otherwise it downloads the release archive for VERSION, checks its SHA-256, and caches it.
 # bin/dbt-quality.cmd does the same on Windows. Keep VERSION equal to the Cargo version.
+# The manifests name this file on every platform. On Windows, cross-spawn runs bin/dbt-quality.cmd
+# when it exists, and the SessionStart hook hooks/fix-dbt-quality-launcher.ps1 deletes this file
+# so that no client can pick it there.
+# Proxy: the download uses HTTPS_PROXY or https_proxy when set. Then SCAI_PROXY. Else it uses
+# the git http.proxy setting that matches the download URL. Curl reads NO_PROXY.
 #
 # Integrity ceiling: the .sha256 file comes from the same release as the archive. It detects a
 # corrupt or partial download, not a release that was built wrong. Immutable releases block
 # changes after publication; `gh release verify-asset` checks the release attestation.
 set -eu
-VERSION=0.3.2-pr10149
+VERSION=0.3.0-pr10625
 here=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 case "$(uname -s)-$(uname -m)" in
   Linux-x86_64) target=x86_64-unknown-linux-musl ;;
@@ -35,14 +40,26 @@ if [ ! -x "$bin" ]; then
     [ -n "$tmp" ] && rm -rf "$tmp"
     echo "dbt-quality: $1" >&2
     echo "dbt-quality: download $url and $url.sha256, or build with scripts/build-plugin.sh" >&2
+    echo "dbt-quality: if the network needs a proxy, set HTTPS_PROXY or run: git config --global http.proxy <url>" >&2
     exit 1
+  }
+  git_proxy=
+  if [ -z "${HTTPS_PROXY:-}" ] && [ -z "${https_proxy:-}" ]; then
+    if [ -n "${SCAI_PROXY:-}" ]; then git_proxy=$SCAI_PROXY
+    elif command -v git >/dev/null 2>&1; then
+      git_proxy=$(git config --get-urlmatch http.proxy "$url" 2>/dev/null || true)
+    fi
+  fi
+  # Set HTTPS_PROXY for the curl process only. Never print its value.
+  fetch() {
+    if [ -n "$git_proxy" ]; then HTTPS_PROXY=$git_proxy curl "$@"; else curl "$@"; fi
   }
   mkdir -p "$cache" || fail "cannot create $cache"
   # The temporary directory is in the cache directory, so the final mv is an atomic rename.
   tmp=$(mktemp -d "$cache/.download.XXXXXX") || fail "cannot create a directory in $cache"
   # MCP clients wait about 30 s for a server to start. Both downloads together stay under that.
-  curl -fsSL --max-time 5 -o "$tmp/$archive.sha256" "$url.sha256" || fail "cannot download $url.sha256"
-  curl -fsSL --max-time 20 -o "$tmp/$archive" "$url" || fail "cannot download $url"
+  fetch -fsSL --max-time 5 -o "$tmp/$archive.sha256" "$url.sha256" || fail "cannot download $url.sha256"
+  fetch -fsSL --max-time 20 -o "$tmp/$archive" "$url" || fail "cannot download $url"
   if command -v sha256sum >/dev/null 2>&1; then sum="sha256sum -c"; else sum="shasum -a 256 -c"; fi
   (cd "$tmp" && $sum "$archive.sha256" >/dev/null 2>&1) || fail "SHA-256 mismatch for $archive"
   tar -xzf "$tmp/$archive" -C "$tmp" || fail "cannot extract $archive"
