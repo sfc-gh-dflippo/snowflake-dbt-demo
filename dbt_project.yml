@@ -81,10 +81,10 @@ models:
   # - "{{ set_warehouse() }}"
 
   # Config indicated by + applies to all files at and below that level
-  #+post-hook:
-  # - "{{ dbt_snow_mask.apply_masking_policy() }}"
-  # This macro will refresh dynamic tables as they are processed
-  # - "{{ dynamic_table_refresh_hook() }}"
+  +post-hook:
+    # - "{{ dbt_snow_mask.apply_masking_policy() }}"
+    # Refresh each dynamic table when dbt runs or builds it
+    - "{{ dynamic_table_refresh_hook() }}"
 
   # By default grants are lost unless you add this configuration
   +copy_grants: true

@@ -1,12 +1,12 @@
 {#- dbt-quality: ignore-file SSC-EWI-DBTMAC0003 -#}
-{#- MAC0003 waived. Opt-in post-hook dynamic_table_refresh_hook(). The hook is commented out in dbt_project.yml as a teaching toggle. -#}
+{#- MAC0003 waived. Project-level post-hook dynamic_table_refresh_hook(), enabled in dbt_project.yml. -#}
 {#
-    Either of these macros will cause dbt to automatically refresh dynamic tables. Without this, a dynamic table may not
-    be up to date when queried in a downstream model.
+    dbt does not refresh an existing dynamic table when its config is unchanged.
+    This post-hook refreshes each dynamic table when dbt runs or builds it.
+    Side effect: runs ALTER DYNAMIC TABLE <this> REFRESH in Snowflake.
 #}
 
 
-{# This is a simple post-hook macro that can be added to cause dynamic tables to automatically refresh if they are not up to date. #}
 {% macro dynamic_table_refresh_hook() -%}
     {% if execute and flags.WHICH in ('run', 'build') and model.config.materialized == "dynamic_table"%}
         {% do run_query( snowflake__refresh_dynamic_table(this) ) %}
