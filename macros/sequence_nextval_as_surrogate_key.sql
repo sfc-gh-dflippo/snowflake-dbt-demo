@@ -4,11 +4,12 @@
             database = this.database,
             schema = this.schema,
             identifier = sequence_name) -%}
-    {% if execute and flags.WHICH in ('run', 'build') %}
+    {% if execute and flags.WHICH in ('run', 'build', 'snapshot') %}
 
         {% set start_with_val = 1 %}
 
-        {% if is_incremental()  %}
+        {#- An incremental model or an existing snapshot table already holds keys. #}
+        {% if is_incremental() or (model.resource_type == 'snapshot' and load_relation(this) is not none) %}
 
             {# This query does not require compute and will respond immediately from cloud services #}
             {%- set high_watermark_statement -%}
@@ -17,7 +18,7 @@
             {%- set high_watermark_result = run_query(high_watermark_statement) -%}
             {%- set high_watermark = high_watermark_result.columns["high_watermark"].values() | first -%}
 
-            {%- if high_watermark > 0 -%}
+            {%- if high_watermark is not none and high_watermark > 0 -%}
                 {%- set start_with_val = high_watermark + 1 -%}
             {%- endif -%}
 

@@ -1,0 +1,16 @@
+# Test project for macros/snowflake_snapshot_merge_valid_from.sql.
+# run_test.sh runs every snapshot in two schemas:
+#   arm A: var snapshot_merge_on_valid_from=false (stock join)
+#   arm B: var snapshot_merge_on_valid_from=true  (join adds dbt_valid_from)
+name: "snapshot_merge_valid_from_test"
+version: "1.0.0"
+profile: "SNOWFLAKE"
+
+vars:
+  test_database: "DFLIPPO_DEV"
+  test_schema: "SNAPSHOT_MERGE_TEST"
+
+snapshots:
+  snapshot_merge_valid_from_test:
+    +database: "DFLIPPO_DEV"
+    +schema: "SNAPSHOT_MERGE_TEST_{{ var('arm', 'A') }}"

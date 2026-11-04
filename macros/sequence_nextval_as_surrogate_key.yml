@@ -17,8 +17,9 @@ macros:
       - name: column_name
         type: string
         description:
-          "Surrogate key column. On incremental runs the macro reads max(column_name) from the
-          target and starts the sequence above it."
+          "Surrogate key column. On incremental runs, and on snapshot runs where the snapshot table
+          exists, the macro reads max(column_name) from the target and starts the sequence above it.
+          It creates the sequence for dbt run, build, and snapshot."
       - name: sequence_name
         type: string
         description:
